@@ -23,10 +23,10 @@ class LocationTypeHeaderModel {
     
     var isHeaderIsCollapsed = false
     var timeStamp = ""
-    
+        
     init() {
+        print("initialize class")
     }
-    
     init(headerObject: Microbial_LocationTypeHeaders) {
         self.section = headerObject.section as? Int ?? -1
         self.noOfPlates =  headerObject.noOfPlates as? Int ?? 0

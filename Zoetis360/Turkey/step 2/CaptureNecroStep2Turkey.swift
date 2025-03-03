@@ -6770,8 +6770,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
         let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: "Are you sure you want to delete this bird? You will lose the data by deleting this bird.", preferredStyle: .alert)
         
-        let action1 = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction) in
-        }
+        let action1 = UIAlertAction(title: "Cancel", style: .default)
         
         let action2 = UIAlertAction(title: "OK", style: .cancel) { (action:UIAlertAction) in
             self.isFirstTimeLaunch = false

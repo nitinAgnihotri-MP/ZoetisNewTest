@@ -109,8 +109,6 @@ extension PVECommentPopupViewController:UITextViewDelegate{
         }
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-    }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {

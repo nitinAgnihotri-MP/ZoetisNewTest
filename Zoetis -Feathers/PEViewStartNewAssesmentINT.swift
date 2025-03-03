@@ -695,9 +695,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                 // As per discussion with Imran and binu we have commented this code so that client can submit their assessment irsepective of their Assessment Approved or not.
                // self.getAssessmentStatusCheck(assessmentId: self.peNewAssessment.serverAssessmentId ?? "")
             }
-            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -1234,19 +1232,11 @@ extension PEViewStartNewAssesmentINT:UITextViewDelegate{
             saveAssessmentInProgressDataInDB()
         }
     }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
-    }
-    
 }
 
 // MARK: - UI Textfield Delegates.
 extension PEViewStartNewAssesmentINT : UITextFieldDelegate{
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-    }
+    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         return true;
     }
@@ -2378,9 +2368,7 @@ extension PEViewStartNewAssesmentINT{
                 // As per discussion with Imran and binu we have commented this code so that client can submit their assessment irsepective of their Assessment Approved or not.
               //  self.getAssessmentStatusCheck(assessmentId: self.peNewAssessment.serverAssessmentId ?? "")
             }
-            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)

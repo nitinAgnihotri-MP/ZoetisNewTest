@@ -65,8 +65,6 @@ class CrewInformationCell: UITableViewCell , UITextFieldDelegate {
     
     // MARK: - TEXTFIELD DELEGATES
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
     func textFieldDidEndEditing(_ textField: UITextField) {
         nameCompletion?(textField.text)
         //   print("TextField did end editing method called\(textField.text!)")

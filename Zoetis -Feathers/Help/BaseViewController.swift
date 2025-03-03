@@ -370,7 +370,7 @@ class BaseViewController: UIViewController , SlideMenuDelegate{
         
         fetchRequest.returnsObjectsAsFaults = false
         do {
-            let results = try! managedContext.fetch(fetchRequest)
+            let results = try managedContext.fetch(fetchRequest)
             for managedObject in results {
                 let managedObjectData: NSManagedObject = managedObject as! NSManagedObject
                 managedContext.delete(managedObjectData)
@@ -391,7 +391,7 @@ class BaseViewController: UIViewController , SlideMenuDelegate{
         
         fetchRequest.returnsObjectsAsFaults = false
         do {
-            let results = try! managedContext.fetch(fetchRequest)
+            let results = try managedContext.fetch(fetchRequest)
             for managedObject in results {
                 let managedObjectData: NSManagedObject = managedObject as! NSManagedObject
                 managedContext.delete(managedObjectData)

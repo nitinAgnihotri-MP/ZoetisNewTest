@@ -1214,10 +1214,6 @@ extension PEViewStartNewAssessment:UITextViewDelegate{
             saveAssessmentInProgressDataInDB()
         }
     }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
-    }
 }
 
 // MARK: - WebServices
@@ -1238,10 +1234,7 @@ extension PEViewStartNewAssessment {
 }
 // MARK: - Extension Textfield Deletgates
 extension PEViewStartNewAssessment : UITextFieldDelegate{
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-    }
+    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         return true;
     }
@@ -2367,9 +2360,7 @@ extension PEViewStartNewAssessment{
                 // As per discussion with Imran and binu we have commented this code so that client can submit their assessment
                // self.getAssessmentStatusCheck(assessmentId: self.peNewAssessment.serverAssessmentId ?? "")
             }
-            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)

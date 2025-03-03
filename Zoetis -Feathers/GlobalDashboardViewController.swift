@@ -17,7 +17,7 @@ class GlobalDashboardViewController: BaseViewController {
     @IBOutlet weak var btnBreeder: UIButton!
     @IBOutlet weak var btnHatchery: UIButton!
     @IBOutlet weak var lblAppVersion: UILabel!
-    
+    let versionStr = "Version "
     var index = 0
     let animationDuration: TimeInterval = 0.75
     let switchingInterval: TimeInterval = 5
@@ -51,19 +51,19 @@ class GlobalDashboardViewController: BaseViewController {
         
         switch liveAlbums {
         case 0:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber + " (UAT)"
+            lblAppVersion.text = versionStr + Bundle.main.versionNumber + " (UAT)"
             
         case 1:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber + " (Dev)"
+            lblAppVersion.text = versionStr + Bundle.main.versionNumber + " (Dev)"
             
         case 2:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber + " (Dev Support)"
+            lblAppVersion.text = versionStr + Bundle.main.versionNumber + " (Dev Support)"
             
         case 3:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber
+            lblAppVersion.text = versionStr + Bundle.main.versionNumber
             
         default:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber
+            lblAppVersion.text = versionStr + Bundle.main.versionNumber
         }
         
         

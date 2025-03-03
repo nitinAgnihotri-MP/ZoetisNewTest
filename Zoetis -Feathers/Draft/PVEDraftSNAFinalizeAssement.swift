@@ -224,10 +224,7 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
             NSLog("OK Pressed")
             self.saveDataInDraft()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-            print("Cancel action")
-        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -309,10 +306,7 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
             NSLog("OK Pressed")
             self.saveFinalizedData()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-            print("Cancel Action")
-        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -610,10 +604,7 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
             _ in
             self.singleDataSync()
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-            _ in
-            print("Cancel Action")
-        }
+        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -668,7 +659,7 @@ extension PVEDraftSNAFinalizeAssement:  UIImagePickerControllerDelegate,UINaviga
                     
                     
                     imagePicker.view.tag = indexPath!.row
-                    present(imagePicker, animated: true, completion: {})
+                    present(imagePicker, animated: true)
                 } else {
                     postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
                 }
@@ -765,8 +756,7 @@ extension PVEDraftSNAFinalizeAssement:  UIImagePickerControllerDelegate,UINaviga
         /******************************************************************************************************/
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             
-            dismiss(animated: true, completion: {
-            })
+            dismiss(animated: true)
         }
         
         
@@ -1454,7 +1444,7 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
     
     
     @IBAction func vaccinatorsPlusBtnAction(_ sender: Any) {
-        
+        print(currentSel_seq_Number)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -3002,7 +2992,8 @@ extension PVEDraftSNAFinalizeAssement: DatePickerPopupViewControllerProtocol{
         
     }
     
-    func doneButtonTapped(string:String){
+    func doneButtonTapped(string:String) {
+        print("doneButtonTapped")
     }
 }
 

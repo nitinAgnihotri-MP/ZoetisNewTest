@@ -111,13 +111,8 @@ extension CommentPopupViewController:UITextViewDelegate{
         return true
     }
     
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if (textView == txtView ) {
-        }
-    }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
-    }
-    
+//    func textViewDidEndEditing(_ textView: UITextView) {
+//        if (textView == txtView ) {
+//        }
+//    }
 }

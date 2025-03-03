@@ -1369,10 +1369,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             
             if lblVeteration.text != ""{
                 let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel) {
-                    UIAlertAction in
-                    
-                }
+                let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel)
                 let okAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.navigationController?.popViewController(animated: true)
@@ -2069,9 +2066,6 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         if (textView == notesTextView ) {
             isClickOnAnyField = true
         }
-    }
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

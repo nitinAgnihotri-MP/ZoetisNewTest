@@ -59,44 +59,36 @@ class PdfViewController: UIViewController {
         let config = URLSessionConfiguration.default
         let session =  URLSession(configuration: config)
         let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
-            if error == nil{
-                if let pdfData = data {
-                    let pathURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\("Self_Injection").PDF")
-                    do {
-                        try pdfData.write(to: pathURL, options: .atomic)
-                    }catch{
-                        print("Error while writting")
-                    }
+            if error == nil, let pdfData = data {
+                let pathURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\("Self_Injection").PDF")
+                do {
+                    try pdfData.write(to: pathURL, options: .atomic)
+                } catch {
+                    print("Error while writting")
+                }
+                
+                DispatchQueue.main.async {
+                    debugPrint(pathURL)
                     
-                    DispatchQueue.main.async {
-                        debugPrint(pathURL)
-                        
-                        let fileManager = FileManager.default
-                        let documentoPath = "Self_Injection.PDF"
-                        if fileManager.fileExists(atPath: documentoPath){
-                            let url = URL(fileURLWithPath: documentoPath)
-                            let activityViewController: UIActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                            activityViewController.popoverPresentationController?.sourceView=self.view
-                            self.present(activityViewController, animated: true, completion: nil)
-                        }else {
-                            
-                            let url = URL(fileURLWithPath: "\(pathURL)")
-                            let vc = UIActivityViewController(activityItems: [url], applicationActivities: [])
-                            vc.popoverPresentationController?.sourceView = self.view
-                            vc.excludedActivityTypes = [UIActivity.ActivityType.airDrop]
-                            vc.popoverPresentationController?.sourceRect = CGRect(x: self.view.center.x, y: self.view.center.y, width: 0, height: 0)
-                            vc.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
-                            self.present(vc, animated: true)
-                        }
-                        
-                        
+                    let fileManager = FileManager.default
+                    let documentoPath = "Self_Injection.PDF"
+                    if fileManager.fileExists(atPath: documentoPath){
+                        let url = URL(fileURLWithPath: documentoPath)
+                        let activityViewController: UIActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                        activityViewController.popoverPresentationController?.sourceView=self.view
+                        self.present(activityViewController, animated: true, completion: nil)
+                    } else {
+                        let url = URL(fileURLWithPath: "\(pathURL)")
+                        let vc = UIActivityViewController(activityItems: [url], applicationActivities: [])
+                        vc.popoverPresentationController?.sourceView = self.view
+                        vc.excludedActivityTypes = [UIActivity.ActivityType.airDrop]
+                        vc.popoverPresentationController?.sourceRect = CGRect(x: self.view.center.x, y: self.view.center.y, width: 0, height: 0)
+                        vc.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
+                        self.present(vc, animated: true)
                     }
                 }
-            }else{
-                print(error?.localizedDescription ?? "")
             }
-        }); task.resume()
-        
+        });
+        task.resume()
     }
-    
 }

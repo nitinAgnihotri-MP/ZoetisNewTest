@@ -221,7 +221,7 @@ public protocol YPSignatureDelegate: class {
     func didFinish(_ view : YPDrawSignatureView)
 }
 
-extension YPSignatureDelegate {
-    func didStart(_ view : YPDrawSignatureView) {}
-    func didFinish(_ view : YPDrawSignatureView) {}
-}
+//extension YPSignatureDelegate {
+//    func didStart(_ view : YPDrawSignatureView) {}
+//    func didFinish(_ view : YPDrawSignatureView) {}
+//}

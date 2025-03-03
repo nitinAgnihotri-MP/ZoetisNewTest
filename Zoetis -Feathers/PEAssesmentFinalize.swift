@@ -692,9 +692,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                             NSLog("OK Pressed")
                             self.saveFinalizedData()
                         }
-                        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                            _ in
-                        }
+                        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
                         alertController.addAction(okAction)
                         alertController.addAction(cancelAction)
                         self.present(alertController, animated: true, completion: nil)
@@ -707,12 +705,9 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                     let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                         _ in
-                        NSLog("OK Pressed")
                         self.saveFinalizedData()
                     }
-                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                        _ in
-                    }
+                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
                     alertController.addAction(okAction)
                     alertController.addAction(cancelAction)
                     self.present(alertController, animated: true, completion: nil)
@@ -729,13 +724,9 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            NSLog("OK Pressed")
             self.saveDraftData()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-            
-        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -747,13 +738,9 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            NSLog("OK Pressed")
             self.saveDraftData()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-            
-        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -5215,13 +5202,8 @@ extension PEAssesmentFinalize{
     func showAlertForAddingPlateType(){
         let errorMSg = "Please select all plate types in Sanitation And Embrex Evaluation Tab"
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-            _ in
-            
-        }
-        _ = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-        }
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+        _ = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         self.present(alertController, animated: true, completion: nil)
     }
@@ -5241,13 +5223,8 @@ extension PEAssesmentFinalize{
         {
             let errorMSg = "Please enter vaccine details in the Vaccine Preparation Tab."
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-                
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -5268,13 +5245,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = "Please enter program name in the Vaccine Preparation Tab."
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-                
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -5284,13 +5256,8 @@ extension PEAssesmentFinalize{
     func showAlertForCommentMandatory(){
         let errorMSg = "Please enter the Comment before submitting the assessment in Extended Microbial."
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-            _ in
-            
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-        }
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -5310,13 +5277,8 @@ extension PEAssesmentFinalize{
         {
             let errorMSg = "Please enter Antibiotic in the Vaccine Preparation Tab."
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-                
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -5327,13 +5289,8 @@ extension PEAssesmentFinalize{
         
         let errorMSg = "Please enter the certification details before submitting the assessment in Extended Microbial."
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-            _ in
-            
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-        }
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -5343,12 +5300,8 @@ extension PEAssesmentFinalize{
         
         let errorMSg = "Please enter the certification details before submitting the assessment."
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-            _ in
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-        }
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -5366,13 +5319,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = "Please enter AM/PM Value in Miscellaneous."
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-                
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -5393,13 +5341,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation."
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-                
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -5419,13 +5362,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = "Please enter person name in Customer Quality Control Program."
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-                
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -5445,13 +5383,8 @@ extension PEAssesmentFinalize{
             
             let errorMSg = "Please enter frequency detail in Customer Quality Control Program."
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-                
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -5473,13 +5406,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = "Please enter QC count in Customer Quality Control Program."
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-                
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -5499,13 +5427,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-                
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -5516,9 +5439,7 @@ extension PEAssesmentFinalize{
         let errorMSg = "Reached maximum limit of images for this question."
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         
-        let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) {
-            _ in
-        }
+        let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) 
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }

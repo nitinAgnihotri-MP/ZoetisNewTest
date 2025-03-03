@@ -154,8 +154,7 @@ class InovojectCell: UITableViewCell , UITextFieldDelegate {
     
     // MARK: - TEXTFIELD DELEGATES
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         nameCompletion?(textField.text)
     }

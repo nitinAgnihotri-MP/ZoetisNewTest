@@ -110,10 +110,11 @@ class HatcheryLandingViewController: BaseViewController {
     }
     
     @IBAction func clickedChickQuality(_ sender: Any) {
-        
+        print("clickedChickQuality")
     }
     
     @IBAction func clickedBreakoutAnalysis(_ sender: Any) {
+        print("clickedBreakoutAnalysis")
     }
     
     

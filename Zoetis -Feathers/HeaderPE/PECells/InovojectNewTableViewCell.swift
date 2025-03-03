@@ -160,12 +160,7 @@ class InovojectNewTableViewCell: UITableViewCell , UITextFieldDelegate {
     @IBAction func bagSizeAction(_ sender: UIButton) {
         bagSizeCompletion?("")
     }
-    
-    @IBAction func hatcheryAntibioticsSwitch(_ sender: UISwitch) {
         
-        
-    }
-    
     @IBAction func vaccineNameBtnAction(_ sender: UIButton) {
         nameCompletion?("")
     }
@@ -182,14 +177,13 @@ class InovojectNewTableViewCell: UITableViewCell , UITextFieldDelegate {
     
     
     @IBAction func dosageBtnAction(_ sender: UIButton) {
-        
+        print("dosageBtnAction")
         
     }
     
     // MARK: - TEXTFIELD DELEGATES
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
+    
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == tfProgramName{

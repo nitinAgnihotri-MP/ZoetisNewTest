@@ -26,7 +26,7 @@ class PE_DraftCell: UITableViewCell {
     @IBOutlet weak var extendedRejectedComment: UIButton!
     
     @IBOutlet weak var extendedMicroStatus: UILabel!
-    
+    let inProcessStr = "In Progress"
     
     // MARK: - VARIABLES
     
@@ -134,7 +134,7 @@ class PE_DraftCell: UITableViewCell {
                 else
                 {
                     extendedMicroLbl.text = "Yes"
-                    extendedMicroStatus.text = "In Progress"
+                    extendedMicroStatus.text = inProcessStr
                     extendedRejectedComment.isHidden = true
                 }
             }
@@ -149,7 +149,7 @@ class PE_DraftCell: UITableViewCell {
             }
            else
             {
-               extendedMicroStatus.text = "In Progress"
+               extendedMicroStatus.text = inProcessStr
             }
             
             
@@ -203,7 +203,7 @@ class PE_DraftCell: UITableViewCell {
                else
                {
                    extendedMicroLbl.text = "Yes"
-                   extendedMicroStatus.text = "In Progress"
+                   extendedMicroStatus.text = inProcessStr
                    extendedRejectedComment.isHidden = true
                }
                

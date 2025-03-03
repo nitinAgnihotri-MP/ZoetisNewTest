@@ -23,7 +23,9 @@ class FeatherPulpVC: BaseViewController {
     var isToggle = false
     var barcodeForPlateId : String = ""
     var reviewerDetails : [MicrobialSelectedUnselectedReviewer] = []
-    
+    let sessionIdPlate = "sessionId = %d AND isSessionPlate == 1"
+    let timeStampSessionPlate = "timeStamp = %@ AND isSessionPlate == 0"
+    let timeStampStr = "timeStamp = %@"
     @IBOutlet weak var saveAsDraftBtn: UIButton!
     @IBOutlet weak var submitBtn: UIButton!
     
@@ -87,7 +89,7 @@ class FeatherPulpVC: BaseViewController {
             if sessionprogresss == true {
                 self.currentRequisition.configureDataIfSessionInProgress_FeatherPulp()
                 let id = UserDefaults.standard.integer(forKey: "sessionId")
-                let predicate = NSPredicate(format: "sessionId = %d AND isSessionPlate == 1", argumentArray: [id])
+                let predicate = NSPredicate(format: sessionIdPlate, argumentArray: [id])
                 plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]
                 let predicateForTest = NSPredicate(format: "timeStamp = %@ && isSessionType == 1", argumentArray: [self.currentRequisition.timeStamp])
                 self.testOptions = MicrobialFeatherpulpServiceTestSampleInfo.fetchDataOfTestOptions(predicate: predicateForTest)
@@ -100,7 +102,7 @@ class FeatherPulpVC: BaseViewController {
             
         case .SHOW_DRAFT_FOR_EDITING:
         self.currentRequisition.setDataOfDraftOrSubmittedRequisition(self.featherPulpData)
-            let predicate = NSPredicate(format: "timeStamp = %@ AND isSessionPlate == 0", argumentArray: [self.currentRequisition.timeStamp])
+            let predicate = NSPredicate(format: timeStampSessionPlate, argumentArray: [self.currentRequisition.timeStamp])
             self.plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]
             let predicateForTest = NSPredicate(format: "timeStamp = %@ && isSessionType == 0", argumentArray: [self.currentRequisition.timeStamp])
             self.testOptions = MicrobialFeatherpulpServiceTestSampleInfo.fetchDataOfTestOptions(predicate: predicateForTest)
@@ -109,7 +111,7 @@ class FeatherPulpVC: BaseViewController {
             
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
             self.currentRequisition.setDataOfDraftOrSubmittedRequisition(self.featherPulpData)
-            let predicate = NSPredicate(format: "timeStamp = %@ AND isSessionPlate == 0", argumentArray: [self.currentRequisition.timeStamp])
+            let predicate = NSPredicate(format: timeStampSessionPlate, argumentArray: [self.currentRequisition.timeStamp])
             self.plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]
             
             let predicateForTest = NSPredicate(format: "timeStamp = %@ && isSessionType == 0", argumentArray: [self.currentRequisition.timeStamp])
@@ -129,7 +131,7 @@ class FeatherPulpVC: BaseViewController {
         CoreDataHandlerMicro().deleteWithPredicatesFeaherPulpSampleInfo("MicrobialFeatherPulpSampleInfo")
         MicrobialFeatherPulpSampleInfo.addSingleFarmDetails(isSessionPlate: true, plateId: 1, timeStamp: self.currentRequisition.timeStamp)
         let id = UserDefaults.standard.integer(forKey: "sessionId")
-        let predicate = NSPredicate(format: "sessionId = %d AND isSessionPlate == 1", argumentArray: [id])
+        let predicate = NSPredicate(format: sessionIdPlate, argumentArray: [id])
         plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]
         let tests = CoreDataHandlerMicro().fetchDetailsFor(entityName: "MicrobialFeatherPulpTestOptions") as! [MicrobialFeatherPulpTestOptions]
         for testOption in tests{
@@ -447,7 +449,7 @@ class FeatherPulpVC: BaseViewController {
         case Constants.ClickedFieldMicrobialSurvey.specimenType:
             self.plateArr[0].specimenType = selectedValue
             self.plateArr[0].specimenTypeId = self.currentRequisition.getSpecimenTypeId(specimen: selectedValue) as NSNumber
-            let predicate = NSPredicate(format: "timeStamp = %@", argumentArray: [self.currentRequisition.timeStamp])
+            let predicate = NSPredicate(format: timeStampStr, argumentArray: [self.currentRequisition.timeStamp])
             MicrobialFeatherPulpSampleInfo.updateSpecimenTypeId(value: self.plateArr[0].specimenTypeId?.intValue ?? 0, predicate: predicate)
         case Constants.ClickedFieldMicrobialSurvey.company:
             
@@ -526,7 +528,7 @@ class FeatherPulpVC: BaseViewController {
             CoreDataHandlerMicro().saveCaseInfoDataInToDB(requestor: currentRequisition.requestor, sampleCollectedBy: currentRequisition.sampleCollectedBy, company: currentRequisition.company, companyId: self.currentRequisition.companyId, site: currentRequisition.site, siteId: self.currentRequisition.siteId, email: "", reviewer: currentRequisition.reviewer, surveyConductedOn:"", sampleCollectionDate: currentRequisition.sampleCollectionDate, sampleCollectionDateWithTimeStamp: "", purposeOfSurvey: "", transferIn: "", barCode: currentRequisition.barCode, barCodeManualEntered: currentRequisition.barCodeManualEntered, notes: currentRequisition.notes, reasonForVisit: currentRequisition.reasonForVisit, currentdate: currentRequisition.currentdate, customerId: "", requisitionType: currentRequisition.requisitionType.rawValue, sessionStatus: sessionStatus.rawValue, requisition_Id: currentRequisition.barCode, timeStamp: currentRequisition.timeStamp, isPlateIdGenerated: false, typeOfBird: currentRequisition.typeOfBird, typeOfBirdId: currentRequisition.typeOfBirdId, reviewerId: currentRequisition.reviewerId, purposeOfSurveyId: -100, surveyConductedOnId: -100, reasonForVisitId: currentRequisition.reasonForVisitId)
             CoreDataHandlerMicro().deleteAllData("Microbial_EnviromentalSessionInProgress")
             CoreDataHandlerMicro().updatePlateIDInfoForFeatherPulp(timeStamp: self.currentRequisition.timeStamp)
-            let predicate = NSPredicate(format: "timeStamp = %@", argumentArray: [self.currentRequisition.timeStamp])
+            let predicate = NSPredicate(format: timeStampStr, argumentArray: [self.currentRequisition.timeStamp])
             MicrobialFeatherpulpServiceTestSampleInfo.updateBoolTypesTestOptions(key: "isSessionType", value: false, predicate: predicate)
             let predicateMicrobialSelectedUnselectedReviewer = NSPredicate(format: "isSessionType = %d", argumentArray: [true])
             MicrobialSelectedUnselectedReviewer.updateTimeStampFromSession(predicate: predicateMicrobialSelectedUnselectedReviewer, timeStamp: self.currentRequisition.timeStamp)
@@ -722,14 +724,14 @@ class FeatherPulpVC: BaseViewController {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
             CoreDataHandlerMicro().saveFeatherPulpSampleInfoDataInDB(plate, plateId: plateId, flockId: "", houseNo: "", sampleDescriptiopn: "", additionalTests: "Bacterial", checkMark: "true", microsporeCheck: "false", sessionId: sessionId, timeStamp: self.currentRequisition.timeStamp, isSessionPlate: true)
             plateArr.removeAll()
-            let predicate = NSPredicate(format: "sessionId = %d AND isSessionPlate == 1", argumentArray: [sessionId])
+            let predicate = NSPredicate(format: sessionIdPlate, argumentArray: [sessionId])
             plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]
 //            plateArr =  CoreDataHandlerMicro().fetchFeatherPulpSampleInfo(sessionId)hgfiureyuiheriu
         
         case .SHOW_DRAFT_FOR_EDITING:
             CoreDataHandlerMicro().saveFeatherPulpSampleInfoDataInDB(plate, plateId: plateId, flockId: "", houseNo: "", sampleDescriptiopn: "", additionalTests: "Bacterial", checkMark: "true", microsporeCheck: "false", sessionId: sessionId, timeStamp: self.currentRequisition.timeStamp, isSessionPlate: false)
             plateArr.removeAll()
-            let predicate = NSPredicate(format: "timeStamp = %@ AND isSessionPlate == 0", argumentArray: [self.currentRequisition.timeStamp])
+            let predicate = NSPredicate(format: timeStampSessionPlate, argumentArray: [self.currentRequisition.timeStamp])
             self.plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]
 //            plateArr =  CoreDataHandlerMicro().fetchFeatherPulpSampleInfo(sessionId)
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
@@ -749,14 +751,14 @@ class FeatherPulpVC: BaseViewController {
                 let predicateToDelete = NSPredicate(format: "sessionId = %d AND isSessionPlate == 1 AND plateId == %d", argumentArray: [sessionId, plateArr.last?.plateId?.intValue])
                 CoreDataHandlerMicro().deleteLastRowFeatherPulpData(predicate: predicateToDelete)
                 plateArr.removeAll()
-                let predicateToFetch = NSPredicate(format: "sessionId = %d AND isSessionPlate == 1", argumentArray: [sessionId])
+                let predicateToFetch = NSPredicate(format: sessionIdPlate, argumentArray: [sessionId])
                 plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicateToFetch) as! [MicrobialFeatherPulpSampleInfo]
 
             case .SHOW_DRAFT_FOR_EDITING:
                 let predicateToDelete = NSPredicate(format: "timeStamp = %@ AND isSessionPlate == 0 AND plateId == %d", argumentArray: [timeStamp, plateArr.last?.plateId?.intValue])
                 CoreDataHandlerMicro().deleteLastRowFeatherPulpData(predicate: predicateToDelete)
                 plateArr.removeAll()
-                let predicateToFetch = NSPredicate(format: "timeStamp = %@ AND isSessionPlate == 0", argumentArray: [timeStamp])
+                let predicateToFetch = NSPredicate(format: timeStampSessionPlate, argumentArray: [timeStamp])
                 plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicateToFetch) as! [MicrobialFeatherPulpSampleInfo]
                 
             case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
@@ -830,7 +832,7 @@ class FeatherPulpVC: BaseViewController {
     
     
     func textFieldDidEndEditingForCell(indexPath: IndexPath, cell: FeatherpulpSampleInfoTableViewCell, textField: UITextField){
-        let predicate = NSPredicate(format: "timeStamp = %@", argumentArray: [self.currentRequisition.timeStamp])
+        let predicate = NSPredicate(format: timeStampStr, argumentArray: [self.currentRequisition.timeStamp])
         var key = ""
         var value = ""
         switch textField {
@@ -1071,13 +1073,13 @@ extension FeatherPulpVC : UITextFieldDelegate, UITextViewDelegate {
         let sessionId = UserDefaults.standard.integer(forKey: "sessionId")
         switch  self.requisitionSavedSessionType{
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
-            let predicate = NSPredicate(format: "sessionId = %d AND isSessionPlate == 1", argumentArray: [sessionId])
+            let predicate = NSPredicate(format: sessionIdPlate, argumentArray: [sessionId])
 
             MicrobialFeatherPulpSampleInfo.updatePlateIdGenerates(entity: "MicrobialFeatherPulpSampleInfo", predicate: predicate, barcode: self.currentRequisition.barCode)
             
             
         case .SHOW_DRAFT_FOR_EDITING:
-            let predicate = NSPredicate(format: "timeStamp = %@ AND isSessionPlate == 0", argumentArray: [self.currentRequisition.timeStamp])
+            let predicate = NSPredicate(format: timeStampSessionPlate, argumentArray: [self.currentRequisition.timeStamp])
             MicrobialFeatherPulpSampleInfo.updatePlateIdGenerates(entity: "MicrobialFeatherPulpSampleInfo", predicate: predicate, barcode: self.currentRequisition.barCode)
             
             
@@ -1090,11 +1092,11 @@ extension FeatherPulpVC : UITextFieldDelegate, UITextViewDelegate {
         let sessionId = UserDefaults.standard.integer(forKey: "sessionId")
         switch self.requisitionSavedSessionType {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
-            let predicateToFetch = NSPredicate(format: "sessionId = %d AND isSessionPlate == 1", argumentArray: [sessionId])
+            let predicateToFetch = NSPredicate(format: sessionIdPlate, argumentArray: [sessionId])
             plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicateToFetch) as! [MicrobialFeatherPulpSampleInfo]
             
         case .SHOW_DRAFT_FOR_EDITING:
-            let predicateToFetch = NSPredicate(format: "timeStamp = %@ AND isSessionPlate == 0", argumentArray: [self.currentRequisition.timeStamp])
+            let predicateToFetch = NSPredicate(format: timeStampSessionPlate, argumentArray: [self.currentRequisition.timeStamp])
             plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicateToFetch) as! [MicrobialFeatherPulpSampleInfo]
             
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
@@ -1109,14 +1111,14 @@ extension FeatherPulpVC : UITextFieldDelegate, UITextViewDelegate {
             let predicate = NSPredicate(format: "sessionId = %d AND isSessionPlate == 1 AND plateId == %d", argumentArray: [sessionId, plateArr[indexPath.row].plateId])
             CoreDataHandlerMicro().updateFeatherPulpSampledesc(plateData: plateArr[indexPath.row], predicate: predicate)
             plateArr.removeAll()
-            let predicateToFetch = NSPredicate(format: "sessionId = %d AND isSessionPlate == 1", argumentArray: [sessionId])
+            let predicateToFetch = NSPredicate(format: sessionIdPlate, argumentArray: [sessionId])
             plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicateToFetch) as! [MicrobialFeatherPulpSampleInfo]
 
         case .SHOW_DRAFT_FOR_EDITING:
             let predicate = NSPredicate(format: "timeStamp = %@ AND isSessionPlate == 0 AND plateId == %d", argumentArray: [timeStamp, plateArr[indexPath.row].plateId])
             CoreDataHandlerMicro().updateFeatherPulpSampledesc(plateData: plateArr[indexPath.row], predicate: predicate)
             plateArr.removeAll()
-            let predicateToFetch = NSPredicate(format: "timeStamp = %@ AND isSessionPlate == 0", argumentArray: [timeStamp])
+            let predicateToFetch = NSPredicate(format: timeStampSessionPlate, argumentArray: [timeStamp])
             plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicateToFetch) as! [MicrobialFeatherPulpSampleInfo]
 
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break

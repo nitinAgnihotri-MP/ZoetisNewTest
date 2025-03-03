@@ -37,8 +37,8 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
     @IBOutlet weak var lblPersonName: UILabel!
     @IBOutlet weak var txtPersonName: PEFormTextfield!
     @IBOutlet weak var viewPersonName: UIView!
-    
-    
+    let amPmStr = "AM/PM Value *"
+    let ppmValStr = "PPM Value *"
     // MARK: - VARIABLES
     var lastPPMText : String?
     var ppmText : String?
@@ -174,7 +174,7 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
     func showAMPMValuetextField()  {
         hideFrequencyFields()
         lblQCCount.isHidden = false
-        lblQCCount.text = "AM/PM Value *"
+        lblQCCount.text = amPmStr
         questionDistanceFromSwitch.constant = 290
         textFieldView.isHidden = false
         txtQCCount.placeholder = "AM/PM Value"
@@ -185,7 +185,7 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
     func showPPMField() {
         hideFrequencyFields()
         lblQCCount.isHidden = false
-        lblQCCount.text = "PPM Value *"
+        lblQCCount.text = ppmValStr
         questionDistanceFromSwitch.constant = 290
         textFieldView.isHidden = false
         txtQCCount.placeholder = "PPM Value"
@@ -196,7 +196,7 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
     func hidePPMfield() {
         hideFrequencyFields()
         lblQCCount.isHidden = true
-        lblQCCount.text = "PPM Value *"
+        lblQCCount.text = ppmValStr
         txtQCCount.placeholder = "PPM Value"
         questionDistanceFromSwitch.constant = 10
         textFieldView.isHidden = true
@@ -209,7 +209,7 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
         
         hideFrequencyFields()
         lblQCCount.isHidden = true
-        lblQCCount.text = "AM/PM Value *"
+        lblQCCount.text = amPmStr
         txtQCCount.placeholder = "AM/PM Value"
         questionDistanceFromSwitch.constant = 10
         textFieldView.isHidden = true
@@ -230,8 +230,8 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
         
     }
     
-    func switchClicked(status: Bool) {
-    }
+//    func switchClicked(status: Bool) {
+//    }
     
     
     
@@ -241,8 +241,8 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
     }
     // MARK: - IB ACTIONS
     
-    @IBAction func cameraBtnCLicked(_ sender: Any) {
-    }
+//    @IBAction func cameraBtnCLicked(_ sender: Any) {
+//    }
     
     @IBAction func na_BtnClicked(_ sender: Any) {
         btnNA?()
@@ -276,9 +276,9 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
         
     }
     
-    @IBAction func switchAction(_ sender: UISwitch) {
-        
-    }
+//    @IBAction func switchAction(_ sender: UISwitch) {
+//        
+//    }
     
     @IBAction func commentClicked(_ sender: Any) {
         commentCompletion?(nil)
@@ -290,15 +290,14 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
     
     // MARK: - TEXTFIELD DELEGATES
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         if textField == txtQCCount {
-            if lblQCCount.text == "AM/PM Value *"{
+            if lblQCCount.text == amPmStr{
                 txtAMPMCompletion?(textField.text)
             }
-            else if lblQCCount.text == "PPM Value *"{
+            else if lblQCCount.text == ppmValStr{
                 
                 if ppmText != textField.text{
                     ppmText = textField.text
@@ -343,7 +342,7 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == txtQCCount {
             var maxLength = 0
-            if lblQCCount.text == "PPM Value *"
+            if lblQCCount.text == ppmValStr
             {
                 maxLength = 4
             }

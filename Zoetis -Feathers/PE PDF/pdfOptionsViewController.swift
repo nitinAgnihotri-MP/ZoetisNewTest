@@ -190,11 +190,7 @@ class pdfOptionsViewController: BaseViewController , UITableViewDelegate, UITabl
             self.dismissGlobalHUD(self.view ?? UIView())
             let errorMSg = "The file has been saved under the iPad Files option ( Path - On My Ipad option -> PoultryView 360 Folder -> Download )"
             let alertController = UIAlertController(title: "Download Completed", message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
-                _ in
-                
-                
-            }
+            let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default)
             let cancelAction = UIAlertAction(title: "Preview", style: UIAlertAction.Style.default) {
                 _ in
                 

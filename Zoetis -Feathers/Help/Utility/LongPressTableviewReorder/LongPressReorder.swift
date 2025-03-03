@@ -293,6 +293,7 @@ extension UIViewController: LongPressReorder {
      - Parameter newIndex: New position of row inside the table
      */
     open func positionChanged(currentIndex: IndexPath, newIndex: IndexPath) {
+        print(newIndex, currentIndex)
     }
 
     /**
@@ -302,6 +303,7 @@ extension UIViewController: LongPressReorder {
      - Parameter finalIndex: Final position of row inside the table, when the long press gesture finishes
      */
     open func reorderFinished(initialIndex: IndexPath, finalIndex: IndexPath) {
+        print(finalIndex, initialIndex)
     }
 
     /**

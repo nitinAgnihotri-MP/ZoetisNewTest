@@ -4070,8 +4070,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     @IBAction func deleteBirds(_ sender: AnyObject) {
         
         let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Are you sure you want to delete this bird? You will lose the data by deleting this bird.", comment: ""), preferredStyle: .alert)
-        let action1 = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .default) { (action:UIAlertAction) in
-        }
+        let action1 = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .default)
         let action2 = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel) { (action:UIAlertAction) in
             self.isFirstTimeLaunch = false
             let formName = UserDefaults.standard.value(forKey: "farm") as! String

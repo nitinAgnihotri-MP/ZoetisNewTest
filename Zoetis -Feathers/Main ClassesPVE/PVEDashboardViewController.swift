@@ -213,10 +213,7 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
                     _ in
                     self.syncBtnTapped()
                 }
-                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-                    _ in
-                    
-                }
+                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
                 alertController.addAction(okAction)
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true, completion: nil)
@@ -696,10 +693,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     func forceSyncMessage(){
         let errorMSg = Constants.forceSyncMessage
         let alertController = UIAlertController(title: "Alert!", message: errorMSg, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
-            _ in
-            
-        }
+        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default)
         alertController.addAction(okAction)
         // alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)

@@ -59,14 +59,6 @@ extension Vaccine_NoteTypeCell: UITextFieldDelegate {
         self.endEditing(true)
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        
-        
-    }
-    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let idArr = (QuesIdArr).value(forKey: "id") as? [Int]

@@ -230,12 +230,19 @@ enum ZoetisArt {
     }
     
     struct Font {
-        static let light = "SFProText-Regular"
+        static let light = Font.regular
         static let regular = "SFProText-Regular"
-        static let medium = "SFProText-Regular"
-        static let semiBold = "SFProText-Regular"
-        static let bold = "SFProText-Regular"
+        static let medium = Font.regular
+        static let semiBold = Font.regular
+        static let bold = Font.regular
     }
+//    struct Font {
+//        static let light = "SFProText-Regular"
+//        static let regular = "SFProText-Regular"
+//        static let medium = "SFProText-Regular"
+//        static let semiBold = "SFProText-Regular"
+//        static let bold = "SFProText-Regular"
+//    }
     
     struct SfProTextFont {
         

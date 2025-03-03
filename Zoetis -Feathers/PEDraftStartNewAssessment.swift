@@ -1913,11 +1913,6 @@ extension PEDraftStartNewAssessment:UITextViewDelegate{
             checkBackAndSave()
         }
     }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
-    }
-    
 }
 
 // MARK: - WebServices
@@ -1945,10 +1940,7 @@ extension PEDraftStartNewAssessment {
 }
 // MARK: Extension & Textfield Delegates
 extension PEDraftStartNewAssessment : UITextFieldDelegate{
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-    }
+    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         return true;
     }

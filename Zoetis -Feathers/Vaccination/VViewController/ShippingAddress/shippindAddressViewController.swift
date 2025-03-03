@@ -229,9 +229,7 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
         }
         else {
             let alertController = UIAlertController(title: "Alert", message: "Please select a country first.", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
         }
@@ -289,9 +287,7 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
     
     func showValidationAlert(alertText : String) {
         let alertController = UIAlertController(title: "Alert", message: alertText, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
-            _ in
-        }
+        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default)
         alertController.addAction(okAction)
         self.present(alertController, animated: true, completion: nil)
     }

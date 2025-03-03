@@ -2318,11 +2318,6 @@ extension PEStartNewAssessment:UITextViewDelegate{
             checkBackAndSave()
         }
     }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
-    }
-    
 }
 
 // MARK: - WebServices
@@ -2388,11 +2383,8 @@ extension PEStartNewAssessment : UITextFieldDelegate{
                 }
             }
         }
-        
     }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        
-    }
+    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         
         return true;

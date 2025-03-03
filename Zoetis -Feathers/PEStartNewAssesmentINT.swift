@@ -2397,10 +2397,6 @@ extension PEStartNewAssessmentINT:UITextViewDelegate{
             checkBackAndSave()
         }
     }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-    }
-    
 }
 
 // MARK: - WebServices
@@ -2465,9 +2461,7 @@ extension PEStartNewAssessmentINT : UITextFieldDelegate{
         }
         
     }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        
-    }
+
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         
         return true;

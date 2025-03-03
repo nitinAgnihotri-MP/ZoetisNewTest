@@ -127,7 +127,7 @@ class VaccinationDashboardVC: BaseViewController{
         } else {
             let errorMSg = "Data not available for sync"
             let alertController = UIAlertController(title: "No data available", message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { _ in }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
         }
@@ -253,9 +253,7 @@ class VaccinationDashboardVC: BaseViewController{
         else{
             let errorMSg = "Data not available for sync"
             let alertController = UIAlertController(title: "No data available", message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                _ in
-            }
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             alertController.addAction(okAction)
             //                alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -379,7 +377,6 @@ class VaccinationDashboardVC: BaseViewController{
         let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            
             self.submitCertifications()
         }
         let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
@@ -395,10 +392,7 @@ class VaccinationDashboardVC: BaseViewController{
     func forceSyncMessage(){
         let errorMSg = Constants.forceSyncMessage
         let alertController = UIAlertController(title: "Alert!", message: errorMSg, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
-            _ in
-            
-        }
+        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default)
         alertController.addAction(okAction)
         self.present(alertController, animated: true, completion: nil)
     }
@@ -409,10 +403,9 @@ class VaccinationDashboardVC: BaseViewController{
             let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
-                
                 self.submitCertifications()
-                
             }
+            
             let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil)
             alertController.addAction(cancelAction)
             alertController.addAction(okAction)

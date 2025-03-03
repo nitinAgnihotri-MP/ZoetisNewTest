@@ -1660,9 +1660,7 @@ extension PVEViewFinalizeAssement: UICollectionViewDelegate, UICollectionViewDat
             _ in
             self.singleDataSync()
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-            _ in
-        }
+        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)

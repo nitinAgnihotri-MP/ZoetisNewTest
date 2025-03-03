@@ -553,10 +553,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 self.pullFromWeb()
                 return
             }
-            let CancelAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default) {
-                UIAlertAction in
-                NSLog("Cancel Pressed")
-            }
+            let CancelAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default)
             alertController.addAction(CancelAction)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
@@ -568,10 +565,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 self.pullFromWeb()
                 return
             }
-            let CancelAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default) {
-                UIAlertAction in
-                NSLog("Cancel Pressed")
-            }
+            let CancelAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default)
             alertController.addAction(CancelAction)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)

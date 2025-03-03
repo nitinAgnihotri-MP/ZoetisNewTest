@@ -20,7 +20,7 @@ class HatcherySelectionViewController: BaseViewController {
      @IBOutlet weak var btnMicrobial: UIButton!
      @IBOutlet weak var labelMicrobial: UILabel!
     @IBOutlet weak var labelVaccination: UILabel!
-     
+     let vesionStr = "Version "
      @IBOutlet weak var lblVersionName: UILabel!
      
     var regionID = Int()
@@ -58,19 +58,19 @@ class HatcherySelectionViewController: BaseViewController {
           
           switch liveAlbums {
           case 0:
-               lblVersionName.text = "Version " + Bundle.main.versionNumber + " (UAT)"
+               lblVersionName.text = vesionStr + Bundle.main.versionNumber + " (UAT)"
 
           case 1:
-               lblVersionName.text = "Version " + Bundle.main.versionNumber + " (Dev)"
+               lblVersionName.text = vesionStr + Bundle.main.versionNumber + " (Dev)"
 
           case 2:
-               lblVersionName.text = "Version " + Bundle.main.versionNumber + " (Dev Support)"
+               lblVersionName.text = vesionStr + Bundle.main.versionNumber + " (Dev Support)"
               
           case 3:
-               lblVersionName.text = "Version " + Bundle.main.versionNumber
+               lblVersionName.text = vesionStr + Bundle.main.versionNumber
 
           default:
-               lblVersionName.text = "Version " + Bundle.main.versionNumber
+               lblVersionName.text = vesionStr + Bundle.main.versionNumber
           }
           
           let ModuleIdsArray =   UserDefaults.standard.string(forKey:"ModuleIdsArray")

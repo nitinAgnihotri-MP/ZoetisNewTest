@@ -890,10 +890,7 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
             self.dismiss(animated: true, completion: nil)
             
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction!) in
-            print("Cancel button tapped");
-            
-        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alertController.addAction(OKAction)
         alertController.addAction(cancelAction)
         

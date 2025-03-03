@@ -173,8 +173,8 @@ class PE_SessionIntCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    @IBAction func idInfoClicked(sender: UIButton) {
-    }
+//    @IBAction func idInfoClicked(sender: UIButton) {
+//    }
     
 }
 

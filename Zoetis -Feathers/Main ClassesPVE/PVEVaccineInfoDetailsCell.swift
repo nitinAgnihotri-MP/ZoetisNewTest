@@ -181,12 +181,6 @@ extension PVEVaccineInfoDetailsCell: UITextFieldDelegate{
         self.endEditing(true)
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-    }
-    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
@@ -237,8 +231,6 @@ extension PVEVaccineInfoDetailsCell: UITextFieldDelegate{
 
 extension PVEVaccineInfoDetailsCell: UITextViewDelegate {
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-    }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         textView.backgroundColor = UIColor.white

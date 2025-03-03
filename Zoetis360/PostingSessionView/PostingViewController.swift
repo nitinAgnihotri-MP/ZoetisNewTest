@@ -1827,10 +1827,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     // MARK: 🟠  Alert Message to add Feed Program
     func showAlert(){
         let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel) {
-            UIAlertAction in
-            
-        }
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel)
         let okAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default) {
             UIAlertAction in
             CoreDataHandler().deleteDataWithPostingId(self.postingId as NSNumber)
@@ -2121,14 +2118,11 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                     UserDefaults.standard.set(custmetIdDb, forKey: "unCustId")
                     UserDefaults.standard.synchronize()
                     
-                    if UserDefaults.standard.bool(forKey: "Unlinked") == true
-                    {
+                    if UserDefaults.standard.bool(forKey: "Unlinked") == true {
                         VetrationArr = CoreDataHandler().fetchVetDataPrdicate(unComplexId as NSNumber)
-                    }
-                    else{
+                    } else {
                         VetrationArr = CoreDataHandler().fetchVetDataPrdicate(str.complexId!)
                     }
-                    
                     isClickOnAnyField = true
                 }
                 

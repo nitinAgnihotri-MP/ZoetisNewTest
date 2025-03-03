@@ -70,49 +70,45 @@ class BlankPDFViewController: BaseViewController {
     
     // MARK: Share Blank PDF File in iPad Device .
     @IBAction func shareBtnAction(_ sender: Any) {
-
+        
         let request = URLRequest(url:  URL(string: "\(pdfURL as URL)")!)
-                let config = URLSessionConfiguration.default
-                let session =  URLSession(configuration: config)
-                let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
-                    if error == nil{
-                        if let pdfData = data {
-                           let pathURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\("Blank").PDF")
-                            do {
-                                try pdfData.write(to: pathURL, options: .atomic)
-                            }catch{
-                                print("Error while writting")
-                            }
-
-                            DispatchQueue.main.async {
-                                debugPrint(pathURL)
-                                
-                                let fileManager = FileManager.default
-                                let documentoPath = "Blank.PDF"
-                                if fileManager.fileExists(atPath: documentoPath){
-                                  let url = URL(fileURLWithPath: documentoPath)
-                                  let activityViewController: UIActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                                  activityViewController.popoverPresentationController?.sourceView=self.view
-                                  self.present(activityViewController, animated: true, completion: nil)
-                                }else {
-                                    let url = URL(fileURLWithPath: "\(pathURL)")
-                                            let vc = UIActivityViewController(activityItems: [url], applicationActivities: [])
-                                            vc.popoverPresentationController?.sourceView = self.view
-                                            vc.excludedActivityTypes = [UIActivity.ActivityType.airDrop]
-                                            vc.popoverPresentationController?.sourceRect = CGRect(x: self.view.center.x, y: self.view.center.y, width: 0, height: 0)
-                                            vc.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
-                                            self.present(vc, animated: true)
-                                }
-                                
-
-                            }
-                        }
-                    }else{
-                        print(error?.localizedDescription ?? "")
-                    }
-                }); task.resume()
+        let config = URLSessionConfiguration.default
+        let session =  URLSession(configuration: config)
+        let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
+            if error == nil, let pdfData = data {
+                //                if let pdfData = data {
+                let pathURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\("Blank").PDF")
+                do {
+                    try pdfData.write(to: pathURL, options: .atomic)
+                }catch{
+                    print("Error while writting")
+                }
                 
-
+                DispatchQueue.main.async {
+                    debugPrint(pathURL)
+                    
+                    let fileManager = FileManager.default
+                    let documentoPath = "Blank.PDF"
+                    if fileManager.fileExists(atPath: documentoPath){
+                        let url = URL(fileURLWithPath: documentoPath)
+                        let activityViewController: UIActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                        activityViewController.popoverPresentationController?.sourceView=self.view
+                        self.present(activityViewController, animated: true, completion: nil)
+                    }else {
+                        let url = URL(fileURLWithPath: "\(pathURL)")
+                        let vc = UIActivityViewController(activityItems: [url], applicationActivities: [])
+                        vc.popoverPresentationController?.sourceView = self.view
+                        vc.excludedActivityTypes = [UIActivity.ActivityType.airDrop]
+                        vc.popoverPresentationController?.sourceRect = CGRect(x: self.view.center.x, y: self.view.center.y, width: 0, height: 0)
+                        vc.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
+                        self.present(vc, animated: true)
+                    }
+                    
+                    
+                }
+                //                }
+            }
+        }); task.resume()
     }
  
     // MARK: Download Blank PDF File in iPad Device .

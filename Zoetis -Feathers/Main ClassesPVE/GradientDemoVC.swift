@@ -26,8 +26,4 @@ class GradientDemoVC: UIViewController{
     @IBAction func actionMenu(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
-    
-    @IBAction func btnAction(_ sender: Any) {
-    }
-    
 }

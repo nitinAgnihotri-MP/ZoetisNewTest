@@ -135,8 +135,8 @@ class HelpViewController: UIViewController, userLogOut, UIScrollViewDelegate, sy
         self.dasBoradPush()
     }
     
-    @IBAction func declinetButton(_ sender: AnyObject) {
-    }
+//    @IBAction func declinetButton(_ sender: AnyObject) {
+//    }
     
     func dasBoradPush() {
         

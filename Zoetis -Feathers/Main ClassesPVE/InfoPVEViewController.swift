@@ -28,28 +28,25 @@ class InfoPVEViewController: BaseViewController {
         
         lblQText.text = questionIs
         lblQuestionText.text = questionDescriptionIs
+        viewPdfBtn.isHidden = true
         
         let imageUrl = URL(string: imageUrlString)!
-        let imageData = try! Data(contentsOf: imageUrl)
-        imgView.image = UIImage(data: imageData)
-        
+        if let imageData = try? Data(contentsOf: imageUrl) {
+            imgView.image = UIImage(data: imageData)
+        }
         if questionId == "104" || questionId == "106" {
             viewPdfBtn.isHidden = false
         }
-        else{
-            viewPdfBtn.isHidden = true
-        }
-
     }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-            super.touchesBegan(touches, with: event)
-            let touch: UITouch = touches.first!
-            if (touch.view?.tag == 1111){
-                self.dismiss(animated: true, completion: nil)
-            }
+        super.touchesBegan(touches, with: event)
+        let touch: UITouch = touches.first!
+        if (touch.view?.tag == 1111){
+            self.dismiss(animated: true, completion: nil)
+        }
     }
-
-  
+    
     @IBAction func crossClicked(_ sender: Any) {
          self.dismiss(animated: true, completion: nil)
     }

@@ -18,7 +18,7 @@ class GrownoutSelectionViewController: BaseViewController {
     @IBOutlet weak var labelPE: UILabel!
     @IBOutlet weak var btnMicrobial: UIButton!
     @IBOutlet weak var labelMicrobial: UILabel!
-    
+    let versionStr = "Version "
     var bottomViewController:BottomViewController!
     var path: UIBezierPath!
     
@@ -64,19 +64,19 @@ class GrownoutSelectionViewController: BaseViewController {
 
         switch liveAlbums {
         case 0:
-            lblVersion.text = "Version " + Bundle.main.versionNumber + " (UAT)"
+            lblVersion.text = versionStr + Bundle.main.versionNumber + " (UAT)"
 
         case 1:
-            lblVersion.text = "Version " + Bundle.main.versionNumber + " (Dev)"
+            lblVersion.text = versionStr + Bundle.main.versionNumber + " (Dev)"
 
         case 2:
-            lblVersion.text = "Version " + Bundle.main.versionNumber + " (Dev Support)"
+            lblVersion.text = versionStr + Bundle.main.versionNumber + " (Dev Support)"
             
         case 3:
-            lblVersion.text = "Version " + Bundle.main.versionNumber
+            lblVersion.text = versionStr + Bundle.main.versionNumber
 
         default:
-            lblVersion.text = "Version " + Bundle.main.versionNumber
+            lblVersion.text = versionStr + Bundle.main.versionNumber
         }        
       
     }
@@ -106,7 +106,7 @@ class GrownoutSelectionViewController: BaseViewController {
         
     }
     @IBAction func clickedGrowout(_ sender: Any) {
-        
+        print("clickedGrowout")
     }
     
     @IBAction func microbialClicked(_ sender: Any) {

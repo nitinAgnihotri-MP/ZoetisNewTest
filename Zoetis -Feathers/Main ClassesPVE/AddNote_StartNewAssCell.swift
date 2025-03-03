@@ -50,8 +50,6 @@ extension AddNote_StartNewAssCell: UITextViewDelegate {
     }
     
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-     }
      
      func textViewDidEndEditing(_ textView: UITextView) {
          textView.backgroundColor = UIColor.white

@@ -277,8 +277,8 @@ class PE_SessionCell: UITableViewCell {
     
     // MARK: - IBACTIONS
 
-    @IBAction func idInfoClicked(sender: UIButton) {
-    }
+//    @IBAction func idInfoClicked(sender: UIButton) {
+//    }
     
     
 }

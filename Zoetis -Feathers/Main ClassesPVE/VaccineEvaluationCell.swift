@@ -544,9 +544,6 @@ class VaccineEvaluationCell: UITableViewCell {
 
 extension VaccineEvaluationCell: UITextViewDelegate {
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        //textView.backgroundColor = UIColor.lightGray
-    }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         textView.backgroundColor = UIColor.white
@@ -585,13 +582,6 @@ extension VaccineEvaluationCell: UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
-    }
-    
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {}
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

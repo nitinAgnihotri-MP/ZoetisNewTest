@@ -18,11 +18,6 @@ class DraftsViewModel {
     private let locationTypeHeaders = "Microbial_LocationTypeHeadersSubmitted"
     private let locationTypePlates = "Microbial_LocationTypeHeaderPlatesSubmitted"
     
-    init() {
-        
-        
-    }
-    
 
     func getData() -> [Microbial_EnviromentalSurveyFormSubmitted]{
         let caseInfoForrequistion = CoreDataHandlerMicro().fetchDataFromDraftsAndRequisition(draftOrSubmit: SessionStatus.saveAsDraft.rawValue, entityName: "Microbial_EnviromentalSurveyFormSubmitted")

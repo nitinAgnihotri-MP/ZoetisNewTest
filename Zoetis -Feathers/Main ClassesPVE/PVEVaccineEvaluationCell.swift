@@ -125,13 +125,6 @@ extension PVEVaccineEvaluationCell: UITextFieldDelegate{
     func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.endEditing(true)
     }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-    }
-    
     func resetAllFields()  {
         
         centerLTxtField.text = "0"

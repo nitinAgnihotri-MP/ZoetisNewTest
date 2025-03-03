@@ -15,7 +15,9 @@ class ZoetisWebServices: BaseViewController {
     
     static let shared = ZoetisWebServices()
     var viewController = UIViewController()
-    
+    let languageIdStr = "&LanguageId=1"
+    let countryIdStr = "&CountryId="
+    let regionIdStr = "&RegionId="
     enum EndPoint: String {
         case login = "Token"
         //        case getPostingSessionList = "/ProcessEvaluation/API/api/PostingSession/GetPostingSessionListByUser?UserId="
@@ -402,7 +404,7 @@ extension ZoetisWebServices {
     /* Get Chlorine strip List */
     func getClorineStripsForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getPEClorine.latestUrl + "RegionId=" + String(Regionid)  + "&LanguageId=1"
+        let url = EndPoint.getPEClorine.latestUrl + "RegionId=" + String(Regionid)  + languageIdStr
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -426,7 +428,7 @@ extension ZoetisWebServices {
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryid = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getCustomerPE.latestUrl + String(id) + "&CountryId=" + String(countryid)  + "&RegionId=" + String(Regionid)
+        let url = EndPoint.getCustomerPE.latestUrl + String(id) + countryIdStr + String(countryid)  + regionIdStr + String(Regionid)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -437,7 +439,7 @@ extension ZoetisWebServices {
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         
-        let url = EndPoint.getSitesPE.latestUrl + String(id) + "&CountryId=" + String(countryId)  + "&RegionId=" + String(Regionid)
+        let url = EndPoint.getSitesPE.latestUrl + String(id) + countryIdStr + String(countryId)  + regionIdStr + String(Regionid)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -466,7 +468,7 @@ extension ZoetisWebServices {
         let id = UserDefaults.standard.integer(forKey: "Id")
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         
-        let url = EndPoint.getEvaluatorTypes.latestUrl + String(id) + "&CountryId=" + String(countryid) + "&LanguageId=1" + "&RegionId=" + String(Regionid)
+        let url = EndPoint.getEvaluatorTypes.latestUrl + String(id) + countryIdStr + String(countryid) + languageIdStr + regionIdStr + String(Regionid)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -481,7 +483,7 @@ extension ZoetisWebServices {
         let id = UserDefaults.standard.integer(forKey: "Id")
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         
-        let url = EndPoint.getBirdBreed.latestUrl  + String(id) + "&CountryId=" + String(countryid) + "&LanguageId=1" + "&RegionId=" + String(Regionid)
+        let url = EndPoint.getBirdBreed.latestUrl  + String(id) + countryIdStr + String(countryid) + languageIdStr + regionIdStr + String(Regionid)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -494,7 +496,7 @@ extension ZoetisWebServices {
         
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        let url = EndPoint.getVaccineManufacturer.latestUrl + String(id) +  "&CountryId=" + String(countryId) + "&LanguageId=1"  + "&Rollout=USC"
+        let url = EndPoint.getVaccineManufacturer.latestUrl + String(id) +  countryIdStr + String(countryId) + languageIdStr  + "&Rollout=USC"
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -502,7 +504,7 @@ extension ZoetisWebServices {
         
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        let url = EndPoint.getVaccineNames.latestUrl  + String(id)  +  "&CountryId=" + String(countryId) + "&LanguageId=1" + "&Rollout=USC"
+        let url = EndPoint.getVaccineNames.latestUrl  + String(id)  +  countryIdStr + String(countryId) + languageIdStr + "&Rollout=USC"
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -510,7 +512,7 @@ extension ZoetisWebServices {
         
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        let url = EndPoint.getSubVaccineNames.latestUrl + String(id) + "&CountryId=" + String(countryId) + "&LanguageId=1" + "&Rollout=PEI"
+        let url = EndPoint.getSubVaccineNames.latestUrl + String(id) + countryIdStr + String(countryId) + languageIdStr + "&Rollout=PEI"
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
         
     }
@@ -557,7 +559,7 @@ extension ZoetisWebServices {
     
     func getPEDOASizes( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getPEDOASizes.latestUrl + "LanguageId=1" + "&RegionId=" + String(Regionid)
+        let url = EndPoint.getPEDOASizes.latestUrl + "LanguageId=1" + regionIdStr + String(Regionid)
         
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
@@ -577,7 +579,7 @@ extension ZoetisWebServices {
         let countryid = UserDefaults.standard.integer(forKey: "nonUScountryId")
         
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getModuleAssessmentCategoriesDetailsPE.latestUrl + "Module_Id=" + moduleID +  "&CountryId=" + String(countryid) + "&LanguageId=1" + "&RegionId=" + String(Regionid) + "&EvalType=" + String(evalType) + "&Rollout="
+        let url = EndPoint.getModuleAssessmentCategoriesDetailsPE.latestUrl + "Module_Id=" + moduleID +  countryIdStr + String(countryid) + languageIdStr + regionIdStr + String(Regionid) + "&EvalType=" + String(evalType) + "&Rollout="
         
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
@@ -585,7 +587,7 @@ extension ZoetisWebServices {
     func getAssessmentQuesInfoPE( controller: UIViewController,evalType: String,moduleID: String, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getAssessmentQuesInfoPE.latestUrl  + "?RegionId=" + String(Regionid) + "&LanguageId=1"
+        let url = EndPoint.getAssessmentQuesInfoPE.latestUrl  + "?RegionId=" + String(Regionid) + languageIdStr
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -599,7 +601,7 @@ extension ZoetisWebServices {
         let siteId = parameters["siteId"] as? String ?? ""
         let countryId = parameters["countryId"] as? String ?? ""
         
-        let url = EndPoint.getVaccineMixerList.latestUrl + custId + "&SiteId=" + siteId + "&CountryId=" + countryId
+        let url = EndPoint.getVaccineMixerList.latestUrl + custId + "&SiteId=" + siteId + countryIdStr + countryId
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -607,7 +609,7 @@ extension ZoetisWebServices {
         
         let Id =  UserDefaults.standard.value(forKey: "Id") as? Int ?? 0
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getPostingAssessmentListByUserPE.latestUrl + String(Id) + "&DeviceType=ios"  + "&RegionId=" + String(Regionid)
+        let url = EndPoint.getPostingAssessmentListByUserPE.latestUrl + String(Id) + "&DeviceType=ios"  + regionIdStr + String(Regionid)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -637,7 +639,7 @@ extension ZoetisWebServices {
         
         let Id =  UserDefaults.standard.value(forKey: "Id") as? Int ?? 0
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getPERejectedAssessment.latestUrl + String(Id)  + "&RegionId=" + String(Regionid)
+        let url = EndPoint.getPERejectedAssessment.latestUrl + String(Id)  + regionIdStr + String(Regionid)
         
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
@@ -652,7 +654,7 @@ extension ZoetisWebServices {
     //getPostingAssessmentImagesListByUserPE
     func getPostingAssessmentImagesListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let Id =  UserDefaults.standard.value(forKey: "Id") as? Int ?? 0
-        let url = EndPoint.getPostingAssessmentImagesListByUserPE.latestUrl + String(Id) + "&DeviceType=ios" //+ "&CountryId=" + String(countryId) + "&RegionId=" + String(Regionid)
+        let url = EndPoint.getPostingAssessmentImagesListByUserPE.latestUrl + String(Id) + "&DeviceType=ios" //+ countryIdStr + String(countryId) + regionIdStr + String(Regionid)
         
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }

@@ -92,9 +92,7 @@ class VaccinationHeaderContainerVC: BaseViewController {
             NSLog("OK Pressed")
             self.finishSession()
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-            _ in
-        }
+        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -109,9 +107,7 @@ class VaccinationHeaderContainerVC: BaseViewController {
             NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "LogoutClicked"),object: nil))
             
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
