@@ -249,7 +249,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     override func viewDidLoad() {
@@ -552,6 +552,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         
         
         if sanitationIndex > -1{
+            print("test message")
         }
     }
     // MARK: - Setup UI
@@ -1181,7 +1182,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     func setupNewInovoCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     
@@ -1417,6 +1418,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             self.certificateData[self.tableviewIndexPath.row].name = error
                             CoreDataHandlerPE().updateVMixerInDB(peCertificateData:  self.certificateData[self.tableviewIndexPath.row], id:  self.certificateData[self.tableviewIndexPath.row].id ?? 0)
                             UIView.performWithoutAnimation {
+                                print("Test Message")
                             }
                             cell.vaccNameField.resignFirstResponder()
                             cell.vaccNameField.endEditing(true)
@@ -2655,10 +2657,10 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     }
                     
                     if assessment?.assStatus == 1 {
-                        cell.switchClicked(status: true)
+//                        cell.switchClicked(status: true)
                         cell.switchBtn.setOn(true, animated: false)
                     } else {
-                        cell.switchClicked(status: false)
+//                        cell.switchClicked(status: false)
                         cell.switchBtn.setOn(false, animated: false)
                     }
                     let imageCount = assessment?.images as? [Int]
@@ -4144,7 +4146,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     self.dropHiddenAndShow()
                 }
             }
-            headerView.hideDropdown(hide: true)
+//            headerView.hideDropdown(hide: true)
             return headerView
         } else {
             return UIView() as! PEInovojectHeaderFooterView
@@ -4730,7 +4732,7 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func updateCategoriesInShared(){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     // MARK: - Update Assessment Binding notes for every questions */
@@ -5521,7 +5523,7 @@ extension PEAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationCon
         //                    imagePicker.sourceType = .savedPhotosAlbum
         //                    imagePicker.allowsEditing = false
         //                    imagePicker.delegate = self
-        //                    present(imagePicker, animated: true, completion: {})
+        //                    present(imagePicker, animated: true, completion: {print("Test message")})
         //
         //
         //                }
@@ -5534,7 +5536,7 @@ extension PEAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationCon
                 imagePicker.sourceType = .camera
                 imagePicker.cameraCaptureMode = .photo
                 imagePicker.delegate = self
-                present(imagePicker, animated: true, completion: {})
+                present(imagePicker, animated: true, completion: {print("Test message")})
             } else {
                 postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
             }
@@ -5596,9 +5598,7 @@ extension PEAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationCon
                 }
             }
         }
-        imagePicker.dismiss(animated: true, completion: {
-            // Anything you want to happen when the user saves an image
-        })
+        imagePicker.dismiss(animated: true)
     }
     /******************************************************************************************************/
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

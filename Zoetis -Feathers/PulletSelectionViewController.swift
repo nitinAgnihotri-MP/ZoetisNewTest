@@ -78,7 +78,7 @@ class PulletSelectionViewController: BaseViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     // MARK:  **********Setup Header **************************************/
@@ -109,6 +109,7 @@ class PulletSelectionViewController: BaseViewController {
     }
     // MARK: Microbial Button Action
     @IBAction func microbialBtnClicked(_ sender: Any) {
+        appDelegate.testFuntion()
     }
     // MARK: Process Evaluation Button Action
     @IBAction func processEvalBtnClicked(_ sender: Any) {
@@ -156,7 +157,7 @@ class PulletSelectionViewController: BaseViewController {
     }
     
     private func navigateToModuleSelectionPVE(){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     // MARK:  ********** Navigate to Microbial Module **************************************/
     private func navigateToMicrobial(){

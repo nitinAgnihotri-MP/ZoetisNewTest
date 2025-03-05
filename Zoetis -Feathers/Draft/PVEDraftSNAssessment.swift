@@ -323,6 +323,7 @@ extension PVEDraftSNAssessment{
             }
             self.dropHiddenAndShow()
         } else {
+            print("test message")
         }
         
         let dataSavedInDB = CoreDataHandlerPVE().fetchDraftForSyncId(type: "draft", syncId: currentTimeStamp)
@@ -478,7 +479,7 @@ extension PVEDraftSNAssessment{
             }
                 
             default:
-                do {}
+                do {print("Test message")}
             }
         }
         

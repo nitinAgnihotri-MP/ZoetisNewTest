@@ -125,7 +125,7 @@ class TroubleshootingSurveyVC:BaseViewController
                 }
                 
         default:
-                do {}
+                do {print("Test message")}
             }
         }
         

@@ -43,7 +43,7 @@ class SettingTblCell: UITableViewCell {
     }
     // MARK: - IBACTION
     @IBAction func switchAction(_ sender: AnyObject) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
 }

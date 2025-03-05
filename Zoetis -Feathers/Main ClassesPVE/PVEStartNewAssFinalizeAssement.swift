@@ -588,7 +588,7 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
                         imagePicker.delegate = self
                         
                         imagePicker.view.tag = indexPath!.row
-                        present(imagePicker, animated: true, completion: {})
+                        present(imagePicker, animated: true)
                     } else {
                         postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
                     }
@@ -684,8 +684,7 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
         /******************************************************************************************************/
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             
-            dismiss(animated: true, completion: {
-            })
+            dismiss(animated: true)
         }
         
     }
@@ -970,7 +969,7 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorsPlusBtnDelegate,NoOfvaccina
 extension PVEStartNewAssFinalizeAssement: NoOfCatchersMinusDelegate,CatchersPlusBtnDelegate , AddedComment{
     
     func updatedComment(commentStr: String) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     
@@ -1366,7 +1365,7 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
     
     
     @IBAction func vaccinatorsPlusBtnAction(_ sender: Any) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -2705,7 +2704,8 @@ extension PVEStartNewAssFinalizeAssement: DatePickerPopupViewControllerProtocol{
         
     }
     
-    func doneButtonTapped(string:String){
+    func doneButtonTapped(string:String) {
+        print("string:",string)
     }
 }
 

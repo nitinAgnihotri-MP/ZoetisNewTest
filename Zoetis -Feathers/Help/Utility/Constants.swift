@@ -360,3 +360,5 @@ extension NSMutableDictionary {
         return nil
     }
 }
+
+let appDelegate = UIApplication.shared.delegate as! AppDelegate

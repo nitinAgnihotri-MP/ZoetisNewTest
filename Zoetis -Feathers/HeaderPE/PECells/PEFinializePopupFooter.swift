@@ -36,11 +36,6 @@ class PEFinializePopupFooter: UIViewController {
 }
 
 extension PEFinializePopupFooter: UITextFieldDelegate {
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        
-    }
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == txtPhone{
             txtPhoneComplete?(textField.text)

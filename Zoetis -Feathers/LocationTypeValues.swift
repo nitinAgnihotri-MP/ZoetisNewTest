@@ -49,8 +49,8 @@ public class LocationValues {
     var samplingMethodDefault : String?
 
     var locationValues: LocationValue?
-    var media : Media?
-    var sampling : Sampling?
+//    var media : Media?
+//    var sampling : Sampling?
     
     init(_ json: JSON) {
         locatgionTypeId = json["LocationTypeId"].intValue
@@ -89,19 +89,19 @@ public class LocationValues {
     }
     
 }
-public class Media {
-    
-    init(_ json : JSON) {
-        
-        
-    }
-    
-}
-public class Sampling {
-    
-    
-    
-}
+//public class Media {
+//    
+//    init(_ json : JSON) {
+//        
+//        
+//    }
+//    
+//}
+//public class Sampling {
+//    
+//    
+//    
+//}
 
 public class LocationValue {
     

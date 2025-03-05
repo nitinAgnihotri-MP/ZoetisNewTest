@@ -140,7 +140,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     override func viewDidLoad() {
@@ -421,6 +421,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         totalScoreLabel.text = "100"
         
         if sanitationIndex > -1{
+            print("test message")
         }
     }
     
@@ -1447,10 +1448,10 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
             
             if assessment?.assStatus == 1 {
-                cell.switchClicked(status: true)
+//                cell.switchClicked(status: true)
                 cell.switchBtn.setOn(true, animated: false)
             } else {
-                cell.switchClicked(status: false)
+//                cell.switchClicked(status: false)
                 cell.switchBtn.setOn(false, animated: false)
             }
             let imageCount = assessment?.images as? [Int]
@@ -1515,7 +1516,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 
                 vc.editable = false
                 vc.commentCompleted = {[unowned self] ( note) in
-                    
+                    print("Test Message")
                 }
                 if vc.editable{
                     self.navigationController?.present(vc, animated: false, completion: nil)
@@ -2337,6 +2338,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
     }
     
     func updateCategoriesInShared(){
+        appDelegate.testFuntion()
     }
     // MARK:  Check for Last Category
     func chechForLastCategory(){
@@ -2416,7 +2418,7 @@ extension PEViewAssesmentFinalize{
 // MARK:  ************** Camera Button Action ***************************************/
 extension PEViewAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationControllerDelegate{
     @objc func takePhoto(_ sender: UIButton) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     // MARK: ************* Alert View Methods ***********************************/
@@ -2454,8 +2456,7 @@ extension PEViewAssesmentFinalize: UIImagePickerControllerDelegate , UINavigatio
                 }
             }
         }
-        imagePicker.dismiss(animated: true, completion: {
-        })
+        imagePicker.dismiss(animated: true)
     }
     /******************************************************************************************************/
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -2823,10 +2824,12 @@ extension PEViewAssesmentFinalize{
         var base64Str = ""
         var base64Str2 = ""
         if sigNumber == 0 {
+            print("test message")
         } else {
             base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig) ?? 0)
         }
         if sigNumber2 == 0 {
+            print("test message")
         } else {
             base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
         }
@@ -2864,6 +2867,7 @@ extension PEViewAssesmentFinalize{
         
         var json : JSONDictionary = JSONDictionary()
         if dateSig != ""{
+            print("test message")
         }else{
             let convertDateFormatter = DateFormatter()
             convertDateFormatter.dateFormat = "yyyy-MM-dd"

@@ -441,6 +441,7 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
         activityViewController.setValue(self.subjectString, forKey: "subject")
         activityViewController.popoverPresentationController?.sourceView = self.btnShare
         self.navigationController?.present(activityViewController, animated: true, completion: {
+            print("test message")
         })
     }
     func didFinishWithParsing(finishedArray : NSArray){

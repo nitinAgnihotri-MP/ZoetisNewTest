@@ -426,6 +426,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             return convertedString!
             
         } catch let myJSONError {
+            print("test message")
         }
         
         return ""
@@ -633,11 +634,11 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     }
     
     private func addComplexPopup(isFromSyncDel:Bool = false) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     private func addComplexPopupWithoutDataCheck(isFromSyncDel:Bool = false) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     // MARK: - Navigate to View Assessment.
     func navigateToViewAssessment(){
@@ -1135,7 +1136,7 @@ extension PEDashboardViewController{
 extension PEDashboardViewController:  SyncBtnDelegatePE {
     
     @objc private func moveToDashBoard(notification: NSNotification){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     // MARK: - Sync Button Notification
     @objc private func syncBtnTappedNoti(notification: NSNotification){
@@ -2814,10 +2815,12 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         var base64Str = ""
         var base64Str2 = ""
         if sigNumber == 0 {
+            print("test message")
         } else {
             base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig) ?? 0)
         }
         if sigNumber2 == 0 {
+            print("test message")
         } else {
             base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
         }
@@ -6279,6 +6282,7 @@ extension PEDashboardViewController{
         self.dismissGlobalHUD(self.view)
         let dontGetRejected = UserDefaults.standard.value(forKey: "dontGetRejectedAssessment") as? Bool
         if dontGetRejected ?? false{
+            print("test message")
         }
         else
         {

@@ -69,6 +69,7 @@ class RefrigatorQuesCell: UITableViewCell {
     }
     
     func switchClicked(status: Bool) {
+        appDelegate.testFuntion()
     }
     
     

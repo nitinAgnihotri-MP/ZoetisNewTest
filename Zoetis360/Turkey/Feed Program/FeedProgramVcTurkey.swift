@@ -1658,15 +1658,19 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     
     @IBAction func starterCheckBoxAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     @IBAction func growerCheckBoxAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     @IBAction func finisherCoccidiosisCheckBoxAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     @IBAction func wdCoccidiosisAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     @IBAction func starterDrinkngWaterAction(sender: AnyObject) {
@@ -1816,19 +1820,24 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     
     @IBAction func antiboticStarterCheckBoxAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     @IBAction func antiboticGrowerAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     @IBAction func antiboticFinisherAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     @IBAction func antiboticWDAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     @IBAction func antiStarterDrinkingWater(sender: AnyObject) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     @IBAction func antiGrowerDrinkngWater(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     
@@ -1858,20 +1867,24 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     
     @IBAction func alternativeStartrAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     
     @IBAction func altrnativeGrowerAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     
     
     @IBAction func alternativeFinisherAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     
     
     @IBAction func alternativeWdAction(sender: AnyObject) {
+        appDelegate.testFuntion()
     }
     
     
@@ -3446,7 +3459,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     }
     
     func clickHelp() {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     func logOytButtn () {

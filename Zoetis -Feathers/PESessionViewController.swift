@@ -161,6 +161,7 @@ class PESessionViewController: BaseViewController {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             })
         }else{
+            print("test message")
         }
     }
 }

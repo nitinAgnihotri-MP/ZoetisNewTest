@@ -9,7 +9,7 @@ import Foundation
 import JNKeychain
 
 final class PasswordService{
-    private init(){}
+    private init(){print("Initializer")}
     static let shared = PasswordService()
     
     func getPassword() -> String{

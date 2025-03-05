@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class PEDataService{
-    private init(){}
+    private init(){print("Initializer")}
     static let sharedInstance = PEDataService()
     
     func getScheduledAssessments(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){

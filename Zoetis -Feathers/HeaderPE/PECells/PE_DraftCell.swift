@@ -106,70 +106,23 @@ class PE_DraftCell: UITableViewCell {
         }
     }
     
-    func config(peNewAssessment:PENewAssessment)  {
+    func config(peNewAssessment:PENewAssessment) {
         
-        if peNewAssessment.extndMicro == false{
-            extendedMicroLbl.text = "No"
-            extendedMicroStatus.text = "N/A"
+        if peNewAssessment.extndMicro == false {
             extendedRejectedComment.isHidden = true
-            if peNewAssessment.isPERejected == true
-            {
-                deleteBtn.isHidden = true
-                rejectIndicatorBtn.isHidden = false
-                //extendedMicroStatus.text = "Rejected"
-            }
-            else
-            {
-                deleteBtn.isHidden = false
-                rejectIndicatorBtn.isHidden = true
-                
-                
-                if peNewAssessment.sanitationValue == false
-                {
-                    extendedMicroLbl.text = "No"
-                    extendedMicroStatus.text = "N/A"
-                    extendedRejectedComment.isHidden = true
-                    
-                }
-                else
-                {
-                    extendedMicroLbl.text = "Yes"
-                    extendedMicroStatus.text = inProcessStr
-                    extendedRejectedComment.isHidden = true
-                }
-            }
-
             
-
+            deleteBtn.isHidden = peNewAssessment.isPERejected ?? false
+            rejectIndicatorBtn.isHidden = !(peNewAssessment.isPERejected ?? false)
+            
+            extendedRejectedComment.isHidden = true
+            extendedMicroLbl.text = peNewAssessment.sanitationValue == true ? "Yes" : "No"
+            extendedMicroStatus.text = peNewAssessment.sanitationValue == true ? inProcessStr : "N/A"
         } else {
-            extendedMicroLbl.text = "Yes"
-            if peNewAssessment.isEMRejected == true
-            {
-                extendedMicroStatus.text = "Rejected"
-            }
-           else
-            {
-               extendedMicroStatus.text = inProcessStr
-            }
-            
-            
-            
             extendedRejectedComment.isHidden = false
+            extendedMicroStatus.text = peNewAssessment.isEMRejected == true ? inProcessStr : "Rejected"
             
-            if peNewAssessment.sanitationValue == false
-            {
-                extendedMicroLbl.text = "N/A"
-//                editBtn.isHidden = true
-//                editImage.isHidden = true
-//                editBtn.isUserInteractionEnabled = false
-            }
-            else
-                
-            {
-                extendedMicroLbl.text = "Incomplete"
-//                editBtn.isHidden = false
-//                editImage.isHidden = false
-//                editBtn.isUserInteractionEnabled = true
+            if peNewAssessment.sanitationValue == true {
+                extendedMicroLbl.text = peNewAssessment.sanitationValue == true ? "Incomplete" : "N/A"
             }
         }
         
@@ -183,32 +136,20 @@ class PE_DraftCell: UITableViewCell {
         lblEvaluator.text = peNewAssessment.customerName
         lblSiteName.text = peNewAssessment.siteName
         let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
-      //  if infoObj?.isExtendedPE ?? false{
-       //     extendedMicroLbl.text = "Yes"
             if peNewAssessment.isEMRejected == true{
                 extendedMicroStatus.text = "Rejected"
                 extendedRejectedComment.isHidden = false
-            }
-           else{
-               
-              
-               
-               if peNewAssessment.sanitationValue == false
-               {
+            } else {
+               if peNewAssessment.sanitationValue == false {
                    extendedMicroLbl.text = "No"
                    extendedMicroStatus.text = "N/A"
                    extendedRejectedComment.isHidden = true
-                   
-               }
-               else
-               {
+               } else {
                    extendedMicroLbl.text = "Yes"
                    extendedMicroStatus.text = inProcessStr
                    extendedRejectedComment.isHidden = true
                }
-               
             }
-
         var date = peNewAssessment.evaluationDate
         date = date?.replacingOccurrences(of: "/", with: "")
         let draftID = peNewAssessment.draftID ?? ""
@@ -248,8 +189,6 @@ class PE_DraftCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
-        
     }
     
     // MARK: - IBACTIONS

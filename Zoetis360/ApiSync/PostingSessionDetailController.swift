@@ -602,6 +602,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
     
     func doneBtnFunc(_ notes : NSMutableArray , notesText : String , noOfBird : Int) {
+        appDelegate.testFuntion()
     }
     
     // MARK: 🟠 - Save Necropsy Notes Function on Database
@@ -769,7 +770,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
     
     @IBAction func updateDateButtonClicked(_ sender: UIButton) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     // MARK: 🟠 - Session Date Done Button Action
@@ -1966,6 +1967,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                         {
                             if  UserDefaults.standard.string(forKey: "Success") == "Yes"
                             {
+                                print("Test Message")
                             }
                             else
                             {
@@ -2047,6 +2049,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     // MARK: - Update Function optional not required
     @objc func update() {
         if WebClass.sharedInstance.connected(){
+            print("test message")
         }
         else{
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))

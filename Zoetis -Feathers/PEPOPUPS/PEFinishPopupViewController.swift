@@ -859,7 +859,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
 extension PEFinishPopupViewController: YPSignatureDelegate {
     
     func didStart(_ view: YPDrawSignatureView) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     func didFinish(_ view: YPDrawSignatureView) {

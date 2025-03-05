@@ -108,23 +108,33 @@ class HelpScreenViewController: UIViewController,UIScrollViewDelegate  {
             self.acceptButton.alpha = 0
         }
         else if Int(currentPage) == 1{
+            print("test message")
         }else if Int(currentPage) == 2{
+            print("test message")
         }
         else if Int(currentPage) == 3{
+            print("test message")
         }
         else if Int(currentPage) == 4{
+            print("test message")
         }
         else if Int(currentPage) == 5{
+            print("test message")
         }
         else if Int(currentPage) == 6{
+            print("test message")
         }
         else if Int(currentPage) == 7{
+            print("test message")
         }
         else if Int(currentPage) == 8{
+            print("test message")
         }
         else if Int(currentPage) == 9{
+            print("test message")
         }
         else if Int(currentPage) == 10{
+            print("test message")
         }
         else if Int(currentPage) == 11{
             UIView.animate(withDuration: 1.0, animations:{ () -> Void in

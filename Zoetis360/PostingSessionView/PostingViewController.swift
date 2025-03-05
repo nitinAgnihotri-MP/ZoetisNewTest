@@ -344,7 +344,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 else if appDelegate.sendFeedVariable == "vaccination"{
                 }
                 else
-                {}
+                {print("Test message")}
             }
             else
             {
@@ -381,6 +381,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         }
         
         if appDelegate.isFeedProgramClick == true{
+            print("Test Body")
         }
         
         if appDelegate.sendFeedVariable == "Feed" {
@@ -486,6 +487,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             }
             else
             {
+                print("Test Message")
             }
         }
         else
@@ -932,6 +934,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         
         if  lblComplex.text! == NSLocalizedString("- Select -", comment: "")
         {
+            print("Test Body")
         }
         else
         {
@@ -1796,8 +1799,10 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     
     func noPopUpPosting() {
         if exitPopUP.tag == 40{
+            print("Test Body")
         }
         else if exitPopUP.tag == 50{
+            print("Test Body")
         }
         else{
             if UserDefaults.standard.bool(forKey: "Unlinked") == true{
@@ -1823,6 +1828,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     }
     
     func YesPopUpPosting() {
+        appDelegate.testFuntion()
     }
     // MARK: 🟠  Alert Message to add Feed Program
     func showAlert(){
@@ -2193,6 +2199,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if (textField == notesTextView ) {
+            print("Test Body")
         } else {
             CustRepTextField.returnKeyType = UIReturnKeyType.done
         }

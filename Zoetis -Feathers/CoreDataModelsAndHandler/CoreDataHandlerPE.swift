@@ -53,6 +53,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -75,6 +76,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -97,6 +99,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -119,6 +122,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -142,6 +146,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -176,6 +181,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
+            print("test message")
         }
     }
     
@@ -207,6 +213,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
+            print("test message")
         }
     }
     
@@ -240,6 +247,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
+            print("test message")
         }
     }
     
@@ -272,6 +280,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
+            print("test message")
         }
     }
     //    get Rejected Refrigator Data
@@ -296,6 +305,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -321,6 +331,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -347,6 +358,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -375,6 +387,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -497,6 +510,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -514,6 +528,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -533,6 +548,7 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
+            print("test message")
         }
         return dataArray
     }
@@ -608,6 +624,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
     }
     
@@ -641,6 +658,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
     }
     
@@ -743,6 +761,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
     }
     
@@ -830,6 +849,7 @@ class CoreDataHandlerPE: NSObject {
                     saveNewAssessmentInProgressInDB(newAssessment:newAssessment)
                 }}
         } catch {
+            print("test message")
         }
     }
     
@@ -960,6 +980,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(assessmentObj)
     }
@@ -1078,6 +1099,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(assessmentObj)
     }
@@ -1222,6 +1244,7 @@ class CoreDataHandlerPE: NSObject {
                 return peNewAssessment
             }
         } catch {
+            print("test message")
         }
         return peNewAssessment
     }
@@ -1365,6 +1388,7 @@ class CoreDataHandlerPE: NSObject {
                 return peNewAssessment
             }
         } catch {
+            print("test message")
         }
         return peNewAssessment
     }
@@ -1490,6 +1514,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -1603,6 +1628,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -1737,6 +1763,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -1859,6 +1886,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -1997,6 +2025,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -2156,6 +2185,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -2313,6 +2343,7 @@ class CoreDataHandlerPE: NSObject {
             }
             
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -2467,6 +2498,7 @@ class CoreDataHandlerPE: NSObject {
             }
             
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -2838,6 +2870,7 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
+            print("test message")
         }
         return dataArray
     }
@@ -3156,6 +3189,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -3268,6 +3302,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(assessmentObj)
     }
@@ -3432,6 +3467,7 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
+            print("test message")
         }
         return dataArray
     }
@@ -3466,6 +3502,7 @@ class CoreDataHandlerPE: NSObject {
             }
             
         } catch {
+            print("test message")
         }
         
         return finalResult
@@ -3489,6 +3526,7 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
+            print("test message")
         }
         return dataArray
     }
@@ -3510,6 +3548,7 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
+            print("test message")
         }
         return dataArray
     }
@@ -3531,6 +3570,7 @@ class CoreDataHandlerPE: NSObject {
                 return userIDArray
             }
         } catch {
+            print("test message")
         }
         return []
     }
@@ -3547,6 +3587,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -3563,6 +3604,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -3580,6 +3622,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -3600,6 +3643,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -3616,6 +3660,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -3633,6 +3678,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3650,6 +3696,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3665,6 +3712,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3680,6 +3728,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3695,6 +3744,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3719,6 +3769,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3735,6 +3786,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3751,6 +3803,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3766,6 +3819,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3782,6 +3836,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3801,6 +3856,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
         
@@ -3833,6 +3889,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3850,6 +3907,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3871,6 +3929,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -3889,6 +3948,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(person)
     }
@@ -3905,6 +3965,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         customerData.append(person)
@@ -3928,6 +3989,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -3952,6 +4014,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         return customerData as NSArray
     }
@@ -3977,6 +4040,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         return dataArray
     }
@@ -4001,6 +4065,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         return dataArray
     }
@@ -4024,6 +4089,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -4049,6 +4115,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -4070,6 +4137,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -4092,6 +4160,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -4116,6 +4185,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -4419,11 +4489,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4448,11 +4520,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4472,11 +4546,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4497,11 +4573,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4554,11 +4632,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4578,11 +4658,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4603,11 +4685,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4628,11 +4712,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4653,11 +4739,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4677,11 +4765,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4701,11 +4791,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4725,11 +4817,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4749,11 +4843,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4909,6 +5005,7 @@ class CoreDataHandlerPE: NSObject {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -4995,6 +5092,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
+            print("test message")
         }
     }
     
@@ -5018,6 +5116,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
+            print("test message")
         }
     }
     func updateDraftNoteAssessmentInProgress(assessment: PE_AssessmentInProgress) -> Bool {
@@ -5068,6 +5167,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         
         do {
@@ -5155,6 +5255,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
     }
@@ -5171,6 +5272,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             saveImageIdToCurrentQuestion(assessment: assessment, imageId: imageId,fromDraft: fromDraft)
         } catch {
+            print("test message")
         }
         
     }
@@ -5188,6 +5290,7 @@ extension CoreDataHandlerPE {
             saveImageIdToCurrentQuestionDraft(assessment: assessment, imageId: imageId)
             
         } catch {
+            print("test message")
         }
     }
     
@@ -5202,6 +5305,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
     }
     
@@ -6422,6 +6526,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(assessmentObj)
     }
@@ -6588,6 +6693,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(assessmentObj)
     }
@@ -6751,6 +6857,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(assessmentObj)
     }
@@ -6899,6 +7006,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(assessmentObj)
     }
@@ -7071,6 +7179,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         customerData.append(assessmentObj)
     }
@@ -7121,6 +7230,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             updateDOACategortIsSelcted(assessment: assessment, doaId: doaId,fromDoaS: fromDoaS,fromDraft:fromDraft)
         } catch {
+            print("test message")
         }
         
     }
@@ -7144,6 +7254,7 @@ extension CoreDataHandlerPE {
             updateDraftDOACategortIsSelcted(assessment: assessment, doaId: doaId)
             //   //   print("PE_AssessmentInProgress---\(CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress"))")
         } catch {
+            print("test message")
         }
         
     }
@@ -7163,6 +7274,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             updateUpdateVMixerMinusCategortIsSelcted(assessment: assessment, doaId: id)
         } catch {
+            print("test message")
         }
         
     }
@@ -7186,6 +7298,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             updateUpdateVMixerGet(doaId: certificateID,evalutionID: evalutionID , NewCatID:CategoryID)
         } catch {
+            print("test message")
         }
     }
     
@@ -7211,6 +7324,7 @@ extension CoreDataHandlerPE {
             updateDraftVMixerAddCategortIsSelcted(assessment: assessment, doaId: id)
             
         } catch {
+            print("test message")
         }
         
     }
@@ -7231,6 +7345,7 @@ extension CoreDataHandlerPE {
             updateUpdateVMixerMinusCategortIsSelcted(assessment: assessment, doaId: id)
             
         } catch {
+            print("test message")
         }
         
     }
@@ -7263,6 +7378,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             updateInovojectCategortIsSelcted(assessment: assessment, doaId: doaId,fromDraft:fromDraft)
         } catch {
+            print("test message")
         }
     }
     
@@ -7285,6 +7401,7 @@ extension CoreDataHandlerPE {
             updateDraftInovojectCategortIsSelcted(assessment: assessment, doaId: doaId)
             
         } catch {
+            print("test message")
         }
         
     }
@@ -7450,6 +7567,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
@@ -7719,11 +7837,13 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
+            print("test message")
         }
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -7795,6 +7915,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
+            print("test message")
         }
         return nil
     }
@@ -7832,6 +7953,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
+            print("test message")
         }
         return nil
     }
@@ -8322,6 +8444,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }
@@ -8588,6 +8711,7 @@ extension CoreDataHandlerPE {
                 
             }
         } catch {
+            print("test message")
         }
         
         return peNewAssessment
@@ -8839,6 +8963,7 @@ extension CoreDataHandlerPE {
                 //  return peNewAssessment
             }
         } catch {
+            print("test message")
         }
         
         let siteId  = UserDefaults.standard.integer(forKey: "PE_Selected_Site_Id")
@@ -9102,6 +9227,7 @@ extension CoreDataHandlerPE {
                 return peNewAssessment
             }
         } catch {
+            print("test message")
         }
         return peNewAssessment
     }
@@ -9229,6 +9355,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
+            print("test message")
         }
         return peNewAssessmentArray
     }

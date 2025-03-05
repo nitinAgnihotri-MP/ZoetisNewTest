@@ -13,7 +13,7 @@ import Reachability
 class  CodeHelper{
     var reachability = try! Reachability()
     
-    private init(){}
+    private init(){print("Initializer")}
     static let sharedInstance = CodeHelper()
     
     func dictKeyExists(dict: Dictionary<String, Any>, key: String) -> Bool{

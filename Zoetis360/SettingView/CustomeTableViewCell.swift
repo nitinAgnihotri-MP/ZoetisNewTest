@@ -42,6 +42,7 @@ class CustomeTableViewCell: UITableViewCell {
     
     // MARK: - IBACTIONS
     @IBAction func switchAction(_ sender: AnyObject) {
+        appDelegate.testFuntion()
     }
 }
 

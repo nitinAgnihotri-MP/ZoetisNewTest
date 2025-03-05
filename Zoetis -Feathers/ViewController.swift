@@ -834,6 +834,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     
     
     func failWithInternetConnection(){
+        appDelegate.testFuntion()
     }
     // MARK: ******* Navigate to Bird Selection Screen **********/
     func didFinishApi(){

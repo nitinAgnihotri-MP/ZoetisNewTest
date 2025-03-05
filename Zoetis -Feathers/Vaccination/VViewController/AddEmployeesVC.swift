@@ -1173,7 +1173,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
     
     @IBAction func newSiteCertificationBtnAction(_ sender: UIButton) {
-        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {}else{
+        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {print("Test message")}else{
             isExistingSite = false
             curentCertification?.isExistingSite = false
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
@@ -1187,7 +1187,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
     // MARK: - Existing Site Button Action
     @IBAction func existingSiteBtnAction(_ sender: UIButton) {
-        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {}else{
+        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {print("Test message")}else{
             isExistingSite = true
             curentCertification?.isExistingSite = true
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
@@ -1488,6 +1488,7 @@ extension AddEmployeesVC: UITableViewDataSource, UITableViewDelegate{
                                     selectedRoleArr =  try decoder.decode([DropwnMasterDataVM].self, from: data!) ?? [DropwnMasterDataVM]()
                                 }
                             }catch{
+                                print("Test Message")
                             }
                         }
                         self.displayEmployeePopup(view: cell.roleBtn, rolesArr: self.rolesArr, defaultRolesArr: selectedRoleArr, empId: self.employeesAddedArr[indexPath.row].employeeId ?? "", indexPath: indexPath
@@ -1567,7 +1568,7 @@ extension AddEmployeesVC: UITableViewDataSource, UITableViewDelegate{
         }
         lbl.textColor = UIColor.white
         view.addSubview(lbl)
-        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{}else{
+        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{print("Test message")}else{
             
             let btn = UIButton()
             btn.tag = section
@@ -1650,7 +1651,7 @@ extension AddEmployeesVC: UIPopoverPresentationControllerDelegate{
 
 extension AddEmployeesVC: DatePickerPopupViewControllerProtocol{
     func doneButtonTapped(string: String) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     func doneButtonTappedWithDate(string: String, objDate: Date) {

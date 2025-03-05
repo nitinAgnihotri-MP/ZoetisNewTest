@@ -298,11 +298,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     /**************************************************************************************************************/
     
     @IBAction func didSelectOnUnlinkedNecrp(_ sender: AnyObject) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     @IBAction func NacropsyButtonPress(_ sender: AnyObject) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     // MARK: 🟠 - Logout Button Action
@@ -1234,6 +1234,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             })
   
         } else{
+            print("test message")
         }
     }
     // MARK: 🟠 Save Bird Size
@@ -1301,6 +1302,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             })
             
         } else{
+            print("test message")
         }
     }
     // MARK: 🟠 Save Breed type
@@ -1492,6 +1494,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 }
             }
         } else{
+            print("test message")
         }
     }
     */
@@ -1994,6 +1997,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             })
 
         } else{
+            print("test message")
         }
     }
     // MARK: 🟢 Get Dossage List with Molecule ID from server
@@ -2056,6 +2060,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             })
            
         } else{
+            print("test message")
         }
     }
     // MARK: 🟢  ZoetisWebServices Get production type List from server

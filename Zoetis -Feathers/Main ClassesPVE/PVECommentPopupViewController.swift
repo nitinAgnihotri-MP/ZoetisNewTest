@@ -106,6 +106,7 @@ extension PVECommentPopupViewController:UITextViewDelegate{
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if (textView == txtView ) {
+            print("test message")
         }
     }
     

@@ -17,7 +17,7 @@ enum MasterDataDropdownStatus:String{
 }
 
 public class AddEmployeesDAO{
-    private init(){}
+    private init(){print("Initializer")}
     static let sharedInstance = AddEmployeesDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     
@@ -35,14 +35,14 @@ public class AddEmployeesDAO{
                 
             }
             try managedContext.save()
-        }catch{
+        } catch {
             debugPrint("Error while saving hacthery employees information in \(type(of: self))")
             managedContext.rollback()
         }
     }
     
     func saveEmployeesByCertification(loginUserId:String, certificationId:String, customerId:String, siteId:String, employeeObj: [VaccinationEmployeeVM]){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     func getEmployees(loginUserId:String, customerId:String, siteId:String)-> [VaccinationEmployeeVM]{

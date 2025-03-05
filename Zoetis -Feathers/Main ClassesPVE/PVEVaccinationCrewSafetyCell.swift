@@ -148,13 +148,30 @@ class PVEVaccinationCrewSafetyCell: UITableViewCell {
     }
     
     
-    func setCellforLiveVaccine(qArr:NSArray, currentIndd:NSIndexPath) {
-        
-    }
+//    func setCellforLiveVaccine(qArr:NSArray, currentIndd:NSIndexPath) {
+//        
+//    }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
+    }
+    
+    fileprivate func methodExtracted1(_ id: Int, _ btnStateBool: Bool, _ seq_Number: Int) {
+        if id == 127 || id == 128 {
+            if btnStateBool == true {
+                if id == 127 {
+                    CoreDataHandlerPVE().updateDraftAssDetails(seq_Number, id: 128, isSel: !btnStateBool, type: typeStr, syncId: timeStampStr)
+                } else {
+                    CoreDataHandlerPVE().updateDraftAssDetails(seq_Number, id: 127, isSel: !btnStateBool, type: typeStr, syncId: timeStampStr)
+                }
+            }
+            CoreDataHandlerPVE().updateDraftAssDetails(seq_Number, id: id, isSel: btnStateBool, type: typeStr, syncId: timeStampStr)
+        } else {
+            CoreDataHandlerPVE().updateDraftAssDetails(seq_Number, id: id, isSel: btnStateBool, type: typeStr, syncId: timeStampStr)
+        }
+        
+        CoreDataHandlerPVE().updateStatusForSync(timeStampStr, text: false, forAttribute: "syncedStatus")
     }
     
     @IBAction func switchAction(_ sender: UISwitch) {
@@ -169,60 +186,31 @@ class PVEVaccinationCrewSafetyCell: UITableViewCell {
         
         let idArr = qArrr.value(forKey: "id") as? [Int]
         let id = idArr![currentInd.row]
-        
+        btnStateBool = true
+
         if isSelected == true {
             btnStateBool = false
-        }else{
-            btnStateBool = true
         }
         
         if timeStampStr.count > 0 {
-            print(typeStr)
-            if id == 127 || id == 128
-            {
+            methodExtracted1(id, btnStateBool, seq_Number)
+            
+        } else {// updateDraftAssDetails
+            if id == 127 || id == 128 {
                 if btnStateBool == true
                 {
-                    if id == 127
-                    {
-                        CoreDataHandlerPVE().updateDraftAssDetails(seq_Number, id: 128, isSel: !btnStateBool, type: typeStr, syncId: timeStampStr)
-                    }
-                    else{
-                        CoreDataHandlerPVE().updateDraftAssDetails(seq_Number, id: 127, isSel: !btnStateBool, type: typeStr, syncId: timeStampStr)
-                    }
-                }
-                CoreDataHandlerPVE().updateDraftAssDetails(seq_Number, id: id, isSel: btnStateBool, type: typeStr, syncId: timeStampStr)
-            }
-            else{
-                CoreDataHandlerPVE().updateDraftAssDetails(seq_Number, id: id, isSel: btnStateBool, type: typeStr, syncId: timeStampStr)
-            }
-            
-            CoreDataHandlerPVE().updateStatusForSync(timeStampStr, text: false, forAttribute: "syncedStatus")
-            
-        }
-        else {// updateDraftAssDetails
-            if id == 127 || id == 128
-            {
-                if btnStateBool == true
-                {
-                    if id == 127
-                    {
+                    if id == 127 {
                         CoreDataHandlerPVE().updateAssementDetails(seq_Number, id: 128, isSel: !btnStateBool)
-                    }
-                    else
-                    {
+                    } else {
                         CoreDataHandlerPVE().updateAssementDetails(seq_Number, id: 127, isSel: !btnStateBool)
                     }
                 }
                 CoreDataHandlerPVE().updateAssementDetails(seq_Number, id: id, isSel: btnStateBool)
-            }
-            else
-            {
+            } else {
                 CoreDataHandlerPVE().updateAssementDetails(seq_Number, id: id, isSel: btnStateBool)
             }
-            
         }
     }
-    
 }
 
 

@@ -11,7 +11,7 @@ import CoreData
 import UIKit
 
 final  public class QuestionnaireDAO{
-    private init(){}
+    private init(){print("Initializer")}
     static let sharedInstance = QuestionnaireDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     

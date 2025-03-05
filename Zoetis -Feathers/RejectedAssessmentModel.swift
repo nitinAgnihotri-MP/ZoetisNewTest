@@ -460,7 +460,7 @@ class JSONNull: Codable, Hashable {
         return 0
     }
     
-    public init() {}
+    public init() {print("Test message")}
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()

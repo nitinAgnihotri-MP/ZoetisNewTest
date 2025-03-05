@@ -42,7 +42,7 @@ public enum VaccinationSubModuleNames:String{
 }
 
 public class VaccinationDashboardDAO{
-    private init(){}
+    private init(){print("Initializer")}
     static let sharedInstance = VaccinationDashboardDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     

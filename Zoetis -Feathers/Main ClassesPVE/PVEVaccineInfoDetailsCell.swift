@@ -153,9 +153,9 @@ class PVEVaccineInfoDetailsCell: UITableViewCell {
         
     }
     
-    @IBAction func minusBtnAction(_ sender: Any) {
-        
-    }
+//    @IBAction func minusBtnAction(_ sender: Any) {
+//        
+//    }
     
 }
 

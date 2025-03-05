@@ -10,7 +10,7 @@ import CoreData
 import UIKit
 
 class PEDeletedDraftsDAO{
-//        private init(){}
+//        private init(){print("Initializer")}
         static let sharedInstance = PEDeletedDraftsDAO()
         
         let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext

@@ -200,6 +200,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     }
     
     @IBAction func btnAction(_ sender: Any) {
+        appDelegate.testFuntion()
     }
     
     override func viewDidLoad() {
@@ -2193,6 +2194,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             self.certificateData[self.chnagedVaccineNameIndexPathRow].name = error
                             CoreDataHandlerPE().updateVMixerInDB(peCertificateData:  self.certificateData[self.chnagedVaccineNameIndexPathRow], id:  self.certificateData[self.chnagedVaccineNameIndexPathRow].id ?? 0)
                             UIView.performWithoutAnimation {
+                                print("Test Message")
                             }
                             cell.vaccNameField.resignFirstResponder()
                             cell.vaccNameField.endEditing(true)
@@ -3615,10 +3617,10 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
             
             if assessment?.assStatus == 1 {
-                cell.switchClicked(status: true)
+//                cell.switchClicked(status: true)
                 cell.switchBtn.setOn(true, animated: false)
             } else {
-                cell.switchClicked(status: false)
+//                cell.switchClicked(status: false)
                 cell.switchBtn.setOn(false, animated: false)
             }
             let imageCount = assessment?.images as? [Int]
@@ -4617,6 +4619,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         {
                             if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
                             {
+                                print("Test Message")
                             }
                             else
                             {
@@ -5889,7 +5892,7 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
                 imagePicker.sourceType = .camera
                 imagePicker.cameraCaptureMode = .photo
                 imagePicker.delegate = self
-                present(imagePicker, animated: true, completion: {})
+                present(imagePicker, animated: true, completion: {print("Test message")})
             } else {
                 postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
             }
@@ -5967,6 +5970,7 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
             }
         }
         imagePicker.dismiss(animated: true, completion: {
+            print("test message")
         })
     }
     /******************************************************************************************************/
@@ -6166,6 +6170,7 @@ extension PEDraftAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate
             }
         }
         else {
+            print("test message")
         }
     }
     // MARK: - Set Drop Down

@@ -24,7 +24,7 @@ class UnlinkedNecropsiesTableViewCell: UITableViewCell {
     @IBOutlet weak var veterinarianLblPostingSession: UILabel!
     
     @IBAction func linkButtonAction(_ sender: AnyObject) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     // MARK: 🟠 - METHOD & FUNCTION

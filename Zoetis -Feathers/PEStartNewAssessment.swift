@@ -784,6 +784,7 @@ class PEStartNewAssessment: BaseViewController {
     }
     
     @IBAction func btnAction(_ sender: Any) {
+        appDelegate.testFuntion()
     }
     // MARK: - Hide Breed Other View
     func hideBreedOthers(){
@@ -806,7 +807,7 @@ class PEStartNewAssessment: BaseViewController {
     }
     // MARK: - Show Incubation Other View
     func showIncubationOthers(){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     // MARK: - Hide Manufacturer Other  View
@@ -1344,7 +1345,7 @@ class PEStartNewAssessment: BaseViewController {
         }
         //
         
-        if (date.count > 0 ){} else  {
+        if (date.count > 0 ){print("Test message")} else  {
             let superviewCurrent =  evaluationDateButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1355,7 +1356,7 @@ class PEStartNewAssessment: BaseViewController {
                 }
             }
         }
-        if (customer.count > 0 ){} else  {
+        if (customer.count > 0 ){print("Test message")} else  {
             let superviewCurrent =  customerButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1366,7 +1367,7 @@ class PEStartNewAssessment: BaseViewController {
                 }
             }
         }
-        if (selectedTSR.count > 0 ){} else  {
+        if (selectedTSR.count > 0 ){print("Test message")} else  {
             let superviewCurrent = tsrButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1379,7 +1380,7 @@ class PEStartNewAssessment: BaseViewController {
         }
         
         
-        if (site.count > 0 ){} else  {
+        if (site.count > 0 ){print("Test message")} else  {
             let superviewCurrent =  siteButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1390,7 +1391,7 @@ class PEStartNewAssessment: BaseViewController {
                 }
             }
         }
-        if (evaluationName.count > 0){} else  {
+        if (evaluationName.count > 0){print("Test message")} else  {
             let superviewCurrent =  evaluationTypeButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1403,7 +1404,7 @@ class PEStartNewAssessment: BaseViewController {
             }
             
         }
-        if (evaluator.count  > 0){} else  {
+        if (evaluator.count  > 0){print("Test message")} else  {
             let superviewCurrent =  evaluatorButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1415,7 +1416,7 @@ class PEStartNewAssessment: BaseViewController {
                 }
             }
         }
-        if (reasonForVisit.count > 0){} else  {
+        if (reasonForVisit.count > 0){print("Test message")} else  {
             let superviewCurrent =  visitButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -2012,7 +2013,7 @@ extension PEStartNewAssessment : DatePickerPopupViewControllerProtocol{
     }
     
     func doneButtonTapped(string:String){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
 }
 
@@ -2184,6 +2185,7 @@ extension PEStartNewAssessment{
                 return
             }
         } else {
+            print("test message")
         }
         
         
@@ -2340,7 +2342,7 @@ extension PEStartNewAssessment {
     }
     
     private func handleAssessmentCategoriesResponse(_ json: JSON) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     

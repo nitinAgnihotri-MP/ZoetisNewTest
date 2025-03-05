@@ -69,7 +69,7 @@ class QuestionnaireTableViewCell: UITableViewCell, UITextFieldDelegate {
     // MARK: - METHODS
     
     func showCommectVw(){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     func hideCommentVw(){

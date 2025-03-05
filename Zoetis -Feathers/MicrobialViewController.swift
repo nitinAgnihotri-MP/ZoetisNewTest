@@ -327,6 +327,7 @@ class MicrobialViewController: BaseViewController {
             }
             
         } else {
+            print("test message")
         }
     }
     

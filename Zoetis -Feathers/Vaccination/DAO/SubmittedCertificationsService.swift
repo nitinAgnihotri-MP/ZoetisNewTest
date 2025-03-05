@@ -9,7 +9,7 @@
 import Foundation
 
 final  public class SubmittedCertificationsService{
-    private init(){}
+    private init(){print("Initializer")}
     static let sharedInstance = SubmittedCertificationsService()
     
     func insertData(userId:String, _ certificationArr:[GetSubmittedCertificationsDTO]){

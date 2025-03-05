@@ -416,7 +416,7 @@ class QuestionnaireVC: BaseViewController {
     }
     
     @objc  func nextBtnAction(_ sender: UIButton){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     @objc  func shippingBtnAction(_ sender: UIButton){
@@ -608,12 +608,13 @@ class QuestionnaireVC: BaseViewController {
     }
     
     func addACtions(){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     func  configureSafetyAwarenessVw(){
         removeAllBtn()
         if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
+            print("Test Body")
         }else{
             
             saveAsDraftBtn.isHidden = false
@@ -627,6 +628,7 @@ class QuestionnaireVC: BaseViewController {
     func  configureVaccineMixingVw(){
         removeAllBtn()
         if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
+            print("Test Body")
         }else{
             
             saveAsDraftBtn.isHidden = false
@@ -699,7 +701,7 @@ class QuestionnaireVC: BaseViewController {
     
     
     func setValues(){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     
@@ -1289,7 +1291,7 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                                     }
                                 }
                             }
-                            if cell.empIndex > 0 && cell.empIndex < employeesAddedArr.count {}
+                            if cell.empIndex > 0 && cell.empIndex < employeesAddedArr.count {print("Test message")}
                             
                             //---*********************
                             if employeesAddedArr.count  > 0{

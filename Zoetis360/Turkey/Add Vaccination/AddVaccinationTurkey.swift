@@ -503,6 +503,7 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
         DropperTurkey.sharedInstance.hideWithAnimation(0.1)
         
         if (textField ==  hatchMarekStrainField ) {
+            print("test message")
         }
         else {
             vaccinationPrgrmTextField.returnKeyType = UIReturnKeyType.done
@@ -757,7 +758,7 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
         
     }
     func yesBtnPop() {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     //////
     func noBtnPop() {

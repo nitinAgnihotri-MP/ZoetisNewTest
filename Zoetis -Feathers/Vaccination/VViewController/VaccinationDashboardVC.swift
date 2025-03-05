@@ -783,7 +783,7 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     @IBAction func notificationBtnsAction(_ sender: UIButton) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     @IBAction func closeBtnAction(_ sender: UIButton) {
@@ -817,10 +817,12 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     @IBAction func draftBtnAction(_ sender: UIButton) {
+        appDelegate.testFuntion()
     }
     
     
     @IBAction func notificationBtnaCTION(_ sender: UIButton) {
+        appDelegate.testFuntion()
     }
     
 }

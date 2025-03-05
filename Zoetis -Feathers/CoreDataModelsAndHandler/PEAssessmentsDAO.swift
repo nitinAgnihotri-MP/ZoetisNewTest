@@ -81,6 +81,7 @@ class PEAssessmentsDAO{
             } else {
             }
         } catch {
+            print("test message")
         }
         return dataArray
     }
@@ -150,6 +151,7 @@ class PEAssessmentsDAO{
             }
             try managedContext.save()
         } catch{
+            print("test message")
         }
     }
     
@@ -319,6 +321,7 @@ class PEAssessmentsDAO{
         do {
             vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [PE_ScheduledAssessments]
         } catch{
+            print("test message")
         }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat="MM/dd/yyyy"
@@ -345,6 +348,7 @@ class PEAssessmentsDAO{
         do {
             vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [PE_AssessmentRejected]
         } catch{
+            print("test message")
         }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat="MM/dd/yyyy"
@@ -516,6 +520,7 @@ class PEAssessmentsDAO{
             
         } catch
         {
+            print("test message")
         }
         return nil
     }
@@ -604,6 +609,7 @@ class PEAssessmentsDAO{
                 }
             }
         } catch {
+            print("test message")
         }
         if peNewAssessmentArray.count > 0{
             return peNewAssessmentArray[0]

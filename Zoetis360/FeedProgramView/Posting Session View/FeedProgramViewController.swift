@@ -1954,13 +1954,13 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         
     }
     
-    @IBAction func starterCheckBoxAction(sender: AnyObject) {}
+    @IBAction func starterCheckBoxAction(sender: AnyObject) {print("Test message")}
     
-    @IBAction func growerCheckBoxAction(sender: AnyObject) {}
+    @IBAction func growerCheckBoxAction(sender: AnyObject) {print("Test message")}
     
-    @IBAction func finisherCoccidiosisCheckBoxAction(sender: AnyObject) {}
+    @IBAction func finisherCoccidiosisCheckBoxAction(sender: AnyObject) {print("Test message")}
     
-    @IBAction func wdCoccidiosisAction(sender: AnyObject) {}
+    @IBAction func wdCoccidiosisAction(sender: AnyObject) {print("Test message")}
     
     
     @IBAction func starterDrinkngWaterAction(sender: AnyObject) {
@@ -2097,13 +2097,13 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
     }
     
     
-    @IBAction func antiboticStarterCheckBoxAction(sender: AnyObject) {}
+    @IBAction func antiboticStarterCheckBoxAction(sender: AnyObject) {print("Test message")}
     
-    @IBAction func antiboticGrowerAction(sender: AnyObject) {}
+    @IBAction func antiboticGrowerAction(sender: AnyObject) {print("Test message")}
     
-    @IBAction func antiboticFinisherAction(sender: AnyObject) {}
+    @IBAction func antiboticFinisherAction(sender: AnyObject) {print("Test message")}
     
-    @IBAction func antiboticWDAction(sender: AnyObject) {}
+    @IBAction func antiboticWDAction(sender: AnyObject) {print("Test message")}
     
     
     @IBAction func antiFinisherDrinkingWater(sender: AnyObject) {
@@ -2131,13 +2131,13 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         droperTableView.reloadData()
     }
     
-    @IBAction func alternativeStartrAction(sender: AnyObject) {}
+    @IBAction func alternativeStartrAction(sender: AnyObject) {print("Test message")}
     
-    @IBAction func altrnativeGrowerAction(sender: AnyObject) {}
+    @IBAction func altrnativeGrowerAction(sender: AnyObject) {print("Test message")}
     
-    @IBAction func alternativeFinisherAction(sender: AnyObject) {}
+    @IBAction func alternativeFinisherAction(sender: AnyObject) {print("Test message")}
     
-    @IBAction func alternativeWdAction(sender: AnyObject) {}
+    @IBAction func alternativeWdAction(sender: AnyObject) {print("Test message")}
     
     @IBAction func alternativeStarterMoleculeAction(sender: AnyObject) {
         view.endEditing(true)
@@ -2533,12 +2533,15 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         if antiFromDurationSecondTextField.text! < antiToDurationSecondTextField.text! {
             
         } else if antiFromDurationSecondTextField.text! > antiToDurationSecondTextField.text! {
+            print("test message")
         }
     }
     @IBAction func toAntiboticThreeTextField(sender: AnyObject) {
         
         if antiFromDurationThirdTextField.text! < antiToDurationThirdTextField.text! {
+            print("test message")
         } else if antiFromDurationThirdTextField.text! > antiToDurationThirdTextField.text! {
+            print("test message")
         }
         
     }

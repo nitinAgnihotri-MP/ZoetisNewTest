@@ -1417,6 +1417,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                 self.getNotesFromServer()
                             }
                             else{
+                                print("Test Message")
                             }
                         }
                         else {
@@ -1661,6 +1662,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     }
     @objc func update() {
         if WebClass.sharedInstance.connected(){
+            print("test message")
         }
         else{
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))

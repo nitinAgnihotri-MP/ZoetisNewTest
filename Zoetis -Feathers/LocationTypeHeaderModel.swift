@@ -25,7 +25,7 @@ class LocationTypeHeaderModel {
     var timeStamp = ""
         
     init() {
-        print("initialize class")
+        print("")
     }
     init(headerObject: Microbial_LocationTypeHeaders) {
         self.section = headerObject.section as? Int ?? -1

@@ -365,7 +365,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         self.preparedArray.add(chartDataSet)
     }
     @nonobjc func didFinishWithParsingWithFarmData(_ finishedArray : [Float]){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     func setChartData(dataPoints: [String], values: [Float]) -> BarChartDataSet? {
         

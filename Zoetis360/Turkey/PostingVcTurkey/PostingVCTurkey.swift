@@ -898,7 +898,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     
     func callBreed(){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     /************** Delegate Method Of DropDown ***************************/
@@ -1300,6 +1300,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if (textField == notesTextView ) {
+            print("test message")
         } else {
             CustRepTextField.returnKeyType = UIReturnKeyType.done
         }
@@ -1326,9 +1327,11 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     
     func touchMoved() {
+        appDelegate.testFuntion()
     }
     
     func touchBegan() {
+        appDelegate.testFuntion()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -2020,6 +2023,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     
     func YesPopUpPosting() {
+        appDelegate.testFuntion()
     }
     
     //MARK -- Delegate SyNC Api

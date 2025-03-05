@@ -117,9 +117,6 @@ class PEHeaderDayOfAge: UITableViewHeaderFooterView , UITextFieldDelegate {
     
     // MARK: - TEXTFIELD DELEGATES
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        //   print("TextField did begin editing method called")
-    }
     func textFieldDidEndEditing(_ textField: UITextField) {
         txtAntiBioticCompletion?(textField.text)
     }

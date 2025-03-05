@@ -64,7 +64,7 @@ class notes: UIView,UITextViewDelegate {
         else{
             let str =  UserDefaults.standard.value(forKey: "postingSessionNotes") as! String
             if str.isEmpty
-            {}
+            {print("Test message")}
             else{
                 textViewN.text = str
             }

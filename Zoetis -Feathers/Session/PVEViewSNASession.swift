@@ -328,6 +328,7 @@ extension PVEViewSNASession{
             }
             self.dropHiddenAndShow()
         } else {
+            print("test message")
         }
         
         let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()

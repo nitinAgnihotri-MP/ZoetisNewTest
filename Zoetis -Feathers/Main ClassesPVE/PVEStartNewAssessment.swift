@@ -476,7 +476,7 @@ extension PVEStartNewAssessment{
             }
                 
             default:
-                do {}
+                do {print("Test message")}
             }
         }
         
@@ -628,6 +628,7 @@ extension PVEStartNewAssessment{
         
         if let text = sharedManager.getSessionValueForKeyFromDB(key: "housing") as? String, !text.isEmpty
         {
+            print("test message")
         }
         else
         {
@@ -700,7 +701,8 @@ extension PVEStartNewAssessment: DatePickerPopupViewControllerProtocol{
     }
     
     
-    func doneButtonTapped(string:String){
+    func doneButtonTapped(string:String) {
+        print("string:",string)
     }
 }
 
@@ -810,10 +812,10 @@ extension PVEStartNewAssessment {
     }
     
     func createRequest() {
-        
+        let evalDate = "2019-12-24T09:41:06.152Z"
         let json = [
             "Id": 0,
-            "Evaluation_Date": "2019-12-24T09:41:06.152Z",
+            "Evaluation_Date": evalDate,
             "Evaluation_Type_Id": 8,
             "Evaluation_For_Id": 4,
             "Customer_Id": 3085,
@@ -826,7 +828,7 @@ extension PVEStartNewAssessment {
             "Housing_Id": 1,
             "Camera": true,
             "Notes": "ssss",
-            "CreatedAt": "2019-12-24T09:41:06.152Z",
+            "CreatedAt": evalDate,
             "CreatedBy": 1609,
             "Survey_Type_Id": 1,
             "Device_Id": "ffdsafds",
@@ -837,7 +839,7 @@ extension PVEStartNewAssessment {
                     "Farm_Name": "fdsafdsaf",
                     "House_No": 0,
                     "Assessment_Detail_Id": 0,
-                    "CreatedAt": "2019-12-24T09:41:06.152Z",
+                    "CreatedAt": evalDate,
                     "CreatedBy": 1609,
                     "Device_Id": "fdsafds"
                 ]

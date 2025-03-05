@@ -71,6 +71,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         vaccineNames.append(person)
     }
@@ -87,6 +88,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         vaccineMan.append(person)
     }
@@ -104,6 +106,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         surveyType.append(person)
     }
@@ -120,6 +123,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         siteInjects.append(person)
     }
@@ -136,6 +140,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         serotype.append(person)
     }
@@ -151,6 +156,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         CustData.append(person)
@@ -174,6 +180,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         vaccineMan.append(person)
     }
@@ -194,6 +201,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         vaccineMan.append(person)
     }
@@ -214,6 +222,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -236,6 +245,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         return dataArray
         
@@ -329,6 +339,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -354,6 +365,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -382,6 +394,7 @@ class CoreDataHandlerPVE: NSObject {
             }
         } 
         catch {
+            print("test message")
         }
         
         return dataArray
@@ -406,6 +419,7 @@ class CoreDataHandlerPVE: NSObject {
                 dataArray = results as NSArray
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -624,6 +638,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -643,6 +658,7 @@ class CoreDataHandlerPVE: NSObject {
             }
             
         } catch {
+            print("test message")
         }
         
     }
@@ -665,6 +681,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -690,6 +707,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -713,6 +731,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -733,6 +752,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         CustData.append(person)
@@ -752,6 +772,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         breedOfBirdsData.append(person)
@@ -770,6 +791,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         breedOfBirdsData.append(person)
@@ -789,6 +811,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         ageOfBirdsData.append(person)
@@ -817,6 +840,7 @@ class CoreDataHandlerPVE: NSObject {
                 dataArray = results as NSArray
             }
         } catch {
+            print("test message")
         }
         return dataArray
         
@@ -835,6 +859,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         breedOfBirdsData.append(person)
@@ -856,6 +881,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         siteIDData.append(person)
@@ -878,6 +904,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -897,6 +924,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         evaluatorData.append(person)
@@ -916,6 +944,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         assignUserData.append(person)
@@ -934,6 +963,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         housingData.append(person)
@@ -958,6 +988,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         assessmentCat.append(person)
@@ -999,6 +1030,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         assessmentQ.append(person)
@@ -1020,6 +1052,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         return dataArray
         
@@ -1038,6 +1071,7 @@ class CoreDataHandlerPVE: NSObject {
             }
         }
         catch {
+            print("test message")
         }
         
     }
@@ -1059,6 +1093,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -1081,6 +1116,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -1121,6 +1157,7 @@ class CoreDataHandlerPVE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         
         return "\(sumMarks)/\(maxMarks)"
@@ -1161,6 +1198,7 @@ class CoreDataHandlerPVE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         
         return "\(sumMarks)/\(maxMarks)"
@@ -1202,6 +1240,7 @@ class CoreDataHandlerPVE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         
         return (sumMarks , maxMarks)
@@ -1241,6 +1280,7 @@ class CoreDataHandlerPVE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         
         return (sumMarks , maxMarks)
@@ -1521,12 +1561,14 @@ class CoreDataHandlerPVE: NSObject {
                 results![0].setValue("synced", forKey: "type")
             }
         } catch {
+            print("test message")
         }
         
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
     }
     
@@ -1553,6 +1595,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         managedObject.append(person)
@@ -1582,6 +1625,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         managedObject.append(person)
@@ -1609,6 +1653,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -1667,6 +1712,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -1688,6 +1734,7 @@ class CoreDataHandlerPVE: NSObject {
                 return userIDArray
             }
         } catch {
+            print("test message")
         }
         return []
     }
@@ -1710,6 +1757,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         assessmentCat.append(person)
@@ -1759,6 +1807,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray
@@ -1827,6 +1876,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         do {
@@ -1834,6 +1884,7 @@ class CoreDataHandlerPVE: NSObject {
             //   NotificationCenter.default.post(name: NSNotification.Name("reloadSNATblViewNoti"), object: nil, userInfo: nil)
         }
         catch {
+            print("test message")
         }
     }
     
@@ -1852,12 +1903,14 @@ class CoreDataHandlerPVE: NSObject {
                 results![0].setValue(type, forKey: "type")
             }
         } catch {
+            print("test message")
         }
         
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
         
     }
@@ -2043,6 +2096,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         sessionPVE.append(person)
@@ -2223,6 +2277,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         
         sessionPVE.append(person)
@@ -2313,6 +2368,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         assessmentCat.append(person)
     }
@@ -2345,12 +2401,14 @@ class CoreDataHandlerPVE: NSObject {
             }
             
         } catch {
+            print("test message")
         }
         
         do {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
         
     }
@@ -2379,6 +2437,7 @@ class CoreDataHandlerPVE: NSObject {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
         
     }
@@ -2430,6 +2489,7 @@ class CoreDataHandlerPVE: NSObject {
                 }
             }
         } catch {
+            print("test message")
         }
         
         
@@ -2461,6 +2521,7 @@ class CoreDataHandlerPVE: NSObject {
             }
         }
         catch {
+            print("test message")
         }
         
     }
@@ -2639,6 +2700,218 @@ class CoreDataHandlerPVE: NSObject {
         
     }
     
+    fileprivate func dataPopulationMethod1(_ person: NSManagedObject, _ vaccineInfoDetailsViewModel: [JSON]) {
+        person.setValue(vaccineInfoDetailsViewModel, forKey: "cat_vaccinInfoDetailArr")
+        if vaccineInfoDetailsViewModel.count > 0 {
+            var vaccinatorInfoArr = [[String : Any]]()
+            for (_, currntSyncObj) in vaccineInfoDetailsViewModel.enumerated(){
+                let Vaccine_Mfg_Id = currntSyncObj["Vaccine_Mfg_Id"].intValue
+                let mfgArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_VaccineManDetails", id: Vaccine_Mfg_Id, keyStr: "id")
+                var manufecturer = ""
+                if mfgArr.count > 0 {
+                    manufecturer = (mfgArr.object(at: 0) as AnyObject).value(forKey: "name") as! String
+                }
+                
+                let Vaccine_Id = currntSyncObj["Vaccine_Id"].intValue
+                let vaccineArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_VaccineNamesDetails", id: Vaccine_Id, keyStr: "id")
+                var vaccine = ""
+                if vaccineArr.count > 0 {
+                    vaccine = (vaccineArr.object(at: 0) as AnyObject).value(forKey: "name") as! String
+                }
+                
+                let Serotype_Id = currntSyncObj["Serotype_Id"].intValue
+                let serotypeArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id: Serotype_Id, keyStr: "id")
+                var serotype = ""
+                if serotypeArr.count > 0 {
+                    serotype = (serotypeArr.object(at: 0) as AnyObject).value(forKey: "type") as! String
+                }
+                
+                
+                let Vaccine_antigen_Id = currntSyncObj["Vaccine_Id"].intValue
+                let Vaccine_antigenArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id: Vaccine_antigen_Id, keyStr: "vaccine_Id")
+                var antigentype = 23
+                if Vaccine_antigenArr.count > 0 {
+                    antigentype = (Vaccine_antigenArr.object(at: 0) as AnyObject).value(forKey: "vaccine_Id") as? Int ?? 0
+                }
+                
+                let Site_Injct_Id = currntSyncObj["Site_Injct_Id"].intValue
+                let siteInjArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SiteInjctsDetails", id: Site_Injct_Id, keyStr: "id")
+                var siteInj = ""
+                if siteInjArr.count > 0 {
+                    siteInj = (siteInjArr.object(at: 0) as AnyObject).value(forKey: "name") as! String
+                }
+                
+                let Serial = currntSyncObj["Serial"].stringValue
+                let Exp_Date = currntSyncObj["Exp_Date"].stringValue
+                
+                var expDateString = String()
+                if Exp_Date == "1900-12-12T00:00:00"{
+                    expDateString = ""
+                }else{
+                    let dateTempArr = Exp_Date.components(separatedBy: "T")
+                    let inputFormatter = DateFormatter()
+                    inputFormatter.dateFormat = "yyyy-MM-dd"
+                    let showDate = inputFormatter.date(from: dateTempArr[0])
+                    inputFormatter.dateFormat = "MM/dd/YYYY"
+                    expDateString = inputFormatter.string(from: showDate!)
+                }
+                var tempVacName = String()
+                var tempVaccine_Id = Int()
+                
+                if Vaccine_Mfg_Id == 17 {
+                    tempVacName = currntSyncObj["Vaccine_Other"].stringValue
+                    tempVaccine_Id = 1000
+                }else{
+                    tempVacName = vaccine
+                    tempVaccine_Id = Vaccine_Id
+                }
+                
+                let note = currntSyncObj["Note"].stringValue
+                let otherAntigen = currntSyncObj["Serotype_Other"].stringValue
+                let showMore = currntSyncObj["ShowMore"].stringValue
+                let antigenModel = currntSyncObj["antigenDetailsViewModel"].arrayValue
+                
+                debugPrint(antigenModel)
+                debugPrint(otherAntigen)
+                var antigenIdArr = [String]()
+                var antigenNameArr = [String]()
+                var otherAntigenArr = [String]()
+                
+                for antigen in antigenModel
+                {
+                    antigenIdArr.append("\(antigen["Antigen_Id"].intValue)")
+                    antigenNameArr.append(antigen["ProperAntigenName"].stringValue)
+                    otherAntigenArr.append(antigen["Antigen_Other"].stringValue)
+                }
+                
+                
+                let antigenOtherStr = otherAntigenArr.joined(separator: "")
+                vaccinatorInfoArr.append(["man_id": Vaccine_Mfg_Id,
+                                          "man" : manufecturer,
+                                          
+                                          "name_id": tempVaccine_Id,
+                                          "name" : tempVacName,
+                                          
+                                          "serotype_id" : antigenIdArr,
+                                          "serotype" : antigenNameArr,
+                                          
+                                          "siteOfInj_id" : Site_Injct_Id,
+                                          "siteOfInj" : siteInj,
+                                          
+                                          "serial" : Serial,
+                                          "expDate" : expDateString,
+                                          "note" : note,
+                                          
+                                          "showMore" : showMore,
+                                          "vaccine_id" : antigentype,
+                                          
+                                          "otherAntigen" : antigenOtherStr,
+                                         ])
+            }
+            person.setValue(vaccinatorInfoArr, forKey: "cat_vaccinInfoDetailArr")
+        }
+    }
+    
+    fileprivate func dataPopulationMethod2(_ json: JSON, _ syncId: String, _ saveType: String, _ selectedBirdTypeId: Int, _ inactivatedVaccinesViewModel: [JSON], _ choleraVaccinesViewModel: [JSON]) {
+        let assessmentScoresViewModelArr = json["assessmentScoresViewModel"].arrayValue
+        
+        for (_, currntObj) in assessmentScoresViewModelArr.enumerated(){
+            // "Assessment_Id": 104,
+            // "Module_Assessment_Cat_Id": 11
+            let score = currntObj["Score"].intValue
+            let enteredTxt = currntObj["TextFieldValue"].stringValue
+            self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: enteredTxt, forAttribute: "enteredText")
+            
+            if score == 0 {
+                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: false, forAttribute: "isSelected")
+                
+            }else{
+                
+                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: true, forAttribute: "isSelected")
+                
+                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: currntObj["InactivatedVaccineType"].boolValue as Any, forAttribute: "inactiveVaccineSwitch")
+                
+                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text:  currntObj["LiveVaccineType"].boolValue as Any, forAttribute: "liveVaccineSwitch")
+                
+                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: currntObj["LiveVaccineTypeComment"].stringValue, forAttribute: "liveComment")
+                
+                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: currntObj["InactivatedVaccineTypeComment"].stringValue, forAttribute: "inactiveComment")
+                
+            }
+        }
+        
+        
+        
+        let assessmentCommentsViewModelArr = json["assessmentCommentsViewModel"].arrayValue
+        for (_, currntObj) in assessmentCommentsViewModelArr.enumerated(){
+            let comment = currntObj["Comment"].stringValue
+            if comment == ""{
+                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: comment, forAttribute: "comment")
+            }else{
+                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: comment, forAttribute: "comment")
+            }
+        }
+        
+        
+        
+        if saveType != "draft"{
+            
+            let assessmentArr = CoreDataHandlerPVE().fetchDraftAssementArr(selectedBirdTypeId: selectedBirdTypeId, type: saveType, syncId: syncId)
+            
+            let catArray = assessmentArr.value(forKey: "category_Name") as? NSArray ?? NSArray()
+            
+            let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
+            
+            var scoreArr = [Any]()
+            scoreArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(syncId, seqNoArr: seq_NumberArr).scoreArr as! [Any]
+            if scoreArr.count > 0
+            {
+                scoreArr.removeLast()
+            }
+            var evalScore = Double()
+            evalScore = inactivatedVaccinesViewModel[0]["Score"].doubleValue + choleraVaccinesViewModel[0]["Score"].doubleValue
+            
+            scoreArr.append(evalScore)
+            
+            var max_MarksArr = [Int]()
+            max_MarksArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(syncId, seqNoArr: seq_NumberArr).max_MarksArr as! [Int]
+            max_MarksArr.append(30)
+            
+            CoreDataHandlerPVE().updateDraftSNAFor(syncId, syncedStatus: true, text: catArray, forAttribute: "categoryArray")
+            CoreDataHandlerPVE().updateDraftSNAFor(syncId, syncedStatus: true, text: scoreArr as NSObject, forAttribute: "scoreArray")
+            CoreDataHandlerPVE().updateDraftSNAFor(syncId, syncedStatus: true, text: max_MarksArr as NSObject, forAttribute: "maxScoreArray")
+            
+        }
+    }
+    
+    fileprivate func dataPopulationMethod3(_ catchersViewModel: [JSON], _ person: NSManagedObject, _ vaccinatorsViewModel: [JSON]) {
+        if catchersViewModel.count > 0 {
+            var catchersArr = [[String : String]]()
+            for (_, currntSyncObj) in catchersViewModel.enumerated(){
+                let name = currntSyncObj["MemberName"].stringValue
+                catchersArr.append((["name" : name ,"serology" : ""]))
+            }
+            person.setValue(catchersArr, forKey: "cat_NoOfCatchersDetailsArr")
+        }
+        
+        
+        person.setValue(vaccinatorsViewModel, forKey: "cat_NoOfVaccinatorsDetailsArr")
+        if vaccinatorsViewModel.count > 0 {
+            var vaccinatorArr = [[String : String]]()
+            for (_, currntSyncObj) in vaccinatorsViewModel.enumerated(){
+                let name = currntSyncObj["MemberName"].stringValue
+                let IsSerology = currntSyncObj["IsSerology"].boolValue
+                //catchersArr.append(["name" : name])
+                if IsSerology == true {
+                    vaccinatorArr.append(["name" : name ,"serology" : "selected"])
+                }else{
+                    vaccinatorArr.append(["name" : name ,"serology" : ""])
+                }
+            }
+            person.setValue(vaccinatorArr, forKey: "cat_NoOfVaccinatorsDetailsArr")
+        }
+    }
+    
     func saveSyncDetailsInDBFromResponse(json:JSON) {
         
         let syncId = json["App_Assessment_Detail_Id"].stringValue
@@ -2684,11 +2957,10 @@ class CoreDataHandlerPVE: NSObject {
             
             person.setValue(json["Device_Id"].stringValue, forKey: "deviceId")
             person.setValue(json["CreatedAt"].stringValue, forKey: "createdAt")
-            
-            if json["Camera"].boolValue == false{
+            person.setValue("true", forKey: "cameraEnabled")
+
+            if json["Camera"].boolValue == false {
                 person.setValue("false", forKey: "cameraEnabled")
-            }else{
-                person.setValue("true", forKey: "cameraEnabled")
             }
             
             person.setValue(vaccineInformationCrewDetailsViewModel?["CompFieldRepEmailId"], forKey: "cat_companyRepEmail")
@@ -2702,142 +2974,10 @@ class CoreDataHandlerPVE: NSObject {
             
             
             person.setValue(catchersViewModel, forKey: "cat_NoOfCatchersDetailsArr")
-            if catchersViewModel.count > 0 {
-                var catchersArr = [[String : String]]()
-                for (_, currntSyncObj) in catchersViewModel.enumerated(){
-                    let name = currntSyncObj["MemberName"].stringValue
-                    catchersArr.append((["name" : name ,"serology" : ""]))
-                }
-                person.setValue(catchersArr, forKey: "cat_NoOfCatchersDetailsArr")
-            }
+            dataPopulationMethod3(catchersViewModel, person, vaccinatorsViewModel)
             
             
-            person.setValue(vaccinatorsViewModel, forKey: "cat_NoOfVaccinatorsDetailsArr")
-            if vaccinatorsViewModel.count > 0 {
-                var vaccinatorArr = [[String : String]]()
-                for (_, currntSyncObj) in vaccinatorsViewModel.enumerated(){
-                    let name = currntSyncObj["MemberName"].stringValue
-                    let IsSerology = currntSyncObj["IsSerology"].boolValue
-                    //catchersArr.append(["name" : name])
-                    if IsSerology == true {
-                        vaccinatorArr.append(["name" : name ,"serology" : "selected"])
-                    }else{
-                        vaccinatorArr.append(["name" : name ,"serology" : ""])
-                    }
-                }
-                person.setValue(vaccinatorArr, forKey: "cat_NoOfVaccinatorsDetailsArr")
-            }
-            
-            
-            person.setValue(vaccineInfoDetailsViewModel, forKey: "cat_vaccinInfoDetailArr")
-            if vaccineInfoDetailsViewModel.count > 0 {
-                var vaccinatorInfoArr = [[String : Any]]()
-                for (_, currntSyncObj) in vaccineInfoDetailsViewModel.enumerated(){
-                    let Vaccine_Mfg_Id = currntSyncObj["Vaccine_Mfg_Id"].intValue
-                    let mfgArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_VaccineManDetails", id: Vaccine_Mfg_Id, keyStr: "id")
-                    var manufecturer = ""
-                    if mfgArr.count > 0 {
-                        manufecturer = (mfgArr.object(at: 0) as AnyObject).value(forKey: "name") as! String
-                    }
-                    
-                    let Vaccine_Id = currntSyncObj["Vaccine_Id"].intValue
-                    let vaccineArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_VaccineNamesDetails", id: Vaccine_Id, keyStr: "id")
-                    var vaccine = ""
-                    if vaccineArr.count > 0 {
-                        vaccine = (vaccineArr.object(at: 0) as AnyObject).value(forKey: "name") as! String
-                    }
-                    
-                    let Serotype_Id = currntSyncObj["Serotype_Id"].intValue
-                    let serotypeArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id: Serotype_Id, keyStr: "id")
-                    var serotype = ""
-                    if serotypeArr.count > 0 {
-                        serotype = (serotypeArr.object(at: 0) as AnyObject).value(forKey: "type") as! String
-                    }
-                    
-                    
-                    let Vaccine_antigen_Id = currntSyncObj["Vaccine_Id"].intValue
-                    let Vaccine_antigenArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id: Vaccine_antigen_Id, keyStr: "vaccine_Id")
-                    var antigentype = 23
-                    if Vaccine_antigenArr.count > 0 {
-                        antigentype = (Vaccine_antigenArr.object(at: 0) as AnyObject).value(forKey: "vaccine_Id") as? Int ?? 0
-                    }
-                    
-                    let Site_Injct_Id = currntSyncObj["Site_Injct_Id"].intValue
-                    let siteInjArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SiteInjctsDetails", id: Site_Injct_Id, keyStr: "id")
-                    var siteInj = ""
-                    if siteInjArr.count > 0 {
-                        siteInj = (siteInjArr.object(at: 0) as AnyObject).value(forKey: "name") as! String
-                    }
-                    
-                    let Serial = currntSyncObj["Serial"].stringValue
-                    let Exp_Date = currntSyncObj["Exp_Date"].stringValue
-                    
-                    var expDateString = String()
-                    if Exp_Date == "1900-12-12T00:00:00"{
-                        expDateString = ""
-                    }else{
-                        let dateTempArr = Exp_Date.components(separatedBy: "T")
-                        let inputFormatter = DateFormatter()
-                        inputFormatter.dateFormat = "yyyy-MM-dd"
-                        let showDate = inputFormatter.date(from: dateTempArr[0])
-                        inputFormatter.dateFormat = "MM/dd/YYYY"
-                        expDateString = inputFormatter.string(from: showDate!)
-                    }
-                    var tempVacName = String()
-                    var tempVaccine_Id = Int()
-                    
-                    if Vaccine_Mfg_Id == 17 {
-                        tempVacName = currntSyncObj["Vaccine_Other"].stringValue
-                        tempVaccine_Id = 1000
-                    }else{
-                        tempVacName = vaccine
-                        tempVaccine_Id = Vaccine_Id
-                    }
-                    
-                    let note = currntSyncObj["Note"].stringValue
-                    let otherAntigen = currntSyncObj["Serotype_Other"].stringValue
-                    let showMore = currntSyncObj["ShowMore"].stringValue
-                    let antigenModel = currntSyncObj["antigenDetailsViewModel"].arrayValue
-                    
-                    debugPrint(antigenModel)
-                    debugPrint(otherAntigen)
-                    var antigenIdArr = [String]()
-                    var antigenNameArr = [String]()
-                    var otherAntigenArr = [String]()
-                    
-                    for antigen in antigenModel
-                    {
-                        antigenIdArr.append("\(antigen["Antigen_Id"].intValue)")
-                        antigenNameArr.append(antigen["ProperAntigenName"].stringValue)
-                        otherAntigenArr.append(antigen["Antigen_Other"].stringValue)
-                    }
-                    
-                    
-                    let antigenOtherStr = otherAntigenArr.joined(separator: "")
-                    vaccinatorInfoArr.append(["man_id": Vaccine_Mfg_Id,
-                                              "man" : manufecturer,
-                                              
-                                              "name_id": tempVaccine_Id,
-                                              "name" : tempVacName,
-                                              
-                                              "serotype_id" : antigenIdArr,
-                                              "serotype" : antigenNameArr,
-                                              
-                                              "siteOfInj_id" : Site_Injct_Id,
-                                              "siteOfInj" : siteInj,
-                                              
-                                              "serial" : Serial,
-                                              "expDate" : expDateString,
-                                              "note" : note,
-                                              
-                                              "showMore" : showMore,
-                                              "vaccine_id" : antigentype,
-                                              
-                                              "otherAntigen" : antigenOtherStr,
-                                             ])
-                }
-                person.setValue(vaccinatorInfoArr, forKey: "cat_vaccinInfoDetailArr")
-            }
+            dataPopulationMethod1(person, vaccineInfoDetailsViewModel)
             
             
             person.setValue(json["Evaluation_Date"].string ?? "", forKey: "evaluationDate")
@@ -2887,23 +3027,21 @@ class CoreDataHandlerPVE: NSObject {
             person.setValue(json["Notes"].stringValue, forKey: "notes")
             
             var selectedBirdTypeId = Int()
+            person.setValue(13, forKey: "selectedBirdTypeId")
+            selectedBirdTypeId = 13
             if json["Type_of_Bird"].intValue == 1{
                 person.setValue(14, forKey: "selectedBirdTypeId")
                 selectedBirdTypeId = 14
-            }else{
-                person.setValue(13, forKey: "selectedBirdTypeId")
-                selectedBirdTypeId = 13
             }
             
             if json["evaluationNoteViewModel"].isEmpty{
                 person.setValue( "", forKey: "vacEval_Comment")
                 person.setValue( 0, forKey: "vacEval_DyeAdded")
-            }else{
+            } else {
                 if evaluationNoteViewModel != nil{
                     person.setValue(evaluationNoteViewModel!["Note"] ?? "", forKey: "vacEval_Comment")
                     person.setValue(evaluationNoteViewModel!["WasDyeAdded"] ?? 0, forKey: "vacEval_DyeAdded")
                 }
-                
             }
             
             person.setValue(saveType, forKey: "type")
@@ -2920,76 +3058,7 @@ class CoreDataHandlerPVE: NSObject {
             CoreDataHandlerPVE().saveSyncAssCatDetails(type: saveType, syncId: syncId)
             CoreDataHandlerPVE().saveSyncAssQuestions(type: saveType, syncId: syncId)
             
-            
-            let assessmentScoresViewModelArr = json["assessmentScoresViewModel"].arrayValue
-            
-            for (_, currntObj) in assessmentScoresViewModelArr.enumerated(){
-                // "Assessment_Id": 104,
-                // "Module_Assessment_Cat_Id": 11
-                let score = currntObj["Score"].intValue
-                let enteredTxt = currntObj["TextFieldValue"].stringValue
-                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: enteredTxt, forAttribute: "enteredText")
-                
-                if score == 0 {
-                    self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: false, forAttribute: "isSelected")
-                    
-                }else{
-                    
-                    self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: true, forAttribute: "isSelected")
-                    
-                    self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: currntObj["InactivatedVaccineType"].boolValue as Any, forAttribute: "inactiveVaccineSwitch")
-                    
-                    self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text:  currntObj["LiveVaccineType"].boolValue as Any, forAttribute: "liveVaccineSwitch")
-                    
-                    self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: currntObj["LiveVaccineTypeComment"].stringValue, forAttribute: "liveComment")
-                    
-                    self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: currntObj["InactivatedVaccineTypeComment"].stringValue, forAttribute: "inactiveComment")
-                    
-                }
-            }
-            
-            
-            
-            let assessmentCommentsViewModelArr = json["assessmentCommentsViewModel"].arrayValue
-            for (_, currntObj) in assessmentCommentsViewModelArr.enumerated(){
-                let comment = currntObj["Comment"].stringValue
-                if comment == ""{
-                    self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: comment, forAttribute: "comment")
-                }else{
-                    self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: comment, forAttribute: "comment")
-                }
-            }
-            
-            
-            
-            if saveType != "draft"{
-                
-                let assessmentArr = CoreDataHandlerPVE().fetchDraftAssementArr(selectedBirdTypeId: selectedBirdTypeId, type: saveType, syncId: syncId)
-                
-                let catArray = assessmentArr.value(forKey: "category_Name") as? NSArray ?? NSArray()
-                
-                let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
-                
-                var scoreArr = [Any]()
-                scoreArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(syncId, seqNoArr: seq_NumberArr).scoreArr as! [Any]
-                if scoreArr.count > 0
-                {
-                    scoreArr.removeLast()
-                }
-                var evalScore = Double()
-                evalScore = inactivatedVaccinesViewModel[0]["Score"].doubleValue + choleraVaccinesViewModel[0]["Score"].doubleValue
-                
-                scoreArr.append(evalScore)
-                
-                var max_MarksArr = [Int]()
-                max_MarksArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(syncId, seqNoArr: seq_NumberArr).max_MarksArr as! [Int]
-                max_MarksArr.append(30)
-                
-                CoreDataHandlerPVE().updateDraftSNAFor(syncId, syncedStatus: true, text: catArray, forAttribute: "categoryArray")
-                CoreDataHandlerPVE().updateDraftSNAFor(syncId, syncedStatus: true, text: scoreArr as NSObject, forAttribute: "scoreArray")
-                CoreDataHandlerPVE().updateDraftSNAFor(syncId, syncedStatus: true, text: max_MarksArr as NSObject, forAttribute: "maxScoreArray")
-                
-            }
+            dataPopulationMethod2(json, syncId, saveType, selectedBirdTypeId, inactivatedVaccinesViewModel, choleraVaccinesViewModel)
         }
     }
     
@@ -3039,6 +3108,7 @@ class CoreDataHandlerPVE: NSObject {
             }
             
         } catch {
+            print("test message")
         }
         
     }
@@ -3057,6 +3127,7 @@ class CoreDataHandlerPVE: NSObject {
             }
             
         } catch {
+            print("test message")
         }
         
     }
@@ -3075,6 +3146,7 @@ class CoreDataHandlerPVE: NSObject {
             }
             
         } catch {
+            print("test message")
         }
         
     }
@@ -3218,6 +3290,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         pve_Sync.append(person)
     }
@@ -3731,6 +3804,7 @@ class CoreDataHandlerPVE: NSObject {
             try managedContext.save()
         }
         catch {
+            print("test message")
         }
         
     }
@@ -3815,6 +3889,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         assessmentCat.append(person)
         
@@ -3846,6 +3921,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             try managedContext.save()
         } catch {
+            print("test message")
         }
         assessmentCat.append(person)
         
@@ -3867,6 +3943,7 @@ class CoreDataHandlerPVE: NSObject {
                 
             }
         } catch {
+            print("test message")
         }
         
         return dataArray

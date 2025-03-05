@@ -14,7 +14,7 @@ class ViewRequisitionViewModel {
     private let kAll = "All"
     
     init() {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     

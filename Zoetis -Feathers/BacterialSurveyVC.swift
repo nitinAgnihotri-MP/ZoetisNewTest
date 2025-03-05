@@ -182,6 +182,65 @@ class BacterialSurveyVC: BaseViewController {
         }
     }
     
+    fileprivate func manageSiteIdCase(_ cell: BacterialCaseInfoCell, _ selectedValue: String) {
+        cell.siteTxt.text = selectedValue
+        self.selectedSite =  cell.siteTxt.text ?? "" == selectSiteString ? "" : cell.siteTxt.text ?? ""
+        var date = dateForBarcode.replacingOccurrences(of: "/", with: "")
+        if dateForBarcode.isEmpty {
+            date = defaultDateWithTimeStamp.replacingOccurrences(of: "/", with: "")
+        }
+        
+        let nameString = String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "") + "\(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "").count > 0 ? " " : "")" + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
+        
+        let initials = nameString.components(separatedBy: " ").reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" }
+        
+        cell.barcodeTxt.text = initials + "-" + "\(String(describing: date))" + "" + (cell.siteTxt.text ?? "")
+        self.globalBarcode = cell.barcodeTxt.text ?? "" + "-B"
+        _ = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer")
+        
+        if (cell.siteTxt.text != nil) {
+            cell.buttonForCornerRadius.layer.masksToBounds = true
+            cell.buttonForCornerRadius.layer.cornerRadius = 23
+            cell.buttonForCornerRadius.layer.borderWidth = 1
+            cell.buttonForCornerRadius.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+        }
+        self.isSiteFieldCheck = false
+        
+        if (cell.siteTxt.text != nil) {
+            self.isSiteFieldCheck = true
+        }
+        
+        CoreDataHandlerMicro().updateRequestorBacterialServeyFormDetails(cell.tag, text: selectedValue, forAttribute: "site")
+    }
+    
+    fileprivate func manageCompanyCase(_ cell: BacterialCaseInfoCell, _ selectedIndex: Int, _ selectedValue: String) {
+        cell.siteTxt.text = ""
+        self.isSiteFieldCheck = false
+        // var customerNamesId = NSArray()
+        var customerDetailsArray = NSArray()
+        customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer")
+        let customerId = (customerDetailsArray.object(at: selectedIndex) as AnyObject).value(forKey: "customerId") as! Int
+        appDelegate.selectedCompany = cell.selectedCompanyTxt.text ?? " "
+        self.selectedCompany = cell.selectedCompanyTxt.text ?? " "
+        //cell.selectedCompanyTxt.text ?? " "
+        self.selectedCompanyId = "\(customerId)"
+        
+        appDelegate.selectedCompany = selectedValue
+        cell.selectedCompanyTxt.text = selectedValue
+        CoreDataHandlerMicro().updateRequestorBacterialServeyFormDetails(cell.tag, text: selectedValue, forAttribute: "company")
+        
+        self.selectedCompany = selectedValue
+        cell.companyBtn.layer.borderColor = UIColor.red.cgColor
+        
+        if(cell.selectedCompanyTxt.text != nil) {
+            self.isCompanyFieldCheck = true
+            cell.companyBtn.layer.masksToBounds = true
+            cell.companyBtn.layer.cornerRadius = 23
+            cell.companyBtn.layer.borderWidth = 1
+            cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+        }
+    }
+    
     func setValueInTextFields(selectedValue: String, selectedIndex: Int, clickedField:String) {
         if let cell = self.bacterialSurveyTableView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? BacterialCaseInfoCell {
             cell.companyBtn.layer.masksToBounds = true
@@ -192,74 +251,12 @@ class BacterialSurveyVC: BaseViewController {
             case Constants.ClickedFieldMicrobialSurvey.SampleCollectedBy:
                 cell.sampleColletedByTxt.text = selectedValue
             case Constants.ClickedFieldMicrobialSurvey.company:
-                cell.siteTxt.text = ""
-                self.isSiteFieldCheck = false
-                // var customerNamesId = NSArray()
-                var customerDetailsArray = NSArray()
-                customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer")
-                let customerId = (customerDetailsArray.object(at: selectedIndex) as AnyObject).value(forKey: "customerId") as! Int
-                appDelegate.selectedCompany = cell.selectedCompanyTxt.text ?? " "
-                self.selectedCompany = cell.selectedCompanyTxt.text ?? " "
-                //cell.selectedCompanyTxt.text ?? " "
-                self.selectedCompanyId = "\(customerId)"
-                
-                if (cell.selectedCompanyTxt.text == "Training") {
-                    // cell.siteTxt.text = "Select Site"
-                } else {
-                    // cell.siteTxt.text = "No Data"
-                }
-                
-                appDelegate.selectedCompany = selectedValue
-                cell.selectedCompanyTxt.text = selectedValue
-                CoreDataHandlerMicro().updateRequestorBacterialServeyFormDetails(cell.tag, text: selectedValue, forAttribute: "company")
-                
-                self.selectedCompany = selectedValue
-                
-                if(cell.selectedCompanyTxt.text != nil) {
-                    self.isCompanyFieldCheck = true
-                    cell.companyBtn.layer.masksToBounds = true
-                    cell.companyBtn.layer.cornerRadius = 23
-                    cell.companyBtn.layer.borderWidth = 1
-                    cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-                } else {
-                    cell.companyBtn.layer.borderColor = UIColor.red.cgColor
-                }
+                manageCompanyCase(cell, selectedIndex, selectedValue)
                 
             case Constants.ClickedFieldMicrobialSurvey.siteId:
+                manageSiteIdCase(cell, selectedValue)
                 
-                cell.siteTxt.text = selectedValue
-                self.selectedSite =  cell.siteTxt.text ?? "" == selectSiteString ? "" : cell.siteTxt.text ?? ""
-                var date = ""
-                if dateForBarcode.isEmpty {
-                    date = defaultDateWithTimeStamp.replacingOccurrences(of: "/", with: "")
-                } else {
-                    date = dateForBarcode.replacingOccurrences(of: "/", with: "")
-                }
-                
-                let nameString = String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "") + "\(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "").count > 0 ? " " : "")" + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
-
-                let initials = nameString.components(separatedBy: " ").reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" }
-                
-                cell.barcodeTxt.text = initials + "-" + "\(String(describing: date))" + "" + (cell.siteTxt.text ?? "")
-                self.globalBarcode = cell.barcodeTxt.text ?? "" + "-B"
-                _ = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer")
-                
-                if(cell.siteTxt.text != nil) {
-                    cell.buttonForCornerRadius.layer.masksToBounds = true
-                    cell.buttonForCornerRadius.layer.cornerRadius = 23
-                    cell.buttonForCornerRadius.layer.borderWidth = 1
-                    cell.buttonForCornerRadius.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-                }
-                
-                if(cell.siteTxt.text != nil)  {
-                    self.isSiteFieldCheck = true
-                } else {
-                    self.isSiteFieldCheck = false
-                }
-                
-                CoreDataHandlerMicro().updateRequestorBacterialServeyFormDetails(cell.tag, text: selectedValue, forAttribute: "site")
             case Constants.ClickedFieldMicrobialSurvey.reviewer:
-                //self.dropdownManager.selectedBreedOfBirdsPVE = selectedValue
                 cell.reviewerTxt.text = selectedValue
                 self.selectedReviewer =  cell.reviewerTxt.text ?? " "
                 CoreDataHandlerMicro().updateRequestorBacterialServeyFormDetails(cell.tag, text: selectedValue, forAttribute: "reviewer")
@@ -623,23 +620,77 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
         return height
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    fileprivate func indexPathSectionIndexZero(_ cell: BacterialCaseInfoCell, _ indexPath: IndexPath) -> UITableViewCell {
+        cell.companyBtn.tag = indexPath.row
         
-        switch indexPath.section {
-        case 0:
+        if cell.sampleCollectionDateTxt.text == "" {
+            cell.sampleCollectionDateTxt.text = defaultDate
+        }
+        
+        UserDefaults.standard.setValue(cell.barcodeTxt.text, forKey: "barcode")
+        
+        cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+        
+        if(self.isPlusBtnClicked == true) && plateArr.count > 0 {
+            cell.barcodeTxt.isEnabled = false
+            cell.barcodeTxt.textColor = UIColor.lightGray
+        } else {
+            cell.barcodeTxt.isEnabled = true
+            cell.barcodeTxt.textColor = UIColor.black
+        }
+        
+        if progressSession.count > 0 {
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: "BacterialCaseInfoCell", for: indexPath) as! BacterialCaseInfoCell
-            cell.companyBtn.tag = indexPath.row
+            let data = progressSession.object(at: 0) as! ProgressSessionMicrobial
+            let firstName = UserDefaults.standard.value(forKey: "FirstName") as! String
             
-            if cell.sampleCollectionDateTxt.text == "" {
-                cell.sampleCollectionDateTxt.text = defaultDate
+            self.loggedInUser.text = firstName
+            cell.requestorTxt.text = firstName
+            cell.sampleColletedByTxt.text = firstName
+            
+            selectedEmailId = data.emailId ?? ""
+            
+            if data.company != "" {
+                cell.selectedCompanyTxt.text =  data.company
+                self.isCompanyFieldCheck = true
+                
+            } else if cell.selectedCompanyTxt.text == "" && isSubmitBtnClicked {
+                self.isCompanyFieldCheck = false
+                cell.companyBtn.layer.borderColor = UIColor.red.cgColor
             }
             
-            UserDefaults.standard.setValue(cell.barcodeTxt.text, forKey: "barcode")
             
-            cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+            if data.emailId != "" {
+                if cell.emailIdTxt.text == "" {
+                    cell.emailIdTxt.text = data.emailId
+                }
+            }
             
-            if(self.isPlusBtnClicked == true) && plateArr.count > 0 {
+            if data.site != "" && data.site != selectSiteString {
+                self.isSiteFieldCheck = true
+                cell.siteTxt.text = data.site
+            } else if cell.siteTxt.text == "" && (isSubmitBtnClicked == true || isPlusBtnClicked) {
+                self.isSiteFieldCheck = false
+                cell.buttonForCornerRadius.layer.borderColor = UIColor.red.cgColor
+            }
+            
+            if data.reviewer != "" {
+                cell.reviewerTxt.text = data.reviewer
+            }
+            
+            if(data.sampleCollectedBy != nil) {
+                cell.sampleColletedByTxt.text = data.sampleCollectedBy
+            }
+            
+            if(data.sampleCollectionDate != ""){
+                cell.sampleCollectionDateTxt.text = data.sampleCollectionDate
+            }
+            
+            barcodeForPlateId =  cell.barcodeTxt.text ?? " "
+            bacterialSurveyTableView.allowsSelection = false
+            
+            if plateArr.count > 0 {
+                isPlusBtnClicked = true
                 cell.barcodeTxt.isEnabled = false
                 cell.barcodeTxt.textColor = UIColor.lightGray
             } else {
@@ -647,296 +698,253 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
                 cell.barcodeTxt.textColor = UIColor.black
             }
             
-            if progressSession.count > 0 {
-                
-                let data = progressSession.object(at: 0) as! ProgressSessionMicrobial
-                let firstName = UserDefaults.standard.value(forKey: "FirstName") as! String
-                
-                self.loggedInUser.text = firstName
-                cell.requestorTxt.text = firstName
-                cell.sampleColletedByTxt.text = firstName
-                
-                selectedEmailId = data.emailId ?? ""
-                
-                if data.company != "" {
-                    cell.selectedCompanyTxt.text =  data.company
-                    self.isCompanyFieldCheck = true
-                    
-                } else if cell.selectedCompanyTxt.text == "" && isSubmitBtnClicked {
-                    self.isCompanyFieldCheck = false
-                    cell.companyBtn.layer.borderColor = UIColor.red.cgColor
-                }
-                
-                
-                if data.emailId != "" {
-                    if cell.emailIdTxt.text == "" {
-                        cell.emailIdTxt.text = data.emailId
-                    }
-                }
-                
-                if data.site != "" && data.site != selectSiteString {
-                    self.isSiteFieldCheck = true
-                    cell.siteTxt.text = data.site
-                } else if cell.siteTxt.text == "" && (isSubmitBtnClicked == true || isPlusBtnClicked) {
-                    self.isSiteFieldCheck = false
-                    cell.buttonForCornerRadius.layer.borderColor = UIColor.red.cgColor
-                }
-                
-                if data.reviewer != "" {
-                    cell.reviewerTxt.text = data.reviewer
-                }
-                
-                if(data.sampleCollectedBy != nil) {
-                    cell.sampleColletedByTxt.text = data.sampleCollectedBy
-                }
-                
-                if(data.sampleCollectionDate != ""){
-                    cell.sampleCollectionDateTxt.text = data.sampleCollectionDate
-                }
-                
-                barcodeForPlateId =  cell.barcodeTxt.text ?? " "
-                bacterialSurveyTableView.allowsSelection = false
-                
-                if plateArr.count > 0 {
-                    isPlusBtnClicked = true
-                    cell.barcodeTxt.isEnabled = false
-                    cell.barcodeTxt.textColor = UIColor.lightGray
-                } else {
-                    cell.barcodeTxt.isEnabled = true
-                    cell.barcodeTxt.textColor = UIColor.black
-                }
-                
-                if cell.selectedCompanyTxt.text != nil {
-                    isCompanyFieldCheck = true
-                }
-                
-                if data.barcode != "" {
-                    cell.barcodeTxt.text = data.barcode
-                }
-                
-                if !self.globalBarcode.isEmpty {
-                    cell.barcodeTxt.text = self.globalBarcode
-                } else {
-
-                        let sampleCollectionDateWithTimeStamp = data.sampleCollectionDateWithTimeStamp ?? ""
-                    let nameString = String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "") + "\(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "").count > 0 ? " " : "")" + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
-
-                    let initials = nameString.components(separatedBy: " ").reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" }
-                        cell.barcodeTxt.text = initials + "-" + "\(String(describing: sampleCollectionDateWithTimeStamp.replacingOccurrences(of: "/", with: "")))" + "" + "\(data.site ?? "")" + "-B"
-                    
-                    self.globalBarcode = cell.barcodeTxt.text ?? ""
-                }
-                
+            if cell.selectedCompanyTxt.text != nil {
+                isCompanyFieldCheck = true
+            }
+            
+            if data.barcode != "" {
+                cell.barcodeTxt.text = data.barcode
+            }
+            
+            if !self.globalBarcode.isEmpty {
+                cell.barcodeTxt.text = self.globalBarcode
             } else {
                 
-                if !self.globalBarcode.isEmpty {
-                    cell.barcodeTxt.text = self.globalBarcode
+                let sampleCollectionDateWithTimeStamp = data.sampleCollectionDateWithTimeStamp ?? ""
+                let nameString = String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "") + "\(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "").count > 0 ? " " : "")" + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
+                
+                let initials = nameString.components(separatedBy: " ").reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" }
+                cell.barcodeTxt.text = initials + "-" + "\(String(describing: sampleCollectionDateWithTimeStamp.replacingOccurrences(of: "/", with: "")))" + "" + "\(data.site ?? "")" + "-B"
+                
+                self.globalBarcode = cell.barcodeTxt.text ?? ""
+            }
+            
+        } else {
+            
+            if !self.globalBarcode.isEmpty {
+                cell.barcodeTxt.text = self.globalBarcode
+            } else {
+                let nameString = String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "") + "\(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "").count > 0 ? " " : "")" + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
+                
+                let initials = nameString.components(separatedBy: " ").reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" }
+                
+                if(dateForBarcode == "") {
+                    cell.barcodeTxt.text = initials + "-" + "\(defaultDateWithTimeStamp.replacingOccurrences(of: "/", with: ""))" + "" + "\(String(describing: cell.siteTxt.text!))" + "-B"
                 } else {
-                    let nameString = String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "") + "\(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "").count > 0 ? " " : "")" + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
-
-                    let initials = nameString.components(separatedBy: " ").reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" }
-                    
-                    if(dateForBarcode == "") {
-                        cell.barcodeTxt.text = initials + "-" + "\(defaultDateWithTimeStamp.replacingOccurrences(of: "/", with: ""))" + "" + "\(String(describing: cell.siteTxt.text!))" + "-B"
-                    } else {
-                        cell.barcodeTxt.text =  initials + "-" + "\(dateForBarcode.replacingOccurrences(of: "/", with: ""))" + "" + "\(String(describing: cell.siteTxt.text!))" + "-B"
-                    }
-                    self.globalBarcode = cell.barcodeTxt.text ?? ""
+                    cell.barcodeTxt.text =  initials + "-" + "\(dateForBarcode.replacingOccurrences(of: "/", with: ""))" + "" + "\(String(describing: cell.siteTxt.text!))" + "-B"
+                }
+                self.globalBarcode = cell.barcodeTxt.text ?? ""
+            }
+            
+            if isPlusBtnClicked {
+                if(cell.selectedCompanyTxt.text == "")
+                {   cell.companyBtn.layer.masksToBounds = true
+                    cell.companyBtn.layer.cornerRadius = 23
+                    cell.companyBtn.layer.borderWidth = 1
+                    cell.companyBtn.layer.borderColor = UIColor.red.cgColor
+                }  else {
+                    cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
                 }
                 
-                if isPlusBtnClicked {
-                    if(cell.selectedCompanyTxt.text == "")
-                    {   cell.companyBtn.layer.masksToBounds = true
-                        cell.companyBtn.layer.cornerRadius = 23
-                        cell.companyBtn.layer.borderWidth = 1
-                        cell.companyBtn.layer.borderColor = UIColor.red.cgColor
-                    }  else {
-                        cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-                    }
-                    
-                    if(cell.siteTxt.text == "")
-                    {   cell.buttonForCornerRadius.layer.masksToBounds = true
-                        cell.buttonForCornerRadius.layer.cornerRadius = 23
-                        cell.buttonForCornerRadius.layer.borderWidth = 1
-                        cell.buttonForCornerRadius.layer.borderColor = UIColor.red.cgColor
-                    }  else {
-                        cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-                    }
+                if(cell.siteTxt.text == "")
+                {   cell.buttonForCornerRadius.layer.masksToBounds = true
+                    cell.buttonForCornerRadius.layer.cornerRadius = 23
+                    cell.buttonForCornerRadius.layer.borderWidth = 1
+                    cell.buttonForCornerRadius.layer.borderColor = UIColor.red.cgColor
+                }  else {
+                    cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                }
+            }
+            
+            let firstName = UserDefaults.standard.value(forKey: "FirstName") as! String
+            self.loggedInUser.text = firstName
+            cell.requestorTxt.text = firstName
+            cell.sampleColletedByTxt.text = firstName
+            
+            selectedEmailId = cell.emailIdTxt.text ?? ""
+            cell.selectedCompanyTxt.text =  selectedCompany
+            
+            if cell.barcodeTxt.text == "" {
+                cell.barcodeBtn.layer.borderColor = UIColor.red.cgColor
+            }
+            
+            if self.isSubmitBtnClicked == true || self.isPlusBtnClicked {
+                
+                cell.companyBtn.layer.masksToBounds = true
+                cell.companyBtn.layer.cornerRadius = 23
+                cell.companyBtn.layer.borderWidth = 1
+                
+                if(cell.selectedCompanyTxt.text == "") {
+                    cell.companyBtn.layer.borderColor = UIColor.red.cgColor
+                } else {
+                    self.isCompanyFieldCheck = true
+                    cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
                 }
                 
-                let firstName = UserDefaults.standard.value(forKey: "FirstName") as! String
-                self.loggedInUser.text = firstName
-                cell.requestorTxt.text = firstName
-                cell.sampleColletedByTxt.text = firstName
+                cell.buttonForCornerRadius.layer.masksToBounds = true
+                cell.buttonForCornerRadius.layer.cornerRadius = 23
+                cell.buttonForCornerRadius.layer.borderWidth = 1
                 
-                selectedEmailId = cell.emailIdTxt.text ?? ""
-                cell.selectedCompanyTxt.text =  selectedCompany
+                if(cell.siteTxt.text == "" || cell.siteTxt.text == selectSiteString) {
+                    cell.buttonForCornerRadius.layer.borderColor = UIColor.red.cgColor
+                    self.isSiteFieldCheck = false
+                } else {
+                    self.isSiteFieldCheck = true
+                    cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                }
+                
+                cell.sampleCollectionDateBtn.layer.masksToBounds = true
+                cell.sampleCollectionDateBtn.layer.cornerRadius = 23
+                cell.sampleCollectionDateBtn.layer.borderWidth = 1
                 
                 if cell.barcodeTxt.text == "" {
                     cell.barcodeBtn.layer.borderColor = UIColor.red.cgColor
+                } else {
+                    self.isbarcodeFieldCheck = true
+                    cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
                 }
-                
-                if self.isSubmitBtnClicked == true || self.isPlusBtnClicked {
-                    
-                    cell.companyBtn.layer.masksToBounds = true
-                    cell.companyBtn.layer.cornerRadius = 23
-                    cell.companyBtn.layer.borderWidth = 1
-                    
-                    if(cell.selectedCompanyTxt.text == "") {
-                        cell.companyBtn.layer.borderColor = UIColor.red.cgColor
-                    } else {
-                        self.isCompanyFieldCheck = true
-                        cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-                    }
-                    
-                    cell.buttonForCornerRadius.layer.masksToBounds = true
-                    cell.buttonForCornerRadius.layer.cornerRadius = 23
-                    cell.buttonForCornerRadius.layer.borderWidth = 1
-                    
-                    if(cell.siteTxt.text == "" || cell.siteTxt.text == selectSiteString) {
-                        cell.buttonForCornerRadius.layer.borderColor = UIColor.red.cgColor
-                        self.isSiteFieldCheck = false
-                    } else {
-                        self.isSiteFieldCheck = true
-                        cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-                    }
-                    
-                    cell.sampleCollectionDateBtn.layer.masksToBounds = true
-                    cell.sampleCollectionDateBtn.layer.cornerRadius = 23
-                    cell.sampleCollectionDateBtn.layer.borderWidth = 1
-                    
-                    if cell.barcodeTxt.text == "" {
-                        cell.barcodeBtn.layer.borderColor = UIColor.red.cgColor
-                    } else {
-                        self.isbarcodeFieldCheck = true
-                        cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-                    }
-                    cell.tag = sessionId
-                }
-                
-                barcodeForPlateId =  cell.barcodeTxt.text ?? " "
-                bacterialSurveyTableView.allowsSelection = false
+                cell.tag = sessionId
             }
             
-            if isPlusBtnClicked && isCompanyFieldCheck && plateArr.count > 0 {
-                cell.companyBtn.isEnabled = false
-                cell.selectedCompanyTxt.isEnabled = false
-                cell.selectedCompanyTxt.textColor = .lightGray
-                cell.siteBtn.isEnabled = false
-                cell.siteTxt.isEnabled = false
-                cell.siteTxt.textColor = .lightGray
-                cell.sampleCollectionDateBtn.isEnabled = false
-                cell.sampleCollectionDateBtn2.isEnabled = false
-                cell.sampleCollectionDateTxt.isEnabled = false
-                cell.sampleCollectionDateTxt.textColor = .lightGray
+            barcodeForPlateId =  cell.barcodeTxt.text ?? " "
+            bacterialSurveyTableView.allowsSelection = false
+        }
+        
+        if isPlusBtnClicked && isCompanyFieldCheck && plateArr.count > 0 {
+            cell.companyBtn.isEnabled = false
+            cell.selectedCompanyTxt.isEnabled = false
+            cell.selectedCompanyTxt.textColor = .lightGray
+            cell.siteBtn.isEnabled = false
+            cell.siteTxt.isEnabled = false
+            cell.siteTxt.textColor = .lightGray
+            cell.sampleCollectionDateBtn.isEnabled = false
+            cell.sampleCollectionDateBtn2.isEnabled = false
+            cell.sampleCollectionDateTxt.isEnabled = false
+            cell.sampleCollectionDateTxt.textColor = .lightGray
+        } else {
+            cell.companyBtn.isEnabled = true
+            cell.selectedCompanyTxt.isEnabled = true
+            cell.selectedCompanyTxt.textColor = .black
+            cell.siteBtn.isEnabled = true
+            cell.siteTxt.isEnabled = true
+            cell.siteTxt.textColor = .black
+            cell.sampleCollectionDateBtn.isEnabled = true
+            cell.sampleCollectionDateTxt.isEnabled = true
+            cell.sampleCollectionDateTxt.textColor = .black
+            cell.sampleCollectionDateBtn2.isEnabled = true
+        }
+        return cell
+    }
+    
+    fileprivate func manageIndexPathOne(_ cell: BacterialSampleInfoCell, _ indexPath: IndexPath) -> UITableViewCell {
+        //cell.delegate = self as? BacterialSampleInfoCellDelegate
+        cell.plusBtnOutlet.tag = indexPath.row
+        cell.noOfPlates.delegate = self
+        
+        if plateArr.count > 0 {
+            self.isNoOfPlates = true
+            cell.noOfPlates.text = String(plateArr.count)
+        } else {
+            cell.noOfPlates.text = ""
+            let cell = bacterialSurveyTableView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? BacterialCaseInfoCell
+            cell?.companyBtn.isEnabled = true
+            cell?.selectedCompanyTxt.textColor = .black
+            cell?.siteBtn.isEnabled = true
+            cell?.siteTxt.textColor = .black
+            cell?.barcodeTxt.isEnabled = true
+            cell?.barcodeTxt.textColor = .black
+            cell?.sampleCollectionDateBtn2.isEnabled = true
+            cell?.sampleCollectionDateTxt.textColor = .black
+        }
+        
+        let numberOfPlates = Int(cell.noOfPlates.text ?? "0") ?? 0
+        if isPlusBtnClicked {
+            if(numberOfPlates > 0) {
+                cell.plateContainerView.layer.borderWidth = 1
+                cell.plateContainerView.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
             } else {
-                cell.companyBtn.isEnabled = true
-                cell.selectedCompanyTxt.isEnabled = true
-                cell.selectedCompanyTxt.textColor = .black
-                cell.siteBtn.isEnabled = true
-                cell.siteTxt.isEnabled = true
-                cell.siteTxt.textColor = .black
-                cell.sampleCollectionDateBtn.isEnabled = true
-                cell.sampleCollectionDateTxt.isEnabled = true
-                cell.sampleCollectionDateTxt.textColor = .black
-                cell.sampleCollectionDateBtn2.isEnabled = true
+                cell.plateContainerView.layer.borderWidth = 1
+                cell.plateContainerView.layer.borderColor = UIColor.red.cgColor
             }
-            return cell
+        }
+        
+        if numberOfPlates == 0 {
+            CoreDataHandlerMicro().deleteAllData("MicrobialSampleInfo")
+        }
+        
+        if isSubmitBtnClicked == true {
+            isSubmitBtnClicked = false
+            if numberOfPlates > 0 {
+                self.isNoOfPlates = true
+                cell.plateContainerView.layer.borderWidth = 1
+                cell.plateContainerView.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                
+            } else {
+                self.isNoOfPlates = false
+                cell.plateContainerView.layer.borderWidth = 1
+                cell.plateContainerView.layer.borderColor = UIColor.red.cgColor
+            }
+        }
+        
+        if(isCompanyFieldCheck == true && isSiteFieldCheck == true && isDateFieldCheck == true) {
+            cell.plusBtnOutlet.isEnabled = true
+        } else {
+            cell.plusBtnOutlet.isEnabled = true
+        }
+        
+        if numberOfPlates > 0 {
+            cell.noOfPlates.isEnabled = false
+            cell.plusBtnOutlet.isEnabled = true
+        }
+        
+        if self.plateArr.count == 0 {
+            cell.noOfPlates.isEnabled = true
+            cell.plusBtnOutlet.isEnabled = true
+        } else if self.plateArr.count == 200 {
+            cell.plusBtnOutlet.isEnabled = false
+        }
+        
+        return cell
+    }
+    
+    fileprivate func indexPathTwo(_ cell: BacterialTextfieldInfoCell, _ indexPath: IndexPath) -> UITableViewCell {
+        cell.microsporeCheck.tag = indexPath.row
+        cell.chkBtnTag.tag = indexPath.row
+        cell.sampleDescriptionTxt.tag = indexPath.row
+        
+        let plateData = plateArr[indexPath.row] as! MicrobialSampleInfo
+        cell.PlateIdTxt.text = plateData.noOfPlates
+        cell.bacterialTxt.text = plateData.additionalTests
+        cell.sampleDescriptionTxt.text = plateData.sampleDescription
+        
+        if plateData.checkMark == "false" {
+            cell.chkBtnTag.setImage(UIImage(named: "uncheckIcon"), for: .normal)
+        } else {
+            cell.chkBtnTag.setImage(UIImage(named: "checkIcon"), for: .normal)
+        }
+        
+        if plateData.microsporeCheckMark == "false" {
+            cell.microsporeCheck.setImage(UIImage(named: "uncheckIcon"), for: .normal)
+        } else {
+            cell.microsporeCheck.setImage(UIImage(named: "checkIcon"), for: .normal)
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        switch indexPath.section {
+        case 0:
             
+            let cell = tableView.dequeueReusableCell(withIdentifier: "BacterialCaseInfoCell", for: indexPath) as! BacterialCaseInfoCell
+            return indexPathSectionIndexZero(cell, indexPath)
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "BacterialSampleInfoCell", for: indexPath) as! BacterialSampleInfoCell
-            //cell.delegate = self as? BacterialSampleInfoCellDelegate
-            cell.plusBtnOutlet.tag = indexPath.row
-            cell.noOfPlates.delegate = self
-            
-            if plateArr.count > 0 {
-                self.isNoOfPlates = true
-                cell.noOfPlates.text = String(plateArr.count)
-            } else {
-                cell.noOfPlates.text = ""
-                let cell = bacterialSurveyTableView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? BacterialCaseInfoCell
-                cell?.companyBtn.isEnabled = true
-                cell?.selectedCompanyTxt.textColor = .black
-                cell?.siteBtn.isEnabled = true
-                cell?.siteTxt.textColor = .black
-                cell?.barcodeTxt.isEnabled = true
-                cell?.barcodeTxt.textColor = .black
-                cell?.sampleCollectionDateBtn2.isEnabled = true
-                cell?.sampleCollectionDateTxt.textColor = .black
-            }
-            
-            let numberOfPlates = Int(cell.noOfPlates.text ?? "0") ?? 0
-            if isPlusBtnClicked {
-                if(numberOfPlates > 0) {
-                    cell.plateContainerView.layer.borderWidth = 1
-                    cell.plateContainerView.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-                } else {
-                    cell.plateContainerView.layer.borderWidth = 1
-                    cell.plateContainerView.layer.borderColor = UIColor.red.cgColor
-                }
-            }
-            
-            if numberOfPlates == 0 {
-                CoreDataHandlerMicro().deleteAllData("MicrobialSampleInfo")
-            }
-            
-            if isSubmitBtnClicked == true {
-                isSubmitBtnClicked = false
-                if numberOfPlates > 0 {
-                    self.isNoOfPlates = true
-                    cell.plateContainerView.layer.borderWidth = 1
-                    cell.plateContainerView.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-                    
-                } else {
-                    self.isNoOfPlates = false
-                    cell.plateContainerView.layer.borderWidth = 1
-                    cell.plateContainerView.layer.borderColor = UIColor.red.cgColor
-                }
-            }
-            
-            if(isCompanyFieldCheck == true && isSiteFieldCheck == true && isDateFieldCheck == true) {
-                cell.plusBtnOutlet.isEnabled = true
-            } else {
-                cell.plusBtnOutlet.isEnabled = true
-            }
-            
-            if numberOfPlates > 0 {
-                cell.noOfPlates.isEnabled = false
-                cell.plusBtnOutlet.isEnabled = true
-            }
-            
-            if self.plateArr.count == 0 {
-                cell.noOfPlates.isEnabled = true
-                cell.plusBtnOutlet.isEnabled = true
-            } else if self.plateArr.count == 200 {
-                cell.plusBtnOutlet.isEnabled = false
-            }
-            
-            return cell
+            return manageIndexPathOne(cell, indexPath)
             
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "BacterialTextfieldInfoCell", for: indexPath) as! BacterialTextfieldInfoCell
-            cell.microsporeCheck.tag = indexPath.row
-            cell.chkBtnTag.tag = indexPath.row
-            cell.sampleDescriptionTxt.tag = indexPath.row
-            
-            let plateData = plateArr[indexPath.row] as! MicrobialSampleInfo
-            cell.PlateIdTxt.text = plateData.noOfPlates
-            cell.bacterialTxt.text = plateData.additionalTests
-            cell.sampleDescriptionTxt.text = plateData.sampleDescription
-            
-            if plateData.checkMark == "false" {
-                cell.chkBtnTag.setImage(UIImage(named: "uncheckIcon"), for: .normal)
-            } else {
-                cell.chkBtnTag.setImage(UIImage(named: "checkIcon"), for: .normal)
-            }
-            
-            if plateData.microsporeCheckMark == "false" {
-                cell.microsporeCheck.setImage(UIImage(named: "uncheckIcon"), for: .normal)
-            } else {
-                cell.microsporeCheck.setImage(UIImage(named: "checkIcon"), for: .normal)
-            }
-            return cell
+            return indexPathTwo(cell, indexPath)
         default:
             return UITableViewCell()
         }

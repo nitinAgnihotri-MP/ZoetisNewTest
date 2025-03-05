@@ -32,7 +32,7 @@ class featherTableViewCell: UITableViewCell {
     
     
     @IBAction func additionalTestAction(_ sender: UIButton) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
 

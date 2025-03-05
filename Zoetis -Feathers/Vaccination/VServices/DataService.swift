@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class DataService{
-    private init(){}
+    private init(){print("Initializer")}
     static let sharedInstance = DataService()
     
     func getScheduledCertifications(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){

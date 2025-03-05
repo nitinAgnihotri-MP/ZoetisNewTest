@@ -100,6 +100,7 @@ class Terms_ConditionViewController: UIViewController,WKUIDelegate,WKNavigationD
             }
         }
         if wkwebView.isLoading {
+            print("test message")
         } else {
             if isLinkedClicked == true && isFirstTimeLoad == false {
                 backBtn.isHidden = false

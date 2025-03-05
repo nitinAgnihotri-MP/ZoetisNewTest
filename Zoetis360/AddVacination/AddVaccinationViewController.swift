@@ -446,6 +446,7 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
         Dropper.sharedInstance.hideWithAnimation(0.1)
         
         if (textField == ndvNew ) {
+            print("test message")
         } else {
             ibdvAgeTextField.returnKeyType = UIReturnKeyType.done
             ibdv2AgeTextField.returnKeyType = UIReturnKeyType.done
@@ -539,7 +540,7 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
     }
     
     func YesPopUpPosting() {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     func alertShow()  {
         

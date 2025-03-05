@@ -68,6 +68,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         createServeyNo = "S"+dateStr
         return createServeyNo
     }
+    
+    func testFuntion() {
+        print("Test")
+    }
+    
     /*************************************/
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
@@ -75,8 +80,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         Messaging.messaging().delegate = self
         //Messaging.messaging().isDirectChannelEstablished = true
         let userDefaults = UserDefaults.standard
-        if userDefaults.value(forKey: "HasLaunchedOnce") != nil && (userDefaults.value(forKey: "HasLaunchedOnce") as? Bool)!{ // App already launched
-        } else {
+//        if userDefaults.value(forKey: "HasLaunchedOnce") != nil && (userDefaults.value(forKey: "HasLaunchedOnce") as? Bool)!{ // App already launched
+//        } else {
+//            UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
+//        }
+        if userDefaults.value(forKey: "HasLaunchedOnce") == nil && (userDefaults.value(forKey: "HasLaunchedOnce") as? Bool)! == false { // App already launched
             UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
         }
         
@@ -94,16 +102,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         application.isStatusBarHidden = true
         //        setUpSlideMenu()
         metricOrImperialClick = "Imperial"
-        var i: Int?
-        i = UserDefaults.standard.integer(forKey: "isFeed")
-        if i != 1 {
-            let feed = UserDefaults.standard.integer(forKey: "feedId")
-            if feed>0 {
-            } else {
+//        var i: Int?
+//        i = UserDefaults.standard.integer(forKey: "isFeed")
+//        if i != 1 {
+//            let feed = UserDefaults.standard.integer(forKey: "feedId")
+//            if feed>0 {
+//            } else {
+//                UserDefaults.standard.set(-1, forKey: "feedId")
+//                UserDefaults.standard.synchronize()
+//            }
+//        }
+        
+        
+        let isFeed = UserDefaults.standard.integer(forKey: "isFeed")
+        if isFeed != 1 {
+            let feedId = UserDefaults.standard.integer(forKey: "feedId")
+            if feedId < 0 {
                 UserDefaults.standard.set(-1, forKey: "feedId")
-                UserDefaults.standard.synchronize()
             }
         }
+        
         var isNewPostingId = UserDefaults.standard.bool(forKey: "isNewPostingId")
         
         
@@ -114,29 +132,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         }
         
         
-        if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
-            
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {status, error in
-                    if !status {
-                        self.showAlert("Push notifications not allowed")
-                    }
-                })
-//            UNUserNotificationCenter.current().requestAuthorization(options: authOptions,completionHandler: { status, error in
-//                if !status {
-//                    self.showAlert("Push notifications not allowed")
-//                }
-//            })
-        } else {
-            let settings: UIUserNotificationSettings =
-            UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            application.registerUserNotificationSettings(settings)
-        }
-        application.registerForRemoteNotifications()
+        notificationSetup(application)
         updateFirestorePushTokenIfNeeded()
         
         
@@ -155,6 +151,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
             }
         }
         
+        manageCoredataTurkey()
+        UserDefaults.standard.set(true, forKey: "isFreshLaunched")
+        IQKeyboardManager.shared.enable = true
+        
+        initiateGigya()
+        return true
+    }
+    
+    fileprivate func manageCoredataTurkey() {
         let val1 = CoreDataHandlerTurkey().fetchAllPostingExistingSessionwithFullSessionTurkey(0, birdTypeId: 0) as NSArray
         for i in 0..<val1.count {
             let posting: PostingSessionTurkey = val1.object(at: i) as! PostingSessionTurkey
@@ -166,23 +171,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
                 CoreDataHandlerTurkey().deleteDataWithPostingIdHatcheryTurkey(pidSession!)
             }
         }
-        UserDefaults.standard.set(true, forKey: "isFreshLaunched")
-        IQKeyboardManager.shared.enable = true
-        
-        initiateGigya()
-//        if environmentIs.contains("stageapi") {
-//            Gigya.sharedInstance().initFor(apiKey: "4_KkOJPb7zC89ubdZyo8pEWg", apiDomain: "us1.gigya.com", cname: "eiamus.zoetisus.com")
-//        }
-//        else if environmentIs.contains("devapi") {
-//            Gigya.sharedInstance().initFor(apiKey: "4_KkOJPb7zC89ubdZyo8pEWg", apiDomain: "us1.gigya.com", cname: "eiamus.zoetisus.com")
-//        }else
-//        {
-//            Gigya.sharedInstance().initFor(apiKey: "4_5r3cxoPXLplYq5ZOvn3fAg", apiDomain: "us1.gigya.com", cname: "eiamus.zoetisus.com")
-//        }
-        
-        return true
     }
     
+    fileprivate func notificationSetup(_ application: UIApplication) {
+        if #available(iOS 10.0, *) {
+            // For iOS 10 display notification (sent via APNS)
+            UNUserNotificationCenter.current().delegate = self
+            
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: {status, error in
+                    if !status {
+                        self.showAlert("Push notifications not allowed")
+                    }
+                })
+        } else {
+            let settings: UIUserNotificationSettings =
+            UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
+        application.registerForRemoteNotifications()
+    }
     
     func updateFirestorePushTokenIfNeeded() {
         

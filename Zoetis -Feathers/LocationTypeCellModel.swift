@@ -35,9 +35,9 @@ class LocationTypeCellModel {
     var mediaDefault : String?
     var samplingDefault : String?
 
-
-    
-    init() {
+    init(placeId: String = "", isBacterialChecked:Bool = false) {
+        self.plateId = placeId
+        self.isBacterialChecked = isBacterialChecked
     }
     
     init(plateObject: Microbial_LocationTypeHeaderPlates) {

@@ -96,6 +96,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
         existingArray = CoreDataHandler().fetchAllPostingExistingSessionwithFullSession(0, birdTypeId: 0).mutableCopy() as! NSMutableArray
         
         if existingArray.count == 0 {
+            print("test message")
         }
         
         if UserDefaults.standard.bool(forKey: "backFromStep1") == true

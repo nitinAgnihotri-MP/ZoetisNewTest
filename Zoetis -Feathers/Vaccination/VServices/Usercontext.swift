@@ -24,7 +24,7 @@ public enum VaccinationCertificationAPICalls:String{
 }
 
 public class UserContext{
-    private init(){}
+    private init(){print("Initializer")}
     static let sharedInstance = UserContext()
     
     var userDetailsObj:UserDetails?

@@ -11,7 +11,7 @@ import CoreData
 import UIKit
 
 final  public class VaccinationCustomersDAO{
-    private init(){}
+    private init(){print("Initializer")}
     static let sharedInstance = VaccinationCustomersDAO()
     private var shippingInfo = [NSManagedObject]()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
@@ -453,6 +453,7 @@ final  public class VaccinationCustomersDAO{
         do {
             try managedContext.save()
         } catch {
+            print("Test Body")
         }
         shippingInfo.append(assessmentObj)
     }
@@ -515,6 +516,7 @@ final  public class VaccinationCustomersDAO{
                 }
             }
         } catch {
+            print("Test Body")
         }
         return shippingInfo
     }
@@ -534,6 +536,7 @@ final  public class VaccinationCustomersDAO{
             }
 
         } catch let error as NSError {
+            print("Test Body")
         }
     }
     
@@ -563,6 +566,7 @@ final  public class VaccinationCustomersDAO{
                 }
             }
         } catch {
+            print("Test Body")
         }
         return shippingInfo
     }
@@ -583,6 +587,7 @@ final  public class VaccinationCustomersDAO{
 
             }
         } catch {
+            print("Test Body")
         }
         return dataArray
 

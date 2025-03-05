@@ -298,7 +298,7 @@ class ReportDashboardTurkey: UIViewController,GI_TtactDelegate,UITableViewDelega
         
     }
     @nonobjc func didFinishWithParsingWithFarmData(_ finishedArray : [Float]){
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     func setChartData(dataPoints: [String], values: [Float]) -> BarChartDataSet? {
         

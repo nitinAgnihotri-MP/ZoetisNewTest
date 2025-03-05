@@ -276,6 +276,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         }
         
         else {
+            print("test message")
         }
         
         userNameLbl.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
@@ -913,7 +914,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 
             case 11 :
                 
-                // let aSet = NSCharacterSet(charactersIn: "0123456789/-&*.{}[],=").inverted
+                // let aSet = NSCharacterSet(charactersIn: "0123456789/-&*.{print("Test message")}[],=").inverted
                 let aSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")

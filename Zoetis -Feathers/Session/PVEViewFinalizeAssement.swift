@@ -545,8 +545,7 @@ extension PVEViewFinalizeAssement:  UIImagePickerControllerDelegate,UINavigation
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             
             //   print("User canceled image")
-            dismiss(animated: true, completion: {
-            })
+            dismiss(animated: true)
         }
     }
     
@@ -695,7 +694,7 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
     }
     
     @IBAction func vaccinatorsPlusBtnAction(_ sender: Any) {
-        
+        print("Test Message",appDelegate.testFuntion())
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

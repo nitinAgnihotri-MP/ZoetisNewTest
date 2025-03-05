@@ -537,10 +537,6 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         return true
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        
-    }
-    
     // MARK: 🟠 Search Button Action
     @IBAction func searchButtonAction(_ sender: AnyObject) {
         
@@ -828,6 +824,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
     }
     
     func startNecropsyBtnFunc (){
+        appDelegate.testFuntion()
     }
     
     // MARK: 🟠 Cross Button Action

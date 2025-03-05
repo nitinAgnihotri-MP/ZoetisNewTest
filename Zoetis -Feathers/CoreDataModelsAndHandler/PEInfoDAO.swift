@@ -10,7 +10,7 @@ import CoreData
 import UIKit
 
 class PEInfoDAO{
-//    private init(){}
+//    private init(){print("Initializer")}
     static let sharedInstance = PEInfoDAO()
     
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext

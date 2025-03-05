@@ -24,11 +24,6 @@ class PETableviewConsumerQualityHeader: UITableViewHeaderFooterView {
 // MARK: - EXTENSION FOR TEXTFIELD DELEGATES
 
 extension PETableviewConsumerQualityHeader: UITextFieldDelegate {
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        
-    }
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == nameMicro{
             microComplete?(textField.text)

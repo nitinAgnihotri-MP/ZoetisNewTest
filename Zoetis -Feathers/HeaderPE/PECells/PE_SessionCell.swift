@@ -120,22 +120,15 @@ class PE_SessionCell: UITableViewCell {
         
         if let isEMRequested = peNewAssessment.IsEMRequested {
             print(isEMRequested)
-        } else {
-            print("IsEMRequested is nil")
         }
         
         if let extndMicro = peNewAssessment.extndMicro {
             print(extndMicro)
-        } else {
-            print("extndMicro is nil")
         }
-        
-        
-      
         
         if !Constants.isFromRejected {
             lblAction.text = "Submitted"
-            if peNewAssessment.IsEMRequested == false{
+            if peNewAssessment.IsEMRequested == false {
                 if peNewAssessment.extndMicro == false
                 {
                     extendedMicroLbl.text = "No"
