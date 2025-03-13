@@ -49,8 +49,8 @@ class BacterialFormCell: UITableViewCell {
     }
     
     func disableAllEvents(){
-        switch requisitionSavedSessionType {
-        case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
+        
+        if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
             reasonForVisitButton.isUserInteractionEnabled = false
             companyButton.isUserInteractionEnabled = false
             siteButton.isUserInteractionEnabled = false
@@ -61,8 +61,6 @@ class BacterialFormCell: UITableViewCell {
             sampleDateTextField.isUserInteractionEnabled = false
             barcodeTextField.isUserInteractionEnabled = false
             noteTextView.isUserInteractionEnabled = false
-            
-        default: break
         }
     }
     
@@ -129,38 +127,7 @@ class BacterialFormCell: UITableViewCell {
         } else {
             self.barcodeButton.layer.borderColor = defaultBorderColor
         }
-        
-        
-//        if header.isPlusButtonPressed && header.numberOfPlateIDCreated.count > 0 {
-//            let backgroundColor =  UIColor(red: 236/255, green: 236/255, blue: 236/255, alpha: 0.2)
-//            self.companyButton.backgroundColor = backgroundColor
-//            self.companyTextField.textColor = .black
-//            self.siteButton.backgroundColor =  backgroundColor
-//            self.siteTextField.textColor = .black
-//            self.barcodeButton.backgroundColor =  backgroundColor
-//            self.barcodeTextField.textColor = .black
-//            self.sampleDateButton.backgroundColor =  backgroundColor
-//            self.sampleDateTextField.textColor = .black
-//
-//            self.companyButton.isUserInteractionEnabled = false
-//            self.siteButton.isUserInteractionEnabled = false
-//            self.sampleDateButton.isUserInteractionEnabled = false
-//            self.barcodeTextField.isUserInteractionEnabled = false
-//        } else {
-//            self.companyButton.backgroundColor =  .white
-//            self.companyTextField.textColor = .black
-//            self.siteButton.backgroundColor =  .white
-//            self.siteTextField.textColor = .black
-//            self.barcodeButton.backgroundColor =  .white
-//            self.barcodeTextField.textColor = .black
-//            self.sampleDateButton.backgroundColor =  .white
-//            self.sampleDateTextField.textColor = .black
-//
-//            self.companyButton.isUserInteractionEnabled = true
-//            self.siteButton.isUserInteractionEnabled = true
-//            self.sampleDateButton.isUserInteractionEnabled = true
-//            self.barcodeTextField.isUserInteractionEnabled = true
-//        }
+
     }
     
 }

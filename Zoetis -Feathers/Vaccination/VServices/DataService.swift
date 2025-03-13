@@ -235,7 +235,7 @@ class DataService{
             if let date = dateFormatterObj.date(from: vacObj.scheduledDate ?? "") {
                 
                 let outputDateFormatter = DateFormatter()
-                outputDateFormatter.dateFormat = "MM/dd/YYYY"
+                outputDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
     
                 formattedDateString = outputDateFormatter.string(from: date)
                 debugPrint("Formatted Date String: \(formattedDateString)")

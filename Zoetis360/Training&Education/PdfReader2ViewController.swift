@@ -193,7 +193,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
         hud1 = MBProgressHUD.showAdded(to: self.view, animated: true)
         hud1.contentColor = UIColor.white
         hud1.bezelView.color = UIColor.black
-        hud1.label.text = "Loading..."
+        hud1.label.text = appDelegateObj.loadingStr
     }
 
     func callPdfApiandDownload()

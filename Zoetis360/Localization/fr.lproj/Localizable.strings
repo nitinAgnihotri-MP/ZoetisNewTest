@@ -47,7 +47,7 @@
 "No" = "Non";
 "Retry" =  "Recommencez";
 "Cancel" = " Annuler";
-"Loading..." = " Chargement...";
+appDelegateObj.loadingStr = " Chargement...";
 "Enter your password"  =  "Entrer votre mot de passe.";
 "Enter your email"  = "Entrer votre email.";
 "SIGN IN " = "SE CONNECTER";

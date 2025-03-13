@@ -14,7 +14,7 @@ class ViewRequisitionViewModel {
     private let kAll = "All"
     
     init() {
-        print("Test Message",appDelegate.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     
@@ -55,7 +55,7 @@ class ViewRequisitionViewModel {
             let arrViewRequisition = caseInfoForrequistion as? [Microbial_EnviromentalSurveyFormSubmitted] ?? []
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .medium
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
           //  let sortedArray = arrViewRequisition.sorted { dateFormatter.date(from: $0.sampleCollectionDate ?? "")! > dateFormatter.date(from: $1.sampleCollectionDate ?? "") ?? Date() }
             
             var sortedArray = arrViewRequisition.sorted { dateFormatter.date(from: $0.sampleCollectionDate ?? "") ?? Date() > dateFormatter.date(from: $1.sampleCollectionDate ?? "") ?? Date() }

@@ -50,7 +50,7 @@ class PVEDraftViewController: BaseViewController {
             getDataToSyncInDBArr = CoreDataHandlerPVE().getDataToSyncInDB(type: "draft")
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .medium
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             let sortedArray = getDataToSyncInDBArr.sorted {
                 dateFormatter.date(from: (($0 as AnyObject).value(forKey: "evaluationDate") as? String)!)! < dateFormatter.date(from: (($1 as AnyObject).value(forKey: "evaluationDate") as? String)!)! }
             getDataToSyncInDBArr = sortedArray as NSArray

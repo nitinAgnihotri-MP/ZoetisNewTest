@@ -758,7 +758,7 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
         
     }
     func yesBtnPop() {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     //////
     func noBtnPop() {

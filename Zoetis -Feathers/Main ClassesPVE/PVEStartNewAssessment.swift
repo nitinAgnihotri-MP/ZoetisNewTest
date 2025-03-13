@@ -102,7 +102,7 @@ class PVEStartNewAssessment: BaseViewController {
     
     func generateSeveyNumber(dateStr:String) -> String{
         let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "MM/dd/YYYY"
+        inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
         var generatedServeyNo = String()
         let siteId = sharedManager.getSessionValueForKeyFromDB(key: "siteId") as! Int
         let evaluationDateStr = sharedManager.getSessionValueForKeyFromDB(key: "evaluationDate") as? String
@@ -590,7 +590,7 @@ extension PVEStartNewAssessment{
     func getTodayDateSring() -> String {
         let todaysDate = NSDate()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         var DateInFormat = dateFormatter.string(from: todaysDate as Date)
         return DateInFormat
     }

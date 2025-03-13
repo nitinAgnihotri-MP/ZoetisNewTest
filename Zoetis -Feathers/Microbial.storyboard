@@ -1661,10 +1661,10 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.88246309759999997" green="0.89038568740000001" blue="0.90226453539999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
-                                            <outlet property="PlateIdTxt" destination="oN8-fZ-cCS" id="21f-1o-Hdo"/>
                                             <outlet property="bacterialTxt" destination="fF2-lB-DqU" id="7lE-hI-yb1"/>
                                             <outlet property="chkBtnTag" destination="CM4-rh-0ZR" id="CI0-nm-tUe"/>
                                             <outlet property="microsporeCheck" destination="DYS-RS-Whd" id="ghG-Zc-7zk"/>
+                                            <outlet property="plateIdTxt" destination="oN8-fZ-cCS" id="5cd-bu-Gqe"/>
                                             <outlet property="sampleDescriptionTxt" destination="PeT-je-k2w" id="J0Y-lM-0x3"/>
                                         </connections>
                                     </tableViewCell>

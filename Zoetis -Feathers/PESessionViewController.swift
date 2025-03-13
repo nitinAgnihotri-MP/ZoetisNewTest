@@ -35,6 +35,7 @@ class PESessionViewController: BaseViewController {
     @IBOutlet weak var txtViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet var idPopupView: UIView!
     @IBOutlet weak var assIdLabel: UILabel!
+    let serverAssesIdStr = "serverAssessmentId = %@"
     
     override func viewDidLoad() {
         print("<<<<",self)
@@ -84,7 +85,7 @@ class PESessionViewController: BaseViewController {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         let sortedArray = peAssessmentDraftArray.sorted {
             let evalDate1 = $0.evaluationDate ?? ""
             let evalDate2 = $1.evaluationDate ?? ""
@@ -131,7 +132,7 @@ class PESessionViewController: BaseViewController {
     // MARK: - Delete Deleated Assessments
     private func deleteDeletedAssessments(){
         if ConnectionManager.shared.hasConnectivity() {
-            self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+            self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
             PEDataService.sharedInstance.deleteDeletedAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
                 guard let _ = self, error == nil else {
                     self?.dismissGlobalHUD(self?.view ?? UIView());
@@ -347,18 +348,29 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         CoreDataHandlerPE().saveDraftPEInDB(newAssessmentArray: allAssesmentArr , draftNumber: draftNumber + 1, isfromRejected: true)
         
         if ConnectionManager.shared.hasConnectivity() {
-            self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+            self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
             self.getRejectedAssessmentImagesListByUser(assId: self.peAssessmentRejectedArray[index].serverAssessmentId ?? "")
             self.peAssessmentRejectedArray.remove(at: index)
         }else{
-            let predicate = NSPredicate(format:"serverAssessmentId = %@", self.peAssessmentRejectedArray[index].serverAssessmentId ?? "")
+            let predicate = NSPredicate(format:serverAssesIdStr, self.peAssessmentRejectedArray[index].serverAssessmentId ?? "")
             CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentRejected", predicate: predicate)
             self.peAssessmentRejectedArray.remove(at: index)
             self.tableview.reloadData()
-            self.showtoast(message: "Assessment moved to draft")
+            self.showDraftTost()
             self.navigationController?.popToViewController(ofClass: PEDraftViewController.self)
         }
         
+    }
+    
+    fileprivate func saveRefrigeratorDataInDB(_ refrigtorArray: [PE_Refrigators], _ index: Int) {
+        for refrii in refrigtorArray{
+            if(CoreDataHandlerPE().checkSameAssesmentEntityExists(id: Int(refrii.id ?? 0),serverAssessmentId: Int(peAssessmentRejectedArray[index].serverAssessmentId ?? "0") ?? 0)){
+                CoreDataHandlerPE().updateRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.peAssessmentRejectedArray[index].serverAssessmentId  ?? "0") ?? 0)
+            }
+            else{
+                CoreDataHandlerPE().saveRefrigatorInDB(refrii.id ?? 0,  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,schAssmentId: refrii.schAssmentId ?? 0)
+            }
+        }
     }
     
     func moveAssessmentTodraft(index: Int) {
@@ -385,30 +397,28 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
             
             refrigtorArray =   CoreDataHandlerPE().getRejectREfriData(id: Int(peAssessmentRejectedArray[index].serverAssessmentId ?? "0") ?? 0)
             if(refrigtorArray.count > 0){
-                for refrii in refrigtorArray{
-                    if(CoreDataHandlerPE().checkSameAssesmentEntityExists(id: Int(refrii.id ?? 0),serverAssessmentId: Int(peAssessmentRejectedArray[index].serverAssessmentId ?? "0") ?? 0)){
-                        CoreDataHandlerPE().updateRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.peAssessmentRejectedArray[index].serverAssessmentId  ?? "0") ?? 0)
-                    }
-                    else{
-                        CoreDataHandlerPE().saveRefrigatorInDB(refrii.id ?? 0,  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,schAssmentId: refrii.schAssmentId ?? 0)
-                    }
-                }
+                saveRefrigeratorDataInDB(refrigtorArray, index)
             }
             let predicate = NSPredicate(format:"schAssmentId = %@", self.peAssessmentRejectedArray[index].serverAssessmentId ?? "")
             CoreDataHandlerPE().deleteExisitingData(entityName: "PE_Refrigator_Rejected", predicate: predicate)
         }
         if ConnectionManager.shared.hasConnectivity() {
-            self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+            self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
             self.getRejectedAssessmentImagesListByUser(assId: self.peAssessmentRejectedArray[index].serverAssessmentId ?? "")
             self.peAssessmentRejectedArray.remove(at: index)
         }else{
-            let predicate = NSPredicate(format:"serverAssessmentId = %@", self.peAssessmentRejectedArray[index].serverAssessmentId ?? "")
+            let predicate = NSPredicate(format:serverAssesIdStr, self.peAssessmentRejectedArray[index].serverAssessmentId ?? "")
             CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentRejected", predicate: predicate)
             self.peAssessmentRejectedArray.remove(at: index)
             self.tableview.reloadData()
-            self.showtoast(message: "Assessment moved to draft")
+            self.showDraftTost()
             self.navigationController?.popToViewController(ofClass: PEDraftViewController.self)
         }
+    }
+    
+    func showDraftTost()
+    {
+        self.showtoast(message: "Assessment moved to draft")
     }
     
     // MARK: - Convert JSON String to Dict
@@ -564,7 +574,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         if SignatureDate != "" {
             sigDate = self.convertDateFormat(inputDate: SignatureDate)
         } else {
-            sigDate = Date().stringFormat(format: "MMM d, yyyy")
+            sigDate = Date().stringFormat(format: appDelegateObj.mmddyyStr)
         }
         let param : [String:String] = ["sig":String(id),"sig2":String(id2),"sig_Date":sigDate ,"sig_EmpID":RoleName,"sig_Name":representaiveName ?? "","sig_EmpID2":RoleName2,"sig_Name2":representaiveName2 ?? "","sig_Phone":representaiveNotes ?? ""]
         
@@ -1027,7 +1037,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
     func convertDateFormat(inputDate: String) -> String {
         
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = "MMM d, yyyy"
+        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         
         let oldDate = olDateFormatter.date(from: inputDate)
         
@@ -1112,7 +1122,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
             return ""
         }
         
-        dateFormatter.dateFormat = "MM/dd/yyyy"///this is what you want to convert format
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr///this is what you want to convert format
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC") //NSTimeZone(name: "UTC") as TimeZone!
         let timeStamp = dateFormatter.string(from: convertedDate ?? Date())
         
@@ -1126,15 +1136,13 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:"draft",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessmentId)
         let draftNumber = getDraftCountFromDb()
         CoreDataHandlerPE().saveDraftPEInDB(newAssessmentArray: allAssesmentArr , draftNumber: draftNumber + 1)
-        let predicate = NSPredicate(format:"serverAssessmentId = %@", peAssessmentRejectedArray[index].serverAssessmentId ?? "" )
+        let predicate = NSPredicate(format:serverAssesIdStr, peAssessmentRejectedArray[index].serverAssessmentId ?? "" )
         CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentRejected", predicate: predicate)
         peAssessmentRejectedArray.remove(at: index)
         tableview.reloadData()
         UserDefaults.standard.set(peAssessmentRejectedArray.count, forKey: "rejected_count")
         UserDefaults.standard.synchronize()
-        self.showAlertViewWithMessageAndActionHandler("Alert", message: "Your Assessment moved to draft") {
-            
-        }
+        self.showAlertViewWithMessageAndActionHandler("Alert", message: "Your Assessment moved to draft", actionHandler: nil)
         
         finishSession()
     }
@@ -1290,11 +1298,11 @@ extension PESessionViewController{
                 
             }
         }
-        let predicate = NSPredicate(format:"serverAssessmentId = %@", assId )
+        let predicate = NSPredicate(format:serverAssesIdStr, assId )
         CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentRejected", predicate: predicate)
         
         self.tableview.reloadData()
-        self.showtoast(message: "Assessment moved to draft")
+        self.showDraftTost()
         self.navigationController?.popToViewController(ofClass: PEDraftViewController.self)
         self.dismissGlobalHUD(self.view ?? UIView())
         

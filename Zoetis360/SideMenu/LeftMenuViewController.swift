@@ -12,7 +12,7 @@ import iOS_Slide_Menu
 var hud1 : MBProgressHUD = MBProgressHUD()
 class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncApiTurkey, UITableViewDataSource {
     func failWithInternetConnection() {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     // MARK: 🟠 - VARIABLES
     var swiftBlogs: [String]  = []

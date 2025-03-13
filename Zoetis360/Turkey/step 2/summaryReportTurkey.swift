@@ -21,7 +21,7 @@ class summaryReportTurkey: UIView {
     var sumarryDelegate: summmaryReportTUR!
 
     override func draw(_ rect: CGRect) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     

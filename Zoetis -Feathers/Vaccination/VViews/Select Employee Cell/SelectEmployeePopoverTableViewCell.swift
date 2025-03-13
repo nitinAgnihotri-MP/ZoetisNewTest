@@ -87,11 +87,11 @@ class SelectEmployeePopoverTableViewCell: UITableViewCell {
     }
     
     func selectMultiSelectDropdown(){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
 
     @IBAction func checkBxAction(_ sender: UIButton){
-
+        print(appDelegateObj.testFuntion())
     }
     
     

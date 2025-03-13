@@ -47,7 +47,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -78,7 +78,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -96,7 +96,7 @@ class CoreDataHandlerMicro: NSObject {
             } else {
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -146,7 +146,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -176,7 +176,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -221,7 +221,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -380,7 +380,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -404,7 +404,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -429,7 +429,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -547,7 +547,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -573,7 +573,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -606,7 +606,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -629,7 +629,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -656,7 +656,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -681,7 +681,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -698,7 +698,7 @@ class CoreDataHandlerMicro: NSObject {
                 try managedContext.save()
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -721,7 +721,7 @@ class CoreDataHandlerMicro: NSObject {
                 return []
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -745,7 +745,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArrayNew
@@ -768,7 +768,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -828,7 +828,7 @@ class CoreDataHandlerMicro: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -907,7 +907,7 @@ class CoreDataHandlerMicro: NSObject {
             }
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -930,7 +930,7 @@ class CoreDataHandlerMicro: NSObject {
             }
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -945,7 +945,7 @@ class CoreDataHandlerMicro: NSObject {
                 try managedContext.save()
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -1034,7 +1034,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -1059,7 +1059,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -1077,7 +1077,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -1096,7 +1096,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -1131,7 +1131,7 @@ class CoreDataHandlerMicro: NSObject {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 result = results as NSArray
-            } else {print("Test message")}
+            } else {print(appDelegateObj.testFuntion())}
         } catch {
             
         }
@@ -1163,7 +1163,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(managedObject)
@@ -1189,7 +1189,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -1213,7 +1213,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -1232,7 +1232,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -1251,7 +1251,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -1269,7 +1269,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -1287,7 +1287,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -1320,7 +1320,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -1356,7 +1356,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -1382,7 +1382,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return auto!
@@ -1401,7 +1401,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -1423,7 +1423,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -1446,7 +1446,7 @@ class CoreDataHandlerMicro: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return data
@@ -1477,7 +1477,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         ManagedCustData.append(person)
@@ -1497,14 +1497,14 @@ class CoreDataHandlerMicro: NSObject {
                 results![0].setValue(text, forKey: forAttribute)
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -1523,7 +1523,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -1542,7 +1542,7 @@ class CoreDataHandlerMicro: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
@@ -1583,7 +1583,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -1620,7 +1620,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -1657,7 +1657,7 @@ class CoreDataHandlerMicro: NSObject {
             
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -1855,7 +1855,7 @@ class CoreDataHandlerMicro: NSObject {
                     data.setValue(noOfPlates, forKey: "noOfPlates")
                     try managedContext.save()
                 }
-            }else{print("Test message")}
+            }else{print(appDelegateObj.testFuntion())}
         } catch {
             //   print("Fetch Failed: \(error)")
         }
@@ -1881,7 +1881,7 @@ class CoreDataHandlerMicro: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -1899,7 +1899,7 @@ extension MicrobialFeatherPulpBirdType{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
 }
@@ -1917,7 +1917,7 @@ extension MicrobialFeatherPulpSpecimenType{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
 }
@@ -2011,7 +2011,7 @@ extension MicrobialFeatherPulpSampleInfo{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -2032,7 +2032,7 @@ extension MicrobialFeatherPulpSampleInfo{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -2099,7 +2099,7 @@ extension MicrobialFeatherpulpServiceTestSampleInfo{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -2195,7 +2195,7 @@ extension MicrobialFeatherPulpTestOptions{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
 }
@@ -2212,7 +2212,7 @@ extension MicrobialCaseStatus{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
 }
@@ -2300,7 +2300,7 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -2321,7 +2321,7 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
                 return results.count > 0
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return false
     }
@@ -2341,7 +2341,7 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
                 return results.count > 0
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return false
     }
@@ -2365,7 +2365,7 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -2388,7 +2388,7 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -2443,7 +2443,7 @@ extension Microbial_LocationTypeHeadersSubmitted{
                 return results.count > 0
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return false
     }
@@ -2688,7 +2688,7 @@ extension Microbial_LocationTypeHeaderPlatesSubmitted{
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -2781,7 +2781,7 @@ extension Microbial_EnvironmentalLocationTypes{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -2800,7 +2800,7 @@ extension Microbial_BacterialLocationTypes{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -2847,7 +2847,7 @@ extension MicrobialSelectedUnselectedReviewer{
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return []
@@ -2963,7 +2963,7 @@ extension MicrobialSelectedUnselectedReviewer{
                 return results.count > 0
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return false
     }
@@ -2981,7 +2981,7 @@ extension MicrobialSelectedUnselectedReviewer{
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
 }

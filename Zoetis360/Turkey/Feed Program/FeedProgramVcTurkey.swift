@@ -1658,19 +1658,19 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     
     @IBAction func starterCheckBoxAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     @IBAction func growerCheckBoxAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     @IBAction func finisherCoccidiosisCheckBoxAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     @IBAction func wdCoccidiosisAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     @IBAction func starterDrinkngWaterAction(sender: AnyObject) {
@@ -1820,24 +1820,24 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     
     @IBAction func antiboticStarterCheckBoxAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     @IBAction func antiboticGrowerAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     @IBAction func antiboticFinisherAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     @IBAction func antiboticWDAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     @IBAction func antiStarterDrinkingWater(sender: AnyObject) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     @IBAction func antiGrowerDrinkngWater(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     
@@ -1867,24 +1867,24 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     
     @IBAction func alternativeStartrAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     
     @IBAction func altrnativeGrowerAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     
     
     @IBAction func alternativeFinisherAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     
     
     @IBAction func alternativeWdAction(sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     
@@ -3459,7 +3459,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     }
     
     func clickHelp() {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     func logOytButtn () {
@@ -4544,14 +4544,14 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3{
             let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateFormat="dd/MM/yyyy"
+            dateFormatter2.dateFormat=appDelegateObj.ddMMyyyStr
             //            dateFormatter2.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
             lblDate.text = dateFormatter2.string(from: datePicker.date) as String
         }
         else{
             let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateFormat="MM/dd/yyyy"
+            dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
             //            dateFormatter2.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
             lblDate.text = dateFormatter2.string(from: datePicker.date) as String

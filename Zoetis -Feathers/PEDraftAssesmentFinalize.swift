@@ -62,8 +62,35 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     var tableviewIndexPath = IndexPath(row: 0, section: 0)
     var catArrayForCollectionIs : [PENewAssessment] = []
     var catArrayForTableIs = NSArray()
-    
-    
+    let refrigrateStr = "Refrigerator\n/Freezer\n/Liquid Nitrogen"
+    let extendedMicro = "Extended Microbial"
+    let pleaseEnterVaccineStr = "Please enter vaccine details in the Vaccine Preparation & Sterility."
+    let ddmmyyyy = "dd-MM-yyyy"
+    let pleasEnterProgName = "Please enter program name in the Vaccine Preparation & Sterility."
+    let pleaseEnterAntiB = "Please enter Antibiotic in the Vaccine Preparation & Sterility."
+    let areYouSureFinishStr = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
+    let pleaseEnterAmPm = "Please enter AM/PM Value in Miscellaneous."
+    let pleaseEnterFreq = "Please enter frequency detail in Customer Quality Control Program."
+    let pleaseEnterPersName = "Please enter person name in Customer Quality Control Program."
+    let pleaseEnterQC = "Please enter QC count in Customer Quality Control Program."
+    let pleaseEnterPPM = "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation."
+    let pleaseEnterVaccine = "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."
+    let yyyyMMDD = "yyyy-MM-dd"
+    let peCommentedStr = "PECommentSelected.png"
+    let incompleteDataStr = "Incomplete Data"
+    let oneGallonStr = "1 gallon"
+    let twoGallonStr = "2 gallon"
+    let fiveGallonStr = "5 gallon"
+    let twoLitre = "2 litre"
+    let liter24 = "2.4 litre"
+    let liter28 = "2.8 litre"
+    let mil200 = "200 ml"
+    let mil300 = "300 ml"
+    let mil400 = "400 ml"
+    let mil500 = "500 ml"
+    let mil800 = "800 ml"
+    let pleaseEnterComentStr = "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application"
+    let pleaseEnterCommentThawStr = "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application"
     @IBOutlet weak var buttonFinishAssessment: PESubmitButton!
     @IBOutlet weak var buttonSaveAsDraft: PESubmitButton!
     @IBOutlet weak var buttonSaveAsDraftInitial: PESubmitButton!
@@ -200,7 +227,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     override func viewDidLoad() {
@@ -233,7 +260,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             if !carColIdArray.contains(cat.sequenceNo ?? 0){
                 carColIdArray.append(cat.sequenceNo ?? 0)
                 if(cat.catName == "Refrigerator"){
-                    cat.catName = "Refrigerator\n/Freezer\n/Liquid Nitrogen"
+                    cat.catName = refrigrateStr
                     
                 }
                 catArrayForCollectionIs.append(cat)
@@ -376,11 +403,10 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         chechForLastCategory()
         
         self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { status in
-            
+            print(status)
         }
         self.collectionView.selectItem(at: self.collectionviewIndexPath, animated: false, scrollPosition: .left)
-        if regionID == 3
-        {
+        if regionID == 3 {
             if showExtendedPE {
                 let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
                 if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
@@ -388,7 +414,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 }
                 
                 let catObjectPE = PENewAssessment()
-                catObjectPE.catName = "Extended Microbial"
+                catObjectPE.catName = extendedMicro
                 catObjectPE.sequenceNo = 12
                 catObjectPE.sequenceNoo = 12
                 catArrayForCollectionIs.append(catObjectPE)
@@ -613,9 +639,9 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 {
                     if regionID == 3
                     {
-                        if strings.contains("Please enter vaccine details in the Vaccine Preparation & Sterility.")
+                        if strings.contains(pleaseEnterVaccineStr)
                         {
-                            strings = strings.filter { $0 != "Please enter vaccine details in the Vaccine Preparation & Sterility." }
+                            strings = strings.filter { $0 != pleaseEnterVaccineStr }
                         }
                     }
                 }
@@ -772,11 +798,11 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         
         let formatter = CodeHelper.sharedInstance.getDateFormatterObj("")
         if(regionID == 3){
-            formatter.dateFormat = "MM/dd/yyyy"
+            formatter.dateFormat = appDelegateObj.MMddyyyStr
 //            formatter.calendar = Calendar(identifier: .gregorian)
 //            formatter.timeZone = TimeZone(secondsFromGMT: 0)
         }else{
-            formatter.dateFormat = "dd/MM/yyyy"
+            formatter.dateFormat = ddmmyyyy
 //            formatter.calendar = Calendar(identifier: .gregorian)
 //            formatter.timeZone = TimeZone(secondsFromGMT: 0)
         }
@@ -797,12 +823,12 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     func showAlertForProgramName(){
         if regionID == 3
         {
-            if strings.contains("Please enter program name in the Vaccine Preparation & Sterility.")
+            if strings.contains(pleasEnterProgName)
             {
-                strings = strings.filter { $0 != "Please enter program name in the Vaccine Preparation & Sterility." }
+                strings = strings.filter { $0 != pleasEnterProgName }
             }
             
-            strings.append("Please enter program name in the Vaccine Preparation & Sterility.")
+            strings.append(pleasEnterProgName)
         }
         else
         {
@@ -830,11 +856,11 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         
         if regionID == 3{
             
-            if strings.contains("Please enter vaccine details in the Vaccine Preparation & Sterility.")
+            if strings.contains(pleaseEnterVaccineStr)
             {
-                strings = strings.filter { $0 != "Please enter vaccine details in the Vaccine Preparation & Sterility." }
+                strings = strings.filter { $0 != pleaseEnterVaccineStr }
             }
-            strings.append("Please enter vaccine details in the Vaccine Preparation & Sterility.")
+            strings.append(pleaseEnterVaccineStr)
         }
         
         else
@@ -853,13 +879,13 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     func showAlertForAntibiotic(){
         if regionID == 3
         {
-            if strings.contains("Please enter Antibiotic in the Vaccine Preparation & Sterility.")
+            if strings.contains(pleaseEnterAntiB)
             {
-                strings = strings.filter { $0 != "Please enter Antibiotic in the Vaccine Preparation & Sterility." }
+                strings = strings.filter { $0 != pleaseEnterAntiB }
             }
             
-            strings.append("Please enter Antibiotic in the Vaccine Preparation & Sterility.")
-            let errorMSg = "Please enter Antibiotic in the Vaccine Preparation & Sterility."
+            strings.append(pleaseEnterAntiB)
+            let errorMSg = pleaseEnterAntiB
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -934,7 +960,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                     
                     var param = [String:String]()
                     
-                    param = ["sig":String(peNewAssessment.sig!),"sig2":String(peNewAssessment.sig2!),"sig_EmpID": String(peNewAssessment.sig_EmpID!),"sig_EmpID2":String(peNewAssessment.sig_EmpID2!),"sig_Name":String(peNewAssessment.sig_Name!),"sig_Name2":String(peNewAssessment.sig_Name2!),"sig_Phone":String(peNewAssessment.sig_Phone!),"sig_Date":Date().stringFormat(format: "MMM d, yyyy") ]
+                    param = ["sig":String(peNewAssessment.sig!),"sig2":String(peNewAssessment.sig2!),"sig_EmpID": String(peNewAssessment.sig_EmpID!),"sig_EmpID2":String(peNewAssessment.sig_EmpID2!),"sig_Name":String(peNewAssessment.sig_Name!),"sig_Name2":String(peNewAssessment.sig_Name2!),"sig_Phone":String(peNewAssessment.sig_Phone!),"sig_Date":Date().stringFormat(format: appDelegateObj.mmddyyStr) ]
                     
                     let savedDataIs =  CoreDataHandlerPE().saveDataToSyncPEInDBArray(newAssessmentArray: allAssesmentArr as? [PENewAssessment] ?? [], dataToSubmitNumber: dataToSubmitNumber + 1,param:param,fromDraft: true)
                     
@@ -986,15 +1012,13 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                             }
                             else
                             {
-                                let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
+                                let errorMSg = areYouSureFinishStr
                                 let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
                                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                                     _ in
                                     self.saveFinalizedData()
                                 }
-                                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                                    _ in
-                                }
+                                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
                                 alertController.addAction(okAction)
                                 alertController.addAction(cancelAction)
                                 self.present(alertController, animated: true, completion: nil)
@@ -1002,7 +1026,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                         }
                         else
                         {
-                            let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
+                            let errorMSg = areYouSureFinishStr
                             let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
                             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                                 _ in
@@ -1036,7 +1060,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                         }
                         else
                         {
-                            let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
+                            let errorMSg = areYouSureFinishStr
                             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
                             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                                 _ in
@@ -1051,7 +1075,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                     
                     else
                     {
-                        let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
+                        let errorMSg = areYouSureFinishStr
                         let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
                         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                             _ in
@@ -1067,7 +1091,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 
                 else
                 {
-                    let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
+                    let errorMSg = areYouSureFinishStr
                     let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                         _ in
@@ -1087,15 +1111,15 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     func showAlertForNoAMPMValue(){
         if regionID == 3
         {
-            if strings.contains("Please enter AM/PM Value in Miscellaneous.")
+            if strings.contains(pleaseEnterAmPm)
             {
-                strings = strings.filter { $0 != "Please enter AM/PM Value in Miscellaneous." }
+                strings = strings.filter { $0 != pleaseEnterAmPm }
             }
-            strings.append("Please enter AM/PM Value in Miscellaneous.")
+            strings.append(pleaseEnterAmPm)
         }
         else
         {
-            let errorMSg = "Please enter AM/PM Value in Miscellaneous."
+            let errorMSg = pleaseEnterAmPm
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -1118,16 +1142,16 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     func showAlertForNoFrequency (){
         if regionID == 3
         {
-            if strings.contains("Please enter frequency detail in Customer Quality Control Program.")
+            if strings.contains(pleaseEnterFreq)
             {
-                strings = strings.filter { $0 != "Please enter frequency detail in Customer Quality Control Program." }
+                strings = strings.filter { $0 != pleaseEnterFreq }
             }
-            strings.append("Please enter frequency detail in Customer Quality Control Program.")
+            strings.append(pleaseEnterFreq)
         }
         else
         {
             
-            let errorMSg = "Please enter frequency detail in Customer Quality Control Program."
+            let errorMSg = pleaseEnterFreq
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -1140,14 +1164,14 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     func showAlertForNoPersonName(){
         if regionID == 3
         {
-            if strings.contains("Please enter person name in Customer Quality Control Program.")
+            if strings.contains(pleaseEnterPersName)
             {
-                strings = strings.filter { $0 != "Please enter person name in Customer Quality Control Program." }
+                strings = strings.filter { $0 != pleaseEnterPersName }
             }
-            strings.append("Please enter person name in Customer Quality Control Program.")
+            strings.append(pleaseEnterPersName)
         }
         else{
-            let errorMSg = "Please enter person name in Customer Quality Control Program."
+            let errorMSg = pleaseEnterPersName
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -1162,16 +1186,16 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     func showAlertForNoQCCount(){
         if regionID == 3
         {
-            if strings.contains("Please enter QC count in Customer Quality Control Program.")
+            if strings.contains(pleaseEnterQC)
             {
-                strings = strings.filter { $0 != "Please enter QC count in Customer Quality Control Program." }
+                strings = strings.filter { $0 != pleaseEnterQC }
             }
             
-            strings.append("Please enter QC count in Customer Quality Control Program.")
+            strings.append(pleaseEnterQC)
         }
         else
         {
-            let errorMSg = "Please enter QC count in Customer Quality Control Program."
+            let errorMSg = pleaseEnterQC
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -1184,16 +1208,16 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     func  showAlertForPPMValue(){
         if regionID == 3
         {
-            if strings.contains("Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation.")
+            if strings.contains(pleaseEnterPPM)
             {
-                strings = strings.filter { $0 != "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation." }
+                strings = strings.filter { $0 != pleaseEnterPPM }
             }
             
-            strings.append("Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation.")
+            strings.append(pleaseEnterPPM)
         }
         else
         {
-            let errorMSg = "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation."
+            let errorMSg = pleaseEnterPPM
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -1208,15 +1232,15 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     func showAlertForNoValidTrainingName(){
         if regionID == 3
         {
-            if strings.contains("Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility.")
+            if strings.contains(pleaseEnterVaccine)
             {
-                strings = strings.filter { $0 != "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."}
+                strings = strings.filter { $0 != pleaseEnterVaccine}
             }
-            strings.append("Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility.")
+            strings.append(pleaseEnterVaccine)
         }
         else
         {
-            let errorMSg = "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."
+            let errorMSg = pleaseEnterVaccine
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -1469,17 +1493,17 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     
     func convertDateFormat(inputDate: String) -> String {
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = "MMM d, yyyy"
+        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = "yyyy-MM-dd"
+        convertDateFormatter.dateFormat = yyyyMMDD
         
         let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID == 3
-        {convertDateFormatter.dateFormat = "yyyy-MM-dd"
+        {convertDateFormatter.dateFormat = yyyyMMDD
         }
         else{
-            convertDateFormatter.dateFormat = "yyyy-MM-dd"
+            convertDateFormatter.dateFormat = yyyyMMDD
         }
         
         
@@ -1579,13 +1603,13 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         if regionId != 3 {
             dateFormatter.dateFormat = "dd/MM/YYYY HH:mm:ss Z"
-            let date = dict.evaluationDate?.toDate(withFormat: "dd/MM/YYYY")
+            let date = dict.evaluationDate?.toDate(withFormat: ddmmyyyy)
             let datastr = date?.toString(withFormat: "dd/MM/YYYY HH:mm:ss Z")
         }
         else{
-            dateFormatter.dateFormat="MM/dd/YYYY"
+            dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
             
-            let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
+            let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
             let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
         }
         
@@ -1619,7 +1643,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             dict.evaluationDate = dateSig
         }else{
             let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = "yyyy-MM-dd"
+            convertDateFormatter.dateFormat = yyyyMMDD
             
             convertDateFormatter.timeZone = Calendar.current.timeZone
             convertDateFormatter.locale = Calendar.current.locale
@@ -1627,15 +1651,15 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
         let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
         if regionId == 3 {
-            dateFormatterObj.dateFormat = "MM/dd/yyyy"
+            dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
         }
         else
         {
-            dateFormatterObj.dateFormat = "dd/MM/yyyy"
+            dateFormatterObj.dateFormat = ddmmyyyy
         }
         
         let evalDateObj = dateFormatterObj.date(from: evaluationDate ?? "")
-        dateFormatterObj.dateFormat = "yyyy-MM-dd"
+        dateFormatterObj.dateFormat = yyyyMMDD
         let evalDateStr = dateFormatterObj.string(from: evalDateObj ?? Date())
         dict.evaluationDate = evalDateStr
         var isEMRequested = dict.IsEMRequested ?? false
@@ -1760,20 +1784,20 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             else if assessment?.sequenceNoo == 1 {
                 return 5
             }
-            if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+            if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigrateStr{
                 return 1
             }
-            if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+            if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigrateStr{
                 return 3
             }
             else {
                 return 1
             }
         }
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigrateStr{
             return 1
         }
-        if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigrateStr{
             return 3
         }
         return 2
@@ -1783,11 +1807,11 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         
         if checkForTraning(){
             
-            if section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen" {
+            if section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigrateStr {
                 return sanitationQuesArr.count
             }
             
-            if (selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+            if (selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigrateStr){
                 return 2
             }
             if section == 1 {
@@ -1829,7 +1853,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if checkForTraning(){
-            if(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+            if(selectedCategory?.catName != refrigrateStr){
                 if indexPath.section == 1 {
                     var height:CGFloat = CGFloat()
                     height = 160
@@ -1841,7 +1865,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
         }
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigrateStr{
             var height:CGFloat = CGFloat()
             height = 70
             return height
@@ -1868,13 +1892,13 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
         
         
-        if selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refrigrateStr{
             var height:CGFloat = CGFloat()
             height = 80
             return height
             
         }
-        if(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.catName != refrigrateStr){
             if indexPath.section > 0 {
                 var height:CGFloat = CGFloat()
                 height = 130
@@ -1900,7 +1924,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if checkForTraning(){
-            if indexPath.section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName == "Extended Microbial"{// "Sanitation and Embrex Evaluation"{
+            if indexPath.section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName == extendedMicro{// "Sanitation and Embrex Evaluation"{
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PlateInfoCell", for: indexPath) as! PlateInfoCell
                 cell.currentIndex = indexPath.row
                 if sanitationQuesArr.count > indexPath.row{
@@ -1949,7 +1973,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             cell.noteBtn.setImage(image, for: .normal)
                             
                         } else {
-                            let image = UIImage(named: "PECommentSelected.png")
+                            let image = UIImage(named: peCommentedStr)
                             cell.noteBtn.setImage(image, for: .normal)
                         }
                         
@@ -1978,7 +2002,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 cell.assessmentId = peNewAssessment?.serverAssessmentId
                 return cell
             }
-            if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+            if(selectedCategory?.catName == refrigrateStr){
                 
                 return  setUpRerigatorQuesCell(tableView, cellForRowAt: indexPath)
             }
@@ -2066,9 +2090,9 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                     let date =   peNewAssessment.evaluationDate
                                     if(regionID != 3){
                                         let inputFormatter = DateFormatter()
-                                        inputFormatter.dateFormat = "dd/MM/yyyy"
+                                        inputFormatter.dateFormat = ddmmyyyy
                                         let showDate = inputFormatter.date(from: date ?? "")
-                                        inputFormatter.dateFormat = "dd/MM/yyyy"
+                                        inputFormatter.dateFormat = ddmmyyyy
                                         if(showDate != nil){
                                             let resultString = inputFormatter.string(from: showDate!)
                                             cell.certDateSelectBtn.setTitle(resultString, for: .normal)
@@ -2121,9 +2145,9 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             self.tableviewIndexPath = indexPath
                             if(regionID != 3){
                                 let inputFormatter = DateFormatter()
-                                inputFormatter.dateFormat = "dd/MM/yyyy"
+                                inputFormatter.dateFormat = ddmmyyyy
                                 let showDate = inputFormatter.date(from: date ?? "")
-                                inputFormatter.dateFormat = "dd/MM/yyyy"
+                                inputFormatter.dateFormat = ddmmyyyy
                                 if(showDate != nil){
                                     let resultString = inputFormatter.string(from: showDate!)
                                     
@@ -2149,7 +2173,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             
                             if(regionID != 3){
                                 let inputFormatter = DateFormatter()
-                                inputFormatter.dateFormat = "dd/MM/yyyy"
+                                inputFormatter.dateFormat = ddmmyyyy
                                 let showDate = inputFormatter.date(from: date ?? "")
                                 inputFormatter.dateFormat = "dd-MM-yyyy"
                                 if(showDate != nil){
@@ -2193,9 +2217,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         updateNameblock = {[unowned self] ( error) in
                             self.certificateData[self.chnagedVaccineNameIndexPathRow].name = error
                             CoreDataHandlerPE().updateVMixerInDB(peCertificateData:  self.certificateData[self.chnagedVaccineNameIndexPathRow], id:  self.certificateData[self.chnagedVaccineNameIndexPathRow].id ?? 0)
-                            UIView.performWithoutAnimation {
-                                print("Test Message")
-                            }
+                            
                             cell.vaccNameField.resignFirstResponder()
                             cell.vaccNameField.endEditing(true)
                         }
@@ -2359,7 +2381,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         
                         let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
                         if c == 0 {
-                            self.showtoast(message: "Incomplete Data")
+                            self.showtoast(message: incompleteDataStr)
                             CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
                             
                             return
@@ -2440,7 +2462,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     let  selectedValIS = selectedVal.replacingOccurrences(of: " ", with: "")
                     let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
                     if c == 0 {
-                        self.showtoast(message: "Incomplete Data")
+                        self.showtoast(message: incompleteDataStr)
                         CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
                         
                         return
@@ -2516,9 +2538,9 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
             
-            cell.doseCompletion  = {[unowned self] ( error) in
-                
-            }
+//            cell.doseCompletion  = {[unowned self] ( error) in
+//                
+//            }
             
             cell.nameCompletion  = {[unowned self] ( text) in
                 self.tableviewIndexPath = indexPath
@@ -2913,7 +2935,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
             
             let image1 = UIImage(named: "PEcomment.png")
-            let image2 = UIImage(named: "PECommentSelected.png")
+            let image2 = UIImage(named: peCommentedStr)
             if assessment?.note == "" || assessment?.note == nil {
                 cell.btn_Comment.setImage(image1, for: .normal)
             } else {
@@ -3078,7 +3100,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         }
                     }
                     
-                    if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                    if(selectedCategory?.catName == refrigrateStr){
                         catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
                     }
                     else{
@@ -3104,7 +3126,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         cell.btn_Comment.setImage(image, for: .normal)
                         
                     } else {
-                        let image = UIImage(named: "PECommentSelected.png")
+                        let image = UIImage(named: peCommentedStr)
                         cell.btn_Comment.setImage(image, for: .normal)
                     }
                     
@@ -3214,28 +3236,28 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
                         self.ml = 0.0
                     }
-                    else if self.peNewAssessment.dDDT?.lowercased().contains("1 gallon") ?? false {
+                    else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
                         self.ml = 3785.41
-                    }else if self.peNewAssessment.dDDT?.lowercased().contains("2 gallon") ?? false {
+                    }else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
                         self.ml = 7570.82
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("5 gallon") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
                         self.ml = 18927.05
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("2 litre") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
                         self.ml = 2000.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("2.4 litre") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
                         self.ml = 2400.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("2.8 litre") ?? false {  self.ml = 2800.00
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {  self.ml = 2800.00
                     }
                     
-                    else if self.peNewAssessment.dDDT?.lowercased().contains("200 ml") ?? false {
+                    else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
                         self.ml = 200.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("300 ml") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
                         self.ml = 300.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("400 ml") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
                         self.ml = 400.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("500 ml") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
                         self.ml = 500.00
-                    }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
+                    }else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
                         self.ml = 800.00
                     }
                     
@@ -3286,27 +3308,27 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
                             self.ml = 0.0
                         }
-                        else if self.peNewAssessment.dDDT?.lowercased().contains("1 gallon") ?? false {
+                        else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
                             self.ml = 3785.41
-                        }else if self.peNewAssessment.dDDT?.lowercased().contains("2 gallon") ?? false {
+                        }else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
                             self.ml = 7570.82
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("5 gallon") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
                             self.ml = 18927.05
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("2 litre") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
                             self.ml = 2000.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("2.4 litre") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
                             self.ml = 2400.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("2.8 litre") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {
                             self.ml = 2800.00
-                        }else if self.peNewAssessment.dDDT?.lowercased().contains("200 ml") ?? false {
+                        }else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
                             self.ml = 200.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("300 ml") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
                             self.ml = 300.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("400 ml") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
                             self.ml = 400.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("500 ml") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
                             self.ml = 500.00
-                        }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
+                        }else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
                             self.ml = 800.00
                         }
                         let c = self.ml
@@ -3633,7 +3655,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 cell.btnImageCount.isHidden = false
             }
             let image1 = UIImage(named: "PEcomment.png")
-            let image2 = UIImage(named: "PECommentSelected.png")
+            let image2 = UIImage(named: peCommentedStr)
             if assessment?.note == "" || assessment?.note == nil {
                 cell.noteBtn.setImage(image1, for: .normal)
             } else {
@@ -3911,7 +3933,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             }
                             
                             
-                            if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                            if(selectedCategory?.catName == refrigrateStr){
                                 catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((self.selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
                             }
                             else{
@@ -4087,7 +4109,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                 CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDraft:true)
                             }
                             
-                            if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                            if(selectedCategory?.catName == refrigrateStr){
                                 catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
                                 var assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
                             }
@@ -4114,9 +4136,9 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
                 {
                     vc.editable = false
-                    vc.commentCompleted = {[unowned self] ( note) in
-                        
-                    }
+//                    vc.commentCompleted = {[unowned self] ( note) in
+//                        
+//                    }
                     if vc.editable{
                         self.navigationController?.present(vc, animated: false, completion: nil)
                     }else{
@@ -4131,7 +4153,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             cell.noteBtn.setImage(image, for: .normal)
                             
                         } else {
-                            let image = UIImage(named: "PECommentSelected.png")
+                            let image = UIImage(named: peCommentedStr)
                             cell.noteBtn.setImage(image, for: .normal)
                             
                         }
@@ -4209,7 +4231,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigrateStr){
             let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
             
             refrigtorProbeArray = CoreDataHandlerPE().getDraftREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
@@ -4499,7 +4521,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigrateStr){
             if ((  section == 0) || ( section == 1)) {
                 return 350
             }
@@ -4527,7 +4549,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             return headerView
             
         }
-        if selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == refrigrateStr{
             let array =   CoreDataHandlerPE().fetchDraftCustomerWithCatID((selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SetFrezzerPointCell" ) as! SetFrezzerPointCell
             if(btn_NA.isSelected && self.selctedNACategoryArray.contains(78)){
@@ -4615,14 +4637,10 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         headerView.lblTitle.text = "Vaccine Mixer Observer"
                         headerView.lblSubTitle.text = "Crew Information"
                         
-                        if regionID == 3
-                        {
-                            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
-                            {
-                                print("Test Message")
-                            }
-                            else
-                            {
+                        if regionID == 3 {
+                            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true {
+                                print(appDelegateObj.testFuntion())
+                            } else {
                                 headerView.addCompletion = {[unowned self] ( error) in
                                     
                                     let lastItem = self.certificateData.last
@@ -5221,28 +5239,28 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
             self.ml = 0.0
         }
-        else if self.peNewAssessment.dDDT?.lowercased().contains("1 gallon") ?? false {
+        else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
             self.ml = 3785.41
-        }else if self.peNewAssessment.dDDT?.lowercased().contains("2 gallon") ?? false {
+        }else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
             self.ml = 7570.82
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("5 gallon") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
             self.ml = 18927.05
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("2 litre") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
             self.ml = 2000.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("2.4 litre") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
             self.ml = 2400.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("2.8 litre") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {
             self.ml = 2800.00
         }
-        else if self.peNewAssessment.dDDT?.lowercased().contains("200 ml") ?? false {
+        else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
             self.ml = 200.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("300 ml") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
             self.ml = 300.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("400 ml") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
             self.ml = 400.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("500 ml") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
             self.ml = 500.00
-        }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
+        }else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
             self.ml = 800.00
         }
         let c = self.ml
@@ -5284,7 +5302,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     func updateDosageInvojectData(section:Int)  {
         let c = Double(self.peNewAssessment.iCS ?? "0") ?? 0
         if c == 0 {
-            self.showtoast(message: "Incomplete Data")
+            self.showtoast(message: incompleteDataStr)
             return
         }
         
@@ -5316,7 +5334,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigrateStr){
             if(section == 2) {
                 return 100
             }
@@ -5482,7 +5500,7 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                 let totalMark = selectedCategory?.catMaxMark ?? 0
                 totalScoreLabel.text = String(totalMark)
                 resultScoreLabel.text = String(0)
-                if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                if(selectedCategory?.catName == refrigrateStr){
                     lblextenderMicro.isHidden = true
                     extendedMicroSwitch.isHidden = true
                     extendedMicroSwitch.isUserInteractionEnabled = false
@@ -5501,7 +5519,7 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                     
                     
                 }
-                if(selectedCategory?.catName == "Extended Microbial"){
+                if(selectedCategory?.catName == extendedMicro){
                     selectedCategory?.sequenceNoo = 12
                     lblextenderMicro.isHidden = false
                     extendedMicroSwitch.isHidden = false
@@ -5536,7 +5554,7 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                 let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
                 if regionID != 3
                 {
-                    if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                    if(selectedCategory?.catName == refrigrateStr){
                         showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
                     }
                     else{
@@ -5578,12 +5596,12 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                 if assessment?.assStatus == 1 && assessment?.assID == 5  {
                     if assessment?.note?.count ?? 0 < 1 {
                         
-                        if strings.contains("Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application")
+                        if strings.contains(pleaseEnterComentStr)
                         {
-                            strings = strings.filter { $0 != "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application" }
+                            strings = strings.filter { $0 != pleaseEnterComentStr }
                         }
                         if regionID == 3 {
-                            strings.append("Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application")
+                            strings.append(pleaseEnterComentStr)
                         }
                         else
                         {
@@ -5594,9 +5612,9 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                     {
                         if regionID == 3 {
                             
-                            if strings.contains("Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application")
+                            if strings.contains(pleaseEnterComentStr)
                             {
-                                strings = strings.filter { $0 != "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application" }
+                                strings = strings.filter { $0 != pleaseEnterComentStr }
                             }
                         }
                         
@@ -5606,13 +5624,13 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                 else if assessment?.assStatus == 1 && assessment?.assID == 9 {
                     if assessment?.note?.count ?? 0 < 1 {
                         
-                        if strings.contains("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application")
+                        if strings.contains(pleaseEnterCommentThawStr)
                         {
-                            strings = strings.filter { $0 != "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application" }
+                            strings = strings.filter { $0 != pleaseEnterCommentThawStr }
                         }
                         if regionID == 3 {
                             
-                            strings.append("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application")
+                            strings.append(pleaseEnterCommentThawStr)
                             
                         }
                         else
@@ -5624,9 +5642,9 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                     else
                     {
                         if regionID == 3 {
-                            if strings.contains("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application")
+                            if strings.contains(pleaseEnterCommentThawStr)
                             {
-                                strings = strings.filter { $0 != "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application" }
+                                strings = strings.filter { $0 != pleaseEnterCommentThawStr }
                             }
                         }
                     }
@@ -5787,7 +5805,7 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
     // MARK: - Show Hide NA
     func showHideNA(sequenceNoo:Int,catName:String){
         
-        if( sequenceNoo == 11 && catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen" ){
+        if( sequenceNoo == 11 && catName == refrigrateStr ){
             lbl_NA.isHidden = true
             btn_NA.isHidden = true
             scoreParentView.isHidden = true
@@ -5892,7 +5910,7 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
                 imagePicker.sourceType = .camera
                 imagePicker.cameraCaptureMode = .photo
                 imagePicker.delegate = self
-                present(imagePicker, animated: true, completion: {print("Test message")})
+                present(imagePicker, animated: true)
             } else {
                 postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
             }
@@ -5969,16 +5987,12 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
                 }
             }
         }
-        imagePicker.dismiss(animated: true, completion: {
-            print("test message")
-        })
+        imagePicker.dismiss(animated: true)
     }
     /******************************************************************************************************/
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
-        dismiss(animated: true, completion: {
-            
-        })
+        dismiss(animated: true)
     }
     
     // MARK: - Save Image In PE Module
@@ -6150,8 +6164,7 @@ extension PEDraftAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate
             if selectedValue != "" {
                 cell.certDateSelectBtn.setTitle(certDateArray[indices], for: .normal)
                 
-            }
-            else {
+            } else {
                 let date =   Date.getCurrentDateNow()
                 cell.certDateSelectBtn.setTitle(date, for: .normal)
             }
@@ -6159,18 +6172,14 @@ extension PEDraftAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate
                 if isCertExpiredArray[indices]{
                     cell.certDateSelectBtn.layer.borderColor = UIColor.red.cgColor
                     dateBlock?(certDateArray[indices],true , true , clickedField.tag )
-                }else{
+                } else {
                     cell.certDateSelectBtn.layer.borderColor = UIColor(red: 0.0, green: 200.0, blue: 226.0, alpha: 1.0).cgColor
                     dateBlock?(certDateArray[indices], false , false , clickedField.tag)
                 }
-            }
-            else {
+            } else {
                 cell.certDateSelectBtn.layer.borderColor = UIColor(red: 0.0, green: 200.0, blue: 226.0, alpha: 1.0).cgColor
                 dateBlock?(certDateArray[indices] , false ,false , clickedField.tag)
             }
-        }
-        else {
-            print("test message")
         }
     }
     // MARK: - Set Drop Down
@@ -6206,7 +6215,7 @@ extension PEDraftAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
-        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen") {
+        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refrigrateStr) {
             self.tableview.isScrollEnabled = false
         }
         else{
@@ -6217,7 +6226,7 @@ extension PEDraftAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen") {
+        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refrigrateStr) {
             let   cell = textField.superview?.superview?.superview?.superview?.superview as! RefrigatorTempProbeCell
             if(textField == cell.topValueTxtFld){
                 cell.valueCompletion?(textField, "Top")
@@ -6255,7 +6264,7 @@ extension PEDraftAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate
         
     }
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen") {
+        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refrigrateStr) {
             self.tableview.isScrollEnabled = false
         }
         else{

@@ -704,7 +704,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     @objc func doneClick() {
         
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat="MM/dd/yyyy"
+        dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
         //        dateFormatter2.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
         let strdate = dateFormatter2.string(from: datePicker.date) as String
@@ -898,7 +898,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     
     func callBreed(){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     /************** Delegate Method Of DropDown ***************************/
@@ -1327,11 +1327,11 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     
     func touchMoved() {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     func touchBegan() {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -2023,7 +2023,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     
     func YesPopUpPosting() {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     //MARK -- Delegate SyNC Api

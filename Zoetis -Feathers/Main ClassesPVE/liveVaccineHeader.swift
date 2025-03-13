@@ -28,7 +28,7 @@ class liveVaccineHeader: UITableViewHeaderFooterView {
     
     
     @IBAction func vaccineSwitchAction(_ sender: UISwitch) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
 

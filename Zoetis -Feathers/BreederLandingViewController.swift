@@ -129,7 +129,7 @@ class BreederLandingViewController: BaseViewController {
             })
     }
     
-    @IBAction func PVEClicked(_ sender: Any) {
+    @IBAction func pveClicked(_ sender: Any) {
       navigateToPVEDashboard(moduleSelected:"Breeder")
     }
     

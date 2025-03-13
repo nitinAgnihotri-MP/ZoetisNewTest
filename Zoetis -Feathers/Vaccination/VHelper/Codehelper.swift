@@ -61,7 +61,7 @@ class  CodeHelper{
         return image!
     }
     
-    func convertDateFormater(_ date: String, inputFormat:String = "yyyy-MM-dd'T'HH:mm:ss", outputString:String = "MM/dd/yyyy") -> String {
+    func convertDateFormater(_ date: String, inputFormat:String = "yyyy-MM-dd'T'HH:mm:ss", outputString:String = appDelegateObj.MMddyyyStr) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = Calendar.current.timeZone
         dateFormatter.locale = Calendar.current.locale
@@ -69,7 +69,7 @@ class  CodeHelper{
         guard let date = dateFormatter.date(from: date) else {
             return ""
         }
-        dateFormatter.dateFormat = outputString//"MM/dd/yyyy"
+        dateFormatter.dateFormat = outputString//appDelegateObj.MMddyyyStr
         let timeStamp = dateFormatter.string(from: date)
         
         return timeStamp
@@ -90,7 +90,7 @@ class  CodeHelper{
         let formatter = DateFormatter()
         formatter.timeZone = Calendar.current.timeZone
         formatter.locale = Calendar.current.locale
-        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.dateFormat = appDelegateObj.ddMMyyyStr
         var firstDate = formatter.date(from: "10/08/2017")
         var secondDate = formatter.date(from: "10/08/2017")
         

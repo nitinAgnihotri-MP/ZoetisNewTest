@@ -141,7 +141,49 @@ extension PVEVaccineInfoTypeCell: UITextFieldDelegate{
         self.endEditing(true)
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        // Restrict non-numeric input for mobile number fields
+        if [crewLeaderMobileTxtField, companyRepMobileTxtField].contains(textField),
+           !CharacterSet(charactersIn: "1234567890").isSuperset(of: CharacterSet(charactersIn: string)) {
+            return false
+        }
+        
+        let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        
+        // Character limit checks
+        if [crewLeaderMobileTxtField, companyRepMobileTxtField].contains(textField), newString.count > 18 {
+            return false
+        }
+        if [crewLeaderTxtField, crewLeaderEmailTxtField, companyRepNameTxtField, companyRepEmailTxtField].contains(textField),
+           newString.count > 40 {
+            return false
+        }
+        
+        // Define attribute mapping
+        let attributeMapping: [UITextField: String] = [
+            crewLeaderTxtField: "cat_crewLeaderName",
+            crewLeaderEmailTxtField: "cat_crewLeaderEmail",
+            crewLeaderMobileTxtField: "cat_crewLeaderMobile",
+            companyRepNameTxtField: "cat_companyRepName",
+            companyRepEmailTxtField: "cat_companyRepEmail",
+            companyRepMobileTxtField: "cat_companyRepMobile"
+        ]
+        
+        // Save data if the field is mapped
+        if let attribute = attributeMapping[textField] {
+            if timeStampStr.count > 0 {
+                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: attribute)
+            } else {
+                CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: attribute)
+            }
+        }
+        
+        return true
+    }
+
     
+   /*
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         if textField == crewLeaderMobileTxtField || textField == companyRepMobileTxtField{
@@ -166,7 +208,6 @@ extension PVEVaccineInfoTypeCell: UITextFieldDelegate{
             }
         }
         
-        
         if textField == crewLeaderTxtField{
             if timeStampStr.count > 0 {
                 CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: "cat_crewLeaderName")
@@ -174,6 +215,7 @@ extension PVEVaccineInfoTypeCell: UITextFieldDelegate{
                 CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: "cat_crewLeaderName")
             }
         }
+        
         if textField == crewLeaderEmailTxtField{
             if timeStampStr.count > 0 {
                 CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: "cat_crewLeaderEmail")
@@ -181,6 +223,7 @@ extension PVEVaccineInfoTypeCell: UITextFieldDelegate{
                 CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: "cat_crewLeaderEmail")
             }
         }
+        
         if textField == crewLeaderMobileTxtField{
             if timeStampStr.count > 0 {
                 CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: "cat_crewLeaderMobile")
@@ -213,5 +256,5 @@ extension PVEVaccineInfoTypeCell: UITextFieldDelegate{
         
         return true
     }
-    
+    */
 }

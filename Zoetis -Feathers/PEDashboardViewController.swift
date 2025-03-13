@@ -97,7 +97,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     @IBOutlet weak var alertLbl: UILabel!
     var fileDetailArray = NSArray()
     // MARK: - VIEW LIFE CYCLE
-    
+    let noIdFound = "No id found"
+    let yyymmdd = "yyyy-MM-dd"
+    let userIdStr = " userID == %d AND serverAssessmentId == %@"
+    let noteStr = "*Note - Please don't minimize App while syncing."
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -237,7 +240,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     }
     
     private func getPlateTypes(){
-        PEDataService.sharedInstance.getPlateTypes(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+        PEDataService.sharedInstance.getPlateTypes(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound, viewController: self, completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
             }
@@ -278,7 +281,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         
         if peNewAssessment?.customerName != nil {
             _ = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession[0].peNewAssessment
-            _ = Date().string(format: "yyyy-MM-dd")
+            _ = Date().string(format: yyymmdd)
             
         } else {
             peNewAssessment = PENewAssessment()
@@ -426,7 +429,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             return convertedString!
             
         } catch let myJSONError {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return ""
@@ -455,10 +458,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         
         if regionID == 3
         {
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         }
         else{
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
         }
         
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC")
@@ -634,11 +637,11 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     }
     
     private func addComplexPopup(isFromSyncDel:Bool = false) {
-        print("Test Message",appDelegate.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     private func addComplexPopupWithoutDataCheck(isFromSyncDel:Bool = false) {
-        print("Test Message",appDelegate.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     // MARK: - Navigate to View Assessment.
     func navigateToViewAssessment(){
@@ -710,10 +713,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         if(regionID == 3){
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         }
         else{
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
         }
         
         let sortedArray = peAssessmentDraftArray.sorted {
@@ -1136,7 +1139,7 @@ extension PEDashboardViewController{
 extension PEDashboardViewController:  SyncBtnDelegatePE {
     
     @objc private func moveToDashBoard(notification: NSNotification){
-        print("Test Message",appDelegate.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     // MARK: - Sync Button Notification
     @objc private func syncBtnTappedNoti(notification: NSNotification){
@@ -1319,7 +1322,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                     _ in
                     let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
                     for id in self.deletedAssessmentIdArray{
-                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: " userID == %d AND serverAssessmentId == %@", userID, id))
+                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: userIdStr, userID, id))
                     }
                     self.peHeaderViewController.titleofSync = "0"
                     self.peHeaderViewController.viewDidLoad()
@@ -1428,7 +1431,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     func callRequest4(paramForImages:JSONDictionary){
         self.convertDictToJson(dict: paramForImages, apiName: "Test")
         callRequest4Int = callRequest4Int + 1
-        Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+        Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + noteStr)
         ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages, completion: { [weak self] (json, error) in
             self?.callRequest4Int = self!   .callRequest4Int - 1
             
@@ -1482,10 +1485,10 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                             self.isSync = false
                             self.dismissGlobalHUD(self.view)
                             self.syncBtnTapped(showHud: false)
-                            Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+                            Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + noteStr)
                         } else {
                             self.dismissGlobalHUD(self.view)
-                            Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+                            Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + noteStr)
                             for i in self.totalImageToSync{
                                 CoreDataHandlerPE().setImageStatusTrue(idArray: i)
                             }
@@ -2434,9 +2437,9 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         var resultString = String()
         if(regionID != 3){
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             let date = dateFormatter.date(from: peCertificateData.certificateDate ?? "")
-            dateFormatter.dateFormat = "yyyy-MM-dd"
+            dateFormatter.dateFormat = yyymmdd
             if date != nil {
                 resultString = dateFormatter.string(from: date ?? Date())
                 
@@ -2787,13 +2790,13 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         if regionId != 3 {
             dateFormatter.dateFormat = "dd/MM/YYYY HH:mm:ss Z"
-            let date = dict.evaluationDate?.toDate(withFormat: "dd/MM/YYYY")
+            let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.ddMMyyyStr)
             let datastr = date?.toString(withFormat: "dd/MM/YYYY HH:mm:ss Z")
         }
         else{
-            dateFormatter.dateFormat="MM/dd/YYYY"
+            dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
             
-            let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
+            let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
             let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
         }
         
@@ -2815,12 +2818,12 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         var base64Str = ""
         var base64Str2 = ""
         if sigNumber == 0 {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         } else {
             base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig) ?? 0)
         }
         if sigNumber2 == 0 {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         } else {
             base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
         }
@@ -2862,7 +2865,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             dict.evaluationDate = dateSig
         }else{
             let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = "yyyy-MM-dd"
+            convertDateFormatter.dateFormat = yyymmdd
             convertDateFormatter.timeZone = Calendar.current.timeZone
             convertDateFormatter.locale = Calendar.current.locale
         }
@@ -2870,15 +2873,15 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
 
         let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
         if regionId == 3 {
-            dateFormatterObj.dateFormat = "MM/dd/yyyy"
+            dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
         }
         else
         {
-            dateFormatterObj.dateFormat = "dd/MM/yyyy"
+            dateFormatterObj.dateFormat = appDelegateObj.ddMMyyyStr
         }
         
         let evalDateObj = dateFormatterObj.date(from: evaluationDate ?? "")
-        dateFormatterObj.dateFormat = "yyyy-MM-dd"
+        dateFormatterObj.dateFormat = yyymmdd
         let evalDateStr = dateFormatterObj.string(from: evalDateObj ?? Date())
         dict.evaluationDate = evalDateStr
         var FSRsign = ""
@@ -3440,17 +3443,17 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
 // MARK: - Date Formatter
 func convertDateFormat(inputDate: String) -> String {
     let olDateFormatter = DateFormatter()
-    olDateFormatter.dateFormat = "MMM d, yyyy"
+    olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
     let oldDate = olDateFormatter.date(from: inputDate)
     let convertDateFormatter = DateFormatter()
-    convertDateFormatter.dateFormat = "yyyy-MM-dd"
+    convertDateFormatter.dateFormat = yyymmdd
     
     let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
     if regionID == 3
-    {convertDateFormatter.dateFormat = "yyyy-MM-dd"
+    {convertDateFormatter.dateFormat = yyymmdd
     }
     else{
-        convertDateFormatter.dateFormat = "yyyy-MM-dd"
+        convertDateFormatter.dateFormat = yyymmdd
     }
     
     if oldDate != nil{
@@ -3462,17 +3465,17 @@ func convertDateFormat(inputDate: String) -> String {
 //    func convertDateFormat(inputDate: String) -> String {
 //
 //        let olDateFormatter = DateFormatter()
-//        olDateFormatter.dateFormat = "MMM d, yyyy"
+//        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
 //        let oldDate = olDateFormatter.date(from: inputDate)
 //        let convertDateFormatter = DateFormatter()
-//        convertDateFormatter.dateFormat = "yyyy-MM-dd"
+//        convertDateFormatter.dateFormat = yyymmdd
 //
 //        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
 //        if regionID == 3
-//        {convertDateFormatter.dateFormat = "yyyy-MM-dd"
+//        {convertDateFormatter.dateFormat = yyymmdd
 //        }
 //        else{
-//            convertDateFormatter.dateFormat = "yyyy-MM-dd"
+//            convertDateFormatter.dateFormat = yyymmdd
 //        }
 //
 //        if oldDate != nil{
@@ -3490,20 +3493,20 @@ func convertDateFormat(inputDate: String) -> String {
 ////        let convertDateFormatter = DateFormatter()
 //////        convertDateFormatter.calendar = Calendar(identifier: .gregorian)
 //////        convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-////        convertDateFormatter.dateFormat = "yyyy-MM-dd"
+////        convertDateFormatter.dateFormat = yyymmdd
 ////
 ////        if regionID == 3
 ////        {
 ////            let inputFormatter = DateFormatter()
-////            inputFormatter.dateFormat = "MMM d, yyyy" // for date like Sept 6, 2024
+////            inputFormatter.dateFormat = appDelegateObj.mmddyyStr // for date like Sept 6, 2024
 ////
 ////            if let date = inputFormatter.date(from: inputDate) {
-////                convertDateFormatter.dateFormat = "MM/dd/YYYY"
+////                convertDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
 ////                return convertDateFormatter.string(from: date)
 ////            } else {
 ////                print("Invalid date format")
 ////            }
-////            convertDateFormatter.dateFormat = "yyyy-MM-dd"
+////            convertDateFormatter.dateFormat = yyymmdd
 ////
 ////        }
 ////        else{
@@ -3519,19 +3522,19 @@ func convertDateFormat(inputDate: String) -> String {
     // MARK: - Date Formatter
     func convertSign_DateFormat(inputDate: String) -> String {
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = "MMM d, yyyy"
+        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = "yyyy-MM-dd"
+        convertDateFormatter.dateFormat = yyymmdd
         
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         if regionId != 3 {
             convertDateFormatter.calendar = Calendar(identifier: .gregorian)
             convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            convertDateFormatter.dateFormat = "yyyy-MM-dd"
+            convertDateFormatter.dateFormat = yyymmdd
         }
         else{
-            convertDateFormatter.dateFormat = "MM/dd/yyyy"
+            convertDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         }
         
         if oldDate != nil{
@@ -3724,7 +3727,7 @@ extension PEDashboardViewController{
             UserDefaults.standard.setValue(false, forKey: "OnGlobalFromPE")
             UserDefaults.standard.synchronize()
             if ConnectionManager.shared.hasConnectivity() {
-                self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+                self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
                 self.fetchAllCustomer()
             }else{
                 self.dismissGlobalHUD(self.view ?? UIView())
@@ -3734,7 +3737,7 @@ extension PEDashboardViewController{
                 
                 UserDefaults.standard.setValue(true, forKey: "haveToCallGetPosting")
                 UserDefaults.standard.setValue(false, forKey: "OnGlobalFromPE")
-                self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+                self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
                 self.getRejectedAssessmentListByUser()
             }
         }
@@ -4296,7 +4299,7 @@ extension PEDashboardViewController{
     }
     // MARK: - Get Posted assessment List
     private func getPostingAssessmentListByUser(){
-        self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+        self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
         if ConnectionManager.shared.hasConnectivity() {
             ZoetisWebServices.shared.getPostingAssessmentListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
@@ -4352,7 +4355,7 @@ extension PEDashboardViewController{
     // MARK: - Get Scheduled assessment List
     private func getScheduledAssessments(){
         if ConnectionManager.shared.hasConnectivity() {
-            PEDataService.sharedInstance.getScheduledAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+            PEDataService.sharedInstance.getScheduledAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound, viewController: self, completion: { [weak self] (status, error) in
                 guard let _ = self, error == nil else {
                     self?.dismissGlobalHUD(self?.view ?? UIView());
                     return
@@ -4625,8 +4628,8 @@ extension PEDashboardViewController{
     
     // MARK: - Get Vaccine Service Responce
     func getVaccinationServiceResponse(showHud:Bool){
-        self.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
-        let id = UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found"
+        self.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + noteStr)
+        let id = UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound
         let url = ZoetisWebServices.EndPoint.getPEScheduledCertifications.latestUrl + "\(id)?customerId=null&siteId=null"
         
         
@@ -4664,14 +4667,14 @@ extension PEDashboardViewController{
                             let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
                             let index = peAssessmentArray.index(of: obj) ?? 0
                             peAssessmentArray.remove(at: index)
-                            CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: " userID == %d AND serverAssessmentId == %@", userID, obj.serverAssessmentId ?? ""))
+                            CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: userIdStr, userID, obj.serverAssessmentId ?? ""))
                         }
                     }else{
                         self?.deletedAssessmentIdArray.append(obj.serverAssessmentId!)
                         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
                         let index = peAssessmentArray.index(of: obj) ?? 0
                         peAssessmentArray.remove(at: index)
-                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: " userID == %d AND serverAssessmentId == %@", userID, obj.serverAssessmentId ?? ""))
+                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: userIdStr, userID, obj.serverAssessmentId ?? ""))
                     }
                 }
             }
@@ -4686,7 +4689,7 @@ extension PEDashboardViewController{
                         }else{
                             let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
                             for id in self?.deletedAssessmentIdArray ?? []{
-                                CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: " userID == %d AND serverAssessmentId == %@", userID, id))
+                                CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: userIdStr, userID, id))
                             }
                             self?.peHeaderViewController.titleofSync = "0"
                             self?.peHeaderViewController.viewDidLoad()
@@ -5095,7 +5098,7 @@ extension PEDashboardViewController{
                 if SignatureDate != "" {
                     sigDate = self.convertDateFormat(inputDate: SignatureDate)
                 } else {
-                    sigDate = Date().stringFormat(format: "yyyy-MM-dd")
+                    sigDate = Date().stringFormat(format: yyymmdd)
                 }
                 let param : [String:String] = ["sig":String(id),"sig2":String(id2),"sig_Date":sigDate ,"sig_EmpID":RoleName,"sig_Name":representaiveName ?? "","sig_EmpID2":RoleName2,"sig_Name2":representaiveName2 ?? "","sig_Phone":representaiveNotes ?? ""]
                 jsonRe = (getJSON("QuestionAns") ?? JSON())
@@ -5737,7 +5740,7 @@ extension PEDashboardViewController{
                 if SignatureDate != "" {
                     sigDate = self.convertDateFormat(inputDate: SignatureDate)
                 } else {
-                    sigDate = Date().stringFormat(format: "MMM d, yyyy")
+                    sigDate = Date().stringFormat(format: appDelegateObj.mmddyyStr)
                 }
                 let param : [String:String] = ["sig":String(id),"sig2":String(id2),"sig_Date":sigDate ,"sig_EmpID":RoleName,"sig_Name":representaiveName ?? "","sig_EmpID2":RoleName2,"sig_Name2":representaiveName2 ?? "","sig_Phone":representaiveNotes ?? ""]
                 jsonRe = (getJSON("QuestionAns") ?? JSON())
@@ -6282,7 +6285,7 @@ extension PEDashboardViewController{
         self.dismissGlobalHUD(self.view)
         let dontGetRejected = UserDefaults.standard.value(forKey: "dontGetRejectedAssessment") as? Bool
         if dontGetRejected ?? false{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         else
         {
@@ -6453,7 +6456,7 @@ extension PEDashboardViewController{
             if SignatureDate != "" {
                 sigDate = self.convertDateFormat(inputDate: SignatureDate)
             } else {
-                sigDate = Date().stringFormat(format: "MMM d, yyyy")
+                sigDate = Date().stringFormat(format: appDelegateObj.mmddyyStr)
             }
             let param : [String:String] = ["sig":String(id),"sig2":String(id2),"sig_Date":sigDate ,"sig_EmpID":RoleName,"sig_Name":representaiveName ,"sig_EmpID2":RoleName2,"sig_Name2":representaiveName2 ,"sig_Phone":representaiveNotes ]
             jsonRe = (getJSON("QuestionAns") ?? JSON())

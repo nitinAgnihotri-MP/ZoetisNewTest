@@ -540,7 +540,7 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
     }
     
     func YesPopUpPosting() {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     func alertShow()  {
         

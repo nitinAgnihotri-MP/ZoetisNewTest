@@ -78,9 +78,9 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             toLblDate.alpha = 0
             var dateFormatter = DateFormatter()
             dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             fromLblDateFrench.text = dateFormatter.string(from: Date())
             toLblDateFrench.text = dateFormatter.string(from: Date())
         }
@@ -92,9 +92,9 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         }
         var dateFormatter = DateFormatter()
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
 
         fromString = dateFormatter.string(from: Date())
         toString = dateFormatter.string(from: Date())
@@ -187,7 +187,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             fromLblDate.alpha = 0
             fromLblDateFrench.alpha = 1
             dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             let strdate = dateFormatter.string(from: datePicker.date) as String
             fromLblDateFrench.text = strdate
         }
@@ -197,9 +197,9 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         }
         
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         fromString = dateFormatter.string(from: datePicker.date)
         fromDate = datePicker.date
         
@@ -209,7 +209,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
                 fromLblDate.alpha = 0
                 fromLblDateFrench.alpha = 1
                 dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd/MM/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
                 let strdate = dateFormatter.string(from: datePicker.date) as String
                 fromLblDateFrench.text = strdate
             }
@@ -229,7 +229,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
                 fromLblDate.alpha = 0
                 fromLblDateFrench.alpha = 1
                 dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd/MM/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
                 let strdate = dateFormatter.string(from: datePicker.date) as String
                 fromLblDateFrench.text = strdate
             }
@@ -248,7 +248,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             
             fromString = fromLblDate.text!
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             fromDate = dateFormatter.date(from: fromString)!
             
             if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -288,7 +288,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             toLblDate.alpha = 0
             toLblDateFrench.alpha = 1
             dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             let strdate = dateFormatter.string(from: datePicker.date) as String
             toLblDateFrench.text = strdate
         }
@@ -298,10 +298,10 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         }
         
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat = "MM/dd/yyyy"
+        dateFormatter2.dateFormat = appDelegateObj.MMddyyyStr
         
         let dateFormatter1 = DateFormatter()
-        dateFormatter1.dateFormat = "MM/dd/yyyy"
+        dateFormatter1.dateFormat = appDelegateObj.MMddyyyStr
         toString = dateFormatter1.string(from: datePicker.date)
         toDate = datePicker.date
         
@@ -310,7 +310,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             if lngId == 3{
                 toLblDate.alpha = 0
                 dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd/MM/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
                 let strdate = dateFormatter.string(from: datePicker.date) as String
                 toLblDateFrench.text = strdate
             }
@@ -330,7 +330,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             if lngId == 3{
                 toLblDate.alpha = 0
                 dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd/MM/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
                 let strdate = dateFormatter.string(from: datePicker.date) as String
                 toLblDateFrench.text = strdate
             }
@@ -350,7 +350,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             self.cancelClick()
             fromString = toLblDate.text!
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             toDate = dateFormatter.date(from: fromString)!
             
             if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -481,9 +481,9 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             {
                 let dateString = posting.sessiondate
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "MM/dd/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                 let dateObj = dateFormatter.date(from: dateString!)
-                dateFormatter.dateFormat = "dd/MM/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
                 cell.datelabel.text = dateFormatter.string(from: dateObj!)
             }
             else

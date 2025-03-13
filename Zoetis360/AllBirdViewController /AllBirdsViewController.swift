@@ -269,7 +269,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     

@@ -128,7 +128,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
         
         let dateFormatter = DateFormatter()
         setupUI()
-        dateFormatter.dateFormat="MM/dd/yyyy"
+        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
         let currentDate: NSDate = NSDate()
         let strdate1 = dateFormatter.string(from: currentDate as Date) as String
         self.cameraSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
@@ -451,11 +451,11 @@ class PEViewStartNewAssesmentINT: BaseViewController {
     
     
     func showExtendedPE(flag:Bool = false){
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     func enableExtendedPE(flag:Bool = true){
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     
@@ -586,7 +586,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     // MARK: Hide other Breed View
     func hideBreedOthers(){
@@ -710,7 +710,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
     
     
     func saveAssessmentInProgressDataInDB()  {
-        print("Test Message",appDelegate.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK: - Merndatory Field Validation Check
@@ -1136,7 +1136,7 @@ extension PEViewStartNewAssesmentINT: DatePickerPopupViewControllerProtocol{
     }
     
     func doneButtonTapped(string:String){
-        print("Test Message",appDelegate.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
 }
 
@@ -1266,7 +1266,7 @@ extension PEViewStartNewAssesmentINT{
     // MARK: - Convert Date Format.
     func convertDateFormat(inputDate: String) -> String {
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = "MMM d, yyyy"
+        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = "yyyy-MM-dd"
@@ -1436,7 +1436,7 @@ extension PEViewStartNewAssesmentINT{
         let Notes = dict.notes
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/YYYY HH:mm:ss Z"
-        let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
+        let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
         let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
         let  sig_Datetext = dict.sig_Date
         var dateSig = ""
@@ -1514,7 +1514,7 @@ extension PEViewStartNewAssesmentINT{
         if regionId == 3 {
             
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "MM/dd/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
 
             // Convert the string to a Date object
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
@@ -1533,7 +1533,7 @@ extension PEViewStartNewAssesmentINT{
         else
         {
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "dd/MM/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
 
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
             
@@ -2022,7 +2022,7 @@ extension PEViewStartNewAssesmentINT{
         var resultString = String()
         if(regionID != 3){
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             let date = dateFormatter.date(from: peCertificateData.certificateDate ?? "")
             dateFormatter.dateFormat = "yyyy-MM-dd"
             if date != nil {

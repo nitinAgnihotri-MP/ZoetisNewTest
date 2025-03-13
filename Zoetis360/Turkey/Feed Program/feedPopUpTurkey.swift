@@ -24,7 +24,7 @@ class feedPopUpTurkey: UIView {
     @IBOutlet weak var lblFedPrgram: UILabel!
         
     override func draw(_ rect: CGRect) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     // MARK: - IBACTIONS

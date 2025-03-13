@@ -422,7 +422,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     }
     func doneClick() {
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat="MM/dd/yyyy"
+        dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
         let strdate = dateFormatter2.string(from: datePicker.date) as String
         sessionDateOutlet.text = strdate
         
@@ -1323,7 +1323,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             assert(false, "no date from string")
             return ""
         }
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         let timeStamp = dateFormatter.string(from: date)
         
         return timeStamp

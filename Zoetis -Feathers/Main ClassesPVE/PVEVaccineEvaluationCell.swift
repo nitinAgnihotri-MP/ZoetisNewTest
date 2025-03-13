@@ -162,20 +162,7 @@ extension PVEVaccineEvaluationCell: UITextFieldDelegate{
         
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        guard CharacterSet(charactersIn: "0123456789.").isSuperset(of: CharacterSet(charactersIn: string)) else {
-            return false
-        }
-        
-        
-        let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
-        let value: Int? = Int(newString)
-        
-        var centerTotalValue: Int? = 0
-        var siteOfInjectTotalValue: Int? = 0
-        
-        
+    fileprivate func leftreportValues(_ textField: UITextField, _ newString: String, _ value: Int?) {
         if textField == centerLTxtField {
             
             centerLLbl.text = newString
@@ -193,18 +180,9 @@ extension PVEVaccineEvaluationCell: UITextFieldDelegate{
             missedLLbl.text = newString
             sharedManager.missedLTxtFieldValue = value ?? 0
         }
-        
-        let totalSubQLeft: Int? = sharedManager.centerLTxtFieldValue + sharedManager.wingLTxtFieldValue + sharedManager.musculLTxtFieldValue + sharedManager.missedLTxtFieldValue
-        
-        leftTotalLbl.text = "\(totalSubQLeft ?? 0)"
-        
-        if totalSubQLeft ?? 0 > 0 {
-            percentCenterLLbl.text = "\(sharedManager.centerLTxtFieldValue * 100 / (totalSubQLeft ?? 0))"
-            percentWingBandLLbl.text = "\(sharedManager.wingLTxtFieldValue * 100 / (totalSubQLeft ?? 0))"
-            percentMusculLLbl.text = "\(sharedManager.musculLTxtFieldValue * 100 / (totalSubQLeft ?? 0))"
-            percentMissedLLbl.text = "\(sharedManager.missedLTxtFieldValue * 100 / (totalSubQLeft ?? 0))"
-        }
-        
+    }
+    
+    fileprivate func rightWingValue(_ textField: UITextField, _ newString: String, _ value: Int?) {
         // SubQ Right Wing -----------
         if textField == centerRTxtField {
             centerRLbl.text = newString
@@ -223,6 +201,36 @@ extension PVEVaccineEvaluationCell: UITextFieldDelegate{
             missedRLbl.text = newString
             sharedManager.missedRTxtFieldValue = value ?? 0
         }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        guard CharacterSet(charactersIn: "0123456789.").isSuperset(of: CharacterSet(charactersIn: string)) else {
+            return false
+        }
+        
+        
+        let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
+        let value: Int? = Int(newString)
+        
+        var centerTotalValue: Int? = 0
+        var siteOfInjectTotalValue: Int? = 0
+        
+        
+        leftreportValues(textField, newString, value)
+        
+        let totalSubQLeft: Int? = sharedManager.centerLTxtFieldValue + sharedManager.wingLTxtFieldValue + sharedManager.musculLTxtFieldValue + sharedManager.missedLTxtFieldValue
+        
+        leftTotalLbl.text = "\(totalSubQLeft ?? 0)"
+        
+        if totalSubQLeft ?? 0 > 0 {
+            percentCenterLLbl.text = "\(sharedManager.centerLTxtFieldValue * 100 / (totalSubQLeft ?? 0))"
+            percentWingBandLLbl.text = "\(sharedManager.wingLTxtFieldValue * 100 / (totalSubQLeft ?? 0))"
+            percentMusculLLbl.text = "\(sharedManager.musculLTxtFieldValue * 100 / (totalSubQLeft ?? 0))"
+            percentMissedLLbl.text = "\(sharedManager.missedLTxtFieldValue * 100 / (totalSubQLeft ?? 0))"
+        }
+        
+        rightWingValue(textField, newString, value)
         
         let totalSubQRight: Int? = sharedManager.centerRTxtFieldValue + sharedManager.wingRTxtFieldValue + sharedManager.musculRTxtFieldValue + sharedManager.missedRTxtFieldValue
         rightTotalLbl.text = "\(totalSubQRight ?? 0)"

@@ -34,16 +34,16 @@ class obsFieldCollectionViewCell: UICollectionViewCell  {
 
     // MARK: - IBACTION
     @IBAction func incrementBtn(_ sender: AnyObject) {
-
+        print(appDelegateObj.testFuntion())
     }
  
     @IBAction func minusBtn(_ sender: AnyObject) {
-
+        print(appDelegateObj.testFuntion())
     }
 
     
     @IBAction func birdSxBtn(_ sender: AnyObject) {
-
+        print(appDelegateObj.testFuntion())
     }
     
     

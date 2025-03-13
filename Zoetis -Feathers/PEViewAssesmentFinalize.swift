@@ -140,7 +140,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     override func viewDidLoad() {
@@ -323,7 +323,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         //        {
         //        }
         //
-        //        dateFormatter2.dateFormat="MM/dd/yyyy"
+        //        dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
         //        dateFormatter2.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
         //        sig_Date.text = dateFormatter2.string(from: selectedCategory?.sig_Date) as String
@@ -2338,7 +2338,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
     }
     
     func updateCategoriesInShared(){
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     // MARK:  Check for Last Category
     func chechForLastCategory(){
@@ -2418,7 +2418,7 @@ extension PEViewAssesmentFinalize{
 // MARK:  ************** Camera Button Action ***************************************/
 extension PEViewAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationControllerDelegate{
     @objc func takePhoto(_ sender: UIButton) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     // MARK: ************* Alert View Methods ***********************************/
@@ -2573,7 +2573,7 @@ extension PEViewAssesmentFinalize{
     // MARK: Change date Fromate
     func convertDateFormat(inputDate: String) -> String {
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = "MMM d, yyyy"
+        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = "yyyy-MM-dd"
@@ -2586,7 +2586,7 @@ extension PEViewAssesmentFinalize{
     // MARK: - Date Formatter
     func convertSign_DateFormat(inputDate: String) -> String {
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = "MMM d, yyyy"
+        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = "yyyy-MM-dd"
@@ -2626,8 +2626,8 @@ extension PEViewAssesmentFinalize{
         // List of common date formats to check
         let dateFormats = [
             "yyyy-MM-dd",
-            "dd/MM/yyyy",
-            "MM/dd/yyyy",
+            appDelegateObj.ddMMyyyStr,
+            appDelegateObj.MMddyyyStr,
             "dd-MM-yyyy",
             "yyyy/MM/dd",
             "MMMM d, yyyy",
@@ -2802,8 +2802,8 @@ extension PEViewAssesmentFinalize{
         let Notes = dict.notes
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/YYYY HH:mm:ss Z"
-        // Date().stringFormat(format: "MMM d, yyyy"
-        let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
+        // Date().stringFormat(format: appDelegateObj.mmddyyStr
+        let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
         let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
         let  sig_Datetext = dict.sig_Date
         var dateSig = ""
@@ -2884,7 +2884,7 @@ extension PEViewAssesmentFinalize{
         if regionId == 3 {
             
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "MM/dd/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
             
             // Convert the string to a Date object
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
@@ -2902,7 +2902,7 @@ extension PEViewAssesmentFinalize{
         else
         {
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "dd/MM/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
                 
@@ -3476,7 +3476,7 @@ extension PEViewAssesmentFinalize{
         var resultString = String()
         if(regionID != 3){
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             let date = dateFormatter.date(from: peCertificateData.certificateDate ?? "")
             dateFormatter.dateFormat = "yyyy-MM-dd"
             if date != nil {
@@ -3961,9 +3961,9 @@ extension PEViewAssesmentFinalize{
         let dateFormatter = DateFormatter()
         
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
-        dateFormatter.dateFormat="MM/dd/YYYY"
+        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
         
-        let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
+        let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
         let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
         
         
@@ -3994,7 +3994,7 @@ extension PEViewAssesmentFinalize{
         if regionId == 3 {
             
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "MM/dd/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
             
             // Convert the string to a Date object
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
@@ -4013,7 +4013,7 @@ extension PEViewAssesmentFinalize{
         else
         {
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "dd/MM/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
                 

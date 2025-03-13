@@ -76,7 +76,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
             
             let date = ((sessionDataArray.object(at: i) as AnyObject).value(forKey: "sessiondate")!)
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/mm/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
             let date1 = dateFormatter.date(from: date as! String)
             let date2 = dateFormatter.date(from: AllValidSessions.sharedInstance.complexDate as String)
@@ -365,7 +365,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         self.preparedArray.add(chartDataSet)
     }
     @nonobjc func didFinishWithParsingWithFarmData(_ finishedArray : [Float]){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     func setChartData(dataPoints: [String], values: [Float]) -> BarChartDataSet? {
         

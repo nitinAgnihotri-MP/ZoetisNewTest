@@ -54,7 +54,7 @@
 "No" = "Não";
 "Retry" = "Tente novamente";
 "Cancel" = "Cancelar";
-"Loading..." = "Carregando...";
+appDelegateObj.loadingStr = "Carregando...";
 "Enter your password" = "Coloque sua senha";
 "Enter your email" = "Digite seu e-mail";
 "SIGN IN" = "ENTRAR";

@@ -110,7 +110,7 @@ class PEViewStartNewAssessment: BaseViewController {
         btn_MoveToDraft.isHidden = true
         let dateFormatter = DateFormatter()
         setupUI()
-        dateFormatter.dateFormat="MM/dd/yyyy"
+        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
 //        dateFormatter.calendar = Calendar(identifier: .gregorian)
 //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         let currentDate: NSDate = NSDate()
@@ -620,7 +620,7 @@ class PEViewStartNewAssessment: BaseViewController {
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     // MARK: - Hide Breed Other
     func hideBreedOthers(){
@@ -675,7 +675,7 @@ class PEViewStartNewAssessment: BaseViewController {
     }
     // MARK: - Draft Button Action
     @IBAction func action_MoveToDraft(_ sender: Any) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     // MARK: - Next Button Action
@@ -691,7 +691,7 @@ class PEViewStartNewAssessment: BaseViewController {
     }
     
     func saveAssessmentInProgressDataInDB()  {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     // MARK: - Mandatory Field Validation
@@ -1108,7 +1108,7 @@ extension PEViewStartNewAssessment: DatePickerPopupViewControllerProtocol{
     }
     
     func doneButtonTapped(string:String){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
 }
 
@@ -1116,7 +1116,7 @@ extension PEViewStartNewAssessment: DatePickerPopupViewControllerProtocol{
 extension PEViewStartNewAssessment{
     
     func getEvaluationFromBackend(){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     // MARK: - Ok Button tabbed
@@ -1231,7 +1231,7 @@ extension PEViewStartNewAssessment {
     }
     
     private func handleAssessmentCategoriesResponse(_ json: JSON) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
 }
@@ -1267,7 +1267,7 @@ extension PEViewStartNewAssessment{
         let olDateFormatter = DateFormatter()
 //        olDateFormatter.calendar = Calendar(identifier: .gregorian)
 //        olDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        olDateFormatter.dateFormat = "MMM d, yyyy"
+        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
 //        convertDateFormatter.calendar = Calendar(identifier: .gregorian)
@@ -1283,7 +1283,7 @@ extension PEViewStartNewAssessment{
     // MARK: - Date Formatter
     func convertSign_DateFormat(inputDate: String) -> String {
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = "MMM d, yyyy"
+        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = "yyyy-MM-dd"
@@ -1449,7 +1449,7 @@ extension PEViewStartNewAssessment{
         let Notes = dict.notes
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/YYYY HH:mm:ss Z"
-        let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
+        let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
         let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
         let  sig_Datetext = dict.sig_Date
         var dateSig = ""
@@ -1525,7 +1525,7 @@ extension PEViewStartNewAssessment{
         }
         let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
         let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
-//        dateFormatterObj.dateFormat = "MM/dd/yyyy"
+//        dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
 //        
 //        let evalDateObj = dateFormatterObj.date(from: evaluationDate ?? "")
 //        dateFormatterObj.dateFormat = "yyyy-MM-dd"
@@ -1536,7 +1536,7 @@ extension PEViewStartNewAssessment{
         if RegionalId == 3 {
             
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "MM/dd/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
 
             // Convert the string to a Date object
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
@@ -1555,7 +1555,7 @@ extension PEViewStartNewAssessment{
         else
         {
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "dd/MM/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
 
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
             
@@ -2039,7 +2039,7 @@ extension PEViewStartNewAssessment{
             let dateFormatter = DateFormatter()
 //            dateFormatter.calendar = Calendar(identifier: .gregorian)
 //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             let date = dateFormatter.date(from: peCertificateData.certificateDate ?? "")
             dateFormatter.dateFormat = "yyyy-MM-dd"
             resultString = dateFormatter.string(from: date ?? Date())
@@ -2975,9 +2975,9 @@ extension PEViewStartNewAssessment{
 //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         
-        dateFormatter.dateFormat="MM/dd/YYYY"
+        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
         
-        let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
+        let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
         
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
@@ -3006,7 +3006,7 @@ extension PEViewStartNewAssessment{
         if regionId == 3 {
             
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "MM/dd/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
 
             // Convert the string to a Date object
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
@@ -3025,7 +3025,7 @@ extension PEViewStartNewAssessment{
         else
         {
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = "dd/MM/yyyy"
+            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
 
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
             

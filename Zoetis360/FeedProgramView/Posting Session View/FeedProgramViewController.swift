@@ -1762,14 +1762,14 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             let dateFormatter2 = DateFormatter()
             //            dateFormatter2.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
-            dateFormatter2.dateFormat="dd/MM/yyyy"
+            dateFormatter2.dateFormat=appDelegateObj.ddMMyyyStr
             lblDate.text = dateFormatter2.string(from: datePicker.date) as String
         }
         else{
             let dateFormatter2 = DateFormatter()
             //            dateFormatter2.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
-            dateFormatter2.dateFormat="MM/dd/yyyy"
+            dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
             lblDate.text = dateFormatter2.string(from: datePicker.date) as String
         }
         buttonBg1.removeFromSuperview()

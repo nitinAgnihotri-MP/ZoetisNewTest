@@ -47,9 +47,9 @@ class VaccinationConstants{
     }
         
     
-    struct TestData{
-
-    }
+//    struct TestData{
+//        
+//    }
     
     struct VaccinationStatus{
         public static let COREDATA_SAVED_SUCCESSFULLY = "Saved Successfuly in Core Data"

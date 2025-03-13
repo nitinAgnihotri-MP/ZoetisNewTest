@@ -52,7 +52,7 @@ class PEDraftViewController: BaseViewController {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         
         deleteDeletedAssessments()
         
@@ -104,6 +104,24 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
         
     }
     
+    
+    fileprivate func deleteDraftAssessment() {
+        if self.anyCategoryContainValueOrNot(){
+            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+            let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftAssesmentFinalize") as? PEDraftAssesmentFinalize
+            if vc != nil{
+                vc!.navigationController?.navigationBar.isHidden = true
+                self.navigationController?.pushViewController(vc!, animated: true)
+            }
+        } else {
+            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+            let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssessment") as? PEDraftStartNewAssessment
+            if vc != nil{
+                vc!.navigationController?.navigationBar.isHidden = true
+                self.navigationController?.pushViewController(vc!, animated: true)
+            }
+        }
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
@@ -179,22 +197,7 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
                     }
                     let delete  = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber ?? 0)
                     if delete{
-                        if self.anyCategoryContainValueOrNot(){
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftAssesmentFinalize") as? PEDraftAssesmentFinalize
-                            
-                            if vc != nil{
-                                vc!.navigationController?.navigationBar.isHidden = true
-                                self.navigationController?.pushViewController(vc!, animated: true)
-                            }
-                        } else {
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssessment") as? PEDraftStartNewAssessment
-                            if vc != nil{
-                                vc!.navigationController?.navigationBar.isHidden = true
-                                self.navigationController?.pushViewController(vc!, animated: true)
-                            }
-                        }
+                        deleteDraftAssessment()
                     }
                 }
                 return cell
@@ -265,23 +268,7 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
                     }
                     let delete  = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber ?? 0)
                     if delete{
-                        if self.anyCategoryContainValueOrNot(){
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftAssesmentFinalize") as? PEDraftAssesmentFinalize
-                            if vc != nil{
-                                vc!.navigationController?.navigationBar.isHidden = true
-                                
-                                self.navigationController?.pushViewController(vc!, animated: true)
-                            }
-                        } else {
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssessment") as? PEDraftStartNewAssessment
-                            if vc != nil{
-                                vc!.navigationController?.navigationBar.isHidden = true
-                                
-                                self.navigationController?.pushViewController(vc!, animated: true)
-                            }
-                        }
+                        deleteDraftAssessment()
                     }
                 }
                 return cell
@@ -309,7 +296,7 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
     // MARK: Delete Deleted Assessments
     private func deleteDeletedAssessments(){
         if ConnectionManager.shared.hasConnectivity() {
-            self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+            self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
             PEDataService.sharedInstance.deleteDeletedAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
                 guard let _ = self, error == nil else {
                     self?.dismissGlobalHUD(self?.view ?? UIView());

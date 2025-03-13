@@ -101,9 +101,7 @@ enum ZoetisApiManager {
                              "Authorization":"\(AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype") ?? "")"]
         
         if imageKey != "" {
-            // guard let URL = try? URLRequest(url: URLString, method: httpMethod, headers: additionalHeaders) else {return}
             guard let url = URL(string: URLString) else {
-                //completion(nil, nil)
                 return
             }
             AF.upload(

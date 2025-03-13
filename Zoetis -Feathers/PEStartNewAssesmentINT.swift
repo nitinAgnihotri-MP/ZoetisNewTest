@@ -119,7 +119,7 @@ class PEStartNewAssessmentINT: BaseViewController {
     @IBOutlet weak var inovoBtn: UIButton!
     @IBOutlet weak var basicNewBtn: UIButton!
     var regionID = Int()
-    
+    let breaderFlock = "Breeder Flock Age of Eggs Injected*"
     
     override func viewDidLoad() {
         print("<<<<",self)
@@ -356,7 +356,7 @@ class PEStartNewAssessmentINT: BaseViewController {
             self.allProductionViewHeightConstraint.constant = 60
             self.flockAgeLower.isHidden = false
             self.btnFlockImageLower.isHidden = false
-            self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected*"
+            self.flockAgeLbl.text = breaderFlock
             
             self.peNewAssessment.evaluationName = evaluationNameArray[0] as? String //selectedVal
             self.peNewAssessment.evaluationID = evaluationIDArray[0] as! Int
@@ -392,12 +392,12 @@ class PEStartNewAssessmentINT: BaseViewController {
         
        // let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID != 3 {
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
 //            dateFormatter.calendar = Calendar(identifier: .gregorian)
 //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         }
         else{
-            dateFormatter.dateFormat="MM/dd/yyyy"
+            dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
 //            dateFormatter.calendar = Calendar(identifier: .gregorian)
 //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         }
@@ -536,7 +536,7 @@ class PEStartNewAssessmentINT: BaseViewController {
             } else {
                 self.flockAgeLower.isHidden = false
                 self.btnFlockImageLower.isHidden = false
-                self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected*"
+                self.flockAgeLbl.text = breaderFlock
             }
             showFlockView()
         }
@@ -732,7 +732,7 @@ class PEStartNewAssessmentINT: BaseViewController {
     }
     
     func enableExtendedPE(flag:Bool = true){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     /* Get offline stored session(Eggs and Incubation) */
@@ -903,7 +903,7 @@ class PEStartNewAssessmentINT: BaseViewController {
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     // MARK: - Hide Other Breed Button
     func hideBreedOthers(){
@@ -1047,7 +1047,7 @@ class PEStartNewAssessmentINT: BaseViewController {
         self.view.endEditing(true)
         Constants.isFirstTime = false
         self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { [self] status in
-            
+            print(status)
         }
         guard let date = self.peNewAssessment.evaluationDate, date.count > 0 else {
             changeMandatorySuperviewToRed()
@@ -1758,7 +1758,7 @@ class PEStartNewAssessmentINT: BaseViewController {
                     self.allProductionViewHeightConstraint.constant = 60
                     self.flockAgeLower.isHidden = false
                     self.btnFlockImageLower.isHidden = false
-                    self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected*"
+                    self.flockAgeLbl.text = breaderFlock
                 }
                 
                 
@@ -2191,7 +2191,7 @@ extension PEStartNewAssessmentINT : DatePickerPopupViewControllerProtocol{
     }
     
     func doneButtonTapped(string:String){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
 }
 
@@ -2420,7 +2420,7 @@ extension PEStartNewAssessmentINT {
         }
     }
     private func handleAssessmentCategoriesResponse(_ json: JSON) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
 }
 

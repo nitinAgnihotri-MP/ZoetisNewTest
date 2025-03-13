@@ -123,7 +123,7 @@ class TrainingEducationViewController: UIViewController,userLogOut,syncApi {
                                 
                                 let formatter = DateFormatter()
                                 // initially set the format based on your datepicker date / server String
-                                formatter.dateFormat = "MM/dd/yyyy"
+                                formatter.dateFormat = appDelegateObj.MMddyyyStr
                                 
                                 let myString = formatter.string(from: Date()) // string purpose I add here
                                 print("\(String(describing: user.username)) "+myString)

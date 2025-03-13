@@ -361,4 +361,4 @@ extension NSMutableDictionary {
     }
 }
 
-let appDelegate = UIApplication.shared.delegate as! AppDelegate
+ let appDelegateObj = UIApplication.shared.delegate as! AppDelegate

@@ -40,11 +40,8 @@ class BacterialSampleInfoCell: UITableViewCell {
     
     @IBAction func plusBtnAction(_ sender: UIButton) {
     
-        var barcode = UserDefaults.standard.value(forKey: "barcode")
-       
-        //   print("you tapped :\(sender.tag)")
-        
-        //   print("---->>>>>>>>>>>>\(noOfPlates.text)")
+        let barcode = UserDefaults.standard.value(forKey: "barcode")
+  
         
         guard let text =  noOfPlates.text  else {
             return
@@ -54,25 +51,33 @@ class BacterialSampleInfoCell: UITableViewCell {
         {
             noOfPlates.text = "enter a value"
             
-           //  self.isNoOfPlates = false
-            
             return
         }
-        else
-        {
-            
-            var txtVale = Int()
+        else {
             let sessionId = UserDefaults.standard.integer(forKey: "sessionId")
-            txtVale =  Int(noOfPlates.text!)!
             
-            for i in 0..<txtVale {
-                var plate =  "\(String(describing: barcode!))-" + "\(i+1)"
-                CoreDataHandlerMicro().saveSampleInfoDataInDB(plate, plateId: i, sampleDescriptiopn: "", additionalTests: "Bacterial", checkMark: "false",  microsporeCheck: "false", sessionId: sessionId)
-               // CoreDataHandlerMicro().saveSampleInfoDataInDB(plate ,plateId : 10, sampleDescriptiopn: "" , additionalTests:"Microbial", checkMark: "false",sessionId : sessionId)
+            if let txtVale = Int(noOfPlates.text!) {  // Ensure safe conversion
+                for i in 0..<txtVale {
+                    let plate = "\(String(describing: barcode!))-" + "\(i + 1)"
+                    CoreDataHandlerMicro().saveSampleInfoDataInDB(plate, plateId: i, sampleDescriptiopn: "", additionalTests: "Bacterial", checkMark: "false", microsporeCheck: "false", sessionId: sessionId)
+                }
             }
-            
-
         }
+
+//        else
+//        {
+//            
+//            var txtVale = Int()
+//            let sessionId = UserDefaults.standard.integer(forKey: "sessionId")
+//            txtVale =  Int(noOfPlates.text!)!
+//            
+//            for i in 0..<txtVale {
+//                var plate =  "\(String(describing: barcode!))-" + "\(i+1)"
+//                CoreDataHandlerMicro().saveSampleInfoDataInDB(plate, plateId: i, sampleDescriptiopn: "", additionalTests: "Bacterial", checkMark: "false",  microsporeCheck: "false", sessionId: sessionId)
+//            }
+//            
+//
+//        }
         delegate?.noOfPlates(count: Int(text)!, clicked: true)
         
      //

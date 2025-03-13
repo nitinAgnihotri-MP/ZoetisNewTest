@@ -146,7 +146,7 @@ class RequisitionModel {
     var surveyConductedOn = ""
     var sampleCollectionDate: String = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/YYYY"
+        formatter.dateFormat = appDelegateObj.MMddyyyStr
         let dateString = formatter.string(from: Date())
         return dateString
     }()
@@ -172,7 +172,7 @@ class RequisitionModel {
     
     var currentdate: String = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/YYYY"
+        formatter.dateFormat = appDelegateObj.MMddyyyStr
         let dateString = formatter.string(from: Date())
         return dateString
     }()

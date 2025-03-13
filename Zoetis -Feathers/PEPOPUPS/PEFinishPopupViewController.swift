@@ -66,9 +66,43 @@ class PEFinishPopupViewController: BaseViewController {
     var isFromDraft : Bool = false
     var showExtendedPE:Bool = false
     var regionID = Int()
+    let mendatoryMessage = "Please fill the mandatory fields."
     
     // MARK: - VIEW LIFE CYCLE
 
+    fileprivate func setsignaturesDetails() {
+        if Int(truncating: rejectedAssessments[0].sig ?? 0) > 0 {
+            let data = CoreDataHandlerPE().getImageByImageID(idArray:Int(truncating: (rejectedAssessments[0].sig)!))
+            DispatchQueue.main.async() {
+                self.signatureView.isHidden = true
+                self.signatureImgView.isHidden = false
+                self.signatureImgView.image = UIImage(data: data)
+            }
+        }else{
+            self.signatureView.isHidden = false
+            self.signatureImgView.isHidden = true
+        }
+        
+        if Int(truncating: rejectedAssessments[0].sig2 ?? 0) > 0 {
+            let data2 = CoreDataHandlerPE().getImageByImageID(idArray:Int(truncating: (rejectedAssessments[0].sig2)!))
+            DispatchQueue.main.async() {
+                self.signatureView2.isHidden = true
+                self.signature2ImgView.isHidden = false
+                self.signature2ImgView.image = UIImage(data: data2)
+            }
+        }else{
+            self.signatureView2.isHidden = false
+            self.signature2ImgView.isHidden = true
+        }
+        self.txtManagerName.text = rejectedAssessments[0].sig_Name
+        self.txtManagerName2.text = rejectedAssessments[0].sig_Name2
+        self.hatheryManagerName = rejectedAssessments[0].sig_Name ?? ""
+        self.hatheryManagerName2 = rejectedAssessments[0].sig_Name2 ?? ""
+        self.txtEmployeeID.text = rejectedAssessments[0].sig_EmpID
+        self.txtEmployeeID2.text = rejectedAssessments[0].sig_EmpID2
+        self.txtPhone.text = rejectedAssessments[0].sig_Phone
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -139,38 +173,7 @@ class PEFinishPopupViewController: BaseViewController {
                 isRejectedAssessment = true
                 
                 if empID1 != "" {
-                    if Int(truncating: rejectedAssessments[0].sig ?? 0) > 0 {
-                        let data = CoreDataHandlerPE().getImageByImageID(idArray:Int(truncating: (rejectedAssessments[0].sig)!))
-                        DispatchQueue.main.async() {
-                            self.signatureView.isHidden = true
-                            self.signatureImgView.isHidden = false
-                            self.signatureImgView.image = UIImage(data: data)
-                        }
-                    }else{
-                        self.signatureView.isHidden = false
-                        self.signatureImgView.isHidden = true
-                    }
-                    
-                    if Int(truncating: rejectedAssessments[0].sig2 ?? 0) > 0 {
-                        let data2 = CoreDataHandlerPE().getImageByImageID(idArray:Int(truncating: (rejectedAssessments[0].sig2)!))
-                        DispatchQueue.main.async() {
-                            self.signatureView2.isHidden = true
-                            self.signature2ImgView.isHidden = false
-                            self.signature2ImgView.image = UIImage(data: data2)
-                        }
-                    }else{
-                        self.signatureView2.isHidden = false
-                        self.signature2ImgView.isHidden = true
-                    }
-                    self.txtManagerName.text = rejectedAssessments[0].sig_Name
-                    self.txtManagerName2.text = rejectedAssessments[0].sig_Name2
-                    self.hatheryManagerName = rejectedAssessments[0].sig_Name ?? ""
-                    self.hatheryManagerName2 = rejectedAssessments[0].sig_Name2 ?? ""
-                    self.txtEmployeeID.text = rejectedAssessments[0].sig_EmpID
-                    self.txtEmployeeID2.text = rejectedAssessments[0].sig_EmpID2
-                    self.txtPhone.text = rejectedAssessments[0].sig_Phone
-                    
-                    
+                    setsignaturesDetails()
                 }
                 if rejectedAssessments[0].statusType == 2{
                     self.clearSignature.isHidden = true
@@ -244,28 +247,28 @@ class PEFinishPopupViewController: BaseViewController {
     }
     
     func submitRejectedAssessmentSignature(){
-        
+        // not possible to break as per sonarqube
         let  sig1 = Int(truncating: rejectedAssessments[0].sig ?? 0)
         if sig1 > 0 {
             DispatchQueue.main.async {
                 if self.hatheryManagerName == "" {
                     self.hatcheryManagerNameView.layer.borderColor = UIColor.red.cgColor
                     self.hatcheryManagerNameView.layer.borderWidth = 2.0
-                    self.showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+                    self.showAlert(title: "Alert", message: self.mendatoryMessage, owner: self)
                     return
                 }
                 if self.txtEmployeeID.text == "" {
                     self.employeeIDView.layer.borderColor = UIColor.red.cgColor
                     self.employeeIDView.layer.borderWidth = 2.0
-                    self.showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+                    self.showAlert(title: "Alert", message: self.mendatoryMessage, owner: self)
                     return
                 }
-                var param : [String:String] = ["sig":String(sig1),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: "MMM d, yyyy") ]
+                var param : [String:String] = ["sig":String(sig1),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: appDelegateObj.mmddyyStr) ]
                 let  sig2 = Int(truncating: self.rejectedAssessments[0].sig2 ?? 0)
                 if sig2 > 0 {
-                    param  = ["sig":String(sig1),"sig2":String(sig2),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ??                "","sig_Date":Date().stringFormat(format: "MMM d, yyyy") ]
+                    param  = ["sig":String(sig1),"sig2":String(sig2),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ??                "","sig_Date":Date().stringFormat(format: appDelegateObj.mmddyyStr) ]
                 }
-                print("params are",param)
+                
                 
                 
                 if let microAvailable =  UserDefaults.standard.value(forKey: "extendedAvailable") as? Bool
@@ -309,7 +312,7 @@ class PEFinishPopupViewController: BaseViewController {
             }
             signatureView.layer.borderColor = UIColor.red.cgColor
             signatureView.layer.borderWidth = 2.0
-            showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+            showAlert(title: "Alert", message: self.mendatoryMessage, owner: self)
             return
         }
         
@@ -859,7 +862,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
 extension PEFinishPopupViewController: YPSignatureDelegate {
     
     func didStart(_ view: YPDrawSignatureView) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     func didFinish(_ view: YPDrawSignatureView) {
@@ -910,13 +913,13 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
                 if self.hatheryManagerName == "" {
                     self.hatcheryManagerNameView.layer.borderColor = UIColor.red.cgColor
                     self.hatcheryManagerNameView.layer.borderWidth = 2.0
-                    self.showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+                    self.showAlert(title: "Alert", message: self.mendatoryMessage, owner: self)
                     return
                 }
                 if self.txtEmployeeID.text == "" {
                     self.employeeIDView.layer.borderColor = UIColor.red.cgColor
                     self.employeeIDView.layer.borderWidth = 2.0
-                    self.showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+                    self.showAlert(title: "Alert", message: self.mendatoryMessage, owner: self)
                     return
                 }
                 let imageData = signatureImage.jpegData(compressionQuality: 0.1)
@@ -926,7 +929,7 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
                     CoreDataHandlerPE().saveImageInPEFinishModule(imageId: imageCount+1, imageData: imageData!)
                 }
                 imageCountID = imageCount+1
-                var param : [String:String] = ["sig":String(imageCountID),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: "MMM d, yyyy") ]
+                var param : [String:String] = ["sig":String(imageCountID),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: appDelegateObj.mmddyyStr) ]
                 let signatureImage2 = self.signatureView2.getSignature(scale: 10)
                 
                 let imageData2 = signatureImage2?.jpegData(compressionQuality: 0.1)
@@ -935,7 +938,7 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
                     let imageCount2 = self.getImageCountInPEModule()
                     CoreDataHandlerPE().saveImageInPEFinishModule(imageId: imageCount2+1, imageData: imageData2!)
                     imageCountID2 = imageCount2+1
-                    param  = ["sig":String(imageCountID),"sig2":String(imageCountID2),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: "MMM d, yyyy") ]
+                    param  = ["sig":String(imageCountID),"sig2":String(imageCountID2),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: appDelegateObj.mmddyyStr) ]
                 }
                 print("params are",param)
 
@@ -991,7 +994,7 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
             }
             signatureView.layer.borderColor = UIColor.red.cgColor
             signatureView.layer.borderWidth = 2.0
-            showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+            showAlert(title: "Alert", message: self.mendatoryMessage, owner: self)
             return
         }
     }

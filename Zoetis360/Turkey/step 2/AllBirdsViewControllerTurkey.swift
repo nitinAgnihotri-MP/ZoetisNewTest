@@ -616,7 +616,7 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     // MARK: - TEXTFIELD DELEGATES

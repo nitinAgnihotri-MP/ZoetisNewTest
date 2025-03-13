@@ -1651,7 +1651,7 @@ extension AddEmployeesVC: UIPopoverPresentationControllerDelegate{
 
 extension AddEmployeesVC: DatePickerPopupViewControllerProtocol{
     func doneButtonTapped(string: String) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     func doneButtonTappedWithDate(string: String, objDate: Date) {

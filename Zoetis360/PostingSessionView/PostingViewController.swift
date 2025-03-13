@@ -910,18 +910,18 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3{
             let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateFormat="dd/MM/yyyy"
+            dateFormatter2.dateFormat=appDelegateObj.ddMMyyyStr
             strdateFrench = dateFormatter2.string(from: datePicker.date) as String
             
             let dateFormatter3 = DateFormatter()
-            dateFormatter3.dateFormat="MM/dd/yyyy"
+            dateFormatter3.dateFormat=appDelegateObj.MMddyyyStr
             
             strdate = dateFormatter3.string(from: datePicker.date) as String
             lblDate.text = strdateFrench
         }
         else{
             let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateFormat="MM/dd/yyyy"
+            dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
             strdate = dateFormatter2.string(from: datePicker.date) as String
             lblDate.text = strdate
         }
@@ -1828,7 +1828,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     }
     
     func YesPopUpPosting() {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     // MARK: 🟠  Alert Message to add Feed Program
     func showAlert(){

@@ -40,13 +40,13 @@ extension Date {
     
     static func getCurrentDate() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         return dateFormatter.string(from: Date())
     }
     
     static func getCurrentDateNow() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         return dateFormatter.string(from: Date())
     }
 }

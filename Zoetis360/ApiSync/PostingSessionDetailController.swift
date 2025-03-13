@@ -155,9 +155,9 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         if lngIdFr == 3{
             let dateString = posting.sessiondate
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             let dateObj = dateFormatter.date(from: dateString!)
-            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             sessionDate.text = dateFormatter.string(from: dateObj!)
             UserDefaults.standard.set(dateFormatter.string(from: dateObj!), forKey: "dateFrench")    // value(forKey: "dateFrench") as? String
             addFeedBtnOutlet.setTitle("Ajouter un flux",for: .normal)
@@ -602,7 +602,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
     
     func doneBtnFunc(_ notes : NSMutableArray , notesText : String , noOfBird : Int) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     // MARK: 🟠 - Save Necropsy Notes Function on Database
@@ -770,13 +770,13 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
     
     @IBAction func updateDateButtonClicked(_ sender: UIButton) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     // MARK: 🟠 - Session Date Done Button Action
     func doneClick() {
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat="MM/dd/yyyy"
+        dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
         let strdate = dateFormatter2.string(from: datePicker.date) as String
         sessionDate.text = strdate
         self.buttonbgNew.removeFromSuperview()
@@ -1294,7 +1294,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             assert(false, "no date from string")
             return ""
         }
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         let timeStamp = dateFormatter.string(from: date)
         return timeStamp
     }

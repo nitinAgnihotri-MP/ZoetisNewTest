@@ -87,11 +87,11 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
         
         var dateFormatter = DateFormatter()
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         //        dateFormatter.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         //        dateFormatter.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         fromString = dateFormatter.string(from: Date())
@@ -358,9 +358,9 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
     @objc func doneClick1() {
         
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         //        dateFormatter.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         fromString = dateFormatter.string(from: datePicker.date)
@@ -388,7 +388,7 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
             self.cancelClick1()
             fromString = sessionFromDate.text!
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             //            dateFormatter.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             fromDate = dateFormatter.date(from: fromString)!
@@ -408,9 +408,9 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
         
     @objc func doneClick() {
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         toString = dateFormatter.string(from: datePicker.date)
         toDate = datePicker.date
         
@@ -436,7 +436,7 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
             
             fromString = sessionToDate.text!
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             toDate = dateFormatter.date(from: fromString)!
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"To date must be greater than from date.")
         }

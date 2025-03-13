@@ -56,9 +56,9 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
         NotificationCenter.default.addObserver(self, selector: #selector(ExistingPostingSessionTurkey.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifierTurkey"), object: nil)
         var dateFormatter = DateFormatter()
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         //        dateFormatter.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         fromString = dateFormatter.string(from: Date())
@@ -122,9 +122,9 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
     @objc func todoneClick() {
         
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat = "MM/dd/yyyy"
+        dateFormatter2.dateFormat = appDelegateObj.MMddyyyStr
         let dateFormatter1 = DateFormatter()
-        dateFormatter1.dateFormat = "MM/dd/yyyy"
+        dateFormatter1.dateFormat = appDelegateObj.MMddyyyStr
         //        dateFormatter1.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter1.timeZone = TimeZone(secondsFromGMT: 0)
         toString = dateFormatter1.string(from: datePicker.date)
@@ -149,7 +149,7 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
             
             fromString = selectDateToLbl.text!
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             //            dateFormatter.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             toDate = dateFormatter.date(from: fromString)!
@@ -166,9 +166,9 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
     @objc func doneClick() {
         
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         //        dateFormatter.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         fromString = dateFormatter.string(from: datePicker.date)
@@ -194,7 +194,7 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
             
             fromString = selectDateFromLbl.text!
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             //            dateFormatter.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             fromDate = dateFormatter.date(from: fromString)!

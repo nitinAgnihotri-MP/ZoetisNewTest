@@ -34,7 +34,7 @@ class StartNecropsySessionViewController: UIViewController, UITableViewDataSourc
     }
     
     @IBAction func sliderBttn(_ sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     @IBAction func selectDateBttn(_ sender: AnyObject) {
         
@@ -59,17 +59,17 @@ class StartNecropsySessionViewController: UIViewController, UITableViewDataSourc
     
     
     @IBAction func selectComplexBttn(_ sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     
     @IBAction func continueWithoutPostingBttn(_ sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     
     @IBAction func createNewPostingBttn(_ sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     // MARK: - METHODS AND FUNCTIONS

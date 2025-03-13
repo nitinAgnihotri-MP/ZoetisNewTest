@@ -79,14 +79,14 @@ class DatePickerPopupViewController: BaseViewController {
                 let theDaysLater = TimeInterval(3.months)
                 let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
                 
-              //  dateFormatterObj.dateFormat = "MM/dd/yyyy"
+              //  dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
                 
                 let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
                 if regionID != 3 {
-                    dateFormatterObj.dateFormat = "dd/MM/yyyy"
+                    dateFormatterObj.dateFormat = appDelegateObj.ddMMyyyStr
                 }
                 else{
-                    dateFormatterObj.dateFormat="MM/dd/yyyy"
+                    dateFormatterObj.dateFormat=appDelegateObj.MMddyyyStr
                 }
           
                
@@ -172,14 +172,14 @@ class DatePickerPopupViewController: BaseViewController {
     
     @objc func doneClick1() {
         let dateFormatter = DateFormatter()
-        //dateFormatter.dateFormat="MM/dd/YYYY"
+        //dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
         
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID != 3 {
-            dateFormatter.dateFormat = "dd/MM/YYYY"
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
         }
         else{
-            dateFormatter.dateFormat="MM/dd/YYYY"
+            dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
            
         }
   

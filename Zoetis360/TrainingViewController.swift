@@ -56,7 +56,7 @@ class TrainingViewController: UIViewController, WKUIDelegate{
 //            return
 //        }
 //        
-//        Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+//        Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
 //        accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
 //        
 //        let headerDict: HTTPHeaders = [
@@ -122,7 +122,7 @@ class TrainingViewController: UIViewController, WKUIDelegate{
     func callWebApiforTutorial(_ completion: @escaping (_ status: Bool) -> Void)  {
         
         if WebClass.sharedInstance.connected() {
-            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
             //(UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
 //            let headerDict: HTTPHeaders = ["Authorization":accestoken]

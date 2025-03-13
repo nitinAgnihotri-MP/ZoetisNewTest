@@ -139,7 +139,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             lblCustmer.isHidden = false
         }
         
-        Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+        Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
         loaderView.alpha = 1
         self.perform(#selector(CaptureNecropsyDataViewController.callFirstMethodToLoadView), with: nil, afterDelay:0)
     }
@@ -153,7 +153,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let isQuickLink : Bool = UserDefaults.standard.bool(forKey: "isQuickLink")
         if isQuickLink == true
         {
-            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             self.perform(#selector(CaptureNecropsyDataViewController.loadformdata), with: nil, afterDelay:0)
             self.traingleImageView.frame = CGRect(x: 276, y: 229, width: 24, height: 24)
             let isQuickLink : Bool = false
@@ -163,7 +163,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     @IBAction func addFarmsAction(_ sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     // MARK: 🟠 - METHODS AND FUNCTIONS
@@ -5435,7 +5435,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             self.farmRow = indexPath.row
             let farm = farmArray.object(at: self.farmRow)
             UserDefaults.standard.set(farm, forKey: "farm")
-            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             self.perform(#selector(CaptureNecropsyDataViewController.loadformdata), with: nil, afterDelay:1)
         }
         else if collectionView == birdsCollectionView{
@@ -5456,7 +5456,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             traingleImageView.frame = CGRect(x: cellFrameInSuperview.origin.x + 10, y: cellFrameInSuperview.origin.y - 2, width: traingleImageView.frame.size.width, height: traingleImageView.frame.size.width)
             let bird = (items.object(at: self.farmRow) as AnyObject).object(at: indexPath.row)
             UserDefaults.standard.set(bird, forKey: "bird")
-            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             self.callLodaBirdData(bird as! NSNumber)
         }
     }

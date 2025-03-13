@@ -298,11 +298,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     /**************************************************************************************************************/
     
     @IBAction func didSelectOnUnlinkedNecrp(_ sender: AnyObject) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     @IBAction func NacropsyButtonPress(_ sender: AnyObject) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     // MARK: 🟠 - Logout Button Action
@@ -525,7 +525,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     // MARK: 🟢  Call Web Services to get Observation's List
     func callWebService() {
         if WebClass.sharedInstance.connected() {
-            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             let keychainHelper = AccessTokenHelper()
             accestoken = keychainHelper.getFromKeychain(keyed: "aceesTokentype") ?? ""
            // accestoken = UserDefaults.standard.string(forKey: "aceesTokentype") ?? ""

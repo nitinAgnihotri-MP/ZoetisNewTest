@@ -332,7 +332,7 @@ class PEStartNewAssessment: BaseViewController {
         self.txtBreedOfBirdsOthers.delegate = self
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat="MM/dd/yyyy"
+        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
 //        dateFormatter.calendar = Calendar(identifier: .gregorian)
 //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         let currentDate: NSDate = NSDate()
@@ -784,7 +784,7 @@ class PEStartNewAssessment: BaseViewController {
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     // MARK: - Hide Breed Other View
     func hideBreedOthers(){
@@ -807,7 +807,7 @@ class PEStartNewAssessment: BaseViewController {
     }
     // MARK: - Show Incubation Other View
     func showIncubationOthers(){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     // MARK: - Hide Manufacturer Other  View
@@ -2013,7 +2013,7 @@ extension PEStartNewAssessment : DatePickerPopupViewControllerProtocol{
     }
     
     func doneButtonTapped(string:String){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
 }
 
@@ -2342,7 +2342,7 @@ extension PEStartNewAssessment {
     }
     
     private func handleAssessmentCategoriesResponse(_ json: JSON) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     

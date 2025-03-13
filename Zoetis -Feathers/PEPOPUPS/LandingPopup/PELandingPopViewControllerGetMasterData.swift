@@ -24,7 +24,7 @@ extension PELandingPoupViewController {
       }
     
     func fetchAllCustomer(){
-        self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+        self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         
         ZoetisWebServices.shared.getCustomerListForPE(controller: self, countryID: String(countryId), parameters: [:], completion: { [weak self] (json, error) in
@@ -640,7 +640,7 @@ extension PELandingPoupViewController{
                 if SignatureDate != "" {
                     sigDate = self.convertDateFormat(inputDate: SignatureDate)
                 } else {
-                    sigDate = Date().stringFormat(format: "MMM d, yyyy")
+                    sigDate = Date().stringFormat(format: appDelegateObj.mmddyyStr)
                 }
                 let param : [String:String] = ["sig":String(id),"sig2":String(id2),"sig_Date":sigDate ,"sig_EmpID":RoleName,"sig_Name":representaiveName ?? "","sig_EmpID2":RoleName2,"sig_Name2":representaiveName2 ?? "","sig_Phone":representaiveNotes ?? ""]
                 jsonRe = (getJSON("QuestionAns") ?? JSON())
@@ -1827,7 +1827,7 @@ extension PELandingPoupViewController{
             return ""
         }
         
-        dateFormatter.dateFormat = "MM/dd/yyyy"///this is what you want to convert format
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr///this is what you want to convert format
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC") //NSTimeZone(name: "UTC") as TimeZone!
         let timeStamp = dateFormatter.string(from: convertedDate ?? Date())
         
@@ -1852,10 +1852,10 @@ extension PELandingPoupViewController{
         
         let oldDate = olDateFormatter.date(from: inputDate)
         
-        // Date().stringFormat(format: "MMM d, yyyy")
+        // Date().stringFormat(format: appDelegateObj.mmddyyStr)
         
         let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = "MMM d, yyyy"
+        convertDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         
         if oldDate != nil{
             return convertDateFormatter.string(from: oldDate!)

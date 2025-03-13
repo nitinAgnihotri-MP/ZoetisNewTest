@@ -40,7 +40,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     let gigyaCname = "eiamus.zoetisus.com"
     let timeStamp = "timeStamp = %@"
     let timeStamp2 = "timeStamp == %@"
-
+    let nameJames = "James Barker"
+    let mmddyyStr = "MMM d, yyyy"
+    let loadingStr = "Loading..."
+    let MMddyyyStr = "MM/dd/yyyy"
+    let ddMMyyyStr = "dd/MM/yyyy"
     func initiateLeftPenal() {
         window = UIWindow(frame: UIScreen.main.bounds)
         let containerViewController = ContainerViewController()
@@ -80,13 +84,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         Messaging.messaging().delegate = self
         //Messaging.messaging().isDirectChannelEstablished = true
         let userDefaults = UserDefaults.standard
-//        if userDefaults.value(forKey: "HasLaunchedOnce") != nil && (userDefaults.value(forKey: "HasLaunchedOnce") as? Bool)!{ // App already launched
-//        } else {
-//            UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
-//        }
-        if userDefaults.value(forKey: "HasLaunchedOnce") == nil && (userDefaults.value(forKey: "HasLaunchedOnce") as? Bool)! == false { // App already launched
+        if userDefaults.value(forKey: "HasLaunchedOnce") != nil && (userDefaults.value(forKey: "HasLaunchedOnce") as? Bool)!{ // App already launched
+        } else {
             UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
         }
+//        if userDefaults.value(forKey: "HasLaunchedOnce") == nil && (userDefaults.value(forKey: "HasLaunchedOnce") as? Bool)! == false { // App already launched
+//            UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
+//        }
         
         UserDefaults.standard.set(false, forKey: "hasLoggedIn")
         //        initiateLeftPenal()
@@ -183,7 +187,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
                 options: authOptions,
                 completionHandler: {status, error in
                     if !status {
-                        self.showAlert("Push notifications not allowed")
+                        //self.showAlert("Push notifications not allowed")
                     }
                 })
         } else {
@@ -207,7 +211,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         
         if let messageID = userInfo[gcmMessageIDKey] {
-            showAlert("Message ID: \(messageID)")
+//            showAlert("Message ID: \(messageID)")
             print("Message ID: \(messageID)")
         }
         
@@ -216,24 +220,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         
         Messaging.messaging().apnsToken = deviceToken as Data
-        showAlert("deviceToken: \(deviceToken)")
+        //showAlert("deviceToken: \(deviceToken)")
         
         let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
         
-        showAlert("deviceTokenString: \(deviceTokenString)")
-        showAlert("Registered Notification")
+        //showAlert("deviceTokenString: \(deviceTokenString)")
+        //showAlert("Registered Notification")
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        showAlert("Not registered notification: \(error.localizedDescription)")
+        //showAlert("Not registered notification: \(error.localizedDescription)")
         print(error.localizedDescription)
         
     }
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if let messageID = userInfo[gcmMessageIDKey] {
-            showAlert("Message ID: \(messageID)")
-            
+            //showAlert("Message ID: \(messageID)")
+            print("Message ID:\(messageID)")
             
         }
         
@@ -252,14 +256,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         
        // UserDefaults.standard.set(fcmToken, forKey: "Token")
         let dataDict = ["token": fcmToken]
-        showAlert("token: \(fcmToken ?? "")")
+        //showAlert("token: \(fcmToken ?? "")")
         NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
         Messaging.messaging().subscribe(toTopic: "/topics/nutriewell_live")
         // Messaging.messaging().shouldEstablishDirectChannel = true
     }
     
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingDelegate) {
-        showAlert("Received data message: \(remoteMessage.description)")
+        //showAlert("Received data message: \(remoteMessage.description)")
         print("Received data message: \(remoteMessage.description)")
     }
     
@@ -518,7 +522,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         
         if let messageID = userInfo[gcmMessageIDKey] {
-            showAlert("userNotificationCenter Message ID: \(messageID)")
+            //showAlert("userNotificationCenter Message ID: \(messageID)")
             print("Message ID: \(messageID)")
         }
         
@@ -531,7 +535,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         
         if let messageID = userInfo[gcmMessageIDKey] {
-            showAlert("userNotificationCenter Message ID: \(messageID)")
+            //showAlert("userNotificationCenter Message ID: \(messageID)")
             print("Message ID: \(messageID)")
         }
         completionHandler()

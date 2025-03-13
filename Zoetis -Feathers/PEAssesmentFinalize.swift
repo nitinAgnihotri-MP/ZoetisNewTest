@@ -120,8 +120,33 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     @IBOutlet weak var extendedMicroSwitch: UISwitch!
     
     var strings = [String]()
-    
-    
+    let refridFreezerNitro = "Refrigerator\n/Freezer\n/Liquid Nitrogen"
+    let extendedMicStr = "Extended Microbial"
+    let peCommentImg = "PEcomment.png"
+    let peCommentSelectedStr = "PECommentSelected.png"
+    let ddmmyyStr = appDelegateObj.ddMMyyyStr
+    let incompleteDataStr = "Incomplete Data"
+    let oneGallonStr = "1 gallon"
+    let twoGallonStr = "2 gallon"
+    let fiveGallonStr = "5 gallon"
+    let twoLitre = "2 litre"
+    let liter24 = "2.4 litre"
+    let liter28 = "2.8 litre"
+    let mil200 = "200 ml"
+    let mil300 = "300 ml"
+    let mil400 = "400 ml"
+    let mil500 = "500 ml"
+    let pleaseEnterMessage = "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccination Application"
+    let pleaseEnterMessageVac = "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application"
+    let peaseEnterVacDet = "Please enter vaccine details in the Vaccine Preparation & Sterility. "
+    let pleaseEnterFrequencyDet = "Please enter frequency detail in Customer Quality Control Program."
+    let pleaseEnterPersonName = "Please enter person name in Customer Quality Control Program."
+    let pleaseEnterQCount = "Please enter QC count in Customer Quality Control Program."
+    let pleaseEnterPPM = "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation."
+    let pleaseEnterAMPM = "Please enter AM/PM Value in Miscellaneous."
+    let pleaseEnterProgramName = "Please enter program name in the Vaccine Preparation & Sterility."
+    let pleaseEnterAntibiotic = "Please enter Antibiotic in the Vaccine Preparation & Sterility."
+    let pleaseEnterVaccineMixer = "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."
     
     override func viewWillAppear(_ animated: Bool) {
         lblextenderMicro.isHidden = true
@@ -249,7 +274,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        print("Test Message",appDelegate.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     override func viewDidLoad() {
@@ -281,7 +306,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
             if !carColIdArray.contains(cat.sequenceNo ?? 0){
                 carColIdArray.append(cat.sequenceNo ?? 0)
                 if(cat.catName == "Refrigerator"){
-                    cat.catName = "Refrigerator\n/Freezer\n/Liquid Nitrogen" // "Sanitation and Embrex Evaluation"
+                    cat.catName = refridFreezerNitro // "Sanitation and Embrex Evaluation"
                 }
                 catArrayForCollectionIs.append(cat)
                 
@@ -302,50 +327,75 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         for cat in catArrayForCollectionIs{
             if cat.doa.count > 0 {
                 var idArr : [Int] = []
-                for obj in  cat.doa {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            dayOfAgeData.append(data!)
-                        }
+                for obj in cat.doa {
+                    if let data = CoreDataHandlerPE().getPEDOAData(doaId: obj),
+                       !idArr.contains(data.id ?? 0) {
+                        idArr.append(data.id ?? 0)
+                        dayOfAgeData.append(data)
                     }
                 }
+                
+//                for obj in  cat.doa {
+//                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
+//                    if data != nil {
+//                        if idArr.contains(data!.id ?? 0){
+//                        }else{
+//                            idArr.append(data!.id ?? 0)
+//                            dayOfAgeData.append(data!)
+//                        }
+//                    }
+//                }
             }
         }
         
         for cat in catArrayForCollectionIs{
             if cat.doaS.count > 0 {
                 var idArr : [Int] = []
-                for obj in  cat.doaS {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            
-                        }else{
-                            
-                            idArr.append(data!.id ?? 0)
-                            dayOfAgeSData.append(data!)
-                        }
+                for obj in cat.doaS {
+                    if let data = CoreDataHandlerPE().getPEDOAData(doaId: obj),
+                       let dataId = data.id,
+                       !idArr.contains(dataId) {
+                        idArr.append(dataId)
+                        dayOfAgeSData.append(data)
                     }
                 }
+
+//                for obj in  cat.doaS {
+//                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
+//                    if data != nil {
+//                        if idArr.contains(data!.id ?? 0){
+//                            
+//                        }else{
+//                            
+//                            idArr.append(data!.id ?? 0)
+//                            dayOfAgeSData.append(data!)
+//                        }
+//                    }
+//                }
             }
         }
         
         for cat in catArrayForCollectionIs{
             if cat.inovoject.count > 0 {
                 var idArr : [Int] = []
-                for obj in  cat.inovoject {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if idArr.contains(data!.id ?? 0){
-                        
-                    }else{
-                        
-                        idArr.append(data!.id ?? 0)
-                        inovojectData.append(data!)
+                for obj in cat.inovoject {
+                    if let data = CoreDataHandlerPE().getPEDOAData(doaId: obj),
+                       let dataId = data.id,
+                       !idArr.contains(dataId) {
+                        idArr.append(dataId)
+                        inovojectData.append(data)
                     }
                 }
+//                for obj in  cat.inovoject {
+//                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
+//                    if idArr.contains(data!.id ?? 0){
+//                        
+//                    }else{
+//                        
+//                        idArr.append(data!.id ?? 0)
+//                        inovojectData.append(data!)
+//                    }
+//                }
             }
         }
         
@@ -363,7 +413,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                 refriCategory = catArrayForCollectionIs.last
             }
         }
-        if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.catName == refridFreezerNitro){
             catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
             
             let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
@@ -397,7 +447,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         {
             refriCategory = catArrayForCollectionIs.last
         }
-        //     }
+
         collectionView.reloadData()
         collectionviewIndexPath = IndexPath(row: row, section: 0)
         selectinitialCell()
@@ -413,7 +463,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
             if showExtendedPE {
                 
                 let catObjectPE = PENewAssessment()
-                catObjectPE.catName = "Extended Microbial" // "Sanitation and Embrex Evaluation"
+                catObjectPE.catName = extendedMicStr // "Sanitation and Embrex Evaluation"
                 catObjectPE.sequenceNo = 12
                 catObjectPE.sequenceNoo = 12
                 catArrayForCollectionIs.append(catObjectPE)
@@ -462,12 +512,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         }
         //  }
         
-        if  peNewAssessment.evaluationID != 2 {
-            
-        }
-        for _ in certificateData {
-            
-        }
+      
         if certificateData.count > 0 {
             self.certificateData =  self.certificateData.sorted(by: {
                 let id1 = $0.id ?? 0
@@ -531,7 +576,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         }
     }
     private func handleVaccineMixer(_ json: JSON) {
-        
+        print(appDelegateObj.testFuntion())
         
     }
     
@@ -549,14 +594,10 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         
         resultScoreLabel.text = "\(score)"
         totalScoreLabel.text = "100"
-        
-        
-        if sanitationIndex > -1{
-            print("test message")
-        }
     }
+    
     // MARK: - Setup UI
-    func setupUI(){
+    func setupUI() {
         let nibCatchers = UINib(nibName: "PETableviewHeaderFooterView", bundle: nil)
         tableview.register(nibCatchers, forHeaderFooterViewReuseIdentifier: "PETableviewHeaderFooterView")
         let nibCas = UINib(nibName: "PEInovojectHeaderFooterView", bundle: nil)
@@ -591,7 +632,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     
     // MARK: - Refresh Tableview
     func refreshTableView(){
-        if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.catName == refridFreezerNitro){
             catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
         }
         else{
@@ -599,14 +640,14 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         }
         //        catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0)
         tableview.reloadData()
-        if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.catName == refridFreezerNitro){
             //            scrollToBottom(section:0)
         }
         
     }
     // MARK: - Refresh Array
     func refreshArray(){
-        if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.catName == refridFreezerNitro){
             catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
         }
         else{
@@ -750,6 +791,24 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     
     // MARK: - Save final assessment
     
+    fileprivate func saveRefrigeratorData(_ refrigtorArray: [PE_Refrigators]) {
+        for refrii in refrigtorArray{
+            if(CoreDataHandlerPE().checkOfflineSameAssesmentEntityExists(id: Int(refrii.id ?? 0),serverAssessmentId: Int(self.scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)){
+                CoreDataHandlerPE().updateOfflineRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+            }
+            else{
+                CoreDataHandlerPE().saveOfflineRefrigatorInDB(refrii.id ?? 0,  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,schAssmentId: refrii.schAssmentId ?? 0)
+                
+            }
+        }
+    }
+    
+    fileprivate func filteredData(_ object: PECategory, _ peCategoryFilteredArray: inout [PECategory]) {
+        if self.peNewAssessment.evaluationID == object.evaluationID{
+            peCategoryFilteredArray.append(object)
+        }
+    }
+    
     private func saveFinalizedData(){
         
         Constants.isMovedOn = true
@@ -762,7 +821,6 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
             for _ in certificateData {
                 certificateData[z].fsrSign = ""
                 certificateData[z].signatureImg = ""
-                // certificateData[z].isCertExpired = true
                 z = z + 1
             }
             UserDefaults.standard.set(nil, forKey: "FsrSign")
@@ -772,14 +830,9 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         vc?.certificateData = certificateData
         vc?.validationSuccessFull = {[unowned self] ( param) in
             
-            /* Check the count before submitting #suraj*/
-            
             DispatchQueue.main.async {
                 let allAssesmentArr = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: self.scheduledAssessment?.serverAssessmentId ?? "")
-                
-                // var allAssesmentArr = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")//[PENewAssessment]()
-                
-                
+   
                 
                 let dataToSubmitNumber = self.getAssessmentInOfflineFromDb()
                 
@@ -789,9 +842,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                 
                 var peCategoryFilteredArray: [PECategory] =  []
                 for object in self.pECategoriesAssesmentsResponse.peCategoryArray{
-                    if self.peNewAssessment.evaluationID == object.evaluationID{
-                        peCategoryFilteredArray.append(object)
-                    }
+                    filteredData(object, &peCategoryFilteredArray)
                 }
                 
                 let savedDataIs =  CoreDataHandlerPE().saveDataToSyncPEInDBArray(newAssessmentArray: allAssesmentArr as? [PENewAssessment] ?? [], dataToSubmitNumber: dataToSubmitNumber + 1,param:param)
@@ -800,32 +851,19 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                 var refrigtorArray  : [PE_Refrigators] = []
                 refrigtorArray =   CoreDataHandlerPE().getREfriData(id: Int(self.scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
                 if(refrigtorArray.count > 0){
-                    for refrii in refrigtorArray{
-                        if(CoreDataHandlerPE().checkOfflineSameAssesmentEntityExists(id: Int(refrii.id ?? 0),serverAssessmentId: Int(self.scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)){
-                            CoreDataHandlerPE().updateOfflineRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveOfflineRefrigatorInDB(refrii.id ?? 0,  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,schAssmentId: refrii.schAssmentId ?? 0)
-                            
-                        }
-                    }
+                    saveRefrigeratorData(refrigtorArray)
                 }
                 
                 PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:" ",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
                 
-                
                 if savedDataIs {
-                    //                    if self.getAssessmentCountInOfflineFromDb() == peCategoryFilteredArray.count {
                     
                     let appDelegate    = UIApplication.shared.delegate as? AppDelegate
                     appDelegate?.saveContext()
                     Constants.isDraftAssessment = false
                     
                     self.finishSession()
-                    
-                    //  } else  {
-                    //    self.showtoast(message: "Signature not captured,try again")
-                    //   }
+          
                 }
             }
             
@@ -1023,49 +1061,53 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             else if assessment?.sequenceNoo == 1 {
                 return 5
             }
-            if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+            if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refridFreezerNitro{
                 return 1
             }
-            if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+            if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refridFreezerNitro{
                 return 3
             }
             else {
                 return 1
             }
         }
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refridFreezerNitro{
             return 1
         }
-        if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refridFreezerNitro{
             return 3
         }
         return 2
+    }
+    
+    fileprivate func rowsForTraning(_ section: Int) -> Int {
+        if section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refridFreezerNitro {
+            return sanitationQuesArr.count
+        }
+        
+        if (selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refridFreezerNitro){
+            return 2
+        }
+        if section == 1 {
+            return certificateData.count
+        }
+        if section == 2 {
+            return inovojectData.count
+        }
+        if section == 3 {
+            return dayOfAgeData.count
+        }
+        if section == 4 {
+            return dayOfAgeSData.count
+        }
+        return catArrayForTableIs.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if checkForTraning(){
             
-            if section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen" {
-                return sanitationQuesArr.count
-            }
-            
-            if (selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
-                return 2
-            }
-            if section == 1 {
-                return certificateData.count
-            }
-            if section == 2 {
-                return inovojectData.count
-            }
-            if section == 3 {
-                return dayOfAgeData.count
-            }
-            if section == 4 {
-                return dayOfAgeSData.count
-            }
-            return catArrayForTableIs.count
+            return rowsForTraning(section)
         } else {
             var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
             if assessment?.sequenceNoo == 3 {
@@ -1092,7 +1134,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if checkForTraning(){
-            if(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+            if(selectedCategory?.catName != refridFreezerNitro){
                 if indexPath.section == 1 {
                     var height:CGFloat = CGFloat()
                     height = 160
@@ -1102,11 +1144,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 if indexPath.section == 2 {
                     return 200
                 }
-                
+                // checked this not able to break this code for Sonarqube
                 
             }
         }
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refridFreezerNitro{
             var height:CGFloat = CGFloat()
             height = 70
             return height
@@ -1137,13 +1179,13 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
         }
         
-        if selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refridFreezerNitro{
             var height:CGFloat = CGFloat()
             height = 80
             return height
             
         }
-        if(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.catName != refridFreezerNitro){
             if indexPath.section > 0 {
                 var height:CGFloat = CGFloat()
                 height = 130
@@ -1182,7 +1224,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     func setupNewInovoCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath){
-        print("Test Message",appDelegate.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     
@@ -1190,7 +1232,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         
         if checkForTraning(){
             
-            if indexPath.section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName == "Extended Microbial"{// "Sanitation and Embrex Evaluation"{
+            if indexPath.section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName == extendedMicStr{// "Sanitation and Embrex Evaluation"{
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PlateInfoCell", for: indexPath) as! PlateInfoCell
                 cell.currentIndex = indexPath.row
                 if sanitationQuesArr.count > indexPath.row{
@@ -1235,11 +1277,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     vc.editable = true
                     vc.commentCompleted = {[unowned self] ( note) in
                         if note == "" {
-                            let image = UIImage(named: "PEcomment.png")
+                            let image = UIImage(named: peCommentImg)
                             cell.noteBtn.setImage(image, for: .normal)
                             
                         } else {
-                            let image = UIImage(named: "PECommentSelected.png")
+                            let image = UIImage(named: peCommentSelectedStr)
                             cell.noteBtn.setImage(image, for: .normal)
                         }
                         
@@ -1268,7 +1310,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 cell.assessmentId = scheduledAssessment?.serverAssessmentId
                 return cell
             }
-            if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+            if(selectedCategory?.catName == refridFreezerNitro){
                 
                 return  setUpRerigatorQuesCell(tableView, cellForRowAt: indexPath)
             }
@@ -1331,9 +1373,9 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                     let date =   peNewAssessment.evaluationDate
                                     if(regionID != 3){
                                         let inputFormatter = DateFormatter()
-                                        inputFormatter.dateFormat = "dd/MM/yyyy"
+                                        inputFormatter.dateFormat = ddmmyyStr
                                         let showDate = inputFormatter.date(from: date ?? "")
-                                        inputFormatter.dateFormat = "dd/MM/yyyy"
+                                        inputFormatter.dateFormat = ddmmyyStr
                                         if(showDate != nil){
                                             let resultString = inputFormatter.string(from: showDate!)
                                             cell.certDateSelectBtn.setTitle(resultString, for: .normal)
@@ -1417,9 +1459,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             self.tableviewIndexPath = indexPath
                             self.certificateData[self.tableviewIndexPath.row].name = error
                             CoreDataHandlerPE().updateVMixerInDB(peCertificateData:  self.certificateData[self.tableviewIndexPath.row], id:  self.certificateData[self.tableviewIndexPath.row].id ?? 0)
-                            UIView.performWithoutAnimation {
-                                print("Test Message")
-                            }
+                            
                             cell.vaccNameField.resignFirstResponder()
                             cell.vaccNameField.endEditing(true)
                         }
@@ -1428,8 +1468,6 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             if certificateData.count > 0 {
                                 self.certificateData[self.chnagedVaccineNameIndexPathRow].name = error
                                 CoreDataHandlerPE().updateVMixerInDB(peCertificateData:  self.certificateData[self.chnagedVaccineNameIndexPathRow], id:  self.certificateData[self.chnagedVaccineNameIndexPathRow].id ?? 0)
-                                UIView.performWithoutAnimation {
-                                }
                                 cell.vaccNameField.resignFirstResponder()
                             }
                         }
@@ -1541,7 +1579,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         
                         let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
                         if c == 0 {
-                            self.showtoast(message: "Incomplete Data")
+                            self.showtoast(message: incompleteDataStr)
                             CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
                             
                             return
@@ -1619,7 +1657,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     let  selectedValIS = selectedVal.replacingOccurrences(of: " ", with: "")
                     let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
                     if c == 0 {
-                        self.showtoast(message: "Incomplete Data")
+                        self.showtoast(message: incompleteDataStr)
                         CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
                         
                         return
@@ -1693,9 +1731,9 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
             
-            cell.doseCompletion  = {[unowned self] ( error) in
-                
-            }
+//            cell.doseCompletion  = {[unowned self] ( error) in
+//                
+//            }
             
             cell.nameCompletion  = {[unowned self] ( text) in
                 self.tableviewIndexPath = indexPath
@@ -1969,27 +2007,27 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
                         self.ml = 0.0
                     }
-                    else if self.peNewAssessment.dDDT?.lowercased().contains("1 gallon") ?? false {
+                    else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
                         self.ml = 3785.41
                     }
-                    else if self.peNewAssessment.dDDT?.lowercased().contains("2 gallon") ?? false {
+                    else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
                         self.ml = 7570.82
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("5 gallon") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
                         self.ml = 18927.05
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("2 litre") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
                         self.ml = 2000.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("2.4 litre") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
                         self.ml = 2400.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("2.8 litre") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {
                         self.ml = 2800.00
                     }
-                    else if self.peNewAssessment.dDDT?.lowercased().contains("200 ml") ?? false {
+                    else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
                         self.ml = 200.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("300 ml") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
                         self.ml = 300.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("400 ml") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
                         self.ml = 400.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains("500 ml") ?? false {
+                    } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
                         self.ml = 500.00
                     }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
                         self.ml = 800.00
@@ -2041,26 +2079,26 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
                             self.ml = 0.0
                         }
-                        else if self.peNewAssessment.dDDT?.lowercased().contains("1 gallon") ?? false {
+                        else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
                             self.ml = 3785.41
-                        }else if self.peNewAssessment.dDDT?.lowercased().contains("2 gallon") ?? false {
+                        }else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
                             self.ml = 7570.82
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("5 gallon") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
                             self.ml = 18927.05
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("2 litre") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
                             self.ml = 2000.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("2.4 litre") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
                             self.ml = 2400.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("2.8 litre") ?? false {  self.ml = 2800.00
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {  self.ml = 2800.00
                         }
                         
-                        else if self.peNewAssessment.dDDT?.lowercased().contains("200 ml") ?? false {
+                        else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
                             self.ml = 200.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("300 ml") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
                             self.ml = 300.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("400 ml") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
                             self.ml = 400.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains("500 ml") ?? false {
+                        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
                             self.ml = 500.00
                         }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
                             self.ml = 800.00
@@ -2179,6 +2217,30 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     // MARK: - Setup PE  Rerigator questions data
+    fileprivate func setRefrigeratorCellUI(_ assesmentArray: inout [PE_AssessmentInProgress], _ indexPath: IndexPath, _ cell: RefrigatorQuesCell) {
+        for refri in refrigtorProbeArray{
+            if(refri.id == assesmentArray[indexPath.row].assID){
+                if(refri.isNA ?? false){
+                    cell.btn_NA.isSelected = true
+                    cell.contentView.alpha = 0.3
+                    cell.btn_Switch.isUserInteractionEnabled = false
+                    cell.btn_Info.isUserInteractionEnabled = false
+                    cell.btn_Camera.isUserInteractionEnabled = false
+                    cell.btn_Comment.isUserInteractionEnabled = false
+                }
+                else{
+                    cell.btn_NA.isSelected = false
+                    cell.contentView.alpha = 1
+                    cell.btn_Switch.isUserInteractionEnabled = true
+                    cell.btn_Info.isUserInteractionEnabled = true
+                    cell.btn_Camera.isUserInteractionEnabled = true
+                    cell.btn_Comment.isUserInteractionEnabled = true
+                }
+                
+            }
+        }
+    }
+    
     func setUpRerigatorQuesCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> RefrigatorQuesCell {
         
         
@@ -2207,27 +2269,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             var assessment = assesmentArray[indexPath.row] as? PE_AssessmentInProgress
             if(refrigtorProbeArray.count > 0){
                 
-                for refri in refrigtorProbeArray{
-                    if(refri.id == assesmentArray[indexPath.row].assID){
-                        if(refri.isNA ?? false){
-                            cell.btn_NA.isSelected = true
-                            cell.contentView.alpha = 0.3
-                            cell.btn_Switch.isUserInteractionEnabled = false
-                            cell.btn_Info.isUserInteractionEnabled = false
-                            cell.btn_Camera.isUserInteractionEnabled = false
-                            cell.btn_Comment.isUserInteractionEnabled = false
-                        }
-                        else{
-                            cell.btn_NA.isSelected = false
-                            cell.contentView.alpha = 1
-                            cell.btn_Switch.isUserInteractionEnabled = true
-                            cell.btn_Info.isUserInteractionEnabled = true
-                            cell.btn_Camera.isUserInteractionEnabled = true
-                            cell.btn_Comment.isUserInteractionEnabled = true
-                        }
-                        
-                    }
-                }
+                setRefrigeratorCellUI(&assesmentArray, indexPath, cell)
                 
             }
             cell.lblQuestion.text = assesmentArray[indexPath.row].assDetail1
@@ -2283,8 +2325,8 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 cell.btn_ImageCount.isHidden = false
             }
             
-            let image1 = UIImage(named: "PEcomment.png")
-            let image2 = UIImage(named: "PECommentSelected.png")
+            let image1 = UIImage(named: peCommentImg)
+            let image2 = UIImage(named: peCommentSelectedStr)
             if assessment?.note == "" || assessment?.note == nil {
                 cell.btn_Comment.setImage(image1, for: .normal)
             } else {
@@ -2448,7 +2490,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         }
                     }
                     
-                    if(self.selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                    if(self.selectedCategory?.catName == refridFreezerNitro){
                         catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
                     }
                     else{
@@ -2471,11 +2513,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 
                 vc.commentCompleted = {[unowned self] ( note) in
                     if note == "" {
-                        let image = UIImage(named: "PEcomment.png")
+                        let image = UIImage(named: peCommentImg)
                         cell.btn_Comment.setImage(image, for: .normal)
                         
                     } else {
-                        let image = UIImage(named: "PECommentSelected.png")
+                        let image = UIImage(named: peCommentSelectedStr)
                         cell.btn_Comment.setImage(image, for: .normal)
                         
                     }
@@ -2672,8 +2714,8 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     } else {
                         cell.btnImageCount.isHidden = false
                     }
-                    let image1 = UIImage(named: "PEcomment.png")
-                    let image2 = UIImage(named: "PECommentSelected.png")
+                    let image1 = UIImage(named: peCommentImg)
+                    let image2 = UIImage(named: peCommentSelectedStr)
                     if assessment?.note == "" || assessment?.note == nil {
                         cell.noteBtn.setImage(image1, for: .normal)
                     } else {
@@ -2712,7 +2754,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             }
                             updateScore(isAllNA: false)
                             
-                            //                    if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                            //                    if(selectedCategory?.catName == refridFreezerNitro){
                             //                        catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(77)
                             //                    }
                             //                    else{
@@ -2907,7 +2949,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                     }
                                     
                                     
-                                    if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                                    if(selectedCategory?.catName == refridFreezerNitro){
                                         catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
                                     }
                                     else{
@@ -3092,7 +3134,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment)
                                     }
                                     
-                                    if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                                    if(selectedCategory?.catName == refridFreezerNitro){
                                         catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
                                         var assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
                                         
@@ -3126,11 +3168,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         
                         vc.commentCompleted = {[unowned self] ( note) in
                             if note == "" {
-                                let image = UIImage(named: "PEcomment.png")
+                                let image = UIImage(named: peCommentImg)
                                 cell.noteBtn.setImage(image, for: .normal)
                                 
                             } else {
-                                let image = UIImage(named: "PECommentSelected.png")
+                                let image = UIImage(named: peCommentSelectedStr)
                                 cell.noteBtn.setImage(image, for: .normal)
                                 
                             }
@@ -3456,7 +3498,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     // MARK: - Table View Delegates
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refridFreezerNitro){
             //   refrigtorProbeArray.removeAll()
             let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
             refrigtorProbeArray = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
@@ -3759,7 +3801,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refridFreezerNitro){
             if ((  section == 0) || ( section == 1)) {
                 return 350
             }
@@ -3789,7 +3831,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             return headerView
             
         }
-        if selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+        if selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == refridFreezerNitro{
             let array =   CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SetFrezzerPointCell" ) as! SetFrezzerPointCell
             if(btnNA.isSelected && self.selctedNACategoryArray.contains(78)){
@@ -4025,7 +4067,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     func updateDosageInvojectData(section:Int)  {
         let c = Double(self.peNewAssessment.iCS ?? "0") ?? 0
         if c == 0 {
-            self.showtoast(message: "Incomplete Data")
+            self.showtoast(message: incompleteDataStr)
             return
         }
         for obj in self.inovojectData{
@@ -4057,6 +4099,22 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     // MARK: - Set Inovo Header
+    fileprivate func minusComplitionAction() {
+        if self.inovojectData.count > 0 {
+            let lastItem = self.inovojectData.last
+            self.deleteInovojectInPEModule(id: lastItem!.id ?? 0)
+            self.inovojectData.removeLast()
+        }
+        if self.inovojectData.count > 1 {
+            UIView.performWithoutAnimation {
+                self.tableview.reloadData()
+                self.scrollToBottom(section:2)
+            }
+        }  else {
+            self.tableview.reloadData()
+        }
+    }
+    
     func setPEInovojectHeaderFooterView(_ tableView: UITableView , section:Int) -> PEInovojectHeaderFooterView {
         if selectedCategory?.sequenceNoo == 1 {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEInovojectHeaderFooterView" ) as! PEInovojectHeaderFooterView
@@ -4064,9 +4122,9 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             headerView.txtCSize.text = peNewAssessment.iCS
             headerView.txtDType.text = peNewAssessment.iDT
             headerView.txtAntiBiotic.text = peNewAssessment.hatcheryAntibioticsText
-            headerView.switchCompletion = {[unowned self] ( status) in
-                
-            }
+//            headerView.switchCompletion = {[unowned self] ( status) in
+//                
+//            }
             
             headerView.txtAntiBioticCompletion = {[unowned self] ( txtAntiBioTic) in
                 self.peNewAssessment.hatcheryAntibioticsText = txtAntiBioTic
@@ -4096,19 +4154,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
             headerView.minusCompletion = {[unowned self] (error) in
-                if self.inovojectData.count > 0 {
-                    let lastItem = self.inovojectData.last
-                    self.deleteInovojectInPEModule(id: lastItem!.id ?? 0)
-                    self.inovojectData.removeLast()
-                }
-                if self.inovojectData.count > 1 {
-                    UIView.performWithoutAnimation {
-                        self.tableview.reloadData()
-                        self.scrollToBottom(section:2)
-                    }
-                }  else {
-                    self.tableview.reloadData()
-                }
+                minusComplitionAction()
             }
             
             headerView.dTypeCompletion = {[unowned self] ( error) in
@@ -4155,6 +4201,32 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     
     // MARK: - Setup Day of Age Header
+    fileprivate func switchDayOfAgeHeader(_ status: Bool?) {
+        if status ?? false {
+            self.peNewAssessment.hatcheryAntibioticsDoa = 1
+        } else {
+            self.peNewAssessment.hatcheryAntibioticsDoa = 0
+        }
+        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoa: true)
+    }
+    
+    
+    fileprivate func headerDayOfAgeMinusFunc() {
+        if self.dayOfAgeData.count > 0 {
+            let lastItem = self.dayOfAgeData.last
+            self.deleteDOAInPEModule(id: lastItem!.id ?? 0)
+            self.dayOfAgeData.removeLast()
+        }
+        if self.dayOfAgeData.count > 1 {
+            UIView.performWithoutAnimation {
+                self.tableview.reloadData()
+                self.scrollToBottom(section:3)
+            }
+        }  else {
+            self.tableview.reloadData()
+        }
+    }
+    
     func setPEHeaderDayOfAge(_ tableView: UITableView , section:Int) -> PEHeaderDayOfAge {
         if selectedCategory?.sequenceNoo == 1 {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEHeaderDayOfAge" ) as! PEHeaderDayOfAge
@@ -4177,12 +4249,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 headerView.hideAntiBioticTextView()
             }
             headerView.switchCompletion = {[unowned self] ( status) in
-                if status ?? false {
-                    self.peNewAssessment.hatcheryAntibioticsDoa = 1
-                } else {
-                    self.peNewAssessment.hatcheryAntibioticsDoa = 0
-                }
-                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoa: true)
+                switchDayOfAgeHeader(status)
             }
             
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn1)
@@ -4219,19 +4286,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
             headerView.minusCompletion = {[unowned self] ( error) in
                 
-                if self.dayOfAgeData.count > 0 {
-                    let lastItem = self.dayOfAgeData.last
-                    self.deleteDOAInPEModule(id: lastItem!.id ?? 0)
-                    self.dayOfAgeData.removeLast()
-                }
-                if self.dayOfAgeData.count > 1 {
-                    UIView.performWithoutAnimation {
-                        self.tableview.reloadData()
-                        self.scrollToBottom(section:3)
-                    }
-                }  else {
-                    self.tableview.reloadData()
-                }
+                headerDayOfAgeMinusFunc()
             }
             
             headerView.dTypeCompletion = {[unowned self] ( error) in
@@ -4273,6 +4328,32 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     
+    fileprivate func HeaderDayOfAgeSMinusAction() {
+        if self.dayOfAgeSData.count > 0 {
+            let lastItem = self.dayOfAgeSData.last
+            self.deleteDOAInPEModule(id: lastItem!.id ?? 0,fromDoaS : true)
+            self.dayOfAgeSData.removeLast()
+        }
+        if self.dayOfAgeSData.count > 1 {
+            UIView.performWithoutAnimation {
+                self.tableview.reloadData()
+                self.scrollToBottom(section:4)
+            }
+        }  else {
+            self.tableview.reloadData()
+        }
+    }
+    
+    
+    fileprivate func HeaderDayOfAgeSSwitchAction(_ status: Bool?) {
+        if status ?? false {
+            self.peNewAssessment.hatcheryAntibioticsDoaS = 1
+        } else {
+            self.peNewAssessment.hatcheryAntibioticsDoaS = 0
+        }
+        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoaS: true)
+    }
+    
     func setPEHeaderDayOfAgeS(_ tableView: UITableView , section:Int) -> PEHeaderDayOfAge {
         if selectedCategory?.sequenceNoo == 1  {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEHeaderDayOfAge" ) as! PEHeaderDayOfAge
@@ -4293,12 +4374,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 headerView.hideAntiBioticTextView()
             }
             headerView.switchCompletion = {[unowned self] ( status) in
-                if status ?? false {
-                    self.peNewAssessment.hatcheryAntibioticsDoaS = 1
-                } else {
-                    self.peNewAssessment.hatcheryAntibioticsDoaS = 0
-                }
-                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoaS: true)
+                HeaderDayOfAgeSSwitchAction(status)
             }
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn1)
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn2)
@@ -4327,19 +4403,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
             headerView.minusCompletion = {[unowned self] ( error) in
-                if self.dayOfAgeSData.count > 0 {
-                    let lastItem = self.dayOfAgeSData.last
-                    self.deleteDOAInPEModule(id: lastItem!.id ?? 0,fromDoaS : true)
-                    self.dayOfAgeSData.removeLast()
-                }
-                if self.dayOfAgeSData.count > 1 {
-                    UIView.performWithoutAnimation {
-                        self.tableview.reloadData()
-                        self.scrollToBottom(section:4)
-                    }
-                }  else {
-                    self.tableview.reloadData()
-                }
+                HeaderDayOfAgeSMinusAction()
             }
             
             headerView.dTypeCompletion = {[unowned self] ( error) in
@@ -4385,29 +4449,63 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     // MARK: - Day of age subcutaneous dosage calculator */
     
+    fileprivate func dosageCalculation(_ obj: InovojectData, _ c: Double, _ count: inout Int) {
+        let a = Double(obj.ampulePerBag ?? "0") ?? 0
+        let b = Double(obj.ampuleSize ?? "0") ?? 0
+        if a != 0 && b != 0 && c != 0{
+            let x = a * b
+            let y = c/0.2
+            let z = x/y
+            
+            let r  = Rational(approximating: z)
+            let n = String(r.numerator)
+            let d = String(r.denominator)
+            if regionID == 3 {
+                obj.dosage = n + "/" + d
+                self.dayOfAgeSData[count].dosage = n + "/" + d
+            }
+            else
+            {
+                obj.dosage = "\(Double(round(1000 * z) / 1000))"
+                self.dayOfAgeSData[count].dosage = "\(Double(round(1000 * z) / 1000))"
+            }
+            CoreDataHandlerPE().updateDOAInDB(inovojectData: obj)
+        }else{
+            obj.dosage = ""
+            self.dayOfAgeSData[count].dosage = ""
+            CoreDataHandlerPE().updateDOAInDB(inovojectData: obj)
+        }
+        
+        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoaS: true)
+        UIView.performWithoutAnimation {
+            self.tableview.reloadData()
+        }
+        count += 1
+    }
+    
     func updateDosageDayOfAgeDataS(section:Int)  {
         
         if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
             self.ml = 0.0
-        }  else if self.peNewAssessment.dDDT?.lowercased().contains("1 gallon") ?? false {
+        }  else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
             self.ml = 3785.41
-        }else if self.peNewAssessment.dDDT?.lowercased().contains("2 gallon") ?? false {
+        }else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
             self.ml = 7570.82
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("5 gallon") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
             self.ml = 18927.05
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("2 litre") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
             self.ml = 2000.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("2.4 litre") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
             self.ml = 2400.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("2.8 litre") ?? false {  self.ml = 2800.00
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {  self.ml = 2800.00
         }
-        else if self.peNewAssessment.dDDT?.lowercased().contains("200 ml") ?? false {
+        else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
             self.ml = 200.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("300 ml") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
             self.ml = 300.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("400 ml") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
             self.ml = 400.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains("500 ml") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
             self.ml = 500.00
         }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
             self.ml = 800.00
@@ -4420,37 +4518,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
         var count = 0
         for obj in self.dayOfAgeSData{
-            let a = Double(obj.ampulePerBag ?? "0") ?? 0
-            let b = Double(obj.ampuleSize ?? "0") ?? 0
-            if a != 0 && b != 0 && c != 0{
-                let x = a * b
-                let y = c/0.2
-                let z = x/y
-                
-                let r  = Rational(approximating: z)
-                let n = String(r.numerator)
-                let d = String(r.denominator)
-                if regionID == 3 {
-                    obj.dosage = n + "/" + d
-                    self.dayOfAgeSData[count].dosage = n + "/" + d
-                }
-                else
-                {
-                    obj.dosage = "\(Double(round(1000 * z) / 1000))"
-                    self.dayOfAgeSData[count].dosage = "\(Double(round(1000 * z) / 1000))"
-                }
-                CoreDataHandlerPE().updateDOAInDB(inovojectData: obj)
-            }else{
-                obj.dosage = ""
-                self.dayOfAgeSData[count].dosage = ""
-                CoreDataHandlerPE().updateDOAInDB(inovojectData: obj)
-            }
-            
-            CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoaS: true)
-            UIView.performWithoutAnimation {
-                self.tableview.reloadData()
-            }
-            count += 1
+            dosageCalculation(obj, c, &count)
         }
     }
     
@@ -4464,7 +4532,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refridFreezerNitro){
             if(section == 2) {
                 return 100
             }
@@ -4642,7 +4710,7 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 totalScoreLabel.text = String(totalMark)
                 resultScoreLabel.text = String(0)
                 catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                if(selectedCategory?.catName == refridFreezerNitro){
                     lblextenderMicro.isHidden = true
                     extendedMicroSwitch.isHidden = true
                     extendedMicroSwitch.isUserInteractionEnabled = false
@@ -4667,7 +4735,7 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                     
                     
                 }
-                if(selectedCategory?.catName == "Extended Microbial"){
+                if(selectedCategory?.catName == extendedMicStr){
                     selectedCategory?.sequenceNoo = 12
                     lblextenderMicro.isHidden = false
                     extendedMicroSwitch.isHidden = false
@@ -4696,7 +4764,7 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
                 if regionID != 3
                 {
-                    if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                    if(selectedCategory?.catName == refridFreezerNitro){
                         showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
                     }
                     else{
@@ -4714,7 +4782,7 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
     // MARK: - Show Hide NA option in Question
     func showHideNA(sequenceNoo:Int,catName:String){
         
-        if( sequenceNoo == 11 && catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen" ){
+        if( sequenceNoo == 11 && catName == refridFreezerNitro ){
             lbl_NA.isHidden = true
             btnNA.isHidden = true
             scoreParentView.isHidden = true
@@ -4732,7 +4800,7 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func updateCategoriesInShared(){
-        print("Test Message",appDelegate.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK: - Update Assessment Binding notes for every questions */
@@ -4767,12 +4835,12 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 if assessment?.assStatus == 1 && assessment?.assID == 5  {
                     if assessment?.note?.count ?? 0 < 1 {
                         
-                        if strings.contains("Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccination Application")
+                        if strings.contains(pleaseEnterMessage)
                         {
-                            strings = strings.filter { $0 != "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccination Application" }
+                            strings = strings.filter { $0 != pleaseEnterMessage }
                         }
                         if regionID == 3 {
-                            strings.append("Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccination Application")
+                            strings.append(pleaseEnterMessage)
                         }
                         else{
                             return true
@@ -4782,9 +4850,9 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                     {
                         if regionID == 3 {
                             
-                            if strings.contains("Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccination Application")
+                            if strings.contains(pleaseEnterMessage)
                             {
-                                strings = strings.filter { $0 != "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccination Application" }
+                                strings = strings.filter { $0 != pleaseEnterMessage }
                             }
                         }
                     }
@@ -4792,12 +4860,12 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 else if assessment?.assStatus == 1 && assessment?.assID == 9 {
                     if assessment?.note?.count ?? 0 < 1 {
                         
-                        if strings.contains("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application")
+                        if strings.contains(pleaseEnterMessageVac)
                         {
-                            strings = strings.filter { $0 != "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application" }
+                            strings = strings.filter { $0 != pleaseEnterMessageVac }
                         }
                         if regionID == 3 {
-                            strings.append("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application")
+                            strings.append(pleaseEnterMessageVac)
                         }else
                         {
                             return true
@@ -4806,9 +4874,9 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                     else
                     {
                         if regionID == 3 {
-                            if strings.contains("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application")
+                            if strings.contains(pleaseEnterMessageVac)
                             {
-                                strings = strings.filter { $0 != "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application" }
+                                strings = strings.filter { $0 != pleaseEnterMessageVac }
                             }
                         }
                     }
@@ -4971,9 +5039,9 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 {
                     if regionID == 3
                     {
-                        if strings.contains("Please enter vaccine details in the Vaccine Preparation & Sterility.")
+                        if strings.contains(peaseEnterVacDet)
                         {
-                            strings = strings.filter { $0 != "Please enter vaccine details in the Vaccine Preparation & Sterility." }
+                            strings = strings.filter { $0 != peaseEnterVacDet }
                         }
                     }
                 }
@@ -5074,9 +5142,9 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 }
                 else
                 {
-                    if strings.contains("Please enter frequency detail in Customer Quality Control Program.")
+                    if strings.contains(pleaseEnterFrequencyDet)
                     {
-                        strings = strings.filter { $0 != "Please enter frequency detail in Customer Quality Control Program." }
+                        strings = strings.filter { $0 != pleaseEnterFrequencyDet }
                     }
                 }
                 if(self.peNewAssessment.personName?.count ?? 0 < 1){
@@ -5096,9 +5164,9 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 }
                 else
                 {
-                    if strings.contains("Please enter person name in Customer Quality Control Program.")
+                    if strings.contains(pleaseEnterPersonName)
                     {
-                        strings = strings.filter { $0 != "Please enter person name in Customer Quality Control Program." }
+                        strings = strings.filter { $0 != pleaseEnterPersonName }
                     }
                 }
             }
@@ -5123,9 +5191,9 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 
                 if regionID == 3
                 {
-                    if strings.contains("Please enter QC count in Customer Quality Control Program.")
+                    if strings.contains(pleaseEnterQCount)
                     {
-                        strings = strings.filter { $0 != "Please enter QC count in Customer Quality Control Program." }
+                        strings = strings.filter { $0 != pleaseEnterQCount }
                     }
                 }
             }
@@ -5138,9 +5206,9 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 }
                 else{
                     if(self.peNewAssessment.evaluationID == 1){
-                        if strings.contains("Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation.")
+                        if strings.contains(pleaseEnterPPM)
                         {
-                            strings = strings.filter { $0 != "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation." }
+                            strings = strings.filter { $0 != pleaseEnterPPM }
                         }
                     }
                 }
@@ -5159,20 +5227,20 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 
             }else
             {
-                if strings.contains("Please enter AM/PM Value in Miscellaneous.")
+                if strings.contains(pleaseEnterAMPM)
                 {
-                    strings = strings.filter { $0 != "Please enter AM/PM Value in Miscellaneous." }
+                    strings = strings.filter { $0 != pleaseEnterAMPM }
                 }
             }
         }
         
         let formatter = CodeHelper.sharedInstance.getDateFormatterObj("")
         if(regionID == 3){
-            formatter.dateFormat = "MM/dd/yyyy"
+            formatter.dateFormat = appDelegateObj.MMddyyyStr
             //            formatter.calendar = Calendar(identifier: .gregorian)
             //            formatter.timeZone = TimeZone(secondsFromGMT: 0)
         }else{
-            formatter.dateFormat = "dd/MM/yyyy"
+            formatter.dateFormat = ddmmyyStr
             //            formatter.calendar = Calendar(identifier: .gregorian)
             //            formatter.timeZone = TimeZone(secondsFromGMT: 0)
         }
@@ -5214,11 +5282,11 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains("Please enter vaccine details in the Vaccine Preparation & Sterility.")
+            if strings.contains(peaseEnterVacDet)
             {
-                strings = strings.filter { $0 != "Please enter vaccine details in the Vaccine Preparation & Sterility." }
+                strings = strings.filter { $0 != peaseEnterVacDet }
             }
-            strings.append("Please enter vaccine details in the Vaccine Preparation & Sterility.")
+            strings.append(peaseEnterVacDet)
         }
         
         else
@@ -5238,11 +5306,11 @@ extension PEAssesmentFinalize{
         // Change
         if regionID == 3
         {
-            if strings.contains("Please enter program name in the Vaccine Preparation & Sterility.")
+            if strings.contains(pleaseEnterProgramName)
             {
-                strings = strings.filter { $0 != "Please enter program name in the Vaccine Preparation & Sterility." }
+                strings = strings.filter { $0 != pleaseEnterProgramName }
             }
-            strings.append("Please enter program name in the Vaccine Preparation & Sterility.")
+            strings.append(pleaseEnterProgramName)
         }
         else{
             let errorMSg = "Please enter program name in the Vaccine Preparation Tab."
@@ -5269,11 +5337,11 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains("Please enter Antibiotic in the Vaccine Preparation & Sterility.")
+            if strings.contains(pleaseEnterAntibiotic)
             {
-                strings = strings.filter { $0 != "Please enter Antibiotic in the Vaccine Preparation & Sterility." }
+                strings = strings.filter { $0 != pleaseEnterAntibiotic }
             }
-            strings.append("Please enter Antibiotic in the Vaccine Preparation & Sterility.")
+            strings.append(pleaseEnterAntibiotic)
         }
         else
         {
@@ -5312,14 +5380,14 @@ extension PEAssesmentFinalize{
     func showAlertForNoAMPMValue(){
         if regionID == 3
         {
-            if strings.contains("Please enter AM/PM Value in Miscellaneous.")
+            if strings.contains(pleaseEnterAMPM)
             {
-                strings = strings.filter { $0 != "Please enter AM/PM Value in Miscellaneous." }
+                strings = strings.filter { $0 != pleaseEnterAMPM }
             }
-            strings.append("Please enter AM/PM Value in Miscellaneous.")
+            strings.append(pleaseEnterAMPM)
         }
         else{
-            let errorMSg = "Please enter AM/PM Value in Miscellaneous."
+            let errorMSg = pleaseEnterAMPM
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -5334,14 +5402,14 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains("Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation.")
+            if strings.contains(pleaseEnterPPM)
             {
-                strings = strings.filter { $0 != "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation." }
+                strings = strings.filter { $0 != pleaseEnterPPM }
             }
-            strings.append("Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation.")
+            strings.append(pleaseEnterPPM)
         }
         else{
-            let errorMSg = "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation."
+            let errorMSg = pleaseEnterPPM
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -5355,14 +5423,14 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains("Please enter person name in Customer Quality Control Program.")
+            if strings.contains(pleaseEnterPersonName)
             {
-                strings = strings.filter { $0 != "Please enter person name in Customer Quality Control Program." }
+                strings = strings.filter { $0 != pleaseEnterPersonName }
             }
-            strings.append("Please enter person name in Customer Quality Control Program.")
+            strings.append(pleaseEnterPersonName)
         }
         else{
-            let errorMSg = "Please enter person name in Customer Quality Control Program."
+            let errorMSg = pleaseEnterPersonName
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -5375,15 +5443,15 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains("Please enter frequency detail in Customer Quality Control Program.")
+            if strings.contains(pleaseEnterFrequencyDet)
             {
-                strings = strings.filter { $0 != "Please enter frequency detail in Customer Quality Control Program." }
+                strings = strings.filter { $0 != pleaseEnterFrequencyDet }
             }
-            strings.append("Please enter frequency detail in Customer Quality Control Program.")
+            strings.append(pleaseEnterFrequencyDet)
         }
         else{
             
-            let errorMSg = "Please enter frequency detail in Customer Quality Control Program."
+            let errorMSg = pleaseEnterFrequencyDet
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -5398,15 +5466,15 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains("Please enter QC count in Customer Quality Control Program.")
+            if strings.contains(pleaseEnterQCount)
             {
-                strings = strings.filter { $0 != "Please enter QC count in Customer Quality Control Program." }
+                strings = strings.filter { $0 != pleaseEnterQCount }
             }
             
-            strings.append("Please enter QC count in Customer Quality Control Program.")
+            strings.append(pleaseEnterQCount)
         }
         else{
-            let errorMSg = "Please enter QC count in Customer Quality Control Program."
+            let errorMSg = pleaseEnterQCount
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -5420,14 +5488,14 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains("Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility.")
+            if strings.contains(pleaseEnterVaccineMixer)
             {
-                strings = strings.filter { $0 != "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."}
+                strings = strings.filter { $0 != pleaseEnterVaccineMixer}
             }
-            strings.append("Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility.")
+            strings.append(pleaseEnterVaccineMixer)
         }
         else{
-            let errorMSg = "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."
+            let errorMSg = pleaseEnterVaccineMixer
             let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -5536,7 +5604,7 @@ extension PEAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationCon
                 imagePicker.sourceType = .camera
                 imagePicker.cameraCaptureMode = .photo
                 imagePicker.delegate = self
-                present(imagePicker, animated: true, completion: {print("Test message")})
+                present(imagePicker, animated: true)
             } else {
                 postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
             }
@@ -5603,9 +5671,7 @@ extension PEAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationCon
     /******************************************************************************************************/
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
-        dismiss(animated: true, completion: {
-            
-        })
+        dismiss(animated: true)
     }
     
     private func saveImageInPEModule(imageData:Data){
@@ -5793,7 +5859,7 @@ extension PEAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate, UIT
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
-        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen") {
+        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refridFreezerNitro) {
             self.tableview.isScrollEnabled = false
         }
         else{
@@ -5806,7 +5872,7 @@ extension PEAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate, UIT
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen") {
+        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refridFreezerNitro) {
             let   cell = textField.superview?.superview?.superview?.superview?.superview as! RefrigatorTempProbeCell
             if(textField == cell.topValueTxtFld){
                 cell.valueCompletion?(textField, "Top")
@@ -5845,7 +5911,7 @@ extension PEAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate, UIT
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen") {
+        if( selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refridFreezerNitro) {
             self.tableview.isScrollEnabled = false
         }
         else{

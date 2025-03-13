@@ -407,8 +407,7 @@ class VaccineEvaluationCell: UITableViewCell {
         
     }
     
-    func resetFields(){
-        
+    fileprivate func leftRightWingPointTable() {
         if injCenter_LeftWing_Field.text == "0"{
             injCenter_LeftWing_Field.text = ""
         }
@@ -451,6 +450,11 @@ class VaccineEvaluationCell: UITableViewCell {
         if subQRightTotal.text == "0"{
             subQRightTotal.text = ""
         }
+    }
+    
+    func resetFields(){
+        
+        leftRightWingPointTable()
         
         //------------ For 20 Pont Table----
         

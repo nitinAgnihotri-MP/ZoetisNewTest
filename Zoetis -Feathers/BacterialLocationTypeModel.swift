@@ -26,11 +26,11 @@ class BacterialLocationTypeModel {
     }
     
     func getAllLocationTypes(customerArray: [BacterialLocationType]) -> [String] {
-        var locationTypeArray : [String] = []
+        var bacterialLocationTypeArray : [String] = []
         for obj in customerArray {
-            locationTypeArray.append(obj.text ?? "")
+            bacterialLocationTypeArray.append(obj.text ?? "")
         }
-        return locationTypeArray
+        return bacterialLocationTypeArray
     }
 }
 

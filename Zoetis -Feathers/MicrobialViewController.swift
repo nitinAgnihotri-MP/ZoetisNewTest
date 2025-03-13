@@ -184,7 +184,7 @@ class MicrobialViewController: BaseViewController {
     }
     
     @objc func draftAction(_ sender: UITapGestureRecognizer? = nil){
-
+        print(appDelegateObj.testFuntion())
     }
     
     @IBAction func viewRequisitionBtnClicked(_ sender: UIButton) {//DraftViewController      ViewRequisitionViewController
@@ -700,21 +700,6 @@ extension MicrobialViewController {
                                 
                                 Microbial_EnviromentalSurveyFormSubmitted.saveDataWhichIsAlreadySynced(reqData: arrMicrobialDetailsList, reqText: objReq.SurveyType?.Text ?? "", reqId: objReq.SurveyType?.Id ?? 0, isPlateIdGenerated: isPlateIdGenerated, reviewerText: reviewersText)
 
-//
-//                                // add new Req
-//                                if objReq.SurveyType?.Id ?? 0 != RequisitionType.feathurePulp.rawValue{
-//
-//                                    self.headersAndPlatesForBacterialAndEnv(microbialSampleDetailsList: arrMicrobialDetailsList.microbialSampleDetailsList ?? [], arrMicrobialDetailsList: arrMicrobialDetailsList, objReq: objReq)
-//                                }else{
-//                                    //save to featherpulp
-//                                    MicrobialFeatherPulpSampleInfo.insertAlreadySyncedFarmData(microbialFeatherDetailsList: (arrMicrobialDetailsList.microbialFeatherDetailsList?.first)!, timeStamp: arrMicrobialDetailsList.timeStamp ?? "")
-//                                    let tests = CoreDataHandlerMicro().fetchDetailsFor(entityName: "MicrobialFeatherPulpTestOptions") as! [MicrobialFeatherPulpTestOptions]
-//                                    let syncedTests = arrMicrobialDetailsList.microbialFeatherDetailsList?.first?.ServiceTestsList ?? []
-//                                    for testOptions in tests{
-//                                        let isTestSelected = syncedTests.contains(testOptions.id?.intValue ?? 0)
-//                                        MicrobialFeatherpulpServiceTestSampleInfo.saveFirstTimeTestOptionValuesInDB(timeStamp:  arrMicrobialDetailsList.timeStamp ?? "", testId: testOptions.id ?? -100 ,testType: testOptions.text ?? "" ,isSessionType: false, isCheckBoxSelected: isTestSelected)
-//                                    }
-//                                }
                             }else{
                                 //update case status
                                 

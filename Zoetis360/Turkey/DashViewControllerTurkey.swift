@@ -334,7 +334,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     
     func callWebService() {
         if WebClass.sharedInstance.connected() {
-            Helper.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+            Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
             let keychainHelper = AccessTokenHelper()
             accestoken = keychainHelper.getFromKeychain(keyed: "aceesTokentype") ?? ""
           //  accestoken = UserDefaults.standard.string(forKey: "aceesTokentype") ?? ""
@@ -821,7 +821,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
 
     
     func callFeedProgramMoleculeService( _ breedTypeArr : NSArray) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     func callSaveMethodforSessiontype( _ seessionTypeArr : NSArray) {
@@ -1174,7 +1174,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     }
     
     func callCocciVaccineService( _ CocciVaccine : NSArray) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     func callTargetWeightProcessing() {

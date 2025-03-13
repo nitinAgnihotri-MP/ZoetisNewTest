@@ -30,7 +30,7 @@ class BlankPDFViewController: BaseViewController {
     // MARK: Setup PDF View .
     private func setPDFView() {
         DispatchQueue.main.async {
-            self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+            self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
             self.pdfView = PDFView(frame: self.pdfBackView.bounds)
             self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
             self.pdfView.maxScaleFactor = 3;

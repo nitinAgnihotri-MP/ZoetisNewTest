@@ -137,7 +137,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             lblCustmer.isHidden = false
         }
         
-        Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+        Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
         loaderView.alpha = 1
         self.callFirstMethodToLoadView()
     }
@@ -154,7 +154,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         let isQuickLink : Bool = UserDefaults.standard.bool(forKey: "isQuickLink")
         if isQuickLink == true {
             
-            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             self.perform(#selector(CaptureNecroStep2Turkey.loadformdata), with: nil, afterDelay:0)
             self.traingleImageView.frame = CGRect(x: 276, y: 229, width: 24, height: 24)
             
@@ -739,7 +739,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     }
     
     func fethDataTrueValue(_ tagName:NSString) {
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     override func didReceiveMemoryWarning() {
@@ -5551,7 +5551,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
            // self.farmRow = indexPath.row
             let farm = farmArray.object(at: self.farmRow)
             UserDefaults.standard.set(farm, forKey: "farm")
-            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             self.perform(#selector(CaptureNecroStep2Turkey.loadformdata), with: nil, afterDelay:1)
             
         }
@@ -5580,7 +5580,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             let bird = (items.object(at: self.farmRow) as AnyObject).object(at: indexPath.row)
             UserDefaults.standard.set(bird, forKey: "bird")
             
-            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Loading...", comment: ""))
+            Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             
             self.callLodaBirdData(bird as! NSNumber)
             
@@ -6999,7 +6999,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
     }
     @IBAction func logOut(_ sender: AnyObject) {
-        
+        print(appDelegateObj.testFuntion())
         
     }
     

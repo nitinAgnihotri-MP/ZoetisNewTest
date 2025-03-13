@@ -5013,7 +5013,7 @@ class CoreDataHandler : NSObject  {
                 postingArray  = results as NSArray
                 
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "MM/dd/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                 
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     return dateFormatter.date(from:one.sessiondate!)! > dateFormatter.date(from: two.sessiondate!)! }
@@ -6296,7 +6296,7 @@ class CoreDataHandler : NSObject  {
             return ""
         }
         
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         let timeStamp = dateFormatter.string(from: date)
         
         return timeStamp
@@ -6934,7 +6934,7 @@ class CoreDataHandler : NSObject  {
                 
                 postingArray  = results as NSArray
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "MM/dd/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                 
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     return dateFormatter.date(from:one.sessiondate!) > dateFormatter.date(from: two.sessiondate!) }
@@ -9113,7 +9113,7 @@ class CoreDataHandler : NSObject  {
             {
                 postingArray  = results as NSArray
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "MM/dd/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     return dateFormatter.date(from:one.sessiondate!) > dateFormatter.date(from: two.sessiondate!)
                 }

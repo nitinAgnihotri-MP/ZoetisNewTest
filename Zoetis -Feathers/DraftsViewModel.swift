@@ -26,7 +26,7 @@ class DraftsViewModel {
             var newArr = [Microbial_EnviromentalSurveyFormSubmitted]()
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .medium
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             var i = 0
             var j = 0
             var k = 0

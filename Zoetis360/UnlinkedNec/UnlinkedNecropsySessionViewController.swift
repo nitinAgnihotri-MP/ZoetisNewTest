@@ -118,12 +118,12 @@ class UnlinkedNecropsySessionViewController: UIViewController,UITableViewDataSou
     
     
     @IBAction func logOutBtnActon(_ sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     
     @IBAction func syncBttnAction(_ sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     // MARK: - METHODS AND FUNCTIONS

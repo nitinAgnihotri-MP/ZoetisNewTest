@@ -53,7 +53,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -76,7 +76,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -99,7 +99,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -122,7 +122,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -146,7 +146,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -181,7 +181,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -213,7 +213,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -247,7 +247,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -280,7 +280,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     //    get Rejected Refrigator Data
@@ -305,7 +305,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -331,7 +331,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -358,7 +358,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -387,7 +387,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -510,7 +510,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -528,7 +528,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -548,13 +548,60 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return dataArray
     }
     
-    func
-    updateInDoGInProgressInDB(newAssessment:PENewAssessment,fromDoa:Bool? = false ,fromDoaS:Bool? = false,fromInvo:Bool? = false,fromDraft:Bool?=false) {
+    fileprivate func updateInGIInDB(_ fetchedResult: [PE_AssessmentInProgress], _ newAssessment: PENewAssessment, _ fromDoa: Bool?, _ fromDoaS: Bool?, _ fromInvo: Bool?, _ managedContext: NSManagedObjectContext) {
+        for i in 0..<fetchedResult.count {
+            let assessmentObj: PE_AssessmentInProgress = (fetchedResult[i])
+            assessmentObj.serverAssessmentId = newAssessment.serverAssessmentId
+            
+            
+            if fromDoa ?? false{
+                let hatcheryAntibioticsInt = newAssessment.hatcheryAntibioticsDoa ?? 0
+                assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibioticsDoa")
+                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
+                
+            }
+            if fromDoaS ?? false{
+                let hatcheryAntibioticsInt = newAssessment.hatcheryAntibioticsDoaS ?? 0
+                assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibioticsDoaS")
+                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText
+                                       , forKey: "hatcheryAntibioticsDoaSText")
+                
+            }
+            if fromInvo ?? false{
+                let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
+                assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
+                assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
+            }
+            assessmentObj.setValue(newAssessment.personName, forKey: "personName")
+            assessmentObj.setValue(newAssessment.ampmValue, forKey: "ampmValue")
+            assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
+            assessmentObj.setValue(newAssessment.qcCount, forKey: "qcCount")
+            assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
+            assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
+            assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
+            assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
+            assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
+            assessmentObj.setValue(newAssessment.dDCS, forKey: "dDCS")
+            assessmentObj.setValue(newAssessment.dDDT, forKey: "dDDT")
+            assessmentObj.setValue(newAssessment.micro, forKey: "micro")
+            assessmentObj.setValue(newAssessment.residue, forKey: "residue")
+            assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
+            
+            do {
+                try managedContext.save()
+                
+            } catch {
+                print(appDelegateObj.testFuntion())
+            }
+        }
+    }
+    
+    func updateInDoGInProgressInDB(newAssessment:PENewAssessment,fromDoa:Bool? = false ,fromDoaS:Bool? = false,fromInvo:Bool? = false,fromDraft:Bool?=false) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         
@@ -574,57 +621,11 @@ class CoreDataHandlerPE: NSObject {
             let fetchResult = try managedContext.fetch(fetchRequest) as? [PE_AssessmentInProgress]
             if let fetchedResult = fetchResult{
                 if fetchedResult.count > 0 {
-                    for i in 0..<fetchedResult.count {
-                        let assessmentObj: PE_AssessmentInProgress = (fetchedResult[i])
-                        assessmentObj.serverAssessmentId = newAssessment.serverAssessmentId
-                        
-                        
-                        if fromDoa ?? false{
-                            let hatcheryAntibioticsInt = newAssessment.hatcheryAntibioticsDoa ?? 0
-                            assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibioticsDoa")
-                            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
-                            
-                        }
-                        if fromDoaS ?? false{
-                            let hatcheryAntibioticsInt = newAssessment.hatcheryAntibioticsDoaS ?? 0
-                            assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibioticsDoaS")
-                            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText
-                                                   , forKey: "hatcheryAntibioticsDoaSText")
-                            
-                        }
-                        if fromInvo ?? false{
-                            let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
-                            assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
-                            assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
-                        }
-                        assessmentObj.setValue(newAssessment.personName, forKey: "personName")
-                        assessmentObj.setValue(newAssessment.ampmValue, forKey: "ampmValue")
-                        assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
-                        assessmentObj.setValue(newAssessment.qcCount, forKey: "qcCount")
-                        assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
-                        assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
-                        assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
-                        assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
-                        assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
-                        assessmentObj.setValue(newAssessment.dDCS, forKey: "dDCS")
-                        assessmentObj.setValue(newAssessment.dDDT, forKey: "dDDT")
-                        assessmentObj.setValue(newAssessment.micro, forKey: "micro")
-                        assessmentObj.setValue(newAssessment.residue, forKey: "residue")
-                        assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
-                        
-                        if newAssessment.isNA ?? false{
-                            //  print("------ -   \(newAssessment.isNA)")
-                        }
-                        do {
-                            try managedContext.save()
-                            
-                        } catch {
-                        }
-                    }
+                    updateInGIInDB(fetchedResult, newAssessment, fromDoa, fromDoaS, fromInvo, managedContext)
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -658,10 +659,92 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
+    
+    fileprivate func updateSeesmentInDB(_ fetchedResult: [PE_AssessmentInProgress], _ newAssessment: PENewAssessment, _ managedContext: NSManagedObjectContext) {
+        for i in 0..<fetchedResult.count {
+            let assessmentObj: PE_AssessmentInProgress = (fetchedResult[i])// as? PE_AssessmentInProgress)!
+            assessmentObj.serverAssessmentId = newAssessment.serverAssessmentId
+            assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
+            assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
+            assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
+            assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
+            assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
+            assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
+            assessmentObj.setValue(newAssessment.siteName, forKey: "siteName")
+            assessmentObj.setValue(NSNumber(value:newAssessment.userID ?? 0), forKey: "userID")
+            assessmentObj.setValue(newAssessment.customerName, forKey: "customerName")
+            assessmentObj.setValue(newAssessment.firstname, forKey: "firstname")
+            assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
+            assessmentObj.setValue(newAssessment.username, forKey: "username")
+            assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
+            assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
+            assessmentObj.setValue(NSNumber(value:newAssessment.evaluatorID ?? 0), forKey: "evaluatorID")
+            assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
+            assessmentObj.setValue(NSNumber(value:newAssessment.visitID ?? 0), forKey: "visitID")
+            assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
+            assessmentObj.setValue(NSNumber(value:newAssessment.evaluationID ?? 0), forKey: "evaluationID")
+            assessmentObj.setValue(newAssessment.approver, forKey: "approver")
+            assessmentObj.setValue(newAssessment.notes, forKey: "notes")
+            let camera = newAssessment.camera == 1 ? 1 : 0
+            let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
+            assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
+            
+            assessmentObj.setValue(NSNumber(value: newAssessment.sig ?? 0), forKey: "sig")
+            assessmentObj.setValue(NSNumber(value: newAssessment.sig2 ?? 0), forKey: "sig2")
+            
+            assessmentObj.setValue(newAssessment.sig_Date, forKey: "sig_Date")
+            assessmentObj.setValue(newAssessment.sig_EmpID, forKey: "sig_EmpID")
+            assessmentObj.setValue(newAssessment.sig_EmpID2, forKey: "sig_EmpID2")
+            assessmentObj.setValue(newAssessment.sig_Name, forKey: "sig_Name")
+            assessmentObj.setValue(newAssessment.sig_Name2, forKey: "sig_Name2")
+            assessmentObj.setValue(newAssessment.sig_Phone, forKey: "sig_Phone")
+            assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
+            assessmentObj.setValue(newAssessment.FSTSignatureImage, forKey: "fsrSignatureImage")
+            assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
+            assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
+            assessmentObj.setValue(newAssessment.isFlopSelected, forKey: "isFlopSelected")
+            assessmentObj.setValue(newAssessment.sequenceNo, forKey: "sequenceNo")
+            assessmentObj.setValue(newAssessment.sequenceNoo, forKey: "sequenceNoo")
+            assessmentObj.setValue(newAssessment.breedOfBird, forKey: "breedOfBird")
+            assessmentObj.setValue(newAssessment.breedOfBirdOther, forKey: "breedOfBirdOther")
+            assessmentObj.setValue(newAssessment.incubation, forKey: "incubation")
+            assessmentObj.setValue(newAssessment.incubationOthers, forKey: "incubationOthers")
+            assessmentObj.setValue(newAssessment.note, forKey: "note")
+            assessmentObj.setValue(newAssessment.images, forKey: "images")
+            assessmentObj.setValue(newAssessment.informationText, forKey: "informationText")
+            assessmentObj.setValue(newAssessment.informationImage, forKey: "informationImage")
+            assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
+            assessmentObj.setValue(NSNumber(value:newAssessment.noOfEggs ?? 0), forKey: "noOfEggs")
+            
+            assessmentObj.setValue(NSNumber(value:newAssessment.draftNumber ?? 0), forKey: "draftNumber")
+            assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
+            assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
+            assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
+            assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
+            assessmentObj.setValue(newAssessment.micro, forKey: "micro")
+            assessmentObj.setValue(newAssessment.residue, forKey: "residue")
+            assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
+            //PE International changes
+            assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
+            assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
+            assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
+            assessmentObj.setValue(NSNumber(value:newAssessment.countryID ?? 0), forKey: "countryID")
+            assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
+            assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
+            assessmentObj.setValue(NSNumber(value:newAssessment.clorineId ?? 0), forKey: "clorineId")
+            assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
+            assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
+            assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
+            do {
+                try managedContext.save()
+            } catch {
+            }
+        }
+    }
     
     func updateAssessmentInProgressInDB(newAssessment:PENewAssessment,serverAssessmentId:String,deleteFlag:Bool = false) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
@@ -669,99 +752,19 @@ class CoreDataHandlerPE: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: serverUserId, userID,serverAssessmentId)
-        
-        
         fetchRequest.returnsObjectsAsFaults = false
+        
         do {
             let fetchResult = try managedContext.fetch(fetchRequest) as? [PE_AssessmentInProgress]
             if let fetchedResult = fetchResult{
                 if fetchedResult.count > 0 {
-                    for i in 0..<fetchedResult.count {
-                        let assessmentObj: PE_AssessmentInProgress = (fetchedResult[i])// as? PE_AssessmentInProgress)!
-                        assessmentObj.serverAssessmentId = newAssessment.serverAssessmentId
-                        assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
-                        assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
-                        assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
-                        assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
-                        assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
-                        assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
-                        assessmentObj.setValue(newAssessment.siteName, forKey: "siteName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.userID ?? 0), forKey: "userID")
-                        assessmentObj.setValue(newAssessment.customerName, forKey: "customerName")
-                        assessmentObj.setValue(newAssessment.firstname, forKey: "firstname")
-                        assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
-                        assessmentObj.setValue(newAssessment.username, forKey: "username")
-                        assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
-                        assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.evaluatorID ?? 0), forKey: "evaluatorID")
-                        assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.visitID ?? 0), forKey: "visitID")
-                        assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.evaluationID ?? 0), forKey: "evaluationID")
-                        assessmentObj.setValue(newAssessment.approver, forKey: "approver")
-                        assessmentObj.setValue(newAssessment.notes, forKey: "notes")
-                        let camera = newAssessment.camera == 1 ? 1 : 0
-                        let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
-                        assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
-                        
-                        assessmentObj.setValue(NSNumber(value: newAssessment.sig ?? 0), forKey: "sig")
-                        assessmentObj.setValue(NSNumber(value: newAssessment.sig2 ?? 0), forKey: "sig2")
-                        
-                        assessmentObj.setValue(newAssessment.sig_Date, forKey: "sig_Date")
-                        assessmentObj.setValue(newAssessment.sig_EmpID, forKey: "sig_EmpID")
-                        assessmentObj.setValue(newAssessment.sig_EmpID2, forKey: "sig_EmpID2")
-                        assessmentObj.setValue(newAssessment.sig_Name, forKey: "sig_Name")
-                        assessmentObj.setValue(newAssessment.sig_Name2, forKey: "sig_Name2")
-                        assessmentObj.setValue(newAssessment.sig_Phone, forKey: "sig_Phone")
-                        assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
-                        assessmentObj.setValue(newAssessment.FSTSignatureImage, forKey: "fsrSignatureImage")
-                        assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
-                        assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
-                        assessmentObj.setValue(newAssessment.isFlopSelected, forKey: "isFlopSelected")
-                        assessmentObj.setValue(newAssessment.sequenceNo, forKey: "sequenceNo")
-                        assessmentObj.setValue(newAssessment.sequenceNoo, forKey: "sequenceNoo")
-                        assessmentObj.setValue(newAssessment.breedOfBird, forKey: "breedOfBird")
-                        assessmentObj.setValue(newAssessment.breedOfBirdOther, forKey: "breedOfBirdOther")
-                        assessmentObj.setValue(newAssessment.incubation, forKey: "incubation")
-                        assessmentObj.setValue(newAssessment.incubationOthers, forKey: "incubationOthers")
-                        assessmentObj.setValue(newAssessment.note, forKey: "note")
-                        assessmentObj.setValue(newAssessment.images, forKey: "images")
-                        assessmentObj.setValue(newAssessment.informationText, forKey: "informationText")
-                        assessmentObj.setValue(newAssessment.informationImage, forKey: "informationImage")
-                        assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.noOfEggs ?? 0), forKey: "noOfEggs")
-                        
-                        assessmentObj.setValue(NSNumber(value:newAssessment.draftNumber ?? 0), forKey: "draftNumber")
-                        assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
-                        assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
-                        assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
-                        assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
-                        assessmentObj.setValue(newAssessment.micro, forKey: "micro")
-                        assessmentObj.setValue(newAssessment.residue, forKey: "residue")
-                        assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-                        //PE International changes
-                        assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
-                        assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
-                        assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.countryID ?? 0), forKey: "countryID")
-                        assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
-                        assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.clorineId ?? 0), forKey: "clorineId")
-                        assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
-                        assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
-                        assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
-                        do {
-                            try managedContext.save()
-                        } catch {
-                        }
-                    }
-                }  else {
-                    
+                    updateSeesmentInDB(fetchedResult, newAssessment, managedContext)
+                } else {
                     saveNewAssessmentInProgressInDB(newAssessment:newAssessment)
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -772,84 +775,86 @@ class CoreDataHandlerPE: NSObject {
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let fetchResult = try managedContext.fetch(fetchRequest) as? [PE_AssessmentInProgress]
-            if let fetchedResult = fetchResult{
-                if fetchedResult.count > 0 {
-                    for i in 0..<fetchedResult.count {
-                        let assessmentObj: PE_AssessmentInProgress = (fetchedResult[i])// as? PE_AssessmentInProgress)!
-                        assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
-                        assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
-                        assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
-                        assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
-                        assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
-                        assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
-                        assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
-                        assessmentObj.setValue(newAssessment.siteName, forKey: "siteName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.userID ?? 0), forKey: "userID")
-                        assessmentObj.setValue(newAssessment.customerName, forKey: "customerName")
-                        assessmentObj.setValue(newAssessment.firstname, forKey: "firstname")
-                        assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
-                        assessmentObj.setValue(newAssessment.username, forKey: "username")
-                        assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
-                        assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.evaluatorID ?? 0), forKey: "evaluatorID")
-                        assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.visitID ?? 0), forKey: "visitID")
-                        assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.evaluationID ?? 0), forKey: "evaluationID")
-                        assessmentObj.setValue(newAssessment.approver, forKey: "approver")
-                        assessmentObj.setValue(newAssessment.notes, forKey: "notes")
-                        let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
-                        assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
-                        assessmentObj.setValue(NSNumber(value: newAssessment.sig ?? 0), forKey: "sig")
-                        assessmentObj.setValue(NSNumber(value: newAssessment.sig2 ?? 0), forKey: "sig2")
-                        assessmentObj.setValue(newAssessment.sig_Date, forKey: "sig_Date")
-                        assessmentObj.setValue(newAssessment.sig_EmpID, forKey: "sig_EmpID")
-                        assessmentObj.setValue(newAssessment.sig_EmpID2, forKey: "sig_EmpID2")
-                        assessmentObj.setValue(newAssessment.sig_Name, forKey: "sig_Name")
-                        assessmentObj.setValue(newAssessment.sig_Name2, forKey: "sig_Name2")
-                        assessmentObj.setValue(newAssessment.sig_Phone, forKey: "sig_Phone")
-                        assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
-                        assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
-                        let camera = newAssessment.camera == 1 ? 1 : 0
-                        assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
-                        assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
-                        assessmentObj.setValue(newAssessment.isFlopSelected, forKey: "isFlopSelected")
-                        assessmentObj.setValue(newAssessment.sequenceNo, forKey: "sequenceNo")
-                        assessmentObj.setValue(newAssessment.sequenceNoo, forKey: "sequenceNoo")
-                        assessmentObj.setValue(newAssessment.breedOfBird, forKey: "breedOfBird")
-                        assessmentObj.setValue(newAssessment.breedOfBirdOther, forKey: "breedOfBirdOther")
-                        assessmentObj.setValue(newAssessment.incubation, forKey: "incubation")
-                        assessmentObj.setValue(newAssessment.incubationOthers, forKey: "incubationOthers")
-                        assessmentObj.setValue(newAssessment.note, forKey: "note")
-                        assessmentObj.setValue(newAssessment.images, forKey: "images")
-                        assessmentObj.setValue(newAssessment.informationText, forKey: "informationText")
-                        assessmentObj.setValue(newAssessment.informationImage, forKey: "informationImage")
-                        
-                        // PE International chnages
-                        assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-                        assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
-                        assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
-                        assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
-                        assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
-                        assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
-                        assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.draftNumber ?? 0), forKey: "draftNumber")
-                        
-                        assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
-                        assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
-                        assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
-                        assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
-                        assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
-                        do {
-                            try managedContext.save()
-                        } catch {
-                        }
+            guard let fetchedResult = fetchResult else {return}
+            //            if let fetchedResult = fetchResult {
+            if fetchedResult.count > 0 {
+                for i in 0..<fetchedResult.count {
+                    let assessmentObj: PE_AssessmentInProgress = (fetchedResult[i])// as? PE_AssessmentInProgress)!
+                    assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
+                    assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
+                    assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
+                    assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
+                    assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
+                    assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
+                    assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
+                    assessmentObj.setValue(newAssessment.siteName, forKey: "siteName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.userID ?? 0), forKey: "userID")
+                    assessmentObj.setValue(newAssessment.customerName, forKey: "customerName")
+                    assessmentObj.setValue(newAssessment.firstname, forKey: "firstname")
+                    assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
+                    assessmentObj.setValue(newAssessment.username, forKey: "username")
+                    assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
+                    assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.evaluatorID ?? 0), forKey: "evaluatorID")
+                    assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.visitID ?? 0), forKey: "visitID")
+                    assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.evaluationID ?? 0), forKey: "evaluationID")
+                    assessmentObj.setValue(newAssessment.approver, forKey: "approver")
+                    assessmentObj.setValue(newAssessment.notes, forKey: "notes")
+                    let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
+                    assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
+                    assessmentObj.setValue(NSNumber(value: newAssessment.sig ?? 0), forKey: "sig")
+                    assessmentObj.setValue(NSNumber(value: newAssessment.sig2 ?? 0), forKey: "sig2")
+                    assessmentObj.setValue(newAssessment.sig_Date, forKey: "sig_Date")
+                    assessmentObj.setValue(newAssessment.sig_EmpID, forKey: "sig_EmpID")
+                    assessmentObj.setValue(newAssessment.sig_EmpID2, forKey: "sig_EmpID2")
+                    assessmentObj.setValue(newAssessment.sig_Name, forKey: "sig_Name")
+                    assessmentObj.setValue(newAssessment.sig_Name2, forKey: "sig_Name2")
+                    assessmentObj.setValue(newAssessment.sig_Phone, forKey: "sig_Phone")
+                    assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
+                    assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
+                    let camera = newAssessment.camera == 1 ? 1 : 0
+                    assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
+                    assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
+                    assessmentObj.setValue(newAssessment.isFlopSelected, forKey: "isFlopSelected")
+                    assessmentObj.setValue(newAssessment.sequenceNo, forKey: "sequenceNo")
+                    assessmentObj.setValue(newAssessment.sequenceNoo, forKey: "sequenceNoo")
+                    assessmentObj.setValue(newAssessment.breedOfBird, forKey: "breedOfBird")
+                    assessmentObj.setValue(newAssessment.breedOfBirdOther, forKey: "breedOfBirdOther")
+                    assessmentObj.setValue(newAssessment.incubation, forKey: "incubation")
+                    assessmentObj.setValue(newAssessment.incubationOthers, forKey: "incubationOthers")
+                    assessmentObj.setValue(newAssessment.note, forKey: "note")
+                    assessmentObj.setValue(newAssessment.images, forKey: "images")
+                    assessmentObj.setValue(newAssessment.informationText, forKey: "informationText")
+                    assessmentObj.setValue(newAssessment.informationImage, forKey: "informationImage")
+                    
+                    // PE International chnages
+                    assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
+                    assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
+                    assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
+                    assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
+                    assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
+                    assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
+                    assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.draftNumber ?? 0), forKey: "draftNumber")
+                    
+                    assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
+                    assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
+                    assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
+                    assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
+                    assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
+                    do {
+                        try managedContext.save()
+                    } catch {
                     }
-                }  else {
-                    saveNewAssessmentInProgressInDB(newAssessment:newAssessment)
-                }}
+                }
+            }  else {
+                saveNewAssessmentInProgressInDB(newAssessment:newAssessment)
+            }
+            //            }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -980,7 +985,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(assessmentObj)
     }
@@ -1099,7 +1104,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(assessmentObj)
     }
@@ -1244,7 +1249,7 @@ class CoreDataHandlerPE: NSObject {
                 return peNewAssessment
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessment
     }
@@ -1388,7 +1393,7 @@ class CoreDataHandlerPE: NSObject {
                 return peNewAssessment
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessment
     }
@@ -1514,7 +1519,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -1628,7 +1633,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -1763,7 +1768,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -1886,7 +1891,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -1901,23 +1906,21 @@ class CoreDataHandlerPE: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
+        fetchRequest.predicate = NSPredicate(format: userIdStr, userID)
+        if ofCurrentDate ?? false {
+            var onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+            fetchRequest.predicate = NSPredicate(format: " userID == %d AND evaluationDate == %@", userID,onGoingPeNewAssessment.evaluationDate ?? "")
+        }
+
         if ofCurrentAssessment ?? false {
             var onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+            fetchRequest.predicate = NSPredicate(format: userIdStr,userID)
+
             if ofCurrentDate ?? false {
                 fetchRequest.predicate = NSPredicate(format: "userID == %d AND evaluationDate == %@", userID,onGoingPeNewAssessment.evaluationDate ?? "")
-            } else {
-                fetchRequest.predicate = NSPredicate(format: userIdStr,userID)
-            }
-            
-        } else {
-            if ofCurrentDate ?? false {
-                var onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                
-                fetchRequest.predicate = NSPredicate(format: " userID == %d AND evaluationDate == %@", userID,onGoingPeNewAssessment.evaluationDate ?? "")
-            } else {
-                fetchRequest.predicate = NSPredicate(format: userIdStr, userID)
             }
         }
+        
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -2025,7 +2028,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -2185,7 +2188,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -2343,7 +2346,7 @@ class CoreDataHandlerPE: NSObject {
             }
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -2498,7 +2501,7 @@ class CoreDataHandlerPE: NSObject {
             }
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -2870,7 +2873,7 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return dataArray
     }
@@ -3189,7 +3192,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -3302,7 +3305,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(assessmentObj)
     }
@@ -3467,7 +3470,7 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return dataArray
     }
@@ -3502,7 +3505,7 @@ class CoreDataHandlerPE: NSObject {
             }
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return finalResult
@@ -3526,7 +3529,7 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return dataArray
     }
@@ -3548,7 +3551,7 @@ class CoreDataHandlerPE: NSObject {
             } else {
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return dataArray
     }
@@ -3570,7 +3573,7 @@ class CoreDataHandlerPE: NSObject {
                 return userIDArray
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return []
     }
@@ -3587,7 +3590,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -3604,7 +3607,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -3622,7 +3625,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -3643,7 +3646,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -3660,7 +3663,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -3678,7 +3681,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3696,7 +3699,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3712,7 +3715,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3728,7 +3731,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3744,7 +3747,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3769,7 +3772,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3786,7 +3789,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3803,7 +3806,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3819,7 +3822,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3836,7 +3839,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3856,7 +3859,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
         
@@ -3889,7 +3892,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3907,7 +3910,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3929,7 +3932,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -3948,7 +3951,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
     }
@@ -3965,7 +3968,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         customerData.append(person)
@@ -3989,7 +3992,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -4014,7 +4017,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return customerData as NSArray
     }
@@ -4040,7 +4043,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return dataArray
     }
@@ -4065,7 +4068,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return dataArray
     }
@@ -4089,7 +4092,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -4115,7 +4118,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -4137,7 +4140,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -4160,7 +4163,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -4185,7 +4188,7 @@ class CoreDataHandlerPE: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -4489,13 +4492,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4520,13 +4523,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4546,13 +4549,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4573,13 +4576,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4632,13 +4635,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4658,13 +4661,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4685,13 +4688,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4712,13 +4715,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4739,13 +4742,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4765,13 +4768,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4791,13 +4794,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4817,13 +4820,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4843,13 +4846,13 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -5005,7 +5008,7 @@ class CoreDataHandlerPE: NSObject {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -5092,7 +5095,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -5116,7 +5119,7 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     func updateDraftNoteAssessmentInProgress(assessment: PE_AssessmentInProgress) -> Bool {
@@ -5167,7 +5170,7 @@ class CoreDataHandlerPE: NSObject {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         do {
@@ -5255,7 +5258,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -5272,7 +5275,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             saveImageIdToCurrentQuestion(assessment: assessment, imageId: imageId,fromDraft: fromDraft)
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -5290,7 +5293,7 @@ extension CoreDataHandlerPE {
             saveImageIdToCurrentQuestionDraft(assessment: assessment, imageId: imageId)
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -5305,7 +5308,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -5799,204 +5802,197 @@ extension CoreDataHandlerPE {
     
     
     
-    func   saveDraftPEInDB(newAssessmentArray:[PENewAssessment],draftNumber:Int,isfromDraft:Bool? = false,isfromRejected:Bool? = false) {
+    fileprivate func extractedFunc(_ newAssessmentArray: [PENewAssessment], _ formate: inout String, _ isfromDraft: Bool?, _ isfromRejected: Bool?, _ draftNumber: Int) {
+        for newAssessment in newAssessmentArray {
+            let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+            let managedContext = appDelegate!.managedObjectContext
+            let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInDraft", in: managedContext)
+            let assessmentObj = NSManagedObject(entity: entity!, insertInto: managedContext)
+            
+            formate = formate.replacingOccurrences(of:" ", with: "")
+            formate = formate.replacingOccurrences(of:"/", with: "")
+            formate = formate.replacingOccurrences(of:":", with: "")
+            formate = formate.replacingOccurrences(of:"Z", with: "")
+            formate = formate.replacingOccurrences(of:"PM", with: "")
+            formate = formate.replacingOccurrences(of:"AM", with: "")
+            
+            print(formate)
+            assessmentObj.setValue(0, forKey: "asyncStatus")
+            if isfromDraft ?? false {
+                assessmentObj.setValue(newAssessment.draftID, forKey: "draftID")
+            } else if isfromRejected ?? false {
+                assessmentObj.setValue(newAssessment.dataToSubmitID, forKey: "draftID")
+            } else {
+                assessmentObj.setValue(formate, forKey: "draftID")
+            }
+            let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
+            assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
+            
+            assessmentObj.setValue(NSNumber(value:draftNumber), forKey: "draftNumber")
+            assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
+            assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
+            assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
+            assessmentObj.setValue(newAssessment.assID, forKey: "assID")
+            assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
+            assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
+            assessmentObj.setValue(newAssessment.siteName, forKey: "siteName")
+            assessmentObj.setValue(newAssessment.userID, forKey: "userID")
+            assessmentObj.setValue(newAssessment.customerName, forKey: "customerName")
+            assessmentObj.setValue(newAssessment.firstname, forKey: "firstname")
+            assessmentObj.setValue(newAssessment.username, forKey: "username")
+            assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
+            assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
+            assessmentObj.setValue(newAssessment.evaluatorID, forKey: "evaluatorID")
+            assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
+            assessmentObj.setValue(newAssessment.visitID , forKey: "visitID")
+            assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
+            assessmentObj.setValue(newAssessment.evaluationID , forKey: "evaluationID")
+            assessmentObj.setValue(newAssessment.approver, forKey: "approver")
+            assessmentObj.setValue(newAssessment.notes, forKey: "notes")
+            assessmentObj.setValue(newAssessment.note, forKey: "note")
+            
+            assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
+            assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
+            assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
+            
+            assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
+            if isfromRejected == true {
+                assessmentObj.setValue(0, forKey: "statusType")
+                
+                if newAssessment.isEMRejected == true && newAssessment.isPERejected == true {
+                    assessmentObj.setValue(2, forKey: "statusType")
+                } else if newAssessment.isEMRejected == true && newAssessment.isPERejected == false {
+                    assessmentObj.setValue(2, forKey: "statusType")
+                } else if newAssessment.isEMRejected == false && newAssessment.isPERejected == true {
+                    assessmentObj.setValue(2, forKey: "statusType")
+                }
+            }
+            //
+            let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
+            let camera = newAssessment.camera == 1 ? 1 : 0
+            let flock = newAssessment.isFlopSelected == 1 ? 1:0
+            assessmentObj.setValue(hatcheryAntibioticsInt, forKey: "hatcheryAntibiotics")
+            assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
+            assessmentObj.setValue(NSNumber(value:flock ), forKey: "isFlopSelected")
+            assessmentObj.setValue(newAssessment.catID, forKey: "catID")
+            assessmentObj.setValue(newAssessment.catName, forKey: "catName")
+            assessmentObj.setValue(newAssessment.catMaxMark, forKey: "catMaxMark")
+            assessmentObj.setValue(newAssessment.catResultMark, forKey: "catResultMark")
+            assessmentObj.setValue(newAssessment.catEvaluationID, forKey: "catEvaluationID")
+            assessmentObj.setValue(newAssessment.catISSelected, forKey: "catISSelected")
+            assessmentObj.setValue(newAssessment.catEvaluationID , forKey: "catEvaluationID")
+            assessmentObj.setValue(newAssessment.assDetail1, forKey: "assDetail1")
+            assessmentObj.setValue(newAssessment.assDetail2, forKey: "assDetail2")
+            assessmentObj.setValue(newAssessment.assMinScore , forKey: "assMinScore")
+            assessmentObj.setValue(newAssessment.assMaxScore , forKey: "assMaxScore")
+            assessmentObj.setValue(newAssessment.assCatType, forKey: "assCatType")
+            assessmentObj.setValue(newAssessment.assModuleCatID , forKey: "assModuleCatID")
+            assessmentObj.setValue(newAssessment.assModuleCatName, forKey: "assModuleCatName")
+            assessmentObj.setValue(newAssessment.assStatus , forKey: "assStatus")
+            assessmentObj.setValue(newAssessment.sequenceNo , forKey: "sequenceNo")
+            assessmentObj.setValue(newAssessment.sequenceNoo , forKey: "sequenceNoo")
+            assessmentObj.setValue(newAssessment.images , forKey: "images")
+            assessmentObj.setValue(newAssessment.doa , forKey: "doa")
+            assessmentObj.setValue(newAssessment.inovoject , forKey: "inovoject")
+            assessmentObj.setValue(newAssessment.vMixer , forKey: "vMixer")
+            assessmentObj.setValue(newAssessment.isFlopSelected , forKey: "isFlopSelected")
+            assessmentObj.setValue(newAssessment.breedOfBird , forKey: "breedOfBird")
+            assessmentObj.setValue(newAssessment.breedOfBirdOther , forKey: "breedOfBirdOther")
+            assessmentObj.setValue(newAssessment.incubation , forKey: "incubation")
+            assessmentObj.setValue(newAssessment.incubationOthers , forKey: "incubationOthers")
+            assessmentObj.setValue(newAssessment.catResultMark , forKey: "catResultMark")
+            assessmentObj.setValue(newAssessment.noOfEggs ?? 0, forKey: "noOfEggs")
+            assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
+            assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
+            assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
+            assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
+            assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
+            assessmentObj.setValue(newAssessment.micro, forKey: "micro")
+            assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
+            assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
+            assessmentObj.setValue(NSNumber(value: newAssessment.sig ?? 0), forKey: "sig")
+            assessmentObj.setValue(NSNumber(value: newAssessment.sig2 ?? 0), forKey: "sig2")
+            assessmentObj.setValue(newAssessment.sig_Date, forKey: "sig_Date")
+            assessmentObj.setValue(newAssessment.sig_EmpID, forKey: "sig_EmpID")
+            assessmentObj.setValue(newAssessment.sig_EmpID2, forKey: "sig_EmpID2")
+            assessmentObj.setValue(newAssessment.sig_Name, forKey: "sig_Name")
+            assessmentObj.setValue(newAssessment.sig_Name2, forKey: "sig_Name2")
+            assessmentObj.setValue(newAssessment.sig_Phone, forKey: "sig_Phone")
+            assessmentObj.setValue(newAssessment.rejectionComment, forKey: "rejectionComment")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText, forKey: "hatcheryAntibioticsDoaSText")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaS, forKey: "hatcheryAntibioticsDoaS")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoa, forKey: "hatcheryAntibioticsDoa")
+            assessmentObj.setValue(newAssessment.doaS, forKey: "doaS")
+            assessmentObj.setValue(newAssessment.qcCount, forKey: "qcCount")
+            
+            assessmentObj.setValue(newAssessment.personName, forKey: "personName")
+            assessmentObj.setValue(newAssessment.ampmValue, forKey: "ampmValue")
+            assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
+            assessmentObj.setValue(newAssessment.dDDT, forKey: "dDDT")
+            assessmentObj.setValue(newAssessment.dDCS, forKey: "dDCS")
+            assessmentObj.setValue(newAssessment.residue, forKey: "residue")
+            assessmentObj.setValue(newAssessment.informationText, forKey: "informationText")
+            assessmentObj.setValue(newAssessment.informationImage, forKey: "informationImage")
+            
+            
+            
+            //   PE International Changes
+            assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
+            assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
+            assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
+            assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
+            assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
+            assessmentObj.setValue(newAssessment.isNA, forKey: "isNA")
+            assessmentObj.setValue(newAssessment.isAllowNA, forKey: "isAllowNA")
+            assessmentObj.setValue(newAssessment.rollOut, forKey: "rollOut")
+            assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
+            assessmentObj.setValue(newAssessment.qSeqNo, forKey: "qSeqNo")
+            
+            assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
+            assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
+            assessmentObj.setValue(newAssessment.IsEMRequested, forKey: "isEMRequested")
+            
+            
+            assessmentObj.setValue(newAssessment.isPERejected, forKey: "isPERejected")
+            assessmentObj.setValue(newAssessment.emRejectedComment, forKey: "emRejectedComment")
+            assessmentObj.setValue(newAssessment.isEMRejected, forKey: "isEMRejected")
+            
+            
+            
+            do {
+                try managedContext.save()
+            } catch {
+            }
+            customerData.append(assessmentObj)
+        }
+    }
+    
+    func saveDraftPEInDB(newAssessmentArray:[PENewAssessment],draftNumber:Int,isfromDraft:Bool? = false,isfromRejected:Bool? = false) {
         
         var regionID = Int()
         regionID = UserDefaults.standard.integer(forKey: "Regionid")
         let date = Date()
         var formate = ""
-        if formate == "" {
+//        if formate == "" {
             
-            if regionID == 3{
+            if regionID == 3 {
                 formate = date.getFormattedDate(format: dateFormatMMDDYY)   // Set output formate
                 let random = newAssessmentArray[0].serverAssessmentId
                 formate = "\(formate)\(random ?? "")"
-            }
-            else
-            {
+            } else {
                 formate = date.getFormattedDate(format: dateFormatDDMMYY)   // Set output formate
                 let random = newAssessmentArray[0].serverAssessmentId
                 formate = "\(formate)\(random ?? "")"
             }
             
-        }
+//        }
         
-        if checkDraftByDate(newAssessment:newAssessmentArray[0] , draftNumber: draftNumber){
+        if checkDraftByDate(newAssessment:newAssessmentArray[0] , draftNumber: draftNumber) {
             
         } else {
-            for newAssessment in newAssessmentArray {
-                let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-                let managedContext = appDelegate!.managedObjectContext
-                let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInDraft", in: managedContext)
-                let assessmentObj = NSManagedObject(entity: entity!, insertInto: managedContext)
-                
-                formate = formate.replacingOccurrences(of:" ", with: "")
-                formate = formate.replacingOccurrences(of:"/", with: "")
-                formate = formate.replacingOccurrences(of:":", with: "")
-                formate = formate.replacingOccurrences(of:"Z", with: "")
-                formate = formate.replacingOccurrences(of:"PM", with: "")
-                formate = formate.replacingOccurrences(of:"AM", with: "")
-                
-                print(formate)
-                assessmentObj.setValue(0, forKey: "asyncStatus")
-                if isfromDraft ?? false {
-                    assessmentObj.setValue(newAssessment.draftID, forKey: "draftID")
-                }  else if isfromRejected ?? false {
-                    assessmentObj.setValue(newAssessment.dataToSubmitID, forKey: "draftID")
-                } else {
-                    assessmentObj.setValue(formate, forKey: "draftID")
-                }
-                let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
-                assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
-                
-                assessmentObj.setValue(NSNumber(value:draftNumber), forKey: "draftNumber")
-                assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
-                assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
-                assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
-                assessmentObj.setValue(newAssessment.assID, forKey: "assID")
-                assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
-                assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
-                assessmentObj.setValue(newAssessment.siteName, forKey: "siteName")
-                assessmentObj.setValue(newAssessment.userID, forKey: "userID")
-                assessmentObj.setValue(newAssessment.customerName, forKey: "customerName")
-                assessmentObj.setValue(newAssessment.firstname, forKey: "firstname")
-                assessmentObj.setValue(newAssessment.username, forKey: "username")
-                assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
-                assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
-                assessmentObj.setValue(newAssessment.evaluatorID, forKey: "evaluatorID")
-                assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
-                assessmentObj.setValue(newAssessment.visitID , forKey: "visitID")
-                assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
-                assessmentObj.setValue(newAssessment.evaluationID , forKey: "evaluationID")
-                assessmentObj.setValue(newAssessment.approver, forKey: "approver")
-                assessmentObj.setValue(newAssessment.notes, forKey: "notes")
-                assessmentObj.setValue(newAssessment.note, forKey: "note")
-                
-                assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
-                assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
-                assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
-                if isfromRejected == true
-                {
-                    if newAssessment.isEMRejected == true && newAssessment.isPERejected == true {
-                        assessmentObj.setValue(2, forKey: "statusType")
-                    }
-                    else if newAssessment.isEMRejected == true && newAssessment.isPERejected == false{
-                        assessmentObj.setValue(2, forKey: "statusType")
-                    }
-                    else if newAssessment.isEMRejected == false && newAssessment.isPERejected == true{
-                        assessmentObj.setValue(2, forKey: "statusType")
-                    }
-                    
-                    else
-                    {
-                        assessmentObj.setValue(0, forKey: "statusType")
-                    }
-                }
-                else
-                {
-                    assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
-                }
-                
-                //
-                let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
-                let camera = newAssessment.camera == 1 ? 1 : 0
-                let flock = newAssessment.isFlopSelected == 1 ? 1:0
-                assessmentObj.setValue(hatcheryAntibioticsInt, forKey: "hatcheryAntibiotics")
-                assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
-                assessmentObj.setValue(NSNumber(value:flock ), forKey: "isFlopSelected")
-                assessmentObj.setValue(newAssessment.catID, forKey: "catID")
-                assessmentObj.setValue(newAssessment.catName, forKey: "catName")
-                assessmentObj.setValue(newAssessment.catMaxMark, forKey: "catMaxMark")
-                assessmentObj.setValue(newAssessment.catResultMark, forKey: "catResultMark")
-                assessmentObj.setValue(newAssessment.catEvaluationID, forKey: "catEvaluationID")
-                assessmentObj.setValue(newAssessment.catISSelected, forKey: "catISSelected")
-                assessmentObj.setValue(newAssessment.catEvaluationID , forKey: "catEvaluationID")
-                assessmentObj.setValue(newAssessment.assDetail1, forKey: "assDetail1")
-                assessmentObj.setValue(newAssessment.assDetail2, forKey: "assDetail2")
-                assessmentObj.setValue(newAssessment.assMinScore , forKey: "assMinScore")
-                assessmentObj.setValue(newAssessment.assMaxScore , forKey: "assMaxScore")
-                assessmentObj.setValue(newAssessment.assCatType, forKey: "assCatType")
-                assessmentObj.setValue(newAssessment.assModuleCatID , forKey: "assModuleCatID")
-                assessmentObj.setValue(newAssessment.assModuleCatName, forKey: "assModuleCatName")
-                assessmentObj.setValue(newAssessment.assStatus , forKey: "assStatus")
-                assessmentObj.setValue(newAssessment.sequenceNo , forKey: "sequenceNo")
-                assessmentObj.setValue(newAssessment.sequenceNoo , forKey: "sequenceNoo")
-                assessmentObj.setValue(newAssessment.images , forKey: "images")
-                assessmentObj.setValue(newAssessment.doa , forKey: "doa")
-                assessmentObj.setValue(newAssessment.inovoject , forKey: "inovoject")
-                assessmentObj.setValue(newAssessment.vMixer , forKey: "vMixer")
-                assessmentObj.setValue(newAssessment.isFlopSelected , forKey: "isFlopSelected")
-                assessmentObj.setValue(newAssessment.breedOfBird , forKey: "breedOfBird")
-                assessmentObj.setValue(newAssessment.breedOfBirdOther , forKey: "breedOfBirdOther")
-                assessmentObj.setValue(newAssessment.incubation , forKey: "incubation")
-                assessmentObj.setValue(newAssessment.incubationOthers , forKey: "incubationOthers")
-                assessmentObj.setValue(newAssessment.catResultMark , forKey: "catResultMark")
-                assessmentObj.setValue(newAssessment.noOfEggs ?? 0, forKey: "noOfEggs")
-                assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
-                assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
-                assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
-                assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
-                assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
-                assessmentObj.setValue(newAssessment.micro, forKey: "micro")
-                assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
-                assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
-                assessmentObj.setValue(NSNumber(value: newAssessment.sig ?? 0), forKey: "sig")
-                assessmentObj.setValue(NSNumber(value: newAssessment.sig2 ?? 0), forKey: "sig2")
-                assessmentObj.setValue(newAssessment.sig_Date, forKey: "sig_Date")
-                assessmentObj.setValue(newAssessment.sig_EmpID, forKey: "sig_EmpID")
-                assessmentObj.setValue(newAssessment.sig_EmpID2, forKey: "sig_EmpID2")
-                assessmentObj.setValue(newAssessment.sig_Name, forKey: "sig_Name")
-                assessmentObj.setValue(newAssessment.sig_Name2, forKey: "sig_Name2")
-                assessmentObj.setValue(newAssessment.sig_Phone, forKey: "sig_Phone")
-                assessmentObj.setValue(newAssessment.rejectionComment, forKey: "rejectionComment")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText, forKey: "hatcheryAntibioticsDoaSText")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaS, forKey: "hatcheryAntibioticsDoaS")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoa, forKey: "hatcheryAntibioticsDoa")
-                assessmentObj.setValue(newAssessment.doaS, forKey: "doaS")
-                assessmentObj.setValue(newAssessment.qcCount, forKey: "qcCount")
-                
-                assessmentObj.setValue(newAssessment.personName, forKey: "personName")
-                assessmentObj.setValue(newAssessment.ampmValue, forKey: "ampmValue")
-                assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
-                assessmentObj.setValue(newAssessment.dDDT, forKey: "dDDT")
-                assessmentObj.setValue(newAssessment.dDCS, forKey: "dDCS")
-                assessmentObj.setValue(newAssessment.residue, forKey: "residue")
-                assessmentObj.setValue(newAssessment.informationText, forKey: "informationText")
-                assessmentObj.setValue(newAssessment.informationImage, forKey: "informationImage")
-                
-                
-                
-                //   PE International Changes
-                assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-                assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
-                assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
-                assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
-                assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
-                assessmentObj.setValue(newAssessment.isNA, forKey: "isNA")
-                assessmentObj.setValue(newAssessment.isAllowNA, forKey: "isAllowNA")
-                assessmentObj.setValue(newAssessment.rollOut, forKey: "rollOut")
-                assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
-                assessmentObj.setValue(newAssessment.qSeqNo, forKey: "qSeqNo")
-                
-                assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
-                assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
-                assessmentObj.setValue(newAssessment.IsEMRequested, forKey: "isEMRequested")
-                
-                
-                assessmentObj.setValue(newAssessment.isPERejected, forKey: "isPERejected")
-                assessmentObj.setValue(newAssessment.emRejectedComment, forKey: "emRejectedComment")
-                assessmentObj.setValue(newAssessment.isEMRejected, forKey: "isEMRejected")
-                
-                
-                
-                do {
-                    try managedContext.save()
-                } catch {
-                }
-                customerData.append(assessmentObj)
-            }
+            extractedFunc(newAssessmentArray, &formate, isfromDraft, isfromRejected, draftNumber)
         }
     }
     
@@ -6142,21 +6138,193 @@ extension CoreDataHandlerPE {
     
     
     
+    fileprivate func extractedFunc1(_ newAssessmentArray: [PENewAssessment],
+                                    _ count: inout Int,
+                                    _ fromDraft: Bool?,
+                                    _ formate: inout String,
+                                    _ dd: String,
+                                    _ dataToSubmitNumber: Int,
+                                    _ param: [String : String]?) -> Bool {
+        for newAssessment in newAssessmentArray {
+            count = count + 1
+            let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+            let managedContext = appDelegate!.managedObjectContext
+            let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInOffline", in: managedContext)
+            let assessmentObj = NSManagedObject(entity: entity!, insertInto: managedContext)
+            
+            if newAssessment.isPERejected == false && newAssessment.isEMRejected == true {
+                assessmentObj.setValue(1, forKey: "asyncStatus")
+            } else {
+                assessmentObj.setValue(0, forKey: "asyncStatus")
+            }
+            
+            if fromDraft ?? false {
+                formate = newAssessment.draftID ?? dd
+                newAssessment.isEMRejected = false
+            }
+            let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
+            assessmentObj.setValue(currentServerAssessmentId, forKey: "serverAssessmentId")
+            assessmentObj.setValue(formate, forKey: "dataToSubmitID")
+            assessmentObj.setValue(NSNumber(value:dataToSubmitNumber ), forKey: "dataToSubmitNumber")
+            assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
+            assessmentObj.setValue(newAssessment.assID, forKey: "assID")
+            assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
+            assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
+            assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
+            assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
+            assessmentObj.setValue(newAssessment.siteName, forKey: "siteName")
+            assessmentObj.setValue(newAssessment.userID, forKey: "userID")
+            assessmentObj.setValue(newAssessment.customerName, forKey: "customerName")
+            assessmentObj.setValue(newAssessment.firstname, forKey: "firstname")
+            assessmentObj.setValue(newAssessment.username, forKey: "username")
+            assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
+            assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
+            assessmentObj.setValue(newAssessment.evaluatorID, forKey: "evaluatorID")
+            assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
+            assessmentObj.setValue(newAssessment.visitID , forKey: "visitID")
+            assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
+            assessmentObj.setValue(newAssessment.evaluationID , forKey: "evaluationID")
+            assessmentObj.setValue(newAssessment.approver, forKey: "approver")
+            assessmentObj.setValue(newAssessment.notes, forKey: "notes")
+            assessmentObj.setValue(newAssessment.note, forKey: "note")
+            let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
+            assessmentObj.setValue(hatcheryAntibioticsInt, forKey: "hatcheryAntibiotics")
+            let camera = newAssessment.camera == 1 ? 1 : 0
+            let flock = newAssessment.isFlopSelected == 1 ? 1:0
+            assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
+            assessmentObj.setValue(NSNumber(value:flock ), forKey: "isFlopSelected")
+            assessmentObj.setValue(newAssessment.catID, forKey: "catID")
+            assessmentObj.setValue(newAssessment.catName, forKey: "catName")
+            assessmentObj.setValue(newAssessment.catMaxMark, forKey: "catMaxMark")
+            assessmentObj.setValue(newAssessment.catResultMark, forKey: "catResultMark")
+            assessmentObj.setValue(newAssessment.catEvaluationID, forKey: "catEvaluationID")
+            assessmentObj.setValue(newAssessment.catISSelected, forKey: "catISSelected")
+            assessmentObj.setValue(newAssessment.catEvaluationID , forKey: "catEvaluationID")
+            assessmentObj.setValue(newAssessment.assDetail1, forKey: "assDetail1")
+            assessmentObj.setValue(newAssessment.assDetail2, forKey: "assDetail2")
+            assessmentObj.setValue(newAssessment.assMinScore , forKey: "assMinScore")
+            assessmentObj.setValue(newAssessment.assMaxScore , forKey: "assMaxScore")
+            assessmentObj.setValue(newAssessment.assCatType, forKey: "assCatType")
+            assessmentObj.setValue(newAssessment.assModuleCatID , forKey: "assModuleCatID")
+            assessmentObj.setValue(newAssessment.assModuleCatName, forKey: "assModuleCatName")
+            assessmentObj.setValue(newAssessment.assStatus , forKey: "assStatus")
+            assessmentObj.setValue(newAssessment.sequenceNo , forKey: "sequenceNo")
+            assessmentObj.setValue(newAssessment.sequenceNoo , forKey: "sequenceNoo")
+            assessmentObj.setValue(newAssessment.images , forKey: "images")
+            assessmentObj.setValue(newAssessment.doa , forKey: "doa")
+            assessmentObj.setValue(newAssessment.inovoject , forKey: "inovoject")
+            assessmentObj.setValue(newAssessment.vMixer , forKey: "vMixer")
+            assessmentObj.setValue(newAssessment.isFlopSelected , forKey: "isFlopSelected")
+            assessmentObj.setValue(newAssessment.breedOfBird , forKey: "breedOfBird")
+            assessmentObj.setValue(newAssessment.breedOfBirdOther , forKey: "breedOfBirdOther")
+            assessmentObj.setValue(newAssessment.incubation , forKey: "incubation")
+            assessmentObj.setValue(newAssessment.incubationOthers , forKey: "incubationOthers")
+            assessmentObj.setValue(newAssessment.catResultMark , forKey: "catResultMark")
+            assessmentObj.setValue(newAssessment.noOfEggs, forKey: "noOfEggs")
+            assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
+            assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
+            assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
+            assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
+            assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
+            assessmentObj.setValue(newAssessment.micro, forKey: "micro")
+            assessmentObj.setValue(newAssessment.residue, forKey: "residue")
+            assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
+            assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText, forKey: "hatcheryAntibioticsDoaSText")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaS, forKey: "hatcheryAntibioticsDoaS")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoa, forKey: "hatcheryAntibioticsDoa")
+            assessmentObj.setValue(newAssessment.doaS, forKey: "doaS")
+            assessmentObj.setValue(newAssessment.qcCount, forKey: "qcCount")
+            assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
+            assessmentObj.setValue(newAssessment.personName, forKey: "personName")
+            assessmentObj.setValue(newAssessment.ampmValue, forKey: "ampmValue")
+            assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
+            assessmentObj.setValue(newAssessment.dDDT, forKey: "dDDT")
+            assessmentObj.setValue(newAssessment.dDCS, forKey: "dDCS")
+            assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
+            let sig = (param?["sig"] ?? "") as String
+            assessmentObj.setValue(Int(sig) , forKey: "sig")
+            assessmentObj.setValue(param?["sig_EmpID"] ?? "", forKey: "sig_EmpID")
+            assessmentObj.setValue(param?["sig_Name"] ?? "" , forKey: "sig_Name")
+            let sig2 = (param?["sig2"] ?? "") as String
+            assessmentObj.setValue(Int(sig2) , forKey: "sig2")
+            assessmentObj.setValue(param?["sig_EmpID2"] ?? "", forKey: "sig_EmpID2")
+            assessmentObj.setValue(param?["sig_Name2"] ?? "" , forKey: "sig_Name2")
+            
+            assessmentObj.setValue(param?["sig_Date"] ?? "", forKey: "sig_Date")
+            
+            assessmentObj.setValue(param?["sig_Phone"] ?? "", forKey: "sig_Phone")
+            
+            
+            assessmentObj.setValue(newAssessment.informationText, forKey: "informationText")
+            assessmentObj.setValue(newAssessment.informationImage, forKey: "informationImage")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText, forKey: "hatcheryAntibioticsDoaSText")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaS, forKey: "hatcheryAntibioticsDoaS")
+            assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoa, forKey: "hatcheryAntibioticsDoa")
+            assessmentObj.setValue(newAssessment.doaS, forKey: "doaS")
+            assessmentObj.setValue(newAssessment.qcCount, forKey: "qcCount")
+            assessmentObj.setValue(newAssessment.dDDT, forKey: "dDDT")
+            assessmentObj.setValue(newAssessment.dDCS, forKey: "dDCS")
+            assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
+            assessmentObj.setValue(newAssessment.personName, forKey: "personName")
+            assessmentObj.setValue(newAssessment.ampmValue, forKey: "ampmValue")
+            assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
+            
+            // PE Intrenational Changes
+            assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
+            assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
+            assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
+            assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
+            assessmentObj.setValue(newAssessment.IsEMRequested, forKey: "isEMRequested")
+            
+            assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
+            assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
+            assessmentObj.setValue(newAssessment.isNA, forKey: "isNA")
+            assessmentObj.setValue(newAssessment.rollOut, forKey: "rollOut")
+            assessmentObj.setValue(newAssessment.isAllowNA, forKey: "isAllowNA")
+            assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
+            assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
+            assessmentObj.setValue(newAssessment.qSeqNo, forKey: "qSeqNo")
+            
+            assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
+            assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
+            assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
+            
+            assessmentObj.setValue(newAssessment.isPERejected, forKey: "isPERejected")
+            assessmentObj.setValue(newAssessment.emRejectedComment, forKey: "emRejectedComment")
+            assessmentObj.setValue(newAssessment.isEMRejected, forKey: "isEMRejected")
+            
+            do {
+                try managedContext.save()
+                
+            } catch {
+            }
+            customerData.append(assessmentObj)
+            if fromDraft ?? false {
+                self.deleteDraftByDrafyNumber(String(newAssessment.draftID ?? ""))
+            }
+            appDelegate?.saveContext()
+            if count == newAssessmentArray.count {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
     func saveDataToSyncPEInDBArray(newAssessmentArray:[PENewAssessment],dataToSubmitNumber:Int,param:[String:String]?,fromDraft:Bool? = false) -> Bool{
         
         var regionID = Int()
         regionID = UserDefaults.standard.integer(forKey: "Regionid")
         let date = Date()
-        var formate = ""
-        if formate == "" {
-            
-            if regionID == 3{
-                formate = date.getFormattedDate(format: dateFormatMMDDYY)
-            }
-            else
-            {
-                formate = date.getFormattedDate(format: dateFormatDDMMYY)
-            }
+        var formate = date.getFormattedDate(format: dateFormatDDMMYY)
+        
+        if regionID == 3 {
+            formate = date.getFormattedDate(format: dateFormatMMDDYY)
         }
         
         // Set output formate
@@ -6169,182 +6337,13 @@ extension CoreDataHandlerPE {
         formate = formate.replacingOccurrences(of:"PM", with: "")
         formate = formate.replacingOccurrences(of:"AM", with: "")
         
-        if  newAssessmentArray.count > 0 {
+        if newAssessmentArray.count > 0 {
             let random = newAssessmentArray[0].serverAssessmentId
             formate = "\(formate)\(random ?? "")"
             print(formate)
             let dd = formate
             var count = 0
-            for newAssessment in newAssessmentArray {
-                count = count + 1
-                let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-                let managedContext = appDelegate!.managedObjectContext
-                let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInOffline", in: managedContext)
-                let assessmentObj = NSManagedObject(entity: entity!, insertInto: managedContext)
-                
-                if newAssessment.isPERejected == false && newAssessment.isEMRejected == true
-                {
-                    assessmentObj.setValue(1, forKey: "asyncStatus")
-                }
-                else
-                {
-                    assessmentObj.setValue(0, forKey: "asyncStatus")
-                }
-                
-                if fromDraft ?? false {
-                    formate = newAssessment.draftID ?? dd
-                    newAssessment.isEMRejected = false
-                }
-                let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
-                assessmentObj.setValue(currentServerAssessmentId, forKey: "serverAssessmentId")
-                assessmentObj.setValue(formate, forKey: "dataToSubmitID")
-                assessmentObj.setValue(NSNumber(value:dataToSubmitNumber ), forKey: "dataToSubmitNumber")
-                assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
-                assessmentObj.setValue(newAssessment.assID, forKey: "assID")
-                assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
-                assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
-                assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
-                assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
-                assessmentObj.setValue(newAssessment.siteName, forKey: "siteName")
-                assessmentObj.setValue(newAssessment.userID, forKey: "userID")
-                assessmentObj.setValue(newAssessment.customerName, forKey: "customerName")
-                assessmentObj.setValue(newAssessment.firstname, forKey: "firstname")
-                assessmentObj.setValue(newAssessment.username, forKey: "username")
-                assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
-                assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
-                assessmentObj.setValue(newAssessment.evaluatorID, forKey: "evaluatorID")
-                assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
-                assessmentObj.setValue(newAssessment.visitID , forKey: "visitID")
-                assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
-                assessmentObj.setValue(newAssessment.evaluationID , forKey: "evaluationID")
-                assessmentObj.setValue(newAssessment.approver, forKey: "approver")
-                assessmentObj.setValue(newAssessment.notes, forKey: "notes")
-                assessmentObj.setValue(newAssessment.note, forKey: "note")
-                let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
-                assessmentObj.setValue(hatcheryAntibioticsInt, forKey: "hatcheryAntibiotics")
-                let camera = newAssessment.camera == 1 ? 1 : 0
-                let flock = newAssessment.isFlopSelected == 1 ? 1:0
-                assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
-                assessmentObj.setValue(NSNumber(value:flock ), forKey: "isFlopSelected")
-                assessmentObj.setValue(newAssessment.catID, forKey: "catID")
-                assessmentObj.setValue(newAssessment.catName, forKey: "catName")
-                assessmentObj.setValue(newAssessment.catMaxMark, forKey: "catMaxMark")
-                assessmentObj.setValue(newAssessment.catResultMark, forKey: "catResultMark")
-                assessmentObj.setValue(newAssessment.catEvaluationID, forKey: "catEvaluationID")
-                assessmentObj.setValue(newAssessment.catISSelected, forKey: "catISSelected")
-                assessmentObj.setValue(newAssessment.catEvaluationID , forKey: "catEvaluationID")
-                assessmentObj.setValue(newAssessment.assDetail1, forKey: "assDetail1")
-                assessmentObj.setValue(newAssessment.assDetail2, forKey: "assDetail2")
-                assessmentObj.setValue(newAssessment.assMinScore , forKey: "assMinScore")
-                assessmentObj.setValue(newAssessment.assMaxScore , forKey: "assMaxScore")
-                assessmentObj.setValue(newAssessment.assCatType, forKey: "assCatType")
-                assessmentObj.setValue(newAssessment.assModuleCatID , forKey: "assModuleCatID")
-                assessmentObj.setValue(newAssessment.assModuleCatName, forKey: "assModuleCatName")
-                assessmentObj.setValue(newAssessment.assStatus , forKey: "assStatus")
-                assessmentObj.setValue(newAssessment.sequenceNo , forKey: "sequenceNo")
-                assessmentObj.setValue(newAssessment.sequenceNoo , forKey: "sequenceNoo")
-                assessmentObj.setValue(newAssessment.images , forKey: "images")
-                assessmentObj.setValue(newAssessment.doa , forKey: "doa")
-                assessmentObj.setValue(newAssessment.inovoject , forKey: "inovoject")
-                assessmentObj.setValue(newAssessment.vMixer , forKey: "vMixer")
-                assessmentObj.setValue(newAssessment.isFlopSelected , forKey: "isFlopSelected")
-                assessmentObj.setValue(newAssessment.breedOfBird , forKey: "breedOfBird")
-                assessmentObj.setValue(newAssessment.breedOfBirdOther , forKey: "breedOfBirdOther")
-                assessmentObj.setValue(newAssessment.incubation , forKey: "incubation")
-                assessmentObj.setValue(newAssessment.incubationOthers , forKey: "incubationOthers")
-                assessmentObj.setValue(newAssessment.catResultMark , forKey: "catResultMark")
-                assessmentObj.setValue(newAssessment.noOfEggs, forKey: "noOfEggs")
-                assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
-                assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
-                assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
-                assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
-                assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
-                assessmentObj.setValue(newAssessment.micro, forKey: "micro")
-                assessmentObj.setValue(newAssessment.residue, forKey: "residue")
-                assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
-                assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText, forKey: "hatcheryAntibioticsDoaSText")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaS, forKey: "hatcheryAntibioticsDoaS")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoa, forKey: "hatcheryAntibioticsDoa")
-                assessmentObj.setValue(newAssessment.doaS, forKey: "doaS")
-                assessmentObj.setValue(newAssessment.qcCount, forKey: "qcCount")
-                assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
-                assessmentObj.setValue(newAssessment.personName, forKey: "personName")
-                assessmentObj.setValue(newAssessment.ampmValue, forKey: "ampmValue")
-                assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
-                assessmentObj.setValue(newAssessment.dDDT, forKey: "dDDT")
-                assessmentObj.setValue(newAssessment.dDCS, forKey: "dDCS")
-                assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
-                let sig = (param?["sig"] ?? "") as String
-                assessmentObj.setValue(Int(sig) , forKey: "sig")
-                assessmentObj.setValue(param?["sig_EmpID"] ?? "", forKey: "sig_EmpID")
-                assessmentObj.setValue(param?["sig_Name"] ?? "" , forKey: "sig_Name")
-                let sig2 = (param?["sig2"] ?? "") as String
-                assessmentObj.setValue(Int(sig2) , forKey: "sig2")
-                assessmentObj.setValue(param?["sig_EmpID2"] ?? "", forKey: "sig_EmpID2")
-                assessmentObj.setValue(param?["sig_Name2"] ?? "" , forKey: "sig_Name2")
-                
-                assessmentObj.setValue(param?["sig_Date"] ?? "", forKey: "sig_Date")
-                
-                assessmentObj.setValue(param?["sig_Phone"] ?? "", forKey: "sig_Phone")
-                
-                
-                assessmentObj.setValue(newAssessment.informationText, forKey: "informationText")
-                assessmentObj.setValue(newAssessment.informationImage, forKey: "informationImage")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText, forKey: "hatcheryAntibioticsDoaSText")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaS, forKey: "hatcheryAntibioticsDoaS")
-                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoa, forKey: "hatcheryAntibioticsDoa")
-                assessmentObj.setValue(newAssessment.doaS, forKey: "doaS")
-                assessmentObj.setValue(newAssessment.qcCount, forKey: "qcCount")
-                assessmentObj.setValue(newAssessment.dDDT, forKey: "dDDT")
-                assessmentObj.setValue(newAssessment.dDCS, forKey: "dDCS")
-                assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
-                assessmentObj.setValue(newAssessment.personName, forKey: "personName")
-                assessmentObj.setValue(newAssessment.ampmValue, forKey: "ampmValue")
-                assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
-                
-                // PE Intrenational Changes
-                assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
-                assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
-                assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
-                assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
-                assessmentObj.setValue(newAssessment.IsEMRequested, forKey: "isEMRequested")
-                
-                assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
-                assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
-                assessmentObj.setValue(newAssessment.isNA, forKey: "isNA")
-                assessmentObj.setValue(newAssessment.rollOut, forKey: "rollOut")
-                assessmentObj.setValue(newAssessment.isAllowNA, forKey: "isAllowNA")
-                assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
-                assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-                assessmentObj.setValue(newAssessment.qSeqNo, forKey: "qSeqNo")
-                
-                assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
-                assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
-                assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
-                
-                assessmentObj.setValue(newAssessment.isPERejected, forKey: "isPERejected")
-                assessmentObj.setValue(newAssessment.emRejectedComment, forKey: "emRejectedComment")
-                assessmentObj.setValue(newAssessment.isEMRejected, forKey: "isEMRejected")
-                
-                do {
-                    try managedContext.save()
-                    
-                } catch {
-                }
-                customerData.append(assessmentObj)
-                if fromDraft ?? false {
-                    self.deleteDraftByDrafyNumber(String(newAssessment.draftID ?? ""))
-                }
-                appDelegate?.saveContext()
-                if count == newAssessmentArray.count {
-                    return true
-                }
-            }
+            return extractedFunc1(newAssessmentArray, &count, fromDraft, &formate, dd, dataToSubmitNumber, param)
         }
         return false
     }
@@ -6526,7 +6525,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(assessmentObj)
     }
@@ -6549,11 +6548,9 @@ extension CoreDataHandlerPE {
             var formate = ""
             if formate == "" {
                 
-                if regionID == 3{
+                if regionID == 3 {
                     formate = date.getFormattedDate(format: dateFormatMMDDYY)
-                }
-                else
-                {
+                } else {
                     formate = date.getFormattedDate(format: dateFormatDDMMYY)
                 }
             }
@@ -6693,7 +6690,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(assessmentObj)
     }
@@ -6857,7 +6854,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(assessmentObj)
     }
@@ -7006,7 +7003,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(assessmentObj)
     }
@@ -7179,7 +7176,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         customerData.append(assessmentObj)
     }
@@ -7230,7 +7227,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             updateDOACategortIsSelcted(assessment: assessment, doaId: doaId,fromDoaS: fromDoaS,fromDraft:fromDraft)
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -7254,7 +7251,7 @@ extension CoreDataHandlerPE {
             updateDraftDOACategortIsSelcted(assessment: assessment, doaId: doaId)
             //   //   print("PE_AssessmentInProgress---\(CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress"))")
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -7274,7 +7271,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             updateUpdateVMixerMinusCategortIsSelcted(assessment: assessment, doaId: id)
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -7298,7 +7295,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             updateUpdateVMixerGet(doaId: certificateID,evalutionID: evalutionID , NewCatID:CategoryID)
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -7324,7 +7321,7 @@ extension CoreDataHandlerPE {
             updateDraftVMixerAddCategortIsSelcted(assessment: assessment, doaId: id)
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -7345,7 +7342,7 @@ extension CoreDataHandlerPE {
             updateUpdateVMixerMinusCategortIsSelcted(assessment: assessment, doaId: id)
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -7378,7 +7375,7 @@ extension CoreDataHandlerPE {
             try managedContext.save()
             updateInovojectCategortIsSelcted(assessment: assessment, doaId: doaId,fromDraft:fromDraft)
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -7401,7 +7398,7 @@ extension CoreDataHandlerPE {
             updateDraftInovojectCategortIsSelcted(assessment: assessment, doaId: doaId)
             
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -7567,7 +7564,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
@@ -7837,13 +7834,13 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         do {
             try managedContext.save()
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -7915,7 +7912,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return nil
     }
@@ -7953,7 +7950,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return nil
     }
@@ -8125,55 +8122,54 @@ extension CoreDataHandlerPE {
         do {
             //            let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             let res = try? managedContext.fetch(fetchRequest) as? [PE_AssessmentInProgress]
-            if let results = res{
-                if results.count != 0 { // Atleast one was returned
-                    for result in results ?? [] {
-                        let assessmentObj: PE_AssessmentInProgress = (result )//as? PE_AssessmentInProgress)!
-                        assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
-                        assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
-                        assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.userID ?? 0), forKey: "userID")
-                        assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
-                        assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.evaluatorID ?? 0), forKey: "evaluatorID")
-                        assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.visitID ?? 0), forKey: "visitID")
-                        assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.evaluationID ?? 0), forKey: "evaluationID")
-                        assessmentObj.setValue(newAssessment.approver, forKey: "approver")
-                        assessmentObj.setValue(newAssessment.notes, forKey: "notes")
-                        assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
-                        assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
-                        assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
-                        let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
-                        assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
-                        let camera = newAssessment.camera == 1 ? 1 : 0
-                        assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
-                        assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
-                        assessmentObj.setValue(newAssessment.isFlopSelected, forKey: "isFlopSelected")
-                        assessmentObj.setValue(newAssessment.breedOfBird, forKey: "breedOfBird")
-                        assessmentObj.setValue(newAssessment.breedOfBirdOther, forKey: "breedOfBirdOther")
-                        assessmentObj.setValue(newAssessment.incubation, forKey: "incubation")
-                        assessmentObj.setValue(newAssessment.incubationOthers, forKey: "incubationOthers")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.noOfEggs ?? 0), forKey: "noOfEggs")
-                        assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
-                        assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-                        assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
-                        assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
-                        assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.countryID ?? 0), forKey: "countryID")
-                        assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.clorineId ?? 0), forKey: "clorineId")
-                        assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
-                        assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
-                        assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
-                        assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
-                        do {
-                            try managedContext.save()
-                        } catch {
-                        }
+            if let results = res, results.count != 0 {
+                for result in results ?? [] {
+                    let assessmentObj: PE_AssessmentInProgress = (result )//as? PE_AssessmentInProgress)!
+                    assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
+                    assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
+                    assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.userID ?? 0), forKey: "userID")
+                    assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
+                    assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.evaluatorID ?? 0), forKey: "evaluatorID")
+                    assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.visitID ?? 0), forKey: "visitID")
+                    assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.evaluationID ?? 0), forKey: "evaluationID")
+                    assessmentObj.setValue(newAssessment.approver, forKey: "approver")
+                    assessmentObj.setValue(newAssessment.notes, forKey: "notes")
+                    assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
+                    assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
+                    assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
+                    let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
+                    assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
+                    let camera = newAssessment.camera == 1 ? 1 : 0
+                    assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
+                    assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
+                    assessmentObj.setValue(newAssessment.isFlopSelected, forKey: "isFlopSelected")
+                    assessmentObj.setValue(newAssessment.breedOfBird, forKey: "breedOfBird")
+                    assessmentObj.setValue(newAssessment.breedOfBirdOther, forKey: "breedOfBirdOther")
+                    assessmentObj.setValue(newAssessment.incubation, forKey: "incubation")
+                    assessmentObj.setValue(newAssessment.incubationOthers, forKey: "incubationOthers")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.noOfEggs ?? 0), forKey: "noOfEggs")
+                    assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
+                    assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
+                    assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
+                    assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
+                    assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.countryID ?? 0), forKey: "countryID")
+                    assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.clorineId ?? 0), forKey: "clorineId")
+                    assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
+                    assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
+                    assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
+                    assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
+                    do {
+                        try managedContext.save()
+                    } catch {
                     }
                 }
+                
             }
             do {
                 try managedContext.save()
@@ -8203,58 +8199,57 @@ extension CoreDataHandlerPE {
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let res = try managedContext.fetch(fetchRequest) as? [PE_AssessmentInProgress]
-            if let results = res {
-                if results.count != 0 { // Atleast one was returned
-                    for result in results ?? [] {
-                        let assessmentObj: PE_AssessmentInProgress = (result)// as? PE_AssessmentInProgress)!
-                        assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
-                        assessmentObj.setValue(0, forKey: "asyncStatus")
-                        assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
-                        assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.userID ?? 0), forKey: "userID")
-                        assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
-                        assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.evaluatorID ?? 0), forKey: "evaluatorID")
-                        assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.visitID ?? 0), forKey: "visitID")
-                        assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.evaluationID ?? 0), forKey: "evaluationID")
-                        assessmentObj.setValue(newAssessment.approver, forKey: "approver")
-                        assessmentObj.setValue(newAssessment.notes, forKey: "notes")
-                        assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
-                        let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
-                        assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
-                        assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
-                        assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
-                        let camera = newAssessment.camera == 1 ? 1 : 0
-                        assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
-                        assessmentObj.setValue(newAssessment.isFlopSelected, forKey: "isFlopSelected")
-                        assessmentObj.setValue(newAssessment.breedOfBird, forKey: "breedOfBird")
-                        assessmentObj.setValue(newAssessment.breedOfBirdOther, forKey: "breedOfBirdOther")
-                        assessmentObj.setValue(newAssessment.incubation, forKey: "incubation")
-                        assessmentObj.setValue(newAssessment.incubationOthers, forKey: "incubationOthers")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.noOfEggs ?? 0), forKey: "noOfEggs")
-                        assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
-                        // PE International Changes
-                        assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
-                        assessmentObj.setValue(NSNumber(value:newAssessment.countryID ?? 0), forKey: "countryID")
-                        assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
-                        assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
-                        assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
-                        assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
+            if let results = res, results.count != 0 {
+                for result in results ?? [] {
+                    let assessmentObj: PE_AssessmentInProgress = (result)// as? PE_AssessmentInProgress)!
+                    assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
+                    assessmentObj.setValue(0, forKey: "asyncStatus")
+                    assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
+                    assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.userID ?? 0), forKey: "userID")
+                    assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
+                    assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.evaluatorID ?? 0), forKey: "evaluatorID")
+                    assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.visitID ?? 0), forKey: "visitID")
+                    assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.evaluationID ?? 0), forKey: "evaluationID")
+                    assessmentObj.setValue(newAssessment.approver, forKey: "approver")
+                    assessmentObj.setValue(newAssessment.notes, forKey: "notes")
+                    assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
+                    let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
+                    assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
+                    assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
+                    assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
+                    let camera = newAssessment.camera == 1 ? 1 : 0
+                    assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
+                    assessmentObj.setValue(newAssessment.isFlopSelected, forKey: "isFlopSelected")
+                    assessmentObj.setValue(newAssessment.breedOfBird, forKey: "breedOfBird")
+                    assessmentObj.setValue(newAssessment.breedOfBirdOther, forKey: "breedOfBirdOther")
+                    assessmentObj.setValue(newAssessment.incubation, forKey: "incubation")
+                    assessmentObj.setValue(newAssessment.incubationOthers, forKey: "incubationOthers")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.noOfEggs ?? 0), forKey: "noOfEggs")
+                    assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
+                    // PE International Changes
+                    assessmentObj.setValue(newAssessment.countryName, forKey: "countryName")
+                    assessmentObj.setValue(NSNumber(value:newAssessment.countryID ?? 0), forKey: "countryID")
+                    assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
+                    assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
+                    assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
+                    assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
+                    
+                    assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
+                    assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
+                    assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
+                    assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
+                    assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
+                    do {
+                        try managedContext.save()
                         
-                        assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
-                        assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
-                        assessmentObj.setValue(newAssessment.isHandMix, forKey: "isHandMix")
-                        assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
-                        assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
-                        do {
-                            try managedContext.save()
-                            
-                        } catch {
-                        }
+                    } catch {
                     }
                 }
+                
             }
             do {
                 try managedContext.save()
@@ -8444,7 +8439,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
@@ -8711,7 +8706,7 @@ extension CoreDataHandlerPE {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return peNewAssessment
@@ -8963,7 +8958,7 @@ extension CoreDataHandlerPE {
                 //  return peNewAssessment
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         let siteId  = UserDefaults.standard.integer(forKey: "PE_Selected_Site_Id")
@@ -9227,7 +9222,7 @@ extension CoreDataHandlerPE {
                 return peNewAssessment
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessment
     }
@@ -9355,7 +9350,7 @@ extension CoreDataHandlerPE {
                 }
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }

@@ -49,7 +49,7 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
     override func viewWillAppear(_ animated: Bool) {
         let todaysDate:NSDate = NSDate()
         let dateFormatter:DateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         //        dateFormatter.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         let DateInFormat:String = dateFormatter.string(from: todaysDate as Date)
@@ -312,7 +312,7 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
     
     @objc func doneClick1() {
         let dateFormatter1 = DateFormatter()
-        dateFormatter1.dateFormat="MM/dd/yyyy"
+        dateFormatter1.dateFormat=appDelegateObj.MMddyyyStr
         //        dateFormatter1.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter1.timeZone = TimeZone(secondsFromGMT: 0)
         selectFromLbl.text = dateFormatter1.string(from: datePicker.date)

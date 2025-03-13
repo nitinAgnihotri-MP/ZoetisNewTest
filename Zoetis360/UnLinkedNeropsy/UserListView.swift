@@ -306,7 +306,7 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
        // Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
     }
     func printSyncLblCount() {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     // MARK: 🟠Logout API

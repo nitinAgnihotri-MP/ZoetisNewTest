@@ -72,7 +72,8 @@ class MicrobialCaseInfoCell: UITableViewCell {
         default: break
         }
     }
-
+    
+/*
     func configureMandatoryFiledsValidation(_ isPlusButtonPressed: Bool,
                                                isSubmitButtonPressed: Bool,
                                                currentSessionInProgressModel: RequisitionModel) {
@@ -101,4 +102,5 @@ class MicrobialCaseInfoCell: UITableViewCell {
             self.barcodeSelectionView.layer.borderColor = defaultBorderColor
         }
     }
+    */
 }

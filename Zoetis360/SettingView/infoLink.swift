@@ -23,7 +23,7 @@ class infoLink: UIView {
     
     // MARK: - IBACTIONS
     @IBAction func doneButtAction(_ sender: AnyObject) {
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     
     @IBAction func noButtonAction(_ sender: AnyObject) {

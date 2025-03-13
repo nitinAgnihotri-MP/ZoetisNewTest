@@ -122,7 +122,7 @@ class CoreDataHandlerTurkey: NSObject {
             assert(false, "no date from string")
             return ""
         }
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         let timeStamp = dateFormatter.string(from: date)
         
         return timeStamp
@@ -3817,7 +3817,7 @@ class CoreDataHandlerTurkey: NSObject {
                 
                 let dateFormatter = DateFormatter()
                 
-                dateFormatter.dateFormat = "MM/dd/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                 
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     
@@ -5600,7 +5600,7 @@ class CoreDataHandlerTurkey: NSObject {
                 postingArray  = results as NSArray
                 
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "MM/dd/yyyy"
+                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     return dateFormatter.date(from:one.sessiondate!)! > dateFormatter.date(from: two.sessiondate!)! }
                 postingArray = sortedArray as NSArray

@@ -358,6 +358,7 @@ class FeatherPulpVC: BaseViewController {
     }
     
     private func presentReviewerController(){
+      /*
         let obj = ReviewerViewController(nibName: "ReviewerViewController", bundle: nil)
         obj.definesPresentationContext = true
         obj.providesPresentationContextTransitionStyle = true
@@ -412,6 +413,7 @@ class FeatherPulpVC: BaseViewController {
         self.present(obj, animated: false) {
             print("presented")
         }
+        */
     }
     
     private func updateBoolValueOfReviewer(reviewerData: MicrobialSelectedUnselectedReviewer){
@@ -522,6 +524,7 @@ class FeatherPulpVC: BaseViewController {
     
      //MARK:- Save  Sample Info/ Case Info data into DB when Submitted or Save As Draft
     func saveCaseInfoData(sessionStatus: SessionStatus) {
+        /*
         switch self.requisitionSavedSessionType {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
             CoreDataHandlerMicro().autoIncrementidtable()
@@ -555,6 +558,7 @@ class FeatherPulpVC: BaseViewController {
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
             break
         }
+        */
     }
     
     func checkIfAllFieldsAreFilledInCaseInfo() -> Bool{
@@ -597,8 +601,9 @@ class FeatherPulpVC: BaseViewController {
         }
         return true
     }
-    
+    /*
     func checkIfSampleInfoAreFilled() -> Bool{
+      
         let cell = featherPulpTableView.cellForRow(at: IndexPath(row: 0, section: 2)) as? FeatherpulpSampleInfoTableViewCell
         if let farmeEnterNameTextField = cell?.farmeEnterNameTextField.text{
             if farmeEnterNameTextField.isEmpty {
@@ -659,7 +664,7 @@ class FeatherPulpVC: BaseViewController {
                 Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter number of plates.")
                 return false
             }
-        }
+        } 
         
         let selectedTests = cell?.arrTestOptions.filter{ $0.isCheckBoxSelected!.boolValue }
         if selectedTests?.count == 0{
@@ -667,17 +672,18 @@ class FeatherPulpVC: BaseViewController {
             return false
         }
         return true
+        
     }
-    
+     */
     @IBAction func submitBtnClk(_ sender: UIButton) {
         if !checkIfAllFieldsAreFilledInCaseInfo(){
             return
         }
         
         
-        if !checkIfSampleInfoAreFilled(){
-            return
-        }
+//        if !checkIfSampleInfoAreFilled(){
+//            return
+//        }
                 
         let alert = UIAlertController(title: "Alert", message: "Are you Sure you want to submit the requisition?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
@@ -951,7 +957,7 @@ extension FeatherPulpVC: UITableViewDelegate, UITableViewDataSource, MicrobialSa
             cell.barcodeTxt.text = currentRequisition.barCode
             cell.barcodeTxt.delegate = self
             featherPulpTableView.allowsSelection = false
-            cell.configureMandatoryFiledsValidation(isPlusBtnClicked, isSubmitButtonPressed: self.isSubmitBtnClk, currentSessionInProgressModel: self.currentRequisition)
+          //  cell.configureMandatoryFiledsValidation(isPlusBtnClicked, isSubmitButtonPressed: self.isSubmitBtnClk, currentSessionInProgressModel: self.currentRequisition)
             cell.unableDisableAccordingToSessionType(sessionType: self.requisitionSavedSessionType)
             return cell
             

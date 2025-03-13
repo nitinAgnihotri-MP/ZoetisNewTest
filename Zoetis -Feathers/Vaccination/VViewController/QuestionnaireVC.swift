@@ -416,7 +416,7 @@ class QuestionnaireVC: BaseViewController {
     }
     
     @objc  func nextBtnAction(_ sender: UIButton){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     @objc  func shippingBtnAction(_ sender: UIButton){
@@ -608,7 +608,7 @@ class QuestionnaireVC: BaseViewController {
     }
     
     func addACtions(){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     func  configureSafetyAwarenessVw(){
@@ -701,7 +701,7 @@ class QuestionnaireVC: BaseViewController {
     
     
     func setValues(){
-        print("Test Message",appDelegate.testFuntion())
+        print("Test Message",appDelegateObj.testFuntion())
     }
     
     

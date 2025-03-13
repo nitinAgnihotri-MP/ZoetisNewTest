@@ -93,7 +93,7 @@ class PEDataService{
     }
     
     func deleteDeletedAssessments(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
-        let userId = loginuserId//1667
+        let userId = loginuserId
         var url = ZoetisWebServices.EndPoint.deleteDrafts.latestUrl
         let deletedAssessments = PEDeletedDraftsDAO.sharedInstance.fetchDeletedAssessments(userId:  loginuserId)
         PEDeletedDraftsDAO.sharedInstance.deleteExisitingData("PE_DeletedAssessments", predicate: NSPredicate(format:"userId = %@", userId))

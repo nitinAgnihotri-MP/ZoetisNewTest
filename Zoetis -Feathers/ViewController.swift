@@ -155,7 +155,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     // MARK:  /*********** Fetch Gigya Country List **************/
     private func fetchGigyaCountryList(){
         Constants.baseUrl = Constants.Api.fhBaseUrl
-        self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...")
+        self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
         if ConnectionManager.shared.hasConnectivity() {
             ZoetisWebServices.shared.getGigyaCountryList(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
@@ -834,7 +834,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     
     
     func failWithInternetConnection(){
-        appDelegate.testFuntion()
+        appDelegateObj.testFuntion()
     }
     // MARK: ******* Navigate to Bird Selection Screen **********/
     func didFinishApi(){
@@ -1854,7 +1854,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             assert(false, "no date from string")
             return ""
         }
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         let timeStamp = dateFormatter.string(from: date)
         
         return timeStamp
