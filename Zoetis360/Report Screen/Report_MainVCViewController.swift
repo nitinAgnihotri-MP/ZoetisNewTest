@@ -58,7 +58,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         userNameLabel.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
         AllValidSessions.sharedInstance.allValidSession.removeAllObjects()
         UserDefaults.standard.set(AllValidSessions.sharedInstance.meanValues, forKey: "meanArray")
-        lblComplex.text = AllValidSessions.sharedInstance.complexName.length > 0 ? AllValidSessions.sharedInstance.complexName as String : NSLocalizedString("- Select -", comment: "")
+        lblComplex.text = AllValidSessions.sharedInstance.complexName.length > 0 ? AllValidSessions.sharedInstance.complexName as String : NSLocalizedString(appDelegateObj.selectStr, comment: "")
         btnComplex.isUserInteractionEnabled = !(AllValidSessions.sharedInstance.complexName.length > 0)
         lblComplex.isEnabled = !(AllValidSessions.sharedInstance.complexName.length > 0)
         lblComplex.backgroundColor = btnComplex.isUserInteractionEnabled ? UIColor.clear : UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.3)
@@ -207,7 +207,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         if self.preparedArray.count > 0 {
             self.preparedArray.removeAllObjects()
         }
-        if lblComplex.text == NSLocalizedString("- Select -", comment: "") {
+        if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
             return
         }
@@ -234,7 +234,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         
         UserDefaults.standard.set(true, forKey: "isCocci")
         
-        if lblComplex.text == NSLocalizedString("- Select -", comment: "") {
+        if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
             return
@@ -250,7 +250,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
     @IBAction func btn_Immune_Action(_ sender: AnyObject) {
         UserDefaults.standard.set(false, forKey: "isBackPress")
         UserDefaults.standard.set(false, forKey: "isCocci")
-        if lblComplex.text == NSLocalizedString("- Select -", comment: "") {
+        if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
             return
@@ -280,7 +280,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
             self.preparedArray.removeAllObjects()
             self.entries_Array.removeAllObjects()
         }
-        if lblComplex.text == NSLocalizedString("- Select -", comment: "") {
+        if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
             return
@@ -313,7 +313,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         
         UserDefaults.standard.set(false, forKey: "isBackPress")
         UserDefaults.standard.set(false, forKey: "isCocci")
-        if lblComplex.text == NSLocalizedString("- Select -", comment: "") {
+        if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr: NSLocalizedString("Please select a complex first.", comment: ""))
             return
@@ -325,7 +325,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         UserDefaults.standard.set(false, forKey: "isBackPress")
         UserDefaults.standard.set(false, forKey: "isCocci")
         
-        if lblComplex.text == NSLocalizedString("- Select -", comment: "") {
+        if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
             return
@@ -365,7 +365,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         self.preparedArray.add(chartDataSet)
     }
     @nonobjc func didFinishWithParsingWithFarmData(_ finishedArray : [Float]){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     func setChartData(dataPoints: [String], values: [Float]) -> BarChartDataSet? {
         

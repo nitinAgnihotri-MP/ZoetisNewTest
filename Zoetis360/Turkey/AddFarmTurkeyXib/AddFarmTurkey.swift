@@ -201,7 +201,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         AgeOp = ["1", "2", "3", "4", "5", "6", "7","8",  "9", "10","11", "12", "13", "14", "15", "16", "17","18",  "19", "20","21", "22", "23", "24", "25", "26", "27","28",  "29", "30","31", "32", "33", "34", "35", "36", "37","38",  "39", "40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80"]
         
         HouseNo = ["1", "2", "3", "4", "5", "6", "7","8",  "9", "10","11", "12", "13", "14", "15", "16", "17","18",  "19", "20","21", "22", "23", "24", "25", "26", "27","28",  "29", "30","31", "32", "33", "34", "35", "36", "37","38",  "39", "40","41","42","43","44","45","46","47","48","49","50"]
-        feedProgramDisplayLabel?.text = NSLocalizedString("- Select -", comment: "")
+        feedProgramDisplayLabel?.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         count = 0
         
         self.spacingTextField()
@@ -702,13 +702,13 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                 })
             }
         }
-        else if (trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString("- Select -", comment: "") ||  ageLbl.text == "" ||  houseNoTxtFld.text == "")  {
+        else if (trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  ageLbl.text == "" ||  houseNoTxtFld.text == "")  {
             
             Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
             feedProgramBtnOtlet.layer.borderColor = UIColor.red.cgColor
             ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
-            if feedProgramDisplayLabel.text != NSLocalizedString("- Select -", comment: "")  {
+            if feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
                 feedProgramBtnOtlet.layer.borderColor = UIColor.black.cgColor
             }
             if farmNameTextField.text == "" {

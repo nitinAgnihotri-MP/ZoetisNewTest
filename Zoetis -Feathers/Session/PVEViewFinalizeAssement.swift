@@ -694,7 +694,7 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
     }
     
     @IBAction func vaccinatorsPlusBtnAction(_ sender: Any) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

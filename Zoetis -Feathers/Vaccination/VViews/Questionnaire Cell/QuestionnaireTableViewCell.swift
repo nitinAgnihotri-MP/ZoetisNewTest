@@ -69,7 +69,7 @@ class QuestionnaireTableViewCell: UITableViewCell, UITextFieldDelegate {
     // MARK: - METHODS
     
     func showCommectVw(){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     func hideCommentVw(){
@@ -106,7 +106,7 @@ class QuestionnaireTableViewCell: UITableViewCell, UITextFieldDelegate {
             let image = UIImage(named: "PECommentSelected.png")
             commentBtn.setImage(image, for: .normal)
         } else{
-            let image = UIImage(named: "PEcomment.png")
+            let image = UIImage(named: appDelegateObj.peCommentStr)
             commentBtn.setImage(image, for: .normal)
         }
     }

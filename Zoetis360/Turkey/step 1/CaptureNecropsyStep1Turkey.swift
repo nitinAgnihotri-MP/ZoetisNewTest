@@ -176,7 +176,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             customerLbl.isHidden = true
             customerLbl.isHidden = true
             feedProgramDisplayLabel.text = ""
-            abfLbl.text = "- Select -"
+            abfLbl.text = appDelegateObj.selectStr
             feedProgramTextLbl.text = "Feed Program"
             
         }  else {
@@ -194,9 +194,9 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             }
             feedProgramDropDwnIcon.isHidden = false
             customerLbl.isHidden = false
-            feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
-            abfLbl.text = NSLocalizedString("- Select -", comment: "")
-            abfLbl.text = "- Select -"
+            feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+            abfLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+            abfLbl.text = appDelegateObj.selectStr
             feedProgramTextLbl.text = "Feed Program *"
             
         }
@@ -262,8 +262,8 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         valueStore = false
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
-            feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
-            abfLbl.text = NSLocalizedString("- Select -", comment: "")
+            feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+            abfLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
         if lngId == 5 {
             feedProgramTextLbl.text = "Programa de alimentación"
@@ -276,7 +276,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         }
         
         else {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         userNameLbl.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
@@ -591,14 +591,14 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 }
             }
             
-            else  if (feedProgramDisplayLabel.text == NSLocalizedString("- Select -", comment: "") ||  ageLbl.text == "" || farmNameTextfield.text == "" )
+            else  if (feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  ageLbl.text == "" || farmNameTextfield.text == "" )
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
                 
                 feedProgramBtn.layer.borderColor = UIColor.red.cgColor
                 ageUperBtnOutlet.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
                 
-                if feedProgramDisplayLabel.text != NSLocalizedString("- Select -", comment: "")  {
+                if feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
                     feedProgramBtn.layer.borderColor = UIColor.black.cgColor
                 }
                 if farmNameTextfield.text == "" {
@@ -752,7 +752,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         ageLbl.text = ""
         farmNameTextfield.text = ""
         farmWeightTextField.text = ""
-        abfLbl.text = "- Select -"
+        abfLbl.text = appDelegateObj.selectStr
         sexLightHenOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
         sexHeavyHenOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
         sexTomsOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
@@ -761,11 +761,11 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         breedHybridOutlet.setImage(UIImage(named: "Radio_Btn01")!, for: UIControl.State())
         if UserDefaults.standard.bool(forKey:"Unlinked") == true{
             feedProgramDisplayLabel.text = ""
-            abfLbl.text = "- Select -"
+            abfLbl.text = appDelegateObj.selectStr
         }
         else{
-            self.feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
-            self.abfLbl.text = NSLocalizedString("- Select -", comment: "")
+            self.feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+            self.abfLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
         if birdIndex == 0 {
             
@@ -914,7 +914,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 
             case 11 :
                 
-                // let aSet = NSCharacterSet(charactersIn: "0123456789/-&*.{print("Test message")}[],=").inverted
+                // let aSet = NSCharacterSet(charactersIn: "0123456789/-&*.{print(appDelegateObj.testFuntion())}[],=").inverted
                 let aSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
@@ -1100,10 +1100,10 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
     @IBAction func nextBtnAction(_ sender: UIButton) {
         
         if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
-            feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
+            feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
         
-        if  farmWeightTextField.text != "" || farmNameTextfield.text != "" || feedProgramDisplayLabel.text != NSLocalizedString("- Select -", comment: "") || ageLbl.text != "" {
+        if  farmWeightTextField.text != "" || farmNameTextfield.text != "" || feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") || ageLbl.text != "" {
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
             
         }  else if captureNecropsy.count == 0 {
@@ -1327,7 +1327,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
                 
                 Cell.abfLbl.text = "A"
                 
-            } else if abfLbl == "- Select -" {
+            } else if abfLbl == appDelegateObj.selectStr {
                 
                 Cell.abfLbl.text = ""
             }
@@ -1794,7 +1794,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
                 {
                     CoreDataHandler().updatedPostigSessionwithIsFarmSyncPostingId(self.postingId as NSNumber, isFarmSync: false)
                     feedButton.setTitle(str.feddProgramNam!, for: .normal)
-                    feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
+                    feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     feeId = Int(truncating: str.feedId!)
                     strFeddUpdate = str.feddProgramNam ?? ""
                 }

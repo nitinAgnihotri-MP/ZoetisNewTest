@@ -98,7 +98,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     var fileDetailArray = NSArray()
     // MARK: - VIEW LIFE CYCLE
     let noIdFound = "No id found"
-    let yyymmdd = "yyyy-MM-dd"
+    let yyymmdd = appDelegateObj.yyyyMMddStr
     let userIdStr = " userID == %d AND serverAssessmentId == %@"
     let noteStr = "*Note - Please don't minimize App while syncing."
     override func viewDidLoad() {
@@ -140,8 +140,8 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         setUI()
         let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID == 3{
-            extendedLbl.text = "Extended Microbial"
-            extendedLblDash.text = "Extended Microbial"
+            extendedLbl.text = appDelegateObj.extendedMicrobialStr
+            extendedLblDash.text = appDelegateObj.extendedMicrobialStr
         }else{
             extendedLbl.text = "Country"
             extendedLblDash.text = "Country"
@@ -1322,7 +1322,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                     _ in
                     let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
                     for id in self.deletedAssessmentIdArray{
-                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: userIdStr, userID, id))
+                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self.userIdStr, userID, id))
                     }
                     self.peHeaderViewController.titleofSync = "0"
                     self.peHeaderViewController.viewDidLoad()
@@ -1431,7 +1431,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     func callRequest4(paramForImages:JSONDictionary){
         self.convertDictToJson(dict: paramForImages, apiName: "Test")
         callRequest4Int = callRequest4Int + 1
-        Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + noteStr)
+        Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
         ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages, completion: { [weak self] (json, error) in
             self?.callRequest4Int = self!   .callRequest4Int - 1
             
@@ -1441,7 +1441,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 if syncArr ?? 0 > 0{
                     self?.syncBtnTapped(showHud: false)
                 } else {
-                    self?.showtoast(message: "Data synced successfully.")
+                    self?.showtoast(message: appDelegateObj.dataSynedSuccess)
                     NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                 }
                 
@@ -1485,10 +1485,10 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                             self.isSync = false
                             self.dismissGlobalHUD(self.view)
                             self.syncBtnTapped(showHud: false)
-                            Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + noteStr)
+                            Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
                         } else {
                             self.dismissGlobalHUD(self.view)
-                            Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + noteStr)
+                            Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
                             for i in self.totalImageToSync{
                                 CoreDataHandlerPE().setImageStatusTrue(idArray: i)
                             }
@@ -2462,7 +2462,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 "Name": peCertificateData.name,
                 "CertificationDate": resultString,
                 "AlternateName": "string",
-                "CertificationDate2": "2020-05-23T06:36:50.915Z",
+                "CertificationDate2": appDelegateObj.date2020_05_23,
                 "ModuleAssessmentCatId":  dictArray.catID,
                 "userId": dictArray.userID,
                 "DeviceId": deviceIDFORSERVER,
@@ -2491,7 +2491,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 "Name": peCertificateData.name,
                 "CertificationDate": resultString,
                 "AlternateName": "string",
-                "CertificationDate2": "2020-05-23T06:36:50.915Z",
+                "CertificationDate2": appDelegateObj.date2020_05_23,
                 "ModuleAssessmentCatId":  dictArray.catID,
                 "userId": dictArray.userID,
                 "DeviceId": deviceIDFORSERVER,
@@ -2616,7 +2616,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             "Name": "",
             "CertificationDate": "",
             "AlternateName": "string",
-            "CertificationDate2": "2020-05-23T06:36:50.915Z",
+            "CertificationDate2": appDelegateObj.date2020_05_23,
             "ModuleAssessmentCatId":  dictArray.catID,
             "userId": dictArray.userID,
             "DeviceId": deviceIDFORSERVER,
@@ -2797,7 +2797,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
             
             let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
-            let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
+            let datastr = date?.toString(withFormat: appDelegateObj.MMddYYYYHHmmss)
         }
         
         let  sig_Datetext = dict.sig_Date
@@ -3223,7 +3223,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         var extendedData : [[String: Any]]?
         let jsonEncoder = JSONEncoder()
         let jsonDataArr = try? jsonEncoder.encode(arr)
-        if jsonDataArr != nil{
+        if jsonDataArr != nil {
             extendedData = try! JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
         }
         var Complete = 1
@@ -3504,7 +3504,7 @@ func convertDateFormat(inputDate: String) -> String {
 ////                convertDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
 ////                return convertDateFormatter.string(from: date)
 ////            } else {
-////                print("Invalid date format")
+////                print(appDelegateObj.invalidDateStr)
 ////            }
 ////            convertDateFormatter.dateFormat = yyymmdd
 ////
@@ -3550,9 +3550,9 @@ func convertDateFormat(inputDate: String) -> String {
 
 extension String {
     
-    func toDate(withFormat format: String = "MM/dd/YYYY HH:mm:ss Z")-> Date?{
+    func toDate(withFormat format: String = appDelegateObj.MMddYYYYHHmmss)-> Date?{
         let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tehran")
+        dateFormatter.timeZone = TimeZone(identifier: appDelegateObj.asiaTehran)
         dateFormatter.locale = Locale(identifier: "fa-IR")
       //  dateFormatter.calendar = Calendar(identifier: .gregorian)
         dateFormatter.dateFormat = format
@@ -3560,9 +3560,9 @@ extension String {
         return date
     }
     
-    func toDateWithFormat(withFormat format: String = "MM/dd/YYYY HH:mm:ss Z")-> Date?{
+    func toDateWithFormat(withFormat format: String = appDelegateObj.MMddYYYYHHmmss)-> Date?{
         let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tehran")
+        dateFormatter.timeZone = TimeZone(identifier: appDelegateObj.asiaTehran)
         dateFormatter.locale = Locale(identifier: "fa-IR")
       //  dateFormatter.calendar = Calendar(identifier: .gregorian)
         dateFormatter.dateFormat = format
@@ -3580,10 +3580,10 @@ extension Date {
         return Int64(self.timeIntervalSince1970 * 1000)
     }
     
-    func toString(withFormat format: String = "MM/dd/YYYY HH:mm:ss Z") -> String {
+    func toString(withFormat format: String = appDelegateObj.MMddYYYYHHmmss) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "fa-IR")
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tehran")
+        dateFormatter.timeZone = TimeZone(identifier: appDelegateObj.asiaTehran)
         dateFormatter.calendar = Calendar(identifier: .persian)
         dateFormatter.dateFormat = format
         let str = dateFormatter.string(from: self)
@@ -4628,7 +4628,7 @@ extension PEDashboardViewController{
     
     // MARK: - Get Vaccine Service Responce
     func getVaccinationServiceResponse(showHud:Bool){
-        self.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + noteStr)
+        self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
         let id = UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound
         let url = ZoetisWebServices.EndPoint.getPEScheduledCertifications.latestUrl + "\(id)?customerId=null&siteId=null"
         
@@ -4667,14 +4667,14 @@ extension PEDashboardViewController{
                             let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
                             let index = peAssessmentArray.index(of: obj) ?? 0
                             peAssessmentArray.remove(at: index)
-                            CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: userIdStr, userID, obj.serverAssessmentId ?? ""))
+                            CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self!.userIdStr, userID, obj.serverAssessmentId ?? ""))
                         }
                     }else{
                         self?.deletedAssessmentIdArray.append(obj.serverAssessmentId!)
                         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
                         let index = peAssessmentArray.index(of: obj) ?? 0
                         peAssessmentArray.remove(at: index)
-                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: userIdStr, userID, obj.serverAssessmentId ?? ""))
+                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self!.userIdStr, userID, obj.serverAssessmentId ?? ""))
                     }
                 }
             }
@@ -4689,7 +4689,7 @@ extension PEDashboardViewController{
                         }else{
                             let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
                             for id in self?.deletedAssessmentIdArray ?? []{
-                                CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: userIdStr, userID, id))
+                                CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self!.userIdStr, userID, id))
                             }
                             self?.peHeaderViewController.titleofSync = "0"
                             self?.peHeaderViewController.viewDidLoad()

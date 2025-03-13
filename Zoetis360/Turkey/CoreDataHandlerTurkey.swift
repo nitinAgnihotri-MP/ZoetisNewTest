@@ -208,7 +208,7 @@ class CoreDataHandlerTurkey: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -234,7 +234,7 @@ class CoreDataHandlerTurkey: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -260,7 +260,7 @@ class CoreDataHandlerTurkey: NSObject {
             
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -297,7 +297,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArrayVetArray
@@ -1387,7 +1387,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             hatcheryVaccinationObject.append(person)
         }
@@ -1863,7 +1863,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             hatcheryVaccinationObject.append(person)
@@ -1899,7 +1899,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return FieldVaccindataArray
@@ -1935,7 +1935,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return FieldVaccindataArray
@@ -1974,7 +1974,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return FieldVaccindataArray
@@ -2016,7 +2016,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -2071,7 +2071,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             settingsSkeletaObject.append(person)
@@ -2136,12 +2136,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataSkeletaArray
@@ -2172,7 +2172,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataSkeletaArray
@@ -2235,7 +2235,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             settingsCocoii.append(person)
@@ -2310,7 +2310,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataCociiaArray
@@ -2342,7 +2342,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataCociiaArray
@@ -2405,7 +2405,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             settingsGITract.append(person)
@@ -2473,7 +2473,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataGiTractArray
@@ -2503,7 +2503,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataGiTractArray
@@ -2564,7 +2564,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             settingsRespiratory.append(person)
@@ -2626,7 +2626,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataRespiratoryArray
@@ -2653,12 +2653,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataRespiratoryArray
@@ -2720,7 +2720,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             settingsImmune.append(person)
@@ -2799,7 +2799,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataImmuneArray
@@ -2835,7 +2835,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataImmuneArray
@@ -2931,7 +2931,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             routeData.append(person)
@@ -2963,7 +2963,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return routeArray
@@ -2994,7 +2994,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return routeArray
@@ -3037,7 +3037,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             CustData.append(person)
@@ -3069,7 +3069,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return custArray
@@ -3098,7 +3098,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return custArray
@@ -3126,7 +3126,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return custArray
@@ -3164,7 +3164,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             SalesRepData.append(person)
@@ -3196,7 +3196,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return SalesRepDataArray
@@ -3239,7 +3239,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             VetData.append(person)
@@ -3273,7 +3273,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return VeterianTypeArray
@@ -3305,7 +3305,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         
@@ -3355,7 +3355,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             CocoiiProgram.append(person)
@@ -3383,12 +3383,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return CocoiiProgramArray
@@ -3415,12 +3415,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return CocoiiProgramArray
@@ -3464,7 +3464,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             BirdSize.append(person)
@@ -3496,7 +3496,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return BirdSizeArray
@@ -3537,7 +3537,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             SessionType.append(person)
@@ -3563,12 +3563,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return SessionTypeArray
@@ -3592,12 +3592,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return SessionTypeArray
@@ -3659,7 +3659,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return dataArray
@@ -3703,7 +3703,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             BreedType.append(person)
@@ -3737,7 +3737,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return BreedTypeArray
@@ -3786,7 +3786,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             complexNsObJECT.append(person)
@@ -3835,7 +3835,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArray
@@ -3870,7 +3870,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArray
@@ -3895,12 +3895,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return complexArray
@@ -3954,7 +3954,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return complexArray
@@ -4006,7 +4006,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             loginType.append(person)
@@ -4036,7 +4036,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return loginArray
@@ -4066,7 +4066,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return loginArray
@@ -4097,7 +4097,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         CustmerRep.append(person)
@@ -4127,7 +4127,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return custRep
@@ -4161,7 +4161,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return custRep
@@ -4188,7 +4188,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4210,7 +4210,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4234,7 +4234,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4256,7 +4256,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4281,7 +4281,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4306,7 +4306,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4327,7 +4327,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4349,7 +4349,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4371,7 +4371,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4393,7 +4393,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4414,7 +4414,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: Delete Feed Program Data in Turkey for Coccidiosis
@@ -4435,7 +4435,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4459,7 +4459,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4481,7 +4481,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -4502,7 +4502,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: Delete Necropsy Data in Turkey
@@ -4524,7 +4524,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4558,7 +4558,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4577,7 +4577,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4603,12 +4603,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return auto!
     }
@@ -4667,7 +4667,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         postingSession.append(contact1)
@@ -4737,7 +4737,7 @@ class CoreDataHandlerTurkey: NSObject {
       }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4780,7 +4780,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -4866,7 +4866,7 @@ class CoreDataHandlerTurkey: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         postingSession.append(contact1)
         
@@ -4950,7 +4950,7 @@ class CoreDataHandlerTurkey: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         postingSession.append(contact1)
@@ -4983,7 +4983,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -5012,7 +5012,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -5077,7 +5077,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: Update finalized data in turkey  with Posting ID
@@ -5106,7 +5106,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: Update Device token for Posting ID in Turkey
@@ -5135,7 +5135,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: Update Posting Session with Posting ID and IsFarmSync
@@ -5163,7 +5163,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: Search Token for Posting ID TUrkey
@@ -5463,7 +5463,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArray
@@ -5504,7 +5504,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArray
@@ -5543,7 +5543,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArray
@@ -5575,7 +5575,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArray
@@ -5611,7 +5611,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArray
@@ -5635,7 +5635,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArray
@@ -5662,11 +5662,11 @@ class CoreDataHandlerTurkey: NSObject {
                 let sortedResults = postingArray.sortedArray(using: [descriptor])
                 postingArray = sortedResults as NSArray
               }
-            else {print("Test message")}
+            else {print(appDelegateObj.testFuntion())}
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return postingArray
     }
@@ -5694,7 +5694,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return postingArray
     }
@@ -5810,7 +5810,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         else
@@ -5840,7 +5840,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             cocciCoccidiosControl.append(person)
         }
@@ -5876,7 +5876,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         cocciCoccidiosControl.append(person)
@@ -5905,7 +5905,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         cocciCoccidiosControl.append(person)
@@ -5928,12 +5928,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return cocciControlArray
     }
@@ -5953,12 +5953,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return cocciControlArray
@@ -5982,12 +5982,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return cocciControlArray
     }
@@ -6009,7 +6009,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
@@ -6050,7 +6050,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -6087,7 +6087,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -6123,7 +6123,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -6154,7 +6154,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -6174,12 +6174,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return AntiboticArray
    }
@@ -6201,12 +6201,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return AntiboticArray
      
@@ -6247,7 +6247,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -6282,7 +6282,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -6303,12 +6303,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return AlternativeArray
@@ -6331,11 +6331,11 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
-        {print("Test message")}
+        {print(appDelegateObj.testFuntion())}
         return AlternativeArray
         
     }
@@ -6408,7 +6408,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -6428,12 +6428,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return MyCoxtinBindersArray
     }
@@ -6456,12 +6456,12 @@ class CoreDataHandlerTurkey: NSObject {
              }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return MyCoxtinBindersArray
@@ -6570,7 +6570,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         else
@@ -6596,7 +6596,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             cocciAntibotic.append(person)
         }
@@ -6630,7 +6630,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         cocciAntibotic.append(person)
@@ -6658,7 +6658,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         cocciAntibotic.append(person)
     }
@@ -6681,12 +6681,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return AntiboticArray
         
@@ -6708,12 +6708,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return AntiboticArray
     }
@@ -6732,12 +6732,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         } 
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return AntiboticArray
     }
@@ -6865,7 +6865,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             cocciAlternative.append(person)
         }
@@ -6887,7 +6887,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         cocoivacc.append(person)
     }
@@ -6908,12 +6908,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return dataArray
     }
@@ -6946,7 +6946,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         cocciAlternative.append(person)
@@ -6973,7 +6973,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         cocciAlternative.append(person)
     }
@@ -7000,7 +7000,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return AlternativeArray
@@ -7039,7 +7039,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return AlternativeArray
@@ -7078,7 +7078,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return AlternativeArray
@@ -7231,7 +7231,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             cocciMyCoxtinBinders.append(person)
@@ -7266,7 +7266,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         cocciMyCoxtinBinders.append(person)
@@ -7296,7 +7296,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         cocciMyCoxtinBinders.append(person)
@@ -7331,12 +7331,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return MyCoxtinBindersArray
@@ -7367,12 +7367,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return MyCoxtinBindersArray
@@ -7400,7 +7400,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         FeddProgram.append(person)
@@ -7425,7 +7425,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         FeddProgram.append(person)
@@ -7486,7 +7486,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
             
             FeddProgram.append(person)
@@ -7568,7 +7568,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return feedprogramArray
@@ -7611,7 +7611,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return feedprogramArray
@@ -7762,7 +7762,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -7803,7 +7803,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -7844,7 +7844,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -7884,7 +7884,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -7924,7 +7924,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -7964,7 +7964,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -8037,7 +8037,7 @@ class CoreDataHandlerTurkey: NSObject {
                 
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsySArray
@@ -8081,7 +8081,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -8114,7 +8114,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -8158,7 +8158,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -8199,7 +8199,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -8240,7 +8240,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -8414,7 +8414,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -8633,7 +8633,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -8672,7 +8672,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
@@ -8732,7 +8732,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return necropsyNIdArray
@@ -8784,7 +8784,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         
@@ -8832,7 +8832,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         
@@ -8882,7 +8882,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return false
     }
@@ -8965,7 +8965,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return captureNecSkeltetonArray
@@ -9000,7 +9000,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return captureNecSkeltetonArray
@@ -9047,7 +9047,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return captureNecSkeltetonArray
@@ -9090,7 +9090,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return captureNecSkeltetonArray
@@ -9131,7 +9131,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return captureNecSkeltetonArray
@@ -9222,7 +9222,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return captureNecSkeltetonArray
@@ -9262,7 +9262,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return captureNecSkeltetonArray
@@ -9431,7 +9431,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return d
         
@@ -9459,7 +9459,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -9521,7 +9521,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         captureSkeletaObject.append(person)
@@ -9560,7 +9560,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         captureSkeletaObject.append(person)
@@ -9598,7 +9598,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         captureSkeletaObject.append(person)
@@ -9637,7 +9637,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         captureSkeletaObject.append(person)
@@ -9665,7 +9665,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -9696,7 +9696,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     /********* Update BodyWeight in immune ************/
@@ -9730,7 +9730,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -9763,7 +9763,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -10063,7 +10063,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -10155,7 +10155,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -10232,7 +10232,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -10256,7 +10256,7 @@ class CoreDataHandlerTurkey: NSObject {
                 return sortedResults as NSArray
             }
             else
-            {print("Test message")}
+            {print(appDelegateObj.testFuntion())}
         }
         catch
         {
@@ -10315,12 +10315,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return fecthPhotoArray
@@ -10436,7 +10436,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -10530,12 +10530,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return fetchBirdNotesArray
@@ -10663,7 +10663,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -10682,7 +10682,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -10710,7 +10710,7 @@ class CoreDataHandlerTurkey: NSObject {
                 captureNecSkeltetonArray = results as NSArray
             }
             else
-            {print("Test message")}
+            {print(appDelegateObj.testFuntion())}
         }
         catch
         {
@@ -10753,7 +10753,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -10785,7 +10785,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return captureNecSkeltetonArray
@@ -11003,7 +11003,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         FarmsTypeObject.append(person)
@@ -11031,12 +11031,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return farmsArrReturn
     }
@@ -11065,12 +11065,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return farmsArrReturn
     }
@@ -11173,7 +11173,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -11210,7 +11210,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -11246,7 +11246,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -11282,7 +11282,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -11347,7 +11347,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         return nameArray
@@ -11378,7 +11378,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         return nameArray
@@ -11406,7 +11406,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         return nameArray
@@ -11434,7 +11434,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         return nameArray
@@ -11465,7 +11465,7 @@ class CoreDataHandlerTurkey: NSObject {
             }
             catch
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         return nameArray
@@ -11523,7 +11523,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return postingArray
@@ -11548,7 +11548,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -11571,7 +11571,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -11594,7 +11594,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -11618,7 +11618,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -11646,12 +11646,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return captureNecSkeltetonArray
@@ -11679,12 +11679,12 @@ class CoreDataHandlerTurkey: NSObject {
             }
             else
             {
-                print("Test Message")
+                print(appDelegateObj.testFuntion())
             }
         }
         catch
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         return PostingSessionTurkey()
     }
@@ -11705,7 +11705,7 @@ class CoreDataHandlerTurkey: NSObject {
                 result = objects ?? []
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         
@@ -11724,7 +11724,7 @@ class CoreDataHandlerTurkey: NSObject {
         do {
             try managedContext.save()
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -11743,7 +11743,7 @@ class CoreDataHandlerTurkey: NSObject {
                 try managedContext.save()
             }
         } catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     

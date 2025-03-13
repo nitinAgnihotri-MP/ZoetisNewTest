@@ -228,7 +228,7 @@ class PEViewStartNewAssessment: BaseViewController {
             selectedTSR.text = peNewAssessment.selectedTSR
         }
         else {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         hideManufacturerOthers()
         hideEggsOthers()
@@ -620,7 +620,7 @@ class PEViewStartNewAssessment: BaseViewController {
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     // MARK: - Hide Breed Other
     func hideBreedOthers(){
@@ -675,7 +675,7 @@ class PEViewStartNewAssessment: BaseViewController {
     }
     // MARK: - Draft Button Action
     @IBAction func action_MoveToDraft(_ sender: Any) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK: - Next Button Action
@@ -691,7 +691,7 @@ class PEViewStartNewAssessment: BaseViewController {
     }
     
     func saveAssessmentInProgressDataInDB()  {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK: - Mandatory Field Validation
@@ -702,7 +702,7 @@ class PEViewStartNewAssessment: BaseViewController {
         let evaluationName = self.peNewAssessment.evaluationName ?? ""
         let evaluator = self.peNewAssessment.evaluatorName ?? ""
         let reasonForVisit = self.peNewAssessment.visitName ?? ""
-        if (date.count > 0 ?? 0){print("Test message")} else  {
+        if (date.count > 0 ?? 0){print(appDelegateObj.testFuntion())} else  {
             let superviewCurrent =  evaluationDateButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -712,7 +712,7 @@ class PEViewStartNewAssessment: BaseViewController {
                     }
                 }}
         }
-        if (customer.count > 0 ?? 0 ){print("Test message")} else  {
+        if (customer.count > 0 ?? 0 ){print(appDelegateObj.testFuntion())} else  {
             let superviewCurrent =  customerButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -723,7 +723,7 @@ class PEViewStartNewAssessment: BaseViewController {
                 }
             }
         }
-        if (site.count > 0 ?? 0){print("Test message")} else  {
+        if (site.count > 0 ?? 0){print(appDelegateObj.testFuntion())} else  {
             let superviewCurrent =  siteButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -733,7 +733,7 @@ class PEViewStartNewAssessment: BaseViewController {
                     }
                 }}
         }
-        if (evaluationName.count ?? 0 > 0){print("Test message")} else  {
+        if (evaluationName.count ?? 0 > 0){print(appDelegateObj.testFuntion())} else  {
             let superviewCurrent =  evaluationTypeButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -743,7 +743,7 @@ class PEViewStartNewAssessment: BaseViewController {
                     }
                 }}
         }
-        if (evaluator.count ?? 0  > 0){print("Test message")} else  {
+        if (evaluator.count ?? 0  > 0){print(appDelegateObj.testFuntion())} else  {
             let superviewCurrent =  evaluatorButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -753,7 +753,7 @@ class PEViewStartNewAssessment: BaseViewController {
                     }
                 }}
         }
-        if (reasonForVisit.count ?? 0 > 0){print("Test message")} else  {
+        if (reasonForVisit.count ?? 0 > 0){print(appDelegateObj.testFuntion())} else  {
             let superviewCurrent =  visitButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -851,7 +851,7 @@ class PEViewStartNewAssessment: BaseViewController {
             }
             self.dropHiddenAndShow()
         } else{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: - Evaluator Button Clicked
@@ -1108,7 +1108,7 @@ extension PEViewStartNewAssessment: DatePickerPopupViewControllerProtocol{
     }
     
     func doneButtonTapped(string:String){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
 }
 
@@ -1116,7 +1116,7 @@ extension PEViewStartNewAssessment: DatePickerPopupViewControllerProtocol{
 extension PEViewStartNewAssessment{
     
     func getEvaluationFromBackend(){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK: - Ok Button tabbed
@@ -1172,7 +1172,7 @@ extension PEViewStartNewAssessment{
             self.navigationController?.pushViewController(vc, animated: true)
             return
         } else {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: - Filter Category Count
@@ -1231,7 +1231,7 @@ extension PEViewStartNewAssessment {
     }
     
     private func handleAssessmentCategoriesResponse(_ json: JSON) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
 }
@@ -1272,7 +1272,7 @@ extension PEViewStartNewAssessment{
         let convertDateFormatter = DateFormatter()
 //        convertDateFormatter.calendar = Calendar(identifier: .gregorian)
 //        convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        convertDateFormatter.dateFormat = "yyyy-MM-dd"
+        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
         if oldDate != nil{
             return convertDateFormatter.string(from: oldDate!)
         }
@@ -1286,7 +1286,7 @@ extension PEViewStartNewAssessment{
         olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = "yyyy-MM-dd"
+        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
         
         if oldDate != nil{
             return convertDateFormatter.string(from: oldDate!)
@@ -1448,9 +1448,9 @@ extension PEViewStartNewAssessment{
         let RepresentativeName = ""
         let Notes = dict.notes
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/YYYY HH:mm:ss Z"
+        dateFormatter.dateFormat = appDelegateObj.MMddYYYYHHmmss
         let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
-        let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
+        let datastr = date?.toString(withFormat: appDelegateObj.MMddYYYYHHmmss)
         let  sig_Datetext = dict.sig_Date
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
@@ -1473,12 +1473,12 @@ extension PEViewStartNewAssessment{
         var base64Str = ""
         var base64Str2 = ""
         if sigNumber == 0 {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         } else {
             base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig) ?? 0)
         }
         if sigNumber2 == 0 {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         } else {
             base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
         }
@@ -1516,10 +1516,10 @@ extension PEViewStartNewAssessment{
         
         var json : JSONDictionary = JSONDictionary()
         if dateSig != ""{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }else{
             let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = "yyyy-MM-dd"
+            convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
             convertDateFormatter.timeZone = Calendar.current.timeZone
             convertDateFormatter.locale = Calendar.current.locale
         }
@@ -1528,7 +1528,7 @@ extension PEViewStartNewAssessment{
 //        dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
 //        
 //        let evalDateObj = dateFormatterObj.date(from: evaluationDate ?? "")
-//        dateFormatterObj.dateFormat = "yyyy-MM-dd"
+//        dateFormatterObj.dateFormat = appDelegateObj.yyyyMMddStr
 //        let evalDateStr = dateFormatterObj.string(from: evalDateObj ?? Date())
         let RegionalId = UserDefaults.standard.integer(forKey: "Regionid")
         let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
@@ -1543,13 +1543,13 @@ extension PEViewStartNewAssessment{
                 
                 // Create another DateFormatter for the desired output format
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = "yyyy-MM-dd"
+                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
                 
                 // Convert the Date object back to a string
                 let formattedDateString = outputFormatter.string(from: date)
                 evalDateStr = formattedDateString
             } else {
-                print("Invalid date format")
+                print(appDelegateObj.invalidDateStr)
             }
         }
         else
@@ -1560,12 +1560,12 @@ extension PEViewStartNewAssessment{
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
             
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = "yyyy-MM-dd"
+                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
                 
                 let formattedDateString = outputFormatter.string(from: date)
                 evalDateStr = formattedDateString
             } else {
-                print("Invalid date format")
+                print(appDelegateObj.invalidDateStr)
             }
         }
         
@@ -2041,7 +2041,7 @@ extension PEViewStartNewAssessment{
 //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             let date = dateFormatter.date(from: peCertificateData.certificateDate ?? "")
-            dateFormatter.dateFormat = "yyyy-MM-dd"
+            dateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
             resultString = dateFormatter.string(from: date ?? Date())
         }
         else{
@@ -2056,7 +2056,7 @@ extension PEViewStartNewAssessment{
             "Name": peCertificateData.name,
             "CertificationDate": resultString,
             "AlternateName": "string",
-            "CertificationDate2": "2020-05-23T06:36:50.915Z",
+            "CertificationDate2": appDelegateObj.date2020_05_23,
             "ModuleAssessmentCatId":  dictArray.catID,
             "userId": dictArray.userID,
             "DeviceId": deviceIDFORSERVER,
@@ -2183,7 +2183,7 @@ extension PEViewStartNewAssessment{
             "Name": "",
             "CertificationDate": "",
             "AlternateName": "string",
-            "CertificationDate2": "2020-05-23T06:36:50.915Z",
+            "CertificationDate2": appDelegateObj.date2020_05_23,
             "ModuleAssessmentCatId":  dictArray.catID,
             "userId": dictArray.userID,
             "DeviceId": deviceIDFORSERVER,
@@ -2875,7 +2875,7 @@ extension PEViewStartNewAssessment{
                 if syncArr ?? 0 > 0{
                     self?.syncBtnTapped(showHud: false)
                 } else {
-                    self?.showtoast(message: "Data synced successfully.")
+                    self?.showtoast(message: appDelegateObj.dataSynedSuccess)
                     NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                 }
             }
@@ -2911,7 +2911,7 @@ extension PEViewStartNewAssessment{
                                 for i in self.totalImageToSync{
                                     CoreDataHandlerPE().setImageStatusTrue(idArray: i)
                                 }
-                                self.showtoast(message: "Data synced successfully.")
+                                self.showtoast(message: appDelegateObj.dataSynedSuccess)
                                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                                 self.dismissGlobalHUD(self.view)
                             }
@@ -2998,7 +2998,7 @@ extension PEViewStartNewAssessment{
             let convertDateFormatter = DateFormatter()
 //            convertDateFormatter.calendar = Calendar(identifier: .gregorian)
 //            convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            convertDateFormatter.dateFormat = "yyyy-MM-dd"
+            convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
             convertDateFormatter.locale = Calendar.current.locale
         }
         let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
@@ -3013,13 +3013,13 @@ extension PEViewStartNewAssessment{
                 
                 // Create another DateFormatter for the desired output format
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = "yyyy-MM-dd"
+                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
                 
                 // Convert the Date object back to a string
                 let formattedDateString = outputFormatter.string(from: date)
                 dict.evaluationDate = evaluationDate
             } else {
-                print("Invalid date format")
+                print(appDelegateObj.invalidDateStr)
             }
         }
         else
@@ -3030,12 +3030,12 @@ extension PEViewStartNewAssessment{
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
             
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = "yyyy-MM-dd"
+                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
                 
                 let formattedDateString = outputFormatter.string(from: date)
                 dict.evaluationDate = evaluationDate
             } else {
-                print("Invalid date format")
+                print(appDelegateObj.invalidDateStr)
             }
         }
        

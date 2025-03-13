@@ -148,7 +148,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         UserDefaults.standard.set(sessionDateOutlet.text, forKey: "date")
         UserDefaults.standard.set(complexLbl.text, forKey: "complex")
         UserDefaults.standard.synchronize()
-        if posting.salesRepName == NSLocalizedString("- Select -", comment: "") || posting.salesRepName == "- Select -"{
+        if posting.salesRepName == NSLocalizedString(appDelegateObj.selectStr, comment: "") || posting.salesRepName == appDelegateObj.selectStr{
             zoetisAccountManagerLbl.text = "NA"
         } else {
             zoetisAccountManagerLbl.text = posting.salesRepName
@@ -162,7 +162,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
         
         cocciProgramLbl.text = posting.cociiProgramName
-        if cocciProgramLbl.text == NSLocalizedString("- Select -", comment: "") {
+        if cocciProgramLbl.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             cocciProgramLbl.text = ""
         }
         customerLbl.text = posting.customerName
@@ -1417,7 +1417,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                 self.getNotesFromServer()
                             }
                             else{
-                                print("Test Message")
+                                print(appDelegateObj.testFuntion())
                             }
                         }
                         else {
@@ -1662,7 +1662,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     }
     @objc func update() {
         if WebClass.sharedInstance.connected(){
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         else{
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
@@ -1876,7 +1876,7 @@ extension PostingSessionDetailTurkey: UITableViewDataSource,UITableViewDelegate 
                 cell.abfLbl.text = "C"
             } else if abfLbl == "Antibiotic free" {
                 cell.abfLbl.text = "A"
-            } else if abfLbl == "- Select -" {
+            } else if abfLbl == appDelegateObj.selectStr {
                 cell.abfLbl.text = ""
             }
             cell.feedProgramLbl.text = (farmArray.object(at: indexPath.row) as AnyObject).value(forKey: "feedProgram") as? String

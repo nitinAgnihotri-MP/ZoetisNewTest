@@ -2750,7 +2750,7 @@ class CoreDataHandlerPVE: NSObject {
 //                }else{
 //                    let dateTempArr = Exp_Date.components(separatedBy: "T")
 //                    let inputFormatter = DateFormatter()
-//                    inputFormatter.dateFormat = "yyyy-MM-dd"
+//                    inputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
 //                    let showDate = inputFormatter.date(from: dateTempArr[0])
 //                    inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
 //                    expDateString = inputFormatter.string(from: showDate!)
@@ -2863,7 +2863,7 @@ class CoreDataHandlerPVE: NSObject {
         guard expDate != "1900-12-12T00:00:00" else { return "" }
         let dateTempArr = expDate.components(separatedBy: "T")
         let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "yyyy-MM-dd"
+        inputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
         if let showDate = inputFormatter.date(from: dateTempArr[0]) {
             inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
             return inputFormatter.string(from: showDate)
@@ -3352,7 +3352,7 @@ class CoreDataHandlerPVE: NSObject {
         
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat="MM/dd/YYYY HH:mm:ss Z"
+        dateFormatter.dateFormat=appDelegateObj.MMddYYYYHHmmss
         let dateCreatedAt = dateFormatter.string(from: NSDate() as Date) as String
         person.setValue(dateCreatedAt, forKey: "createdAt")
         

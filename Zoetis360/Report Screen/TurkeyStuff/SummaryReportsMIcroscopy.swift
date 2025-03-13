@@ -141,10 +141,10 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         var salesRepName: String = ""
         
         if let salesRepNameDummy = (objectArray as AnyObject).value(forKey: "salesRepName"){
-            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString("- Select -", comment: "") ? "NA" : salesRepNameDummy as! String
+            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "NA" : salesRepNameDummy as! String
         }
         
-        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString("- Select -", comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
+        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
         
         let sessiondate = AllValidSessions.sharedInstance.isDirect ? objectArray.value(forKey: "sessiondate") as! String : objectArray.value(forKey: "sessiondate") as! String
         
@@ -222,10 +222,10 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         var salesRepName: String = ""
         
         if let salesRepNameDummy = (objectArray as AnyObject).value(forKey: "salesRepName"){
-            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString("- Select -", comment: "") ? "NA" : salesRepNameDummy as! String
+            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "NA" : salesRepNameDummy as! String
         }
         
-        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString("- Select -", comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
+        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
         
         let sessiondate = AllValidSessions.sharedInstance.isDirect ? objectArray.value(forKey: "sessiondate") as! String : objectArray.value(forKey: "sessiondate") as! String
         
@@ -399,10 +399,10 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         var salesRepName: String = ""
         
         if let salesRepNameDummy = (objectArray as AnyObject).value(forKey: "salesRepName"){
-            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString("- Select -", comment: "") ? "NA" : salesRepNameDummy as! String
+            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "NA" : salesRepNameDummy as! String
         }
         
-        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString("- Select -", comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
+        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
         
         let sessiondate = objectArray.value(forKey: "sessiondate") as! String
         

@@ -67,7 +67,7 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
         buttonback.removeFromSuperview()
         self.necbckBtn.removeFromSuperview();
         if existingArray.count == 0 {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         if UserDefaults.standard.bool(forKey: "backFromStep1") == true {

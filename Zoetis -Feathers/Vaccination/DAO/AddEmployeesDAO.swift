@@ -42,7 +42,7 @@ public class AddEmployeesDAO{
     }
     
     func saveEmployeesByCertification(loginUserId:String, certificationId:String, customerId:String, siteId:String, employeeObj: [VaccinationEmployeeVM]){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     func getEmployees(loginUserId:String, customerId:String, siteId:String)-> [VaccinationEmployeeVM]{

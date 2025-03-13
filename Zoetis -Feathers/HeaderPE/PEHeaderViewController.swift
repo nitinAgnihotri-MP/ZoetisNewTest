@@ -122,7 +122,7 @@ class PEHeaderViewController: BaseViewController {
         let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            NSLog("OK Pressed")
+            
             
             self.ssologoutMethod()
             if userType == "PVE" {// For PVE
@@ -265,7 +265,7 @@ class PEHeaderViewController: BaseViewController {
         let alertController = UIAlertController(title: "Exit Session", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            NSLog("OK Pressed")
+            
             let userType =   UserDefaults.standard.string(forKey:"userType")
             if userType == "PE" {// For PE
                 self.finishSessionPE()

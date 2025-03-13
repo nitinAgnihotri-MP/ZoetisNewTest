@@ -143,10 +143,10 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
         var salesRepName: String = ""
         
         if let salesRepNameDummy = (objectArray as AnyObject).value(forKey: "salesRepName"){
-            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString("- Select -", comment: "") ? "NA" : salesRepNameDummy as! String
+            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "NA" : salesRepNameDummy as! String
         }
         
-        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString("- Select -", comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
+        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
         
         let sessiondate = AllValidSessions.sharedInstance.isDirect ? (objectArray as AnyObject).value(forKey: "sessiondate") as! String : objectArray.value(forKey: "sessiondate") as! String
         
@@ -224,10 +224,10 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
         var salesRepName: String = ""
         
         if let salesRepNameDummy = objectArray.value(forKey: "salesRepName"){
-            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString("- Select -", comment: "") ? "NA" : salesRepNameDummy as! String
+            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "NA" : salesRepNameDummy as! String
         }
         
-        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString("- Select -", comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
+        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
         
         let sessiondate = AllValidSessions.sharedInstance.isDirect ? objectArray.value(forKey: "sessiondate") as! String : objectArray.value(forKey: "sessiondate") as! String
         
@@ -400,10 +400,10 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
         var salesRepName: String = ""
         
         if let salesRepNameDummy = objectArray.value(forKey: "salesRepName"){
-            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString("- Select -", comment: "") ? "NA" : salesRepNameDummy as! String
+            salesRepName = (objectArray.value(forKey: "salesRepName") as! NSString) as String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "NA" : salesRepNameDummy as! String
         }
         
-        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString("- Select -", comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
+        let customerRepName = objectArray.value(forKey: "customerRepName") as! String == NSLocalizedString(appDelegateObj.selectStr, comment: "") ? "" : objectArray.value(forKey: "customerRepName") as! String
         
         let sessiondate = objectArray.value(forKey: "sessiondate") as! String
         
@@ -441,7 +441,7 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
         activityViewController.setValue(self.subjectString, forKey: "subject")
         activityViewController.popoverPresentationController?.sourceView = self.btnShare
         self.navigationController?.present(activityViewController, animated: true, completion: {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         })
     }
     func didFinishWithParsing(finishedArray : NSArray){

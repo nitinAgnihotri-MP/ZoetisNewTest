@@ -63,7 +63,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     var catArrayForCollectionIs : [PENewAssessment] = []
     var catArrayForTableIs = NSArray()
     let refrigrateStr = "Refrigerator\n/Freezer\n/Liquid Nitrogen"
-    let extendedMicro = "Extended Microbial"
+    let extendedMicro = appDelegateObj.extendedMicrobialStr
     let pleaseEnterVaccineStr = "Please enter vaccine details in the Vaccine Preparation & Sterility."
     let ddmmyyyy = "dd-MM-yyyy"
     let pleasEnterProgName = "Please enter program name in the Vaccine Preparation & Sterility."
@@ -75,7 +75,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     let pleaseEnterQC = "Please enter QC count in Customer Quality Control Program."
     let pleaseEnterPPM = "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation."
     let pleaseEnterVaccine = "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."
-    let yyyyMMDD = "yyyy-MM-dd"
+    let yyyyMMDD = appDelegateObj.yyyyMMddStr
     let peCommentedStr = "PECommentSelected.png"
     let incompleteDataStr = "Incomplete Data"
     let oneGallonStr = "1 gallon"
@@ -973,7 +973,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                     let alertController = UIAlertController(title: "Alert!", message: errorMSg as? String, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                         _ in
-                        self.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+                        self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + "*Note - Please don't minimize App while syncing.")
                         self.callExtendedMicro(param: ExtendedMicroparam)
                     }
                     let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
@@ -1610,7 +1610,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
             
             let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
-            let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
+            let datastr = date?.toString(withFormat: appDelegateObj.MMddYYYYHHmmss)
         }
         
         let  sig_Datetext = dict.sig_Date
@@ -1734,7 +1734,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             guard let `self` = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 cleanSession()
-                self.showtoast(message: "Data synced successfully.")
+                self.showtoast(message: appDelegateObj.dataSynedSuccess)
                 self.dismissGlobalHUD(self.view)
                 
             } else {
@@ -1969,7 +1969,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     vc.editable = true
                     vc.commentCompleted = {[unowned self] ( note) in
                         if note == "" {
-                            let image = UIImage(named: "PEcomment.png")
+                            let image = UIImage(named: appDelegateObj.peCommentStr)
                             cell.noteBtn.setImage(image, for: .normal)
                             
                         } else {
@@ -2934,7 +2934,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 cell.btn_ImageCount.isHidden = false
             }
             
-            let image1 = UIImage(named: "PEcomment.png")
+            let image1 = UIImage(named: appDelegateObj.peCommentStr)
             let image2 = UIImage(named: peCommentedStr)
             if assessment?.note == "" || assessment?.note == nil {
                 cell.btn_Comment.setImage(image1, for: .normal)
@@ -3122,7 +3122,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 
                 vc.commentCompleted = {[unowned self] ( note) in
                     if note == "" {
-                        let image = UIImage(named: "PEcomment.png")
+                        let image = UIImage(named: appDelegateObj.peCommentStr)
                         cell.btn_Comment.setImage(image, for: .normal)
                         
                     } else {
@@ -3654,7 +3654,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             } else {
                 cell.btnImageCount.isHidden = false
             }
-            let image1 = UIImage(named: "PEcomment.png")
+            let image1 = UIImage(named: appDelegateObj.peCommentStr)
             let image2 = UIImage(named: peCommentedStr)
             if assessment?.note == "" || assessment?.note == nil {
                 cell.noteBtn.setImage(image1, for: .normal)
@@ -4149,7 +4149,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 } else {
                     vc.commentCompleted = {[unowned self] ( note) in
                         if note == "" {
-                            let image = UIImage(named: "PEcomment.png")
+                            let image = UIImage(named: appDelegateObj.peCommentStr)
                             cell.noteBtn.setImage(image, for: .normal)
                             
                         } else {

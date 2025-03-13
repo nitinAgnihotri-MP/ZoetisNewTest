@@ -45,6 +45,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     let loadingStr = "Loading..."
     let MMddyyyStr = "MM/dd/yyyy"
     let ddMMyyyStr = "dd/MM/yyyy"
+    let dataSyncInProgressStr = "Data sync is in progress, please do not close the app."
+    let date2020_05_23 = "2020-05-23T06:36:50.915Z"
+    let MMddYYYYHHmmss = "MM/dd/YYYY HH:mm:ss Z"
+    let asiaTehran = "Asia/Tehran"
+    let noDataFoundStr = "No Data Found"
+    let peCommentStr = "PEcomment.png"
+    let extendedMicrobialStr = "Extended Microbial"
+    let yyyyMMddStr = "yyyy-MM-dd"
+    let invalidDateStr = "Invalid date format"
+    let dataSynedSuccess = "Data synced successfully."
+    let selectStr = "- Select -"
+    
     func initiateLeftPenal() {
         window = UIWindow(frame: UIScreen.main.bounds)
         let containerViewController = ContainerViewController()

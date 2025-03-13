@@ -108,7 +108,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                 asb = false
             }
         }else{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: 🟠 Show Custome Alert
@@ -155,7 +155,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                 })
             }
         }
-        else if (trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString("- Select -", comment: "") ||  lblAge.text == "" ||  houseNoTextFld.text == "" )  {
+        else if (trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  lblAge.text == "" ||  houseNoTextFld.text == "" )  {
             
             showAlertIfNeeded(message: NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
@@ -173,7 +173,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
             }
             ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
             
-            if feedProgramDisplayLabel.text != NSLocalizedString("- Select -", comment: "")  {
+            if feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
                 feedProgramOutlet.layer.borderColor = UIColor.gray.cgColor
             }
             
@@ -789,7 +789,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         AgeOp = ["1", "2", "3", "4", "5", "6", "7","8",  "9", "10","11", "12", "13", "14", "15", "16", "17","18",  "19", "20","21", "22", "23", "24", "25", "26", "27","28",  "29", "30","31", "32", "33", "34", "35", "36", "37","38",  "39", "40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80"]
         
         HouseNo = ["1", "2", "3", "4", "5", "6", "7","8",  "9", "10","11", "12", "13", "14", "15", "16", "17","18",  "19", "20","21", "22", "23", "24", "25", "26", "27","28",  "29", "30","31", "32", "33", "34", "35", "36", "37","38",  "39", "40","41","42","43","44","45","46","47","48","49","50"]
-        feedProgramDisplayLabel?.text = NSLocalizedString("- Select -", comment: "")
+        feedProgramDisplayLabel?.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         count = 0
         
         self.spacingTextField()

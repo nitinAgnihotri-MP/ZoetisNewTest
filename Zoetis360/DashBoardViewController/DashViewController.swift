@@ -298,11 +298,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     /**************************************************************************************************************/
     
     @IBAction func didSelectOnUnlinkedNecrp(_ sender: AnyObject) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     @IBAction func NacropsyButtonPress(_ sender: AnyObject) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK: 🟠 - Logout Button Action
@@ -1234,7 +1234,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             })
   
         } else{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: 🟠 Save Bird Size
@@ -1302,7 +1302,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             })
             
         } else{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: 🟠 Save Breed type
@@ -1494,7 +1494,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 }
             }
         } else{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     */
@@ -1997,7 +1997,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             })
 
         } else{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: 🟢 Get Dossage List with Molecule ID from server
@@ -2060,7 +2060,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             })
            
         } else{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     // MARK: 🟢  ZoetisWebServices Get production type List from server

@@ -493,7 +493,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
     }
     
     @IBAction func shippingBtnAction(_ sender: UIButton) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK: - METHODS

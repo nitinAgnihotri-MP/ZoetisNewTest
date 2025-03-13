@@ -623,7 +623,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 }
                 else
                 {
-                    coccidsisStartrDrinking.text = NSLocalizedString("- Select -", comment: "")
+                    coccidsisStartrDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                 }
                 var str1 = String()
                 if cocciControlArray.count == 1 {
@@ -638,7 +638,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 }
                 else {
                     
-                    coccidsisGrowerDrinking.text = NSLocalizedString("- Select -", comment: "")
+                    coccidsisGrowerDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     
                 }
                 var str2 = String()
@@ -657,7 +657,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 }
                 else
                 {
-                    cocciFinisherDrinkingWater.text = NSLocalizedString("- Select -", comment: "")
+                    cocciFinisherDrinkingWater.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     
                 }
                 var str3 = String()
@@ -676,7 +676,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 }
                 else
                 {
-                    coccidiosisWdDrinking.text = NSLocalizedString("- Select -", comment: "")
+                    coccidiosisWdDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     
                 }
                 
@@ -696,7 +696,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 }
                 else
                 {
-                    fivthMoleculelBL.text = NSLocalizedString("- Select -", comment: "")
+                    fivthMoleculelBL.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     
                 }
                 
@@ -714,7 +714,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 }
                 else
                 {
-                    sixthMoleculeLbl.text = NSLocalizedString("- Select -", comment: "")
+                    sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                 }
                 
                 if cocciControlArray.count == 1{
@@ -1680,7 +1680,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         Allbuttonbg = 0
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            starterDosageTextField.text = "- Select -"
+            starterDosageTextField.text = appDelegateObj.selectStr
         }
         
         tableViewpop()
@@ -1695,7 +1695,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         Allbuttonbg = 1
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            growerDosageCoccidiosisTEXT.text = "- Select -"
+            growerDosageCoccidiosisTEXT.text = appDelegateObj.selectStr
         }
         tableViewpop()
         droperTableView.frame = CGRect(x: 183,y: 365,width: 237,height: 150)
@@ -1711,7 +1711,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         Allbuttonbg = 2
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            finisherDosageTxtField.text = "- Select -"
+            finisherDosageTxtField.text = appDelegateObj.selectStr
         }
         tableViewpop()
         
@@ -1726,7 +1726,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         Allbuttonbg = 3
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            wdDosageTextField.text =  "- Select -"
+            wdDosageTextField.text =  appDelegateObj.selectStr
         }
         tableViewpop()
         droperTableView.frame = CGRect(x: 183,y: 477,width: 237,height: 150)
@@ -1741,7 +1741,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         Allbuttonbg = 40
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            feed5textField.text = "- Select -"
+            feed5textField.text = appDelegateObj.selectStr
         }
         tableViewpop()
         droperTableView.frame = CGRect(x: 183,y: 530,width: 237,height: 150)
@@ -1757,7 +1757,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         Allbuttonbg = 50
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            feed6TextField.text = "- Select -"
+            feed6TextField.text = appDelegateObj.selectStr
         }
         tableViewpop()
         droperTableView.frame = CGRect(x: 183,y: 580,width: 237,height: 150)
@@ -1833,7 +1833,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     }
     
     @IBAction func antiStarterDrinkingWater(sender: AnyObject) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     @IBAction func antiGrowerDrinkngWater(sender: AnyObject) {
@@ -2451,7 +2451,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             if i == 0 {
                 
-                if coccidsisStartrDrinking.text == NSLocalizedString("- Select -", comment: ""){
+                if coccidsisStartrDrinking.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     coccidsisStartrDrinking.text = ""
                 }
@@ -2462,7 +2462,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             }
             else if i == 1 {
                 
-                if coccidsisGrowerDrinking.text == NSLocalizedString("- Select -", comment: ""){
+                if coccidsisGrowerDrinking.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     coccidsisGrowerDrinking.text = ""
                     
                 }
@@ -2470,7 +2470,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 CoreDataHandlerTurkey().saveCoccoiControlDatabaseTurkey(1, postingId:postingId as NSNumber, molecule  :coccidsisGrowerDrinking.text ?? "", dosage:growerDosageCoccidiosisTEXT.text ?? "", fromDays: FromGrowerTextField.text ?? "", toDays:toGrowerTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: "Feed type 2",cocoVacId: CocoiVacId,lngId:lngId as NSNumber, lbldate:lblDate.text ?? "", dosemoleculeId: (secoundMolID ) as NSNumber)
                 
             } else if i == 2 {
-                if cocciFinisherDrinkingWater.text == NSLocalizedString("- Select -", comment: ""){
+                if cocciFinisherDrinkingWater.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     cocciFinisherDrinkingWater.text = ""
                     
@@ -2479,7 +2479,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 CoreDataHandlerTurkey().saveCoccoiControlDatabaseTurkey(1, postingId:postingId as NSNumber , molecule  :cocciFinisherDrinkingWater.text ?? "", dosage:finisherDosageTxtField.text ?? "", fromDays: fromFinisherTextField.text ?? "", toDays:toFinisherTextField.text ?? "", coccidiosisVaccine:coccidiosisVaccineDrinkin.text ?? "", targetWeight:"", index: i, dbArray: cocciControlArray, feedId: feedId as NSNumber,feedProgram:feedProgramTextField.text ?? "",formName: addFarmSelectLbl.text ?? "",isSync :true,feedType: "Feed type 3" ,cocoVacId: CocoiVacId,lngId:lngId as NSNumber,lbldate:lblDate.text ?? "", dosemoleculeId: (thirdMolID ) as NSNumber)
                 
             } else if i == 3 {
-                if coccidiosisWdDrinking.text == NSLocalizedString("- Select -", comment: ""){
+                if coccidiosisWdDrinking.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     coccidiosisWdDrinking.text = ""
                 }
@@ -2490,7 +2490,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             else if i == 4 {
                 
-                if fivthMoleculelBL.text == NSLocalizedString("- Select -", comment: ""){
+                if fivthMoleculelBL.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     fivthMoleculelBL.text = ""
                     
@@ -2503,7 +2503,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             else if i == 5{
                 
-                if sixthMoleculeLbl.text == NSLocalizedString("- Select -", comment: ""){
+                if sixthMoleculeLbl.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     sixthMoleculeLbl.text = ""
                     
@@ -2719,15 +2719,15 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         UserDefaults.standard.set(feedId , forKey: "feedId")
         UserDefaults.standard.synchronize()
         
-        coccidsisStartrDrinking.text = NSLocalizedString("- Select -", comment: "")
-        coccidsisGrowerDrinking.text = NSLocalizedString("- Select -", comment: "")
-        cocciFinisherDrinkingWater.text = NSLocalizedString("- Select -", comment: "")
-        coccidiosisWdDrinking.text = NSLocalizedString("- Select -", comment: "")
-        fivthMoleculelBL.text = NSLocalizedString("- Select -", comment: "")
-        sixthMoleculeLbl.text = NSLocalizedString("- Select -", comment: "")
+        coccidsisStartrDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        coccidsisGrowerDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        cocciFinisherDrinkingWater.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        coccidiosisWdDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        fivthMoleculelBL.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         feed5textField.text = ""
         from5TextField.text = ""
-        sixthMoleculeLbl.text = NSLocalizedString("- Select -", comment: "")
+        sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         feed6TextField.text = ""
         from6teXTfield.text = ""
         toFeed5TextFeidl.text = ""
@@ -2780,7 +2780,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         toGrowerTextField.text = ""
         toFinisherTextField.text = ""
         toWdTextField.text = ""
-        coccidiosisVaccineDrinkin.text = NSLocalizedString("- Select -", comment: "")
+        coccidiosisVaccineDrinkin.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         antiDosageFirstTextField.text = ""
         antiDosageSecondTextField.text = ""
         antiDosageThirdTextField.text = ""
@@ -2819,7 +2819,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         myToThirdTextField.text = ""
         myToFourTextField.text = ""
         feedProgramTextField.text = ""
-        addFarmSelectLbl.text = NSLocalizedString("- Select -", comment: "")
+        addFarmSelectLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         self.coccidiosisControlBtnActoin(sender: "0" as AnyObject)
         
         
@@ -3459,7 +3459,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     }
     
     func clickHelp() {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     func logOytButtn () {
@@ -3856,7 +3856,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             }
             
         } else {
-            addFarmSelectLbl.text = NSLocalizedString("- Select -", comment: "")
+            addFarmSelectLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
         
         
@@ -4043,7 +4043,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if coccidsisStartrDrinking.text == "- Select -"
+            if coccidsisStartrDrinking.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -4074,7 +4074,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         if  Bundle.main.versionNumber > "7.5.1"
         {
             
-            if coccidsisGrowerDrinking.text == "- Select -"
+            if coccidsisGrowerDrinking.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -4104,7 +4104,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if cocciFinisherDrinkingWater.text == "- Select -"
+            if cocciFinisherDrinkingWater.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -4132,7 +4132,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     @IBAction func feedType4Action(_ sender: Any) {
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if coccidiosisWdDrinking.text == "- Select -"
+            if coccidiosisWdDrinking.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -4160,7 +4160,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     @IBAction func feedType5Action(_ sender: Any) {
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if fivthMoleculelBL.text == "- Select -"
+            if fivthMoleculelBL.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -4189,7 +4189,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     @IBAction func feedType6Action(_ sender: Any) {
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if sixthMoleculeLbl.text == "- Select -"
+            if sixthMoleculeLbl.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return

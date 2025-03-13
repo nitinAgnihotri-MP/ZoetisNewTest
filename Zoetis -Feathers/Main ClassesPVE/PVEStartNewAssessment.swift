@@ -476,7 +476,7 @@ extension PVEStartNewAssessment{
             }
                 
             default:
-                do {print("Test message")}
+                do {print(appDelegateObj.testFuntion())}
             }
         }
         
@@ -628,7 +628,7 @@ extension PVEStartNewAssessment{
         
         if let text = sharedManager.getSessionValueForKeyFromDB(key: "housing") as? String, !text.isEmpty
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         else
         {

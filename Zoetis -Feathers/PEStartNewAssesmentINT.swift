@@ -707,8 +707,6 @@ class PEStartNewAssessmentINT: BaseViewController {
                 
             }else{
             }
-        }else{
-            print("test message")
         }
         checkBackAndSave()
         
@@ -732,7 +730,7 @@ class PEStartNewAssessmentINT: BaseViewController {
     }
     
     func enableExtendedPE(flag:Bool = true){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     /* Get offline stored session(Eggs and Incubation) */
@@ -903,7 +901,7 @@ class PEStartNewAssessmentINT: BaseViewController {
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     // MARK: - Hide Other Breed Button
     func hideBreedOthers(){
@@ -1398,7 +1396,7 @@ class PEStartNewAssessmentINT: BaseViewController {
             }
         }
         
-        if (date.count > 0 ){print("Test message")} else  {
+        if (date.count > 0 ){} else  {
             let superviewCurrent =  evaluationDateButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1409,7 +1407,7 @@ class PEStartNewAssessmentINT: BaseViewController {
                 }
             }
         }
-        if (customer.count > 0 ){print("Test message")} else  {
+        if (customer.count > 0 ){} else  {
             let superviewCurrent =  customerButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1420,7 +1418,7 @@ class PEStartNewAssessmentINT: BaseViewController {
                 }
             }
         }
-        if (selectedTSR.count > 0 ){print("Test message")} else  {
+        if (selectedTSR.count > 0 ){} else  {
             let superviewCurrent = tsrButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1433,7 +1431,7 @@ class PEStartNewAssessmentINT: BaseViewController {
         }
         
         
-        if (site.count > 0 ){print("Test message")} else  {
+        if (site.count > 0 ){} else  {
             let superviewCurrent =  siteButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1444,7 +1442,7 @@ class PEStartNewAssessmentINT: BaseViewController {
                 }
             }
         }
-        if (evaluationName.count > 0){print("Test message")} else  {
+        if (evaluationName.count > 0){} else  {
             let superviewCurrent =  evaluationTypeButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1457,7 +1455,7 @@ class PEStartNewAssessmentINT: BaseViewController {
             }
             
         }
-        if (evaluator.count  > 0){print("Test message")} else  {
+        if (evaluator.count  > 0){} else  {
             let superviewCurrent =  evaluatorButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1469,7 +1467,7 @@ class PEStartNewAssessmentINT: BaseViewController {
                 }
             }
         }
-        if (reasonForVisit.count > 0){print("Test message")} else  {
+        if (reasonForVisit.count > 0){} else  {
             let superviewCurrent =  visitButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -2191,7 +2189,7 @@ extension PEStartNewAssessmentINT : DatePickerPopupViewControllerProtocol{
     }
     
     func doneButtonTapped(string:String){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
 }
 
@@ -2349,8 +2347,6 @@ extension PEStartNewAssessmentINT{
                 self.navigationController?.pushViewController(vc!, animated: true)
                 return
             }
-        } else {
-            print("test message")
         }
         
     }
@@ -2420,7 +2416,7 @@ extension PEStartNewAssessmentINT {
         }
     }
     private func handleAssessmentCategoriesResponse(_ json: JSON) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
 }
 

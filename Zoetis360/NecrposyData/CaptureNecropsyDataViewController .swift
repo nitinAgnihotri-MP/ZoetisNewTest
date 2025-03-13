@@ -3183,7 +3183,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     imagePicker.sourceType = .camera
                     imagePicker.cameraCaptureMode = .photo
                     
-                    present(imagePicker, animated: true, completion: {print("Test message")})
+                    present(imagePicker, animated: true, completion: {print(appDelegateObj.testFuntion())})
                 } else {
                     
                     if lngId == 1 {
@@ -4337,7 +4337,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             UIImageWriteToSavedPhotosAlbum(pickedImage, self, nil, nil)
         }
         imagePicker.dismiss(animated: true, completion: {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         })
     }
     /******************************************************************************************************/
@@ -4348,7 +4348,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     @objc func imageWasSavedSuccessfully(_ image: UIImage, didFinishSavingWithError error: NSError!, context: UnsafeMutableRawPointer){
         
         if let theError = error {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         } else {
             DispatchQueue.main.async(execute: { () -> Void in
                 
@@ -5975,7 +5975,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let rowToSelect:IndexPath = IndexPath(row: 0, section: 0)
         if tableViewSelectedRow == 0
         {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         else
         {
@@ -6312,7 +6312,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     func postingNotesdoneBtnFunc(_ notesText : String)
-    {print("Test message")}
+    {print(appDelegateObj.testFuntion())}
     // MARK: 🟠 Sync Button Action
     @IBAction func syncBtnAction(_ sender: AnyObject) {
         

@@ -821,7 +821,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
 
     
     func callFeedProgramMoleculeService( _ breedTypeArr : NSArray) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     func callSaveMethodforSessiontype( _ seessionTypeArr : NSArray) {
@@ -1174,7 +1174,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     }
     
     func callCocciVaccineService( _ CocciVaccine : NSArray) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     func callTargetWeightProcessing() {

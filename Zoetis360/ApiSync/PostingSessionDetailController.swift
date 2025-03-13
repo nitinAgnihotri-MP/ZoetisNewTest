@@ -175,7 +175,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         UserDefaults.standard.set(sessionDate.text, forKey: "date")
         UserDefaults.standard.set(complexNamelbl.text, forKey: "complex")
         UserDefaults.standard.synchronize()
-        if posting.salesRepName == NSLocalizedString("- Select -", comment: "") || posting.salesRepName == "- Select -"{
+        if posting.salesRepName == NSLocalizedString(appDelegateObj.selectStr, comment: "") || posting.salesRepName == appDelegateObj.selectStr{
             salesRepLbl.text = "NA"
         }
         else{
@@ -197,7 +197,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         }
         
         cocciProgramLbl.text = posting.cociiProgramName
-        if cocciProgramLbl.text == NSLocalizedString("- Select -", comment: "") {
+        if cocciProgramLbl.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             cocciProgramLbl.text = ""
         }
         
@@ -770,7 +770,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
     
     @IBAction func updateDateButtonClicked(_ sender: UIButton) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK: 🟠 - Session Date Done Button Action
@@ -1967,7 +1967,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                         {
                             if  UserDefaults.standard.string(forKey: "Success") == "Yes"
                             {
-                                print("Test Message")
+                                print(appDelegateObj.testFuntion())
                             }
                             else
                             {
@@ -2049,7 +2049,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     // MARK: - Update Function optional not required
     @objc func update() {
         if WebClass.sharedInstance.connected(){
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         else{
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))

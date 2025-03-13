@@ -857,7 +857,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            NSLog("OK Pressed")
+            
             UserDefaults.standard.set(false, forKey: "hasVaccinationDataLoaded")
             if userType == "PVE" {// For PVE
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "syncDataNoti"),object: nil))

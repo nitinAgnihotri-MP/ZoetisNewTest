@@ -739,7 +739,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     }
     
     func fethDataTrueValue(_ tagName:NSString) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     override func didReceiveMemoryWarning() {
@@ -3295,7 +3295,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     imagePicker.sourceType = .camera
                     imagePicker.cameraCaptureMode = .photo
                     
-                    present(imagePicker, animated: true, completion: {print("Test message")})
+                    present(imagePicker, animated: true, completion: {print(appDelegateObj.testFuntion())})
                 } else {
                     postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
                 }
@@ -3333,7 +3333,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     
     @objc func imageWasSavedSuccessfully(_ image: UIImage, didFinishSavingWithError error: NSError!, context: UnsafeMutableRawPointer){
         if let theError = error {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         } else {
             DispatchQueue.main.async(execute: { () -> Void in
                 
@@ -6718,7 +6718,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
     }
     
-    func postingNotesdoneBtnFunc(_ notesText : String){print("Test message")}
+    func postingNotesdoneBtnFunc(_ notesText : String){print(appDelegateObj.testFuntion())}
     
     
     // MARK: - IBACTIONS

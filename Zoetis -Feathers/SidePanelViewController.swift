@@ -126,7 +126,7 @@ class SidePanelViewController: UIViewController {
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            NSLog("OK Pressed")
+            
             UserDefaults.standard.removeObject(forKey: "login")
             self.navigationController?.popToRootViewController(animated: true)
             

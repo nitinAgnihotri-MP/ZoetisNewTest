@@ -57,7 +57,7 @@ class CaptureNecroStep2TurkeyCell: UICollectionViewCell {
     
     
     func makeItCircle() {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     

@@ -71,7 +71,7 @@ class PlateInfoCell: UITableViewCell {
             let image = UIImage(named: "PECommentSelected.png")
             noteBtn.setImage(image, for: .normal)
         }else{
-            let image = UIImage(named: "PEcomment.png")
+            let image = UIImage(named: appDelegateObj.peCommentStr)
             noteBtn.setImage(image, for: .normal)
         }
         self.quesObj = quesObj

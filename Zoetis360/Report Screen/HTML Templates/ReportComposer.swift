@@ -447,7 +447,7 @@ class ReportComposer: NSObject {
             }
         }
         catch {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
         return nil

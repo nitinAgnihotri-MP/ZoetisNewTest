@@ -205,7 +205,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             feedProgramTextLebl.text = NSLocalizedString("Feed Program *", comment: "")
             feedProgramDropDwnIcon.isHidden = false
             customerLbl.isHidden = false
-            feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
+            feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
         
         flockIdTextField.tag = 11
@@ -254,7 +254,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         
         if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
-            feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
+            feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
         
         feedProgramTextLebl.text = NSLocalizedString("Feed Program *", comment: "")
@@ -467,7 +467,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 self.insertdata()
             }
         }
-        else  if ( trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString("- Select -", comment: "") ||  lblAge.text == "" ){
+        else  if ( trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  lblAge.text == "" ){
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
             if trimmedString == ""{
@@ -478,7 +478,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             }
             feedProgramOutlet.layer.borderColor = UIColor.red.cgColor
             ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: .normal)
-            if feedProgramDisplayLabel.text != NSLocalizedString("- Select -", comment: "")  {
+            if feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
                 feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
             }
             if lblAge.text != ""  {
@@ -533,9 +533,9 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     @IBAction func nextBttnAction(sender: AnyObject) {
         
         if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
-            feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
+            feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
-        if farmNameTextField.text != "" || feedProgramDisplayLabel.text != NSLocalizedString("- Select -", comment: "") || lblAge.text != "" {
+        if farmNameTextField.text != "" || feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblAge.text != "" {
             
             Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
         }
@@ -732,7 +732,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             feedProgramDisplayLabel.text = ""
         }
         else{
-            self.feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
+            self.feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
         
         flockIdTextField.text = ""
@@ -1285,7 +1285,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 {
                     CoreDataHandler().updatedPostigSessionwithIsFarmSyncPostingId(self.postingId as NSNumber, isFarmSync: false)
                     feedButton.setTitle(str.feddProgramNam!, for: .normal)
-                    feedProgramDisplayLabel.text = NSLocalizedString("- Select -", comment: "")
+                    feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     feeId = Int(truncating: str.feedId!)
                     strFeddUpdate = str.feddProgramNam ?? ""
                 }

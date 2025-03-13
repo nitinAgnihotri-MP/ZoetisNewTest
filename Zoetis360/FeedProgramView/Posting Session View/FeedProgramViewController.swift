@@ -587,77 +587,77 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             startDatellbl.text = "Date de début"
             lblDate.text =  "Sélectionner une date"
             
-            if myCoxtinStarterDosage.text == "- Select -" {
+            if myCoxtinStarterDosage.text == appDelegateObj.selectStr {
                 myCoxtinStarterDosage.text = "- Sélectionner -"
             }
-            if myCoxtinGrowerDosage.text == "- Select -" {
+            if myCoxtinGrowerDosage.text == appDelegateObj.selectStr {
                 myCoxtinGrowerDosage.text = "- Sélectionner -"
             }
-            if myCoxtinFinisherDosge.text == "- Select -" {
+            if myCoxtinFinisherDosge.text == appDelegateObj.selectStr {
                 myCoxtinFinisherDosge.text = "- Sélectionner -"
             }
-            if myCoxtinWDDosage.text == "- Select -" {
+            if myCoxtinWDDosage.text == appDelegateObj.selectStr {
                 myCoxtinWDDosage.text = "- Sélectionner -"
             }
-            if myCoxtin5DosageTextField.text == "- Select -" {
+            if myCoxtin5DosageTextField.text == appDelegateObj.selectStr {
                 myCoxtin5DosageTextField.text = "- Sélectionner -"
             }
-            if myCoxtin6DosageTextField.text == "- Select -" {
+            if myCoxtin6DosageTextField.text == appDelegateObj.selectStr {
                 myCoxtin6DosageTextField.text = "- Sélectionner -"
             }
-            if antiDosageFirstTextField.text == "- Select -" {
+            if antiDosageFirstTextField.text == appDelegateObj.selectStr {
                 antiDosageFirstTextField.text = "- Sélectionner -"
             }
-            if antiDosageSecondTextField.text == "- Select -" {
+            if antiDosageSecondTextField.text == appDelegateObj.selectStr {
                 antiDosageSecondTextField.text = "- Sélectionner -"
             }
-            if antiDosageThirdTextField.text == "- Select -" {
+            if antiDosageThirdTextField.text == appDelegateObj.selectStr {
                 antiDosageThirdTextField.text = "- Sélectionner -"
             }
-            if antiDosageFourTextField.text == "- Select -" {
+            if antiDosageFourTextField.text == appDelegateObj.selectStr {
                 antiDosageFourTextField.text = "- Sélectionner -"
             }
-            if antiDosageFivthTextField.text == "- Select -" {
+            if antiDosageFivthTextField.text == appDelegateObj.selectStr {
                 antiDosageFivthTextField.text = "- Sélectionner -"
             }
-            if antiDosageSixTextField.text == "- Select -" {
+            if antiDosageSixTextField.text == appDelegateObj.selectStr {
                 antiDosageSixTextField.text = "- Sélectionner -"
             }
-            if alternativeDosageFirstText.text == "- Select -" {
+            if alternativeDosageFirstText.text == appDelegateObj.selectStr {
                 alternativeDosageFirstText.text = "- Sélectionner -"
             }
-            if alternativeDosageSecoondText.text == "- Select -" {
+            if alternativeDosageSecoondText.text == appDelegateObj.selectStr {
                 alternativeDosageSecoondText.text = "- Sélectionner -"
             }
-            if alternativeDosageThirdText.text == "- Select -" {
+            if alternativeDosageThirdText.text == appDelegateObj.selectStr {
                 alternativeDosageThirdText.text = "- Sélectionner -"
             }
-            if alternativeDosageFourText.text == "- Select -" {
+            if alternativeDosageFourText.text == appDelegateObj.selectStr {
                 alternativeDosageFourText.text = "- Sélectionner -"
             }
-            if altrNativeDosage5Text.text == "- Select -" {
+            if altrNativeDosage5Text.text == appDelegateObj.selectStr {
                 altrNativeDosage5Text.text = "- Sélectionner -"
             }
-            if altrNativeDosage6Text.text == "- Select -" {
+            if altrNativeDosage6Text.text == appDelegateObj.selectStr {
                 altrNativeDosage6Text.text = "- Sélectionner -"
             }
             if lngId == 1{
-                if starterDosageTextField.text == "- Select -" {
+                if starterDosageTextField.text == appDelegateObj.selectStr {
                     starterDosageTextField.text = "- Sélectionner -"
                 }
-                if growerDosageCoccidiosisTEXT.text == "- Select -" {
+                if growerDosageCoccidiosisTEXT.text == appDelegateObj.selectStr {
                     growerDosageCoccidiosisTEXT.text = "- Sélectionner -"
                 }
-                if finisherDosageTxtField.text == "- Select -" {
+                if finisherDosageTxtField.text == appDelegateObj.selectStr {
                     finisherDosageTxtField.text = "- Sélectionner -"
                 }
-                if wdDosageTextField.text == "- Select -" {
+                if wdDosageTextField.text == appDelegateObj.selectStr {
                     wdDosageTextField.text = "- Sélectionner -"
                 }
-                if feed5textField.text == "- Select -" {
+                if feed5textField.text == appDelegateObj.selectStr {
                     feed5textField.text = "- Sélectionner -"
                 }
-                if feed6TextField.text == "- Select -" {
+                if feed6TextField.text == appDelegateObj.selectStr {
                     feed6TextField.text = "- Sélectionner -"
                 }
             }
@@ -757,7 +757,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 }
                 else
                 {
-                    coccidsisStartrDrinking.text = NSLocalizedString("- Select -", comment: "")
+                    coccidsisStartrDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                 }
                 var str1 = String()
                 if cocciControlArray.count == 1{
@@ -774,7 +774,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 }
                 else
                 {
-                    coccidsisGrowerDrinking.text = NSLocalizedString("- Select -", comment: "")
+                    coccidsisGrowerDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     
                 }
                 var str2 = String()
@@ -794,7 +794,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 }
                 else
                 {
-                    cocciFinisherDrinkingWater.text = NSLocalizedString("- Select -", comment: "")
+                    cocciFinisherDrinkingWater.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     
                 }
                 var str3 = String()
@@ -814,7 +814,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 }
                 else
                 {
-                    coccidiosisWdDrinking.text = NSLocalizedString("- Select -", comment: "")
+                    coccidiosisWdDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     
                 }
                 var str4 = String()
@@ -833,7 +833,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 }
                 else
                 {
-                    fivthMoleculelBL.text = NSLocalizedString("- Select -", comment: "")
+                    fivthMoleculelBL.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                     
                 }
                 var str5 = String()
@@ -852,7 +852,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 }
                 else
                 {
-                    sixthMoleculeLbl.text = NSLocalizedString("- Select -", comment: "")
+                    sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                 }
                 
                 if cocciControlArray.count == 1{
@@ -1954,13 +1954,13 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         
     }
     
-    @IBAction func starterCheckBoxAction(sender: AnyObject) {print("Test message")}
+    @IBAction func starterCheckBoxAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
-    @IBAction func growerCheckBoxAction(sender: AnyObject) {print("Test message")}
+    @IBAction func growerCheckBoxAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
-    @IBAction func finisherCoccidiosisCheckBoxAction(sender: AnyObject) {print("Test message")}
+    @IBAction func finisherCoccidiosisCheckBoxAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
-    @IBAction func wdCoccidiosisAction(sender: AnyObject) {print("Test message")}
+    @IBAction func wdCoccidiosisAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
     
     @IBAction func starterDrinkngWaterAction(sender: AnyObject) {
@@ -1973,7 +1973,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         tableViewpop()
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            starterDosageTextField.text = "- Select -"
+            starterDosageTextField.text = appDelegateObj.selectStr
         }
         
         
@@ -1989,7 +1989,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         tableViewpop()
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            growerDosageCoccidiosisTEXT.text = "- Select -"
+            growerDosageCoccidiosisTEXT.text = appDelegateObj.selectStr
         }
         
         droperTableView.frame = CGRect(x: 183,y: 365,width: 237,height: 150)
@@ -2006,7 +2006,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         tableViewpop()
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            finisherDosageTxtField.text = "- Select -"
+            finisherDosageTxtField.text = appDelegateObj.selectStr
         }
         
         droperTableView.frame = CGRect(x: 183,y: 422,width: 237,height: 150)
@@ -2022,7 +2022,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         tableViewpop()
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            wdDosageTextField.text =  "- Select -"
+            wdDosageTextField.text =  appDelegateObj.selectStr
         }
         
         droperTableView.frame = CGRect(x: 183,y: 477,width: 237,height: 150)
@@ -2039,7 +2039,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         tableViewpop()
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            feed5textField.text = "- Select -"
+            feed5textField.text = appDelegateObj.selectStr
         }
         
         droperTableView.frame = CGRect(x: 183,y: 530,width: 237,height: 150)
@@ -2057,7 +2057,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         tableViewpop()
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            feed6TextField.text = "- Select -"
+            feed6TextField.text = appDelegateObj.selectStr
         }
         
         droperTableView.frame = CGRect(x: 183,y: 580,width: 237,height: 150)
@@ -2097,13 +2097,13 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
     }
     
     
-    @IBAction func antiboticStarterCheckBoxAction(sender: AnyObject) {print("Test message")}
+    @IBAction func antiboticStarterCheckBoxAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
-    @IBAction func antiboticGrowerAction(sender: AnyObject) {print("Test message")}
+    @IBAction func antiboticGrowerAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
-    @IBAction func antiboticFinisherAction(sender: AnyObject) {print("Test message")}
+    @IBAction func antiboticFinisherAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
-    @IBAction func antiboticWDAction(sender: AnyObject) {print("Test message")}
+    @IBAction func antiboticWDAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
     
     @IBAction func antiFinisherDrinkingWater(sender: AnyObject) {
@@ -2131,13 +2131,13 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         droperTableView.reloadData()
     }
     
-    @IBAction func alternativeStartrAction(sender: AnyObject) {print("Test message")}
+    @IBAction func alternativeStartrAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
-    @IBAction func altrnativeGrowerAction(sender: AnyObject) {print("Test message")}
+    @IBAction func altrnativeGrowerAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
-    @IBAction func alternativeFinisherAction(sender: AnyObject) {print("Test message")}
+    @IBAction func alternativeFinisherAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
-    @IBAction func alternativeWdAction(sender: AnyObject) {print("Test message")}
+    @IBAction func alternativeWdAction(sender: AnyObject) {print(appDelegateObj.testFuntion())}
     
     @IBAction func alternativeStarterMoleculeAction(sender: AnyObject) {
         view.endEditing(true)
@@ -2533,15 +2533,15 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         if antiFromDurationSecondTextField.text! < antiToDurationSecondTextField.text! {
             
         } else if antiFromDurationSecondTextField.text! > antiToDurationSecondTextField.text! {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     @IBAction func toAntiboticThreeTextField(sender: AnyObject) {
         
         if antiFromDurationThirdTextField.text! < antiToDurationThirdTextField.text! {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         } else if antiFromDurationThirdTextField.text! > antiToDurationThirdTextField.text! {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
         
     }
@@ -2629,7 +2629,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
  
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if coccidsisStartrDrinking.text == "- Select -"
+            if coccidsisStartrDrinking.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -2666,7 +2666,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         if  Bundle.main.versionNumber > "7.5.1"
         {
             
-            if coccidsisGrowerDrinking.text == "- Select -"
+            if coccidsisGrowerDrinking.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -2695,7 +2695,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if cocciFinisherDrinkingWater.text == "- Select -"
+            if cocciFinisherDrinkingWater.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -2728,7 +2728,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if coccidiosisWdDrinking.text == "- Select -"
+            if coccidiosisWdDrinking.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -2760,7 +2760,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if fivthMoleculelBL.text == "- Select -"
+            if fivthMoleculelBL.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -2792,7 +2792,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         
         if  Bundle.main.versionNumber > "7.5.1"
         {
-            if sixthMoleculeLbl.text == "- Select -"
+            if sixthMoleculeLbl.text == appDelegateObj.selectStr
             {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
@@ -3430,7 +3430,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             if i == 0 {
                 
-                if coccidsisStartrDrinking.text == NSLocalizedString("- Select -", comment: ""){
+                if coccidsisStartrDrinking.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     coccidsisStartrDrinking.text = ""
                     
@@ -3444,7 +3444,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             }
             else if i == 1 {
                 
-                if coccidsisGrowerDrinking.text == NSLocalizedString("- Select -", comment: ""){
+                if coccidsisGrowerDrinking.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     coccidsisGrowerDrinking.text = ""
                     
@@ -3458,7 +3458,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             }
             
             else if i == 2 {
-                if cocciFinisherDrinkingWater.text == NSLocalizedString("- Select -", comment: ""){
+                if cocciFinisherDrinkingWater.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     cocciFinisherDrinkingWater.text = ""
                     
@@ -3472,7 +3472,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             }
             
             else if i == 3{
-                if coccidiosisWdDrinking.text == NSLocalizedString("- Select -", comment: ""){
+                if coccidiosisWdDrinking.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     coccidiosisWdDrinking.text = ""
                     
@@ -3487,7 +3487,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             else if i == 4 {
                 
-                if fivthMoleculelBL.text == NSLocalizedString("- Select -", comment: ""){
+                if fivthMoleculelBL.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     fivthMoleculelBL.text = ""
                     
@@ -3502,7 +3502,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             else if i == 5{
                 
-                if sixthMoleculeLbl.text == NSLocalizedString("- Select -", comment: ""){
+                if sixthMoleculeLbl.text == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
                     
                     sixthMoleculeLbl.text = ""
                     
@@ -3710,15 +3710,15 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         UserDefaults.standard.set(feedId , forKey: "feedId")
         UserDefaults.standard.synchronize()
         
-        coccidsisStartrDrinking.text = NSLocalizedString("- Select -", comment: "")
-        coccidsisGrowerDrinking.text = NSLocalizedString("- Select -", comment: "")
-        cocciFinisherDrinkingWater.text = NSLocalizedString("- Select -", comment: "")
-        coccidiosisWdDrinking.text = NSLocalizedString("- Select -", comment: "")
-        fivthMoleculelBL.text = NSLocalizedString("- Select -", comment: "")
-        sixthMoleculeLbl.text = NSLocalizedString("- Select -", comment: "")
+        coccidsisStartrDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        coccidsisGrowerDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        cocciFinisherDrinkingWater.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        coccidiosisWdDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        fivthMoleculelBL.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         feed5textField.text = ""
         from5TextField.text = ""
-        sixthMoleculeLbl.text = NSLocalizedString("- Select -", comment: "")
+        sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         feed6TextField.text = ""
         from6teXTfield.text = ""
         toFeed5TextFeidl.text = ""
@@ -3777,7 +3777,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         toGrowerTextField.text = ""
         toFinisherTextField.text = ""
         toWdTextField.text = ""
-        coccidiosisVaccineDrinkin.text = NSLocalizedString("- Select -", comment: "")
+        coccidiosisVaccineDrinkin.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         antiDosageFirstTextField.text = ""
         antiDosageSecondTextField.text = ""
         antiDosageThirdTextField.text = ""
@@ -3816,7 +3816,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         myToThirdTextField.text = ""
         myToFourTextField.text = ""
         feedProgramTextField.text = ""
-        addFarmSelectLbl.text = NSLocalizedString("- Select -", comment: "")
+        addFarmSelectLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         self.coccidiosisControlBtnActoin(sender: "0" as AnyObject)
         
         self.printSyncLblCount()
@@ -4916,7 +4916,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         }
         else
         {
-            addFarmSelectLbl.text = NSLocalizedString("- Select -", comment: "")
+            addFarmSelectLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
         
         btnTag = 0

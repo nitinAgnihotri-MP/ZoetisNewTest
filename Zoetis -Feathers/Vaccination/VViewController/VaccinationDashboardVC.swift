@@ -652,7 +652,7 @@ class VaccinationDashboardVC: BaseViewController{
                     }
                     self?.hasDataLoaded = true
                     self?.showPopup()
-                } else if status == "No Data Found"{
+                } else if status == appDelegateObj.noDataFoundStr{
                     self?.hasDataLoaded = true
                     self?.showPopup()
                     self?.dismissGlobalHUD(self?.view ?? UIView())
@@ -794,7 +794,7 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     @IBAction func notificationBtnsAction(_ sender: UIButton) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     @IBAction func closeBtnAction(_ sender: UIButton) {

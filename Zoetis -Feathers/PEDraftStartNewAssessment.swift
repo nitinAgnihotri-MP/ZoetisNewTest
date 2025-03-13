@@ -917,6 +917,7 @@ class PEDraftStartNewAssessment: BaseViewController {
     @IBAction func nextBtnAction(_ sender: Any) {
         
         self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { [self] status in
+            print(status)
         }
         
         guard let date = self.peNewAssessment.evaluationDate, date.count > 0 else {

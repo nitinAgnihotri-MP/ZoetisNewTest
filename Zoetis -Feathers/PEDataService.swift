@@ -33,21 +33,21 @@ class PEDataService{
                                 completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
                             }else{
 
-                                completion("No Data Found", nil)
+                                completion(appDelegateObj.noDataFoundStr, nil)
                             }
                         }else{
-                            completion("No Data Found", nil)
+                            completion(appDelegateObj.noDataFoundStr, nil)
                         }
                         
                     }else{
-                        completion("No Data Found", nil)
+                        completion(appDelegateObj.noDataFoundStr, nil)
                     }
                     
                 }else{
-                    completion("No Data Found", nil)
+                    completion(appDelegateObj.noDataFoundStr, nil)
                 }
             }else{
-                completion("No Data Found", nil)
+                completion(appDelegateObj.noDataFoundStr, nil)
             }
             
         })
@@ -72,22 +72,22 @@ class PEDataService{
                                 PEAssessmentsDAO.sharedInstance.saveRejectedAssessments(certificationDTOArr: vaccinationCertificationObj ?? [PE_AssessmentRejectedDTO](), loginUserId: loginuserId)
                                 completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
                             }else{
-                                completion("No Data Found", nil)
+                                completion(appDelegateObj.noDataFoundStr, nil)
                             }
                             
                         }else{
-                            completion("No Data Found", nil)
+                            completion(appDelegateObj.noDataFoundStr, nil)
                         }
                         
                     }else{
-                        completion("No Data Found", nil)
+                        completion(appDelegateObj.noDataFoundStr, nil)
                     }
                     
                 }else{
-                    completion("No Data Found", nil)
+                    completion(appDelegateObj.noDataFoundStr, nil)
                 }
             }else{
-                completion("No Data Found", nil)
+                completion(appDelegateObj.noDataFoundStr, nil)
             }
         })
     }
@@ -123,23 +123,23 @@ class PEDataService{
                                     }
                                     completion(responseStr, nil)
                                 }else{
-                                    completion("No Data Found", nil)
+                                    completion(appDelegateObj.noDataFoundStr, nil)
                                 }
                             }else{
-                                completion("No Data Found", nil)
+                                completion(appDelegateObj.noDataFoundStr, nil)
                             }
                         } catch let error as NSError {
                             print("Failed to load: \(error.localizedDescription)")
-                            completion("No Data Found", nil)
+                            completion(appDelegateObj.noDataFoundStr, nil)
                         }
                     }else{
-                        completion("No Data Found", nil)
+                        completion(appDelegateObj.noDataFoundStr, nil)
                     }
                 }else{
-                    completion("No Data Found", nil)
+                    completion(appDelegateObj.noDataFoundStr, nil)
                 }
             }else{
-                completion("No Data Found", nil)
+                completion(appDelegateObj.noDataFoundStr, nil)
             }
             
         })
@@ -184,22 +184,22 @@ class PEDataService{
                                 PlateTypesDAO.sharedInstance.savePlateTypes(userId: loginuserId, plateTypeDTO: vaccinationCertificationObj!)
                                 completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
                             }else{
-                                completion("No Data Found", nil)
+                                completion(appDelegateObj.noDataFoundStr, nil)
                             }
                             
                         }else{
-                            completion("No Data Found", nil)
+                            completion(appDelegateObj.noDataFoundStr, nil)
                         }
                         
                     }else{
-                        completion("No Data Found", nil)
+                        completion(appDelegateObj.noDataFoundStr, nil)
                     }
                     
                 }else{
-                    completion("No Data Found", nil)
+                    completion(appDelegateObj.noDataFoundStr, nil)
                 }
             }else{
-                completion("No Data Found", nil)
+                completion(appDelegateObj.noDataFoundStr, nil)
             }
             
         })

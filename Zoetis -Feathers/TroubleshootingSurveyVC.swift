@@ -125,7 +125,7 @@ class TroubleshootingSurveyVC:BaseViewController
                 }
                 
         default:
-                do {print("Test message")}
+                do {print(appDelegateObj.testFuntion())}
             }
         }
         

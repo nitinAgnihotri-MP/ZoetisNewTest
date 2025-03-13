@@ -801,7 +801,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
     }
     
     func printSyncLblCount(){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     /*******************************************************************************/

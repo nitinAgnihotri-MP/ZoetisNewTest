@@ -89,7 +89,7 @@ class VaccinationHeaderContainerVC: BaseViewController {
         let alertController = UIAlertController(title: "Clear Session", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            NSLog("OK Pressed")
+            
             self.finishSession()
         }
         let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
@@ -103,7 +103,7 @@ class VaccinationHeaderContainerVC: BaseViewController {
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            NSLog("OK Pressed")
+            
             NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "LogoutClicked"),object: nil))
             
         }

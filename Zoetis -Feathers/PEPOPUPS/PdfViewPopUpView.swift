@@ -40,7 +40,7 @@ class PdfViewPopUpView: BaseViewController {
             pdfViewIs.document = PDFDocument(url: fileURL!)
             
         }  else {
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
     

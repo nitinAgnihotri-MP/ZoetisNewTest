@@ -759,7 +759,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
             let syncArr = CoreDataHandlerPVE().fetchDataForSync()
             if syncArr.count > 0{
                 dismissGlobalHUD(self.view)
-                self.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+                self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + "*Note - Please don't minimize App while syncing.")
                 
                 for (_, val) in syncArr.enumerated(){
                     if !isSync {
@@ -800,7 +800,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         CoreDataHandlerPVE().updateStatusForSync(syncId, text: true, forAttribute: "syncedStatus")
         let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
         peHeaderViewController.labelSyncCount.text = "\(syncArr.count)"
-        showtoast(message: "Data synced successfully.")
+        showtoast(message: appDelegateObj.dataSynedSuccess)
         
     }
     
@@ -857,7 +857,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 
                 for (indx, obj) in tempImgArrDict.enumerated(){
                     
-                    self.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+                    self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + "*Note - Please don't minimize App while syncing.")
                     ZoetisWebServices.shared.postSaveAssessmentImagesDetailsForPVE(controller: self, parameters: obj, completion: { [weak self] (json, error) in
                         guard let `self` = self, error == nil else { return }
                         
@@ -1477,7 +1477,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         }
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat="MM/dd/YYYY HH:mm:ss Z"
+        dateFormatter.dateFormat=appDelegateObj.MMddYYYYHHmmss
         let date = dateFormatter.string(from: objEvaluationDate) as String
         
         let evaluationDate = (dict).value(forKey: "evaluationDate")  as? String

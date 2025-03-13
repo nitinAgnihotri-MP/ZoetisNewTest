@@ -416,7 +416,7 @@ class QuestionnaireVC: BaseViewController {
     }
     
     @objc  func nextBtnAction(_ sender: UIButton){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     @objc  func shippingBtnAction(_ sender: UIButton){
@@ -608,7 +608,7 @@ class QuestionnaireVC: BaseViewController {
     }
     
     func addACtions(){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     func  configureSafetyAwarenessVw(){
@@ -701,7 +701,7 @@ class QuestionnaireVC: BaseViewController {
     
     
     func setValues(){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     
@@ -1291,7 +1291,7 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                                     }
                                 }
                             }
-                            if cell.empIndex > 0 && cell.empIndex < employeesAddedArr.count {print("Test message")}
+                            if cell.empIndex > 0 && cell.empIndex < employeesAddedArr.count {print(appDelegateObj.testFuntion())}
                             
                             //---*********************
                             if employeesAddedArr.count  > 0{
@@ -1465,7 +1465,7 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                             }
                             vc.commentCompleted = {[unowned self] ( note) in
                                 if note == "" {
-                                    let image = UIImage(named: "PEcomment.png")
+                                    let image = UIImage(named: appDelegateObj.peCommentStr)
                                     cell.commentBtn.setImage(image, for: .normal)
                                     
                                 } else {

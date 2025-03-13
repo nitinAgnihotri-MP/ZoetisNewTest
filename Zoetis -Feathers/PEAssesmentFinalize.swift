@@ -121,8 +121,8 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     
     var strings = [String]()
     let refridFreezerNitro = "Refrigerator\n/Freezer\n/Liquid Nitrogen"
-    let extendedMicStr = "Extended Microbial"
-    let peCommentImg = "PEcomment.png"
+    let extendedMicStr = appDelegateObj.extendedMicrobialStr
+    let peCommentImg = appDelegateObj.peCommentStr
     let peCommentSelectedStr = "PECommentSelected.png"
     let ddmmyyStr = appDelegateObj.ddMMyyyStr
     let incompleteDataStr = "Incomplete Data"
@@ -136,6 +136,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     let mil300 = "300 ml"
     let mil400 = "400 ml"
     let mil500 = "500 ml"
+    let mil800 = "800 ml"
     let pleaseEnterMessage = "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccination Application"
     let pleaseEnterMessageVac = "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application"
     let peaseEnterVacDet = "Please enter vaccine details in the Vaccine Preparation & Sterility. "
@@ -731,7 +732,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
                         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                             _ in
-                            NSLog("OK Pressed")
+                            
                             self.saveFinalizedData()
                         }
                         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
@@ -1731,10 +1732,6 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
             
-//            cell.doseCompletion  = {[unowned self] ( error) in
-//                
-//            }
-            
             cell.nameCompletion  = {[unowned self] ( text) in
                 self.tableviewIndexPath = indexPath
                 
@@ -2029,7 +2026,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         self.ml = 400.00
                     } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
                         self.ml = 500.00
-                    }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
+                    }else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
                         self.ml = 800.00
                     }
                     let c = self.ml
@@ -2100,7 +2097,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             self.ml = 400.00
                         } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
                             self.ml = 500.00
-                        }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
+                        }else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
                             self.ml = 800.00
                         }
                         let c = self.ml
@@ -2137,11 +2134,6 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
                 self.dropHiddenAndShow()
             }
-            
-            cell.doseCompletion  = {[unowned self] ( error) in
-                
-            }
-            
             
             cell.nameCompletion  = {[unowned self] ( text) in
                 self.tableviewIndexPath = indexPath
@@ -4507,7 +4499,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             self.ml = 400.00
         } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
             self.ml = 500.00
-        }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
+        }else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
             self.ml = 800.00
         }
         
@@ -5591,7 +5583,7 @@ extension PEAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationCon
         //                    imagePicker.sourceType = .savedPhotosAlbum
         //                    imagePicker.allowsEditing = false
         //                    imagePicker.delegate = self
-        //                    present(imagePicker, animated: true, completion: {print("Test message")})
+        //                    present(imagePicker, animated: true, completion: {print(appDelegateObj.testFuntion())})
         //
         //
         //                }

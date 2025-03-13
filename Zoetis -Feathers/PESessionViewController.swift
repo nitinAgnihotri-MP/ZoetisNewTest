@@ -162,7 +162,7 @@ class PESessionViewController: BaseViewController {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             })
         }else{
-            print("test message")
+            print(appDelegateObj.testFuntion())
         }
     }
 }
@@ -1042,7 +1042,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         let oldDate = olDateFormatter.date(from: inputDate)
         
         let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = "yyyy-MM-dd"
+        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
         
         if oldDate != nil{
             return convertDateFormatter.string(from: oldDate!)

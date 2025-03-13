@@ -78,7 +78,7 @@ class PulletSelectionViewController: BaseViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK:  **********Setup Header **************************************/
@@ -157,7 +157,7 @@ class PulletSelectionViewController: BaseViewController {
     }
     
     private func navigateToModuleSelectionPVE(){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     // MARK:  ********** Navigate to Microbial Module **************************************/
     private func navigateToMicrobial(){

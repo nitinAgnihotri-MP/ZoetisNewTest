@@ -807,7 +807,7 @@ class PEStartNewAssessment: BaseViewController {
     }
     // MARK: - Show Incubation Other View
     func showIncubationOthers(){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     // MARK: - Hide Manufacturer Other  View
@@ -946,6 +946,7 @@ class PEStartNewAssessment: BaseViewController {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { [self] status in
+                print(status)
             }
         }
     }
@@ -1345,7 +1346,7 @@ class PEStartNewAssessment: BaseViewController {
         }
         //
         
-        if (date.count > 0 ){print("Test message")} else  {
+        if (date.count > 0 ){} else  {
             let superviewCurrent =  evaluationDateButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1356,7 +1357,7 @@ class PEStartNewAssessment: BaseViewController {
                 }
             }
         }
-        if (customer.count > 0 ){print("Test message")} else  {
+        if (customer.count > 0 ){} else  {
             let superviewCurrent =  customerButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1367,7 +1368,7 @@ class PEStartNewAssessment: BaseViewController {
                 }
             }
         }
-        if (selectedTSR.count > 0 ){print("Test message")} else  {
+        if (selectedTSR.count > 0 ){} else  {
             let superviewCurrent = tsrButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1380,7 +1381,7 @@ class PEStartNewAssessment: BaseViewController {
         }
         
         
-        if (site.count > 0 ){print("Test message")} else  {
+        if (site.count > 0 ){} else  {
             let superviewCurrent =  siteButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1391,7 +1392,7 @@ class PEStartNewAssessment: BaseViewController {
                 }
             }
         }
-        if (evaluationName.count > 0){print("Test message")} else  {
+        if (evaluationName.count > 0){} else  {
             let superviewCurrent =  evaluationTypeButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1404,7 +1405,7 @@ class PEStartNewAssessment: BaseViewController {
             }
             
         }
-        if (evaluator.count  > 0){print("Test message")} else  {
+        if (evaluator.count  > 0){} else  {
             let superviewCurrent =  evaluatorButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1416,7 +1417,7 @@ class PEStartNewAssessment: BaseViewController {
                 }
             }
         }
-        if (reasonForVisit.count > 0){print("Test message")} else  {
+        if (reasonForVisit.count > 0){} else  {
             let superviewCurrent =  visitButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -2013,7 +2014,7 @@ extension PEStartNewAssessment : DatePickerPopupViewControllerProtocol{
     }
     
     func doneButtonTapped(string:String){
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
 }
 
@@ -2184,8 +2185,6 @@ extension PEStartNewAssessment{
                 self.navigationController?.pushViewController(vc!, animated: true)
                 return
             }
-        } else {
-            print("test message")
         }
         
         
@@ -2342,7 +2341,7 @@ extension PEStartNewAssessment {
     }
     
     private func handleAssessmentCategoriesResponse(_ json: JSON) {
-        print("Test Message",appDelegateObj.testFuntion())
+        print(appDelegateObj.testFuntion())
     }
     
     

@@ -326,7 +326,7 @@
 //            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
 //            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //                _ in
-//                NSLog("OK Pressed")
+//                
 //                self.saveFinalizedData()
 //            }
 //            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
@@ -344,7 +344,7 @@
 //        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //            _ in
-//            NSLog("OK Pressed")
+//            
 //            self.saveDraftData()
 //        }
 //        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
@@ -362,7 +362,7 @@
 //        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //            _ in
-//            NSLog("OK Pressed")
+//            
 //            self.saveDraftData()
 //        }
 //        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
@@ -1061,7 +1061,7 @@
 //            } else {
 //                cell.btnImageCount.isHidden = false
 //            }
-//            let image1 = UIImage(named: "PEcomment.png")
+//            let image1 = UIImage(named: appDelegateObj.peCommentStr)
 //            let image2 = UIImage(named: "PECommentSelected.png")
 //            if assessment?.note == "" {
 //                cell.noteBtn.setImage(image1, for: .normal)
@@ -1114,7 +1114,7 @@
 //
 //                vc.commentCompleted = {[unowned self] ( note) in
 //                    if note == "" {
-//                        let image = UIImage(named: "PEcomment.png")
+//                        let image = UIImage(named: appDelegateObj.peCommentStr)
 //                        cell.noteBtn.setImage(image, for: .normal)
 //
 //                    } else {
@@ -2338,7 +2338,7 @@
 //            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
 //            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //                _ in
-//                NSLog("OK Pressed")
+//                
 //                self.saveFinalizedData()
 //            }
 //            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
@@ -2354,7 +2354,7 @@
 //        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //            _ in
-//            NSLog("OK Pressed")
+//            
 //            self.saveDraftData()
 //        }
 //        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
@@ -2369,7 +2369,7 @@
 //        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //            _ in
-//            NSLog("OK Pressed")
+//            
 //            self.saveDraftData()
 //        }
 //        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
@@ -2969,7 +2969,7 @@
 //            } else {
 //                cell.btnImageCount.isHidden = false
 //            }
-//            let image1 = UIImage(named: "PEcomment.png")
+//            let image1 = UIImage(named: appDelegateObj.peCommentStr)
 //            let image2 = UIImage(named: "PECommentSelected.png")
 //            if assessment?.note == "" {
 //                cell.noteBtn.setImage(image1, for: .normal)
@@ -3019,7 +3019,7 @@
 //                vc.infoText = assessment?.informationText ?? ""
 //                vc.commentCompleted = { note in
 //                    if note == "" {
-//                        let image = UIImage(named: "PEcomment.png")
+//                        let image = UIImage(named: appDelegateObj.peCommentStr)
 //                        cell.noteBtn.setImage(image, for: .normal)
 //                    } else {
 //                        let image = UIImage(named: "PECommentSelected.png")

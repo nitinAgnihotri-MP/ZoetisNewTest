@@ -31,14 +31,14 @@ class DataService{
                             if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
                                 completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
                             }else{
-                                completion("No Data Found", nil)
+                                completion(appDelegateObj.noDataFoundStr, nil)
                             }
                         }
                     }
                 }
             }
             else{
-                completion("No Data Found", nil)
+                completion(appDelegateObj.noDataFoundStr, nil)
             }
         })
     }
@@ -712,7 +712,7 @@ class DataService{
                                 SubmittedCertificationsService.sharedInstance.insertData(userId: loginuserId, vaccinationCertificationObj!)
                                 completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
                             }
-                            completion("No Data Found", nil)
+                            completion(appDelegateObj.noDataFoundStr, nil)
                             
                         }
                         
