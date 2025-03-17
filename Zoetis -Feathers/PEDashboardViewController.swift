@@ -637,11 +637,11 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     }
     
     private func addComplexPopup(isFromSyncDel:Bool = false) {
-        print(appDelegateObj.testFuntion())
+        appDelegateObj.testFuntion()
     }
     
     private func addComplexPopupWithoutDataCheck(isFromSyncDel:Bool = false) {
-        print(appDelegateObj.testFuntion())
+        appDelegateObj.testFuntion()
     }
     // MARK: - Navigate to View Assessment.
     func navigateToViewAssessment(){
@@ -738,7 +738,6 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             if !lastTwoAssessmentsSubmitId.contains(assessment.dataToSubmitID ?? "" ){
                 lastTwoAssessmentsDate.append(assessment.evaluationDate ?? "")
                 lastTwoAssessmentsSubmitId.append(assessment.dataToSubmitID ?? "")
-                
             }
         }
         

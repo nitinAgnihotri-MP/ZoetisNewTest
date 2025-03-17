@@ -44,7 +44,7 @@ public struct PVEAgeOfBirdsRes {
         age = json["Age"].stringValue
         birdId = json["Bird_Id"].intValue
         
-        CoreDataHandlerPVE().saveAgeOfBirdsDetailsInDB(NSNumber(value: id!), bird_Id: NSNumber(value: birdId!), age: age!)
+        CoreDataHandlerPVE().saveAgeOfBirdsDetailsInDB(NSNumber(value: id!), birdId: NSNumber(value: birdId!), age: age!)
 
     }
 

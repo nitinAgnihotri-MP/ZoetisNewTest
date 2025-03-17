@@ -48,7 +48,7 @@ public struct PVESiteIdNameRes {
         complex_Id = json["Complex_Id"].intValue
         customer_Id = json["Customer_Id"].intValue
 
-        CoreDataHandlerPVE().saveSiteIDNameDetailsInDB(id! as NSNumber, siteId: siteId! as NSNumber, siteName: siteName!, complex_Id: NSNumber(value: complex_Id!),  customerId: NSNumber(value: customer_Id!))
+        CoreDataHandlerPVE().saveSiteIDNameDetailsInDB(id! as NSNumber, siteId: siteId! as NSNumber, siteName: siteName!, complexId: NSNumber(value: complex_Id!),  customerId: NSNumber(value: customer_Id!))
     }
 
 }

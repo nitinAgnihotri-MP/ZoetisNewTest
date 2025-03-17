@@ -48,7 +48,7 @@ struct Constants {
     static var SelectedFarmTurkey : Int = 0
     static var deviceType = "iOS"
     
-    
+    static var appURLink =   "https://itunes.apple.com/us/app/poultryview-360/id1228196698?mt=8"
     struct ControllerIdentifier {
         static let dashboardController = "DashboardViewController"
         static let searchController = "SearchViewController"

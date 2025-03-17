@@ -50,7 +50,7 @@ public struct PVEOtherPdfRes {
             fileName = json["FileName"].stringValue
             pdfPath = json["PdfPath"].stringValue
             pdfCompletePath = json["PdfCompletePath"].stringValue
-            CoreDataHandlerPVE().saveOtherPdfInDB(fileName: fileName!, PdfPath: pdfPath!, PdfCompletePath: pdfCompletePath!)
+            CoreDataHandlerPVE().saveOtherPdfInDB(fileName: fileName!, otherPdfPath: pdfPath!, otherPdfCompletePath: pdfCompletePath!)
     
         }
 

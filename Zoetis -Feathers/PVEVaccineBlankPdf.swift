@@ -51,7 +51,7 @@ public struct PVEBlankPdfRes {
             fileName = json["FileName"].stringValue
             pdfPath = json["PdfPath"].stringValue
             pdfCompletePath = json["PdfCompletePath"].stringValue
-            CoreDataHandlerPVE().saveBlankPdfInDB(fileName: fileName!, PdfPath: pdfPath!, PdfCompletePath: pdfCompletePath!)
+            CoreDataHandlerPVE().saveBlankPdfInDB(fileName: fileName!, pdfPathStr: pdfPath!, pdfCompletePathStr: pdfCompletePath!)
     
         }
 

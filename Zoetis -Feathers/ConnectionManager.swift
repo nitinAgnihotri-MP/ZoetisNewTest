@@ -10,7 +10,7 @@ import Reachability
 class ConnectionManager {
 
     static let shared = ConnectionManager()
-//    private init () {}
+
 
     func hasConnectivity() -> Bool {
         do {

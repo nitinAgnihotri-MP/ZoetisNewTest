@@ -125,9 +125,9 @@ class PVEVaccinationCrewSafetyCell: UITableViewCell {
         
         var tempArr = NSArray()
         if timeStampStr.count > 0{
-            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(timeStampStr, seq_Number: NSNumber(value: seq_Number), rowId: id, Entity: "PVE_ImageEntitySync")
+            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(timeStampStr, seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntitySync")
         }else{
-            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(timeStampStr, seq_Number: NSNumber(value: seq_Number), rowId: id, Entity: "PVE_ImageEntity")
+            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(timeStampStr, seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntity")
         }
         
         if tempArr.count > 0 {

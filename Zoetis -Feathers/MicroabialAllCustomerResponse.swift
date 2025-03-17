@@ -47,7 +47,7 @@ public struct MicroabialCustomer {
         customerId = json["Id"].intValue
         customerName = json["Text"].stringValue
         
-        CoreDataHandlerMicro().saveCustomerDetailsInDB(NSNumber(value: customerId!), CustName: customerName!)
+        CoreDataHandlerMicro().saveCustomerDetailsInDB(NSNumber(value: customerId!), custName: customerName!)
     }
     
     

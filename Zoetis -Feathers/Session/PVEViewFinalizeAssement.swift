@@ -223,7 +223,7 @@ class PVEViewFinalizeAssement: BaseViewController {
         assessmentDateLbl.text = getDraftValueForKey(key: "evaluationDate") as? String
         
         let selectedBirdTypeId = getDraftValueForKey(key: "selectedBirdTypeId") as? Int
-        assessmentArr = CoreDataHandlerPVE().fetchSyncAssementArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: currentTimeStamp)
+        assessmentArr = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: currentTimeStamp)
         
         let selectedItem = IndexPath(row: Int(truncating: NSNumber(value: currentSel_CategoryIndex)), section: 0)
         collectionView.selectItem(at: selectedItem, animated: true, scrollPosition: .centeredVertically)
@@ -247,7 +247,7 @@ class PVEViewFinalizeAssement: BaseViewController {
         
         currentCategoryTotalScore = 0
         let selectedBirdTypeId = getDraftValueForKey(key: "selectedBirdTypeId") as? Int
-        assessmentArr = CoreDataHandlerPVE().fetchSyncAssementArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: currentTimeStamp)
+        assessmentArr = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: currentTimeStamp)
         
         tblView.reloadData()
         let allCategorySelected = checkAllCategorySeledtedOneQuestion()
@@ -613,9 +613,9 @@ extension PVEViewFinalizeAssement:  UIImagePickerControllerDelegate,UINavigation
             id = idArr![currentSelectedBtnIndex]          }
         
         if currentTimeStamp.count > 0{
-            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seq_Number: NSNumber(value: seq_Number), rowId: id, Entity: "PVE_ImageEntitySync")
+            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntitySync")
         }else{
-            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seq_Number: NSNumber(value: seq_Number), rowId: id, Entity: "PVE_ImageEntity")
+            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntity")
         }
         
         let imgDaraArr = tempArr.value(forKey: "imageData") as? [Data]

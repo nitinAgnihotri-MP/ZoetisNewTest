@@ -16,9 +16,9 @@ class CoreDataHandlerPVE: NSObject {
     
     let sharedManager = PVEShared.sharedInstance
     
-    private var managedContext  = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType) //: NSManagedObjectContext! = nil
+    private var managedContext  = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType)
     
-    private var CustData = [NSManagedObject]()
+    private var custData = [NSManagedObject]()
     private var ageOfBirdsData = [NSManagedObject]()
     private var breedOfBirdsData = [NSManagedObject]()
     private var siteIDData = [NSManagedObject]()
@@ -30,7 +30,7 @@ class CoreDataHandlerPVE: NSObject {
     private var sessionPVE = [NSManagedObject]()
     private var assessmentQ = [NSManagedObject]()
     
-    private var pve_Sync = [NSManagedObject]()
+    private var pveSync = [NSManagedObject]()
     
     private var serotype = [NSManagedObject]()
     private var vaccineNames = [NSManagedObject]()
@@ -145,27 +145,27 @@ class CoreDataHandlerPVE: NSObject {
         serotype.append(person)
     }
     
-    func saveCustomerDetailsInDB(_ custId: NSNumber, CustName: String) {
+    func saveCustomerDetailsInDB(_ custId: NSNumber, custName: String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let entity = NSEntityDescription.entity(forEntityName: "Customer_PVE", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(custId, forKey: "customerId")
-        person.setValue(CustName, forKey: "customerName")
+        person.setValue(custName, forKey: "customerName")
         do {
             try managedContext.save()
         } catch {
             print(message)
         }
         
-        CustData.append(person)
+        custData.append(person)
         
     }
     
     
     
-    func saveBlankPdfInDB(fileName: String, PdfPath: String , PdfCompletePath: String ) {
+    func saveBlankPdfInDB(fileName: String, pdfPathStr: String , pdfCompletePathStr: String ) {
         
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
@@ -174,8 +174,8 @@ class CoreDataHandlerPVE: NSObject {
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
         person.setValue(fileName, forKey: "fileName")
-        person.setValue(PdfPath, forKey: "pdfPath")
-        person.setValue(PdfCompletePath, forKey: "pdfCompletePath")
+        person.setValue(pdfPathStr, forKey: "pdfPath")
+        person.setValue(pdfCompletePathStr, forKey: "pdfCompletePath")
         
         do {
             try managedContext.save()
@@ -187,7 +187,7 @@ class CoreDataHandlerPVE: NSObject {
     
     
     
-    func saveOtherPdfInDB(fileName: String, PdfPath: String , PdfCompletePath: String ) {
+    func saveOtherPdfInDB(fileName: String, otherPdfPath: String , otherPdfCompletePath: String ) {
         
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
@@ -195,8 +195,8 @@ class CoreDataHandlerPVE: NSObject {
         let entity = NSEntityDescription.entity(forEntityName: "PVE_OtherPdfDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(fileName, forKey: "fileName")
-        person.setValue(PdfPath, forKey: "pdfPath")
-        person.setValue(PdfCompletePath, forKey: "pdfCompletePath")
+        person.setValue(otherPdfPath, forKey: "pdfPath")
+        person.setValue(otherPdfCompletePath, forKey: "pdfCompletePath")
         
         do {
             try managedContext.save()
@@ -257,10 +257,8 @@ class CoreDataHandlerPVE: NSObject {
         
         let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_CustomerComplexPopup")
         if valuee.count > 0 {
-            let currentUserId =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
             
             let customerArr = valuee.value(forKey: "customer")  as! NSArray
-            let customerStr = customerArr[0] as! String
             let siteNameArr = valuee.value(forKey: "complexName")  as! NSArray
             let siteNameStr = siteNameArr[0] as! String
             
@@ -321,7 +319,7 @@ class CoreDataHandlerPVE: NSObject {
         
     }
     
-    func fetchSyncAssementArr(selectedBirdTypeId:Int, type:String, syncId:String) -> NSArray {
+    func getSyncdAssementsArr(selectedBirdTypeId:Int, type:String, syncId:String) -> NSArray {
         
         var dataArray = NSArray()
         
@@ -474,11 +472,7 @@ class CoreDataHandlerPVE: NSObject {
         if valuee.count > 0 {
             
             let customerIdArr = valuee.value(forKey: "customerId")  as! NSArray
-            let customerId = customerIdArr[0] as! Int
-            
-            
             let complexIdArr = valuee.value(forKey: "complexId")  as! NSArray
-            let complexIdStr = complexIdArr[0] as! Int
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
             
@@ -511,12 +505,7 @@ class CoreDataHandlerPVE: NSObject {
         if valuee.count > 0 {
             
             let customerIdArr = valuee.value(forKey: "customerId")  as! NSArray
-            let customerId = customerIdArr[0] as! Int
-            
-            
             let complexIdArr = valuee.value(forKey: "complexId")  as! NSArray
-            let complexIdStr = complexIdArr[0] as! Int
-            //   print("complexId----\(complexIdStr)")
             
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
@@ -550,13 +539,7 @@ class CoreDataHandlerPVE: NSObject {
         if valuee.count > 0 {
             
             let customerIdArr = valuee.value(forKey: "customerId")  as! NSArray
-            let customerId = customerIdArr[0] as! Int
-            
-            
             let complexIdArr = valuee.value(forKey: "complexId")  as! NSArray
-            let complexIdStr = complexIdArr[0] as! Int
-            //   print("complexId----\(complexIdStr)")
-            
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
             
@@ -755,11 +738,11 @@ class CoreDataHandlerPVE: NSObject {
             print(message)
         }
         
-        CustData.append(person)
+        custData.append(person)
         
     }
     
-    func saveEvaluationTypeInDB(_ evaluationId: NSNumber, evaluationName: String, isDeletd: Bool, module_Id:NSNumber) {
+    func saveEvaluationTypeInDB(_ evaluationId: NSNumber, evaluationName: String, isDeletd: Bool, moduleId:NSNumber) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
@@ -768,7 +751,7 @@ class CoreDataHandlerPVE: NSObject {
         person.setValue(evaluationId, forKey: "evaluationId")
         person.setValue(evaluationName, forKey: "evaluationName")
         person.setValue(isDeletd, forKey: "isDeletd")
-        person.setValue(module_Id, forKey: "module_Id")
+        person.setValue(moduleId, forKey: "module_Id")
         do {
             try managedContext.save()
         } catch {
@@ -799,14 +782,14 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     
-    func saveAgeOfBirdsDetailsInDB(_ id: NSNumber, bird_Id: NSNumber, age: String) {
+    func saveAgeOfBirdsDetailsInDB(_ id: NSNumber, birdId: NSNumber, age: String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let entity = NSEntityDescription.entity(forEntityName: "PVE_AgeOfBirds", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(id, forKey: "id")
-        person.setValue(bird_Id, forKey: "bird_Id")
+        person.setValue(birdId, forKey: "bird_Id")
         person.setValue(age, forKey: "age")
         do {
             try managedContext.save()
@@ -867,7 +850,7 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     
-    func saveSiteIDNameDetailsInDB(_ id: NSNumber, siteId: NSNumber, siteName:String, complex_Id:NSNumber, customerId:NSNumber) {
+    func saveSiteIDNameDetailsInDB(_ id: NSNumber, siteId: NSNumber, siteName:String, complexId:NSNumber, customerId:NSNumber) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
@@ -876,7 +859,7 @@ class CoreDataHandlerPVE: NSObject {
         person.setValue(id, forKey: "id")
         person.setValue(siteId, forKey: "site_Id")
         person.setValue(siteName, forKey: "site_Name")
-        person.setValue(complex_Id, forKey: "complex_Id")
+        person.setValue(complexId, forKey: "complex_Id")
         person.setValue(customerId, forKey: "customer_Id")
         do {
             try managedContext.save()
@@ -1129,7 +1112,6 @@ class CoreDataHandlerPVE: NSObject {
         isSelected = true
         var sumMarks = Int()
         var maxMarks = Int()
-        var dataArray = NSArray()
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -1139,10 +1121,10 @@ class CoreDataHandlerPVE: NSObject {
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
+                var dataArray = results as NSArray
                 
-                let max_ScoreArr = dataArray.value(forKey: "max_Score") as? [Int]
-                for (_, obj) in max_ScoreArr!.enumerated() {
+                let maxScoreArr = dataArray.value(forKey: "max_Score") as? [Int]
+                for (_, obj) in maxScoreArr!.enumerated() {
                     sumMarks = sumMarks + obj
                 }
                 
@@ -1150,9 +1132,9 @@ class CoreDataHandlerPVE: NSObject {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 if let results = fetchedResult {
                     dataArray = results as NSArray
-                    let max_MarksArr = dataArray.value(forKey: "max_Mark") as? [Int]
-                    if max_MarksArr!.count > 0{
-                        maxMarks = max_MarksArr![0]
+                    let maxMarksArr = dataArray.value(forKey: "max_Mark") as? [Int]
+                    if maxMarksArr!.count > 0{
+                        maxMarks = maxMarksArr![0]
                     }
                 }
             }
@@ -1166,11 +1148,9 @@ class CoreDataHandlerPVE: NSObject {
     
     func fetchSumOfSelectedMarks(_ seqNo: NSNumber) -> String {
         
-        var isSelected = Bool()
-        isSelected = true
+        var isSelected = true
         var sumMarks = Int()
         var maxMarks = Int()
-        var dataArray = NSArray()
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -1180,7 +1160,7 @@ class CoreDataHandlerPVE: NSObject {
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
+                var dataArray = results as NSArray
                 
                 let max_ScoreArr = dataArray.value(forKey: "max_Score") as? [Int]
                 for (_, obj) in max_ScoreArr!.enumerated() {
@@ -1207,11 +1187,10 @@ class CoreDataHandlerPVE: NSObject {
     
     func fetchSumOfSelectedMarksModify(_ seqNo: NSNumber) -> (Int, Int) {
         
-        var isSelected = Bool()
-        isSelected = true
+        var isSelected =  true
         var sumMarks = Int()
         var maxMarks = Int()
-        var dataArray = NSArray()
+       
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -1221,10 +1200,10 @@ class CoreDataHandlerPVE: NSObject {
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
+                var  dataArray = results as NSArray
                 
-                let max_ScoreArr = dataArray.value(forKey: "max_Score") as? [Int]
-                for (_, obj) in max_ScoreArr!.enumerated() {
+                let maxScoreArr = dataArray.value(forKey: "max_Score") as? [Int]
+                for (_, obj) in maxScoreArr!.enumerated() {
                     sumMarks = sumMarks + obj
                 }
                 
@@ -1233,9 +1212,9 @@ class CoreDataHandlerPVE: NSObject {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 if let results = fetchedResult {
                     dataArray = results as NSArray
-                    let max_MarksArr = dataArray.value(forKey: "max_Mark") as? [Int]
-                    if max_MarksArr!.count > 0{
-                        maxMarks = max_MarksArr![0]
+                    let maxMarksArr = dataArray.value(forKey: "max_Mark") as? [Int]
+                    if maxMarksArr!.count > 0{
+                        maxMarks = maxMarksArr![0]
                     }
                 }
             }
@@ -1248,11 +1227,10 @@ class CoreDataHandlerPVE: NSObject {
     
     func fetchDraftSumOfSelectedMarksModify(_ seqNo: NSNumber, type:String, syncId:String) -> (Int, Int) {
         
-        var isSelected = Bool()
-        isSelected = true
+        var isSelected =  true
         var sumMarks = Int()
         var maxMarks = Int()
-        var dataArray = NSArray()
+       
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -1262,10 +1240,10 @@ class CoreDataHandlerPVE: NSObject {
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
+                var dataArray = results as NSArray
                 
-                let max_ScoreArr = dataArray.value(forKey: "max_Score") as? [Int]
-                for (_, obj) in max_ScoreArr!.enumerated() {
+                let maxScoreArr = dataArray.value(forKey: "max_Score") as? [Int]
+                for (_, obj) in maxScoreArr!.enumerated() {
                     sumMarks = sumMarks + obj
                 }
                 
@@ -1273,9 +1251,9 @@ class CoreDataHandlerPVE: NSObject {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 if let results = fetchedResult {
                     dataArray = results as NSArray
-                    let max_MarksArr = dataArray.value(forKey: "max_Mark") as? [Int]
-                    if max_MarksArr!.count > 0{
-                        maxMarks = max_MarksArr![0]
+                    let maxMarksArr = dataArray.value(forKey: "max_Mark") as? [Int]
+                    if maxMarksArr!.count > 0{
+                        maxMarks = maxMarksArr![0]
                     }
                 }
             }
@@ -1293,8 +1271,7 @@ class CoreDataHandlerPVE: NSObject {
         
         for (ind, seqNo) in seqNoArr.enumerated() {
             
-            var isSelected = Bool()
-            isSelected = true
+            var isSelected =  true
             var dataArray = NSArray()
             var sumMarks = Int()
             
@@ -1547,13 +1524,13 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     
-    func updateStatusSyncImageDataInAssementDetails(_ ImgSyncId:String) {
+    func updateStatusSyncImageDataInAssementDetails(_ imgSyncId:String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_ImageEntitySync")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "imgSyncId == %@", argumentArray: [ImgSyncId])
+        fetchRequest.predicate = NSPredicate(format: "imgSyncId == %@", argumentArray: [imgSyncId])
         
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -1588,7 +1565,6 @@ class CoreDataHandlerPVE: NSObject {
         person.setValue(rowId, forKey: "id")
         person.setValue(seqNo, forKey: "seq_Number")
         person.setValue(syncId, forKey: "syncId")
-        let timeStampStr = sharedManager.generateCurrentTimeStamp()
         person.setValue(syncId, forKey: "imgSyncId")
         person.setValue("", forKey: "type")
         
@@ -1633,17 +1609,17 @@ class CoreDataHandlerPVE: NSObject {
     
     
     
-    func getImageDataForCurrentAssementDetails(_ syncId:String, seq_Number: NSNumber, rowId:Int, Entity:String) -> NSArray {
+    func getImageDataForCurrentAssementDetails(_ syncId:String, seqNumber: NSNumber, rowId:Int, entity:String) -> NSArray {
         
         var dataArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: Entity)
+        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         fetchRequest.returnsObjectsAsFaults = false
         if syncId.count > 0 {
-            fetchRequest.predicate = NSPredicate(format: "seq_Number == %@ AND id == %@ AND syncId == %@", argumentArray: [seq_Number, rowId, syncId])
+            fetchRequest.predicate = NSPredicate(format: "seq_Number == %@ AND id == %@ AND syncId == %@", argumentArray: [seqNumber, rowId, syncId])
         }else{
-            fetchRequest.predicate = NSPredicate(format: predicateSeqId, argumentArray: [seq_Number, rowId, syncId])
+            fetchRequest.predicate = NSPredicate(format: predicateSeqId, argumentArray: [seqNumber, rowId, syncId])
         }
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -2694,7 +2670,7 @@ class CoreDataHandlerPVE: NSObject {
                 try managedContext.save()
             } catch {
             }
-            pve_Sync.append(person)
+            pveSync.append(person)
             
         }
         
@@ -3129,7 +3105,7 @@ class CoreDataHandlerPVE: NSObject {
                 try managedContext.save()
             } catch {
             }
-            pve_Sync.append(person)
+            pveSync.append(person)
             
             CoreDataHandlerPVE().deleteSyncAssCatDetails(syncId)
             CoreDataHandlerPVE().deleteSyncAssQuestions(syncId)
@@ -3371,7 +3347,7 @@ class CoreDataHandlerPVE: NSObject {
         } catch {
             print(message)
         }
-        pve_Sync.append(person)
+        pveSync.append(person)
     }
     
     func updateVacInfoArrFor(_ syncId: String, currentField:String, currentIndPath: NSIndexPath, text: Any, id: Any, forAttribute:String, entityName:String) {

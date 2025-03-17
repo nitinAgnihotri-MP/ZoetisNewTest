@@ -758,7 +758,7 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
             id = idArr![currentSelectedBtnIndex]
         }
         
-        tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails("", seq_Number: NSNumber(value: seq_Number), rowId: id, Entity: "PVE_ImageEntity")
+        tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails("", seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntity")
         
         let imgDaraArr = tempArr.value(forKey: "imageData") as? [Data]
         return imgDaraArr!

@@ -35,7 +35,7 @@ class CoreDataHandlerMicro: NSObject {
         
     }
     
-    func saveCustomerDetailsInDB(_ custId: NSNumber, CustName: String) {
+    func saveCustomerDetailsInDB(_ custId: NSNumber, custName: String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
@@ -43,7 +43,7 @@ class CoreDataHandlerMicro: NSObject {
         let entity = NSEntityDescription.entity(forEntityName: "Micro_Customer", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(custId, forKey: "customerId")
-        person.setValue(CustName, forKey: "customerName")
+        person.setValue(custName, forKey: "customerName")
         do {
             try managedContext.save()
         } catch {

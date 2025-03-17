@@ -45,7 +45,7 @@ public struct PVEEvaluationTypeRes {
         evaluationName = json["EvaluationName"].stringValue
         module_Id = json["Module_Id"].intValue
         isDeleted = json["IsDeleted"].boolValue
-        CoreDataHandlerPVE().saveEvaluationTypeInDB(evaluationId! as NSNumber, evaluationName: evaluationName!, isDeletd: isDeleted!, module_Id: NSNumber(value: module_Id!))
+        CoreDataHandlerPVE().saveEvaluationTypeInDB(evaluationId! as NSNumber, evaluationName: evaluationName!, isDeletd: isDeleted!, moduleId: NSNumber(value: module_Id!))
     }
 
 }

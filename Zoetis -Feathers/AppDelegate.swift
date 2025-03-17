@@ -60,9 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     func initiateLeftPenal() {
         window = UIWindow(frame: UIScreen.main.bounds)
         let containerViewController = ContainerViewController()
-        window!.rootViewController = containerViewController
-        
-        let serneyNoStr = generateSeveyNumber()
+        window!.rootViewController = containerViewController       
         
     }
     
@@ -138,12 +136,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
             }
         }
         
-        var isNewPostingId = UserDefaults.standard.bool(forKey: "isNewPostingId")
+      //  var isNewPostingId = UserDefaults.standard.bool(forKey: "isNewPostingId")
         
         
         if userDefaults.object(forKey: "ApplicationIdentifier") == nil {
-            let UUID = Foundation.UUID().uuidString
-            userDefaults.set(UUID, forKey: "ApplicationIdentifier")
+            let uuID = Foundation.UUID().uuidString
+            userDefaults.set(uuID, forKey: "ApplicationIdentifier")
             userDefaults.synchronize()
         }
         
@@ -234,7 +232,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         Messaging.messaging().apnsToken = deviceToken as Data
         //showAlert("deviceToken: \(deviceToken)")
         
-        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+     //   let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
         
         //showAlert("deviceTokenString: \(deviceTokenString)")
         //showAlert("Registered Notification")
@@ -259,19 +257,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        
-        
-        
+                
         let keychainHelper = AccessTokenHelper()
         keychainHelper.saveToKeychain(valued: fcmToken ?? "", keyed: "Token")
-                                        
-        
-       // UserDefaults.standard.set(fcmToken, forKey: "Token")
         let dataDict = ["token": fcmToken]
-        //showAlert("token: \(fcmToken ?? "")")
+ 
         NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
         Messaging.messaging().subscribe(toTopic: "/topics/nutriewell_live")
-        // Messaging.messaging().shouldEstablishDirectChannel = true
     }
     
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingDelegate) {
@@ -279,53 +271,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         print("Received data message: \(remoteMessage.description)")
     }
     
-    //fcm code end
-    
-    func isUpdateAvailable() throws -> Bool {
-        guard let info = Bundle.main.infoDictionary,
-              let currentVersion = info["CFBundleShortVersionString"] as? String,
-              //let identifier = info["CFBundleIdentifier"] as? String,
-              let url = URL(string: "http://itunes.apple.com/lookup?bundleId=com.zoetis.us.pv360") else {
-            return false
-        }
-        let data = try Data(contentsOf: url)
-        guard let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? [String: Any] else {
-            return false
-            
-        }
-        if let result = (json["results"] as? [Any])?.first as? [String: Any], let version = result["version"] as? String {
-            return version != currentVersion
-        }
-        return false
-        
-    }
-    func updateNow() {
-        guard let url = URL(string: "https://itunes.apple.com/us/app/poultryview-360/id1228196698?mt=8") else {
-            return
-        }
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url)
-        }
-    }
-    
-    
     
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let val = UserDefaults.standard.integer(forKey: "chick")
         if val  ==  4 {
-            if let VC = window?.rootViewController as? DashViewController {
+            if let vC = window?.rootViewController as? DashViewController {
                 // Update JSON data
-                VC.self.callSyncApi()
+                vC.self.callSyncApi()
                 completionHandler(.newData)
             } else {
                 completionHandler(.failed)
             }
         } else {
-            if let VC = window?.rootViewController as? DashViewControllerTurkey {
+            if let vC = window?.rootViewController as? DashViewControllerTurkey {
                 // Update JSON data
-                VC.self.callSyncApi()
+                vC.self.callSyncApi()
                 completionHandler(.newData)
             } else {
                 completionHandler(.failed)
@@ -387,7 +347,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: "Update", style: .default) { _ in
-            if let url = URL(string: "https://itunes.apple.com/us/app/poultryview-360/id1228196698?mt=8") {
+            if let url = URL(string: Constants.appURLink) {
                 UIApplication.shared.open(url)
             }
         })
@@ -427,7 +387,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = self.applicationDocumentsDirectory.appendingPathComponent("SingleViewCoreData.sqlite")
-        var failureReason = "There was an error creating or loading the application's saved data."
+        let failureReason = "There was an error creating or loading the application's saved data."
         do {
             let options = [ NSInferMappingModelAutomaticallyOption: true,
                       NSMigratePersistentStoresAutomaticallyOption: true]

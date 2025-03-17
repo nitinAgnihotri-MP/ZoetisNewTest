@@ -43,7 +43,7 @@ public struct CustomerPVE {
         customerId = json["CustomerId"].intValue
         customerName = json["CustomerName"].stringValue
         
-        CoreDataHandlerPVE().saveCustomerDetailsInDB(NSNumber(value: customerId!), CustName: customerName!)
+        CoreDataHandlerPVE().saveCustomerDetailsInDB(NSNumber(value: customerId!), custName: customerName!)
 
     }
 

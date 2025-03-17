@@ -729,10 +729,10 @@ extension PVEDraftSNAFinalizeAssement:  UIImagePickerControllerDelegate,UINaviga
             var tempArr = NSArray()
             
             if currentTimeStamp.count > 0{
-                tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seq_Number: NSNumber(value: seq_Number), rowId: id, Entity: "PVE_ImageEntitySync")
+                tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntitySync")
                 CoreDataHandlerPVE().updateStatusForSync(currentTimeStamp, text: false, forAttribute: "syncedStatus")
             }else{
-                tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seq_Number: NSNumber(value: seq_Number), rowId: id, Entity: "PVE_ImageEntity")
+                tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntity")
             }
             
             debugPrint("After tempArr--\(tempArr.count)")
@@ -816,9 +816,9 @@ extension PVEDraftSNAFinalizeAssement:  UIImagePickerControllerDelegate,UINaviga
         }
         
         if currentTimeStamp.count > 0{
-            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seq_Number: NSNumber(value: seq_Number), rowId: id, Entity: "PVE_ImageEntitySync")
+            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntitySync")
         }else{
-            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seq_Number: NSNumber(value: seq_Number), rowId: id, Entity: "PVE_ImageEntity")
+            tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails(currentTimeStamp, seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntity")
         }
         
         debugPrint("After tempArr--\(tempArr.count)")
