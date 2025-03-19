@@ -1195,10 +1195,17 @@ extension ZoetisWebServices {
         var Id = Int()
         Id =  UserDefaults.standard.value(forKey: "Id") as! Int
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        let url = EndPoint.GetChickenTurkeyVeterinarian.latestUrl + "\(Id)" + "&SubProductID=2&CountryId=\(countryId)"
+        let url = EndPoint.GetChickenTurkeyVeterinarian.latestUrl + "\(Id)" + "&SubProductID=1&CountryId=\(countryId)"
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
+    func getVeterinarianResponceTurkey(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
+        var Id = Int()
+        Id =  UserDefaults.standard.value(forKey: "Id") as! Int
+        let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
+        let url = EndPoint.GetChickenTurkeyVeterinarian.latestUrl + "\(Id)" + "&SubProductID=2&CountryId=\(countryId)"
+        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
     
     
     func getCustomerListResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){

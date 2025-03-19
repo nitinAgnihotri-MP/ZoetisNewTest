@@ -731,22 +731,34 @@ extension PVEStartNewAssessment {
         }
     }
     
+    fileprivate func otherFields(_ cell: StartNewAssignmentCell) {
+        if cell.evaluatorTxtfield.text?.count == 0 {
+            setBorderRedForMandatoryFiels(forBtn: cell.evaluatorBtn)
+        }
+        if cell.siteIdTxtfield.text?.count == 0 {
+            setBorderRedForMandatoryFiels(forBtn: cell.siteIdBtn)
+        }
+        
+        if cell.evaluationForTxtfield.text?.count == 0 {
+            setBorderRedForMandatoryFiels(forBtn: cell.evaluationForBtn)
+        }
+        if cell.accManagerTxtfield.text?.count == 0 {
+            setBorderRedForMandatoryFiels(forBtn: cell.accManagerBtn)
+        }
+        
+        if cell.breedOfBirdsTxtfield.text?.count == 0 {
+            setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsBtn)
+        }
+    }
+    
     private func checkValidationnn() -> Bool{
         var isAllValidationOk = Bool()
         isAllValidationOk = true
         
         if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
         {
-            // Commercial selection
-            let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
-            print("dataSavedInDB-----\(dataSavedInDB)")
             
-            let arr = dataSavedInDB.value(forKey: "evaluationForId") as! NSArray
-            let evaluationForId = arr[0] as! Int
-            
-            
-            if cell.evaluationDateTxtfield.text?.count == 0 || cell.evaluatorTxtfield.text?.count == 0 || cell.siteIdTxtfield.text?.count == 0 ||/* cell.housingTxtfield.text?.count == 0 ||*/ cell.customerTxtfield.text?.count == 0 || cell.evaluationForTxtfield.text?.count == 0 || cell.accManagerTxtfield.text?.count == 0 || /*cell.ageOfBirdsTxtfield.text?.count == 0*/ cell.breedOfBirdsTxtfield.text?.count == 0 || /*cell.houseNoTxtfield.text?.count == 0 ||*/ cell.noOfBirdsTxtfield.text?.count == 0 /*|| cell.farmNameTxtfield.text?.count == 0*/ /*|| (evaluationForId == 5 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0) || (evaluationForId == 5 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0 && cell.breesOfBirdsSuperView.isHidden == false) || (evaluationForId == 5 && cell.breesOfBirdsFemaleOtherSuperView.isHidden == false && cell.breedOfBirdsFemaleOtherTxtfield.text?.count == 0) || (evaluationForId == 5 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false && cell.breedOfBirdsOtherTxtfield.text?.count == 0) || (evaluationForId == 4 && cell.breedOfBirdsOtherTxtfield.text?.count == 0 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false)*/
-            {
+            if cell.evaluationDateTxtfield.text?.count == 0 || cell.evaluatorTxtfield.text?.count == 0 || cell.siteIdTxtfield.text?.count == 0 || cell.customerTxtfield.text?.count == 0 || cell.evaluationForTxtfield.text?.count == 0 || cell.accManagerTxtfield.text?.count == 0 ||  cell.breedOfBirdsTxtfield.text?.count == 0 ||  cell.noOfBirdsTxtfield.text?.count == 0 {
                 
                 if cell.customerTxtfield.text?.count == 0 {
                     setBorderRedForMandatoryFiels(forBtn: cell.customerBtn)
@@ -759,23 +771,7 @@ extension PVEStartNewAssessment {
                     setBorderRedForMandatoryFiels(forBtn: cell.noOfBirdsBtn)
                 }
                 
-                if cell.evaluatorTxtfield.text?.count == 0 {
-                    setBorderRedForMandatoryFiels(forBtn: cell.evaluatorBtn)
-                }
-                if cell.siteIdTxtfield.text?.count == 0 {
-                    setBorderRedForMandatoryFiels(forBtn: cell.siteIdBtn)
-                }
-                
-                if cell.evaluationForTxtfield.text?.count == 0 {
-                    setBorderRedForMandatoryFiels(forBtn: cell.evaluationForBtn)
-                }
-                if cell.accManagerTxtfield.text?.count == 0 {
-                    setBorderRedForMandatoryFiels(forBtn: cell.accManagerBtn)
-                }
-                
-                if cell.breedOfBirdsTxtfield.text?.count == 0 {
-                    setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsBtn)
-                }
+                otherFields(cell)
                 
                 showAlert(title: "Alert", message: "Please enter details in all the fields marked as mandatory.", owner: self)
                 

@@ -2236,7 +2236,7 @@ extension PEViewStartNewAssessment{
                     }
                 }
             }
-            
+            tempArr.removeAll()
             let json = createSyncRequest(dict: peNewAssessment, certificationData: certificateData)
             tempArr.append(json)
             dayOfAgeSData.removeAll()

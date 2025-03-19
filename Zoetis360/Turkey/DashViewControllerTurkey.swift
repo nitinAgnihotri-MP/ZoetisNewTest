@@ -1292,7 +1292,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     func callVeterianService() {
         
         if WebClass.sharedInstance.connected() {
-            ZoetisWebServices.shared.getVeterinarianResponce(controller: self, parameters: [:], completion: { [weak self] (json, error) in
+            ZoetisWebServices.shared.getVeterinarianResponceTurkey(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
                     self?.showToastWithTimer(message: "Failed to get Bird Size list", duration: 3.0)
                     self?.dismissGlobalHUD(self?.view ?? UIView())

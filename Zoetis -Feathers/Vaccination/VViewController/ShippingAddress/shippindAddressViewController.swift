@@ -37,6 +37,38 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
     var trainingId = Int()
     var fssId = Int()
     
+    fileprivate func setupSavedShippingInfo(_ shippingInfoDB: ShippingAddressDTO?) {
+        if curentCertification?.fsmName != "" {
+            fsmName.text = curentCertification?.fsrName
+        }
+        else
+        {
+            fsmName.text =  shippingInfoDB?.fssName
+        }
+        
+        shippingInfo = shippingInfoDB!
+        self.addressline1TxtFld.text = shippingInfo?.address1
+        self.addressline2TxtFld.text = shippingInfo?.address2
+        self.cityTextField.text = shippingInfo?.city
+        self.zipCodeTxtFld.text = shippingInfo?.pincode
+        var countryId = String(shippingInfo?.countryID ?? 0)
+        self.countryId = shippingInfo?.countryID ?? 0
+        self.stateId = shippingInfo?.stateID ?? 0
+        var countryName = VaccinationCustomersDAO.sharedInstance.fetchCountryNameFromCountryId(countryId: countryId)
+        var stateId = String(shippingInfo?.stateID ?? 0)
+        var stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
+        if stateName == "" {
+            self.getVaccinationStateList(countryId: countryId)
+            stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
+            self.selectedState.text = stateName
+        }
+        self.selectedState.text = stateName
+        self.selectedCountry.text = countryName
+        self.addressline1TxtFld.text = shippingInfo?.address1
+        self.curentCertification?.FSSId = shippingInfo?.fssID
+        VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -51,35 +83,7 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
             let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfoByTrainingId(trainingId: self.trainingId)
             if shippingInfoDB != nil {
                 
-                if curentCertification?.fsmName != "" {
-                    fsmName.text = curentCertification?.fsrName
-                }
-                else
-                {
-                    fsmName.text =  shippingInfoDB?.fssName
-                }
-               
-                shippingInfo = shippingInfoDB!
-                self.addressline1TxtFld.text = shippingInfo?.address1
-                self.addressline2TxtFld.text = shippingInfo?.address2
-                self.cityTextField.text = shippingInfo?.city
-                self.zipCodeTxtFld.text = shippingInfo?.pincode
-                var countryId = String(shippingInfo?.countryID ?? 0)
-                self.countryId = shippingInfo?.countryID ?? 0
-                self.stateId = shippingInfo?.stateID ?? 0
-                var countryName = VaccinationCustomersDAO.sharedInstance.fetchCountryNameFromCountryId(countryId: countryId)
-                var stateId = String(shippingInfo?.stateID ?? 0)
-                var stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
-                if stateName == "" {
-                    self.getVaccinationStateList(countryId: countryId)
-                    stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
-                    self.selectedState.text = stateName
-                }
-                self.selectedState.text = stateName
-                self.selectedCountry.text = countryName
-                self.addressline1TxtFld.text = shippingInfo?.address1
-                self.curentCertification?.FSSId = shippingInfo?.fssID
-                VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
+                setupSavedShippingInfo(shippingInfoDB)
             }
         }
         else{
@@ -151,7 +155,7 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
         headerView.roundCorners(corners: [.topLeft, .topRight], radius: 18.5)
         headerView.setGradient(topGradientColor: UIColor.getDashboardTableHeaderUpperGradColor(), bottomGradientColor: UIColor.getDashboardTableHeaderLowerGradColor())
         mainContentView.setGradient(topGradientColor: UIColor.white , bottomGradientColor: UIColor.getAddEmployeeGradient())
-        setupUI()
+  
         
         if self.curentCertification?.certificationCategoryId == "1"{
             isSafetyCertification = true
@@ -251,32 +255,32 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
         else if addressline1TxtFld.text == ""  {
             isValidated = false
             addressline1TxtFld.layer.borderColor = UIColor.red.cgColor
-            self.showValidationAlert(alertText : "Please fill all the mandatory fields.")
+            self.showValidationAlert(alertText : Constants.mandatoryFields)
         }
         else if addressline2TxtFld.text == ""  {
             isValidated = false
             addressline2TxtFld.layer.borderColor = UIColor.red.cgColor
-            self.showValidationAlert(alertText : "Please fill all the mandatory fields.")
+            self.showValidationAlert(alertText : Constants.mandatoryFields)
         }
         else if selectedCountry.text == "" {
             isValidated = false
             countryBtn.layer.borderColor = UIColor.red.cgColor
-            self.showValidationAlert(alertText : "Please fill all the mandatory fields.")
+            self.showValidationAlert(alertText : Constants.mandatoryFields)
         }
         else if selectedState.text == "" {
             isValidated = false
             stateBtn.layer.borderColor = UIColor.red.cgColor
-            self.showValidationAlert(alertText : "Please fill all the mandatory fields.")
+            self.showValidationAlert(alertText :Constants.mandatoryFields)
         }
         else if cityTextField.text == ""{
             isValidated = false
             cityTextField.layer.borderColor = UIColor.red.cgColor
-            self.showValidationAlert(alertText : "Please fill all the mandatory fields.")
+            self.showValidationAlert(alertText : Constants.mandatoryFields)
         }
         else if zipCodeTxtFld.text == "" {
             isValidated = false
             zipCodeTxtFld.layer.borderColor = UIColor.red.cgColor
-            self.showValidationAlert(alertText : "Please fill all the mandatory fields.")
+            self.showValidationAlert(alertText : Constants.mandatoryFields)
         }
         else {
             isValidated = true
@@ -390,10 +394,18 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
     }
     
     
-    func setupUI(){
-        
-        
-        
+ 
+    
+    fileprivate func setupZipcodeValidation(_ string: String, _ newLength: Int) -> Bool {
+        if zipCodeTxtFld.layer.borderColor == UIColor.red.cgColor {
+            zipCodeTxtFld.layer.borderColor = UIColor(displayP3Red: 216/255, green: 236/228, blue: 253/255, alpha: 1).cgColor
+        }
+        let ACCEPTABLE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        let check  = ACCEPTABLE_CHARACTERS.contains(string)
+        if check == false {
+            return false
+        }
+        return newLength <= maxLengthForTextField2
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -416,15 +428,7 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
             guard !string.isEmpty else {
                 return true
             }
-            if zipCodeTxtFld.layer.borderColor == UIColor.red.cgColor {
-                zipCodeTxtFld.layer.borderColor = UIColor(displayP3Red: 216/255, green: 236/228, blue: 253/255, alpha: 1).cgColor
-            }
-            let ACCEPTABLE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-            let check  = ACCEPTABLE_CHARACTERS.contains(string)
-            if check == false {
-                return false
-            }
-            return newLength <= maxLengthForTextField2
+            return setupZipcodeValidation(string, newLength)
         }
         else if textField == cityTextField {
             if cityTextField.layer.borderColor == UIColor.red.cgColor {

@@ -3808,12 +3808,11 @@ extension PEViewAssesmentFinalize{
                         idArr.append(data!.id ?? 0)
                         if data != nil{
                             certificateData.append(data!)
-                            
                         }
                     }
                 }
             }
-            
+            tempArr.removeAll()
             let json = createSyncRequest(dict: peNewAssessment, certificationData: certificateData)
             tempArr.append(json)
             
@@ -4359,7 +4358,6 @@ extension PEViewAssesmentFinalize{
             
             if json["StatusCode"]  == 200{
                 self.handleSyncResponse(mjson)
-                
             } else {
             }
         })

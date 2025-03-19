@@ -49,6 +49,8 @@ struct Constants {
     static var deviceType = "iOS"
     
     static var appURLink =   "https://itunes.apple.com/us/app/poultryview-360/id1228196698?mt=8"
+    static var mandatoryFields = "Please fill all the mandatory fields."
+    static var gigyaValidation = "Failed to get Gigya Country list"
     struct ControllerIdentifier {
         static let dashboardController = "DashboardViewController"
         static let searchController = "SearchViewController"

@@ -2637,7 +2637,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dict.dataToSubmitID ?? ""
         
-        let evaluationDate = dict.evaluationDate
+        let evaluationDate = dict.evaluationDate ?? ""
         if UniID == "" {
             UniID = dict.draftID ?? ""
         }
@@ -4507,7 +4507,7 @@ extension PEDashboardViewController{
                             }
                         }
                     }
-                    self.tempArr.removeAll()
+                   
                     
                     if obj.extndMicro == false
                     {
@@ -4516,7 +4516,7 @@ extension PEDashboardViewController{
                     else{
                         HaveToCallExtendedMicro = true
                     }
-                    
+                    self.tempArr.removeAll()
                     let json = self.createSyncRequest(dict: obj , certificationData : self.certificateData )
                     tempArr.append(json)
                     

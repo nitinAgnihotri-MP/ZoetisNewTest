@@ -293,19 +293,10 @@ class BaseViewController: UIViewController , SlideMenuDelegate{
             if apiName == "add score"{
                 let scoreArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "ScoreData")
                 CoreDataHandlerPE().saveScoreDataInDB(jsonDataString, NSNumber(value: scoreArray.count + 1))
-                // print(jsonDataString)
             }
-            
-            if apiName == "Assessment_AddEMAssessment"
-            {
-                
-               // print("Post Request Params of EM  : \(jsonDataString)")
-            }
-            
-            else if  apiName == "add paramData" {
+            else if  apiName == "add assessment" {
                  print("Post Request Params of Add Assessment.  : \(jsonDataString)")
             }
-
             
         } catch {
             // // print("JSON serialization failed:  \(error)")

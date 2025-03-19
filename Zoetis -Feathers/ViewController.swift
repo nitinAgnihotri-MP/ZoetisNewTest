@@ -121,35 +121,38 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         
         lblAppName.text = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
         
-        var liveAlbums = 3
         let environmentIs = Constants.Api.versionUrl
-        
+        let baseVersionText = "Version " + Bundle.main.versionNumber
+
+        // Define constants for liveAlbums values
+        enum LiveAlbumEnvironment: Int {
+            case stage = 0, dev = 1, support = 2, production = 3
+        }
+
+        var liveAlbums: LiveAlbumEnvironment = .production
+
         if environmentIs.contains("stageapi") {
-            liveAlbums = 0
+            liveAlbums = .stage
         } else if environmentIs.contains("devapi") {
-            liveAlbums = 1
+            liveAlbums = .dev
         } else if environmentIs.contains("supportapi") {
-            liveAlbums = 2
-        } else {
-            liveAlbums = 3
+            liveAlbums = .support
         }
-        
+
+        let environmentSuffix: String
         switch liveAlbums {
-        case 0:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber + " (UAT)"
-            
-        case 1:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber + " (Dev)"
-            
-        case 2:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber + " (Dev Support)"
-            
-        case 3:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber
-            
-        default:
-            lblAppVersion.text = "Version " + Bundle.main.versionNumber
+        case .stage:
+            environmentSuffix = " (UAT)"
+        case .dev:
+            environmentSuffix = " (Dev)"
+        case .support:
+            environmentSuffix = " (Dev Support)"
+        case .production:
+            environmentSuffix = ""
         }
+
+        lblAppVersion.text = baseVersionText + environmentSuffix
+
     }
     
     // MARK:  /*********** Fetch Gigya Country List **************/
@@ -159,7 +162,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         if ConnectionManager.shared.hasConnectivity() {
             ZoetisWebServices.shared.getGigyaCountryList(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
-                    self?.showToastWithTimer(message: "Failed to get Gigya Country list", duration: 3.0)
+                    self?.showToastWithTimer(message: Constants.gigyaValidation, duration: 3.0)
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     return
                 }
@@ -182,7 +185,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
         
         else{
-            self.showToastWithTimer(message: "Failed to get Gigya Country list", duration: 3.0)
+            self.showToastWithTimer(message: Constants.gigyaValidation, duration: 3.0)
             self.dismissGlobalHUD(self.view ?? UIView())
         }
     }
@@ -248,32 +251,20 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         let apiKeyId = apiKeys["Id"]
                         self?.apiKeyId = apiKeyId.rawValue as? NSNumber
                         
-                        var liveAlbums = 3
                         let environmentIs = Constants.Api.versionUrl
-                        
-                        if environmentIs.contains("stageapi") {
-                            liveAlbums = 0
-                        } else if environmentIs.contains("devapi") {
-                            liveAlbums = 1
-                        } else if environmentIs.contains("supportapi") {
-                            liveAlbums = 2
-                        } else {
-                            liveAlbums = 3
-                        }
-                        
-                        switch liveAlbums {
-                        case 0:
-                            self?.gigya.initFor(apiKey: "4_KkOJPb7zC89ubdZyo8pEWg" , apiDomain: self?.domainName)
-                          //  self?.gigya.initFor(apiKey: self?.apiKey ?? "" , apiDomain: self?.domainName)
-                        case 1:
-                            self?.gigya.initFor(apiKey: "4_KkOJPb7zC89ubdZyo8pEWg" , apiDomain: self?.domainName)
-                        case 2:
-                            self?.gigya.initFor(apiKey: "4_KkOJPb7zC89ubdZyo8pEWg" , apiDomain: self?.domainName)
-                        case 3:
-                            self?.gigya.initFor(apiKey: self?.apiKey ?? "" , apiDomain: self?.domainName)
-                        default:
-                            self?.gigya.initFor(apiKey: self?.apiKey ?? "" , apiDomain: self?.domainName)
-                        }
+
+                        let liveAlbums: Int = {
+                            if environmentIs.contains("stageapi") { return 0 }
+                            if environmentIs.contains("devapi") { return 1 }
+                            if environmentIs.contains("supportapi") { return 2 }
+                            return 3
+                        }()
+
+                        // Determine the correct API key
+                        let apiKey: String = (liveAlbums == 1 || liveAlbums == 2) ? "4_KkOJPb7zC89ubdZyo8pEWg" : (self?.apiKey ?? "")
+
+                        // Initialize Gigya with the determined API key
+                        self?.gigya.initFor(apiKey: apiKey, apiDomain: self?.domainName)
                         
                     }
                 }
@@ -1063,7 +1054,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         if btnTag == 1
         {
             if countryArray.count == 0 {
-                self.showToastWithTimer(message: "Failed to get Gigya Country list", duration: 3.0)
+                self.showToastWithTimer(message: Constants.gigyaValidation, duration: 3.0)
                 return
             }
             

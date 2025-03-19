@@ -185,22 +185,19 @@ class ApiSync: NSObject {
             if isSyncPostingArrWithData == false{
                 isSyncPostingArrWithData = true
                 let pSession =  postingArrWithAllData.object(at: i) as! PostingSession
-                sessionId = pSession.postingId!
-                timestamp = pSession.timeStamp!
-                var actualTimestampStr =  pSession.actualTimeStamp
-                if actualTimestampStr == nil {
-                    actualTimestampStr = ""
-                }
+                sessionId = pSession.postingId ?? 0
+                timestamp = pSession.timeStamp ?? ""
+                var actualTimestampStr =  pSession.actualTimeStamp ?? ""
                 self.postingIdArr.add(sessionId)
                 tempArrTime.add(timestamp)
-                actualTmestamp.add(actualTimestampStr!)
+                actualTmestamp.add(actualTimestampStr)
             }
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession =  necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            sessionId = nIdSession.necropsyId ?? 0
             self.postingIdArr.add(sessionId)
         }
         
@@ -263,7 +260,7 @@ class ApiSync: NSObject {
                     let mainDict = NSMutableDictionary()
                     let antiboticFeed = fetchAntibotic.object(at: i) as! AntiboticFeed
                     let dosage = antiboticFeed.dosage
-                    var feedId = antiboticFeed.feedId as! Int
+                    let feedId = antiboticFeed.feedId as! Int
                     let startDate =  antiboticFeed.feedDate
                     let feedProgram = antiboticFeed.feedProgram
                     let fromDays = antiboticFeed.fromDays
@@ -304,7 +301,7 @@ class ApiSync: NSObject {
                     let mainDict = NSMutableDictionary()
                     let antiboticFeed = fetchAlternative.object(at: i) as! AlternativeFeed
                     let dosage = antiboticFeed.dosage
-                    var feedId = antiboticFeed.feedId as! Int
+                    let feedId = antiboticFeed.feedId as! Int
                     let startDate = antiboticFeed.feedDate
                     let feedProgram = antiboticFeed.feedProgram
                     let fromDays = antiboticFeed.fromDays
@@ -410,7 +407,6 @@ class ApiSync: NSObject {
                 
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
                 let headerDict = ["Authorization":accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
