@@ -51,6 +51,7 @@ struct Constants {
     static var appURLink =   "https://itunes.apple.com/us/app/poultryview-360/id1228196698?mt=8"
     static var mandatoryFields = "Please fill all the mandatory fields."
     static var gigyaValidation = "Failed to get Gigya Country list"
+    static var loginLoaderMessage = "Logging in...Please Wait"
     struct ControllerIdentifier {
         static let dashboardController = "DashboardViewController"
         static let searchController = "SearchViewController"
@@ -192,6 +193,22 @@ struct Constants {
     }
     
     static let failedPosting = "Failed to get Posting Assessment list"
+    static let yyyyMMddHHmmss = "yyyy-MM-dd'T'HH:mm:ss"
+    static let noIdFoundStr = "No id found"
+    static let countryNamStr = "CountryName"
+    static let coccidioStr = "Coccidiosis Control"
+    static let mytoxinStr = "Mycotoxin Binders"
+    static let dataAvailableStr = "Data available"
+    static let unknownErrorStr = "Unknown error"
+    static let noLesion = "No lesion."
+    static let sinLesionStr = "Sin lesión."
+    static let growth50 = "<50% growth plate."
+    static let growth50GreaterStr = ">50% growth plate."
+    static let yesStr = "Yes."
+    static let noStr = "Yes."
+    static let alertStr = "Alert"
+    static let areYouSureSaveAsmntStr = "Are you sure you want to save assessment in Draft?"
+    static let areYouSureToLogoutStr = "Are you sure you want to Logout?"
 }
 
 enum ZoetisArt {

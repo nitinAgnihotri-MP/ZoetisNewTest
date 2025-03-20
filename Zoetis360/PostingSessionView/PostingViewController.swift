@@ -786,7 +786,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 btnDate.layer.borderColor = UIColor.black.cgColor
             }
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
         }
         else
         {
@@ -940,7 +940,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         {
             if checkComplexNameandDate(strdate, complexName: lblComplex.text!) == true
             {
-                let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: ""), preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: ""), preferredStyle: .alert)
                 let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
@@ -1071,7 +1071,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                     btnDate.layer.borderColor = UIColor.black.cgColor
                 }
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
         } else {
             
@@ -1166,7 +1166,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 self.btnDate.layer.borderColor = UIColor.red.cgColor
             }
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
             btnCustmer.layer.borderColor = UIColor.red.cgColor
             btnVetration.layer.borderColor = UIColor.red.cgColor
@@ -1401,7 +1401,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         view.endEditing(true)
         
         if lblCustmer.text == NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a customer first.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a customer first.", comment: ""))
         }
         else{
             btnTag = 3
@@ -1437,7 +1437,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 droperTableView.reloadData()
             }
             else{
-                let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message:NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: "") , preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message:NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: "") , preferredStyle: .alert)
                 let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.lblComplex.text = ""
@@ -1451,7 +1451,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             btnVetration.layer.borderColor = UIColor.black.cgColor
             view.endEditing(true)
             if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
             }
             else{
                 btnTag = 8
@@ -1590,7 +1590,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 self.ssologoutMethod()
                 CoreDataHandler().deleteAllData("Custmer")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
@@ -1626,7 +1626,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             else{
                 str =  "farm(s) are not connected. Please navigate to Feed Program and connect the farms with the Feed Program."
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
             return
         }
         UserDefaults.standard.set(false, forKey: "isUpadteFeedFromUnlinked")
@@ -1642,11 +1642,11 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         if feedProgramArray.count == 0{
             
             if lblVeteration.text != ""{
-                let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel) {
                     UIAlertAction in
                 }
-                let okAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default) {
+                let okAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.navigationController?.popViewController(animated: true)
                     return
@@ -1684,7 +1684,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                     else{
                         str =  "farm(s) are not connected. Please navigate to Feed Program and connect the farms with the Feed Program."
                     }
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
                     return
                 }
             }
@@ -1702,7 +1702,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             }
             else
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
             }
         }
     }
@@ -1766,18 +1766,18 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 }
                 else
                 {
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
                 }
             }
             else{
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
             }
         }
         
         else{
             if self.allSessionArr().count == 0
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
             }
             else{
                 self.showExitAlertWith(msg: "Feed program not added in the session. Do you want to add now? If you click No, session data will not be saved", tag: 1)
@@ -1832,9 +1832,9 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     }
     // MARK: 🟠  Alert Message to add Feed Program
     func showAlert(){
-        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel)
-        let okAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default) {
+        let okAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default) {
             UIAlertAction in
             CoreDataHandler().deleteDataWithPostingId(self.postingId as NSNumber)
             CoreDataHandler().deletefieldVACDataWithPostingId(self.postingId as NSNumber)
@@ -2105,7 +2105,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 
                 if checkComplexNameandDate(strdate, complexName: lblComplex.text!) == true
                 {
-                    let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: ""), preferredStyle: .alert)
+                    let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: ""), preferredStyle: .alert)
                     let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                         UIAlertAction in
                         self.lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
@@ -2295,14 +2295,14 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             if lngId == 1{
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             }
             else if lngId == 3{
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
         }
     }
@@ -2310,19 +2310,19 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     {
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
     }
     func didFinishApi()
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     func failWithInternetConnection()
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     func printSyncLblCount()
     {

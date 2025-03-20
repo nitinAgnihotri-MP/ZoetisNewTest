@@ -51,13 +51,9 @@ class CaptureNecropsyCollectionViewCell: UICollectionViewCell {
     // MARK: - VIEW LIFE CYCLE
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        self.makeItCircle()
     }
     
-    func makeItCircle() {
    
-    }
     // MARK: 🟠 Bird Sex Button Action
     @IBAction func birdSexBtn(_ sender: Any) {
         birdSexCompletion?("")

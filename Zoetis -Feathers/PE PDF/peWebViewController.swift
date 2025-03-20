@@ -71,7 +71,7 @@ class peWebViewController: BaseViewController {
                 
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download pdf file.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download pdf file.", comment: ""))
         }
     }
 }

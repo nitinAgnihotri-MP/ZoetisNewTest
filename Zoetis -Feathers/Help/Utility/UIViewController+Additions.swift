@@ -35,7 +35,7 @@ extension UIViewController {
         MBProgressHUD.hide(for: vc, animated: true)
     }
     
-    func showAlertViewWithMessageAndActionHandler(_ title: String = "Alert", message: String, actionHandler: (() -> Void)?) {
+    func showAlertViewWithMessageAndActionHandler(_ title: String = Constants.alertStr, message: String, actionHandler: (() -> Void)?) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         let alAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default) { _ in
             if let _ = actionHandler {

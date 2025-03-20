@@ -74,7 +74,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.int ?? 0
                     
                     print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
@@ -254,7 +254,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
             else
             {
                 self.lblOfflineMessage.isHidden = false
-                //Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Pdfs available online.")
+                //Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Pdfs available online.")
                 progressview.isHidden = true
                 labelProgress.isHidden = true
             }

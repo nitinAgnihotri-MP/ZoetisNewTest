@@ -185,7 +185,7 @@ class ComplexPoupViewController: BaseViewController {
             updateEvaluatorIfExist()
             
         }else{
-            showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+            showAlert(title: Constants.alertStr, message: "Please fill the mandatory fields.", owner: self)
             
         }
         
@@ -271,7 +271,7 @@ class ComplexPoupViewController: BaseViewController {
             customerView.layer.borderWidth = 2.0
             siteView.layer.borderColor = UIColor.red.cgColor
             siteView.layer.borderWidth = 2.0
-            showAlert(title: "Alert", message: "Please select customer to fetch related complex list.", owner: self)
+            showAlert(title: Constants.alertStr, message: "Please select customer to fetch related complex list.", owner: self)
             return
         }
         
@@ -303,7 +303,7 @@ class ComplexPoupViewController: BaseViewController {
             }
             self.dropHiddenAndShow()
         } else{
-            showAlert(title: "Alert", message: "The complex not available.", owner: self)
+            showAlert(title: Constants.alertStr, message: "The complex not available.", owner: self)
         }
         
     }
@@ -681,7 +681,7 @@ extension ComplexPoupViewController{
             //  showtoast(message: "Downloading")
             
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
         }
         stopLoader()
         
@@ -716,7 +716,7 @@ extension ComplexPoupViewController{
             })
             
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
         }
         stopLoader()
         

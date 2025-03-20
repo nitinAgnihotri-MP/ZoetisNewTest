@@ -10,7 +10,7 @@ import UIKit
 public extension UIViewController {
 
     func noInternetConnection() {
-        //        alert.sharedInstance.showAlertView(title:"Alert", message:"No Internet Connection Found", actionTitles: JacksonArt.ButtonTitle.setting, JacksonArt.ButtonTitle.cancel], actions: [
+        //        alert.sharedInstance.showAlertView(title:Constants.alertStr, message:"No Internet Connection Found", actionTitles: JacksonArt.ButtonTitle.setting, JacksonArt.ButtonTitle.cancel], actions: [
         //            {()->() in
         //                guard let urlString = URL(string: UIApplication.openSettingsURLString) else {return}
         //                UIApplication.shared.open(urlString, options: [:], completionHandler: nil)

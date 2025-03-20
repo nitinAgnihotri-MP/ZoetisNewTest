@@ -153,7 +153,7 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
             //            dateFormatter.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             toDate = dateFormatter.date(from: fromString)!
-            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"To date must be greater than from date.")
+            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"To date must be greater than from date.")
             
         }
     }
@@ -198,7 +198,7 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
             //            dateFormatter.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             fromDate = dateFormatter.date(from: fromString)!
-            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"From date must be smaller than to date.")
+            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"From date must be smaller than to date.")
         }
     }
     
@@ -246,12 +246,12 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
     }
     
     @objc func infoButton() {
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please connect farm(s) with feed program.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please connect farm(s) with feed program.", comment: ""))
     }
     
     func Alert(){
         
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"No sessions found.")
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"No sessions found.")
     }
     func CallPopoupStartNec()  {
         buttonback = UIButton(frame: CGRect(x: 0, y: 0, width: 1024, height: 768))
@@ -511,7 +511,7 @@ extension ExistingPostingSessionTurkey : UITableViewDataSource,UITableViewDelega
                     lanStr = "Spanish"
                 }
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in \(lanStr) language. Please logout and select \(lanStr) as a language to edit /proceed this session.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in \(lanStr) language. Please logout and select \(lanStr) as a language to edit /proceed this session.", comment: ""))
             }
         }
     }

@@ -16,6 +16,7 @@ class SidePanelViewController: UIViewController {
     var delegate: SidePanelViewControllerDelegate?
     var menuArr: Array<MenuInformation>!
     var arrayMenuOptions = [Dictionary<String,String>]()
+    let globaclDashboarStr = "Global Dashboard"
     
     enum CellIdentifiers {
         static let MenuInfoCell = "MenuInfoCell"
@@ -23,14 +24,14 @@ class SidePanelViewController: UIViewController {
     }
     
     func updateArrayMenuOptionsForMicrobial(){
-        arrayMenuOptions.append(["title":"Global Dashboard", "icon":"appsIconPE"])
+        arrayMenuOptions.append(["title":globaclDashboarStr, "icon":"appsIconPE"])
         arrayMenuOptions.append(["title":"Dashboard", "icon":"dashboardIconPE"])
         arrayMenuOptions.append(["title":"Help", "icon":"helpIconPE"])
         arrayMenuOptions.append(["title":"Logout", "icon":"logoutIconPE"])
         tableView.reloadData()
     }
     func updateArrayMenuOptionsForPVE(){
-        arrayMenuOptions.append(["title":"Global Dashboard", "icon":"appsIconPE"])
+        arrayMenuOptions.append(["title":globaclDashboarStr, "icon":"appsIconPE"])
         arrayMenuOptions.append(["title":"PVE \nDashboard", "icon":"dashboardIconPE"])
         arrayMenuOptions.append(["title":"Start New Assessment", "icon":"startAssessmentIconPE"])
         arrayMenuOptions.append(["title":"View Assessment", "icon":"viewAssessmentIconPE"])
@@ -41,7 +42,7 @@ class SidePanelViewController: UIViewController {
     
     
     func updateArrayMenuOptions(){
-        arrayMenuOptions.append(["title":"Global Dashboard", "icon":"appsIconPE"])
+        arrayMenuOptions.append(["title":globaclDashboarStr, "icon":"appsIconPE"])
         arrayMenuOptions.append(["title":"PE Dashboard", "icon":"dashboardIconPE"])
         arrayMenuOptions.append(["title":"View  Assessment", "icon":"viewAssessmentIconPE"])
         arrayMenuOptions.append(["title":"Scheduled Assessments", "icon":"startAssessmentIconPE"])
@@ -51,7 +52,7 @@ class SidePanelViewController: UIViewController {
     }
     
     func updateArrayMenuOptionsMBL(){
-        arrayMenuOptions.append(["title":"Global Dashboard", "icon":"appsIconPE"])
+        arrayMenuOptions.append(["title":globaclDashboarStr, "icon":"appsIconPE"])
         arrayMenuOptions.append(["title":"Microbial Dashboard", "icon":"dashboardIconPE"])
         arrayMenuOptions.append(["title":"New Requisition", "icon":"startAssessmentIconPE"])
         arrayMenuOptions.append(["title":"View Requisition", "icon":"viewAssessmentIconPE"])
@@ -61,7 +62,7 @@ class SidePanelViewController: UIViewController {
     }
     
     func updateArrayMenuOptionsVaccination(){
-        arrayMenuOptions.append(["title":"Global Dashboard", "icon":"appsIconPE"])
+        arrayMenuOptions.append(["title":globaclDashboarStr, "icon":"appsIconPE"])
         arrayMenuOptions.append(["title":"Dashboard", "icon":"dashboardIconPE"])
         arrayMenuOptions.append(["title":"View Training & Certification", "icon":"reportsIconPE"])
         arrayMenuOptions.append(["title":"Drafts", "icon":"draftIconPE"])
@@ -72,7 +73,7 @@ class SidePanelViewController: UIViewController {
     func updateArrayMenuOptionsFlockHealth(){
         self.tableView.backgroundColor = UIColor(displayP3Red: 62/255, green: 62/255, blue: 62/255, alpha: 1.0)
         self.tableView.separatorStyle = .none
-        arrayMenuOptions.append(["title":NSLocalizedString("Global Dashboard", comment: ""), "icon":"appPvGlobalashboard"])
+        arrayMenuOptions.append(["title":NSLocalizedString(globaclDashboarStr, comment: ""), "icon":"appPvGlobalashboard"])
         arrayMenuOptions.append(["title":NSLocalizedString("Language", comment: ""), "icon":"languageIcon"])
         arrayMenuOptions.append(["title":NSLocalizedString("Poultry Health Monitoring", comment: ""), "icon":"slider_dashboard"])
         arrayMenuOptions.append(["title": NSLocalizedString("Start New Session", comment: "") , "icon":"slider_start_new_session"])
@@ -122,7 +123,7 @@ class SidePanelViewController: UIViewController {
     
     
     @objc private func logoutClickedNoti(notification: NSNotification){
-        let errorMSg = "Are you sure you want to Logout?"
+        let errorMSg = Constants.areYouSureToLogoutStr
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in

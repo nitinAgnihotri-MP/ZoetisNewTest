@@ -115,7 +115,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
     func showAlertIfNeeded(message: String) {
         if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootViewController = scene.windows.first(where: { $0.isKeyWindow })?.rootViewController {
-            let title = NSLocalizedString("Alert", comment: "")
+            let title = NSLocalizedString(Constants.alertStr, comment: "")
             
             Helper.showAlertMessage(rootViewController, titleStr: title, messageStr: message)
         }

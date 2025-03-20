@@ -366,7 +366,7 @@ class SingleSyncDataTurkey: NSObject {
         }
         do {
             
-            let jsonData = try! JSONSerialization.data(withJSONObject: sessionDictMain, options: JSONSerialization.WritingOptions.prettyPrinted)
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -383,7 +383,7 @@ class SingleSyncDataTurkey: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try! JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
+                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -575,7 +575,7 @@ class SingleSyncDataTurkey: NSObject {
         
         do {
             
-            let jsonData = try! JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted)
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
@@ -590,7 +590,7 @@ class SingleSyncDataTurkey: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try! JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
+                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -717,7 +717,7 @@ class SingleSyncDataTurkey: NSObject {
         
         do {
             
-            let jsonData = try! JSONSerialization.data(withJSONObject: postingDictOnServer, options: JSONSerialization.WritingOptions.prettyPrinted)
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -731,7 +731,7 @@ class SingleSyncDataTurkey: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try! JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
+                request.httpBody = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
                     
@@ -983,7 +983,7 @@ class SingleSyncDataTurkey: NSObject {
         
         do {
             
-            let jsonData = try! JSONSerialization.data(withJSONObject: sessionWithAllforms, options: JSONSerialization.WritingOptions.prettyPrinted)
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             debugPrint(jsonString)
@@ -997,7 +997,7 @@ class SingleSyncDataTurkey: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try! JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
+                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -1212,7 +1212,7 @@ class SingleSyncDataTurkey: NSObject {
         sessionDict.setValue(sessionArr, forKey: "Sessions")
         
         do {
-            let jsonData = try! JSONSerialization.data(withJSONObject: sessionDict, options: JSONSerialization.WritingOptions.prettyPrinted)
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
@@ -1228,7 +1228,7 @@ class SingleSyncDataTurkey: NSObject {
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 
-                request.httpBody = try! JSONSerialization.data(withJSONObject: sessionDict, options: [])
+                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDict, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -1414,7 +1414,7 @@ class SingleSyncDataTurkey: NSObject {
         }
         
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
-        let jsonData = try! JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted)
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
         var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
         jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
         
@@ -1429,7 +1429,7 @@ class SingleSyncDataTurkey: NSObject {
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try! JSONSerialization.data(withJSONObject: outerDict, options: [])
+            request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                 let statusCode =  response.response?.statusCode

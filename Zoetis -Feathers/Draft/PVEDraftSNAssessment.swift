@@ -663,7 +663,7 @@ extension PVEDraftSNAssessment: DatePickerPopupViewControllerProtocol{
             
         }
         else{
-            showAlert(title: "Alert", message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
+            showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
             if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
             {
             }
@@ -765,7 +765,7 @@ extension PVEDraftSNAssessment {
                 setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsOtherBtn)
             }
         }
-        showAlert(title: "Alert", message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
         isAllValidationOk = false
     }
     
@@ -820,7 +820,7 @@ extension PVEDraftSNAssessment {
                     navigationController?.pushViewController(vc, animated: true)
        
                 }else{
-                    showAlert(title: "Alert", message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
+                    showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
                     // cell.evaluationDateTxtfield.text = ""
                     setBorderRedForMandatoryFiels(forBtn: cell.evaluationDateBtn)
                 }

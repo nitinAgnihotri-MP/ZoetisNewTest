@@ -178,7 +178,7 @@ class Terms_ConditionViewController: UIViewController,WKUIDelegate,WKNavigationD
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")

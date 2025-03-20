@@ -139,7 +139,7 @@ class BlankPDFViewController: BaseViewController {
          
         }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download pdf file.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download pdf file.", comment: ""))
         }
     }
   
@@ -153,7 +153,7 @@ class BlankPDFViewController: BaseViewController {
         
         let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
             guard let tempLocalUrl = tempLocalUrl, error == nil else {
-                print("Failure: \(error?.localizedDescription ?? "Unknown error")")
+                print("Failure: \(error?.localizedDescription ?? Constants.unknownErrorStr)")
                 return
             }
             

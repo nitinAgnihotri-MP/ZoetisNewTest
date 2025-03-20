@@ -878,7 +878,7 @@ class PEDraftStartNewAssessment: BaseViewController {
     func showOnlyExtendedMicrobial(){
         
         let errorMSg = VaccinationConstants.PEConstants.WARNING_MSG_NEXTBTN_CLICK_EXTENDED_MICROBIAL
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.fromBackNextBtnAction()
@@ -1276,7 +1276,7 @@ class PEDraftStartNewAssessment: BaseViewController {
             }
         }
         
-        showAlert(title: "Alert", message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
         
     }
     
@@ -1746,7 +1746,7 @@ extension PEDraftStartNewAssessment: DatePickerPopupViewControllerProtocol{
                     }
                 }
             }
-            showAlert(title: "Alert", message: "Assessment Data already Exists for this Customer, Site & Date combination", owner: self)
+            showAlert(title: Constants.alertStr, message: "Assessment Data already Exists for this Customer, Site & Date combination", owner: self)
             return
         }  else {
             selectedEvaluationDateText.text = string

@@ -122,7 +122,7 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
             self.bgTableView.reloadData()
         }
         else{
-            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"No quicklink is selected. Please go to Settings and select quicklink.")
+            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"No quicklink is selected. Please go to Settings and select quicklink.")
         }
     }
     
@@ -131,6 +131,19 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
         
     }
     
+    
+    fileprivate func plusBtnTurkeyObsUpdate(_ array: ([String]), _ cell: obsFieldCollectionViewCell, _ obsName: Any, _ formNameValue: String, _ noOfBird: Int, _ captureNec: CaptureNecropsyViewDataTurkey) {
+        if Int(array[0]) != 0
+        {
+            cell.displayLabel.text = String(array[0])
+            CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
+        }
+        else
+        {
+            cell.displayLabel.text = String(array[1])
+            CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[1])!, necId :necId as NSNumber)
+        }
+    }
     
     @objc func plusButtonClick (_ sender: UIButton){
         guard let cell = sender.superview!.superview as? obsFieldCollectionViewCell else {
@@ -171,37 +184,50 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
         
         if c.obsPoint == 0
         {
-            if Int(array[0]) != 0
-            {
-                cell.displayLabel.text = String(array[0])
-                CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
-            }
-            else
-            {
-                cell.displayLabel.text = String(array[1])
-                CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[1])!, necId :necId as NSNumber)
-            }
+            plusBtnTurkeyObsUpdate(array, cell, obsName, formNameValue, noOfBird, captureNec)
         }
         else
         {
-            for  i in 0..<array.count
-            {
-                let lastElement = (Int(array.last!)! as Int)
-                if lastElement == Int(array[i])!
-                {
+            for i in 0..<array.count {
+                let lastElement = Int(array.last!)!  // No need to cast twice
+                let currentElement = Int(array[i])!
+                
+                if lastElement != currentElement {  // Only execute when values are different
+                    let value = Int(array[i])!
                     
-                }
-                else
-                {
-                    let value =  Int(array[i] as String)!
-                    if  (value as NSNumber == c.obsPoint)
-                    {
+                    if value as NSNumber == c.obsPoint {
                         cell.displayLabel.text = String(array[i+1])
-                        CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[i+1])!, necId :necId as NSNumber)
+                        CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(
+                            obsName as! String,
+                            formName: formNameValue,
+                            birdNo: noOfBird as NSNumber,
+                            obsId: captureNec.obsID!,
+                            index: Int(array[i+1])!,
+                            necId: necId as NSNumber
+                        )
                         break
                     }
                 }
             }
+
+//            for  i in 0..<array.count
+//            {
+//                let lastElement = (Int(array.last!)! as Int)
+//                if lastElement == Int(array[i])!
+//                {
+//                    
+//                }
+//                else
+//                {
+//                    let value =  Int(array[i] as String)!
+//                    if  (value as NSNumber == c.obsPoint)
+//                    {
+//                        cell.displayLabel.text = String(array[i+1])
+//                        CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[i+1])!, necId :necId as NSNumber)
+//                        break
+//                    }
+//                }
+//            }
         }
         
         if UserDefaults.standard.bool(forKey: "Unlinked") == true{
@@ -210,6 +236,44 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
         else
         {
             CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(necId as NSNumber)
+        }
+    }
+    
+    fileprivate func minusBtnTurkeyObsUpdate(_ c: CaptureNecropsyViewDataTurkey, _ array: ([String]), _ cell: obsFieldCollectionViewCell, _ obsName: Any, _ formNameValue: String, _ noOfBird: Int, _ captureNec: CaptureNecropsyViewDataTurkey) {
+        if c.obsPoint == 0
+        {
+            
+        }
+        else
+        {
+            for  i in 0..<array.count
+            {
+                
+                if Int(array[i]) == 1
+                {
+                    
+                }
+                else
+                {
+                    if c.obsPoint == 1
+                    {
+                        if Int(array[i]) == 0
+                        {
+                            cell.displayLabel.text = array[0]
+                            CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
+                            break
+                        }
+                    }
+                    let value = Int(array[i])
+                    if ((value! as NSNumber) == c.obsPoint)
+                    {
+                        cell.displayLabel.text = array[i-1]
+                        CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[i-1])!, necId :necId as NSNumber)
+                        break
+                    }
+                }
+            }
+            
         }
     }
     
@@ -248,41 +312,7 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
         let c = fethchArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
         
         if fethchArr.count > 0 {
-            if c.obsPoint == 0
-            {
-                
-            }
-            else
-            {
-                for  i in 0..<array.count
-                {
-                    
-                    if Int(array[i]) == 1
-                    {
-                        
-                    }
-                    else
-                    {
-                        if c.obsPoint == 1
-                        {
-                            if Int(array[i]) == 0
-                            {
-                                cell.displayLabel.text = array[0]
-                                CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
-                                break
-                            }
-                        }
-                        let value = Int(array[i])
-                        if ((value! as NSNumber) == c.obsPoint)
-                        {
-                            cell.displayLabel.text = array[i-1]
-                            CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[i-1])!, necId :necId as NSNumber)
-                            break
-                        }
-                    }
-                }
-                
-            }
+            minusBtnTurkeyObsUpdate(c, array, cell, obsName, formNameValue, noOfBird, captureNec)
             
         }
         if UserDefaults.standard.bool(forKey: "Unlinked") == true{

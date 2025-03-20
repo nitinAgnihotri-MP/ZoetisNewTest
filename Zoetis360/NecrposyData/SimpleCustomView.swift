@@ -70,6 +70,39 @@ protocol infoLinkk: class {
         return self.infoImages.count
     }
     
+    fileprivate func stageSetupForIndexLabelTxt(_ indexPath: IndexPath, _ cell: infocollection) {
+        if [1955, 1958, 1956, 1952 , 1960].contains(obsData.obsID) {
+            if indexPath.row == 0{
+                cell.indexLbl.text = "1"
+            }
+            else if indexPath.row == 1{
+                cell.indexLbl.text = "0"
+            }
+        }
+    }
+    
+    fileprivate func             devSetupForIndexLabelTxt(_ indexPath: IndexPath, _ cell: infocollection) {
+        if [1870, 1874, 1875, 1873 , 1878].contains(obsData.obsID) {
+            if indexPath.row == 0{
+                cell.indexLbl.text = "1"
+            }
+            else if indexPath.row == 1{
+                cell.indexLbl.text = "0"
+            }
+        }
+    }
+    
+    fileprivate func             productionSetupForIndexLabelTxt(_ indexPath: IndexPath, _ cell: infocollection) {
+        if [2033, 2035, 2030, 2034].contains(obsData.obsID) {
+            if indexPath.row == 0{
+                cell.indexLbl.text = "1"
+            }
+            else if indexPath.row == 1{
+                cell.indexLbl.text = "0"
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = infoCollectionView.dequeueReusableCell(withReuseIdentifier: "infocollection", for: indexPath) as! infocollection
@@ -95,35 +128,14 @@ protocol infoLinkk: class {
         
         let environmentIs = Constants.Api.versionUrl
         if environmentIs.contains("stageapi") {
-            if [1955, 1958, 1956, 1952 , 1960].contains(obsData.obsID) {
-                if indexPath.row == 0{
-                    cell.indexLbl.text = "1"
-                }
-                else if indexPath.row == 1{
-                    cell.indexLbl.text = "0"
-                }
-            }
+            stageSetupForIndexLabelTxt(indexPath, cell)
         }
         else if environmentIs.contains("devapi") {
-            if [1870, 1874, 1875, 1873 , 1878].contains(obsData.obsID) {
-                if indexPath.row == 0{
-                    cell.indexLbl.text = "1"
-                }
-                else if indexPath.row == 1{
-                    cell.indexLbl.text = "0"
-                }
-            }
+            devSetupForIndexLabelTxt(indexPath, cell)
         }
         else
         {
-            if [2033, 2035, 2030, 2034].contains(obsData.obsID) {
-                if indexPath.row == 0{
-                    cell.indexLbl.text = "1"
-                }
-                else if indexPath.row == 1{
-                    cell.indexLbl.text = "0"
-                }
-            }
+            productionSetupForIndexLabelTxt(indexPath, cell)
         }
         cell.obsDesc.setContentOffset(CGPoint.zero, animated: false)
         cell.obsDesc.scrollRangeToVisible(NSMakeRange(0, 0))

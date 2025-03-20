@@ -77,7 +77,7 @@ class BirdsSelectionVC: UIViewController {
                 self.navigationController?.pushViewController(navigateDashZoetis, animated: false)
             }
             else {
-                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""))
+                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""))
             }
         }
     }
@@ -118,7 +118,7 @@ class BirdsSelectionVC: UIViewController {
             self.navigationController?.pushViewController(navigateDashTurkey, animated: false)
         }
             else {
-                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""))
+                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""))
             }
         }
     }

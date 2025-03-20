@@ -72,8 +72,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     var domainName : String?
     var apiKey: String?
     let gigya =  Gigya.sharedInstance(GigyaAccount.self)
-   
-    
+    let selectCountryStr = "Select country"
+    let selectLangStr = "Select language"
+    let pleaseSelectLangStr = "Please select Language "
     
     private let sessionManager: Session = {
            let configuration = URLSessionConfiguration.default
@@ -86,8 +87,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         print("<<<<",self)
         super.viewDidLoad()
         
-        lblCountry.text = "Select country"
-        lblLanguage.text = "Select language"
+        lblCountry.text = selectCountryStr
+        lblLanguage.text = selectLangStr
         
         lblCountry.textColor = .lightGray
         lblLanguage.textColor = .lightGray
@@ -175,7 +176,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     let dataArray = json
                     for countries in dataArray {
                         let countryName = countries.1
-                        let country = countryName["CountryName"]
+                        let country = countryName[Constants.countryNamStr]
                         let countryIds = countryName["CountryId"]
                         self?.countryArray.append(country.rawValue as! String)
                         self?.countryId.append(countryIds.rawValue as! NSNumber)
@@ -298,17 +299,17 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         {
             self.showToastWithTimer(message: "Please select Country ", duration: 3.0)
         }
-        else if lblCountry.text == "Select country"
+        else if lblCountry.text == selectCountryStr
         {
             self.showToastWithTimer(message: "Please select Country ", duration: 3.0)
         }
         else if lblLanguage.text == ""
         {
-            self.showToastWithTimer(message: "Please select Language ", duration: 3.0)
+            self.showToastWithTimer(message: pleaseSelectLangStr, duration: 3.0)
         }
-        else if lblLanguage.text == "Select language"
+        else if lblLanguage.text == selectLangStr
         {
-            self.showToastWithTimer(message: "Please select Language ", duration: 3.0)
+            self.showToastWithTimer(message: pleaseSelectLangStr, duration: 3.0)
         }
         
         else
@@ -372,7 +373,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         
         if WebClass.sharedInstance.connected() {
             self.deleteAllData("Login")
-            _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: "Logging in...Please Wait")
+            _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.loginLoaderMessage)
             let Url = "Token"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded","Accept": "application/json"]
@@ -383,7 +384,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 let stass = response.response?.statusCode
                 if stass == 500 {
                     Helper.dismissGlobalHUD(self.view)
-                    Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"InvalidWebcredentials")
+                    Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"InvalidWebcredentials")
                     self.ssologoutMethod()
                     return
                 }
@@ -392,7 +393,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                         self.ssologoutMethod()
                         Helper.dismissGlobalHUD(self.view)
-                        Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"Authorisation failed please contact PV360 support team poultryview360@zoetis.com.")
+                        Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Authorisation failed please contact PV360 support team poultryview360@zoetis.com.")
                         return
                     }
                     
@@ -446,7 +447,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     if (dict.value(forKey: "error") as? String) ?? ""  == "invalid_grant"{
                         self.ssologoutMethod()
                         let errorMSg = dict["error_description"]
-                        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+                        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
                         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                             UIAlertAction in
                             
@@ -460,7 +461,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     if statusCode == 401{
                         self.ssologoutMethod()
                         let errorMSg = dict["error_description"]
-                        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+                        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
                         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                             UIAlertAction in
                             
@@ -663,7 +664,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let name = Email as String
             self.loginArray = CoreDataHandler().fetchLoginTypeWithUserEmail(email:name)
             if  loginArray.count == 0{
-                Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"You are offline. Please go online for first time login.")
+                Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"You are offline. Please go online for first time login.")
             }
             else {
                 
@@ -690,7 +691,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     self.callDashBordView()
                 }
                 else if userName.lowercased() != name{
-                    Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"Please enter valid mail .")
+                    Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Please enter valid mail .")
                 }
             }
         }
@@ -793,15 +794,15 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
         Helper.dismissGlobalHUD((UIApplication.shared.keyWindow)!)
         if statusCode == 0{
-            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again.(NA)")
+            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again.(NA)")
         } else {
             
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
                 
             } else if lngId == 3 {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
         }
     }
@@ -819,7 +820,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     // MARK: ******* Method for Internet Connection Fail with Error Message **********/
     func failWithErrorInternal() {
         self.dismisLoader()
-        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
         
     }
     
@@ -844,8 +845,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         let moduleName =   UserDefaults.standard.string(forKey:"ModuleName")
         let userType =   UserDefaults.standard.string(forKey:"userType")
         
-        let errorMSg = "Are you sure you want to logout?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+        let errorMSg = Constants.areYouSureToLogoutStr
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             
@@ -1195,7 +1196,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 lblCountry.textColor = .black
                 
             } else {
-                lblCountry.text = "Select country"
+                lblCountry.text = selectCountryStr
                 lblCountry.textColor = .lightGray
                 
             }
@@ -1205,7 +1206,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 lblLanguage.text = value as? String
                 lblLanguage.textColor = .black
             } else {
-                lblLanguage.text = "Select language"
+                lblLanguage.text = selectLangStr
                 lblLanguage.textColor = .lightGray
             }
             
@@ -1289,7 +1290,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         self.deleteAllData("PostingSession")
         if WebClass.sharedInstance.connected() {
             Helper.dismissGlobalHUD(self.view)
-            _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: "Logging in...Please Wait")
+            _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.loginLoaderMessage)
             let Id = UserDefaults.standard.value(forKey: "Id") as! Int
             let devType = Constants.deviceType
             let newUrl = ZoetisWebServices.EndPoint.getPostingSessionList.latestUrl + "\(Id)&DeviceType=\(devType)"
@@ -1306,7 +1307,6 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     
                     if let arr = JSON(json).array, !arr.isEmpty {
                         for item in arr {
-                            // Pass the JSON item directly to the CoreDataHandler
                             CoreDataHandler().getPostingData((item.dictionaryObject as NSDictionary?)!)
                         }
                         
@@ -1378,14 +1378,14 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                                           guard let feedCatName = feedDetail["feedProgramCategory"].string else { continue }
 
                                           switch feedCatName {
-                                          case "Coccidiosis Control":
-                                              self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: "Coccidiosis Control", feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
+                                          case Constants.coccidioStr:
+                                              self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: Constants.coccidioStr, feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
                                           case "Antibiotic":
                                               self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: "Antibiotic", feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
                                           case "Alternatives":
                                               self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: "Alternatives", feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
-                                          case "Mycotoxin Binders":
-                                              self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: "Mycotoxin Binders", feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
+                                          case Constants.mytoxinStr:
+                                              self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: Constants.mytoxinStr, feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
                                           default:
                                               break
                                           }
@@ -1411,13 +1411,13 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             for postDict in feedDetails {
                 // Handle feed details based on category
                 switch category {
-                case "Coccidiosis Control":
+                case Constants.coccidioStr:
                     CoreDataHandler().getDataFromCocoiiControll(postDict as NSDictionary, feedId: feedId as NSNumber, postingId: sessionId as NSNumber, feedProgramName: feedName, startDate: startDate)
                 case "Antibiotic":
                     CoreDataHandler().getDataFromAntiboitic(postDict as NSDictionary, feedId: feedId as NSNumber, postingId: sessionId as NSNumber, feedProgramName: feedName, startDate: startDate)
                 case "Alternatives":
                     CoreDataHandler().getDataFromAlterNative(postDict as NSDictionary, feedId: feedId as NSNumber, postingId: sessionId as NSNumber, feedProgramName: feedName, startDate: startDate)
-                case "Mycotoxin Binders":
+                case Constants.mytoxinStr:
                     CoreDataHandler().getDataFromMyCocotinBinder(postDict as NSDictionary, feedId: feedId as NSNumber, postingId: sessionId as NSNumber, feedProgramName: feedName, startDate: startDate)
                 default:
                     break
@@ -1837,7 +1837,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     // MARK: Data Formatter
     func convertDateFormater(_ date: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss
         // New addition for below 2 line
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC")
         dateFormatter.locale = Locale(identifier: "your_loc_id")
@@ -1883,7 +1883,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     func getPostingDataFromServerTurkey() {
         if WebClass.sharedInstance.connected() {
             Helper.dismissGlobalHUD(self.view)
-            _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: "Logging in...Please Wait")
+            _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.loginLoaderMessage)
             let Id = UserDefaults.standard.value(forKey: "Id") as! Int
             let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedSession.latestUrl + "\(Id)&DeviceType=\(Constants.deviceType)"
             ZoetisWebServices.shared.getTurkeyPostedSessionsListResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
@@ -1892,7 +1892,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.int ?? 0
                     
                     print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
@@ -1957,7 +1957,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.int ?? 0
                     
                     print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
@@ -2192,7 +2192,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.int ?? 0
                     
                     print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
@@ -2303,7 +2303,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                                             for  j in 0..<(feedDetailArr! as AnyObject).count{
                                                 let feedCatName = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedProgramCategory") as! String
                                                 
-                                                if feedCatName == "Coccidiosis Control"{
+                                                if feedCatName == Constants.coccidioStr{
                                                     let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
                                                     for  m in 0..<(feedDetail! as AnyObject).count{
                                                         let postDict = (feedDetail as AnyObject).object(at: m)
@@ -2326,7 +2326,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                                                         CoreDataHandlerTurkey().getDataFromAlterNativeTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,startDate:startDate as? String ?? "" )
                                                     }
                                                 }
-                                                else if  feedCatName  == "Mycotoxin Binders"{
+                                                else if  feedCatName  == Constants.mytoxinStr{
                                                     let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
                                                     for  y in 0..<(feedDetail! as AnyObject).count{
                                                         let postDict = (feedDetail as AnyObject).object(at: y)
@@ -2380,7 +2380,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.int ?? 0
                     
                     print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
@@ -2440,6 +2440,30 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     }
     
     // MARK:  ****************************** Get Notes from Server & Save ******************************/
+    fileprivate func saveTurkeyNotes(_ vacData: JSON) {
+        if let noteArr = vacData["Note"].array, !noteArr.isEmpty {
+            for note in noteArr {
+                // Safely unwrap each value
+                if let sessionId = note["sessionId"].int,
+                   let farmName = note["farmName"].string,
+                   let birdNo = note["birdNumber"].int,
+                   let birdNotes = note["Notes"].string {
+                    
+                    // Save data using CoreDataHandlerTurkey
+                    CoreDataHandlerTurkey().saveNoofBirdWithNotesTurkey(
+                        "",
+                        notes: birdNotes,
+                        formName: farmName,
+                        birdNo: NSNumber(value: birdNo),
+                        index: 0,
+                        necId: NSNumber(value: sessionId),
+                        isSync: false
+                    )
+                }
+            }
+        }
+    }
+    
     func getNotesFromServerTurkey() {
         self.deleteAllData("NotesBirdTurkey")
         if WebClass.sharedInstance.connected() {
@@ -2448,7 +2472,6 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let dev = "iOS"
             let url = "PostingSession/T_GetBirdNotesListByUser?UserId=\(id)&DeviceType=\(dev)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-          //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
             let headerDict: HTTPHeaders = ["Authorization": accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url
             
@@ -2457,9 +2480,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 guard let self = self else { return }
                 
                 let jsonResponse = JSON(json)
-                // Check for the "errorResult" key and handle errors
+           
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.int ?? 0
                     
                     print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
@@ -2469,30 +2492,10 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     }
                 }
                 
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [self] in
                     if let arr = JSON(json).array, !arr.isEmpty {
                         for vacData in arr {
-                            if let noteArr = vacData["Note"].array, !noteArr.isEmpty {
-                                for note in noteArr {
-                                    // Safely unwrap each value
-                                    if let sessionId = note["sessionId"].int,
-                                       let farmName = note["farmName"].string,
-                                       let birdNo = note["birdNumber"].int,
-                                       let birdNotes = note["Notes"].string {
-                                        
-                                        // Save data using CoreDataHandlerTurkey
-                                        CoreDataHandlerTurkey().saveNoofBirdWithNotesTurkey(
-                                            "",
-                                            notes: birdNotes,
-                                            formName: farmName,
-                                            birdNo: NSNumber(value: birdNo),
-                                            index: 0,
-                                            necId: NSNumber(value: sessionId),
-                                            isSync: false
-                                        )
-                                    }
-                                }
-                            }
+                            self.saveTurkeyNotes(vacData)
                         }
                         // Fetch posting data after processing
                         self.getPostingDataFromServerforImageTurkey()
@@ -2506,6 +2509,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
 
         } else {
             
+            self.failWithErrorInternal()
         }
     }
 }
@@ -2854,7 +2858,7 @@ extension ViewController:SidePanelViewControllerDelegate {
                                     Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
                                     self.callSyncApiTurkey()
                                 } else {
-                                    Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
+                                    Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
                                 }
                             } else {
                                 
@@ -2870,7 +2874,7 @@ extension ViewController:SidePanelViewControllerDelegate {
                                     Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
                                     self.callSyncApi()
                                 } else {
-                                    Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
+                                    Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
                                 }
                             }
                             else {
@@ -2888,7 +2892,7 @@ extension ViewController:SidePanelViewControllerDelegate {
                             let custArr = CoreDataHandler().fetchCustomer()
                             if(custArr.count == 0){
                                 let appDelegate = UIApplication.shared.delegate as? AppDelegate
-                                let alert = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
+                                let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
                                 
                                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                                 appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
@@ -2902,7 +2906,7 @@ extension ViewController:SidePanelViewControllerDelegate {
                             let custArr = CoreDataHandlerTurkey().fetchCustomerTurkey()
                             if(custArr.count == 0){
                                 let appDelegate = UIApplication.shared.delegate as? AppDelegate
-                                let alert = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
+                                let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
                                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                                 appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
                             }  else {

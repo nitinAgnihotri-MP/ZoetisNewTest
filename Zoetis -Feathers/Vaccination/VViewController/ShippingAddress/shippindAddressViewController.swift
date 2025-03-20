@@ -226,13 +226,13 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
     }
     
     @IBAction func StateBtnAction(_ sender: Any) {
-        stateList = VaccinationCustomersDAO.sharedInstance.getStateListVM(user_id: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found")
+        stateList = VaccinationCustomersDAO.sharedInstance.getStateListVM(user_id: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr)
         stateList = stateList.sorted { $0.stateName ?? "" < $1.stateName ?? "" }
         if selectedCountry.text != "" {
             self.setDropDown(stateBtn)
         }
         else {
-            let alertController = UIAlertController(title: "Alert", message: "Please select a country first.", preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: "Please select a country first.", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
@@ -290,7 +290,7 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
     }
     
     func showValidationAlert(alertText : String) {
-        let alertController = UIAlertController(title: "Alert", message: alertText, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: alertText, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default)
         alertController.addAction(okAction)
         self.present(alertController, animated: true, completion: nil)

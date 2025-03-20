@@ -1191,7 +1191,7 @@ class PEStartNewAssessmentINT: BaseViewController {
                     self.okButtonTapped()
                 }
             } else {
-                showAlert(title: "Alert", message: "Please enter the flock details.", owner: self)
+                showAlert(title: Constants.alertStr, message: "Please enter the flock details.", owner: self)
             }
         }else {
             if isFromBack {
@@ -1479,7 +1479,7 @@ class PEStartNewAssessmentINT: BaseViewController {
             }
         }
         
-        showAlert(title: "Alert", message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
         
     }
     
@@ -2087,7 +2087,7 @@ class PEStartNewAssessmentINT: BaseViewController {
         var countryIDArray = NSArray()
         var countryNameArray = NSArray()
         let countryDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "AllCountriesPE")
-        countryNameArray = countryDetailsArray.value(forKey: "countryName") as? NSArray ?? NSArray()
+        countryNameArray = countryDetailsArray.value(forKey: Constants.countryNamStr) as? NSArray ?? NSArray()
         countryIDArray = countryDetailsArray.value(forKey: "countryId") as? NSArray ?? NSArray()
         if  countryNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: countryNameArray as? [String] ?? [String](), kWidth: countryBtn.frame.width, kAnchor: countryBtn, yheight: countryBtn.bounds.height) { [unowned self] selectedVal, index  in
@@ -2222,7 +2222,7 @@ extension PEStartNewAssessmentINT{
         
         let errorMSg = msg
         
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.okAction()

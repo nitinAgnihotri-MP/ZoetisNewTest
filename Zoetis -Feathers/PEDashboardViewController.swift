@@ -97,7 +97,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     @IBOutlet weak var alertLbl: UILabel!
     var fileDetailArray = NSArray()
     // MARK: - VIEW LIFE CYCLE
-    let noIdFound = "No id found"
+    let noIdFound = Constants.noIdFoundStr
     let yyymmdd = appDelegateObj.yyyyMMddStr
     let userIdStr = " userID == %d AND serverAssessmentId == %@"
     let noteStr = "*Note - Please don't minimize App while syncing."
@@ -332,12 +332,12 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         if ConnectionManager.shared.hasConnectivity(){
             if syncArr > 0{
                 let errorMSg = "Data available for sync, Do you want to sync now?"
-                let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+                let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                     _ in
                     self.getVaccinationServiceResponse(showHud: true)
                 }
-                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+                let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
                     _ in
                     self.popupTblVw.reloadData()
                     self.dashboardTblVw.reloadData()
@@ -447,7 +447,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     func convertDateFormatter(date: String) -> String {
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC")
         dateFormatter.locale = Locale(identifier: "your_loc_id")
         let convertedDate = dateFormatter.date(from: date)
@@ -1152,7 +1152,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                     _ in
                     self.askForDataSync()
                 }
-                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+                let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
                     _ in
                     self.forceSyncMessage()
                 }
@@ -1164,7 +1164,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 self.logoutAction()
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
         
     }
@@ -1185,12 +1185,12 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     // MARK: - Ask for data Sync
     func askForDataSync(){
         let errorMSg = Constants.askForDataSync
-        let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.getVaccinationServiceResponse(showHud: true)
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
             _ in
             self.forceSyncMessage()
         }
@@ -1312,11 +1312,11 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 self.accessPEArrayObjects()
                 
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }else{
             if self.deletedAssessmentIdArray.count > 0{
-                let alertController = UIAlertController(title: "Alert", message: String(format: "%d assessment(s) has been removed from the web. App data will be updated.", self.deletedAssessmentIdArray.count), preferredStyle: .alert)
+                let alertController = UIAlertController(title: Constants.alertStr, message: String(format: "%d assessment(s) has been removed from the web. App data will be updated.", self.deletedAssessmentIdArray.count), preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                     _ in
                     let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
@@ -3033,7 +3033,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                     "EvaluationTypeText": dict.evaluationName,
                     "AppCreationTime": UniID.prefix(22),
                     "SignatureDate":dateSig,
-                    "AssessmentId":serverAssessmentId,
+                    "AssessmentId": serverAssessmentId,
                     "DoubleSanitation":hacheryAntibiotics,
                     "SanitationEmbrex":  dict.sanitationValue,
                     "HasChlorineStrips" :  dict.isChlorineStrip ?? false,
@@ -3223,7 +3223,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         let jsonEncoder = JSONEncoder()
         let jsonDataArr = try? jsonEncoder.encode(arr)
         if jsonDataArr != nil {
-            extendedData = try! JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
+            extendedData = try? JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
         }
         var Complete = 1
         var Draft = 0
@@ -3487,7 +3487,7 @@ func convertDateFormat(inputDate: String) -> String {
 //////        olDateFormatter.calendar = Calendar(identifier: .gregorian)
 //////        olDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
 ////
-////        olDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+////        olDateFormatter.dateFormat = Constants.yyyyMMddHHmmss
 ////        let oldDate = olDateFormatter.date(from: inputDate)
 ////        let convertDateFormatter = DateFormatter()
 //////        convertDateFormatter.calendar = Calendar(identifier: .gregorian)
@@ -3757,7 +3757,7 @@ extension PEDashboardViewController{
             })
             
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
         }
     }
     
@@ -4680,7 +4680,7 @@ extension PEDashboardViewController{
             
             if peAssessmentNewArray.count > 0{
                 if self?.deletedAssessmentIdArray.count ?? 0 > 0{
-                    let alertController = UIAlertController(title: "Alert", message: String(format: "%d assessment(s) has been removed from the web. App data will be updated.", self?.deletedAssessmentIdArray.count ?? 0), preferredStyle: .alert)
+                    let alertController = UIAlertController(title: Constants.alertStr, message: String(format: "%d assessment(s) has been removed from the web. App data will be updated.", self?.deletedAssessmentIdArray.count ?? 0), preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                         _ in
                         if peAssessmentArray.count > 0{
@@ -5042,7 +5042,7 @@ extension PEDashboardViewController{
                 peNewAssessmentWas.breedOfBirdOther = objDic["BreedOfBirdsOther"] as? String ?? ""
                 peNewAssessmentWas.dataToSubmitID = objDic["AppCreationTime"] as? String ?? ""
                 peNewAssessmentWas.manufacturer = objDic["ManufacturerName"] as? String ?? ""
-                peNewAssessmentWas.countryName = objDic["CountryName"] as? String ?? ""
+                peNewAssessmentWas.countryName = objDic[Constants.countryNamStr] as? String ?? ""
                 peNewAssessmentWas.countryID = objDic["CountryId"] as? Int ?? 0
                 peNewAssessmentWas.refrigeratorNote = objDic["RefrigeratorNote"] as? String ?? ""
                 peNewAssessmentWas.fluid = objDic["IsInovoFluids"] as? Bool ?? false
@@ -5682,7 +5682,7 @@ extension PEDashboardViewController{
                 peNewAssessmentWas.dataToSubmitID = objDic["DeviceId"] as? String ?? ""
                 peNewAssessmentWas.rejectionComment = objDic["RejectionComments"] as? String ?? ""
                 peNewAssessmentWas.manufacturer = objDic["ManufacturerName"] as? String ?? ""
-                peNewAssessmentWas.countryName = objDic["CountryName"] as? String ?? ""
+                peNewAssessmentWas.countryName = objDic[Constants.countryNamStr] as? String ?? ""
                 peNewAssessmentWas.countryID = objDic["CountryId"] as? Int ?? 0
                 peNewAssessmentWas.clorineName = objDic["ChlorineText"] as? String ?? ""
                 peNewAssessmentWas.clorineId = objDic["ChlorineId"] as? Int ?? 0
@@ -6386,7 +6386,7 @@ extension PEDashboardViewController{
             peNewAssessmentWas.visitID = objDic["VisitId"] as? Int ?? 0
             peNewAssessmentWas.visitName =  objDic["VisitName"] as? String ?? ""
             peNewAssessmentWas.selectedTSRID = objDic["TSRId"] as? Int ?? 0
-            peNewAssessmentWas.countryName = objDic["CountryName"] as? String ?? ""
+            peNewAssessmentWas.countryName = objDic[Constants.countryNamStr] as? String ?? ""
             peNewAssessmentWas.countryID = objDic["CountryId"] as? Int ?? 0
             peNewAssessmentWas.clorineName = objDic["ChlorineText"] as? String ?? ""
             peNewAssessmentWas.clorineId = objDic["ChlorineId"] as? Int ?? 0

@@ -499,7 +499,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     @IBAction func finalizeButtonClicked(_ sender: Any) {
         
         let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             
@@ -514,8 +514,8 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     }
     // MARK:  Draft Button Action
     @IBAction func draftBtnClicked(_ sender: Any) {
-        let errorMSg = "Are you sure you want to save assessment in Draft?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let errorMSg = Constants.areYouSureSaveAsmntStr
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default   ) {
             _ in
             
@@ -529,8 +529,8 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     }
     
     @IBAction func draftButtonClickedInitial(_ sender: Any) {
-        let errorMSg = "Are you sure you want to save assessment in Draft?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let errorMSg = Constants.areYouSureSaveAsmntStr
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             
@@ -2076,9 +2076,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView  == collectionViewSignature {
             return certificateData.count + 1
-        }
-        else {
-            
+        } else {
             return catArrayForCollectionIs.count + 1 ?? 0
         }
     }
@@ -2092,20 +2090,17 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
                 cell.imgSignature.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[indexPath.row].signatureImg)
                 cell.lblSignatureName.text = "Vaccination Mixer Operator Name : \(certificateData[indexPath.row].name ?? "")"
             }
-            if certificateData.count == indexPath.row {
-                if certificateData.count > 0 {
-                    let data = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].fsrSign)
-                    DispatchQueue.main.async() {
-                        cell.imgSignature.contentMode = .scaleAspectFit
-                        cell.imgSignature.image =  data
-                        cell.lblSignatureName.text = "FSR Sign"
-                    }
+            if certificateData.count == indexPath.row,
+               certificateData.count > 0 {
+                let data = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].fsrSign)
+                DispatchQueue.main.async() {
+                    cell.imgSignature.contentMode = .scaleAspectFit
+                    cell.imgSignature.image =  data
+                    cell.lblSignatureName.text = "FSR Sign"
                 }
             }
-            
             return cell
-        }
-        else {
+        } else {
             if indexPath.row == catArrayForCollectionIs.count  {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewIDPE", for: indexPath as IndexPath) as! PECategoryCell
                 // let category = catArrayForCollectionIs[indexPath.row]
@@ -3906,7 +3901,7 @@ extension PEViewAssesmentFinalize{
         let jsonEncoder = JSONEncoder()
         let jsonDataArr = try? jsonEncoder.encode(arr)
         if jsonDataArr != nil{
-            extendedData = try! JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
+            extendedData = try? JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
         }
         
         
@@ -4103,7 +4098,7 @@ extension PEViewAssesmentFinalize{
     @IBAction func syncBtnAction(_ sender: Any) {
         if ConnectionManager.shared.hasConnectivity(){
             let errorMSg = "Are you sure, you want to sync the data?"
-            let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
                 self.syncBtnTapped(showHud: true)
@@ -4115,7 +4110,7 @@ extension PEViewAssesmentFinalize{
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }else{
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     
@@ -4144,34 +4139,26 @@ extension PEViewAssesmentFinalize{
         var QCCount = ""
         var PPMValue = ""
         let assID =  dictArray.assID ?? 0
-        if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12
-        {
+        if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12 {
             QCCount =  dictArray.qcCount ?? ""
-        } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous"
-        {
+        } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous" {
             TextAmPm =  dictArray.ampmValue ?? ""
-        }
-        else if  dictArray.rollOut == "Y" && dictArray.sequenceNoo == 5  && dictArray.qSeqNo == 5
-                    
-        {
-            PPMValue =  dictArray.ppmValue ?? ""              }
-        
-        else if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 1
-        {
+        } else if  dictArray.rollOut == "Y" && dictArray.sequenceNoo == 5  && dictArray.qSeqNo == 5 {
+            PPMValue =  dictArray.ppmValue ?? ""
+        } else if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 1 {
             PersonName =  dictArray.personName ?? ""
             let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
             let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
             let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-            if dictArray.frequency?.count ?? 0 > 0 {
-                if visitNameArray.contains(dictArray.frequency ?? ""){
-                    let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
-                    FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
-                }
+            if dictArray.frequency?.count ?? 0 > 0,
+               visitNameArray.contains(dictArray.frequency ?? "") {
+                let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
+                FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
             }
         }
         
         var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
+        if let id = dictArray.serverAssessmentId {
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
         
@@ -4196,9 +4183,7 @@ extension PEViewAssesmentFinalize{
             ] as JSONDictionary
             return json
             
-        }
-        else
-        {
+        } else {
             let json = [
                 "DisplayId":DisplayId?.prefix(22) ?? "",
                 "AppAssessmentId": String(AssessmentId),
@@ -4216,7 +4201,6 @@ extension PEViewAssesmentFinalize{
                 "isNA":dictArray.isNA ?? false
             ] as JSONDictionary
             return json
-            
         }
     }
     

@@ -18,17 +18,16 @@ class RejectedAssessmentViewModel{
             guard let `self` = self, error == nil else { return }
             let mainQueue = OperationQueue.main
             mainQueue.addOperation{
+                print(appDelegateObj.testFuntion())
             }
-         
         })
     }
     
-    
     func callSaveApi(dataModel: RejectedAssessmentModel){
         for data in dataModel.data{
-            for rejected in data.assessmentScoresPostingData{
+            for rejected in data.assessmentScoresPostingData {
+                print(appDelegateObj.testFuntion())
             }
         }
     }
-    
 }

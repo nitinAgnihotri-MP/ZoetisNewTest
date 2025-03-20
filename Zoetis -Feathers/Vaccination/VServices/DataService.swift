@@ -206,7 +206,7 @@ class DataService{
             
             dateFormatterObj.timeZone = Calendar.current.timeZone
             dateFormatterObj.locale = Calendar.current.locale
-            dateFormatterObj.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            dateFormatterObj.dateFormat = Constants.yyyyMMddHHmmss
             
             if let submittedDate = vacObj.submittedDate{
                 mainCertObj.SubmitedDate = dateFormatterObj.string(from:submittedDate )
@@ -419,7 +419,7 @@ class DataService{
                     let dateFormatterObj = DateFormatter()
                     dateFormatterObj.timeZone = Calendar.current.timeZone
                     dateFormatterObj.locale = Calendar.current.locale
-                    dateFormatterObj.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                    dateFormatterObj.dateFormat = Constants.yyyyMMddHHmmss
                     operatorObj.FromDate = moObj.startDate
                     operatorArr.append(operatorObj)
                 }

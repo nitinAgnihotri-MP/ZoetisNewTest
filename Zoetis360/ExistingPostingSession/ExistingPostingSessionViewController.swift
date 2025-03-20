@@ -253,7 +253,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             
             if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let rootViewController = scene.windows.first(where: { $0.isKeyWindow })?.rootViewController {
-                let title = NSLocalizedString("Alert", comment: "")
+                let title = NSLocalizedString(Constants.alertStr, comment: "")
                 let message = NSLocalizedString("From date must be smaller than to date.", comment: "")
                 
                 Helper.showAlertMessage(rootViewController, titleStr: title, messageStr: message)
@@ -355,7 +355,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             
             if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let rootViewController = scene.windows.first(where: { $0.isKeyWindow })?.rootViewController {
-                let title = NSLocalizedString("Alert", comment: "")
+                let title = NSLocalizedString(Constants.alertStr, comment: "")
                 let message = NSLocalizedString("To date must be greater than from date.", comment: "")
                 Helper.showAlertMessage(rootViewController, titleStr: title, messageStr: message)
             }
@@ -416,16 +416,16 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
                 let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
                 if lngId == 1{
                     lanStr = "English"
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in English language Please logout and select English as a language to edit /proceed this session", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in English language Please logout and select English as a language to edit /proceed this session", comment: ""))
                     
                 }else  if lngId == 3{
                     lanStr = "French"
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("Cette session a été créée en langue anglaise déconnectez-vous et sélectionnez anglais pour modifier.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("Cette session a été créée en langue anglaise déconnectez-vous et sélectionnez anglais pour modifier.", comment: ""))
                     
                 }
                 else  if lngId == 4{
                     lanStr = "Portuguese"
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("Esta sessão foi criada no idioma Português, faça logout e selecione o inglês como um idioma para editar /prosseguir nesta sessão", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("Esta sessão foi criada no idioma Português, faça logout e selecione o inglês como um idioma para editar /prosseguir nesta sessão", comment: ""))
                     
                 }
                 else{
@@ -557,7 +557,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
     
     // MARK: 🟠 -Info Button Action
     @objc func infoButton() {
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please connect farm(s) with feed program.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please connect farm(s) with feed program.", comment: ""))
     }
     // MARK: 🟠 Posting View Controller
     @objc func methodOfReceivedNotification(notification: Notification){
@@ -569,7 +569,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
     }
     
     func Alert(){
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No sessions found.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No sessions found.", comment: ""))
     }
     // MARK: 🟠 Load Custome popup
     func CallPopoupStartNec()  {
@@ -703,11 +703,11 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             }
             else
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }
         else{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
         }
         
     }
@@ -723,17 +723,17 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         self.printSyncLblCount()
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             } else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
             
             else if lngId == 4 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
             }
             
         }
@@ -743,21 +743,21 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
     {
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
     }
     
     func didFinishApi()
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     // MARK: 🟠 Failed With Internet Connection offline
     func failWithInternetConnection()
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
     func printSyncLblCount()

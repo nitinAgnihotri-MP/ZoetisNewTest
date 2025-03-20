@@ -18,7 +18,7 @@ class PulletSelectionViewController: BaseViewController {
     @IBOutlet weak var pveLabel: UILabel!
     @IBOutlet weak var footerView: UIView!
     @IBOutlet weak var lblVersion: UILabel!
-    
+    let verStr = "Version "
     var bottomViewController:BottomViewController!
     var path: UIBezierPath!
     
@@ -59,19 +59,19 @@ class PulletSelectionViewController: BaseViewController {
         
         switch liveAlbums {
         case 0:
-            lblVersion.text = "Version " + Bundle.main.versionNumber + " (UAT)"
+            lblVersion.text = verStr + Bundle.main.versionNumber + " (UAT)"
             
         case 1:
-            lblVersion.text = "Version " + Bundle.main.versionNumber + " (Dev)"
+            lblVersion.text = verStr + Bundle.main.versionNumber + " (Dev)"
             
         case 2:
-            lblVersion.text = "Version " + Bundle.main.versionNumber + " (Dev Support)"
+            lblVersion.text = verStr + Bundle.main.versionNumber + " (Dev Support)"
             
         case 3:
-            lblVersion.text = "Version " + Bundle.main.versionNumber
+            lblVersion.text = verStr + Bundle.main.versionNumber
             
         default:
-            lblVersion.text = "Version " + Bundle.main.versionNumber
+            lblVersion.text = verStr + Bundle.main.versionNumber
         }
         
     }
@@ -211,7 +211,7 @@ class PulletSelectionViewController: BaseViewController {
          
         }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download pdf file.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download pdf file.", comment: ""))
         }
       
     }

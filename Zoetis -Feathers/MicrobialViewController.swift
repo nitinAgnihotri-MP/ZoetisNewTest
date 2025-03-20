@@ -101,14 +101,14 @@ class MicrobialViewController: BaseViewController {
             if syncCount > 0{
                 
                 let errorMSg = "Data available for sync. Do you want to sync now? \n\n\n *Note - Please don't minimize App while syncing."
-                let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+                let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                     _ in
                     
                     self.suncDataBackToServer(reqType: .bacterial, sessionStatus: .submitted)
                     
                 }
-                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+                let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
                     _ in
                     
                     self.logoutAction()
@@ -129,14 +129,14 @@ class MicrobialViewController: BaseViewController {
     }
     
     @IBAction func logoutNavBarBtn(_ sender: UIButton) {
-        let errorMSg = "Are you sure you want to logout?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+        let errorMSg = Constants.areYouSureToLogoutStr
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
             self.startLogoutProcess()
             
         }
         
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) 
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -242,15 +242,15 @@ class MicrobialViewController: BaseViewController {
 //            Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.feathurePulp.rawValue).count
 
         if syncCount == 0{
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "No data available to sync.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "No data available to sync.")
             return
         }
         if !ConnectionManager.shared.hasConnectivity(){
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "No Internet connection available.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "No Internet connection available.")
             return
         }
-        let alert = UIAlertController(title: "Alert", message: "Data Available for Sync.\nAre you sure you want to Sync ?", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
+        let alert = UIAlertController(title: Constants.alertStr, message: "Data Available for Sync.\nAre you sure you want to Sync ?", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (_) in
             self.suncDataBackToServer(reqType: .bacterial, sessionStatus: .submitted)
         }))
@@ -309,14 +309,14 @@ class MicrobialViewController: BaseViewController {
             if syncCount > 0{
                 
                 let errorMSg = "Data available for sync. Do you want to sync now? \n\n\n *Note - Please don't minimize App while syncing."
-                let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+                let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                     _ in
                     
                     self.suncDataBackToServer(reqType: .bacterial, sessionStatus: .submitted)
                     
                 }
-                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
+                let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
                 
                 alertController.addAction(okAction)
                 alertController.addAction(cancelAction)
@@ -454,8 +454,8 @@ class MicrobialViewController: BaseViewController {
     }
     
     @IBAction func sessionBtnAction(_ sender: UIButton) {
-        let alert = UIAlertController(title: "Alert", message: "Are you sure to clear current session?", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
+        let alert = UIAlertController(title: Constants.alertStr, message: "Are you sure to clear current session?", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (_) in
             self.sessionBtn.isHidden = true
             self.widthOfSessionButton.constant = 0

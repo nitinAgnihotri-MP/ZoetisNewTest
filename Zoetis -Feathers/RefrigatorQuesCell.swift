@@ -77,4 +77,7 @@ class RefrigatorQuesCell: UITableViewCell {
     imagesCompletion?(nil)
     }
     
+    @IBAction func buttonTap(_ sender: Any) {
+    }
+    
 }

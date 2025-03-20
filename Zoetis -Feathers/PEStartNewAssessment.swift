@@ -872,7 +872,7 @@ class PEStartNewAssessment: BaseViewController {
     func showOnlyExtendedMicrobial(){
         let errorMSg = VaccinationConstants.PEConstants.WARNING_MSG_NEXTBTN_CLICK_EXTENDED_MICROBIAL
         
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.fromBackNextBtnAction()
@@ -1079,7 +1079,7 @@ class PEStartNewAssessment: BaseViewController {
         //                    view.layer.borderWidth = 2.0
         //                }
         //            }
-        //            showAlert(title: "Alert", message: "Assessment already exists for the customer, site, date, and evaluation type. Please try another one.", owner: self)
+        //            showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, site, date, and evaluation type. Please try another one.", owner: self)
         //            return
         //        }
         //     checkBackAndSave()
@@ -1115,7 +1115,7 @@ class PEStartNewAssessment: BaseViewController {
                     
                 }
             } else {
-                showAlert(title: "Alert", message: "Please enter the flock details.", owner: self)
+                showAlert(title: Constants.alertStr, message: "Please enter the flock details.", owner: self)
             }
         }else {
             //            self.checkBackAndSave()
@@ -1429,7 +1429,7 @@ class PEStartNewAssessment: BaseViewController {
             }
         }
         
-        showAlert(title: "Alert", message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
         
     }
     
@@ -1999,7 +1999,7 @@ extension PEStartNewAssessment : DatePickerPopupViewControllerProtocol{
         //                    view.layer.borderWidth = 2.0
         //                }
         //            }
-        //            showAlert(title: "Alert", message: "Assessment already exists for the customer, site, date, and evaluation type. Please try another one.", owner: self)
+        //            showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, site, date, and evaluation type. Please try another one.", owner: self)
         //            return
         //        }  else {
         selectedEvaluationDateText.text = string
@@ -2051,7 +2051,7 @@ extension PEStartNewAssessment{
         let errorMSg = msg
         //VaccinationConstants.PEConstants.WARNING_MSG_NEXTBTN_CLICK_EXTENDED_MICROBIAL
         
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.okAction()

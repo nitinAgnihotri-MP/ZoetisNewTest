@@ -1116,7 +1116,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     func setObsImageDescForSkleta(desc: Int) -> NSMutableArray {
         let languageDescriptions: [Int: [String]] = [
             1: [
-                "No lesion.",
+                Constants.noLesion,
                 "(<50%) footpad.",
                 "(>50%) footpad or a footpad that is <50% but has toe involvement."
             ],
@@ -1133,7 +1133,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         ]
         
         let yesNoDescriptions: [Int: [String]] = [
-            1: ["No.", "Yes."],
+            1: ["No.", Constants.yesStr],
             3: ["Non.", "Oui."],
             4: ["Não.", "Sim."]
         ]
@@ -1156,9 +1156,9 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             descriptions = yesNoDescriptions[lngId] ?? defaultDescriptions[lngId] ?? ["No data available."]
         case 5:
             descriptions = [
-                "No lesion.",
-                "<50% growth plate.",
-                ">50% growth plate."
+                Constants.noLesion,
+                Constants.growth50,
+                Constants.growth50GreaterStr
             ]
         case 7:
             switch lngId {
@@ -1367,7 +1367,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 27:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1495,7 +1495,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 35:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1510,7 +1510,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 37:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1525,7 +1525,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 45 :
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1540,7 +1540,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 46 :
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1556,7 +1556,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 47:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1571,7 +1571,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 40 :
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1586,7 +1586,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 36:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1602,7 +1602,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 41:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1617,7 +1617,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 39:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1632,7 +1632,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 38:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1647,7 +1647,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 48:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1663,7 +1663,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         default:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1691,7 +1691,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 49:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1751,7 +1751,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 52:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1766,7 +1766,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 53:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1781,7 +1781,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 54:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1795,7 +1795,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         default:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 3{
                 obsDescArr.add("Non.")
@@ -1857,7 +1857,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 60, 55, 65, 63, 81, 61, 64, 66:
             if lngId == 1 {
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             } else if lngId == 3 {
                 obsDescArr.add("Non.")
                 obsDescArr.add("Oui.")
@@ -1868,7 +1868,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
         case 1955, 1957, 1952, 1956:
             if lngId == 1 {
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
                 obsDescArr.add("NO.")
             } else if lngId == 3 {
                 obsDescArr.add("Oui.")
@@ -1881,7 +1881,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         default:
             if lngId == 1 {
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             } else if lngId == 3 {
                 obsDescArr.add("Non.")
                 obsDescArr.add("Oui.")
@@ -3116,7 +3116,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if imageArrWithIsyncIsTrue.count == 8{
             
             if lngId == 1 {
-                postAlert(NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Maximum limit of image has been exceeded. Limit will be reset after next sync.", comment: ""))
+                postAlert(NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Maximum limit of image has been exceeded. Limit will be reset after next sync.", comment: ""))
             }
             else if lngId == 3 {
                 postAlert(NSLocalizedString("Alerte", comment: ""), message: NSLocalizedString("La limite maximale de l'image a été dépassée. La limite sera réinitialisée après la prochaine synchronisation.", comment: ""))
@@ -3287,7 +3287,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             isBirdCount = true
                             
                             if lngId == 1 {
-                                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You can not add more than 10 birds.", comment: ""))
+                                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You can not add more than 10 birds.", comment: ""))
                             } else if lngId == 3 {
                                 Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alerte", comment: "") , messageStr:"Vous ne pouvez pas ajouter plus de 10 oiseaux.")
                             }
@@ -3848,7 +3848,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 if (items.object(at: i) as AnyObject).count == 10
                 {
                     if lngId == 1 {
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You can not add more than 10 birds.", comment: ""))
+                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You can not add more than 10 birds.", comment: ""))
                     }
                     else if lngId == 3 {
                         Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alerte", comment: "") , messageStr:"Vous ne pouvez pas ajouter plus de 10 oiseaux.")
@@ -3899,7 +3899,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             if noOfBird == 1
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("At least one bird is required under a Farm.", comment: "") )
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("At least one bird is required under a Farm.", comment: "") )
                 traingleImageView.frame = CGRect(x: 276, y: 229, width: 24, height: 24)
             }
             
@@ -4034,7 +4034,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
         else
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("At least one bird is required under a Farm.", comment: "") )
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("At least one bird is required under a Farm.", comment: "") )
         }
         
         traingleImageView.frame = CGRect(x: 276, y: 229, width: 24, height: 24)
@@ -4070,7 +4070,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     // MARK: - 🔴 Delete Bird Button Action
     @IBAction func deleteBirds(_ sender: AnyObject) {
         
-        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Are you sure you want to delete this bird? You will lose the data by deleting this bird.", comment: ""), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Are you sure you want to delete this bird? You will lose the data by deleting this bird.", comment: ""), preferredStyle: .alert)
         let action1 = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .default)
         let action2 = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel) { (action:UIAlertAction) in
             self.isFirstTimeLaunch = false
@@ -4082,7 +4082,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 {
                     if (self.items.object(at: i) as AnyObject).count == 1
                     {
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
                         return
                     }
                 }
@@ -6324,12 +6324,12 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             }
             else
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }
         else
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
         }
     }
     // MARK: 🟠 Get all Sessions
@@ -6382,34 +6382,34 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         Helper.dismissGlobalHUD(self.view)
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             if lngId == 1
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             } else if lngId == 3
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
         }
     }
     func failWithErrorInternal()
     {
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
     }
     
     func didFinishApi()
     {
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     
     func failWithInternetConnection()
     {
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
 }

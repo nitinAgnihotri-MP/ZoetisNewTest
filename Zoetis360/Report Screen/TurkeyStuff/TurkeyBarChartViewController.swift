@@ -39,6 +39,7 @@ class TurkeyBarChartViewController: UIViewController,IAxisValueFormatter,ChartVi
     @IBOutlet weak var btnAirSac: UIButton!
     @IBOutlet weak var btnShare: UIButton!
     
+    
     // MARK: - VIEW LIFE CYCLE
     override func viewDidLoad() {
         print("<<<<",self)

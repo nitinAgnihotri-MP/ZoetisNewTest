@@ -199,8 +199,8 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
     
     @IBAction func draftBtnAction(_ sender: Any) {
         
-        let errorMSg = "Are you sure you want to save assessment in draft?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let errorMSg = Constants.areYouSureSaveAsmntStr
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             
@@ -261,7 +261,7 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
         for (indx, _) in vaccinInfoDetailArr.enumerated() {
             
             if vaccinInfoDetailArr[indx]["man"] as? String == "" || vaccinInfoDetailArr[indx]["name"] as? String == "" || vaccinInfoDetailArr[indx]["serotype"] as? String == "" /*|| vaccinInfoDetailArr[indx]["serial"] as? String == "" || vaccinInfoDetailArr[indx]["expDate"] as? String == "" || vaccinInfoDetailArr[indx]["siteOfInj"] as? String == "" */ {
-                showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+                showAlert(title: Constants.alertStr, message: "Please fill the mandatory fields.", owner: self)
                 
                 selectColeectionViewCell(currentSel_CategoryIndex: 1)
                 let selectedItem = IndexPath(row: Int(truncating: NSNumber(value: 1)), section: 0)
@@ -278,7 +278,7 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
         
         
         let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             
@@ -1244,7 +1244,7 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
         for (indx, _) in vaccinInfoDetailArr.enumerated() {
             
             if  vaccinInfoDetailArr[indx]["man"] as? String == "" || vaccinInfoDetailArr[indx]["name"] as? String == "" || vaccinInfoDetailArr[indx]["serotype"] as? String == "" /* vaccinInfoDetailArr[indx]["serial"] as? String == "" || vaccinInfoDetailArr[indx]["expDate"] as? String == "" || vaccinInfoDetailArr[indx]["siteOfInj"] as? String == "" */{
-                showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+                showAlert(title: Constants.alertStr, message: "Please fill the mandatory fields.", owner: self)
                 
                 return
             }
@@ -1254,7 +1254,7 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
         
         vaccinInfoDetailArr = sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as? [[String : Any]] ?? []
         
-        vaccinInfoDetailArr.append(["man" : "", "man_id" : 0, "name" : "", "name_id" : 0, "serotype" : "", "serotype_id" : 0, "serial" : "", "expDate" : "", "siteOfInj" : "", "siteOfInj_id" : 0, "note" : "", "otherAntigen" :"" , "showMore" : "No" , "vaccine_id" : 0 ])
+        vaccinInfoDetailArr.append(["man" : "", "man_id" : 0, "name" : "", "name_id" : 0, "serotype" : "", "serotype_id" : 0, "serial" : "", "expDate" : "", "siteOfInj" : "", "siteOfInj_id" : 0, "note" : "", "otherAntigen" :"" , "showMore" : Constants.noStr , "vaccine_id" : 0 ])
         let indexPath = IndexPath(row: vaccinInfoDetailArr.count-1, section: 6)
         
         
@@ -1329,12 +1329,12 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
         
         let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
         let currentIndPath = self.tblView.indexPathForRow(at:buttonPosition)
-        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "No"
+        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
         
         if let isShow = vaccinInfoDetailArr[currentIndPath!.row]["showMore"]  as? String
         {
             print(isShow)
-            if isShow == "No"
+            if isShow == Constants.noStr
             {
                 CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
                 
@@ -1344,8 +1344,8 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
             }
             else
             {
-                CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "No", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "No"
+                CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
             }
             
         }
@@ -1450,7 +1450,7 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                 return 80.0 //\\\ ---Crew Safty Cell-----
             }
             else if indexPath.section == 6 {
-                if let showMore = vaccinInfoDetailArr[indexPath.row]["showMore"] as? String, showMore == "No" {
+                if let showMore = vaccinInfoDetailArr[indexPath.row]["showMore"] as? String, showMore == Constants.noStr {
                     return 93
                 }
                 return 300
@@ -1458,7 +1458,7 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
 //            else if indexPath.section == 6{
 //                
 //                if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore"){
-//                    if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == "No"
+//                    if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr
 //                    {
 //                        return 93
 //                    }
@@ -1832,7 +1832,7 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                     
                     
                     if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore"){
-                        if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == "No"
+                        if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr
                         {
                             cell.showMoreBtn.setImage(UIImage(named: "up"), for: .normal)
                         }
@@ -2357,8 +2357,8 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
                         
                         CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "vaccine_id", currentIndPath: currentIndPath! as NSIndexPath, text: id as Any, id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
                         
-                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "No", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "No"
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
                         
                         self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
                         self.tblView.reloadRows(at: [currentIndPath!], with: .none)
@@ -2472,12 +2472,12 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
                         
                         CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
                         
-                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "No", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
                         
                         CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: antigenNameArr, id: antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
                         
                         
-                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "No"
+                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
                         self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
                         
                     }

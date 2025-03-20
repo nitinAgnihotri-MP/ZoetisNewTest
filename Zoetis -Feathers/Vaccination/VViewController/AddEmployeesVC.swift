@@ -96,8 +96,8 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     var addEmployeeBtnClicked:Bool = true
     var fssId = Int()
     var trainingId = Int()
-    
-    
+    let gaddInfoStr = "Add Info."
+    let addEmpStr = "Add Employees"
     // MARK: - VIEW LIFE CYCLE
     
     override func viewDidLoad() {
@@ -136,7 +136,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             let dateFormatterObj =  DateFormatter()
             
             dateFormatterObj.locale = Calendar.current.locale
-            dateFormatterObj.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            dateFormatterObj.dateFormat = Constants.yyyyMMddHHmmss
             
             self.curentCertification?.scheduledDate = dateFormatterObj.string(from: Date())
             if Constants.modeType == "new_operator"{
@@ -343,14 +343,14 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             addEmployeeBtn.isHidden = true
             removeEmployeeBtn.isHidden = true
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                addEmployeesLbl.text = "Add Info."
+                addEmployeesLbl.text = gaddInfoStr
                 sectionHeaderVw.isHidden = false
                 addEmployeesLbl.isHidden = false
             } else{
                 if employeesAddedArr.count > 0{
                     addEmployeesLbl.text = "Add Employees (\(employeesAddedArr.count))"
                 }else{
-                    addEmployeesLbl.text = "Add Employees"
+                    addEmployeesLbl.text = addEmpStr
                 }
                 
             }
@@ -417,7 +417,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             let dateFormatterObj =  DateFormatter()
             dateFormatterObj.locale = Calendar.current.locale
             
-            dateFormatterObj.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            dateFormatterObj.dateFormat = Constants.yyyyMMddHHmmss
             self.curentCertification?.scheduledDate = self.dateLbl.text ?? ""
             dateLbl.text = CodeHelper.sharedInstance.convertDateFormater( dateFormatterObj.string(from: Date()))
             self.curentCertification?.scheduledDate = dateFormatterObj.string(from: Date())
@@ -767,9 +767,9 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     
     
     func getMasterData(){
-        tShirtArr = AddEmployeesDAO.sharedInstance.getMasterDropdownData(loginUserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", valueType:MasterDataDropdownStatus.TShirtSize)
-        langArr = AddEmployeesDAO.sharedInstance.getMasterDropdownData(loginUserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", valueType:MasterDataDropdownStatus.Languages)
-        rolesArr = AddEmployeesDAO.sharedInstance.getMasterDropdownData(loginUserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", valueType:MasterDataDropdownStatus.UserRoles)
+        tShirtArr = AddEmployeesDAO.sharedInstance.getMasterDropdownData(loginUserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, valueType:MasterDataDropdownStatus.TShirtSize)
+        langArr = AddEmployeesDAO.sharedInstance.getMasterDropdownData(loginUserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, valueType:MasterDataDropdownStatus.Languages)
+        rolesArr = AddEmployeesDAO.sharedInstance.getMasterDropdownData(loginUserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, valueType:MasterDataDropdownStatus.UserRoles)
     }
     
     deinit {
@@ -939,7 +939,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             curentCertification?.selectedFsmId = UpdateCertification
         }
         
-        DataService.sharedInstance.getShippingDetails(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found",  SelectedFsmId:self.curentCertification?.selectedFsmId ?? "", viewController: self, completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getShippingDetails(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr,  SelectedFsmId:self.curentCertification?.selectedFsmId ?? "", viewController: self, completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { self?.dismissGlobalHUD(self?.view ?? UIView()); return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
@@ -1020,7 +1020,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         
         dateFormatterObj.timeZone = Calendar.current.timeZone
         dateFormatterObj.locale = Calendar.current.locale
-        dateFormatterObj.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatterObj.dateFormat = Constants.yyyyMMddHHmmss
         
         if (self.curentCertification == nil){
             self.curentCertification = VaccinationCertificationVM()
@@ -1222,12 +1222,12 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             employeesTblVw.reloadData()
             
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                addEmployeesLbl.text = "Add Info."
+                addEmployeesLbl.text = gaddInfoStr
             } else{
                 if employeesAddedArr.count > 0{
                     addEmployeesLbl.text = "Add Employees (\(employeesAddedArr.count))"
                 }else{
-                    addEmployeesLbl.text = "Add Employees"
+                    addEmployeesLbl.text = addEmpStr
                 }
             }
             
@@ -1252,12 +1252,12 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             }
             
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                addEmployeesLbl.text = "Add Info."
+                addEmployeesLbl.text = gaddInfoStr
             } else{
                 if employeesAddedArr.count > 0{
                     addEmployeesLbl.text = "Add Employees (\(employeesAddedArr.count))"
                 }else{
-                    addEmployeesLbl.text = "Add Employees"
+                    addEmployeesLbl.text = addEmpStr
                 }
             }
             employeesTblVw.reloadData()
@@ -1558,12 +1558,12 @@ extension AddEmployeesVC: UITableViewDataSource, UITableViewDelegate{
         lbl.font = UIFont(name:"HelveticaNeue-Bold", size: 16)
         lbl.font = UIFont.boldSystemFont(ofSize: 16)
         if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-            lbl.text = "Add Info."
+            lbl.text = gaddInfoStr
         } else{
             if employeesAddedArr.count > 0{
                 lbl.text = "Add Employees (\(employeesAddedArr.count))"
             }else{
-                lbl.text = "Add Employees"
+                lbl.text = addEmpStr
             }
         }
         lbl.textColor = UIColor.white
@@ -1656,7 +1656,7 @@ extension AddEmployeesVC: DatePickerPopupViewControllerProtocol{
     
     func doneButtonTappedWithDate(string: String, objDate: Date) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss
         let date = dateFormatter.string(from: objDate)
         if employeesAddedArr.count > tableviewIndexPath.row{
             var emp = employeesAddedArr[tableviewIndexPath.row]

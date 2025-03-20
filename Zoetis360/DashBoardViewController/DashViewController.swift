@@ -455,11 +455,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 if isFarmSync == false{
                     
                     if lngId == 1 {
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr: NSLocalizedString("You have unlinked farm(s) to your feed in posting session. Visit '' Open Existing Session '' to link farm(s) to feed program.", comment: ""))
+                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString("You have unlinked farm(s) to your feed in posting session. Visit '' Open Existing Session '' to link farm(s) to feed program.", comment: ""))
                         isFarmSync = true
                         
                     } else if lngId == 3 {
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr: NSLocalizedString("Vous avez dissocié la/les ferme(s) de votre aliment en affichant. La visite '' Ouvrir la séance existante '' pour associer la ferme(s) au programme alimentaire.", comment: ""))
+                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString("Vous avez dissocié la/les ferme(s) de votre aliment en affichant. La visite '' Ouvrir la séance existante '' pour associer la ferme(s) au programme alimentaire.", comment: ""))
                         isFarmSync = true
                     }
                 }
@@ -766,7 +766,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -853,7 +853,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1010,7 +1010,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1097,7 +1097,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1182,7 +1182,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1402,7 +1402,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1512,7 +1512,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                          let jsonResponse = JSON(json)
                          // Check for the "errorResult" key and handle errors
                          if let errorResult = jsonResponse["errorResult"].dictionary {
-                             let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                             let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                              let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                              
                              print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1588,7 +1588,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Target Weight Processing List API : \(errorMsg) (Code: \(errorCode))")
@@ -1725,7 +1725,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1799,7 +1799,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1871,7 +1871,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1945,7 +1945,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -2015,7 +2015,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -2078,7 +2078,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -2333,7 +2333,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 self.callSyncApi()
             }
             else{
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }
         else{
@@ -2346,7 +2346,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             }else if lngId == 1{
                 strMsg = "Data not available for syncing."
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:strMsg)
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:strMsg)
         }
     }
     // MARK: 🟢 Sync API method call for Feed Program
@@ -2380,13 +2380,13 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         self.printSyncLblCount()
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr: NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             } else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
         }
     }
@@ -2395,14 +2395,14 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     {
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
     }
     
     func failWithInternetConnection()
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     // MARK: 🟠 Alert Message
     func promtSyncing (){
@@ -2411,7 +2411,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         let titleFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: "HelveticaNeue-Light", size: 19.0)]
         let messageFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: "HelveticaNeue-Light", size: 12.0)]
         let myMsgString = NSLocalizedString("Data available for sync. Do you want to sync now? \n\n\n *Note - Please don't minimize App while syncing.", comment: "")
-        let titleAttrString = NSMutableAttributedString(string: NSLocalizedString("Alert", comment: ""), attributes: convertToOptionalNSAttributedStringKeyDictionary(titleFont))
+        let titleAttrString = NSMutableAttributedString(string: NSLocalizedString(Constants.alertStr, comment: ""), attributes: convertToOptionalNSAttributedStringKeyDictionary(titleFont))
         var messageAttrString = NSMutableAttributedString(string: myMsgString , attributes: convertToOptionalNSAttributedStringKeyDictionary(messageFont))
         messageAttrString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: NSRange(location:50,length:52))
         let font = UIFont(name: "HelveticaNeue-Light", size: 11.0)
@@ -2430,7 +2430,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     }
                 }
                 else{
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
                 }
             }
             else{
@@ -2444,11 +2444,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 else if lngId == 1{
                     strMsg = "Data not available for syncing."
                 }
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:strMsg)
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:strMsg)
             }
             Helper.dismissGlobalHUD(self.view)
         }
-        let CancelAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default) {
+        let CancelAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default) {
             UIAlertAction in
             NSLog("Cancel Pressed")
             self.iSfarmSync()
@@ -2470,7 +2470,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         }
         else {
             Helper.dismissGlobalHUD(self.view)
-            let alertView = UIAlertController(title:NSLocalizedString("Alert", comment: "") , message:NSLocalizedString("Data Sync has been completed.", comment: ""), preferredStyle: .alert)
+            let alertView = UIAlertController(title:NSLocalizedString(Constants.alertStr, comment: "") , message:NSLocalizedString("Data Sync has been completed.", comment: ""), preferredStyle: .alert)
             alertView.addAction(UIAlertAction(title:NSLocalizedString("OK", comment: "") , style: .default, handler: { (alertAction) -> Void in
                 self.iSfarmSync()
                 
@@ -2559,17 +2559,17 @@ extension DashViewController{
         
         self.printSyncLblCount()
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             }
             else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
             else if lngId == 4 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
             }
         }
     }
@@ -2577,16 +2577,16 @@ extension DashViewController{
     func failWithErrorInternalSyncdata(){
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Server error please try again .", comment: "") )
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Server error please try again .", comment: "") )
     }
     func didFinishApiSyncdata(){
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data Sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data Sync has been completed.", comment: ""))
         self.printSyncLblCount()
     }
     func failWithInternetConnectionSyncdata(){
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
 }

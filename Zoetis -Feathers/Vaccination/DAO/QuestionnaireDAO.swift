@@ -14,7 +14,7 @@ final  public class QuestionnaireDAO{
     private init(){print("Initializer")}
     static let sharedInstance = QuestionnaireDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
-    
+    let userIdStr = "userId = %@"
     private func convertDTOtoMO(dtoObj: CertificationQuestionTypesDTO, userId:String){
         
         if let dtoObjQuestTypes = dtoObj.certificateQuestionTypes{
@@ -211,7 +211,7 @@ final  public class QuestionnaireDAO{
             fetchRequest.predicate = NSPredicate(format:"userId = %@ AND typeid = %@", userId, typeId!)
             
         } else{
-            fetchRequest.predicate = NSPredicate(format:"userId = %@", userId)
+            fetchRequest.predicate = NSPredicate(format:userIdStr, userId)
         }
         
         do {
@@ -243,9 +243,9 @@ final  public class QuestionnaireDAO{
     }
     
     func deleteVaccinationQuestions(userId:String){
-        deleteExisitingData(entityName: "VaccinationQuestionTypes", predicate: NSPredicate(format:"userId = %@", userId))
-        deleteExisitingData(entityName: "VaccinationQuestionCategories", predicate: NSPredicate(format:"userId = %@", userId))
-        deleteExisitingData(entityName: "VaccinationQuestions", predicate: NSPredicate(format:"userId = %@", userId))
+        deleteExisitingData(entityName: "VaccinationQuestionTypes", predicate: NSPredicate(format:userIdStr, userId))
+        deleteExisitingData(entityName: "VaccinationQuestionCategories", predicate: NSPredicate(format:userIdStr, userId))
+        deleteExisitingData(entityName: "VaccinationQuestions", predicate: NSPredicate(format:userIdStr, userId))
     }
     
 }

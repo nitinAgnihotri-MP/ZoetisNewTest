@@ -323,7 +323,7 @@
 //        if validateForm(){
 //
 //            let errorMSg = "Are you sure you want to finish assessment \nNote*- Edit will be disable after finishing assessment."
-//            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+//            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
 //            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //                _ in
 //                
@@ -341,7 +341,7 @@
 //
 //    @IBAction func draftBtnClicked(_ sender: Any) {
 //        let errorMSg = "Are you sure you want to save assessment in Draft?"
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //            _ in
 //            
@@ -359,7 +359,7 @@
 //
 //    @IBAction func draftButtonClickedInitial(_ sender: Any) {
 //        let errorMSg = "Are you sure you want to save assessment in Draft?"
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //            _ in
 //            
@@ -1790,7 +1790,7 @@
 //
 //    func showAlertForNoValid(){
 //        let errorMSg = "Fill in ovo information to submit this assessment."
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
 //            _ in
 //
@@ -1805,7 +1805,7 @@
 //
 //    func showAlertForNoValidTraining(){
 //        let errorMSg = "Please enter the certification details before submitting the assessment."
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
 //            _ in
 //
@@ -1821,7 +1821,7 @@
 //
 //    func showAlertForNoValidTrainingName(){
 //        let errorMSg = "Fill name in vaccine mixer data to submit this assessment."
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
 //            _ in
 //
@@ -1836,7 +1836,7 @@
 //
 //    func showAlertForNoCamera(){
 //      let errorMSg = "You cannot exceed 5 images for 1 question."
-//      let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+//      let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
 //
 //      let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) {
 //          _ in
@@ -1878,7 +1878,7 @@
 //    @objc func takePhoto(_ sender: UIButton) {
 //        //    let imageArrWithIsyncIsTrue = CoreDataHandlerTurkey().fecthPhotoWithiSynsTrueTurkey(true)
 //        //    if imageArrWithIsyncIsTrue.count >= 15 {
-//        //        postAlert("Alert", message: "Maximum limit of image has been exceeded. Limit will be reset after next sync.")
+//        //        postAlert(Constants.alertStr, message: "Maximum limit of image has been exceeded. Limit will be reset after next sync.")
 //        //    } else {
 //        /*************** Intilzing Camera Delegate Methods **********************************/
 //        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
@@ -2335,7 +2335,7 @@
 //    @IBAction func finalizeButtonClicked(_ sender: Any) {
 //        if validateForm(){
 //            let errorMSg = "Are you sure you want to finish assessment \nNote*- Edit will be disable after finishing assessment."
-//            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+//            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
 //            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //                _ in
 //                
@@ -2351,7 +2351,7 @@
 //    }
 //    @IBAction func draftBtnClicked(_ sender: Any) {
 //        let errorMSg = "Are you sure you want to save assessment in Draft?"
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //            _ in
 //            
@@ -2366,7 +2366,7 @@
 //    }
 //    @IBAction func draftButtonClickedInitial(_ sender: Any) {
 //        let errorMSg = "Are you sure you want to save assessment in Draft?"
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
 //            _ in
 //            
@@ -3627,7 +3627,7 @@
 //
 //    func showAlertForNoValid(){
 //        let errorMSg = "Fill in ovo information to submit this assessment."
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
 //            _ in
 //        }
@@ -3641,7 +3641,7 @@
 //
 //    func showAlertForNoValidTraining(){
 //        let errorMSg = "Please enter the certification details before submitting the assessment."
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
 //            _ in
 //        }
@@ -3655,7 +3655,7 @@
 //
 //    func showAlertForNoValidTrainingName(){
 //        let errorMSg = "Fill name in vaccine mixer data to submit this assessment."
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg , preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg , preferredStyle: .alert)
 //        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
 //            _ in
 //        }
@@ -3669,7 +3669,7 @@
 //
 //    func showAlertForNoCamera(){
 //        let errorMSg = "You cannot exceed 5 images for 1 question."
-//        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+//        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
 //
 //        let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) {
 //            _ in
@@ -3681,7 +3681,7 @@
 //
 //    func showAlertForNoNote(){
 //           let errorMSg = "Please enter note for questions marked false that is mandatory."
-//           let alertController = UIAlertController(title: "Alert", message: errorMSg , preferredStyle: .alert)
+//           let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg , preferredStyle: .alert)
 //
 //           let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) {
 //               _ in

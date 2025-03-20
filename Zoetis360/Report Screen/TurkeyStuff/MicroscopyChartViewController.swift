@@ -259,7 +259,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
                 
                 if lastSessionDataArray.count == 0 {
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
                     self.barChartView.clear()
                     return
                 }
@@ -300,7 +300,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
                 
                 if lastSessionDataArray.count == 0 {
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
                     self.barChartView.clear()
                     return
                 }
@@ -338,7 +338,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
             
             if lastSessionDataArray.count == 0 {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
                 self.barChartView.clear()
                 return
             }
@@ -553,7 +553,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
         let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds.last! as NSNumber)
         
         if lastSessionDataArray.count == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.lineChartView.clear()
             return
         }
@@ -700,7 +700,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
         
         if self.preparedArray.count < 3 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -807,7 +807,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -867,7 +867,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
         
         if self.preparedArray.count < 3 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -953,7 +953,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
         chartNameLable.text = self.subjectString as String
         if self.preparedArray.count < 2 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             self.btnShare.isHidden = true
             self.incedenceText.isHidden = true
@@ -1091,7 +1091,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
     
     func failWithInternetConnection() {
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
 }
 

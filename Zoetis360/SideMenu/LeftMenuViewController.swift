@@ -76,21 +76,21 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
         
         Helper.dismissGlobalHUD((UIApplication.shared.keyWindow)!)
         if statusCode == 0{
-            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again.(NA)")
+            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again.(NA)")
         } else {
             
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
                 
             } else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
         }
     }
     
     func failWithErrorInternal() {
         Helper.dismissGlobalHUD((UIApplication.shared.keyWindow)!)
-        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
         
     }
     func didFinishApi(){
@@ -409,7 +409,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                                 Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
                                 self.callSyncApiTurkey()
                             } else {
-                                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
+                                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
                             }
                         } else {
                             SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC"), withCompletion: nil)
@@ -423,7 +423,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                                 
                                 self.callSyncApi()
                             } else {
-                                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
+                                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
                             }
                         }
                         else {
@@ -437,7 +437,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                         let custArr = CoreDataHandler().fetchCustomer()
                         if(custArr.count == 0){
                             let appDelegate = UIApplication.shared.delegate as? AppDelegate
-                            let alert = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
+                            let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
                             alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                             appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
                         }
@@ -450,7 +450,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                         if(custArr.count == 0){
                             let appDelegate = UIApplication.shared.delegate as? AppDelegate
                             
-                            let alert = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
+                            let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
                             alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                             appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
                         }  else {

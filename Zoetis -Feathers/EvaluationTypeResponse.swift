@@ -190,12 +190,12 @@ public struct PECountry {
     let RegionId: Int?
     init(_ json: JSON) {
         CountryId = json["CountryId"].intValue
-        CountryName = json["CountryName"].stringValue
+        CountryName = json[Constants.countryNamStr].stringValue
         RegionId = json["RegionId"].intValue
         let countryIs = CountryName ?? ""
         let CountryIdIs = CountryId ?? 0
         let RegionIdIs = RegionId ?? 0
-        CoreDataHandlerPE().saveCountriesInDB(id: NSNumber(value: CountryIdIs), country: countryIs, regionId: NSNumber(value: RegionIdIs), forEntityName: "AllCountriesPE", firstKey: "countryId", secondKey: "countryName", thirdKey: "regionId")
+        CoreDataHandlerPE().saveCountriesInDB(id: NSNumber(value: CountryIdIs), country: countryIs, regionId: NSNumber(value: RegionIdIs), forEntityName: "AllCountriesPE", firstKey: "countryId", secondKey: Constants.countryNamStr, thirdKey: "regionId")
         
     }
 }

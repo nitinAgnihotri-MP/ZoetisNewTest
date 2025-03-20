@@ -544,7 +544,7 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
     }
     func alertShow()  {
         
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter strain.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter strain.", comment: ""))
     }
     // MARK: 🟠 - Enable disable all text field
     func textFieldEnable(){
@@ -688,7 +688,7 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
                 self.navigationController?.popViewController(animated: true)
             }
             else{
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter the vaccination program.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter the vaccination program.", comment: ""))
             }
         }
         else{

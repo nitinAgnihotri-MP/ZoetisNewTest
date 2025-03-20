@@ -692,19 +692,19 @@ class PEViewStartNewAssesmentINT: BaseViewController {
     @IBAction func syncActionButton(_ sender: UIButton) {
         if ConnectionManager.shared.hasConnectivity(){
             let errorMSg = "Are you sure, you want to sync the data?"
-            let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
                 self.syncBtnTapped(showHud: true)
                 // As per discussion with Imran and binu we have commented this code so that client can submit their assessment irsepective of their Assessment Approved or not.
                // self.getAssessmentStatusCheck(assessmentId: self.peNewAssessment.serverAssessmentId ?? "")
             }
-            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) 
+            let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }else{
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     
@@ -783,7 +783,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                 }}
         }
         
-        showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+        showAlert(title: Constants.alertStr, message: "Please fill the mandatory fields.", owner: self)
         
     }
     
@@ -1126,7 +1126,7 @@ extension PEViewStartNewAssesmentINT: DatePickerPopupViewControllerProtocol{
                         view.layer.borderWidth = 2.0
                     }}
             }
-            showAlert(title: "Alert", message: "Assessment Data already Exists for this Customer, Site & Date combination", owner: self)
+            showAlert(title: Constants.alertStr, message: "Assessment Data already Exists for this Customer, Site & Date combination", owner: self)
             return
         }  else {
             selectedEvaluationDateText.text = string
@@ -2346,7 +2346,7 @@ extension PEViewStartNewAssesmentINT{
             
             if jsonDataArr != nil{
                 
-                let json = try! JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
+                guard let json = try? JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]] else {return}
                 param.updateValue(json, forKey: "SanitationEmbrexScoresDataModel")
             }
             
@@ -2370,19 +2370,19 @@ extension PEViewStartNewAssesmentINT{
     @IBAction func syncBtnAction(_ sender: Any) {
         if ConnectionManager.shared.hasConnectivity(){
             let errorMSg = "Are you sure, you want to sync the data?"
-            let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
                 self.syncBtnTapped(showHud: true)
                 // As per discussion with Imran and binu we have commented this code so that client can submit their assessment irsepective of their Assessment Approved or not.
               //  self.getAssessmentStatusCheck(assessmentId: self.peNewAssessment.serverAssessmentId ?? "")
             }
-            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) 
+            let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }else{
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     // MARK: - Create SYNC Request for Score

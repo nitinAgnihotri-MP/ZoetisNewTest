@@ -131,7 +131,7 @@ class PE_SessionCell: UITableViewCell {
             if peNewAssessment.IsEMRequested == false {
                 if peNewAssessment.extndMicro == false
                 {
-                    extendedMicroLbl.text = "No"
+                    extendedMicroLbl.text = Constants.noStr
                     emstatus.text = "N/A"
                     
                     editBtn.isHidden = true
@@ -146,7 +146,7 @@ class PE_SessionCell: UITableViewCell {
                         editBtn.isHidden = true
                         editImage.isHidden = true
                         editBtn.isUserInteractionEnabled = false
-                        emstatus.text = "No"
+                        emstatus.text = Constants.noStr
                     }
                     else
                         
@@ -191,7 +191,7 @@ class PE_SessionCell: UITableViewCell {
                 infoButton.isHidden = false
                 
                 if peNewAssessment.extndMicro == false{
-                    extendedMicroLbl.text = "No"
+                    extendedMicroLbl.text = Constants.noStr
                 }
                 else{
                     extendedMicroLbl.text = "Yes"
@@ -205,7 +205,7 @@ class PE_SessionCell: UITableViewCell {
                 infoButton.isHidden = true
                 
                 if peNewAssessment.extndMicro == false{
-                    extendedMicroLbl.text = "No"
+                    extendedMicroLbl.text = Constants.noStr
                 }
                 else{
                     extendedMicroLbl.text = "Yes"
@@ -216,7 +216,7 @@ class PE_SessionCell: UITableViewCell {
             {
                 lblAction.text = "Rejected"
                 if peNewAssessment.sanitationValue == false{
-                    extendedMicroLbl.text = "No"
+                    extendedMicroLbl.text = Constants.noStr
                     emstatus.text = "N/A"
                 }
                 
@@ -226,13 +226,13 @@ class PE_SessionCell: UITableViewCell {
             {
                 lblAction.text = "Rejected"
                 if peNewAssessment.extndMicro == false{
-                    extendedMicroLbl.text = "No"
+                    extendedMicroLbl.text = Constants.noStr
                     emstatus.text = "N/A"
                 }
             }
          
              else {
-                 extendedMicroLbl.text = "No"
+                 extendedMicroLbl.text = Constants.noStr
                  emstatus.text = "N/A"
                  emRejectedComentBtn.isHidden = true
             }

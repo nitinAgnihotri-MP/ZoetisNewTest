@@ -356,7 +356,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
                 
                 if lastSessionDataArray.count == 0 {
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
                     self.barChartView.clear()
                     return
                 }
@@ -397,7 +397,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
                 
                 if lastSessionDataArray.count == 0 {
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
                     self.barChartView.clear()
                     return
                 }
@@ -435,7 +435,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             
             if lastSessionDataArray.count == 0 {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
                 self.barChartView.clear()
                 return
             }
@@ -653,7 +653,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds.first as! NSNumber)
         
         if lastSessionDataArray.count == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.lineChartView.clear()
             return
         }
@@ -799,7 +799,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         
         if self.preparedArray.count < 3 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -904,7 +904,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -962,7 +962,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         
         if self.preparedArray.count < 3 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -1064,7 +1064,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -1176,7 +1176,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -1287,7 +1287,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -1398,7 +1398,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             return
         }
@@ -1496,7 +1496,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         chartNameLable.text = self.subjectString as String
         if self.preparedArray.count < 2 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.barChartView.clear()
             self.btnShare.isHidden = true
             self.incedenceText.isHidden = true

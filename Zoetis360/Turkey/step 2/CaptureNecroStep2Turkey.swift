@@ -200,7 +200,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                                                             
                                                             if self.postingIdFromExistingNavigate == "Exting"{
                                                                 self.formCollectionView.selectItem(at: IndexPath(item: self.nsIndexPathFromExist, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-                                                                //self.nsIndexPathFromExist
                                                             }
                                                             else{
                                                                 self.formCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
@@ -219,26 +218,19 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                                                         let rowToSelect:IndexPath = IndexPath(row: 0, section: 0)
                                                         
                                                         self.tableView.selectRow(at: rowToSelect, animated: true, scrollPosition: UITableView.ScrollPosition.none)
-                                                        //                                                    self.tableView(self.tableView, didSelectRowAtIndexPath: rowToSelect)
                                                         self.loaderView.alpha = 0
                                                         Helper.dismissGlobalHUD(self.view)
                                                         
                                                     }
-                                                    
                                                 })
-                                                
                                             }
                                         })
                                     }
-                                    
                                 })
                             }
-                            
                         })
-                        
                     }
                 }
-                
             }
         }
     }
@@ -1131,25 +1123,25 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         case 1:
             lngId = UserDefaults.standard.integer(forKey: "lngId")
             if lngId == 1{
-                obsDescArr.add("No lesion.")
+                obsDescArr.add(Constants.noLesion)
                 obsDescArr.add("(<50%) footpad.")
                 obsDescArr.add("(>50%) footpad or a footpad that is <50% but has toe involvement.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
             
         case 2:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             
             break
@@ -1157,35 +1149,35 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         case 3:
             if lngId == 1{
                 obsDescArr.add("No. ")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
             
         case 4:
             if lngId == 1{
                 obsDescArr.add("No. ")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
             
         case 5:
             if lngId == 1{
-                obsDescArr.add("No lesion.")
-                obsDescArr.add("<50% growth plate.")
-                obsDescArr.add(">50% growth plate.")
+                obsDescArr.add(Constants.noLesion)
+                obsDescArr.add(Constants.growth50)
+                obsDescArr.add(Constants.growth50GreaterStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
         case 6:
@@ -1194,8 +1186,8 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add("Yes (widening of growth plate).")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
                 
             }
             break
@@ -1206,59 +1198,59 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add("Folding bone rather than snap.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
         case 8:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
         case 9:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
         case 12 :
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
         case 11 :
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
         case 13 :
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
         case 300 :
@@ -1272,27 +1264,27 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             break
         case 596 :
             if lngId == 1{
-                obsDescArr.add("No lesion.")
+                obsDescArr.add(Constants.noLesion)
                 obsDescArr.add("(<50%) footpad.")
                 obsDescArr.add("(>50%) footpad or a footpad that is <50% but has toe involvement.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
         case 599 :
             
             if lngId == 1{
-                obsDescArr.add("No lesion.")
-                obsDescArr.add("<50% growth plate.")
-                obsDescArr.add(">50% growth plate.")
+                obsDescArr.add(Constants.noLesion)
+                obsDescArr.add(Constants.growth50)
+                obsDescArr.add(Constants.growth50GreaterStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
         case 10 :
@@ -1309,22 +1301,22 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             break
         case 598 :
             obsDescArr.add("No.")
-            obsDescArr.add("Yes.")
+            obsDescArr.add(Constants.yesStr)
             break
             
         case 602 :
             obsDescArr.add("No.")
-            obsDescArr.add("Yes.")
+            obsDescArr.add(Constants.yesStr)
             break
             
             
         case 597 :
             obsDescArr.add("No.")
-            obsDescArr.add("Yes.")
+            obsDescArr.add(Constants.yesStr)
             break
         case 603 :
             obsDescArr.add("No.")
-            obsDescArr.add("Yes.")
+            obsDescArr.add(Constants.yesStr)
             break
         case 600 :
             
@@ -1333,8 +1325,8 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add("Yes (widening of growth plate).")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
                 
             }
             
@@ -1370,11 +1362,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add("Lesions completely coalescent with petechial hemorrhage or red mucosa.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             
             break
@@ -1388,11 +1380,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add("Bloody and ballooned.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             
             break
@@ -1406,11 +1398,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add(">50 Oocysts per low power field.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
             
@@ -1423,11 +1415,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add("Cecal wall greatly distended with blood or cores.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             
             break
@@ -1441,11 +1433,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add(">50 Oocysts per low power field.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
             
@@ -1514,7 +1506,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             break
         case 615 :
             obsDescArr.add("No.")
-            obsDescArr.add("Yes.")
+            obsDescArr.add(Constants.yesStr)
             break
         default:
             obsDescArr.add("N/A.")
@@ -1535,12 +1527,12 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         // Define a dictionary for specific cases and descriptions
         let descriptions: [Int: [Int: [String]]] = [
             27: [
-                1: ["No.", "Yes."],
-                5: ["Sin lesión.", "Sin lesión."]
+                1: ["No.", Constants.yesStr],
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             28: [
                 1: ["Normal.", "Swollen glands.", "Swollen glands and enlarged.", "Greatly enlarged and flaccid."],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             29: [
                 1: [
@@ -1549,11 +1541,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     "Severe erosion through gizzard lining.",
                     "Erosions into the gizzard muscle."
                 ],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             31: [
                 1: ["<50% of gizzard contents is litter.", ">50% gizzard contents is litter."],
-                5: ["Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             32: [
                 1: [
@@ -1562,31 +1554,31 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     "Intestine lays flat or has no tone when opened. There may be significant loss of tensile strength and thinning. Intestine may have a layer of mucous, moderate reddening, cellular debris, and an increased amount of fluid or orange material present.",
                     "A generalized thinning and loss of intestinal mucosal surface. Significant feed passage is observed. There may be formation of diphtheritic membrane and/or severe reddening with petechiae hemorrhaging readily apparent. No tensile strength of gut. Ballooning of gut may be observed."
                 ],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             33: [
                 1: ["No evidence of necrotic enteritis present.", "Necrotic enteritis present."],
-                5: ["Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             34: [
                 1: ["No.", "Multiple fragments of undigested feed present in colon."],
-                5: ["Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             35: [
-                1: ["No.", "Yes."],
-                5: ["Sin lesión.", "Sin lesión."]
+                1: ["No.", Constants.yesStr],
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             37: [
-                1: ["No.", "Yes."],
-                5: ["Sin lesión.", "Sin lesión."]
+                1: ["No.", Constants.yesStr],
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             45: [
                 1: ["N/A.", "N/A."],
                 5: ["N/A.", "N/A."]
             ],
             675: [
-                1: ["No.", "Yes."],
-                5: ["No.", "Yes."]
+                1: ["No.", Constants.yesStr],
+                5: ["No.", Constants.yesStr]
             ],
             46: [
                 1: ["N/A.", "N/A."],
@@ -1599,27 +1591,27 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     "Intestine lays flat or has no tone when opened. There may be significant loss of tensile strength and thinning. Intestine may have a layer of mucous, moderate reddening, cellular debris, and an increased amount of fluid or orange material present.",
                     "A generalized thinning and loss of intestinal mucosal surface. Significant feed passage is observed. There may be formation of diphtheritic membrane and/or severe reddening with petechiae hemorrhaging readily apparent. No tensile strength of gut. Ballooning of gut may be observed."
                 ],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             632: [
-                1: ["No.", "Yes."],
-                5: ["No.", "Yes."]
+                1: ["No.", Constants.yesStr],
+                5: ["No.", Constants.yesStr]
             ],
             633: [
                 1: ["N/A.", "N/A."],
                 5: ["N/A.", "N/A."]
             ],
             634: [
-                1: ["No.", "Yes."],
-                5: ["No.", "Yes."]
+                1: ["No.", Constants.yesStr],
+                5: ["No.", Constants.yesStr]
             ],
             617: [
-                1: ["No.", "Yes."],
-                5: ["No.", "Yes."]
+                1: ["No.", Constants.yesStr],
+                5: ["No.", Constants.yesStr]
             ],
             624: [
-                1: ["No.", "Yes."],
-                5: ["No.", "Yes."]
+                1: ["No.", Constants.yesStr],
+                5: ["No.", Constants.yesStr]
             ],
             618: [
                 1: ["N/A.", "N/A.", "N/A.", "N/A."],
@@ -1636,7 +1628,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     "Severe erosion through gizzard lining.",
                     "Erosions into the gizzard muscle."
                 ],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             47: [
                 1: ["N/A.", "N/A."],
@@ -1644,11 +1636,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             ],
             621: [
                 1: ["<50% of gizzard contents is litter.", ">50% gizzard contents is litter."],
-                5: ["Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             40: [
-                1: ["No.", "Yes."],
-                5: ["Sin lesión.", "Sin lesión."]
+                1: ["No.", Constants.yesStr],
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             36: [
                 1: ["N/A.", "N/A."],
@@ -1691,8 +1683,8 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         // Define a dictionary for specific cases and descriptions
         let descriptions: [Int: [Int: [String]]] = [
             49: [
-                1: ["No.", "Yes."],
-                5: ["Sin lesión.", "Sin lesión."]
+                1: ["No.", Constants.yesStr],
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             50: [
                 1: [
@@ -1701,7 +1693,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     "Copious mucus and/or moderate hyperemia.",
                     "Severe hyperemia and/or Hemorrhagic and/or Diphtheritic."
                 ],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             51: [
                 1: [
@@ -1711,12 +1703,12 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     "Multifocal to diffuse exudate or exudate + pericarditis.",
                     "Pericarditis + perihepatitis."
                 ],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
-            638: [1: ["No.", "Yes."]],
-            635: [1: ["No.", "Yes."]],
-            640: [1: ["No.", "Yes."]],
-            639: [1: ["No.", "Yes."]],
+            638: [1: ["No.", Constants.yesStr]],
+            635: [1: ["No.", Constants.yesStr]],
+            640: [1: ["No.", Constants.yesStr]],
+            639: [1: ["No.", Constants.yesStr]],
             636: [
                 1: [
                     "Normal.",
@@ -1724,7 +1716,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     "Copious mucus and/or moderate hyperemia.",
                     "Severe hyperemia and/or Hemorrhagic and/or Diphtheritic."
                 ],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ]
         ]
         
@@ -1763,11 +1755,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         case 49:
             if lngId == 1{
                 obsDescArr.add("No.")
-                obsDescArr.add("Yes.")
+                obsDescArr.add(Constants.yesStr)
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
             
@@ -1779,10 +1771,10 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add("Severe hyperemia and/or Hemorrhagic and/or Diphtheritic.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
             
@@ -1795,11 +1787,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add("Pericarditis + perihepatitis.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             break
             
@@ -1831,19 +1823,19 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             break
         case 638 :
             obsDescArr.add("No.")
-            obsDescArr.add("Yes.")
+            obsDescArr.add(Constants.yesStr)
             break
         case 635 :
             obsDescArr.add("No.")
-            obsDescArr.add("Yes.")
+            obsDescArr.add(Constants.yesStr)
             break
         case 640 :
             obsDescArr.add("No.")
-            obsDescArr.add("Yes.")
+            obsDescArr.add(Constants.yesStr)
             break
         case 639 :
             obsDescArr.add("No.")
-            obsDescArr.add("Yes.")
+            obsDescArr.add(Constants.yesStr)
             break
         case 636:
             if lngId == 1{
@@ -1853,10 +1845,10 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 obsDescArr.add("Severe hyperemia and/or Hemorrhagic and/or Diphtheritic.")
             }
             else if lngId == 5{
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
-                obsDescArr.add("Sin lesión.")
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
             }
             
             break
@@ -1879,28 +1871,28 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         let descriptions: [Int: [Int: [String]]] = [
             58: [
                 1: ["Very small.", "Default.", "Large."],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             57: [
                 1: ["NA", "NA.", "NA.", "NA."],
-                5: ["Sin lesión.", "Sin lesión.", "Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             59: [
                 1: ["Absent.", "Presents."],
-                5: ["Sin lesión.", "Sin lesión."]
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             61: [
-                1: ["No.", "Yes."],
-                5: ["Sin lesión.", "Sin lesión."]
+                1: ["No.", Constants.yesStr],
+                5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             1958: [
-                1: ["Yes.", "No."]
+                1: [Constants.yesStr, "No."]
             ],
             1960: [
-                1: ["Yes.", "No."]
+                1: [Constants.yesStr, "No."]
             ],
             1878: [
-                1: ["Yes.", "No."]
+                1: [Constants.yesStr, "No."]
             ]
         ]
         
@@ -3226,7 +3218,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     @objc func takePhoto(_ sender: UIButton) {
         let imageArrWithIsyncIsTrue = CoreDataHandlerTurkey().fecthPhotoWithiSynsTrueTurkey(true)
         if imageArrWithIsyncIsTrue.count == 8 {
-            postAlert("Alert", message: "Maximum limit of image has been exceeded. Limit will be reset after next sync.")
+            postAlert(Constants.alertStr, message: "Maximum limit of image has been exceeded. Limit will be reset after next sync.")
         }
         else{
             if btnTag == 0 {
@@ -3326,9 +3318,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     }
     /******************************************************************************************************/
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: {
-            // Anything you want to happen when the user selects cancel
-        })
+        dismiss(animated: true)
     }
     
     @objc func imageWasSavedSuccessfully(_ image: UIImage, didFinishSavingWithError error: NSError!, context: UnsafeMutableRawPointer){
@@ -3458,7 +3448,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                             isBirdCount = true
                             
                             
-                            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"You can not add more than 10 birds")
+                            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"You can not add more than 10 birds")
                             
                             self.view.alpha = 1
                             self.view.isUserInteractionEnabled = true
@@ -4112,7 +4102,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             if noOfBird == 1 {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"At least one bird is required under a Farm.")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"At least one bird is required under a Farm.")
                 
                 traingleImageView.frame = CGRect(x: 276, y: 229, width: 24, height: 24)
                 
@@ -4264,7 +4254,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
         } else {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"At least one bird is required under a Farm.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"At least one bird is required under a Farm.")
         }
         
         traingleImageView.frame = CGRect(x: 276, y: 229, width: 24, height: 24)
@@ -6731,11 +6721,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 self.callSyncApi()
             }
             else {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         } else {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
         }
     }
     
@@ -6751,7 +6741,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 
                 if (items.object(at: i) as AnyObject).count == 10
                 {
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"You can not add more than 10 birds")
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"You can not add more than 10 birds")
                     return
                 }
             }
@@ -6767,7 +6757,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     
     @IBAction func deleteBirds(_ sender: AnyObject) {
         
-        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: "Are you sure you want to delete this bird? You will lose the data by deleting this bird.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: "Are you sure you want to delete this bird? You will lose the data by deleting this bird.", preferredStyle: .alert)
         
         let action1 = UIAlertAction(title: "Cancel", style: .default)
         
@@ -6779,7 +6769,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 let farm = self.farmArray.object(at: i) as! String
                 if farm == formName {
                     if (self.items.object(at: i) as AnyObject).count == 1 {
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"At least one bird is required under a Farm.")
+                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"At least one bird is required under a Farm.")
                         return
                     }
                 }
@@ -7052,17 +7042,17 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         self.printSyncLblCount()
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             }
             if lngId == 1000 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again(NA))", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again(NA))", comment: ""))
             }
             else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
             
         }
@@ -7072,20 +7062,20 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
         self.printSyncLblCount()
         
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
     }
     
     func didFinishApi(){
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     
     func failWithInternetConnection() {
         
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
     func printSyncLblCount() {

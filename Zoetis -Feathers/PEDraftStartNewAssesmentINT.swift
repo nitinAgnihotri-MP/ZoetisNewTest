@@ -978,6 +978,7 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
     @IBAction func nextBtnAction(_ sender: Any) {
         
         self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { [self] status in
+            print(status)
         }
         
         guard let date = self.peNewAssessment.evaluationDate, date.count > 0 else {
@@ -1384,7 +1385,7 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
             visitBtnBorder()
         }
         
-        showAlert(title: "Alert", message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
         
     }
     
@@ -1464,7 +1465,7 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
         var countryIDArray = NSArray()
         var countryNameArray = NSArray()
         let countryDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "AllCountriesPE")
-        countryNameArray = countryDetailsArray.value(forKey: "countryName") as? NSArray ?? NSArray()
+        countryNameArray = countryDetailsArray.value(forKey: Constants.countryNamStr) as? NSArray ?? NSArray()
         countryIDArray = countryDetailsArray.value(forKey: "countryId") as? NSArray ?? NSArray()
         
         if  countryNameArray.count > 0 {
@@ -1950,7 +1951,7 @@ extension PEDraftStartNewAssesmentINT: DatePickerPopupViewControllerProtocol{
                     }
                 }
             }
-            showAlert(title: "Alert", message: "Assessment Data already Exists for this Customer, Site & Date combination", owner: self)
+            showAlert(title: Constants.alertStr, message: "Assessment Data already Exists for this Customer, Site & Date combination", owner: self)
             return
         }  else {
             selectedEvaluationDateText.text = string

@@ -538,8 +538,7 @@ extension PVEViewFinalizeAssement:  UIImagePickerControllerDelegate,UINavigation
             }
             
             CoreDataHandlerPVE().updateImageDataInAssementDetails(seq_Number, rowId: id, imageData: imageData!)
-            imagePicker.dismiss(animated: true, completion: {
-            })
+            imagePicker.dismiss(animated: true)
         }
         /******************************************************************************************************/
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -755,7 +754,7 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
             else if indexPath.section == 6{
                 
                 if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore"){
-                    if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == "No"
+                    if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr
                     {
                         return 93
                     }
@@ -1067,7 +1066,7 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
                     }
                     
                     if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore"){
-                        if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == "No"
+                        if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr
                         {
                             cell.showMoreBtn.setImage(UIImage(named: "up"), for: .normal)
                         }
@@ -1659,7 +1658,7 @@ extension PVEViewFinalizeAssement: UICollectionViewDelegate, UICollectionViewDat
             _ in
             self.singleDataSync()
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)

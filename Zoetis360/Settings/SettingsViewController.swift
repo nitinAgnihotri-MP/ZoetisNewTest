@@ -209,10 +209,10 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
                 self.callSyncApi()
             }
             else {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         } else {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
         }
     }
     
@@ -528,7 +528,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         Internaldict.setValue(lngId, forKey: "LanguageId")
         arr1.add(Internaldict)
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
-        let jsonData = try! JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted)
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else  { return }
         
         var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
         jsonString = jsonString.trimmingCharacters(in: NSCharacterSet.whitespaces)
@@ -545,7 +545,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try! JSONSerialization.data(withJSONObject: outerDict, options: [])
+            request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as URLRequestConvertible)
                 .responseJSON { response in
@@ -678,7 +678,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
                 self.ssologoutMethod()
                 CoreDataHandler().deleteAllData("Custmer")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
@@ -774,30 +774,30 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         self.printSyncLblCount()
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again(NA))", comment: ""))
         }
         else {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.", comment: "") + "\n(\(statusCode))")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.", comment: "") + "\n(\(statusCode))")
         }
     }
     
     func failWithErrorInternal(){
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection Please try again!", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection Please try again!", comment: ""))
     }
     
     func didFinishApi() {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     
     func failWithInternetConnection() {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
     func printSyncLblCount(){
@@ -874,7 +874,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
         
-        let jsonData = try! JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted)
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
         var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
         jsonString = jsonString.trimmingCharacters(in: NSCharacterSet.whitespaces)
         
@@ -888,7 +888,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try! JSONSerialization.data(withJSONObject: outerDict, options: [])
+            request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as! URLRequestConvertible).responseJSON { response in
                     

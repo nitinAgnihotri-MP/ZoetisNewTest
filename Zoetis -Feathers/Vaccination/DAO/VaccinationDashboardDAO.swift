@@ -74,7 +74,7 @@ public class VaccinationDashboardDAO{
             
             dateFormatterObj.timeZone = Calendar.current.timeZone
             dateFormatterObj.locale = Calendar.current.locale
-            dateFormatterObj.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss"
+            dateFormatterObj.dateFormat =  Constants.yyyyMMddHHmmss
             
             if $0.scheduledDate != nil && $1.scheduledDate != nil{
                 let date1Obj = dateFormatterObj.date(from: $0.scheduledDate!)
@@ -396,7 +396,7 @@ public class VaccinationDashboardDAO{
             let dateFormatterObj = DateFormatter()
             dateFormatterObj.timeZone = Calendar.current.timeZone
             dateFormatterObj.locale = Calendar.current.locale
-            dateFormatterObj.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss"
+            dateFormatterObj.dateFormat =  Constants.yyyyMMddHHmmss
             
             if $0.scheduledDate != nil && $1.scheduledDate != nil{
                 let date1Obj =  $0.submittedDate!

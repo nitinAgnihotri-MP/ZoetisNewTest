@@ -69,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
             return
         }
         DispatchQueue.main.async {
-            Helper.showAlertMessage(topController, titleStr: "Alert", messageStr: msg)
+            Helper.showAlertMessage(topController, titleStr: Constants.alertStr, messageStr: msg)
         }
     }
     
@@ -323,7 +323,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
              Helper.dismissGlobalHUD(topController.view)
              guard error == nil else {
                  DispatchQueue.main.async {
-                     Helper.showAlertMessage(topController, titleStr: "Alert", messageStr: "API is not working...")
+                     Helper.showAlertMessage(topController, titleStr: Constants.alertStr, messageStr: "API is not working...")
                  }
                  return
              }

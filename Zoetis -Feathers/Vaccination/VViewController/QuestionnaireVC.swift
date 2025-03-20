@@ -897,7 +897,7 @@ class QuestionnaireVC: BaseViewController {
             self.submitData(status: status)
             
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil)
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil)
         alertController.addAction(cancelAction)
         alertController.addAction(okAction)
         

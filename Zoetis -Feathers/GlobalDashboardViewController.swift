@@ -73,7 +73,7 @@ class GlobalDashboardViewController: BaseViewController {
             }
             else
             {
-                Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"No Internet connection, please check your internet connection.")
+                Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"No Internet connection, please check your internet connection.")
             }
             
         }
@@ -87,7 +87,7 @@ class GlobalDashboardViewController: BaseViewController {
             let result = dict["Result"].boolValue
             let updateMessage = dict["AlertMsg"].stringValue
             if error != nil {
-                Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"API is Not Working...")
+                Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"API is Not Working...")
             }            
             
             

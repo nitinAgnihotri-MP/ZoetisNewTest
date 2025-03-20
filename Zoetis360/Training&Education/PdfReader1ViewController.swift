@@ -219,7 +219,7 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
             else
             {
                 self.lblOfflineMessage.isHidden = false
-                //Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Pdfs available online.")
+                //Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Pdfs available online.")
                 progressview.isHidden = true
                 labelProgress.isHidden = true
             }

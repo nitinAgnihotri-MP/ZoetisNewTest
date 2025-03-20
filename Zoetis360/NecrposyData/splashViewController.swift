@@ -13,8 +13,56 @@ import AVKit
 class splashViewController: UIViewController {
     // MARK: 🟠 - VARIABLES
     var moviePlayer: AVPlayerViewController?
+    var termCondition = "Terms&Condition"
     
     // MARK: 🟠 - VIEW LIFE CYCLE
+    fileprivate func haveChickenAndTurkeyAccess(_ birdTypeId: Int) {
+        if UserDefaults.standard.bool(forKey: "login") == true && UserDefaults.standard.bool(forKey: "Chicken") == true ||  UserDefaults.standard.bool(forKey: "login") == true && UserDefaults.standard.bool(forKey: "turkey") == true{
+            self.initiateLeftPenal()
+        }
+        else if birdTypeId == 2 {
+            UserDefaults.standard.set(true, forKey: "turkey")
+        }
+        else if birdTypeId == 1 {
+            UserDefaults.standard.set(false, forKey: "turkey")
+        }
+        else if  UserDefaults.standard.bool(forKey: termCondition) == true {
+            let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController
+            self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+        }
+        else {
+            if birdTypeId == 3 && UserDefaults.standard.bool(forKey: "login") == true{
+                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier:  "BirdsSelectionVC") as? BirdsSelectionVC
+                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+            }
+            else{
+                self.initiateLeftPenal()
+            }
+        }
+    }
+    
+    fileprivate func haveTurkeyAccess() {
+        if  UserDefaults.standard.bool(forKey: termCondition) == true {
+            let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController
+            self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+        }
+        else {
+            self.initiateLeftPenal()
+        }
+        UserDefaults.standard.set(true, forKey: "turkey")
+    }
+    
+    fileprivate func haveChickenAccess() {
+        if  UserDefaults.standard.bool(forKey: termCondition) == true {
+            let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController
+            self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+        }
+        else {
+            self.initiateLeftPenal()
+        }
+        UserDefaults.standard.set(false, forKey: "turkey")
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -35,62 +83,18 @@ class splashViewController: UIViewController {
         let delay = seconds * Double(NSEC_PER_SEC)
         let dispatchTime = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
         DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: {
-            
-            let appdel = UIApplication.shared.delegate as! AppDelegate
-            DispatchQueue.global().async {
-                do {
-                    
-                } catch {
-                    print(error)
-                }
-            }
-            
+        
             let birdTypeId = UserDefaults.standard.integer(forKey: "birdTypeId")
             
             if birdTypeId == 3{
-                if UserDefaults.standard.bool(forKey: "login") == true && UserDefaults.standard.bool(forKey: "Chicken") == true ||  UserDefaults.standard.bool(forKey: "login") == true && UserDefaults.standard.bool(forKey: "turkey") == true{
-                    self.initiateLeftPenal()
-                }
-                else if birdTypeId == 2 {
-                    UserDefaults.standard.set(true, forKey: "turkey")
-                }
-                else if birdTypeId == 1 {
-                    UserDefaults.standard.set(false, forKey: "turkey")
-                }
-                else if  UserDefaults.standard.bool(forKey: "Terms&Condition") == true {
-                    let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController
-                    self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                }
-                else {
-                    if birdTypeId == 3 && UserDefaults.standard.bool(forKey: "login") == true{
-                        let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier:  "BirdsSelectionVC") as? BirdsSelectionVC
-                        self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                    }
-                    else{
-                        self.initiateLeftPenal()
-                    }
-                }
+                self.haveChickenAndTurkeyAccess(birdTypeId)
             }
             else if birdTypeId == 2 {
-                if  UserDefaults.standard.bool(forKey: "Terms&Condition") == true {
-                    let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController
-                    self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                }
-                else {
-                    self.initiateLeftPenal()
-                }
-                UserDefaults.standard.set(true, forKey: "turkey")
+                self.haveTurkeyAccess()
                 
             }
             else if birdTypeId == 1 {
-                if  UserDefaults.standard.bool(forKey: "Terms&Condition") == true {
-                    let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController
-                    self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                }
-                else {
-                    self.initiateLeftPenal()
-                }
-                UserDefaults.standard.set(false, forKey: "turkey")
+                self.haveChickenAccess()
             }
             else {
                 self.initiateLeftPenal()

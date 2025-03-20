@@ -15,7 +15,7 @@ extension PELandingPoupViewController {
     
     
     private func getPlateTypes(){
-        PEDataService.sharedInstance.getPlateTypes(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+        PEDataService.sharedInstance.getPlateTypes(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
                      guard let _ = self, error == nil else { return }
                      if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                         
@@ -170,7 +170,24 @@ extension PELandingPoupViewController {
     }
     
     
-    // ---- Fetch Category Details for PVE -----------------
+    // <---- Fetch Category Details for PVE ---->
+    
+    fileprivate func saveExtendedPEQuestions(_ responseStr: String, _ jsonDecoder: JSONDecoder) {
+        let jsonData = try? Data(responseStr.utf8)
+        if let data = jsonData{
+            let vaccinationCertificationObj = try? jsonDecoder.decode([ExtendedPECategoryDTO].self, from: data)
+            
+            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
+                let index = vaccinationCertificationObj?.firstIndex(where: {
+                    $0.id == 36
+                })
+                if index != nil{
+                    let embrex =  vaccinationCertificationObj![index!]
+                    SanitationEmbrexQuestionMasterDAO.sharedInstance.saveExtendedPEQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", plateTypeDTO: [embrex])
+                }
+            }
+        }
+    }
     
     internal func fetchtAssessmentCategoriesResponse(){
         let evalTypeId = String(peNewAssessment.evalType?.id ?? 1)
@@ -181,30 +198,7 @@ extension PELandingPoupViewController {
                                let jsonDecoder = JSONDecoder()
                                let responseStr = response.description
                                if responseStr != ""{
-                                   let jsonData = try? Data(responseStr.utf8)
-                                                     if let data = jsonData{
-                                                       let vaccinationCertificationObj = try? jsonDecoder.decode([ExtendedPECategoryDTO].self, from: data)
-                                                        //vaccinationCertificationObj.
-                                                       
-                                                     //  print(vaccinationCertificationObj!.count)// ?? 100)
-                                                       if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                                        let index = vaccinationCertificationObj?.firstIndex(where: {
-                                                            $0.id == 36
-                                                        })
-                                                        if index != nil{
-                                                            let embrex =  vaccinationCertificationObj![index!]
-                                                            SanitationEmbrexQuestionMasterDAO.sharedInstance.saveExtendedPEQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", plateTypeDTO: [embrex])
-                                                        }
-//                                                        let index =  vaccinationCertificationObj
-//                                                          VaccinationCustomersDAO.sharedInstance.insertCustomerSites(userId: loginuserId
-//                                                           , customerDTOArr: vaccinationCertificationObj!)
-//                                                           completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                                                       }
-                                                       
-                                                   
-                                                       //FPass the completion  handler to the Dashaboard VC
-                                                       
-                                                     }
+                                   saveExtendedPEQuestions(responseStr, jsonDecoder)
                                }
                            }
                        }
@@ -550,9 +544,6 @@ extension PELandingPoupViewController{
                     
                 }
                 
-                
-                
-                
                 let currentServerAssessmentId = UserDefaults.standard.set(String(serverAssessmentId), forKey: "currentServerAssessmentId")
                     
                 peNewAssessmentWas.serverAssessmentId = String(serverAssessmentId)
@@ -703,7 +694,7 @@ extension PELandingPoupViewController{
                         let TextAmPm = questionMark["TextAmPm"] as? String ?? ""
                         let PersonName = questionMark["PersonName"] as? String ?? ""
                         let isNA = questionMark["IsNA"] as? Bool ?? false
-                        var assIDD = questionMark["ModuleAssessmentId"] as? Int ?? 64
+                        let assIDD = questionMark["ModuleAssessmentId"] as? Int ?? 64
                         CoreDataHandlerPE().update_isNAInAssessmentInProgress(isNA: isNA,assID:Int(truncating: (assIDD ?? 0) as NSNumber))
                         if FrequencyValueStr.count > 0 {
                             CoreDataHandlerPE().updateFrequencyInAssessmentInProgress(frequency:FrequencyValueStr)
@@ -717,7 +708,6 @@ extension PELandingPoupViewController{
                         if TextAmPm.count > 0 {
                             CoreDataHandlerPE().updateAMPMInAssessmentInProgress(ampmValue: TextAmPm)
                         }
-                     
                        
                        
                         if AssessmentScore  ==  0  {
@@ -1660,7 +1650,7 @@ extension PELandingPoupViewController{
     
     private func getScheduledAssessments(){
       print(UserContext.sharedInstance.userDetailsObj?.userId)
-      PEDataService.sharedInstance.getScheduledAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+      PEDataService.sharedInstance.getScheduledAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
           guard let _ = self, error == nil else {self?.dismissGlobalHUD(self?.view ?? UIView()); return }
           
                    if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
@@ -1817,7 +1807,7 @@ extension PELandingPoupViewController{
     
     func convertDateFormatter(date: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"//this your string date format
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss//this your string date format
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC") 
         dateFormatter.locale = Locale(identifier: "your_loc_id")
         let convertedDate = dateFormatter.date(from: date)
@@ -1848,7 +1838,7 @@ extension PELandingPoupViewController{
     func convertDateFormat(inputDate: String) -> String {
         
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        olDateFormatter.dateFormat = Constants.yyyyMMddHHmmss
         
         let oldDate = olDateFormatter.date(from: inputDate)
         

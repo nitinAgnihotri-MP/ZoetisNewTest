@@ -118,8 +118,8 @@ class PEHeaderViewController: BaseViewController {
         let moduleName =   UserDefaults.standard.string(forKey:"ModuleName")
         let userType =   UserDefaults.standard.string(forKey:"userType")
         
-        let errorMSg = "Are you sure you want to logout?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+        let errorMSg = Constants.areYouSureToLogoutStr
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             
@@ -151,7 +151,7 @@ class PEHeaderViewController: BaseViewController {
 
         }
         
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -200,8 +200,8 @@ class PEHeaderViewController: BaseViewController {
     // MARK: - IBACTIONS
     
     @IBAction func logoutBtnClicked(_ sender: Any) {
-        let errorMSg = "Are you sure you want to Logout?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let errorMSg = Constants.areYouSureToLogoutStr
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
                 let userDefault = UserDefaults.standard
@@ -223,7 +223,7 @@ class PEHeaderViewController: BaseViewController {
             delegate?.syncBtnTapped()
             delegatePE?.getVaccinationServiceResponse(showHud: true)
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     
@@ -273,7 +273,7 @@ class PEHeaderViewController: BaseViewController {
                 self.finishSession()
             }
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)

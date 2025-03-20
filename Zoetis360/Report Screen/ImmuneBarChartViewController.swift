@@ -215,7 +215,7 @@ import Reachability
 
         if recivedDataArray.count < 2 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             self.incedenceText.isHidden = true
             self.btnShare.isHidden = true
             barChartView.clear()
@@ -299,7 +299,7 @@ import Reachability
                      
                      if lastSessionDataArray.count == 0 {
                          
-                         Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                         Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
                          self.barChartView.clear()
                          return
                      }

@@ -127,7 +127,7 @@ extension ViewCertificationsVC{
             self.deleteAction(index)
             
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil)
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil)
         
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)

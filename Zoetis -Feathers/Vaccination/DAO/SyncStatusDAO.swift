@@ -89,7 +89,7 @@ class SyncStatusDAO{
         let dateFormatter = DateFormatter()
         
         dateFormatter.locale = Calendar.current.locale
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss
         
         syncStatusObj.createdDate = CodeHelper.sharedInstance.convertDateFormater( dateFormatter.string(from: Date()))
     }

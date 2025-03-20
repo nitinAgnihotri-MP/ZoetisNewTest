@@ -148,7 +148,7 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
                     
                     
                     let errorMSg = "Are you sure you want to delete the assessment" + (date ?? "") + "?"
-                    let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+                    let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                         _ in
                         CoreDataHandlerPE().deleteDraftByDrafyNumber(assessment.draftID ?? "")
@@ -221,7 +221,7 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
                     
                     
                     let errorMSg = "Are you sure you want to delete the assessment" + (date ?? "") + "?"
-                    let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+                    let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                         _ in
                         CoreDataHandlerPE().deleteDraftByDrafyNumber(assessment.draftID ?? "")
@@ -297,7 +297,7 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
     private func deleteDeletedAssessments(){
         if ConnectionManager.shared.hasConnectivity() {
             self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
-            PEDataService.sharedInstance.deleteDeletedAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+            PEDataService.sharedInstance.deleteDeletedAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
                 guard let _ = self, error == nil else {
                     self?.dismissGlobalHUD(self?.view ?? UIView());
                     return

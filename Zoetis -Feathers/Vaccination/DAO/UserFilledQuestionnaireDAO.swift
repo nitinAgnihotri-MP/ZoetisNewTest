@@ -14,6 +14,7 @@ final public  class UserFilledQuestionnaireDAO{
     private init(){print("Initializer")}
     static let sharedInstance = UserFilledQuestionnaireDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
+    let userIdCertificateStr = "userId = %@ AND certificationId = %@"
     
     func getVaccinationQuestionsCategoryObj() ->VaccinationFilledQuestionCategories{
         let vaccinationQuestionCategoriesObj = NSEntityDescription.insertNewObject(forEntityName: "VaccinationFilledQuestionCategories" , into: managedContext) as! VaccinationFilledQuestionCategories
@@ -223,7 +224,7 @@ final public  class UserFilledQuestionnaireDAO{
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationFilledQuestionTypes")
         fetchRequest.returnsObjectsAsFaults = false
         
-        fetchRequest.predicate = NSPredicate(format:"userId = %@ AND certificationId = %@", userId, certificationId)
+        fetchRequest.predicate = NSPredicate(format:userIdCertificateStr, userId, certificationId)
         do {
             questionTypesArr = try managedContext.fetch(fetchRequest) as! [VaccinationFilledQuestionTypes]
             
@@ -282,9 +283,9 @@ final public  class UserFilledQuestionnaireDAO{
     }
     
     func deleteVaccinationQuestions(userId:String, certificationId:String){
-        deleteExisitingData(entityName: "VaccinationFilledQuestionTypes", predicate: NSPredicate(format:"userId = %@ AND certificationId = %@", userId, certificationId))
-        deleteExisitingData(entityName: "VaccinationFilledQuetions", predicate: NSPredicate(format:"userId = %@ AND certificationId = %@", userId, certificationId))
-        deleteExisitingData(entityName: "VaccinationFilledQuestionCategories", predicate: NSPredicate(format:"userId = %@ AND certificationId = %@", userId, certificationId))
+        deleteExisitingData(entityName: "VaccinationFilledQuestionTypes", predicate: NSPredicate(format:userIdCertificateStr, userId, certificationId))
+        deleteExisitingData(entityName: "VaccinationFilledQuetions", predicate: NSPredicate(format:userIdCertificateStr, userId, certificationId))
+        deleteExisitingData(entityName: "VaccinationFilledQuestionCategories", predicate: NSPredicate(format:userIdCertificateStr, userId, certificationId))
     }
     
     

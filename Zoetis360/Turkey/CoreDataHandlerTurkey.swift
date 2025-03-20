@@ -113,7 +113,7 @@ class CoreDataHandlerTurkey: NSObject {
     // MARK: - METHODS AND FUNCTIONS
     func convertDateFormater(_ date: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss
         // New addition for below 2 line
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC")
         dateFormatter.locale = Locale(identifier: "your_loc_id")
@@ -10990,7 +10990,7 @@ class CoreDataHandlerTurkey: NSObject {
         person.setValue(city, forKey:"City")
         
         person.setValue(countryId, forKey:"CountryId")
-        person.setValue(countryName, forKey:"CountryName")
+        person.setValue(countryName, forKey:Constants.countryNamStr)
         person.setValue(farmId, forKey:"FarmId")
         person.setValue(farmName, forKey:"FarmName")
         person.setValue(stateId, forKey:"StateId")

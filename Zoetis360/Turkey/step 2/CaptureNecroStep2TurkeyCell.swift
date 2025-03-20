@@ -50,16 +50,12 @@ class CaptureNecroStep2TurkeyCell: UICollectionViewCell {
     // MARK: - METHOD & FUNCTIONS
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        self.makeItCircle()
+       
     }
     
     
     
-    func makeItCircle() {
-        print(appDelegateObj.testFuntion())
-    }
-    
+   
     
     @IBAction func turkeySexBtn(_ sender: Any) {
         turkeybirdSexCompletion?("")

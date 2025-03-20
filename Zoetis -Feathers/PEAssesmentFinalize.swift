@@ -726,7 +726,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                     else
                     {
                         let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
-                        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+                        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
                         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                             _ in
                             
@@ -742,7 +742,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                 else
                 {
                     let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
-                    let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+                    let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                         _ in
                         self.saveFinalizedData()
@@ -760,8 +760,8 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     }
     // MARK: - Draft Button Action
     @IBAction func draftBtnClicked(_ sender: Any) {
-        let errorMSg = "Are you sure you want to save assessment in Draft?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let errorMSg = Constants.areYouSureSaveAsmntStr
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.saveDraftData()
@@ -774,8 +774,8 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     }
     
     @IBAction func draftButtonClickedInitial(_ sender: Any) {
-        let errorMSg = "Are you sure you want to save assessment in Draft?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let errorMSg = Constants.areYouSureSaveAsmntStr
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.saveDraftData()
@@ -4960,7 +4960,7 @@ extension PEAssesmentFinalize{
     
     func showAlertForAddingPlateType(){
         let errorMSg = "Please select all plate types in Sanitation And Embrex Evaluation Tab"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
         _ = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
@@ -4981,7 +4981,7 @@ extension PEAssesmentFinalize{
         else
         {
             let errorMSg = "Please enter vaccine details in the Vaccine Preparation Tab."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
@@ -5003,7 +5003,7 @@ extension PEAssesmentFinalize{
         }
         else{
             let errorMSg = "Please enter program name in the Vaccine Preparation Tab."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
@@ -5014,7 +5014,7 @@ extension PEAssesmentFinalize{
     
     func showAlertForCommentMandatory(){
         let errorMSg = "Please enter the Comment before submitting the assessment in Extended Microbial."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
@@ -5035,7 +5035,7 @@ extension PEAssesmentFinalize{
         else
         {
             let errorMSg = "Please enter Antibiotic in the Vaccine Preparation Tab."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -5047,7 +5047,7 @@ extension PEAssesmentFinalize{
     func showAlertForNoValidTraining(){
         
         let errorMSg = "Please enter the certification details before submitting the assessment in Extended Microbial."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
@@ -5058,7 +5058,7 @@ extension PEAssesmentFinalize{
     func showAlertForVaccineMixture(){
         
         let errorMSg = "Please enter the certification details before submitting the assessment."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
@@ -5077,7 +5077,7 @@ extension PEAssesmentFinalize{
         }
         else{
             let errorMSg = pleaseEnterAMPM
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -5099,7 +5099,7 @@ extension PEAssesmentFinalize{
         }
         else{
             let errorMSg = pleaseEnterPPM
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -5120,7 +5120,7 @@ extension PEAssesmentFinalize{
         }
         else{
             let errorMSg = pleaseEnterPersonName
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -5141,7 +5141,7 @@ extension PEAssesmentFinalize{
         else{
             
             let errorMSg = pleaseEnterFrequencyDet
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -5164,7 +5164,7 @@ extension PEAssesmentFinalize{
         }
         else{
             let errorMSg = pleaseEnterQCount
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -5185,7 +5185,7 @@ extension PEAssesmentFinalize{
         }
         else{
             let errorMSg = pleaseEnterVaccineMixer
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -5196,7 +5196,7 @@ extension PEAssesmentFinalize{
     
     func showAlertForNoCamera(){
         let errorMSg = "Reached maximum limit of images for this question."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) 
         alertController.addAction(cancelAction)
@@ -5205,7 +5205,7 @@ extension PEAssesmentFinalize{
     
     func showAlertForNoNote(){
         let errorMSg = "Please enter comments for all the questions which have been scored 0"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg , preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg , preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) {
             _ in
@@ -5262,7 +5262,7 @@ extension PEAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationCon
     @objc func takePhoto(_ sender: UIButton) {
         //    let imageArrWithIsyncIsTrue = CoreDataHandlerTurkey().fecthPhotoWithiSynsTrueTurkey(true)
         //    if imageArrWithIsyncIsTrue.count >= 15 {
-        //        postAlert("Alert", message: "Maximum limit of image has been exceeded. Limit will be reset after next sync.")
+        //        postAlert(Constants.alertStr, message: "Maximum limit of image has been exceeded. Limit will be reset after next sync.")
         //    } else {
         /*************** Intilzing Camera Delegate Methods **********************************/
         

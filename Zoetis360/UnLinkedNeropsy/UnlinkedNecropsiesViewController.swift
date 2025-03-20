@@ -367,6 +367,31 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         }
     }
     
+    fileprivate func alertMessageLanguageBasis() {
+        let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
+        if lngId == 1{
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in french language. Please logout and select french as a language to edit / view this session.", comment: ""))
+            
+        }else  if lngId == 3{
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("Cette session a été créée en langue anglaise. Veuillez vous déconnecter et sélectionnez l'anglais en tant que langue pour éditer / voir cette session.", comment: ""))
+        }
+    }
+    
+    fileprivate func dateFormatterFrench(_ sessiondate: String) {
+        let dateString = sessiondate
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        let dateObj = dateFormatter.date(from: dateString)
+        if dateObj == nil{
+            comlexDateFrench = dateString
+        }
+        else{
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            comlexDateFrench = dateFormatter.string(from: dateObj!)
+        }
+        UserDefaults.standard.setValue(comlexDateFrench, forKey: "dateFrench")
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if tableView == autoSerchTable {
@@ -403,18 +428,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 
                 let lngId = UserDefaults.standard.integer(forKey: "lngId")
                 if lngId == 3{
-                    let dateString = sessiondate
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-                    let dateObj = dateFormatter.date(from: dateString)
-                    if dateObj == nil{
-                        comlexDateFrench = dateString
-                    }
-                    else{
-                        dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-                        comlexDateFrench = dateFormatter.string(from: dateObj!)
-                    }
-                    UserDefaults.standard.setValue(comlexDateFrench, forKey: "dateFrench")
+                    dateFormatterFrench(sessiondate)
                 }
                 
                 UserDefaults.standard.set(sessiondate, forKey: "complexDateUnlinked")
@@ -440,15 +454,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 self.navigationController?.pushViewController(mapViewControllerObj!, animated: true)
             }
             else{
-                let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
-                if lngId == 1{
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in french language. Please logout and select french as a language to edit / view this session.", comment: ""))
-                    
-                }else  if lngId == 3{
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("Cette session a été créée en langue anglaise. Veuillez vous déconnecter et sélectionnez l'anglais en tant que langue pour éditer / voir cette session.", comment: ""))
-                }
-                else{
-                }
+                alertMessageLanguageBasis()
+                
             }
         }
         else{
@@ -486,16 +493,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 self.navigationController?.pushViewController(navigateToAnother!, animated: false)
             }
             else{
-                
-                let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
-                if lngId == 1{
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in french language. Please logout and select french as a language to edit / view this session.", comment: ""))
-                    
-                }else  if lngId == 3{
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("Cette session a été créée en langue anglaise. Veuillez vous déconnecter et sélectionnez l'anglais en tant que langue pour éditer / voir cette session.", comment: ""))
-                }
-                else{
-                }
+                alertMessageLanguageBasis()
             }
         }
     }
@@ -659,7 +657,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         self.unlinkedNecropsies =  CoreDataHandler().fetchAllPostingExistingSessionwithFullSession(0, birdTypeId: 0).mutableCopy() as! NSMutableArray
         
         if unlinkedNecropsies.count == 0{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No sessions found.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No sessions found.", comment: ""))
         }
         
         necropsyTableView.isHidden = true
@@ -694,7 +692,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
     
     // MARK: - METHODS AND FUNCTIONS
     func Alert(){
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No sessions found.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No sessions found.", comment: ""))
     }
     // MARK: 🟠 Call Necropsy PopUp Button Action
     func CallPopoupStartNec()  {
@@ -765,7 +763,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             fromDate = dateFormatter.date(from: fromString)!
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("From date must be smaller than to date.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("From date must be smaller than to date.", comment: ""))
         }
     }
     // MARK: 🟠 Calander Cancel Button Action
@@ -819,7 +817,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             toDate = dateFormatter.date(from: fromString)!
-            Helper.showAlertMessage(self,titleStr: NSLocalizedString("Alert", comment: "") , messageStr: NSLocalizedString("To date must be greater than from date.", comment: "") )
+            Helper.showAlertMessage(self,titleStr: NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString("To date must be greater than from date.", comment: "") )
         }
     }
     

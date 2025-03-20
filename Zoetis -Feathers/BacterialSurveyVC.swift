@@ -148,7 +148,7 @@ class BacterialSurveyVC: BaseViewController {
     @IBAction func siteBtnAction(_ sender: UIButton) {
         
         guard isCompanyFieldCheck else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select Company first.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select Company first.")
             return
         }
         let index = IndexPath(row: 0, section: 0)
@@ -316,7 +316,7 @@ class BacterialSurveyVC: BaseViewController {
                 let arrayOfEmail = email.components(separatedBy: ",")
                 for item in arrayOfEmail {
                     guard isValidEmail(item) else {
-                        Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter valid email.")
+                        Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter valid email.")
                         return
                     }
                 }
@@ -332,7 +332,7 @@ class BacterialSurveyVC: BaseViewController {
             let vc = UIStoryboard.init(name: Constants.Storyboard.microbialStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "Microbial") as? MicrobialViewController
             self.navigationController?.pushViewController(vc!, animated: false)
         } else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please fill al the mandatory fields.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please fill al the mandatory fields.")
         }
     }
     
@@ -430,7 +430,7 @@ class BacterialSurveyVC: BaseViewController {
         let cell = bacterialSurveyTableView.cellForRow(at: IndexPath(row: 0, section: 1) ) as? BacterialSampleInfoCell
         
         if( Int(cell?.noOfPlates.text ?? "") ?? 0 > 200) {
-            let alert = UIAlertController(title: "Alert", message: "Number of plates exceeding 200", preferredStyle: UIAlertController.Style.alert)
+            let alert = UIAlertController(title: Constants.alertStr, message: "Number of plates exceeding 200", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (_) in
                 cell?.noOfPlates.text = ""
             }))
@@ -438,7 +438,7 @@ class BacterialSurveyVC: BaseViewController {
             return
         }
         if !self.isCompanyFieldCheck || !self.isSiteFieldCheck {
-            let alert = UIAlertController(title: "Alert", message: "Please enter all mandatory fields", preferredStyle: UIAlertController.Style.alert)
+            let alert = UIAlertController(title: Constants.alertStr, message: "Please enter all mandatory fields", preferredStyle: UIAlertController.Style.alert)
             let action1 = UIAlertAction(title: "Ok", style: .default) { (action:UIAlertAction) in
                 self.bacterialSurveyTableView.reloadData()
             }
@@ -451,7 +451,7 @@ class BacterialSurveyVC: BaseViewController {
             let barCode = cell.barcodeTxt.text {
             
             guard  !barCode.isEmpty && barCode != "B-" && barCode.contains("B-")  else {
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter valid barcode.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter valid barcode.")
                 cell.barcodeBtn.layer.borderColor = UIColor.red.cgColor
                 return
             }
@@ -459,7 +459,7 @@ class BacterialSurveyVC: BaseViewController {
         }
         
         if(cell?.noOfPlates.text == "" ) {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please Enter A Value")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please Enter A Value")
             bacterialSurveyTableView.reloadData()
             return
             

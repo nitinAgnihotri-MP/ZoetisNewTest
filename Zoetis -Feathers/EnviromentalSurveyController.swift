@@ -162,25 +162,25 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         
         self.isSubmitButtonPressed = true
         guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: requisitionAlreadyExist)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: requisitionAlreadyExist)
             return
         }
         
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: fillAllStr)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: fillAllStr)
             return
         }
         
         guard self.currentRequisition.barCode != "E-" else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Invalid Barcode")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Invalid Barcode")
             return
         }
         
         if self.currentRequisition.actualCreatedHeaders.count == 1 {
             guard self.currentRequisition.actualCreatedHeaders[0].numberOfPlateIDCreated.count > 0 else {
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please create plates before submit.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please create plates before submit.")
                 return
             }
         }
@@ -188,7 +188,7 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         if self.currentRequisition.actualCreatedHeaders.count > 1 {
             for plates in self.currentRequisition.actualCreatedHeaders{
                 guard plates.numberOfPlateIDCreated.count > 0 else {
-                    Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please create plates for all the locations added.")
+                    Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please create plates for all the locations added.")
                     return
                 }
             }
@@ -196,23 +196,23 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         
         guard self.isAllPlatesHaveLocationValue() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select location value for all plates generated.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select location value for all plates generated.")
             return
         }
         
         guard self.isSampleTextFieldFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter sample description.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter sample description.")
             return
         }
 
-        let alert = UIAlertController(title: "Alert", message: "Are you sure you want to submit?", preferredStyle: .alert)
+        let alert = UIAlertController(title: Constants.alertStr, message: "Are you sure you want to submit?", preferredStyle: .alert)
 
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
             self.currentRequisition.isPlateIdGenerated = true
             self.finalSubmit()
         }))
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: Constants.noStr, style: .cancel, handler: nil))
         self.present(alert, animated: true)
         
     }
@@ -935,14 +935,14 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
     func siteButtonPressed(_ cell: EnviromentalFormCell) {
         guard !self.currentRequisition.company.isEmpty else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select company first.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select company first.")
             return
         }
         let sitesObjectArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_siteByCustomer", customerId: self.currentRequisition.companyId)
         let sitesArray = sitesObjectArray.value(forKey: "siteName") as? [String] ?? []
         
         if sitesArray.count == 0 {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "There are no sites for selected company")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "There are no sites for selected company")
             return
         }
         
@@ -1336,12 +1336,12 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
     func stdButtonPressed(_ view: EnviromentalLocationHeaderView) {
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: fillAllStr)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: fillAllStr)
             return
         }
         
         guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: requisitionAlreadyExist)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: requisitionAlreadyExist)
             return
         }
         self.setTemplateFor(templateType: .STD)
@@ -1350,12 +1350,12 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
     func std20ButtonPressed(_ view: EnviromentalLocationHeaderView) {
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: fillAllStr)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: fillAllStr)
             return
         }
         
         guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: requisitionAlreadyExist)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: requisitionAlreadyExist)
             return
         }
         self.setTemplateFor(templateType: .STD20)
@@ -1364,11 +1364,11 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
     func std40ButtonPressed(_ view: EnviromentalLocationHeaderView) {
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: fillAllStr)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: fillAllStr)
             return
         }
         guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: requisitionAlreadyExist)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: requisitionAlreadyExist)
             return
         }
         self.setTemplateFor(templateType: .STD40)
@@ -1377,7 +1377,7 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
     func generatePlateIdButtonPressed(_ view: EnviromentalLocationHeaderView) {
         guard self.isAllPlatesHaveLocationValue() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select location value for all plates generated.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select location value for all plates generated.")
             return
         }
         self.currentRequisition.isPlateIdGenerated = !self.currentRequisition.isPlateIdGenerated
@@ -1437,7 +1437,7 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
             locationHeader.requisition_Id = self.currentRequisition.barCode
             self.currentRequisition.actualCreatedHeaders.append(locationHeader)
         } else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please click to Plus icon to add plates.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please click to Plus icon to add plates.")
             return
         }
         self.saveCurrentDataInLocalDB(isFinalSubmit: false)
@@ -1456,7 +1456,7 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
     func deleteLocationButton(){
         if !currentRequisition.isPlateIdGenerated{
             guard self.currentRequisition.actualCreatedHeaders.count > 1 else {
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You can't delete all the locations.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "You can't delete all the locations.")
                 return
             }
         }
@@ -1470,13 +1470,13 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
         
 //        if !currentRequisition.isPlateIdGenerated{
 //            guard isAllHeaderChecked == false else {
-//                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You can't delete all the locations.")
+//                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "You can't delete all the locations.")
 //                return
 //            }
 //        }
         
-        let alert = UIAlertController(title: "Alert", message: "Are you sure you want to delete?", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
+        let alert = UIAlertController(title: Constants.alertStr, message: "Are you sure you want to delete?", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (_) in
             var checkedHeadersIndex = [Int]()
             for (index, header) in self.currentRequisition.actualCreatedHeaders.enumerated() {
@@ -1533,7 +1533,7 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
         self.view.endEditing(true)
         if ((requisitionSavedSessionType == .CREATE_NEW_SESSION) || (requisitionSavedSessionType == .RESTORE_OLD_SESSION)){
             guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: requisitionAlreadyExist)
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: requisitionAlreadyExist)
                 return
             }
         }
@@ -1542,32 +1542,32 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
         
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: fillAllStr)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: fillAllStr)
             return
         }
         
         guard self.currentRequisition.barCode != "E-" else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Invalid Barcode")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Invalid Barcode")
             return
         }
         
         guard let selectedLocationType = view.locationTypeTextField.text,
             selectedLocationType != "Select location type" else {
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select location type.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select location type.")
                 self.reloadTableView()
                 return
         }
         self.isSubmitButtonPressed = false
         let noOfPlates = self.currentRequisition.actualCreatedHeaders[view.tag].noOfPlates
         guard noOfPlates > 0 else {
-             Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter number of plates.")
+             Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter number of plates.")
             self.reloadTableView()
             return
         }
         
         guard noOfPlates <= 200  else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Number of plates exceeding 200.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Number of plates exceeding 200.")
             return
         }
         
@@ -1771,14 +1771,14 @@ extension EnviromentalSurveyController: BacterialFormCellDelegates {
     func siteButtonPressed_Bacterial(_ cell: BacterialFormCell) {
         guard !self.currentRequisition.company.isEmpty else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select company first.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select company first.")
             return
         }
         let sitesObjectArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_siteByCustomer", customerId: self.currentRequisition.companyId)
         let sitesArray = sitesObjectArray.value(forKey: "siteName") as? [String] ?? []
        
         if sitesArray.count == 0 {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "There are no sites for selected company")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "There are no sites for selected company")
             return
         }
         
@@ -1967,12 +1967,12 @@ extension EnviromentalSurveyController{
         switch requisitionSavedSessionType {
         case .RESTORE_OLD_SESSION, .CREATE_NEW_SESSION:
             if self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .saveAsDraft){
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: requisitionAlreadyExist)
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: requisitionAlreadyExist)
                 return
             }
 
-            let alert = UIAlertController(title: "Alert", message: "Are you sure you want to Save To draft?", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
+            let alert = UIAlertController(title: Constants.alertStr, message: "Are you sure you want to Save To draft?", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil))
             alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (_) in
                 self.currentRequisition.timeStamp = Date().getCurrentTimeStamp()
                 self.currentRequisition.sessionStatus = SessionStatus.saveAsDraft

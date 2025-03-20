@@ -208,12 +208,12 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
         if ConnectionManager.shared.hasConnectivity(){
             if syncArr.count > 0{
                 let errorMSg = "Data available for sync, Do you want to sync now?"
-                let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+                let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                     _ in
                     self.syncBtnTapped()
                 }
-                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
+                let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
                 alertController.addAction(okAction)
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true, completion: nil)
@@ -435,7 +435,7 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
            
             
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to view PDF.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to view PDF.", comment: ""))
         }
         
     }
@@ -647,7 +647,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                     
                     self.askForDataSync()
                 }
-                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+                let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
                     _ in
                     self.forceSyncMessage()
                     
@@ -675,12 +675,12 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     
     func askForDataSync(){
         let errorMSg = Constants.askForDataSync
-        let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.syncBtnTapped()
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
             _ in
             self.forceSyncMessage()
             
@@ -745,7 +745,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 showtoast(message: "Data syncing")
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     
@@ -791,7 +791,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 }
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     

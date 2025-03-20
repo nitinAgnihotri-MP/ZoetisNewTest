@@ -133,7 +133,7 @@ class PESessionViewController: BaseViewController {
     private func deleteDeletedAssessments(){
         if ConnectionManager.shared.hasConnectivity() {
             self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
-            PEDataService.sharedInstance.deleteDeletedAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+            PEDataService.sharedInstance.deleteDeletedAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
                 guard let _ = self, error == nil else {
                     self?.dismissGlobalHUD(self?.view ?? UIView());
                     return
@@ -262,7 +262,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
                 
                 let vc = storyBoard.instantiateViewController(withIdentifier: "PEViewStartNewAssessment") as? PEViewStartNewAssessment
                 vc?.peNewAssessment = peAssessmentDraftArray[indexPath.row]
-                vc?.editExtendedMicro = "no"
+                vc?.editExtendedMicro = Constants.noStr
                 UserDefaults.standard.set(vc?.peNewAssessment.serverAssessmentId ?? "" , forKey: "currentServerAssessmentId")
                 let userDefault = UserDefaults.standard
                 
@@ -333,7 +333,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
                 }
                 
             }
-            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) 
+            let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) 
             
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
@@ -1113,7 +1113,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
     
     func convertDateFormatter(date: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"//this your string date format
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss//this your string date format
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC") //TimeZone(name: "UTC") //as TimeZone
         dateFormatter.locale = Locale(identifier: "your_loc_id")
         let convertedDate = dateFormatter.date(from: date)
@@ -1130,7 +1130,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
     }
     // MARK: - Save Draft Data
     private func saveDraftData(assessmentId: String, index: Int){
-        let userId = UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found"
+        let userId = UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr
         let allAssesmentArr = CoreDataHandlerPE().getRejectedAssessmentArrayPEObject(ofCurrentAssessment:true)
         
         PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:"draft",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessmentId)
@@ -1142,7 +1142,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         tableview.reloadData()
         UserDefaults.standard.set(peAssessmentRejectedArray.count, forKey: "rejected_count")
         UserDefaults.standard.synchronize()
-        self.showAlertViewWithMessageAndActionHandler("Alert", message: "Your Assessment moved to draft", actionHandler: nil)
+        self.showAlertViewWithMessageAndActionHandler(Constants.alertStr, message: "Your Assessment moved to draft", actionHandler: nil)
         
         finishSession()
     }

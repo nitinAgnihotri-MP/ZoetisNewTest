@@ -210,7 +210,7 @@ class FeatherPulpVC: BaseViewController {
         case .CREATE_NEW_SESSION,.RESTORE_OLD_SESSION :
             guard !self.currentRequisition.company.isEmpty else {
                 featherPulpTableView.reloadData()
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select company first.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select company first.")
                 return
             }
             
@@ -219,7 +219,7 @@ class FeatherPulpVC: BaseViewController {
             self.currentRequisition.barCodeManualEntered = ""
             
             if sitesArray.count == 0 {
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "There are no sites for selected company")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "There are no sites for selected company")
                 return
             }
             
@@ -234,7 +234,7 @@ class FeatherPulpVC: BaseViewController {
         case .SHOW_DRAFT_FOR_EDITING:
             guard !self.currentRequisition.company.isEmpty else {
                 featherPulpTableView.reloadData()
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select company first.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select company first.")
                 return
             }
             
@@ -243,7 +243,7 @@ class FeatherPulpVC: BaseViewController {
             self.currentRequisition.barCodeManualEntered = ""
             
             if sitesArray.count == 0 {
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "There are no sites for selected company")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "There are no sites for selected company")
                 return
             }
             
@@ -501,12 +501,12 @@ class FeatherPulpVC: BaseViewController {
         switch self.requisitionSavedSessionType {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
             if self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .saveAsDraft){
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You have already added requisition with same date and site.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "You have already added requisition with same date and site.")
                 return
             }
 
-            let alert = UIAlertController(title: "Alert", message: "Are you sure you want to Save To draft...?", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
+            let alert = UIAlertController(title: Constants.alertStr, message: "Are you sure you want to Save To draft...?", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil))
             alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (_) in
                 self.saveCaseInfoData(sessionStatus: .saveAsDraft)
             }))
@@ -572,7 +572,7 @@ class FeatherPulpVC: BaseViewController {
         let reviewer = cellCaseInfo?.reviewerTxt.text ?? ""
         if !company.isEmpty && !site.isEmpty && !barcode.isEmpty && !typeOfBird.isEmpty && !reviewer.isEmpty {
             if self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted){
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You have already added requisition with same date and site.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "You have already added requisition with same date and site.")
                 return false
             }
         }else{
@@ -596,7 +596,7 @@ class FeatherPulpVC: BaseViewController {
             if cellCaseInfo?.reviewerTxt.text == "" {
                 cellCaseInfo?.reviewerTextFieldSuperView.layer.borderColor = UIColor.red.cgColor
             }
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter mandatory fields.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter mandatory fields.")
             return false
         }
         return true
@@ -609,7 +609,7 @@ class FeatherPulpVC: BaseViewController {
             if farmeEnterNameTextField.isEmpty {
                 cell?.farmeEnterNameTextField.layer.borderWidth = 2.0
                 cell?.farmeEnterNameTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter farm name.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter farm name.")
                 return false
             }
         }
@@ -619,14 +619,14 @@ class FeatherPulpVC: BaseViewController {
                 cell?.ageWeeksTextField.layer.borderWidth = 2.0
                 cell?.ageWeeksTextField.layer.borderColor = UIColor.red.cgColor
 
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter the weeks")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter the weeks")
                 return false
             }
             if Int(ageWeeksTextField) ?? 0 >= 20{
                 cell?.ageWeeksTextField.layer.borderWidth = 2.0
                 cell?.ageWeeksTextField.layer.borderColor = UIColor.red.cgColor
 
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Weeks should be less than or equal to 20")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Weeks should be less than or equal to 20")
                 return false
             }
         }
@@ -635,13 +635,13 @@ class FeatherPulpVC: BaseViewController {
             if ageDaysTextField.isEmpty {
                 cell?.ageDaysTextField.layer.borderWidth = 2.0
                 cell?.ageDaysTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter the days")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter the days")
                 return false
             }
             if Int(ageDaysTextField) ?? 0 > 6{
                 cell?.ageDaysTextField.layer.borderWidth = 2.0
                 cell?.ageDaysTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Days should be less than 7")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Days should be less than 7")
                 return false
             }
         }
@@ -652,7 +652,7 @@ class FeatherPulpVC: BaseViewController {
             if specimenTypeTextField.isEmpty {
                 cell?.specimenTypeTextField.layer.borderWidth = 2.0
                 cell?.specimenTypeTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select specimen")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select specimen")
                 return false
             }
         }
@@ -661,14 +661,14 @@ class FeatherPulpVC: BaseViewController {
             if enterNoOfPlatesTextField.isEmpty {
                 cell?.enterNoOfPlatesTextField.layer.borderWidth = 2.0
                 cell?.enterNoOfPlatesTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please enter number of plates.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter number of plates.")
                 return false
             }
         } 
         
         let selectedTests = cell?.arrTestOptions.filter{ $0.isCheckBoxSelected!.boolValue }
         if selectedTests?.count == 0{
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please select at least one test.")
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select at least one test.")
             return false
         }
         return true
@@ -685,7 +685,7 @@ class FeatherPulpVC: BaseViewController {
 //            return
 //        }
                 
-        let alert = UIAlertController(title: "Alert", message: "Are you Sure you want to submit the requisition?", preferredStyle: UIAlertController.Style.alert)
+        let alert = UIAlertController(title: Constants.alertStr, message: "Are you Sure you want to submit the requisition?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: { (_) in
             self.saveCaseInfoData(sessionStatus: .submitted)

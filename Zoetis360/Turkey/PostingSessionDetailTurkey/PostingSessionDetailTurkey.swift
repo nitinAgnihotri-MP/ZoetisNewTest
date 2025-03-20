@@ -672,7 +672,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             } else{
                 feedButton.layer.borderColor = UIColor.black.cgColor
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
             
         }else if trimmedString == ""  {
             
@@ -683,7 +683,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             }else {
                 feedButton.layer.borderColor = UIColor.black.cgColor
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
             
         } else if trimmedString == "" && strFeedCheck == ""{
             let abc = feedButton.currentTitle!
@@ -695,12 +695,12 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             }
             nameText.layer.borderColor = UIColor.red.cgColor
             farmWeightText.layer.borderColor = UIColor.black.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
         }
         
         if houseNoTxtFldTurkey.text == ""
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             houseNoTxtFldTurkey.layer.borderColor = UIColor.red.cgColor
             // feedButton.layer.borderColor = UIColor.black.cgColor
             return
@@ -711,12 +711,12 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             nameText.layer.borderColor = UIColor.red.cgColor
             feedButton.layer.borderColor = UIColor.black.cgColor
             farmWeightText.layer.borderColor = UIColor.black.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Please enter farm name.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Please enter farm name.")
             
         }else if strFarmNameFeedId == "" && strFeddUpdate == ""{
             if strFeddUpdate == "" {
                 feedButton.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a feed program.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a feed program.", comment: ""))
             }
             if trimmedString == "" {
                 nameText.layer.borderColor = UIColor.red.cgColor
@@ -730,7 +730,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             farmWeightText.layer.borderColor = UIColor.black.cgColor
             nameText.layer.borderColor = UIColor.black.cgColor
             feedButton.layer.borderColor = UIColor.red.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Please select a feed program.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Please select a feed program.")
         }
         
         else {
@@ -779,7 +779,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             let headerDict: HTTPHeaders = ["Authorization":accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             
-            let jsonData = try! JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions.prettyPrinted)
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -1081,7 +1081,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
                 let statusCode =  response.response?.statusCode
                 if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                    // UserDefaults.standard.set("No", forKey: "Success")
+                    // UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                     self.getCNecStep1Data()
                 }
                 switch response.result{
@@ -1119,7 +1119,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                         for  j in 0..<(feedDetailArr! as AnyObject).count{
                                             let feedCatName = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedProgramCategory") as! String
                                             
-                                            if feedCatName == "Coccidiosis Control"{
+                                            if feedCatName == Constants.coccidioStr{
                                                 let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
                                                 for  m in 0..<(feedDetail! as AnyObject).count{
                                                     let postDict = (feedDetail as AnyObject).object(at: m)
@@ -1150,7 +1150,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                                     
                                                 }
                                             }
-                                            else if  feedCatName  == "Mycotoxin Binders"{
+                                            else if  feedCatName  == Constants.mytoxinStr{
                                                 let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
                                                 for  y in 0..<(feedDetail! as AnyObject).count{
                                                     let postDict = (feedDetail as AnyObject).object(at: y)
@@ -1315,7 +1315,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     
     func convertDateFormater(_ date: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss
         // New addition for below 2 line
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC")
         dateFormatter.locale = Locale(identifier: "your_loc_id")
@@ -1620,18 +1620,18 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             }
             if lngId == 1000 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again(NA))", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again(NA))", comment: ""))
             }
             
             else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
             
         }
@@ -1639,20 +1639,20 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     func failWithErrorInternalSyncdata(){
         Helper.dismissGlobalHUD(self.view)
         
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:" Server error please try again .")
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:" Server error please try again .")
     }
     func didFinishApiSyncdata(){
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     func failWithInternetConnectionSyncdata(){
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         
     }
     func alerViewSucees() {
-        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Data sync has been completed.", comment: ""), preferredStyle: UIAlertController.Style.alert) //Replace
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data sync has been completed.", comment: ""), preferredStyle: UIAlertController.Style.alert) //Replace
         let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
             (result : UIAlertAction) -> Void in
             self.navigationController?.popViewController(animated: true)
@@ -1665,7 +1665,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             print(appDelegateObj.testFuntion())
         }
         else{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
         
     }
@@ -1688,7 +1688,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 self.pullFromWeb()
                 return
             }
-            let CancelAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default)
+            let CancelAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default)
             alertController.addAction(CancelAction)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
@@ -1700,7 +1700,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 self.pullFromWeb()
                 return
             }
-            let CancelAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default)
+            let CancelAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default)
             alertController.addAction(CancelAction)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
@@ -1742,10 +1742,10 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 
                 self.callSyncApiPostingId(Pid: postingId)
             } else {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         } else {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
         }
     }
     
@@ -1906,7 +1906,7 @@ extension PostingSessionDetailTurkey: UITableViewDataSource,UITableViewDelegate 
             cell.deleteButton.tag = indexPath.row
             cell.deleteButton.addTarget(self, action: #selector(PostingSessionDetailTurkey.ClickDeleteBtton(_:)), for: .touchUpInside)
             if sick == 0 {
-                cell.sickLbl.text = NSLocalizedString("No", comment: "")
+                cell.sickLbl.text = NSLocalizedString(Constants.noStr, comment: "")
             } else if sick == 1 {
                 cell.sickLbl.text = NSLocalizedString("Yes", comment: "")
             }
@@ -2000,7 +2000,7 @@ extension PostingSessionDetailTurkey: UITableViewDataSource,UITableViewDelegate 
         let cell = self.tblView.cellForRow(at: indexpath as IndexPath) as? PostingSessionDetailCell
         cell?.backgroundColor = UIColor.gray
         if farmArray.count == 1{
-            let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("You can not delete all farms. One farm is mandatory for this session.", comment: ""), preferredStyle: .alert)
+            let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("You can not delete all farms. One farm is mandatory for this session.", comment: ""), preferredStyle: .alert)
             let action1 = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { (action) in
                 print("Default is pressed.....")
                 cell?.backgroundColor = UIColor.clear
@@ -2032,7 +2032,7 @@ extension PostingSessionDetailTurkey: UITableViewDataSource,UITableViewDelegate 
                 strMsgforDelete = "Are you sure you want to delete this farm?"
             }
             
-            let alertController = UIAlertController(title: "Alert", message: strMsgforDelete, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: strMsgforDelete, preferredStyle: .alert)
             let action1 = UIAlertAction(title: "Yes", style: .default) { (action) in
                 
                 CoreDataHandlerTurkey().deleteDataWithPostingIdStep1dataWithfarmNameTurkey(necId as NSNumber, farmName: farmArrayWithoutAge!)
@@ -2045,7 +2045,7 @@ extension PostingSessionDetailTurkey: UITableViewDataSource,UITableViewDelegate 
                 self.tblView.reloadData()
                 
             }
-            let action2 = UIAlertAction(title: "No", style: .cancel) { (action) in
+            let action2 = UIAlertAction(title: Constants.noStr, style: .cancel) { (action) in
                 
                 cell?.backgroundColor = UIColor.clear
             }

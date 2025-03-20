@@ -1670,15 +1670,15 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             selectFarmsLabel.isHidden = true
             
         }
-        coccidiosisControlOutlet.setTitle(NSLocalizedString("Coccidiosis Control", comment: ""), for: .normal)
+        coccidiosisControlOutlet.setTitle(NSLocalizedString(Constants.coccidioStr, comment: ""), for: .normal)
         antiboticControlOutlet.setTitle(NSLocalizedString("Antibiotic", comment: ""), for: .normal)
         alternativeControlOutlet.setTitle(NSLocalizedString("Alternative", comment: ""), for: .normal)
-        myCotoxiinOutlet.setTitle(NSLocalizedString("Mycotoxin Binders", comment: ""), for: .normal)
+        myCotoxiinOutlet.setTitle(NSLocalizedString(Constants.mytoxinStr, comment: ""), for: .normal)
         
-        coccidiosisControlOutlet.setTitle(NSLocalizedString("Coccidiosis Control", comment: ""), for: .selected)
+        coccidiosisControlOutlet.setTitle(NSLocalizedString(Constants.coccidioStr, comment: ""), for: .selected)
         antiboticControlOutlet.setTitle(NSLocalizedString("Antibiotic", comment: ""), for: .selected)
         alternativeControlOutlet.setTitle(NSLocalizedString("Alternative", comment: ""), for: .selected)
-        myCotoxiinOutlet.setTitle(NSLocalizedString("Mycotoxin Binders", comment: ""), for: .selected)
+        myCotoxiinOutlet.setTitle(NSLocalizedString(Constants.mytoxinStr, comment: ""), for: .selected)
         
     }
     
@@ -1798,7 +1798,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         for btn in self.view.subviews {
             if btn.isKind(of: UIButton.self) {
                 let bt = btn as! UIButton
-                if bt.titleLabel?.text == NSLocalizedString("Coccidiosis Control", comment: "") {
+                if bt.titleLabel?.text == NSLocalizedString(Constants.coccidioStr, comment: "") {
                     bt.isSelected = true
                 } else{
                     bt.isSelected = false
@@ -1895,7 +1895,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         for btn in self.view.subviews {
             if btn.isKind(of: UIButton.self) {
                 let bt = btn as! UIButton
-                if bt.titleLabel?.text == NSLocalizedString("Mycotoxin Binders", comment: "") {
+                if bt.titleLabel?.text == NSLocalizedString(Constants.mytoxinStr, comment: "") {
                     bt.isSelected = true
                 } else{
                     bt.isSelected = false
@@ -2488,7 +2488,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             var error : NSError?
             
-            let jsonData = try! JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted)
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             
@@ -2582,7 +2582,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         if feedProgramArray.count < 1  {
             // Create the alert controller
             if feedProgramTextField.text == ""{
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: NSLocalizedString("Please enter feed program.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: NSLocalizedString("Please enter feed program.", comment: ""))
                 return
             }
             
@@ -2614,11 +2614,11 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 }
                 else {
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
                 }
             } else{
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
             }
             
         }
@@ -2631,7 +2631,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         {
             if coccidsisStartrDrinking.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             
@@ -2668,7 +2668,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             if coccidsisGrowerDrinking.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchDossgaeWithMoleculeId(secoundMolID as NSNumber)
@@ -2697,7 +2697,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         {
             if cocciFinisherDrinkingWater.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchDossgaeWithMoleculeId(thirdMolID as NSNumber)
@@ -2730,7 +2730,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         {
             if coccidiosisWdDrinking.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchDossgaeWithMoleculeId(fourthMolID as NSNumber)
@@ -2762,7 +2762,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         {
             if fivthMoleculelBL.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchDossgaeWithMoleculeId(fifthMolID as NSNumber)
@@ -2794,7 +2794,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         {
             if sixthMoleculeLbl.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchDossgaeWithMoleculeId(sixthMolID as NSNumber)
@@ -3039,12 +3039,12 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         self.printSyncLblCount()
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
                 
             } else if lngId == 3 {
                 
@@ -3058,7 +3058,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
         
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
     }
     
     func didFinishApi() {
@@ -3071,10 +3071,10 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 exitPopUP.tag = 11
                 let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "PostingViewController") as? PostingViewController
                 self.navigationController?.pushViewController(mapViewControllerObj!, animated: true)
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
             }
             else{
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
                 let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "PostingViewController") as? PostingViewController
                 self.navigationController?.pushViewController(mapViewControllerObj!, animated: true)
                 
@@ -3084,7 +3084,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "PostingViewController") as? PostingViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: true)
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
         }
     }
     func failWithInternetConnection()
@@ -3092,7 +3092,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
     func printSyncLblCount()
@@ -3175,7 +3175,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             }
             else{
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
             }
         }
         else{
@@ -3338,11 +3338,11 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                             }
                             else {
                                 
-                                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
                             }
                         } else{
                             
-                            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+                            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
                         }
                         
                     }
@@ -4777,7 +4777,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         
         if  feedProgramTextField.text == ""  {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
             
         }
         else{
@@ -4835,7 +4835,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             if addFarmArray.count == 0
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"You don't have any farm to add in feed.")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"You don't have any farm to add in feed.")
             }
             else
             {

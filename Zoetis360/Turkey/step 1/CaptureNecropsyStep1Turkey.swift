@@ -553,13 +553,13 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         countFarm =  (farmNameTextfield.text?.count)!
         
         if farmWeightTextField.text?.count == 1 && farmWeightTextField.text == "."  {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
             farmWeightTextField.layer.borderColor = UIColor.red.cgColor
             farmWeightTextField.text = nil
         }
         else if farmWeightTextField.text == ""
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
             farmWeightTextField.layer.borderColor = UIColor.red.cgColor
             farmWeightTextField.text = nil
         }
@@ -571,7 +571,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 
                 if (trimmedString == "" ||  ageLbl.text == "" || farmNameTextfield.text == ""){
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
                     
                     if farmNameTextfield.text == ""  {
                         farmNameTextfield.layer.borderColor = UIColor.red.cgColor
@@ -593,7 +593,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             
             else  if (feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  ageLbl.text == "" || farmNameTextfield.text == "" )
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
                 
                 feedProgramBtn.layer.borderColor = UIColor.red.cgColor
                 ageUperBtnOutlet.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
@@ -1104,10 +1104,10 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         }
         
         if  farmWeightTextField.text != "" || farmNameTextfield.text != "" || feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") || ageLbl.text != "" {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
             
         }  else if captureNecropsy.count == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
         } else {
             let navigateNxt = self.storyboard?.instantiateViewController(withIdentifier: "CaptureNecroStep2Turkey") as? CaptureNecroStep2Turkey
             self.navigationController?.pushViewController(navigateNxt!, animated: false)
@@ -1369,7 +1369,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             }
             let checkVal  = person.value(forKey: "sick") as! Int
             if checkVal == 0 {
-                Cell.sickLbl?.text = NSLocalizedString("No", comment: "")
+                Cell.sickLbl?.text = NSLocalizedString(Constants.noStr, comment: "")
             } else {
                 Cell.sickLbl?.text = NSLocalizedString("Yes", comment: "")
             }
@@ -1612,7 +1612,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             } else{
                 feedButton.layer.borderColor = UIColor.black.cgColor
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
             
         }else if trimmedString == ""  {
             
@@ -1623,7 +1623,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             }else {
                 feedButton.layer.borderColor = UIColor.black.cgColor
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
             
         } else if trimmedString == "" && strFeedCheck == ""{
             let abc = feedButton.currentTitle!
@@ -1635,12 +1635,12 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             }
             nameText.layer.borderColor = UIColor.red.cgColor
             farmWeightText.layer.borderColor = UIColor.black.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
         }
         
         if houseNoTxtFldTurkey.text == ""
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             houseNoTxtFldTurkey.layer.borderColor = UIColor.red.cgColor
             return
             
@@ -1650,12 +1650,12 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             nameText.layer.borderColor = UIColor.red.cgColor
             feedButton.layer.borderColor = UIColor.black.cgColor
             farmWeightText.layer.borderColor = UIColor.black.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Please enter farm name.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Please enter farm name.")
             
         }else if strFarmNameFeedId == "" && strFeddUpdate == ""{
             if strFeddUpdate == "" {
                 feedButton.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a feed program.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a feed program.", comment: ""))
             }
             if trimmedString == "" {
                 nameText.layer.borderColor = UIColor.red.cgColor
@@ -1669,7 +1669,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             farmWeightText.layer.borderColor = UIColor.black.cgColor
             nameText.layer.borderColor = UIColor.black.cgColor
             feedButton.layer.borderColor = UIColor.red.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Please select a feed program.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Please select a feed program.")
         }
         
         else {
@@ -1729,7 +1729,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             strMsgforDelete = "Are you sure you want to delete this farm?"
         }
         
-        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString(strMsgforDelete, comment: ""), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString(strMsgforDelete, comment: ""), preferredStyle: .alert)
         let action1 = UIAlertAction(title:NSLocalizedString("Yes", comment: ""), style: .default) { (action) in
             
             let data =  CoreDataHandlerTurkey().FetchNecropsystep1neccIdTurkey(necId as NSNumber) as! [NSManagedObject]
@@ -1751,7 +1751,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             self.appDelegate.saveContext()
             self.tblView.reloadData()
         }
-        let action2 = UIAlertAction(title:NSLocalizedString("No", comment: "") , style: .cancel) { (action) in
+        let action2 = UIAlertAction(title:NSLocalizedString(Constants.noStr, comment: "") , style: .cancel) { (action) in
             cell?.contentView.backgroundColor = UIColor.clear
         }
         
@@ -1913,7 +1913,7 @@ extension CaptureNecropsyStep1Turkey :UIPickerViewDelegate,UIPickerViewDataSourc
             if editfeed == "yes"
             {
                 if let value = AgeOp[row] as? String {
-                    editfeed = "no"
+                    editfeed = Constants.noStr
                     return ageButton.setTitle("\(value)", for: .normal)
                     
                 } else {

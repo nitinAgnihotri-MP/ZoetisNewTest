@@ -109,7 +109,7 @@ class PELandingPoupViewController: BaseViewController {
             fetchAllCustomer()
         } else {
             let errorMSg = "Internet not available , Please connect and then try."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
                 self.fetchAllCustomer()
@@ -123,7 +123,7 @@ class PELandingPoupViewController: BaseViewController {
     
     func showAlertDifferentLogin(){
           let errorMSg = "Seems you are login with different user or you do not have selected customer and site. Please allow app to fetch data for you."
-          let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+          let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
           let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
               _ in
             self.fetchAllCustomer()
@@ -243,7 +243,7 @@ class PELandingPoupViewController: BaseViewController {
             }
             self.dropHiddenAndShow()
         } else{
-            showAlert(title: "Alert", message: "No Site available this customer", owner: self)
+            showAlert(title: Constants.alertStr, message: "No Site available this customer", owner: self)
         }
     }     
     

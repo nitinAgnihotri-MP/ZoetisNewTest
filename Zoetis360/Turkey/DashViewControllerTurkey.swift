@@ -244,11 +244,11 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 self.callSyncApi()
                 
             } else {
-                Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:Constants.offline)
+                Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:Constants.offline)
             }
         } else {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
         }
     }
     
@@ -468,7 +468,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
 
                 switch statusCode {
                 case 400, 401:
-                    debugPrint("Error: \(dict["error_description"] as? String ?? "Unknown error")")
+                    debugPrint("Error: \(dict["error_description"] as? String ?? Constants.unknownErrorStr)")
                 case 200:
                     let acessToken = (dict["access_token"] as? String)!
                     
@@ -496,7 +496,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         let messageFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: "HelveticaNeue-Light", size: 12.0)]
         
         var myString = "Data available for sync. Do you want to sync now? \n\n\n *Note - Please don't minimize App while syncing."
-        let titleAttrString = NSMutableAttributedString(string: "Alert", attributes: convertToOptionalNSAttributedStringKeyDictionary(titleFont))
+        let titleAttrString = NSMutableAttributedString(string: Constants.alertStr, attributes: convertToOptionalNSAttributedStringKeyDictionary(titleFont))
         var messageAttrString = NSMutableAttributedString(string: myString , attributes: convertToOptionalNSAttributedStringKeyDictionary(messageFont))
         messageAttrString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: NSRange(location:50,length:52))
         let font = UIFont(name: "HelveticaNeue-Light", size: 11.0)
@@ -517,18 +517,18 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 }
                 else
                 {
-                    Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:Constants.offline)
+                    Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:Constants.offline)
                 }
                 
             }
             else{
-                Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"Data not available for syncing.")
+                Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Data not available for syncing.")
             }
             Helper.dismissGlobalHUD(self.view)
             
         }
         
-        let CancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.default) {
+        let CancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default) {
             UIAlertAction in
             self.iSfarmSync()
             self.printSyncLblCount()
@@ -570,17 +570,17 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         self.printSyncLblCount()
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"There are problem in data syncing please try again.(NA))")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"There are problem in data syncing please try again.(NA))")
         } else {
             
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
                 
             } else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
                 
             } else if lngId == 1000 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
             }
         }
     }
@@ -588,7 +588,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     func failWithErrorInternal() {
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"No internet connection. Please try again!")
+        Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"No internet connection. Please try again!")
     }
     
     func didFinishApi() {
@@ -600,7 +600,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             self.callSyncApi()
         }
         else {
-            let alertView = UIAlertController(title:NSLocalizedString("Alert", comment: "") , message:NSLocalizedString("Data Sync has completed.", comment: ""), preferredStyle: .alert)
+            let alertView = UIAlertController(title:NSLocalizedString(Constants.alertStr, comment: "") , message:NSLocalizedString("Data Sync has completed.", comment: ""), preferredStyle: .alert)
             alertView.addAction(UIAlertAction(title:NSLocalizedString("OK", comment: "") , style: .default, handler: { (alertAction) -> Void in
                 Helper.dismissGlobalHUD(self.view)
                 self.iSfarmSync()
@@ -613,7 +613,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     func failWithInternetConnection() {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:"Alert" , messageStr: Constants.offline)
+        Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr: Constants.offline)
     }
     
     // ******************************* Get FormList From Server ************************************* //
@@ -767,7 +767,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1038,7 +1038,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             if farms.count > 0 {
                 CoreDataHandlerTurkey().updatedPostigSessionwithIsFarmSyncPostingIdTurkey(pid!, isFarmSync: true)
                 if isFarmSync == false{
-                    Helper.showAlertMessage(self,titleStr:"Alert" , messageStr: "You have unlinked farm(s) to your feed in posting session. Visit '' Open Existing Session '' to link farm(s) to feed program.")
+                    Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr: "You have unlinked farm(s) to your feed in posting session. Visit '' Open Existing Session '' to link farm(s) to feed program.")
                     isFarmSync = true
                 }
             }
@@ -1302,7 +1302,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1445,7 +1445,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1519,7 +1519,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1597,7 +1597,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1740,7 +1740,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1818,7 +1818,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -1933,7 +1933,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -2005,7 +2005,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -2079,7 +2079,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -2148,7 +2148,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -2234,7 +2234,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
@@ -2361,18 +2361,18 @@ extension DashViewControllerTurkey :userlistProtocol,userLogOut {
         self.printSyncLblCount()
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             }
             if lngId == 1000 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again(NA))", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again(NA))", comment: ""))
             }
             else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
         }
     }
@@ -2380,19 +2380,19 @@ extension DashViewControllerTurkey :userlistProtocol,userLogOut {
     func failWithErrorInternalSyncdata(){
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:" Server error please try again .")
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:" Server error please try again .")
     }
     
     func didFinishApiSyncdata(){
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     
     func failWithInternetConnectionSyncdata(){
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
 }

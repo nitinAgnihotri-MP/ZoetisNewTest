@@ -92,7 +92,7 @@ class VaccinationDashboardVC: BaseViewController{
                 self.getScheduledCertifications()
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
         hasViewLoaded = true
         hidePopup()
@@ -365,7 +365,7 @@ class VaccinationDashboardVC: BaseViewController{
                         _ in
                         self.askForDataSync()
                     }
-                    let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+                    let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
                         _ in
                         self.forceSyncMessage()
                     }
@@ -385,12 +385,12 @@ class VaccinationDashboardVC: BaseViewController{
     
     func askForDataSync(){
         let errorMSg = Constants.askForDataSync
-        let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.submitCertifications()
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
             _ in
             self.forceSyncMessage()
             
@@ -411,19 +411,19 @@ class VaccinationDashboardVC: BaseViewController{
     func syncDataPopup(){
         if ConnectionManager.shared.hasConnectivity() {
             let errorMSg = "Data available for sync, Do you want to sync now?"
-            let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
                 self.submitCertifications()
             }
             
-            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil)
+            let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil)
             alertController.addAction(cancelAction)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
             
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     
@@ -629,7 +629,7 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     private func getScheduledCertifications(){
-        DataService.sharedInstance.getScheduledCertifications(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self,completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getScheduledCertifications(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self,completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else {
                 self?.hasDataLoaded = true
                 self?.showPopup()
@@ -668,7 +668,7 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     private func getQuestionsMasterData(){
-        DataService.sharedInstance.getCertificationMasterQuestions(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self,completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getCertificationMasterQuestions(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self,completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
@@ -680,7 +680,7 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     private func getDropdownMasterData(){
-        DataService.sharedInstance.getDropdownMasterData(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self,completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getDropdownMasterData(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self,completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
@@ -692,7 +692,7 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     private func getEmployeesMasterData(){
-        DataService.sharedInstance.getEmployeesById(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, customerId: "11", siteId: "221",completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getEmployeesById(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, customerId: "11", siteId: "221",completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
@@ -703,7 +703,7 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     private func getVaccinationCustomers(){
-        DataService.sharedInstance.getVaccinationCustomers(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getVaccinationCustomers(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
@@ -717,7 +717,7 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     private func getVaccinationCustomersSites(){
-        DataService.sharedInstance.getVaccinationCustomerSites(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getVaccinationCustomerSites(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
@@ -731,7 +731,7 @@ class VaccinationDashboardVC: BaseViewController{
     
     //Get FSM List
     private func getVaccinationFSMList(){
-        DataService.sharedInstance.getVaccinationFSMList(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getVaccinationFSMList(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
@@ -744,7 +744,7 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     private func getVaccinationCountryList(){
-        DataService.sharedInstance.getVaccinationCountryList(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getVaccinationCountryList(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
@@ -763,7 +763,7 @@ class VaccinationDashboardVC: BaseViewController{
             self.showGlobalProgressHUDWithTitle(self.view, title: "Loading Data...")
         }
         
-        DataService.sharedInstance.getSubmittedCertifications(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "No id found", viewController: self, completion: { [weak self] (status, error) in
+        DataService.sharedInstance.getSubmittedCertifications(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else { self?.dismissGlobalHUD(self?.view ?? UIView()); return }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main

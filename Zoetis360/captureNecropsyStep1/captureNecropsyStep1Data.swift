@@ -151,7 +151,8 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     var oldFarmName = NSString()
     var strFeddCheck  = String()
     var buttonbgNew2 = UIButton()
-    
+    let feedProgramText = "Feed Program *"
+    let mendatoryFieldsMessage = "Fields marked as (*) are mandatory. Please fill all the fields."
     // MARK: - VIEW LIFE CYCLE
     override func viewDidLoad() {
         print("<<<<",self)
@@ -202,7 +203,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             postingId = UserDefaults.standard.integer(forKey: "postingId")
             feedProgramOutlet.isUserInteractionEnabled = true
             lblCustmer.isHidden = false
-            feedProgramTextLebl.text = NSLocalizedString("Feed Program *", comment: "")
+            feedProgramTextLebl.text = NSLocalizedString(feedProgramText, comment: "")
             feedProgramDropDwnIcon.isHidden = false
             customerLbl.isHidden = false
             feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
@@ -257,10 +258,10 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             feedProgramDisplayLabel.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
         
-        feedProgramTextLebl.text = NSLocalizedString("Feed Program *", comment: "")
+        feedProgramTextLebl.text = NSLocalizedString(feedProgramText, comment: "")
         
         if lngId == 1{
-            feedProgramTextLebl.text = "Feed Program *"
+            feedProgramTextLebl.text = feedProgramText
         } else if lngId == 3 {
             feedProgramTextLebl.text = "Programme alimentaire *"
         } else if lngId == 5 {
@@ -441,34 +442,38 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         }
     }
     
+    fileprivate func unlinkedSessionValidations() {
+        if (trimmedString == "" ||  lblAge.text == ""){
+            
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMessage, comment: ""))
+            
+            if trimmedString == ""{
+                farmNameTextField.layer.borderColor = UIColor.red.cgColor
+                
+            } else {
+                farmNameTextField.layer.borderColor = UIColor.black.cgColor
+            }
+            ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: .normal)
+            
+            if lblAge.text != ""  {
+                ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: .normal)
+            }
+        } else {
+            
+            feedProgramDisplayLabel.text = ""
+            self.insertdata()
+        }
+    }
+    
     @IBAction func addMoreAction(sender: AnyObject) {
         
         trimmedString = farmNameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
             
-            if (trimmedString == "" ||  lblAge.text == ""){
-                
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
-                
-                if trimmedString == ""{
-                    farmNameTextField.layer.borderColor = UIColor.red.cgColor
-                    
-                } else {
-                    farmNameTextField.layer.borderColor = UIColor.black.cgColor
-                }
-                ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: .normal)
-                
-                if lblAge.text != ""  {
-                    ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: .normal)
-                }
-            } else {
-                
-                feedProgramDisplayLabel.text = ""
-                self.insertdata()
-            }
+            unlinkedSessionValidations()
         }
         else  if ( trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  lblAge.text == "" ){
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMessage, comment: ""))
             
             if trimmedString == ""{
                 farmNameTextField.layer.borderColor = UIColor.red.cgColor
@@ -537,11 +542,11 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         }
         if farmNameTextField.text != "" || feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblAge.text != "" {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
         }
         else if captureNecropsy.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please add farm & bird details.", comment:""))
         }
         else{
             
@@ -597,6 +602,18 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     var managedObjectContext = (UIApplication.shared.delegate
                                 as! AppDelegate).managedObjectContext
     
+    fileprivate func saveUnlinkedStep1Data() {
+        CoreDataHandler().updateFinalizeDataWithNec( self.necId as NSNumber, finalizeNec: 1)
+        self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(self.necId as NSNumber) as! [NSManagedObject]
+        if  self.captureNecropsy.count == 0{
+            
+            if UserDefaults.standard.bool(forKey:"Unlinked") == true{
+                self.saveDataforposting()
+            }
+        }
+        saveStep1Data()
+    }
+    
     func insertdata()  {
         farmNameTextField.layer.borderColor = UIColor.black.cgColor
         
@@ -647,15 +664,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             }
         }
         else{
-            CoreDataHandler().updateFinalizeDataWithNec( self.necId as NSNumber, finalizeNec: 1)
-            self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(self.necId as NSNumber) as! [NSManagedObject]
-            if  self.captureNecropsy.count == 0{
-                
-                if UserDefaults.standard.bool(forKey:"Unlinked") == true{
-                    self.saveDataforposting()
-                }
-            }
-            saveStep1Data()
+            saveUnlinkedStep1Data()
         }
     }
     
@@ -790,6 +799,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         return timeStampString
     }
     
+    
     @objc func ClickDeleteBtton(_ sender: UIButton){
         let person = captureNecropsy[sender.tag]
         let indexpath = NSIndexPath(row:sender.tag, section: 0)
@@ -819,7 +829,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             strMsgforDelete = NSLocalizedString("Are you sure you want to delete this farm?", comment: "")
         }
         
-        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString(strMsgforDelete, comment: ""), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString(strMsgforDelete, comment: ""), preferredStyle: .alert)
         let action1 = UIAlertAction(title:NSLocalizedString("Yes", comment: ""), style: .default) { (action) in
             CoreDataHandler().deleteDataWithPostingIdStep1dataWithfarmName(necId as NSNumber, farmName: farmArrayWithoutAge, { (success) in
                 if success == true{
@@ -832,27 +842,14 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                                     CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necId as NSNumber, farmName: farmArrayWithoutAge, { (success) in
                                         if success == true{
                                             
-                                            self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(necId as NSNumber) as! [NSManagedObject]
-                                            
-                                            if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
-                                                if  self.captureNecropsy.count == 0{
-                                                    CoreDataHandler().deleteDataWithPostingId(necId as NSNumber)
-                                                }
-                                                
-                                            }
-                                            else if self.captureNecropsy.count == 0{
-                                                CoreDataHandler().updateFinalizeDataWithNec( necId as NSNumber, finalizeNec: 0)
-                                            }
-                                            
-                                            self.appDelegate.saveContext()
-                                            self.tableView.reloadData()
+                                            self.deleteSessionWithPostingId(necropsyId:necId as NSNumber)
                                         }
                                     })
                                 }})
                         }})
                 }})
         }
-        let action2 = UIAlertAction(title:NSLocalizedString("No", comment: "") , style: .cancel) { (action) in
+        let action2 = UIAlertAction(title:NSLocalizedString(Constants.noStr, comment: "") , style: .cancel) { (action) in
             cell?.backgroundColor = UIColor.clear
         }
         
@@ -862,6 +859,22 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         self.present(alertController, animated: true, completion: nil)
     }
     
+    
+    fileprivate func deleteSessionWithPostingId(necropsyId:NSNumber) {
+        
+        self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(necropsyId as NSNumber) as! [NSManagedObject]
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
+            if  self.captureNecropsy.count == 0{
+                CoreDataHandler().deleteDataWithPostingId(necropsyId as NSNumber)
+            }
+        }
+        else if self.captureNecropsy.count == 0{
+            CoreDataHandler().updateFinalizeDataWithNec(necropsyId as NSNumber, finalizeNec: 0)
+        }
+        
+        self.appDelegate.saveContext()
+        self.tableView.reloadData()
+    }
     
     
     
@@ -1091,7 +1104,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         
         if houseNoTxtFld.text == ""
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMessage, comment: ""))
             houseNoTxtFld.layer.borderColor = UIColor.red.cgColor
             return
             
@@ -1105,7 +1118,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         if strFarmNameFeedId == ""{
             if strFeddUpdate == "" {
                 feedButton.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMessage, comment: ""))
             }
         }
         if strFeddCheck == "" && strFeddUpdate == "" && strFarmNameFeedId == ""{
@@ -1117,13 +1130,13 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 nameText.layer.borderColor = UIColor.black.cgColor
             }
             feedButton.layer.borderColor = UIColor.red.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMessage, comment: ""))
         }
         
         else {
             
             if trimmedString == "" {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMessage, comment: ""))
                 nameText.layer.borderColor = UIColor.red.cgColor
                 feedButton.layer.borderColor = UIColor.black.cgColor
             }
@@ -1212,19 +1225,19 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 return cell
             }
         }
-        else if tableView == autoSerchTable {
-            
-            do {
-                let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell")!
-                if indexPath.row  < autocompleteUrls.count
-                {
-                    if let value = autocompleteUrls.object(at:indexPath.row) as? String{
-                        cell.textLabel?.text = value
-                    }
-                }
-                return cell
-            }
-        }
+//        else if tableView == autoSerchTable {
+//            
+//            do {
+//                let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+//                if indexPath.row  < autocompleteUrls.count
+//                {
+//                    if let value = autocompleteUrls.object(at:indexPath.row) as? String{
+//                        cell.textLabel?.text = value
+//                    }
+//                }
+//                return cell
+//            }
+//        }
         
         else{
             
@@ -1261,7 +1274,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             }
             let checkVal  = person.value(forKey: "sick") as! Int
             if checkVal == 0 {
-                Cell.sickLabel.text = NSLocalizedString("No", comment: "")
+                Cell.sickLabel.text = NSLocalizedString(Constants.noStr, comment: "")
             } else {
                 Cell.sickLabel.text = NSLocalizedString("Yes", comment: "")
             }
@@ -1358,11 +1371,11 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         }
         
         else{
-            
+            let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
             switch textField.tag {
                 
             case 40 :
-                let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
+               
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
                 
@@ -1373,7 +1386,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 return string == numberFiltered && newString.length <= maxLength
                 
             case 18 :
-                let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
+              
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
                 
@@ -1384,7 +1397,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 return string == numberFiltered && newString.length <= maxLength
                 
             case 11 :
-                let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
+                
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
                 let maxLength = 6
@@ -1460,7 +1473,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             if editfeed == "yes"
             {
                 if let value = AgeOp[row] as? String {
-                    editfeed = "no"
+                    editfeed = Constants.noStr
                     return ageButton.setTitle("\(value)", for: .normal)
                     
                     

@@ -678,11 +678,11 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     
     
     func showAlert(){
-        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel) {
             UIAlertAction in
         }
-        let okAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default) {
+        let okAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default) {
             UIAlertAction in
             CoreDataHandlerTurkey().deleteDataWithPostingIdTurkey(self.postingId as NSNumber)
             CoreDataHandlerTurkey().deletefieldVACDataWithPostingIdTurkey(self.postingId as NSNumber)
@@ -723,7 +723,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         }
         else {
             if checkComplexNameandDate(lblDate.text!, complexName: lblComplex.text!) == true {
-                let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: "Session for this date & complex already exists. Please select another date or complex.", preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: "Session for this date & complex already exists. Please select another date or complex.", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
@@ -1182,7 +1182,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 
                 if checkComplexNameandDate(lblDate.text!, complexName: lblComplex.text!) == true {
                     
-                    let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: "Session for this date & complex already exists. Please select another date or complex.", preferredStyle: .alert)
+                    let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: "Session for this date & complex already exists. Please select another date or complex.", preferredStyle: .alert)
                     let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                         UIAlertAction in
                         self.lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
@@ -1242,7 +1242,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 self.ssologoutMethod()
                 CoreDataHandlerTurkey().deleteAllDataTurkey("CustmerTurkey")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
@@ -1354,7 +1354,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 str =  "farm(s) are not connected. Please navigate to Feed Program and connect the farms with the Feed Program."
             }
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
             
             return
         }
@@ -1371,9 +1371,9 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         if feedProgramArray.count == 0{
             
             if lblVeteration.text != ""{
-                let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel)
-                let okAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default) {
+                let okAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.navigationController?.popViewController(animated: true)
                     return
@@ -1411,7 +1411,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                     else{
                         str =  "farm(s) are not connected. Please navigate to Feed Program and connect the farms with the Feed Program."
                     }
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
                     return
                 }
             }
@@ -1427,7 +1427,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 self.navigationController?.popViewController(animated: true)
             }
             else {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
             }
         }
     }
@@ -1458,7 +1458,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 btnDate.layer.borderColor = UIColor.black.cgColor
             }
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
         }  else  {
             CoreDataHandlerTurkey().updatePostingSessionForNextButtonTurkey(postingId as NSNumber,antobotic: "", birdBreesId:breedIdDb, birdbreedName: "", birdBreedType: "", birdSize:"", birdSizeId: birdSizeIdDb, cocciProgramId: cocciProgramIdDb, cociiProgramName: lblCocieeProgram.text!, complexId: complexIdDb, complexName: lblComplex.text!, convential:"", customerId: custmetIdDb, customerName:lblCustmer.text!, customerRepId: cusmerRepIdDb, customerRepName: CustRepTextField.text!, imperial: "", metric: "", notes: notesTextView.text, salesRepId: salesRepIdDb, salesRepName: lblSelesRep.text!, sessiondate:  lblDate.text!, sessionTypeId: sessionTypeIdDb, sessionTypeName: lblSessionType.text!, vetanatrionName: lblVeteration.text!, veterinarianId:veterinartionIdDb , loginSessionId: 1,mail: "",female: "",finilize:0,isSync : true,timeStamp:lblTimeStamp,lngId:lngId as NSNumber,birdType:"",birdTypeId:2 , avgAge: avgAgeTxtFld.text! , avgWeight: avgWeightTxtFld.text! , outTime: outTimeTxtFld.text! , FCR: fcrTxtFld.text! , Livability: txtFldLivability.text! , mortality: txtFldMortality.text!)
@@ -1596,7 +1596,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                     btnDate.layer.borderColor = UIColor.black.cgColor
                 }
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
         } else {
             let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
@@ -1660,7 +1660,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         view.endEditing(true)
         if lblCustmer.text == NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a customer first.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a customer first.", comment: ""))
         } else {
             
             btnTag = 3
@@ -1725,7 +1725,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 droperTableView.reloadData()
                 
             } else {
-                let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: "Session for this date & complex already exists. Please select another date or complex.", preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: "Session for this date & complex already exists. Please select another date or complex.", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.lblComplex.text = ""
@@ -1739,7 +1739,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             view.endEditing(true)
             if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
                 
             } else {
                 
@@ -1797,7 +1797,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             lblComplex.text! == ""
             || lblVeteration.text! == "" || lblVeteration.text! == "" || lblDate.text! == "" || lblDate.text == "- Seleccione fecha -") {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             btnDate.layer.borderColor = UIColor.red.cgColor
             btnCustmer.layer.borderColor = UIColor.red.cgColor
             btnVetration.layer.borderColor = UIColor.red.cgColor
@@ -2032,33 +2032,33 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         Helper.dismissGlobalHUD(self.view)
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         } else {
             
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
                 
             } else if lngId == 3 {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
                 
             }
         }
     }
     func failWithErrorInternal() {
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
     }
     
     func didFinishApi(){
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     func failWithInternetConnection() {
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
     // MARK: - TEXTVIEW DELEGATES

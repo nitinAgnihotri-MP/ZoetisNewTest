@@ -32,7 +32,7 @@ class summaryReport: UIView {
         reportLbl.text = NSLocalizedString("View summary report ?", comment: "")
         summaryLbl.text = NSLocalizedString("Summary Report", comment: "")
         yesBtn.setTitle(NSLocalizedString("Yes", comment: ""), for: .normal)
-        noBtn.setTitle(NSLocalizedString("No", comment: ""), for: .normal)
+        noBtn.setTitle(NSLocalizedString(Constants.noStr, comment: ""), for: .normal)
         bgView.layer.cornerRadius = 7
         
     }

@@ -81,13 +81,21 @@ protocol infoLinkkTurkey: class {
         return self.infoImages.count
     }
     
+    fileprivate func setIndexLblText(_ indexPath: IndexPath, _ cell: TurkeyInfoCollectionViewCell) {
+        if indexPath.row == 0{
+            cell.indexLbl.text = "1"
+        }
+        else if indexPath.row == 1{
+            cell.indexLbl.text = "0"
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = infoCollectionView.dequeueReusableCell(withReuseIdentifier: "TurkeyInfoCollectionViewCell", for: indexPath) as! TurkeyInfoCollectionViewCell
         let image = infoImages[indexPath.row] as! UIImage
         if obsData.obsID == 1960 && indexPath.row == 0 {
             cell.birdImgView.image = image
-//            cell.birdImgView.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.obsDesc.frame.origin.y)
         } else {
             cell.infoImageView.image = image
         }
@@ -105,34 +113,19 @@ protocol infoLinkkTurkey: class {
         
         if environmentIs.contains("stageapi") {
             if [1955, 1958, 1956, 1952 , 1960].contains(obsData.obsID) {
-                if indexPath.row == 0{
-                    cell.indexLbl.text = "1"
-                }
-                else if indexPath.row == 1{
-                    cell.indexLbl.text = "0"
-                }
+                setIndexLblText(indexPath, cell)
             }
         }
         else if environmentIs.contains("devapi") {
             if [1870, 1874, 1875, 1873 , 1878 ].contains(obsData.obsID) {
-                if indexPath.row == 0{
-                    cell.indexLbl.text = "1"
-                }
-                else if indexPath.row == 1{
-                    cell.indexLbl.text = "0"
-                }
+                setIndexLblText(indexPath, cell)
             }
             
         }
         else
         {
             if [1955, 2036, 1956, 1952].contains(obsData.obsID) {
-                if indexPath.row == 0{
-                    cell.indexLbl.text = "1"
-                }
-                else if indexPath.row == 1{
-                    cell.indexLbl.text = "0"
-                }
+                setIndexLblText(indexPath, cell)
             }
         }
     

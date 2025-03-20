@@ -182,7 +182,7 @@ class PEAssessmentsDAO{
         let dateFormatterObj = DateFormatter()
         dateFormatterObj.timeZone = Calendar.current.timeZone
         dateFormatterObj.locale = Calendar.current.locale
-        dateFormatterObj.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatterObj.dateFormat =  Constants.yyyyMMddHHmmss
         moObj.assessmentStatus = dtoObj.statusName
         
     }
@@ -221,7 +221,7 @@ class PEAssessmentsDAO{
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = Calendar.current.timeZone
         dateFormatter.locale = Calendar.current.locale
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss
 
         moObj.scheduledDate = convertDate(dtoObj.scheduleDate, using: dateFormatter)
         moObj.updatedDate = convertDate(dtoObj.updatedDate?.components(separatedBy: ".").first, using: dateFormatter)
@@ -282,7 +282,7 @@ class PEAssessmentsDAO{
 //        let dateFormatterObj = DateFormatter()
 //        dateFormatterObj.timeZone = Calendar.current.timeZone
 //        dateFormatterObj.locale = Calendar.current.locale
-//        dateFormatterObj.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss"
+//        dateFormatterObj.dateFormat =  Constants.yyyyMMddHHmmss
 //        if let scheduledDate = dtoObj.scheduleDate{
 //            moObj.scheduledDate = dateFormatterObj.date(from: scheduledDate)
 //        }

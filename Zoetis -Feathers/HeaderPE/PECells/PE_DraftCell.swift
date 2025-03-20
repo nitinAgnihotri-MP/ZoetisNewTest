@@ -115,7 +115,7 @@ class PE_DraftCell: UITableViewCell {
             rejectIndicatorBtn.isHidden = !(peNewAssessment.isPERejected ?? false)
             
             extendedRejectedComment.isHidden = true
-            extendedMicroLbl.text = peNewAssessment.sanitationValue == true ? "Yes" : "No"
+            extendedMicroLbl.text = peNewAssessment.sanitationValue == true ? "Yes" : Constants.noStr
             extendedMicroStatus.text = peNewAssessment.sanitationValue == true ? inProcessStr : "N/A"
         } else {
             extendedRejectedComment.isHidden = false
@@ -141,7 +141,7 @@ class PE_DraftCell: UITableViewCell {
                 extendedRejectedComment.isHidden = false
             } else {
                if peNewAssessment.sanitationValue == false {
-                   extendedMicroLbl.text = "No"
+                   extendedMicroLbl.text = Constants.noStr
                    extendedMicroStatus.text = "N/A"
                    extendedRejectedComment.isHidden = true
                } else {

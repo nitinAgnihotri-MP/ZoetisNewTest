@@ -118,7 +118,7 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
         
         if(complexNameLbl.text == "") || (selectFromLbl.text == "" ){
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter complex.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter complex.", comment: ""))
         } else {
             let newString = complexNameLbl.text
             if newString!.isEmpty == true{
@@ -135,7 +135,7 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
                         self.strtNecrPop()
                     } else {
                         
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Complex doesn't exist.")
+                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Complex doesn't exist.")
                     }
                 } else {
                     self.tableView.alpha = 1
@@ -155,13 +155,13 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
                         self.strtNecrPop()
                     } else  {
                         
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Complex doesn't exist.")
+                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Complex doesn't exist.")
                     }
                 } else {
                     self.tableView.alpha = 1
                     let necData = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdTurkeyWithId(sessiondate: selectFromLbl.text!, newString: newString!)
                     if necData.count>1{
-                        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: "Session for this date & complex already exist. Please select another date or complex.", preferredStyle: .alert)
+                        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: "Session for this date & complex already exist. Please select another date or complex.", preferredStyle: .alert)
                         let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                             UIAlertAction in
                             self.complexNameLbl.text = ""
@@ -209,7 +209,7 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
     func startNecropsyBtnFunc (){
         UserDefaults.standard.removeObject(forKey: "count")
         if(complexNameLbl.text == "") || (selectFromLbl.text == "" ){
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select coplex & date.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select coplex & date.", comment: ""))
         } else {
             
             let navigateToAnother = self.storyboard?.instantiateViewController(withIdentifier: "Step1Turkey") as? CaptureNecropsyStep1Turkey
@@ -470,7 +470,7 @@ extension StartNecropsyVcTurky: UITableViewDataSource,UITableViewDelegate {
             let cutstId = cuatomerep.customerId as! Int
             
             if checkComplexNameandDate(date: selectFromLbl.text!, complexName: complexNameLbl.text!) == true {
-                let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: "Session for this date & complex already exists. Please select another date or complex.", preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: "Session for this date & complex already exists. Please select another date or complex.", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     

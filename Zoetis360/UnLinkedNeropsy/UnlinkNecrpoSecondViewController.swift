@@ -43,6 +43,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
     @IBOutlet weak var lblDate: UILabel!
     @IBOutlet weak var tblSession: UITableView!
     @IBOutlet weak var searchWidComplexName: UITextField!
+    let sessionExistedMsg = "Session for this date & complex already exist. Please select another date or complex."
     
     // MARK: - VIEW LIFE CYCLE
     override func viewDidLoad() {
@@ -158,11 +159,11 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
             }
             else
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }
         else{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
         }
         
     }
@@ -255,7 +256,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
             let cutstId = cuatomerep.customerId as! Int
             
             if checkComplexNameandDate(date: strDateEn, complexName: searchWidComplexName.text!) == true {
-                let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message:NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: "") , preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message:NSLocalizedString(sessionExistedMsg, comment: "") , preferredStyle: .alert)
                 let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     
@@ -292,7 +293,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
                 self.navigationController?.pushViewController(navigateToAnother!, animated: false)
             }
             else{
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in English language Please logout and select English as a language to edit /proceed this session.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in English language Please logout and select English as a language to edit /proceed this session.", comment: ""))
             }
         }
     }
@@ -354,10 +355,33 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
         return isComplexandDateExist
     }
     // MARK: 🟠 Search Button Action
+    fileprivate func checkExistedComplex(_ newString: String?) {
+        if checkComplexName(complexName: searchWidComplexName.text!) == true {
+            
+            let necData = CoreDataHandler().FetchNecropsystep1neccIdAllwithId(sessiondate: strDateEn, newstring: newString!)
+            if necData.count>1{
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message:NSLocalizedString(sessionExistedMsg, comment: "") , preferredStyle: .alert)
+                let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
+                    UIAlertAction in
+                    self.searchWidComplexName.text = ""
+                }
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+            else{
+                self.CallPopoupStartNec()
+            }
+        }
+        else {
+            
+            Helper.showAlertMessage(self,titleStr: NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString("Complex doesn't exist.", comment: ""))
+        }
+    }
+    
     @IBAction func serchButtonAction(sender: AnyObject) {
         
         if(searchWidComplexName.text == "") || (lblDate.text == "" ){
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter complex.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter complex.", comment: ""))
         }
         else {
             
@@ -372,26 +396,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
                 
                 if existingArray.count == 0 {
                     
-                    if checkComplexName(complexName: searchWidComplexName.text!) == true {
-                        
-                        let necData = CoreDataHandler().FetchNecropsystep1neccIdAllwithId(sessiondate: strDateEn, newstring: newString!)
-                        if necData.count>1{
-                            let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message:NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: "") , preferredStyle: .alert)
-                            let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
-                                UIAlertAction in
-                                self.searchWidComplexName.text = ""
-                            }
-                            alertController.addAction(okAction)
-                            self.present(alertController, animated: true, completion: nil)
-                        }
-                        else{
-                            self.CallPopoupStartNec()
-                        }
-                    }
-                    else {
-                        
-                        Helper.showAlertMessage(self,titleStr: NSLocalizedString("Alert", comment: "") , messageStr: NSLocalizedString("Complex doesn't exist.", comment: ""))
-                    }
+                    checkExistedComplex(newString)
                 }
                 else {
                     self.tblSession.alpha = 1
@@ -418,7 +423,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
                         
                         let necData = CoreDataHandler().FetchNecropsystep1neccIdAllwithId(sessiondate: strDateEn, newstring: newString!)
                         if necData.count>1{
-                            let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message:NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: "") , preferredStyle: .alert)
+                            let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message:NSLocalizedString(sessionExistedMsg, comment: "") , preferredStyle: .alert)
                             let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                                 UIAlertAction in
                                 self.searchWidComplexName.text = ""
@@ -432,14 +437,14 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
                         
                     }  else  {
                         
-                        Helper.showAlertMessage(self,titleStr: NSLocalizedString("Alert", comment: "") , messageStr:  NSLocalizedString( "Complex doesn't exist.", comment: "") )
+                        Helper.showAlertMessage(self,titleStr: NSLocalizedString(Constants.alertStr, comment: "") , messageStr:  NSLocalizedString( "Complex doesn't exist.", comment: "") )
                     }
                 }
                 else{
                     self.tblSession.alpha = 1
                     let necData = CoreDataHandler().FetchNecropsystep1neccIdAllwithId(sessiondate: strDateEn, newstring: newString!)
                     if necData.count>1{
-                        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message:NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: "") , preferredStyle: .alert)
+                        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message:NSLocalizedString(sessionExistedMsg, comment: "") , preferredStyle: .alert)
                         let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                             UIAlertAction in
                             self.searchWidComplexName.text = ""
@@ -619,7 +624,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
     func startNecropsyBtnFunc (){
         UserDefaults.standard.removeObject(forKey: "count")
         if(searchWidComplexName.text == "") || (lblDate.text == "" ){
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select coplex & date.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select coplex & date.", comment: ""))
         }
         else{
             
@@ -684,10 +689,10 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
         self.printSyncLblCount()
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.", comment: "") + "(NA)")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.", comment: "") + "(NA)")
         }
         else{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.", comment: "")  + "\n(\(statusCode))")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.", comment: "")  + "\n(\(statusCode))")
         }
     }
     
@@ -695,7 +700,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
     {
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection Please try again!", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection Please try again!", comment: ""))
     }
     
     // MARK: 🟠 Did Finish API
@@ -703,14 +708,14 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     
     func failWithInternetConnection()
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
     // MARK: 🟠 Print Sync Count.

@@ -61,16 +61,15 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
         tabelview_UserList.reloadData()
         if array_List.count != 0 {
             for _ in 0 ..< array_List.count {
-                selecteditems.add(NSLocalizedString("No", comment: ""))
+                selecteditems.add(NSLocalizedString(Constants.noStr, comment: ""))
             }
         }
         tabelview_UserList.separatorStyle = UITableViewCell.SeparatorStyle.none
     }
-    
-    
+
     func showView(_ view1: UIView, frame1: CGRect) -> UIView {
         for i in 0 ..< selecteditems.count {
-            selecteditems.replaceObject(at: i, with: NSLocalizedString("No", comment: ""))
+            selecteditems.replaceObject(at: i, with: NSLocalizedString(Constants.noStr, comment: ""))
         }
         
         tabelview_UserList.reloadData()
@@ -82,12 +81,10 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
             self.alpha = 1
             
         }, completion: { finished in
-            
+            appDelegateObj.testFuntion()
         })
         return self
     }
-    
-    
     func removeView(_ view1: UIView) -> UIView {
         let transitionOptions = UIView.AnimationOptions.transitionCurlUp
         UIView.transition(with: self, duration: 0.75, options: transitionOptions, animations: {
@@ -108,7 +105,7 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
     @IBAction func Done_btnAction(_ sender: AnyObject) {
         let temparray: NSMutableArray! = []
         for i in 0 ..< selecteditems.count {
-            if !(selecteditems[i] as! String == NSLocalizedString("No", comment: "")) {
+            if !(selecteditems[i] as! String == NSLocalizedString(Constants.noStr, comment: "")) {
                 temparray.add(selecteditems[i] as! String)
             }
         }
@@ -149,6 +146,22 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
         return cell
     }
     
+    fileprivate func logoutTurkeyModuleAfterDataSync() {
+        objApiSyncTurkey.delegeteSyncApiTurkey = self
+        
+        if self.allSessionArrTurkey().count > 0 {
+            if WebClass.sharedInstance.connected() == true{
+                Helper.showGlobalProgressHUDWithTitleWithoutHudBack(self, title: NSLocalizedString("Data syncing...", comment: ""))
+                self.callSyncApiTurkey()
+            } else {
+                self.logoutDelegate?.leftController(self, didSelectTableView: tabelview_UserList ,indexValue:str)
+            }
+        } else {
+            
+            self.logoutDelegate?.leftController(self, didSelectTableView: tabelview_UserList ,indexValue:str)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         str = array_List[indexPath.row] as! String
@@ -170,19 +183,7 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
                 self.logoutDelegate?.leftController(self, didSelectTableView: tabelview_UserList ,indexValue:str)
             }
         }else if UserDefaults.standard.bool(forKey: "turkeySyncStatus") == true {
-            objApiSyncTurkey.delegeteSyncApiTurkey = self
-            
-            if self.allSessionArrTurkey().count > 0 {
-                if WebClass.sharedInstance.connected() == true{
-                    Helper.showGlobalProgressHUDWithTitleWithoutHudBack(self, title: NSLocalizedString("Data syncing...", comment: ""))
-                    self.callSyncApiTurkey()
-                } else {
-                    self.logoutDelegate?.leftController(self, didSelectTableView: tabelview_UserList ,indexValue:str)
-                }
-            } else {
-                
-                self.logoutDelegate?.leftController(self, didSelectTableView: tabelview_UserList ,indexValue:str)
-            }
+            logoutTurkeyModuleAfterDataSync()
             
         }
     }
@@ -262,18 +263,18 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
         self.printSyncLblCount()
         if statusCode == 0{
             showAlertIfNeeded(message: NSLocalizedString("There are problem in data syncing please try again.(NA)", comment: ""))
-          //  Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again.(NA)")
+          //  Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again.(NA)")
         } else {
             
             if lngId == 1 {
                 showAlertIfNeeded(message: NSLocalizedString("There are problem in data syncing please try again. \n(\(statusCode))", comment: ""))
                 
-              //  Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+              //  Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
                 
                 
             } else if lngId == 3 {
                 showAlertIfNeeded(message: NSLocalizedString("Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))", comment: ""))
-              //  Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+              //  Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
                 
             }
         }
@@ -281,7 +282,7 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
     func showAlertIfNeeded(message: String) {
         if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootViewController = scene.windows.first(where: { $0.isKeyWindow })?.rootViewController {
-            let title = NSLocalizedString("Alert", comment: "")
+            let title = NSLocalizedString(Constants.alertStr, comment: "")
             
             Helper.showAlertMessage(rootViewController, titleStr: title, messageStr: message)
         }
@@ -291,7 +292,7 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
         Helper.dismissGlobalHUD(self)
         self.printSyncLblCount()
         showAlertIfNeeded(message: NSLocalizedString("No internet connection. Please try again!", comment: ""))
-     //   Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
+     //   Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No internet connection. Please try again!", comment: ""))
         
     }
     
@@ -303,7 +304,7 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
     
     func failWithInternetConnection() {
         showAlertIfNeeded(message: NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
-       // Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
+       // Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
     }
     func printSyncLblCount() {
         appDelegateObj.testFuntion()

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="ipad10_9rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,7 +19,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DtX-qP-mg1">
-                        <rect key="frame" x="845" y="42.5" width="35" height="35"/>
+                        <rect key="frame" x="849" y="42.5" width="35" height="35"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="35" id="8Zh-e4-i88"/>
                             <constraint firstAttribute="width" constant="35" id="9TP-9K-ki9"/>
@@ -30,7 +30,7 @@
                         </connections>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vnj-93-gtm">
-                        <rect key="frame" x="794" y="42.5" width="35" height="35"/>
+                        <rect key="frame" x="798" y="42.5" width="35" height="35"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="35" id="LdS-Fh-a9P"/>
                             <constraint firstAttribute="width" constant="35" id="ZgL-fb-fG2"/>
@@ -41,7 +41,7 @@
                         </connections>
                     </button>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tx9-ob-d47">
-                        <rect key="frame" x="822" y="27" width="20" height="20"/>
+                        <rect key="frame" x="826" y="27" width="20" height="20"/>
                         <color key="backgroundColor" systemColor="systemRedColor"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="20" id="pN7-0T-jyg"/>
@@ -61,7 +61,7 @@
                         </connections>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="THL-tc-aCP">
-                        <rect key="frame" x="743" y="42.5" width="35" height="35"/>
+                        <rect key="frame" x="747" y="42.5" width="35" height="35"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="35" id="Frk-Jy-nbH"/>
                             <constraint firstAttribute="height" constant="35" id="q3Y-ct-Ugd"/>
@@ -72,7 +72,7 @@
                         </connections>
                     </button>
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3wM-gm-WmH">
-                        <rect key="frame" x="678" y="44.5" width="51" height="31"/>
+                        <rect key="frame" x="682" y="44.5" width="51" height="31"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="31" id="C71-AC-63p"/>
@@ -83,13 +83,13 @@
                         </connections>
                     </switch>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refigirator used only for vaccine and lab suplies" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="296-OF-Kpk">
-                        <rect key="frame" x="20" y="10" width="578" height="100"/>
+                        <rect key="frame" x="20" y="10" width="582" height="100"/>
                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NA" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5la-gf-idf">
-                        <rect key="frame" x="643" y="49.5" width="30" height="21"/>
+                        <rect key="frame" x="647" y="49.5" width="30" height="21"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="F72-Pu-aZA"/>
                         </constraints>
@@ -98,7 +98,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="riE-2V-txF">
-                        <rect key="frame" x="618" y="50" width="20" height="20"/>
+                        <rect key="frame" x="622" y="50" width="20" height="20"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="20" id="8JP-bD-v21"/>
                             <constraint firstAttribute="height" constant="20" id="Iwn-KL-LKR"/>

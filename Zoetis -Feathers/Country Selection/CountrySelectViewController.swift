@@ -120,7 +120,7 @@ class CountrySelectViewController: BaseViewController , UITableViewDelegate , UI
                     for countries in dataArray {
                         var countryName = countries.1
                         print(countryName)
-                        let country = countryName["CountryName"]
+                        let country = countryName[Constants.countryNamStr]
                         print(country)
                         let countryIds = countryName["CountryId"]
                         print(countryIds)
@@ -414,7 +414,7 @@ class CountrySelectViewController: BaseViewController , UITableViewDelegate , UI
     
     func convertDateFormater(_ date: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss
         // New addition for below 2 line
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC")
         dateFormatter.locale = Locale(identifier: "your_loc_id")

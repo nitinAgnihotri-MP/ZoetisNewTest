@@ -620,7 +620,7 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
                 self.navigationController?.popViewController(animated: true)
             }
             else {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter the vaccination program.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter the vaccination program.", comment: ""))
             }
         }  else {
             if isClickOnAnyField == true
@@ -784,7 +784,7 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
     
     func alertShow()  {
         
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter strain.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter strain.", comment: ""))
     }
     
     func allSessionArr() ->NSMutableArray{

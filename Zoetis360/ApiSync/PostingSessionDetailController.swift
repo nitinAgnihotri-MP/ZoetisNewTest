@@ -533,11 +533,11 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 self.callSyncApiPostingId(Pid: postingId)
             }
             else {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }
         else{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
         }
     }
     // MARK: 🟠 - Sync to device Button Action
@@ -553,7 +553,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 self.pullFromWeb()
                 return
             }
-            let CancelAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default)
+            let CancelAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default)
             alertController.addAction(CancelAction)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
@@ -565,7 +565,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 self.pullFromWeb()
                 return
             }
-            let CancelAction = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: UIAlertAction.Style.default)
+            let CancelAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default)
             alertController.addAction(CancelAction)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
@@ -709,12 +709,12 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             }
             else
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }
         
         else{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
         }
         
     }
@@ -727,17 +727,17 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         self.printSyncLblCount()
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
                 
             } else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
                 
             } else if lngId == 4 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
             }
         }
     }
@@ -746,14 +746,14 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     {
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr: NSLocalizedString("Server error please try again .", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString("Server error please try again .", comment: ""))
     }
     // MARK: 🟠 - Did Finish API
     func didFinishApi()
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
         self.printSyncLblCount()
     }
     // MARK: 🟠 - Fail With Internet Connection
@@ -761,7 +761,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     // MARK: 🟠 - get Sync Count
     func printSyncLblCount()
@@ -1061,7 +1061,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         cell?.backgroundColor = UIColor.gray
         if farmArray.count == 1{
             
-            let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("You can not delete all farms. One farm is mandatory for this session.", comment: ""), preferredStyle: .alert)
+            let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("You can not delete all farms. One farm is mandatory for this session.", comment: ""), preferredStyle: .alert)
             let action1 = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { (action) in
                 cell?.backgroundColor = UIColor.clear
             }
@@ -1094,7 +1094,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 strMsgforDelete = NSLocalizedString("Are you sure you want to delete this farm?", comment: "")
             }
             
-            let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString(strMsgforDelete, comment: ""), preferredStyle: .alert)
+            let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString(strMsgforDelete, comment: ""), preferredStyle: .alert)
             let action1 = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: .default) { (action) in
                 
                 CoreDataHandler().deleteDataWithPostingIdStep1dataWithfarmName(necId as NSNumber, farmName: farmArrayWithoutAge!, { (success) in
@@ -1118,7 +1118,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                     }})
             }
             
-            let action2 = UIAlertAction(title: NSLocalizedString("No", comment: ""), style: .cancel) { (action) in
+            let action2 = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: .cancel) { (action) in
                 
                 cell?.backgroundColor = UIColor.clear
             }
@@ -1189,7 +1189,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         
         if houseNoTxtFld.text == ""
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             houseNoTxtFld.layer.borderColor = UIColor.red.cgColor
             return
         }
@@ -1202,7 +1202,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         {
             if strFeddUpdate == "" {
                 feedButton.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             }
         }
         if strFeddCheck == "" && strFeddUpdate == "" && strFarmNameFeedId == ""
@@ -1213,12 +1213,12 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 nameText.layer.borderColor = UIColor.black.cgColor
             }
             feedButton.layer.borderColor = UIColor.red.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
         }
         else
         {
             if trimmedString == "" {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
                 nameText.layer.borderColor = UIColor.red.cgColor
                 feedButton.layer.borderColor = UIColor.black.cgColor
             }
@@ -1254,40 +1254,40 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         Helper.dismissGlobalHUD(self.view)
         
         if statusCode == 0 {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again.(NA))", comment: ""))
         }
         else{
             
             if lngId == 1 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             }
             else if lngId == 3 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
             else if lngId == 4 {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
             }
         }
     }
     func failWithErrorInternalSyncdata(){
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Server error please try again .", comment: "") )
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Server error please try again .", comment: "") )
     }
     func didFinishApiSyncdata(){
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
         self.printSyncLblCount()
     }
     func failWithInternetConnectionSyncdata(){
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         
     }
     // MARK: 🟠 Date Formatter
     func convertDateFormater(_ date: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = Constants.yyyyMMddHHmmss
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC")
         dateFormatter.locale = Locale(identifier: "your_loc_id")
         guard let date = dateFormatter.date(from: date) else {
@@ -1333,12 +1333,12 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 }
                 let jsonResponse = JSON(json)
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error responce from  PostingSessionListBySessionId?DeviceSessionId API is ------ : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "404"{
-                        UserDefaults.standard.set("No", forKey: "Success")
+                        UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                         self.getPostingDataFromServerforVaccination()
                     }
                 }
@@ -1393,13 +1393,13 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from PostingSession/GetVaccinationListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
                     
                     if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-                        UserDefaults.standard.set("No", forKey: "Success")
+                        UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                     }
                 }
                 
@@ -1456,13 +1456,13 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from PostingSession/getFeedListByDeviceSessionID  API : \(errorMsg) (Code: \(statusCode))")
                     
                     if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-                        UserDefaults.standard.set("No", forKey: "Success")
+                        UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                         self!.getCNecStep1Data()
                     }
                 }
@@ -1533,7 +1533,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                                         guard let dict = postDict.dictionaryObject as NSDictionary? else { continue }
 
                                         switch feedCatName {
-                                        case "Coccidiosis Control":
+                                        case Constants.coccidioStr:
                                             coreDataHandler.getDataFromCocoiiControllForSingleData(
                                                 dict, feedId: feedId as NSNumber, postingId: sessionId as NSNumber,
                                                 feedProgramName: feedName, postingIdCocoii: self.postingId, feedDate: feedDate
@@ -1551,7 +1551,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                                                 feedProgramName: feedName, postingIdAlterNative: self.postingId, feedDate: feedDate
                                             )
 
-                                        case "Mycotoxin Binders":
+                                        case Constants.mytoxinStr:
                                             coreDataHandler.getDataFromMyCocotinBinderWithSingleData(
                                                 dict, feedId: feedId as NSNumber, postingId: sessionId as NSNumber,
                                                 feedProgramName: feedName, postingidMycotxin: self.postingId, feedDate: feedDate
@@ -1593,13 +1593,13 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from PostingSession/getFarmListDataByDeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
                     
                     if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-                        UserDefaults.standard.set("No", forKey: "Success")
+                        UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                         self!.getCNecStep1Data()
                     }
                 }
@@ -1617,13 +1617,13 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                     let jsonResponse = JSON(json)
                     // Check for the "errorResult" key and handle errors
                     if let errorResult = jsonResponse["errorResult"].dictionary {
-                        let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                        let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                         let statusCode = errorResult["errorCode"]?.string ?? "Unknown code"
                         
                         print("Error from PostingSession/getFarmListDataByDeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
                         
                         if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-                            UserDefaults.standard.set("No", forKey: "Success")
+                            UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                             self.getPostingDataFromServerforNecorpsy()
                         }
                     }
@@ -1725,7 +1725,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 let statusCode =  response.response?.statusCode
                 
                 if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                    UserDefaults.standard.set("No", forKey: "Success")
+                    UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                     self.getNotesFromServer()
                 }
                 switch response.result{
@@ -1831,13 +1831,13 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let statusCode = errorResult["errorCode"]?.string ?? "Unknown code"
                     
                     print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
                     
                     if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-                        UserDefaults.standard.set("No", forKey: "Success")
+                        UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                         self!.getCNecStep1Data()
                     }
                 }
@@ -1855,13 +1855,13 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                     let jsonResponse = JSON(json)
                     // Check for the "errorResult" key and handle errors
                     if let errorResult = jsonResponse["errorResult"].dictionary {
-                        let errorMsg = errorResult["errorMsg"]?.string ?? "Unknown error"
+                        let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                         let statusCode = errorResult["errorCode"]?.string ?? "Unknown code"
                         
                         print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
                         
                         if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-                            UserDefaults.standard.set("No", forKey: "Success")
+                            UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                             self.getPostingDataFromServerforImage()
                         }
                     }
@@ -2038,7 +2038,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
     
     func alerViewSucees() {
-        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Data sync has been completed.", comment: ""), preferredStyle: UIAlertController.Style.alert) //Replace
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data sync has been completed.", comment: ""), preferredStyle: UIAlertController.Style.alert) //Replace
         let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
             (result : UIAlertAction) -> Void in
             self.navigationController?.popViewController(animated: true)
@@ -2052,7 +2052,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             print(appDelegateObj.testFuntion())
         }
         else{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     

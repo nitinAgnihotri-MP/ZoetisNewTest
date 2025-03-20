@@ -167,9 +167,9 @@ class DraftViewController: BaseViewController {
     
     
     private func showAlert(completionHandler: @escaping (_ yesOrNo: Bool) -> Void){
-        let alert = UIAlertController(title: "Alert", message: "Are you sure you want to delete??", preferredStyle: .alert)
+        let alert = UIAlertController(title: Constants.alertStr, message: "Are you sure you want to delete??", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in    completionHandler(true) }))
-        alert.addAction(UIAlertAction(title: "No", style: .default, handler: { action in    completionHandler(false) }))
+        alert.addAction(UIAlertAction(title: Constants.noStr, style: .default, handler: { action in    completionHandler(false) }))
         self.present(alert, animated: true, completion: nil)
     }
     

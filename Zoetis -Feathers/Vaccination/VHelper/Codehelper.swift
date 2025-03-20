@@ -15,6 +15,7 @@ class  CodeHelper{
     
     private init(){print("Initializer")}
     static let sharedInstance = CodeHelper()
+    let dateStr = "10/08/2017"
     
     func dictKeyExists(dict: Dictionary<String, Any>, key: String) -> Bool{
         if dict.index(forKey: key) != nil{
@@ -28,12 +29,14 @@ class  CodeHelper{
         return UserDefaults.standard.object(forKey: key) != nil
     }
     
-    func prettyPrint(with json: [String: Any]) -> String?{
-        let data = try! JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-        let str = string! as String
-        
-        return str
+    func prettyPrint(with json: [String: Any]) -> String? {
+        if let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+            let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+            let str = string! as String
+            
+            return str
+        }
+        return nil
     }
     
     func convertToBase64(image: UIImage) -> String?{
@@ -61,11 +64,11 @@ class  CodeHelper{
         return image!
     }
     
-    func convertDateFormater(_ date: String, inputFormat:String = "yyyy-MM-dd'T'HH:mm:ss", outputString:String = appDelegateObj.MMddyyyStr) -> String {
+    func convertDateFormater(_ date: String, inputFormat:String = Constants.yyyyMMddHHmmss, outputString:String = appDelegateObj.MMddyyyStr) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = Calendar.current.timeZone
         dateFormatter.locale = Calendar.current.locale
-        dateFormatter.dateFormat = inputFormat//"yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = inputFormat//Constants.yyyyMMddHHmmss
         guard let date = dateFormatter.date(from: date) else {
             return ""
         }
@@ -75,10 +78,10 @@ class  CodeHelper{
         return timeStamp
     }
     
-    func getDateFormatterObj(_ date: String, inputFormat:String = "yyyy-MM-dd'T'HH:mm:ss")-> DateFormatter{
+    func getDateFormatterObj(_ date: String, inputFormat:String = Constants.yyyyMMddHHmmss)-> DateFormatter{
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = inputFormat//"yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.dateFormat = inputFormat//Constants.yyyyMMddHHmmss
         // dateFormatter.timeZone = Calendar.current.timeZone commented this
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC") // added this
         dateFormatter.locale = Calendar.current.locale
@@ -91,14 +94,14 @@ class  CodeHelper{
         formatter.timeZone = Calendar.current.timeZone
         formatter.locale = Calendar.current.locale
         formatter.dateFormat = appDelegateObj.ddMMyyyStr
-        var firstDate = formatter.date(from: "10/08/2017")
-        var secondDate = formatter.date(from: "10/08/2017")
+        var firstDate = formatter.date(from: dateStr)
+        var secondDate = formatter.date(from: dateStr)
         
         firstDate = formatter.date(from: "8/08/2017")
-        secondDate = formatter.date(from: "10/08/2017")
+        secondDate = formatter.date(from: dateStr)
         
         firstDate = formatter.date(from: "18/08/2017")
-        secondDate = formatter.date(from: "10/08/2017")
+        secondDate = formatter.date(from: dateStr)
         
     }
     

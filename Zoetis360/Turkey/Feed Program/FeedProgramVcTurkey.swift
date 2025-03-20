@@ -1450,15 +1450,15 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             selectFarmsLabel.isHidden = true
             
         }
-        coccidiosisControlOutlet.setTitle(NSLocalizedString("Coccidiosis Control", comment: ""), for: .normal)
+        coccidiosisControlOutlet.setTitle(NSLocalizedString(Constants.coccidioStr, comment: ""), for: .normal)
         antiboticControlOutlet.setTitle(NSLocalizedString("Antibiotic", comment: ""), for: .normal)
         alternativeControlOutlet.setTitle(NSLocalizedString("Alternative", comment: ""), for: .normal)
-        myCotoxiinOutlet.setTitle(NSLocalizedString("Mycotoxin Binders", comment: ""), for: .normal)
+        myCotoxiinOutlet.setTitle(NSLocalizedString(Constants.mytoxinStr, comment: ""), for: .normal)
         
-        coccidiosisControlOutlet.setTitle(NSLocalizedString("Coccidiosis Control", comment: ""), for: .selected)
+        coccidiosisControlOutlet.setTitle(NSLocalizedString(Constants.coccidioStr, comment: ""), for: .selected)
         antiboticControlOutlet.setTitle(NSLocalizedString("Antibiotic", comment: ""), for: .selected)
         alternativeControlOutlet.setTitle(NSLocalizedString("Alternative", comment: ""), for: .selected)
-        myCotoxiinOutlet.setTitle(NSLocalizedString("Mycotoxin Binders", comment: ""), for: .selected)
+        myCotoxiinOutlet.setTitle(NSLocalizedString(Constants.mytoxinStr, comment: ""), for: .selected)
         
     }
     
@@ -1483,7 +1483,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         for btn in self.view.subviews {
             if btn.isKind(of: UIButton.self) {
                 let bt = btn as! UIButton
-                if bt.titleLabel?.text == NSLocalizedString("Coccidiosis Control", comment: "") {
+                if bt.titleLabel?.text == NSLocalizedString(Constants.coccidioStr, comment: "") {
                     bt.isSelected = true
                 } else{
                     bt.isSelected = false
@@ -1596,7 +1596,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         for btn in self.view.subviews {
             if btn.isKind(of: UIButton.self) {
                 let bt = btn as! UIButton
-                if bt.titleLabel?.text == NSLocalizedString("Mycotoxin Binders", comment: "") {
+                if bt.titleLabel?.text == NSLocalizedString(Constants.mytoxinStr, comment: "") {
                     bt.isSelected = true
                 } else{
                     bt.isSelected = false
@@ -2142,7 +2142,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         do {
             var error : NSError?
             
-            let jsonData = try! JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted)
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString =  jsonString.trimmingCharacters(in: (NSCharacterSet.whitespaces))
             
@@ -2204,7 +2204,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 UserDefaults.standard.synchronize()
             } else {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
             }
         } else {
             
@@ -2373,11 +2373,11 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                             }
                             else {
                                 
-                                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
                             }
                         } else{
                             
-                            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+                            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
                         }
                         
                     }
@@ -3434,7 +3434,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 self.ssologoutMethod()
                 CoreDataHandlerTurkey().deleteAllDataTurkey("CustmerTurkey")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
@@ -3718,7 +3718,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
         if  feedProgramTextField.text == ""  {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
             
         } else {
             
@@ -3768,7 +3768,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             if addFarmArray.count == 0{
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"You don't have any farm to add in feed.")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"You don't have any farm to add in feed.")
                 
             }  else {
                 
@@ -4045,7 +4045,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         {
             if coccidsisStartrDrinking.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             
@@ -4076,7 +4076,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             if coccidsisGrowerDrinking.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(secoundMolID as NSNumber)
@@ -4106,7 +4106,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         {
             if cocciFinisherDrinkingWater.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(thirdMolID as NSNumber)
@@ -4134,7 +4134,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         {
             if coccidiosisWdDrinking.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(fourthMolID as NSNumber)
@@ -4162,7 +4162,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         {
             if fivthMoleculelBL.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(fifthMolID as NSNumber)
@@ -4191,7 +4191,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         {
             if sixthMoleculeLbl.text == appDelegateObj.selectStr
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select the molecule feed.", comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(sixthMolID as NSNumber)

@@ -39,7 +39,7 @@ final  public class SubmittedCertificationsService{
                     
                     dateFormatterObj.timeZone = Calendar.current.timeZone
                     dateFormatterObj.locale = Calendar.current.locale
-                    dateFormatterObj.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                    dateFormatterObj.dateFormat = Constants.yyyyMMddHHmmss
                     //                    dateFormatterObj.calendar = Calendar(identifier: .gregorian)
                     //                    dateFormatterObj.timeZone = TimeZone(secondsFromGMT: 0)
                     

@@ -114,7 +114,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
             self.setTemperaryObsNameArray()
             self.bgTableView.reloadData()
         } else {
-            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No quicklink is selected. Please go to Settings and select quicklink.", comment: ""))
+            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No quicklink is selected. Please go to Settings and select quicklink.", comment: ""))
         }
     }
     
@@ -274,6 +274,19 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
     
     
     // MARK: 🟠 - Plus Button Action
+    fileprivate func updateObsDataInSkeleta(_ array: ([String]), _ cell: obsFieldCollectionViewCell, _ obsName: Any, _ formNameValue: String, _ noOfBird: Int, _ captureNec: CaptureNecropsyViewData) {
+        if Int(array[0]) != 0
+        {
+            cell.displayLabel.text = String(array[0])
+            CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnStepper(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
+        }
+        else
+        {
+            cell.displayLabel.text = String(array[1])
+            CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnStepper(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[1])!, necId :necId as NSNumber)
+        }
+    }
+    
     @objc func plusButtonClick (_ sender: UIButton){
         guard let cell = sender.superview!.superview as? obsFieldCollectionViewCell else {
             return
@@ -307,16 +320,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
         
         if c.obsPoint == 0
         {
-            if Int(array[0]) != 0
-            {
-                cell.displayLabel.text = String(array[0])
-                CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnStepper(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
-            }
-            else
-            {
-                cell.displayLabel.text = String(array[1])
-                CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnStepper(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[1])!, necId :necId as NSNumber)
-            }
+            updateObsDataInSkeleta(array, cell, obsName, formNameValue, noOfBird, captureNec)
         }
         else
         {
@@ -346,6 +350,40 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
         }
     }
     // MARK: 🟠 Minus Button Action
+    fileprivate func updateObservationDataOnMinusBtnClick(_ c: CaptureNecropsyViewData, _ array: ([String]), _ cell: obsFieldCollectionViewCell, _ obsName: Any, _ formNameValue: String, _ noOfBird: Int, _ captureNec: CaptureNecropsyViewData) {
+        if c.obsPoint == 0
+        {
+        }
+        else
+        {
+            for  i in 0..<array.count
+            {
+                if Int(array[i]) == 1
+                {
+                }
+                else
+                {
+                    if c.obsPoint == 1
+                    {
+                        if Int(array[i]) == 0
+                        {
+                            cell.displayLabel.text = array[0]
+                            CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnStepper(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
+                            break
+                        }
+                    }
+                    let value = Int(array[i])
+                    if ((value! as NSNumber) == c.obsPoint)
+                    {
+                        cell.displayLabel.text = array[i-1]
+                        CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnStepper(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[i-1])!, necId :necId as NSNumber)
+                        break
+                    }
+                }
+            }
+        }
+    }
+    
     @objc func minusButtonClick (_ sender: UIButton){
         
         guard let cell = sender.superview!.superview as? obsFieldCollectionViewCell else {
@@ -378,37 +416,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
         let c = fethchArr.object(at: 0) as! CaptureNecropsyViewData
         
         if fethchArr.count > 0 {
-            if c.obsPoint == 0
-            {
-            }
-            else
-            {
-                for  i in 0..<array.count
-                {
-                    if Int(array[i]) == 1
-                    {
-                    }
-                    else
-                    {
-                        if c.obsPoint == 1
-                        {
-                            if Int(array[i]) == 0
-                            {
-                                cell.displayLabel.text = array[0]
-                                CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnStepper(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
-                                break
-                            }
-                        }
-                        let value = Int(array[i])
-                        if ((value! as NSNumber) == c.obsPoint)
-                        {
-                            cell.displayLabel.text = array[i-1]
-                            CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnStepper(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[i-1])!, necId :necId as NSNumber)
-                            break
-                        }
-                    }
-                }
-            }
+            updateObservationDataOnMinusBtnClick(c, array, cell, obsName, formNameValue, noOfBird, captureNec)
         }
         
         if UserDefaults.standard.bool(forKey: "Unlinked") == true{

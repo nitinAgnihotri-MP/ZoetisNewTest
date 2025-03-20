@@ -15,6 +15,8 @@ final  public class VaccinationCustomersDAO{
     static let sharedInstance = VaccinationCustomersDAO()
     private var shippingInfo = [NSManagedObject]()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
+    let userIdStr = "userId = %@"
+    let fssIdStr = "fssId = %d"
     
     func getVaccineCustomerObj() -> VaccinationCustomers{
         let vaccinationCertObj = NSEntityDescription.insertNewObject(forEntityName: "VaccinationCustomers" , into: managedContext) as! VaccinationCustomers
@@ -50,7 +52,7 @@ final  public class VaccinationCustomersDAO{
         var vaccinationMasterDataArr = [VaccinationCustomers]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationCustomers")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format:"userId = %@", userId)
+        fetchRequest.predicate = NSPredicate(format:userIdStr, userId)
         do {
             vaccinationMasterDataArr = try managedContext.fetch(fetchRequest) as! [VaccinationCustomers]
         } catch{
@@ -66,7 +68,7 @@ final  public class VaccinationCustomersDAO{
         if  customerId  != nil && !customerId!.isEmpty{
             fetchRequest.predicate = NSPredicate(format:"userId = %@ AND customerId = %@", userId, customerId!)
         }else{
-            fetchRequest.predicate = NSPredicate(format:"userId = %@", userId)
+            fetchRequest.predicate = NSPredicate(format:userIdStr, userId)
         }
         do {
             vaccinationMasterDataArr = try managedContext.fetch(fetchRequest) as! [VaccinationCustomerSites]
@@ -80,7 +82,7 @@ final  public class VaccinationCustomersDAO{
         var vaccinationMasterDataArr = [VaccinationFSMList]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationFSMList")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format:"userId = %@", userId)
+        fetchRequest.predicate = NSPredicate(format:userIdStr, userId)
         do {
             vaccinationMasterDataArr = try managedContext.fetch(fetchRequest) as! [VaccinationFSMList]
         } catch{
@@ -453,7 +455,7 @@ final  public class VaccinationCustomersDAO{
         do {
             try managedContext.save()
         } catch {
-            print("Test Body")
+            print(appDelegateObj.testFuntion())
         }
         shippingInfo.append(assessmentObj)
     }
@@ -489,11 +491,11 @@ final  public class VaccinationCustomersDAO{
         if fssId == 0
         {
            
-            fetchRequest.predicate = NSPredicate(format: "fssId = %d",FsrId)
+            fetchRequest.predicate = NSPredicate(format: fssIdStr,FsrId)
         }
         else
         {
-             fetchRequest.predicate = NSPredicate(format: "fssId = %d",fssId)
+             fetchRequest.predicate = NSPredicate(format: fssIdStr,fssId)
         }
         
         
@@ -516,7 +518,7 @@ final  public class VaccinationCustomersDAO{
                 }
             }
         } catch {
-            print("Test Body")
+            print(appDelegateObj.testFuntion())
         }
         return shippingInfo
     }
@@ -528,16 +530,16 @@ final  public class VaccinationCustomersDAO{
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         
         fetchRequest.returnsObjectsAsFaults = false
-        do {
-            let results = try! managedContext.fetch(fetchRequest)
+//        do {
+        if let results = try? managedContext.fetch(fetchRequest) {
             for managedObject in results {
                 let managedObjectData: NSManagedObject = managedObject as! NSManagedObject
                 managedContext.delete(managedObjectData)
             }
-
-        } catch let error as NSError {
-            print("Test Body")
         }
+//        } catch let error as NSError {
+//            print(appDelegateObj.testFuntion())
+//        }
     }
     
     func fetchShippingInfoByTrainingId(trainingId:Int) -> ShippingAddressDTO? {
@@ -566,7 +568,7 @@ final  public class VaccinationCustomersDAO{
                 }
             }
         } catch {
-            print("Test Body")
+            print(appDelegateObj.testFuntion())
         }
         return shippingInfo
     }
@@ -578,7 +580,7 @@ final  public class VaccinationCustomersDAO{
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationShippingAddress")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "fssId = %d",fssId)
+        fetchRequest.predicate = NSPredicate(format: fssIdStr,fssId)
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
@@ -587,7 +589,7 @@ final  public class VaccinationCustomersDAO{
 
             }
         } catch {
-            print("Test Body")
+            print(appDelegateObj.testFuntion())
         }
         return dataArray
 

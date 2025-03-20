@@ -92,14 +92,14 @@ class VaccinationHeaderContainerVC: BaseViewController {
             
             self.finishSession()
         }
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
+        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }
     
     @IBAction func logoutBtnClicked(_ sender: Any) {
-        let errorMSg = "Are you sure you want to Logout?"
+        let errorMSg = Constants.areYouSureToLogoutStr
         let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in

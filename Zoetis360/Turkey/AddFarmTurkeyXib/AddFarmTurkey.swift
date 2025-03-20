@@ -678,7 +678,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
             Constants.isForUnlinkedTurkey = true
             if (trimmedString == "" ||  ageLbl.text == "" ) {
                 
-                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
                 if  trimmedString == ""{
                     farmNameTextField.layer.borderColor = UIColor.red.cgColor
                 }
@@ -704,7 +704,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         }
         else if (trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  ageLbl.text == "" ||  houseNoTxtFld.text == "")  {
             
-            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
             feedProgramBtnOtlet.layer.borderColor = UIColor.red.cgColor
             ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())

@@ -130,12 +130,12 @@ class ReportDashboardTurkey: UIViewController,GI_TtactDelegate,UITableViewDelega
             self.preparedArray.removeAllObjects()
         }
         if lblComplex.text == appDelegateObj.selectStr {
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"Please select a complex first.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Please select a complex first.")
             return
         }
         
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"No historical data.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"No historical data.")
             return
         }
         
@@ -155,13 +155,13 @@ class ReportDashboardTurkey: UIViewController,GI_TtactDelegate,UITableViewDelega
         
         if lblComplex.text == appDelegateObj.selectStr {
             
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"Please select a complex first.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Please select a complex first.")
             return
         }
         
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"No historical data.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"No historical data.")
             return
         }
     }
@@ -173,7 +173,7 @@ class ReportDashboardTurkey: UIViewController,GI_TtactDelegate,UITableViewDelega
         
         if lblComplex.text == appDelegateObj.selectStr {
             
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"Please select a complex first.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Please select a complex first.")
             return
         }
         
@@ -182,7 +182,7 @@ class ReportDashboardTurkey: UIViewController,GI_TtactDelegate,UITableViewDelega
         }
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"No historical data.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"No historical data.")
             return
         }
         verticalValues = CoreDataHandlerTurkey().getObservationNameForImmuneTurkey(refID: Regions.getObservationsForImmuneTr(countryID: Regions.countryId)) as! [String]
@@ -219,13 +219,13 @@ class ReportDashboardTurkey: UIViewController,GI_TtactDelegate,UITableViewDelega
         }
         if lblComplex.text == appDelegateObj.selectStr {
             
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"Please select a complex first.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Please select a complex first.")
             return
         }
         
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:"Alert", messageStr:"No historical data.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr, messageStr:"No historical data.")
             return
         }
         
@@ -246,7 +246,7 @@ class ReportDashboardTurkey: UIViewController,GI_TtactDelegate,UITableViewDelega
         UserDefaults.standard.set(false, forKey: "isBackPress")
         UserDefaults.standard.set(false, forKey: "isCocci")
         if lblComplex.text == appDelegateObj.selectStr {
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr: "Please select a complex first.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr: "Please select a complex first.")
             return
         }
     }
@@ -259,7 +259,7 @@ class ReportDashboardTurkey: UIViewController,GI_TtactDelegate,UITableViewDelega
         
         if lblComplex.text == appDelegateObj.selectStr {
             
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"Please select a complex first.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Please select a complex first.")
             return
         }
         
@@ -268,7 +268,7 @@ class ReportDashboardTurkey: UIViewController,GI_TtactDelegate,UITableViewDelega
         }
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:"Alert" , messageStr:"No historical data.")
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"No historical data.")
             return
         }
         verticalValues = CoreDataHandlerTurkey().getObservationNameForSkelatalTurkey(refID: Regions.getobservationsSkeletalTr(countryID: Regions.countryId)) as! [String]
@@ -464,7 +464,7 @@ extension ReportDashboardTurkey {
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
             return
         }
         

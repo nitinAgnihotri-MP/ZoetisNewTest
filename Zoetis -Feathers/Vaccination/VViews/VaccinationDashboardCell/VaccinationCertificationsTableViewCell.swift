@@ -118,7 +118,7 @@ class VaccinationCertificationsTableViewCell: UITableViewCell {
         certificationTypeLbl.text = vaccinationCertificatonObj.certificationTypeName
         managerLbl.text = vaccinationCertificatonObj.fsmName
         let formatter = CodeHelper.sharedInstance.getDateFormatterObj("")
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        formatter.dateFormat = Constants.yyyyMMddHHmmss
         
         let firstDate = formatter.date(from: vaccinationCertificatonObj.scheduledDate ?? "")
         let secondDate = Date()
@@ -147,7 +147,7 @@ class VaccinationCertificationsTableViewCell: UITableViewCell {
             if vaccinationCertificatonObj.sanitationEmbrex == 1{
                 certificationTypeLbl.text = "Yes"
             }else{
-                certificationTypeLbl.text = "No"
+                certificationTypeLbl.text = Constants.noStr
             }
         }
         else

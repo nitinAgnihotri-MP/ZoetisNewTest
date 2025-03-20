@@ -334,7 +334,7 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
         
         if unlinkedNecropsies.count == 0{
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"No sessions found.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"No sessions found.")
         }
         
         necroWithOutPostingView.isHidden = true
@@ -352,7 +352,7 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
     }
     // MARK: - METHODS AND FUNCTIONS
     func Alert(){
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"No sessions found.")
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"No sessions found.")
     }
     
     @objc func doneClick1() {
@@ -393,7 +393,7 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
             //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             fromDate = dateFormatter.date(from: fromString)!
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"From date must be smaller than to date.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"From date must be smaller than to date.")
         }
     }
     
@@ -438,7 +438,7 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             toDate = dateFormatter.date(from: fromString)!
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"To date must be greater than from date.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"To date must be greater than from date.")
         }
     }
     
@@ -629,7 +629,7 @@ extension UnlinkedNecropsyControllerTurkey : UITableViewDataSource,UITableViewDe
                     lanStr = "Spanish"
                 }
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in \(lanStr) language. Please logout and select \(lanStr) as a language to edit /proceed this session.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in \(lanStr) language. Please logout and select \(lanStr) as a language to edit /proceed this session.", comment: ""))
             }
         } else {
             let navigateToAnother = self.storyboard?.instantiateViewController(withIdentifier: "Step1Turkey") as? CaptureNecropsyStep1Turkey
@@ -665,7 +665,7 @@ extension UnlinkedNecropsyControllerTurkey : UITableViewDataSource,UITableViewDe
                     lanStr = "Spanish"
                 }
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString("Alert", comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in \(lanStr) language. Please logout and select \(lanStr) as a language to edit /proceed this session.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in \(lanStr) language. Please logout and select \(lanStr) as a language to edit /proceed this session.", comment: ""))
             }
         }
     }
