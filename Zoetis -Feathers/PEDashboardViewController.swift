@@ -4318,7 +4318,7 @@ extension PEDashboardViewController{
     // MARK: - Get Images of Posted assessment
     private func getPostingAssessmentImagesListByUser(){
         if ConnectionManager.shared.hasConnectivity() {
-            ZoetisWebServices.shared.getPostingAssessmentImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
+            ZoetisWebServices.shared.getPostingImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     return

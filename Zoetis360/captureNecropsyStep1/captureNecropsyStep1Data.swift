@@ -1225,19 +1225,19 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 return cell
             }
         }
-//        else if tableView == autoSerchTable {
-//            
-//            do {
-//                let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell")!
-//                if indexPath.row  < autocompleteUrls.count
-//                {
-//                    if let value = autocompleteUrls.object(at:indexPath.row) as? String{
-//                        cell.textLabel?.text = value
-//                    }
-//                }
-//                return cell
-//            }
-//        }
+        else if tableView == autoSerchTable {
+            
+            do {
+                let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+                if indexPath.row  < autocompleteUrls.count
+                {
+                    if let value = autocompleteUrls.object(at:indexPath.row) as? String{
+                        cell.textLabel?.text = value
+                    }
+                }
+                return cell
+            }
+        }
         
         else{
             

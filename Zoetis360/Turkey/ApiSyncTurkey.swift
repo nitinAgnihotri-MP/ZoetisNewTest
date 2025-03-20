@@ -428,7 +428,6 @@ class ApiSyncTurkey: NSObject {
                 
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-              //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
                 let headerDict = ["Authorization":accestoken]
                 
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
@@ -436,7 +435,11 @@ class ApiSyncTurkey: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
+                if let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: []) {
+                    request.httpBody = jsonData
+                } else {
+                    print("Failed to serialize JSON data")
+                }
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -668,6 +671,15 @@ class ApiSyncTurkey: NSObject {
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
                 
+              //  request.httpBody = try! JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
+                
+                if let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: []) {
+                    request.httpBody = jsonData
+                } else {
+                    print("Failed to serialize JSON data")
+                    // Handle error case, such as not making the request
+                }
+                
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
                     
@@ -714,7 +726,6 @@ class ApiSyncTurkey: NSObject {
         postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
         
         self.postingIdArr.removeAllObjects()
-        let tempArrTime = NSMutableArray()
         let postingServerArray = NSMutableArray()
         let  postingDictOnServer = NSMutableDictionary()
         
@@ -733,11 +744,9 @@ class ApiSyncTurkey: NSObject {
                     
                 } else if sessiontype == "Posting Visit" {
                     sessionTypeId = 1
-                    
                 }
                 else {
                     sessionTypeId = 0
-                    
                 }
 
                 let customerId = pSession.customerId
@@ -845,7 +854,6 @@ class ApiSyncTurkey: NSObject {
             let sessionDate = pSession.complexDate
             let sessionTypeId : Int = 0
             let customerId = pSession.custmerId
-            let timeStamp = pSession.timeStamp
             let complexId = pSession.complexId
             let customerRep = ""
             let vetUserId = 0
@@ -915,10 +923,7 @@ class ApiSyncTurkey: NSObject {
         
         do {
             
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
-            debugPrint(jsonString)
+       
             if WebClass.sharedInstance.connected() {
                 
                 
@@ -931,8 +936,11 @@ class ApiSyncTurkey: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
-                
+                if let jsonData = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: []) {
+                    request.httpBody = jsonData
+                } else {
+                    print("Failed to serialize JSON data")
+                }
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -962,19 +970,105 @@ class ApiSyncTurkey: NSObject {
                             // other failures
                             debugPrint (encodingError)
                             debugPrint (responseString)
-                            if let s = statusCode {
-                                
-                                self.delegeteSyncApiTurkey.failWithError(statusCode: s)
-                                
-                            }  else {
-                                self.delegeteSyncApiTurkey.failWithErrorInternal()
-                            }
+                            self.delegeteSyncApiTurkey.failWithErrorInternal()
+                        
                         }
                     }
                 }
             }
         }
     }
+    fileprivate func extractedFunc(_ i: Int, _ lngId: Int, _ sessionArr: NSMutableArray) {
+        if self.isSyncPostingArrWithData == false {
+            self.isSyncPostingArrWithData = true
+            var timestamp = NSString()
+            let allArray = NSMutableArray()
+            
+            let captureNecropsyData = postingArrWithAllData.object(at: i)  as! PostingSessionTurkey
+            let nId = captureNecropsyData.postingId!
+            let cNec =  CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncandPostingIdTurkey(true , postingId:nId)
+            let formWithcatNameWithBirdAndAllObs1 = NSMutableDictionary()
+            
+            for x in 0..<cNec.count {
+                let birdArry = NSMutableArray()
+                let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
+                let farmName = cNData.farmName
+                let farmWeight = cNData.farmWeight
+                let breedString = cNData.breed
+                let abf = cNData.abf
+                let sex = cNData.sex
+                
+                let noOfBird = Int(cNData.noOfBirds!)
+                let houseNo = cNData.houseNo
+                let feedProgram = cNData.feedProgram
+                var feedID:Int = 0
+                if let feedId  = cNData.feedId as? Int{
+                    feedID = feedId
+                }
+                let age = cNData.age
+                let imgId = cNData.imageId
+                timestamp = cNData.timeStamp! as NSString
+                let flock = cNData.flockId
+                let sick = cNData.sick
+                let customerId = cNData.custmerId
+                let customerName = cNData.complexName
+                let complexDate = cNData.complexDate
+                let farmId = cNData.farmId
+                let GeneID = cNData.generID
+                let formWithcatNameWithBirdAndAllObs = NSMutableDictionary()
+                for j in 0..<noOfBird! {
+                    
+                    let obsNameWithValue =   CoreDataHandlerTurkey().fetchObsWithBirdandFarmNameTurkey(farmName!, birdNo: (j + 1) as NSNumber, necId: cNData.necropsyId!)
+                    let notesWithFarm = CoreDataHandlerTurkey().fetchNotesWithBirdNumandFarmNameTurkey((j + 1) as NSNumber, formName: farmName!, necId: cNData.necropsyId!)
+                    
+                    if notesWithFarm.count > 0
+                    {
+                        let n = notesWithFarm.object(at: 0) as! NotesBirdTurkey
+                        let notes = n.notes
+                        obsNameWithValue.setValue(j + 1, forKey: "BirdId")
+                        obsNameWithValue.setValue(notes, forKey: "birdNotes")
+                    }
+                    else
+                    {
+                        obsNameWithValue.setValue(j + 1, forKey: "BirdId")
+                        obsNameWithValue.setValue("", forKey: "birdNotes")
+                    }
+                    birdArry.add(obsNameWithValue)
+                }
+                
+                formWithcatNameWithBirdAndAllObs.setValue(birdArry, forKey: "BirdDetails")
+                formWithcatNameWithBirdAndAllObs.setValue(farmName, forKey: "farmName")
+                formWithcatNameWithBirdAndAllObs.setValue(houseNo, forKey: "houseNo")
+                formWithcatNameWithBirdAndAllObs.setValue(noOfBird!, forKey: "birds")
+                formWithcatNameWithBirdAndAllObs.setValue(farmId, forKey: "SortId")
+                formWithcatNameWithBirdAndAllObs.setValue(imgId, forKey: "ImgId")
+                formWithcatNameWithBirdAndAllObs.setValue(feedProgram, forKey: "feedProgram")
+                formWithcatNameWithBirdAndAllObs.setValue(abf, forKey: "ABF")
+                formWithcatNameWithBirdAndAllObs.setValue(farmWeight, forKey: "Farm_Weight")
+                formWithcatNameWithBirdAndAllObs.setValue(breedString, forKey: "Breed")
+                formWithcatNameWithBirdAndAllObs.setValue(sex, forKey: "Sex")
+                formWithcatNameWithBirdAndAllObs.setValue(feedID, forKey: "DeviceFeedId")
+                formWithcatNameWithBirdAndAllObs.setValue(age, forKey: "age")
+                formWithcatNameWithBirdAndAllObs.setValue(customerId, forKey: "customerId")
+                formWithcatNameWithBirdAndAllObs.setValue(customerName, forKey: "customerName")
+                formWithcatNameWithBirdAndAllObs.setValue(sick, forKey: "sick")
+                formWithcatNameWithBirdAndAllObs.setValue(flock, forKey: "flockId")
+                formWithcatNameWithBirdAndAllObs.setValue(complexDate, forKey: "ComplexDate")
+                formWithcatNameWithBirdAndAllObs.setValue(GeneID, forKey: "GenerationId")
+                allArray.add(formWithcatNameWithBirdAndAllObs)
+            }
+            formWithcatNameWithBirdAndAllObs1.setValue(timestamp, forKey: "deviceSessionId")
+            formWithcatNameWithBirdAndAllObs1.setValue(captureNecropsyData.postingId!, forKey: "SessionId")
+            formWithcatNameWithBirdAndAllObs1.setValue(lngId, forKey: "LanguageId")
+            formWithcatNameWithBirdAndAllObs1.setValue(captureNecropsyData.complexId!, forKey: "ComplexId")
+            formWithcatNameWithBirdAndAllObs1.setValue(captureNecropsyData.sessiondate!, forKey: "sessionDate")
+            formWithcatNameWithBirdAndAllObs1.setValue(allArray, forKey: "farmDetails")
+            let Id = UserDefaults.standard.integer(forKey: "Id")
+            formWithcatNameWithBirdAndAllObs1.setValue(Id, forKey: "UserId")
+            sessionArr.add(formWithcatNameWithBirdAndAllObs1)
+        }
+    }
+    
     /********************* Save Farms  data On Server ***************************/
     /**************************************************************************/
     func saveNecropsyDataOnServer(){
@@ -1079,104 +1173,13 @@ class ApiSyncTurkey: NSObject {
         
         for i in 0..<postingArrWithAllData.count
         {
-            if self.isSyncPostingArrWithData == false {
-                self.isSyncPostingArrWithData = true
-                var timestamp = NSString()
-                let allArray = NSMutableArray()
-                
-                let captureNecropsyData = postingArrWithAllData.object(at: i)  as! PostingSessionTurkey
-                let nId = captureNecropsyData.postingId!
-                let cNec =  CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncandPostingIdTurkey(true , postingId:nId)
-                let formWithcatNameWithBirdAndAllObs1 = NSMutableDictionary()
-                
-                for x in 0..<cNec.count {
-                    let birdArry = NSMutableArray()
-                    let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
-                    let farmName = cNData.farmName
-                    let farmWeight = cNData.farmWeight
-                    let breedString = cNData.breed
-                    let abf = cNData.abf
-                    let sex = cNData.sex
-                    
-                    let noOfBird = Int(cNData.noOfBirds!)
-                    let houseNo = cNData.houseNo
-                    let feedProgram = cNData.feedProgram
-                    var feedID:Int = 0
-                    if let feedId  = cNData.feedId as? Int{
-                        feedID = feedId
-                    }
-                    let age = cNData.age
-                    let imgId = cNData.imageId
-                    timestamp = cNData.timeStamp! as NSString
-                    let flock = cNData.flockId
-                    let sick = cNData.sick
-                    let customerId = cNData.custmerId
-                    let customerName = cNData.complexName
-                    let complexDate = cNData.complexDate
-                    let farmId = cNData.farmId
-                    let GeneID = cNData.generID
-                    let formWithcatNameWithBirdAndAllObs = NSMutableDictionary()
-                    for j in 0..<noOfBird! {
-                        
-                        let obsNameWithValue =   CoreDataHandlerTurkey().fetchObsWithBirdandFarmNameTurkey(farmName!, birdNo: (j + 1) as NSNumber, necId: cNData.necropsyId!)
-                        let notesWithFarm = CoreDataHandlerTurkey().fetchNotesWithBirdNumandFarmNameTurkey((j + 1) as NSNumber, formName: farmName!, necId: cNData.necropsyId!)
-                        
-                        if notesWithFarm.count > 0
-                        {
-                            let n = notesWithFarm.object(at: 0) as! NotesBirdTurkey
-                            let notes = n.notes
-                            obsNameWithValue.setValue(j + 1, forKey: "BirdId")
-                            obsNameWithValue.setValue(notes, forKey: "birdNotes")
-                        }
-                        else
-                        {
-                            obsNameWithValue.setValue(j + 1, forKey: "BirdId")
-                            obsNameWithValue.setValue("", forKey: "birdNotes")
-                        }
-                        birdArry.add(obsNameWithValue)
-                    }
-                    
-                    formWithcatNameWithBirdAndAllObs.setValue(birdArry, forKey: "BirdDetails")
-                    formWithcatNameWithBirdAndAllObs.setValue(farmName, forKey: "farmName")
-                    formWithcatNameWithBirdAndAllObs.setValue(houseNo, forKey: "houseNo")
-                    formWithcatNameWithBirdAndAllObs.setValue(noOfBird!, forKey: "birds")
-                    formWithcatNameWithBirdAndAllObs.setValue(farmId, forKey: "SortId")
-                    formWithcatNameWithBirdAndAllObs.setValue(imgId, forKey: "ImgId")
-                    formWithcatNameWithBirdAndAllObs.setValue(feedProgram, forKey: "feedProgram")
-                    formWithcatNameWithBirdAndAllObs.setValue(abf, forKey: "ABF")
-                    formWithcatNameWithBirdAndAllObs.setValue(farmWeight, forKey: "Farm_Weight")
-                    formWithcatNameWithBirdAndAllObs.setValue(breedString, forKey: "Breed")
-                    formWithcatNameWithBirdAndAllObs.setValue(sex, forKey: "Sex")
-                    formWithcatNameWithBirdAndAllObs.setValue(feedID, forKey: "DeviceFeedId")
-                    formWithcatNameWithBirdAndAllObs.setValue(age, forKey: "age")
-                    formWithcatNameWithBirdAndAllObs.setValue(customerId, forKey: "customerId")
-                    formWithcatNameWithBirdAndAllObs.setValue(customerName, forKey: "customerName")
-                    formWithcatNameWithBirdAndAllObs.setValue(sick, forKey: "sick")
-                    formWithcatNameWithBirdAndAllObs.setValue(flock, forKey: "flockId")
-                    formWithcatNameWithBirdAndAllObs.setValue(complexDate, forKey: "ComplexDate")
-                    formWithcatNameWithBirdAndAllObs.setValue(GeneID, forKey: "GenerationId")
-                    allArray.add(formWithcatNameWithBirdAndAllObs)
-                }
-                formWithcatNameWithBirdAndAllObs1.setValue(timestamp, forKey: "deviceSessionId")
-                formWithcatNameWithBirdAndAllObs1.setValue(captureNecropsyData.postingId!, forKey: "SessionId")
-                formWithcatNameWithBirdAndAllObs1.setValue(lngId, forKey: "LanguageId")
-                formWithcatNameWithBirdAndAllObs1.setValue(captureNecropsyData.complexId!, forKey: "ComplexId")
-                formWithcatNameWithBirdAndAllObs1.setValue(captureNecropsyData.sessiondate!, forKey: "sessionDate")
-                formWithcatNameWithBirdAndAllObs1.setValue(allArray, forKey: "farmDetails")
-                let Id = UserDefaults.standard.integer(forKey: "Id")
-                formWithcatNameWithBirdAndAllObs1.setValue(Id, forKey: "UserId")
-                sessionArr.add(formWithcatNameWithBirdAndAllObs1)
-            }
+            extractedFunc(i, lngId, sessionArr)
             
         }
         sessionWithAllforms.setValue(sessionArr, forKey: "Session")
         
         do {
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
-            print(jsonString)
+      
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
                // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
@@ -1187,6 +1190,13 @@ class ApiSyncTurkey: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+              
+                if let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: []) {
+                    request.httpBody = jsonData
+                } else {
+                    print("Failed to serialize JSON data")
+                    // Handle error case, such as not making the request
+                }
                 
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1218,12 +1228,12 @@ class ApiSyncTurkey: NSObject {
                             // other failures
                             debugPrint (encodingError)
                             debugPrint (responseString)
-                            if let s = statusCode {
-                                
-                                self.delegeteSyncApiTurkey.failWithError(statusCode: s)
-                            }  else {
+//                            if let s = statusCode {
+//                                
+//                                self.delegeteSyncApiTurkey.failWithError(statusCode: s)
+//                            }  else {
                                 self.delegeteSyncApiTurkey.failWithErrorInternal()
-                            }
+//                           }
                         }
                     }
                 }
@@ -1418,9 +1428,7 @@ class ApiSyncTurkey: NSObject {
         sessionDict.setValue(sessionArr, forKey: "Sessions")
         
         do {
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
+   
             
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
@@ -1434,7 +1442,12 @@ class ApiSyncTurkey: NSObject {
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDict, options: [])
+                if let jsonData = try? JSONSerialization.data(withJSONObject: sessionDict, options: []) {
+                    request.httpBody = jsonData
+                } else {
+                    print("Failed to serialize JSON data")
+                    // Handle error case, such as not making the request
+                }
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -1606,6 +1619,7 @@ class ApiSyncTurkey: NSObject {
     }
     /********************* Save User Setting   On Server ***************************/
     /**************************************************************************/
+    /*
     func saveDatOnServerAllSeting() {
         
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
@@ -1692,11 +1706,7 @@ class ApiSyncTurkey: NSObject {
         }
         
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-        
-        var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-        jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
-        debugPrint(jsonString)
+    
         
         if WebClass.sharedInstance.connected() {
             
@@ -1709,8 +1719,12 @@ class ApiSyncTurkey: NSObject {
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
-            
+            if let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: []) {
+                request.httpBody = jsonData
+            } else {
+                print("Failed to serialize JSON data")
+                // Handle error case, such as not making the request
+            }
             
             sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                 let statusCode =  response.response?.statusCode
@@ -1736,17 +1750,17 @@ class ApiSyncTurkey: NSObject {
                         // other failures
                         print (encodingError)
                         print (responseString)
-                        if let s = statusCode {
-                            
-                        }  else   {
+//                        if let s = statusCode {
+//                            
+//                        }  else   {
                             self.delegeteSyncApiTurkey.failWithErrorInternal()
-                        }
+                       // }
                     }
                 }
             }
         }
     }
-    
+    */
     /*************** Login Method call Again  ***************************************************/
     
     func loginMethod(){

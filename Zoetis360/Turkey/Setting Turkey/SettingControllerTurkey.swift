@@ -39,7 +39,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
     @IBOutlet weak var respiratoryBtnOutlet: UIButton!
     @IBOutlet weak var tblView: UITableView!
     @IBOutlet weak var userNameLbl: UILabel!
-    
+    let bodyWeightObs = "Body Weight"
     
     
     // MARK: - VIEW LIFE CYCLE
@@ -215,20 +215,24 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
     
     
     
+    fileprivate func setCheckBtnImage(_ sender: UIButton) {
+        let cocoii : ImmuneTurkey = dataImmuneArray.object(at: sender.tag) as! ImmuneTurkey
+        let obs = cocoii.observationField
+        if obs == bodyWeightObs{
+            sender.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+        else{
+            sender.setImage(UIImage(named: "Check_")!, for: .normal)
+        }
+    }
+    
     /**************** Action Of CheckBox Button *******************************************/
     @objc func checkBoxClick(_ sender:UIButton){
         sender.isSelected = !sender.isSelected
         if  sender.isSelected {
             sender.isSelected = true
             if  btnTag == 4{
-                let cocoii : ImmuneTurkey = dataImmuneArray.object(at: sender.tag) as! ImmuneTurkey
-                let obs = cocoii.observationField
-                if obs == "Body Weight"{
-                    sender.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-                }
-                else{
-                    sender.setImage(UIImage(named: "Check_")!, for: .normal)
-                }
+                setCheckBtnImage(sender)
             }
             else{
                 sender.setImage(UIImage(named: "Check_")!, for: .normal)
@@ -293,7 +297,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             
             
             
-            if obsName == "Body Weight"{
+            if obsName == bodyWeightObs{
                 CoreDataHandlerTurkey().updateSettingDataImmuneTurkey(cocoii.observationField!, visibilityCheck: vsibilityValue, quicklinks: false, strInformation: "xyz", index: sender.tag,dbArray: dataImmuneArray,obsId: observationId,measure: measure!,isSync:true, lngId: lngIdValue!,refId:refId! )
             }
             else{
@@ -381,6 +385,113 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
         
     }
     
+    fileprivate func setupSkeleta(_ indexPath: IndexPath, _ cell: SettingTblCell) {
+        let skeletaObject : SkeletaTurkey = dataSkeletaArray.object(at: indexPath.row) as! SkeletaTurkey
+        cell.lblName.text = skeletaObject.observationField
+        cell.switchView.isOn = skeletaObject.visibilityCheck as! Bool
+        
+        if cell.switchView.isOn == true {
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        }
+        else {
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        cell.checkBoxOutlet.isSelected = skeletaObject.quicklinks as! Bool
+        
+        if cell.checkBoxOutlet.isSelected == true {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
+    fileprivate func setupCoccidiosis(_ indexPath: IndexPath, _ cell: SettingTblCell) {
+        let cocoii : CoccidiosisTurkey = dataCocoiiArray.object(at: indexPath.row) as! CoccidiosisTurkey
+        cell.lblName.text = cocoii.observationField
+        cell.switchView.isOn = cocoii.visibilityCheck as! Bool
+        
+        if cell.switchView.isOn == true {
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        } else {
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        
+        cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
+        if cell.checkBoxOutlet.isSelected == true {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
+    fileprivate func setupGiTract(_ indexPath: IndexPath, _ cell: SettingTblCell) {
+        let skeletaObject : GITractTurkey = dataGiTractArray.object(at: indexPath.row) as! GITractTurkey
+        cell.lblName.text = skeletaObject.observationField
+        cell.switchView.isOn = skeletaObject.visibilityCheck as! Bool
+        
+        if cell.switchView.isOn == true {
+            
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        } else {
+            
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        cell.checkBoxOutlet.isSelected = skeletaObject.quicklinks as! Bool
+        
+        if cell.checkBoxOutlet.isSelected == true {
+            
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
+    fileprivate func setupRespiratory(_ indexPath: IndexPath, _ cell: SettingTblCell) {
+        let cocoii : RespiratoryTurkey = dataRespiratoryArray.object(at: indexPath.row) as! RespiratoryTurkey
+        cell.lblName.text = cocoii.observationField
+        cell.switchView.isOn = cocoii.visibilityCheck as! Bool
+        
+        if cell.switchView.isOn == true {
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        }  else {
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        
+        cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
+        
+        if cell.checkBoxOutlet.isSelected == true {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
+    fileprivate func setupImmune(_ indexPath: IndexPath, _ cell: SettingTblCell) {
+        let cocoii : ImmuneTurkey = dataImmuneArray.object(at: indexPath.row) as! ImmuneTurkey
+        cell.lblName.text = cocoii.observationField
+        cell.switchView.isOn = cocoii.visibilityCheck as! Bool
+        
+        
+        if cell.switchView.isOn == true {
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        }
+        else {
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        
+        cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
+        
+        
+        
+        if cell.checkBoxOutlet.isSelected == true {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
     /**********************************************************************************************/
     // MARK: - TABLE VIEW DATA SOURCE AND DELEGATES
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
@@ -388,7 +499,6 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
         // or fatalError() or whatever
         
         if indexPath.row % 2 == 0 {
-            
             cell.bgView.backgroundColor = UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0)
         } else {
             
@@ -396,119 +506,25 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
         }
         
         if btnTag == 0 {
-            let skeletaObject : SkeletaTurkey = dataSkeletaArray.object(at: indexPath.row) as! SkeletaTurkey
-            
-            
-            cell.lblName.text = skeletaObject.observationField
-            cell.switchView.isOn = skeletaObject.visibilityCheck as! Bool
-            
-            if cell.switchView.isOn == true {
-                
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            } else {
-                
+            setupSkeleta(indexPath, cell)
+        }
+        else if btnTag == 1{
+            setupCoccidiosis(indexPath, cell)
+        }
+        else if btnTag == 2 {
+            setupGiTract(indexPath, cell)
+        }
+        else if btnTag == 3 {
+            setupRespiratory(indexPath, cell)
+        }
+        else if btnTag ==  4{
+            setupImmune(indexPath, cell)
+            if  cell.lblName.text == bodyWeightObs{
                 cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            cell.checkBoxOutlet.isSelected = skeletaObject.quicklinks as! Bool
-            
-            if cell.checkBoxOutlet.isSelected == true {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            } else {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-        } else if btnTag == 1{
-            
-            let cocoii : CoccidiosisTurkey = dataCocoiiArray.object(at: indexPath.row) as! CoccidiosisTurkey
-            cell.lblName.text = cocoii.observationField
-            cell.switchView.isOn = cocoii.visibilityCheck as! Bool
-            
-            if cell.switchView.isOn == true {
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            } else {
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            
-            cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
-            if cell.checkBoxOutlet.isSelected == true {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            } else {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-        } else if btnTag == 2 {
-            let skeletaObject : GITractTurkey = dataGiTractArray.object(at: indexPath.row) as! GITractTurkey
-            cell.lblName.text = skeletaObject.observationField
-            cell.switchView.isOn = skeletaObject.visibilityCheck as! Bool
-            
-            if cell.switchView.isOn == true {
-                
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            } else {
-                
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            cell.checkBoxOutlet.isSelected = skeletaObject.quicklinks as! Bool
-            
-            if cell.checkBoxOutlet.isSelected == true {
-                
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            } else {
-                
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-        }  else if btnTag == 3 {
-            
-            let cocoii : RespiratoryTurkey = dataRespiratoryArray.object(at: indexPath.row) as! RespiratoryTurkey
-            cell.lblName.text = cocoii.observationField
-            cell.switchView.isOn = cocoii.visibilityCheck as! Bool
-            
-            if cell.switchView.isOn == true {
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            }  else {
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            
-            cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
-            
-            if cell.checkBoxOutlet.isSelected == true {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            } else {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-        } else if btnTag ==  4{
-            
-            let cocoii : ImmuneTurkey = dataImmuneArray.object(at: indexPath.row) as! ImmuneTurkey
-            cell.lblName.text = cocoii.observationField
-            cell.switchView.isOn = cocoii.visibilityCheck as! Bool
-            
-            
-            if cell.switchView.isOn == true {
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            }
-            else {
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            
-            cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
-            
-            
-            
-            if cell.checkBoxOutlet.isSelected == true {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            } else {
-                
                 cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
             }
         }
-        if btnTag ==  4{
-            if  cell.lblName.text == "Body Weight"{
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-            //        else{
-            //            cell.checkBoxOutlet.isUserInteractionEnabled = true
-            //            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            //        }
-        }
+       
         cell.checkBoxOutlet.addTarget(self, action: #selector(SettingControllerTurkey.checkBoxClick(_:)) , for: .touchUpInside )
         cell.switchView.addTarget(self, action: #selector(SettingControllerTurkey.switchClick(_:)) , for: .valueChanged)
         cell.switchView.tag = indexPath.row

@@ -1662,7 +1662,7 @@ extension PELandingPoupViewController{
     
     
     private func getPostingAssessmentImagesListByUser(){
-        ZoetisWebServices.shared.getPostingAssessmentImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
+        ZoetisWebServices.shared.getPostingImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
             guard let `self` = self, error == nil else { return }
             self.handlGetPostingAssessmentImagesListByUser(json)
         })

@@ -249,8 +249,8 @@ class ReportComposerDaignostic: NSObject {
                     itemHTMLContent = try String(contentsOfFile: pathToSingleItemHTMLTemplate!, encoding: String.Encoding.utf8)
                     index = 0
                     
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#margin-left:-40px#", with: items[0]["isCocciHistory"]?.boolValue == true ? birdsMargin : SingleItemBirdsMargin(countryID: Regions.countryId))
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#margin-left:-20px#", with: items[0]["isCocciHistory"]?.boolValue == true ? ageMarginHistory : SingleItemAgeMargin(countryID: Regions.countryId))
+                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left:-40px;", with: items[0]["isCocciHistory"]?.boolValue == true ? birdsMargin : SingleItemBirdsMargin(countryID: Regions.countryId))
+                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left: -20px;", with: items[0]["isCocciHistory"]?.boolValue == true ? ageMarginHistory : SingleItemAgeMargin(countryID: Regions.countryId))
                     
                     
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Intestinal#", with: NSString(format: "%.1f",items[i]["Intestinal"]!.floatValue) as String)
@@ -788,8 +788,8 @@ class ReportComposerDaignostic: NSObject {
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MeanAge#", with: NSString(format: "%.0f",round(meanAge/Float(items.count))) as String)
                     
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display:none#", with: items[0]["isCocciHistory"]?.boolValue == true ? "display:none" : "")
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#margin-left:-40px#", with: items[0]["isCocciHistory"]?.boolValue == true ? birdsMarginHistory : birdsMarginSummary)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#margin-left:-20px#", with: items[0]["isCocciHistory"]?.boolValue == true ? ageMarginHistory : ageMarginSummary)
+                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left:-40px;", with: items[0]["isCocciHistory"]?.boolValue == true ? birdsMarginHistory : birdsMarginSummary)
+                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left: -20px;", with: items[0]["isCocciHistory"]?.boolValue == true ? ageMarginHistory : ageMarginSummary)
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left:-140px", with: items[0]["isCocciHistory"]?.boolValue == true ? "margin-left:-180px" : "margin-left:-140px")
                     
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FP_TOTAL#", with: NSString(format: "%.1f",Foot_Pad_Lesions/Float(items.count)) as String)

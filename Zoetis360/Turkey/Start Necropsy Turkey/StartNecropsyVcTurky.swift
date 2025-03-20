@@ -114,6 +114,15 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
         self.navigationController?.popViewController(animated: true)
     }
     
+    fileprivate func checkComplex() {
+        if checkComplexName(complexName: complexNameLbl.text!) == true {
+            self.strtNecrPop()
+        } else  {
+            
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alert", comment: "") , messageStr:"Complex doesn't exist.")
+        }
+    }
+    
     @IBAction func searchBtnAction(_ sender: UIButton) {
         
         if(complexNameLbl.text == "") || (selectFromLbl.text == "" ){
@@ -131,12 +140,7 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
                 
                 if existingArray.count == 0 {
                     
-                    if checkComplexName(complexName: complexNameLbl.text!) == true {
-                        self.strtNecrPop()
-                    } else {
-                        
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Complex doesn't exist.")
-                    }
+                    checkComplex()
                 } else {
                     self.tableView.alpha = 1
                 }
@@ -151,12 +155,7 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
                 
                 if existingArray.count == 0 {
                     
-                    if checkComplexName(complexName: complexNameLbl.text!) == true {
-                        self.strtNecrPop()
-                    } else  {
-                        
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Complex doesn't exist.")
-                    }
+                    checkComplex()
                 } else {
                     self.tableView.alpha = 1
                     let necData = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdTurkeyWithId(sessiondate: selectFromLbl.text!, newString: newString!)

@@ -14,8 +14,8 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
     
     // MARK: - VARIABLES
     let buttonDroper = UIButton ()
-    let buttonbg1 = UIButton ()
-    let buttonbg2 = UIButton ()
+  
+  
     var buttonback = UIButton()
     var customPopV: startNecrPopUpTurkey!
     var finializeB = NSNumber()

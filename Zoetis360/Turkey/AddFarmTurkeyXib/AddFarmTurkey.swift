@@ -107,6 +107,23 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
     @IBOutlet weak var houseNoTxtFld: UITextField!
     
     // MARK: - METHODS AND FUNCTIONS
+    fileprivate func setUnlinkedUI() {
+        postingId = 0
+        feedProgramBtnOtlet.isUserInteractionEnabled = false
+        feedProgramBtnOtlet.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.1)
+        
+        if lngId == 5 {
+            feedDisplyLbl.text = "Programa de alimentación"
+        }
+        if lngId == 1000{
+            feedDisplyLbl.text = NSLocalizedString("Feed Program", comment: "")
+        }else{
+            feedDisplyLbl.text = "Feed Program"
+        }
+        
+        feedProgramdropDwnIcon.isHidden = true
+    }
+    
     override func draw(_ rect: CGRect) {
         let allBireType = CoreDataHandlerTurkey().fetchBirdSizeTurkey()
         if(birdArray.count == 0){
@@ -160,33 +177,13 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
             
-            postingId = 0
-            feedProgramBtnOtlet.isUserInteractionEnabled = false
-            feedProgramBtnOtlet.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.1)
-            
-            if lngId == 5 {
-                feedDisplyLbl.text = "Programa de alimentación"
-            }
-            if lngId == 1000{
-                feedDisplyLbl.text = NSLocalizedString("Feed Program", comment: "")
-            }else{
-                feedDisplyLbl.text = "Feed Program"
-            }
-            
-            feedProgramdropDwnIcon.isHidden = true
+            setUnlinkedUI()
         }  else  {
             postingId = UserDefaults.standard.integer(forKey: "postingId")
             feedProgramBtnOtlet.isUserInteractionEnabled = true
-            if lngId == 5
-            {
-                feedDisplyLbl.text = "Programa de alimentación *"
-            }
-            if lngId == 1000{
-                feedDisplyLbl.text = NSLocalizedString("Feed Program", comment: "")
-            }
-            else{
-                feedDisplyLbl.text = "Feed Program *"
-            }
+           
+            feedDisplyLbl.text = "Feed Program *"
+            
             feedProgramdropDwnIcon.isHidden = false
         }
         
@@ -358,6 +355,32 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         }
     }
     
+    fileprivate func setBirdsBodyWeight(_ immune: ImmuneTurkey, _ formName: String, _ necId: Int, _ j: Int) {
+        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let farmWeight =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkeyWithFarmName(formName ,necropsyId:necId as NSNumber)
+        let arrdata = farmWeight.object(at: 0) as! CaptureNecropsyDataTurkey
+        var result: Float
+        if arrdata.farmWeight! != ""{
+            result = Float(arrdata.farmWeight!)! / Float(arrdata.noOfBirds!)!
+        }
+        else{
+            result = 0.0
+        }
+        
+        let newResult = Float(result).rounded(toPlaces: 3)
+        
+        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeyImmuneCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: newResult , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
+    }
+    
+    fileprivate func setBirdSex(_ immune: ImmuneTurkey, _ formName: String, _ j: Int, _ necId: Int) {
+        /// New Addition for Bird Sex
+        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        if immune.observationField == "Male/Female"
+        {
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeySex(catName: "Immune", obsName: immune.observationField!, formName: formName, obsVisibility: false, birdNo:  j + 1 as NSNumber, obsPoint: 1, index: j, obsId: Int(immune.observationId!), measure: trimmed, quickLink: immune.quicklinks!, necId: necId as NSNumber, isSync: true, lngId: lngId as NSNumber, refId: immune.refId!, actualText: "0")
+        }
+    }
+    
     func saveImmuneCat(_ formName: String , numberofBirds:Int) {
         var  necId = Int()
         
@@ -386,28 +409,11 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                         
                     }  else if ( immune.measure! == "Actual"){
                         
-                        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        let farmWeight =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkeyWithFarmName(formName ,necropsyId:necId as NSNumber)
-                        let arrdata = farmWeight.object(at: 0) as! CaptureNecropsyDataTurkey
-                        var result: Float
-                        if arrdata.farmWeight! != ""{
-                            result = Float(arrdata.farmWeight!)! / Float(arrdata.noOfBirds!)!
-                        }
-                        else{
-                            result = 0.0
-                        }
-                        
-                        var newResult = Float(result).rounded(toPlaces: 3)
-                        
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeyImmuneCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: newResult , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
+                        setBirdsBodyWeight(immune, formName, necId, j)
                     }
                     
-                    else if ( immune.measure! == "F,M"){  /// New Addition for Bird Sex
-                        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        if immune.observationField == "Male/Female"
-                        {
-                            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeySex(catName: "Immune", obsName: immune.observationField!, formName: formName, obsVisibility: false, birdNo:  j + 1 as NSNumber, obsPoint: 1, index: j, obsId: Int(immune.observationId!), measure: trimmed, quickLink: immune.quicklinks!, necId: necId as NSNumber, isSync: true, lngId: lngId as NSNumber, refId: immune.refId!, actualText: "0")
-                        }
+                    else if ( immune.measure! == "F,M"){
+                        setBirdSex(immune, formName, j, necId)
                     }
                     else {
                         

@@ -652,7 +652,7 @@ extension ZoetisWebServices {
     }
     
     //getPostingAssessmentImagesListByUserPE
-    func getPostingAssessmentImagesListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
+    func getPostingImagesListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let Id =  UserDefaults.standard.value(forKey: "Id") as? Int ?? 0
         let url = EndPoint.getPostingAssessmentImagesListByUserPE.latestUrl + String(Id) + "&DeviceType=ios" //+ countryIdStr + String(countryId) + regionIdStr + String(Regionid)
         
