@@ -25,7 +25,6 @@
 		00183C582558792E00E17B01 /* PEInfoDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00183C572558792E00E17B01 /* PEInfoDAO.swift */; };
 		00183C5A25588FB500E17B01 /* PESanitationDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00183C5925588FB500E17B01 /* PESanitationDTO.swift */; };
 		001966A626825C990047CC98 /* PEAssessmentRejectedDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001966A526825C990047CC98 /* PEAssessmentRejectedDTO.swift */; };
-		001C521D2BBD309800503998 /* CountrySelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001C521C2BBD309800503998 /* CountrySelectViewController.swift */; };
 		00206520269D8E5D008553F3 /* PE_AssessmentRejected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0020651F269D8E5D008553F3 /* PE_AssessmentRejected.swift */; };
 		00250EAA25B5AD9500A65775 /* AES256CBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00250EA925B5AD9500A65775 /* AES256CBC.swift */; };
 		00250F0B25B8190800A65775 /* PasswordService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00250F0A25B8190800A65775 /* PasswordService.swift */; };
@@ -915,7 +914,6 @@
 		00183C572558792E00E17B01 /* PEInfoDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PEInfoDAO.swift; sourceTree = "<group>"; };
 		00183C5925588FB500E17B01 /* PESanitationDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PESanitationDTO.swift; sourceTree = "<group>"; };
 		001966A526825C990047CC98 /* PEAssessmentRejectedDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PEAssessmentRejectedDTO.swift; sourceTree = "<group>"; };
-		001C521C2BBD309800503998 /* CountrySelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountrySelectViewController.swift; sourceTree = "<group>"; };
 		0020651F269D8E5D008553F3 /* PE_AssessmentRejected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PE_AssessmentRejected.swift; sourceTree = "<group>"; };
 		00250EA925B5AD9500A65775 /* AES256CBC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AES256CBC.swift; sourceTree = "<group>"; };
 		00250F0A25B8190800A65775 /* PasswordService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordService.swift; sourceTree = "<group>"; };
@@ -1874,7 +1872,6 @@
 			isa = PBXGroup;
 			children = (
 				009211102BBD485800201885 /* SSO Files */,
-				001C521C2BBD309800503998 /* CountrySelectViewController.swift */,
 			);
 			path = "Country Selection";
 			sourceTree = "<group>";
@@ -4881,7 +4878,6 @@
 				214E0A5F242E02CD005F8653 /* AddNote_StartNewAssCell.swift in Sources */,
 				B72960CB24A7C5BC003237C7 /* TableViewDraggerCell.swift in Sources */,
 				B729619624A7CC22003237C7 /* LastSessionDataModal.swift in Sources */,
-				001C521D2BBD309800503998 /* CountrySelectViewController.swift in Sources */,
 				107B30EC23A974A4008C566B /* EvaluatorResponse.swift in Sources */,
 				7864A3EE248D6CE3007CDF49 /* ReviewerViewController.swift in Sources */,
 				00CC26AD296C7426005E9205 /* PEStartNewAssesmentINT.swift in Sources */,

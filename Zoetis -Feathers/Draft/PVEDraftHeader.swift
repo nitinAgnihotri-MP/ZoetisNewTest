@@ -10,5 +10,9 @@ import Foundation
 import UIKit
 
 class PVEDraftHeader: UITableViewHeaderFooterView {
- 
+    
+    func doNothing() {
+        debugPrint("PVEDraftHeader is being used.")
+    }
+    
 }

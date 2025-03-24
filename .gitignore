@@ -60,3 +60,13 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+.DS_Store
+Zoetis -Feathers/Assets.xcassets/.DS_Store
+Zoetis -Feathers/Help/.DS_Store
+Zoetis -Feathers/Localization/.DS_Store
+Zoetis -Feathers/PE DTO's/.DS_Store
+Zoetis -Feathers/PEPOPUPS/.DS_Store
+Zoetis -Feathers/PVE/.DS_Store
+Zoetis -Feathers/SourcesAnimation/.DS_Store
+Zoetis -Feathers/Zoetis -Feathers/.DS_Store
+Zoetis360/Localization/.DS_Store

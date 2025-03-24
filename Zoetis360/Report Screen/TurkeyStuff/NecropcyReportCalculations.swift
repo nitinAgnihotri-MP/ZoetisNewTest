@@ -116,6 +116,82 @@ class NecropcyReportCalculations: NSObject {
         delegate?.didFinishWithParsing(finishedArray: preparedArray)
     }
     
+    fileprivate func stageNewObservation(_ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Liver_Granuloma: inout Float, _ Septicemia: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1952 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Pericarditis=Pericarditis+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1957 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Liver_Granuloma=Liver_Granuloma+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1956 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Septicemia=Septicemia+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1955 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1960 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Cellulitis=Cellulitis+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
+    fileprivate func devNewObservation(_ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Liver_Granuloma: inout Float, _ Septicemia: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1870 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Pericarditis=Pericarditis+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1875 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Liver_Granuloma=Liver_Granuloma+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1874 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Septicemia=Septicemia+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1873 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1878 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Cellulitis=Cellulitis+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
+    fileprivate func productionNewObservation(_ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Liver_Granuloma: inout Float, _ Septicemia: inout Float, _ Active_Bursa: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2030 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Pericarditis=Pericarditis+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2035 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Liver_Granuloma=Liver_Granuloma+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2034 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Septicemia=Septicemia+(value.floatValue > 0 ? 1 : 0)
+        }
+        
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2033 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
     func allSummaryPDF(_ aArray : NSArray , birdsCount : Float)  {
         
         let preparedArray = NSMutableArray()
@@ -304,85 +380,16 @@ class NecropcyReportCalculations: NSObject {
             
             if environmentIs.contains("stageapi") {
                 
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1952 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Pericarditis=Pericarditis+(value.floatValue > 0 ? 1 : 0)
-                }
-            
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1957 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Liver_Granuloma=Liver_Granuloma+(value.floatValue > 0 ? 1 : 0)
-                }
-             
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1956 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Septicemia=Septicemia+(value.floatValue > 0 ? 1 : 0)
-                }
-            
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1955 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
-                }
-                
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1960 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Cellulitis=Cellulitis+(value.floatValue > 0 ? 1 : 0)
-                }
-                
-                
+                stageNewObservation(aArray, j, &Pericarditis, &Liver_Granuloma, &Septicemia, &Active_Bursa, &Cellulitis)
                 
             } else if environmentIs.contains("devapi") {
                 
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1870 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Pericarditis=Pericarditis+(value.floatValue > 0 ? 1 : 0)
-                }
-              
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1875 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Liver_Granuloma=Liver_Granuloma+(value.floatValue > 0 ? 1 : 0)
-                }
-              
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1874 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Septicemia=Septicemia+(value.floatValue > 0 ? 1 : 0)
-                }
-               
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1873 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
-                }
+                devNewObservation(aArray, j, &Pericarditis, &Liver_Granuloma, &Septicemia, &Active_Bursa, &Cellulitis)
                 
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1878 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Cellulitis=Cellulitis+(value.floatValue > 0 ? 1 : 0)
-                }
-            }
-            else {
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2030 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Pericarditis=Pericarditis+(value.floatValue > 0 ? 1 : 0)
-                }
-          
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2035 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Liver_Granuloma=Liver_Granuloma+(value.floatValue > 0 ? 1 : 0)
-                }
-          
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2034 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Septicemia=Septicemia+(value.floatValue > 0 ? 1 : 0)
-                }
-           
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2033 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
-                }
+            }else {
                 
-//                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2033 {
-//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-//                    Active_Bursa=Active_Bursa+(value.floatValue > 0 ? 1 : 0)
-//                }
+                productionNewObservation(aArray, j, &Pericarditis, &Liver_Granuloma, &Septicemia, &Active_Bursa)
+
             }
             
             

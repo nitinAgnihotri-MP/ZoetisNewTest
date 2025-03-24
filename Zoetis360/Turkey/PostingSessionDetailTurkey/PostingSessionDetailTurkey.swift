@@ -117,6 +117,8 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     
     var buttonback = UIButton()
     var customPopV :OtherDetailsTurkey!
+    let mendatoryFieldmsg = "Fields marked as (*) are mandatory. Please fill all the fields."
+    let offlineDataMsg = "You are currently offline. Please go online to sync data."
     // MARK: - VIEW LIFE CYCLE
     override func viewDidLoad() {
         print("<<<<",self)
@@ -672,7 +674,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             } else{
                 feedButton.layer.borderColor = UIColor.black.cgColor
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldmsg)
             
         }else if trimmedString == ""  {
             
@@ -683,7 +685,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             }else {
                 feedButton.layer.borderColor = UIColor.black.cgColor
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldmsg)
             
         } else if trimmedString == "" && strFeedCheck == ""{
             let abc = feedButton.currentTitle!
@@ -695,12 +697,12 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             }
             nameText.layer.borderColor = UIColor.red.cgColor
             farmWeightText.layer.borderColor = UIColor.black.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldmsg)
         }
         
         if houseNoTxtFldTurkey.text == ""
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldmsg, comment: ""))
             houseNoTxtFldTurkey.layer.borderColor = UIColor.red.cgColor
             // feedButton.layer.borderColor = UIColor.black.cgColor
             return
@@ -876,41 +878,35 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
         
         
-        if textField == farmWeightText {
-            
-            let inverseSet = NSCharacterSet(charactersIn:"0123456789").inverted
-            let components = string.components(separatedBy: inverseSet)
-            let filtered = components.joined(separator: "")
-            if filtered == string {
-                return newString.length <= maxLength
-            } else {
-                if string == "." {
-                    let countdots = textField.text!.components(separatedBy:".").count - 1
-                    
-                    if countdots == 0 {
-                        print(newString.length)
-                        
-                        if (newString.length) > 6 {
-                            newString = newString.substring(to: newString.length - 1) as NSString
-                            
-                            return false
-                        }
-                        
-                    } else {
-                        if countdots > 0 && string == "." {
-                            return false
-                        } else {
-                            return true
-                        }
-                    }
-                } else {
-                    return false
-                }
-            }
-        }
+//        if textField == farmWeightText {
+//            
+//            let inverseSet = NSCharacterSet(charactersIn:"0123456789").inverted
+//            let components = string.components(separatedBy: inverseSet)
+//            let filtered = components.joined(separator: "")
+//            if filtered == string {
+//                return newString.length <= maxLength
+//            } else {
+//                let allowedCharacters = CharacterSet.decimalDigits.union(CharacterSet(charactersIn: ".")) // (1) Define allowed characters
+//                let filteredString = string.trimmingCharacters(in: allowedCharacters.inverted) // (2) Remove unwanted characters
+//
+//                if filteredString == string {
+//                    return newString.length <= maxLength
+//                } else if string == "." {
+//                    let dotCount = textField.text?.filter { $0 == "." }.count ?? 0
+//                    
+//                    if dotCount == 0 {
+//                        return newString.length <= maxLength
+//                    } else {
+//                        return false
+//                    }
+//                }
+//                return false
+//                
+//
+//            }
+//        }
         return true
-        
-        return true
+       
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -919,6 +915,23 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     }
     
     // MARK: - METHODS AND FUNCTIONS
+    fileprivate func savePostingDatatoDataBase(_ value: Any) {
+        let arr : NSArray = value as! NSArray
+        
+        if arr.count>0{
+            for  i in 0..<arr.count {
+                let posDict = arr.object(at: i)
+                let deviceId = (posDict as AnyObject).value(forKey: "DeviceSessionId") as! String
+                CoreDataHandlerTurkey().getPostingDatWithSpecificIdTurkey(posDict as! NSDictionary,postinngId: self.postingId)
+            }
+            
+            let postingData = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(self.postingId)
+            if postingData.count>0{
+                self.getPostingDataFromServerforVaccination()
+            }
+        }
+    }
+    
     func pullFromWeb() {
         fullData =  deviceTokenId
         timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.update), userInfo: nil, repeats: false)
@@ -950,27 +963,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                         if value != nil {
                             UserDefaults.standard.set("Yes", forKey: "Success")
                             if value is NSArray{
-                                let arr : NSArray = value as! NSArray
-                                if arr.count>0{
-                                    for  i in 0..<arr.count {
-                                        let posDict = arr.object(at: i)
-                                        
-                                        let deviceId = (posDict as AnyObject).value(forKey: "DeviceSessionId") as! String
-                                        CoreDataHandlerTurkey().getPostingDatWithSpecificIdTurkey(posDict as! NSDictionary,postinngId: self.postingId)
-                                        
-                                    }
-                                    
-                                    let postingData = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(self.postingId)
-                                    
-                                    if postingData.count>0{
-                                        self.getPostingDataFromServerforVaccination()
-                                    }
-                                    else{
-                                        
-                                    }
-                                }
-                                else{
-                                }
+                                self.savePostingDatatoDataBase(value)
                             }
                             else{
                                 let postingData = CoreDataHandlerTurkey().fetchAllPostingExistingSessionTurkey()
@@ -979,16 +972,35 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                         }
                     case .failure(let encodingError):
                         
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            // other failures
-                            print (encodingError)
-                            print (responseString)
-                        }
+                        print (encodingError)
+                      
                     }
                 }
             }
+        }
+    }
+    
+    fileprivate func saveVaccinationData(_ value: Any) {
+        let arr : NSArray = value as! NSArray
+        
+        UserDefaults.standard.set("Yes", forKey: "Success")
+        if arr.count>0 {
+            CoreDataHandlerTurkey().deleteDataWithPostingIdHatcheryTurkey(self.postingId)
+            CoreDataHandlerTurkey().deleteDataWithPostingIdFieldVacinationWithSingleTurkey(self.postingId)
+            
+            for  i in 0..<arr.count {
+                
+                let vac = (arr.object(at: i) as AnyObject).value(forKey: "Vaccination") as! NSArray
+                if vac.count > 0{
+                    let posDict = (vac as AnyObject).object(at: 0)
+                    CoreDataHandlerTurkey().getHatcheryDataFromServerSingleFromDeviceIdTurkey(posDict as! NSDictionary,postingId: self.postingId)
+                    CoreDataHandlerTurkey().getFieldDataFromServerSingledataTurkey(posDict as! NSDictionary,postingId: self.postingId)
+                }
+            }
+            self.getPostingDataFromServerforFeed()
+        }
+        else{
+            self.getPostingDataFromServerforFeed()
         }
     }
     
@@ -1016,58 +1028,62 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                         
                         if value != nil {
                             if value is NSArray{
-                                let arr : NSArray = value as! NSArray
-                                
-                                UserDefaults.standard.set("Yes", forKey: "Success")
-                                if arr.count>0 {
-                                    CoreDataHandlerTurkey().deleteDataWithPostingIdHatcheryTurkey(self.postingId)
-                                    CoreDataHandlerTurkey().deleteDataWithPostingIdFieldVacinationWithSingleTurkey(self.postingId)
-                                    
-                                    for  i in 0..<arr.count {
-                                        
-                                        let vac = (arr.object(at: i) as AnyObject).value(forKey: "Vaccination") as! NSArray
-                                        if vac.count > 0{
-                                            let posDict = (vac as AnyObject).object(at: 0)
-                                            CoreDataHandlerTurkey().getHatcheryDataFromServerSingleFromDeviceIdTurkey(posDict as! NSDictionary,postingId: self.postingId)
-                                            
-                                            CoreDataHandlerTurkey().getFieldDataFromServerSingledataTurkey(posDict as! NSDictionary,postingId: self.postingId)
-                                            
-                                        }
-                                        
-                                    }
-                                    self.getPostingDataFromServerforFeed()
-                                    
-                                    
-                                    
-                                }
-                                else{
-                                    self.getPostingDataFromServerforFeed()
-                                }
+                                self.saveVaccinationData(value)
                             }
-                            else{
-                                
-                            }
+                           
                         }
                     case .failure(let encodingError):
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            
-                            print(err)
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            // other failures
-                            print (encodingError)
-                            print (responseString)
-                            
-                        }
+                        print(encodingError)
                     }
                 }
-                
             }
             
         } else{
-            
+            self.noInternetConnection()
         }
         
     }
+    fileprivate func saveAlternativeFeedData(_ feedDetailArr: Any?, _ j: Int, _ feedId: Int, _ seesionId: Int, _ feedName: Any?, _ feedDate: Any?) {
+        let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
+        for  p in 0..<(feedDetail! as AnyObject).count{
+            let postDict = (feedDetail as AnyObject).object(at: p)
+            
+            
+            CoreDataHandlerTurkey().getDataFromAlterNativeForSingleDevTokenTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String, postingAlterNative: self.postingId, feedDate: feedDate as! String)
+            
+        }
+    }
+    
+    fileprivate func saveAntibioticFeedData(_ feedDetailArr: Any?, _ j: Int, _ feedId: Int, _ seesionId: Int, _ feedName: Any?, _ feedDate: Any?) {
+        let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey:"feedDetails")
+        for  a in 0..<(feedDetail! as AnyObject).count{
+            let postDict = (feedDetail as AnyObject).object(at: a)
+            
+            CoreDataHandlerTurkey().getDataFromAntiboiticWithSigleDataTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,postingIdAlterNative:self.postingId, feedDate: feedDate as! String)
+            
+        }
+    }
+    
+    fileprivate func saveMicoToxinFeedData(_ feedDetailArr: Any?, _ j: Int, _ feedId: Int, _ seesionId: Int, _ feedName: Any?, _ feedDate: Any?) {
+        let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
+        for  y in 0..<(feedDetail! as AnyObject).count{
+            let postDict = (feedDetail as AnyObject).object(at: y)
+            
+            CoreDataHandlerTurkey().getDataFromMyCocotinBinderWithSingleDataTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,postingidMycotxin:self.postingId, feedDate: feedDate as! String)
+            
+        }
+    }
+    
+    fileprivate func saveCoccidiosisFeedData(_ feedDetailArr: Any?, _ j: Int, _ feedId: Int, _ seesionId: Int, _ feedName: Any?, _ feedDate: Any?) {
+        let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
+        for  m in 0..<(feedDetail! as AnyObject).count{
+            
+            let postDict = (feedDetail as AnyObject).object(at: m)
+            CoreDataHandlerTurkey().getDataFromCocoiiControllForSingleDataTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName: feedName as! String,postingIdCocoii:self.postingId, feedDate: feedDate as! String)
+            
+        }
+    }
+    
     func getPostingDataFromServerforFeed (){
         
         if WebClass.sharedInstance.connected() {
@@ -1120,45 +1136,16 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                             let feedCatName = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedProgramCategory") as! String
                                             
                                             if feedCatName == Constants.coccidioStr{
-                                                let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
-                                                for  m in 0..<(feedDetail! as AnyObject).count{
-                                                    let postDict = (feedDetail as AnyObject).object(at: m)
-                                                    
-                                                    
-                                                    CoreDataHandlerTurkey().getDataFromCocoiiControllForSingleDataTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName: feedName as! String,postingIdCocoii:self.postingId, feedDate: feedDate as! String)
-                                                    
-                                                }
+                                                self.saveCoccidiosisFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
                                             }
                                             else if feedCatName  == "Alternatives"{
-                                                let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
-                                                for  p in 0..<(feedDetail! as AnyObject).count{
-                                                    let postDict = (feedDetail as AnyObject).object(at: p)
-                                                    
-                                                    
-                                                    CoreDataHandlerTurkey().getDataFromAlterNativeForSingleDevTokenTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String, postingAlterNative: self.postingId, feedDate: feedDate as! String)
-                                                    
-                                                }
+                                                self.saveAlternativeFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
                                             }
                                             else if  feedCatName == "Antibiotic"{
-                                                let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey:"feedDetails")
-                                                for  a in 0..<(feedDetail! as AnyObject).count{
-                                                    let postDict = (feedDetail as AnyObject).object(at: a)
-                                                    
-                                                    
-                                                    
-                                                    CoreDataHandlerTurkey().getDataFromAntiboiticWithSigleDataTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,postingIdAlterNative:self.postingId, feedDate: feedDate as! String)
-                                                    
-                                                }
+                                                self.saveAntibioticFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
                                             }
                                             else if  feedCatName  == Constants.mytoxinStr{
-                                                let feedDetail = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedDetails")
-                                                for  y in 0..<(feedDetail! as AnyObject).count{
-                                                    let postDict = (feedDetail as AnyObject).object(at: y)
-                                                    
-                                                    
-                                                    CoreDataHandlerTurkey().getDataFromMyCocotinBinderWithSingleDataTurkey(postDict as! NSDictionary, feedId: feedId as NSNumber, postingId: seesionId as NSNumber, feedProgramName:feedName as! String,postingidMycotxin:self.postingId, feedDate: feedDate as! String)
-                                                    
-                                                }
+                                                self.saveMicoToxinFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
                                                 
                                             }
                                         }
@@ -1171,31 +1158,53 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                 self.getCNecStep1Data()
                             }
                         }
-                        
-                        else{
-                            
-                            
-                        }
                     }
                 case .failure(let encodingError):
                     
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        
-                        print(err)
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        print (encodingError)
-                        print (responseString)
-                        
-                    }
-                    
+                    print (encodingError)
                 }
                 
             }
             
         } else{
-            
+            self.noInternetConnection()
         }
         
+    }
+    
+    fileprivate func saveNecropsyDataInDataBase(_ farmArr: Any?, _ sessionId: Int, _ posttingId: inout Int, _ complexName: String, _ seesDat: String, _ complexId: Int, _ custId: Int, _ devSessionId: String) {
+        for  j in 0..<(farmArr! as AnyObject).count {
+            let farmName =  ((farmArr as AnyObject).object(at:j) as AnyObject).value(forKey:"farmName") as! String
+            let  postingArr  =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(sessionId as NSNumber)
+            if postingArr.count>0{
+                posttingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
+                if posttingId == sessionId{
+                    CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(self.postingId, finalizeNec: 1)
+                    posttingId = sessionId
+                }
+            }
+            else{
+                posttingId = 0
+            }
+            let age =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"age")
+            let birds =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"birds")
+            let houseNo =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"houseNo")
+            let flockId =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"flockId")
+            let feedProgram =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"feedProgram") as! String
+            let sick =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"sick") as! Bool
+            let feedId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "FeedId") as! Int
+            let farmweight =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"Farm_Weight") as! String
+            let abf =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"ABF") as! String
+            let sex =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"Sex") as! String
+            let breed =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"Breed") as! String
+            let farmId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "DeviceFarmId") as! Int
+            let genName =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"GenerationName") as! String
+            let genId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "GenerationId") as! Int
+            
+            let imgId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "ImgId") as! Int
+            CoreDataHandlerTurkey().SaveNecropsystep1SingleDataTurkey(posttingId as NSNumber, age: ((age as AnyObject).stringValue)!, farmName: farmName, feedProgram:feedProgram, flockId: ((flockId as AnyObject).stringValue) ?? "", houseNo: ((houseNo as AnyObject).stringValue) ?? "", noOfBirds: ((birds as AnyObject).stringValue)!, sick: sick as NSNumber,necId:sessionId as NSNumber,compexName:complexName,complexDate:seesDat,complexId:complexId as NSNumber,custmerId:custId as NSNumber,feedId: feedId as NSNumber,isSync:false,timeStamp:devSessionId,actualTimeStamp:devSessionId, necIdSingle: self.postingId, farmweight: farmweight, abf: abf,sex: sex,breed: breed,farmId:farmId as NSNumber,imgId:imgId as NSNumber , generationName: genName , generationId: genId as NSNumber)
+            UserDefaults.standard.set(farmId as NSNumber, forKey: "farmIdTurkey")
+        }
     }
     
     func getCNecStep1Data(){
@@ -1238,46 +1247,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                     let seesDat = self.convertDateFormater(sessionDateOutlet)
                                     let farmArr = (arr.object(at:i) as AnyObject).value(forKey:  "Farms")
                                     if (farmArr as AnyObject).count>0{
-                                        for  j in 0..<(farmArr! as AnyObject).count {
-                                            let farmName =  ((farmArr as AnyObject).object(at:j) as AnyObject).value(forKey:"farmName") as! String
-                                            let  postingArr  =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(sessionId as NSNumber)
-                                            if postingArr.count>0{
-                                                posttingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
-                                                if posttingId == sessionId{
-                                                    CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(self.postingId, finalizeNec: 1)
-                                                    posttingId = sessionId
-                                                }
-                                                
-                                            }
-                                            else{
-                                                posttingId = 0
-                                            }
-                                            let age =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"age")
-                                            let birds =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"birds")
-                                            let houseNo =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"houseNo")
-                                            let flockId =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"flockId")
-                                            let feedProgram =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"feedProgram") as! String
-                                            let sick =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"sick") as! Bool
-                                            let feedId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "FeedId") as! Int
-                                            
-                                            
-                                            let farmweight =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"Farm_Weight") as! String
-                                            
-                                            let abf =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"ABF") as! String
-                                            
-                                            let sex =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"Sex") as! String
-                                            
-                                            let breed =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"Breed") as! String
-                                            let farmId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "DeviceFarmId") as! Int
-                                            
-                                            let genName =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"GenerationName") as! String
-                                            let genId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "GenerationId") as! Int
-                                            
-                                            
-                                            let imgId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "ImgId") as! Int
-                                            CoreDataHandlerTurkey().SaveNecropsystep1SingleDataTurkey(posttingId as NSNumber, age: ((age as AnyObject).stringValue)!, farmName: farmName, feedProgram:feedProgram, flockId: ((flockId as AnyObject).stringValue) ?? "", houseNo: ((houseNo as AnyObject).stringValue) ?? "", noOfBirds: ((birds as AnyObject).stringValue)!, sick: sick as NSNumber,necId:sessionId as NSNumber,compexName:complexName,complexDate:seesDat,complexId:complexId as NSNumber,custmerId:custId as NSNumber,feedId: feedId as NSNumber,isSync:false,timeStamp:devSessionId,actualTimeStamp:devSessionId, necIdSingle: self.postingId, farmweight: farmweight, abf: abf,sex: sex,breed: breed,farmId:farmId as NSNumber,imgId:imgId as NSNumber , generationName: genName , generationId: genId as NSNumber)
-                                            UserDefaults.standard.set(farmId as NSNumber, forKey: "farmIdTurkey")
-                                        }
+                                        self.saveNecropsyDataInDataBase(farmArr, sessionId, &posttingId, complexName, seesDat, complexId, custId, devSessionId)
                                     }
                                 }
                                 let necArr = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdTurkey()
@@ -1416,34 +1386,54 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                 }
                                 self.getNotesFromServer()
                             }
-                            else{
-                                print(appDelegateObj.testFuntion())
-                            }
+                           
                         }
                         else {
                             self.getNotesFromServer()
-                            //                            let errorMsg = ((value as AnyObject).value(forKey: "error") as AnyObject).value(forKey: "errorMsg") as? String
-                            //                            print(errorMsg ?? "There is no update available on the server.")
+                           
                         }
                     }
                 case .failure(let encodingError):
                     
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        
-                        print(err)
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        // other failures
-                        print (encodingError)
-                        print (responseString)
-                    }
+                    print (encodingError)
                 }
             }
             
         } else{
-            
+            self.noInternetConnection()
         }
         
     }
+    fileprivate func saveNotesData(_ value: Any) {
+        let arr : NSArray = value as! NSArray
+        if arr.count>0{
+            CoreDataHandlerTurkey().deleteDataBirdNotesWithIdTurkey(self.postingId)
+            
+            UserDefaults.standard.set("Yes", forKey: "Success")
+            for  i in 0..<arr.count {
+                
+                let noteArr = (arr.object(at: i) as AnyObject).value(forKey:"Note")
+                
+                if (noteArr as AnyObject).count>0{
+                    for  j in 0..<(noteArr! as AnyObject).count {
+                        let sessionId =  ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey: "sessionId") as! Int
+                        let farmName =  ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey:"farmName") as! String
+                        let birdNo =  ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey: "birdNumber") as! Int
+                        let birdNotes = ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey: "Notes")
+                        as! String
+                        
+                        CoreDataHandlerTurkey().saveNoofBirdWithNotesSingledataTurkey("" , notes: birdNotes, formName: farmName , birdNo: birdNo as NSNumber, index: 0 , necId: sessionId as NSNumber, isSync :false,necIdSingle:self.postingId)
+                    }
+                }
+            }
+            self.getPostingDataFromServerforImage()
+            
+        }
+        else{
+            self.getPostingDataFromServerforImage()
+        }
+    }
+    
     func getNotesFromServer(){
         if WebClass.sharedInstance.connected() {
             let url = "PostingSession/GetBirdNotesListBySessionId?DeviceSessionId=\(fullData)"
@@ -1465,33 +1455,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                     if value != nil {
                         if value is NSArray{
                             
-                            let arr : NSArray = value as! NSArray
-                            if arr.count>0{
-                                CoreDataHandlerTurkey().deleteDataBirdNotesWithIdTurkey(self.postingId)
-                                
-                                UserDefaults.standard.set("Yes", forKey: "Success")
-                                for  i in 0..<arr.count {
-                                    
-                                    let noteArr = (arr.object(at: i) as AnyObject).value(forKey:"Note")
-                                    
-                                    if (noteArr as AnyObject).count>0{
-                                        for  j in 0..<(noteArr! as AnyObject).count {
-                                            let sessionId =  ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey: "sessionId") as! Int
-                                            let farmName =  ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey:"farmName") as! String
-                                            let birdNo =  ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey: "birdNumber") as! Int
-                                            let birdNotes = ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey: "Notes")
-                                            as! String
-                                            
-                                            CoreDataHandlerTurkey().saveNoofBirdWithNotesSingledataTurkey("" , notes: birdNotes, formName: farmName , birdNo: birdNo as NSNumber, index: 0 , necId: sessionId as NSNumber, isSync :false,necIdSingle:self.postingId)
-                                        }
-                                    }
-                                }
-                                self.getPostingDataFromServerforImage()
-                                
-                            }
-                            else{
-                                self.getPostingDataFromServerforImage()
-                            }
+                            self.saveNotesData(value)
                         }
                         else{
                             self.getPostingDataFromServerforImage()
@@ -1500,17 +1464,43 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                     }
                 case .failure(let encodingError):
                     Helper.dismissGlobalHUD(self.view)
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        print(err)
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        // other failures
-                        print (encodingError)
-                        print (responseString)
-                    }
+                    print (encodingError)
                 }
             }
         } else{
             
+        }
+    }
+    
+    fileprivate func saveImagesDatainDataBase(_ value: Any, _ statusCode: Int?) {
+        UserDefaults.standard.set("Yes", forKey: "Success")
+        let arr : NSArray = value as! NSArray
+        if arr.count>0{
+            CoreDataHandlerTurkey().deleteImageForSingleTurkey(self.postingId)
+            
+            for  i in 0..<arr.count {
+                let imagArr = (arr.object(at: i) as AnyObject).value(forKey: "Images")
+                if  (imagArr as AnyObject).count>0{
+                    for  i in 0..<(imagArr! as AnyObject).count {
+                        let posDict = (imagArr! as AnyObject).object(at: i)
+                        CoreDataHandlerTurkey().getSaveImageFromServerSingledataTurkey(posDict as! NSDictionary,necIdSingle: self.postingId)
+                    }
+                    
+                }
+            }
+            
+            self.appDelegate.saveContext()
+            self.fetcFarmData()
+            self.tblView.reloadData()
+            if  UserDefaults.standard.string(forKey: "Success") == "Yes"
+            {
+                self.alerViewSucees()
+            }
+            else
+            {
+                self.alerView(statusCode:statusCode!)
+            }
+            Helper.dismissGlobalHUD(self.view)
         }
     }
     
@@ -1540,58 +1530,20 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 case let .success(value):
                     if value != nil {
                         if value is NSArray{
-                            UserDefaults.standard.set("Yes", forKey: "Success")
-                            let arr : NSArray = value as! NSArray
-                            if arr.count>0{
-                                CoreDataHandlerTurkey().deleteImageForSingleTurkey(self.postingId)
-                                
-                                print(arr)
-                                
-                                for  i in 0..<arr.count {
-                                    let imagArr = (arr.object(at: i) as AnyObject).value(forKey: "Images")
-                                    if  (imagArr as AnyObject).count>0{
-                                        for  i in 0..<(imagArr! as AnyObject).count {
-                                            let posDict = (imagArr! as AnyObject).object(at: i)
-                                            CoreDataHandlerTurkey().getSaveImageFromServerSingledataTurkey(posDict as! NSDictionary,necIdSingle: self.postingId)
-                                        }
-                                        
-                                    }
-                                }
-                                
-                                self.appDelegate.saveContext()
-                                self.fetcFarmData()
-                                self.tblView.reloadData()
-                                if  UserDefaults.standard.string(forKey: "Success") == "Yes"
-                                {
-                                    self.alerViewSucees()
-                                }
-                                else
-                                {
-                                    self.alerView(statusCode:statusCode!)
-                                }
-                                Helper.dismissGlobalHUD(self.view)
-                            }
+                            self.saveImagesDatainDataBase(value, statusCode)
                         }
                         else{
-                            
                             Helper.dismissGlobalHUD(self.view)
-                            
-                            
                         }
                     }
                 case .failure(let encodingError):
                     Helper.dismissGlobalHUD(self.view)
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        // other failures
-                        print (encodingError)
-                        print (responseString)
-                    }
+                    print (encodingError)
                 }
             }
             
         } else{
+            self.noInternetConnection()
             Helper.dismissGlobalHUD(self.view)
         }
     }
@@ -1648,7 +1600,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     func failWithInternetConnectionSyncdata(){
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offlineDataMsg, comment: ""))
         
     }
     func alerViewSucees() {
@@ -1665,7 +1617,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             print(appDelegateObj.testFuntion())
         }
         else{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offlineDataMsg, comment: ""))
         }
         
     }
@@ -1742,7 +1694,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 
                 self.callSyncApiPostingId(Pid: postingId)
             } else {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offlineDataMsg, comment: ""))
             }
         } else {
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))

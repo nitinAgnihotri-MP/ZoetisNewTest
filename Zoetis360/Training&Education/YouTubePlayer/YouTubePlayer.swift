@@ -44,8 +44,15 @@ public protocol YouTubePlayerDelegate {
 public extension YouTubePlayerDelegate {
     
     func playerReady(_ videoPlayer: YouTubePlayerView) {}
-    func playerStateChanged(_ videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {}
-    func playerQualityChanged(_ videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {}
+    func playerStateChanged(_ videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
+           print("Player state changed to \(playerState).")
+       }
+       
+       func playerQualityChanged(_ videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {
+           print("Player quality changed to \(playbackQuality).")
+       }
+//    func playerStateChanged(_ videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {}
+//    func playerQualityChanged(_ videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {}
     
 }
 

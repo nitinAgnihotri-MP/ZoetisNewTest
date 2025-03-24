@@ -305,15 +305,15 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 
                 cell.complexLbl.text = complexName
                 
-                let lngId =  (arr1 as AnyObject).value(forKey: "lngId") as! NSNumber
-                
-                if lngId == 1{
-                    cell.lblLng.text = "(En)"
-                } else if lngId == 3 {
-                    cell.lblLng.text = "(Fr)"
-                }else  if lngId == 4{
-                    cell.lblLng.text = "(pt-BR)"
-                }
+                let lngId = (arr1 as AnyObject).value(forKey: "lngId") as! NSNumber
+
+                let languageMap: [NSNumber: String] = [
+                    1: "(En)",
+                    3: "(Fr)",
+                    4: "(pt-BR)"
+                ]
+
+                cell.lblLng.text = languageMap[lngId] ?? ""
             }
             return cell
         }
@@ -367,14 +367,16 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         }
     }
     
-    fileprivate func alertMessageLanguageBasis() {
-        let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
-        if lngId == 1{
+    fileprivate func alertMessageLanguageBasis(lngId :NSNumber) {
+        if lngId == 4{
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in portuguese language. Please logout and select portuguese as a language to edit / view this session.", comment: ""))
+            
+        }
+        if lngId == 3{
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in french language. Please logout and select french as a language to edit / view this session.", comment: ""))
             
-        }else  if lngId == 3{
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("Cette session a été créée en langue anglaise. Veuillez vous déconnecter et sélectionnez l'anglais en tant que langue pour éditer / voir cette session.", comment: ""))
         }
+      
     }
     
     fileprivate func dateFormatterFrench(_ sessiondate: String) {
@@ -454,8 +456,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 self.navigationController?.pushViewController(mapViewControllerObj!, animated: true)
             }
             else{
-                alertMessageLanguageBasis()
                 
+                alertMessageLanguageBasis(lngId: lngIdNec)
             }
         }
         else{
@@ -466,12 +468,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 var postingId = Int()
                 postingId = posting.postingId as! Int
                 navigateToAnother!.isComesFromUnlikedWithPostind = true
-                if posting.actualTimeStamp == nil || posting.actualTimeStamp == ""{
-                    posting.actualTimeStamp = ""
-                }
-                else{
-                    navigateToAnother?.actualTimestamp = posting.actualTimeStamp!
-                }
+                posting.actualTimeStamp = posting.actualTimeStamp ?? ""
+                navigateToAnother?.actualTimestamp = posting.actualTimeStamp ?? ""
                 
                 UserDefaults.standard.set(true, forKey: "nec")
                 let lngId = UserDefaults.standard.integer(forKey: "lngId")
@@ -493,7 +491,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 self.navigationController?.pushViewController(navigateToAnother!, animated: false)
             }
             else{
-                alertMessageLanguageBasis()
+                alertMessageLanguageBasis(lngId: lngId)
             }
         }
     }

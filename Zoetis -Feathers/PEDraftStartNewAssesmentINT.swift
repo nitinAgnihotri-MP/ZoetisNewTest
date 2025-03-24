@@ -1465,7 +1465,7 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
         var countryIDArray = NSArray()
         var countryNameArray = NSArray()
         let countryDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "AllCountriesPE")
-        countryNameArray = countryDetailsArray.value(forKey: Constants.countryNamStr) as? NSArray ?? NSArray()
+        countryNameArray = countryDetailsArray.value(forKey: Constants.countryNamStrSmall) as? NSArray ?? NSArray()
         countryIDArray = countryDetailsArray.value(forKey: "countryId") as? NSArray ?? NSArray()
         
         if  countryNameArray.count > 0 {

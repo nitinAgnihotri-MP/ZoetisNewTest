@@ -60,8 +60,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveVaccineNameDetailsInDB(json:PVEVaccineNameDetailsRes) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_VaccineNamesDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(json.id, forKey: "id")
@@ -78,8 +78,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveVaccineManDetailsInDB(json:PVEVaccineManDetailsRes) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_VaccineManDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(json.id, forKey: "id")
@@ -95,8 +95,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveSurveyTypeDetailsInDB(json:PVESurveyTypeDetailsRes) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_SurveyTypeDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(json.id, forKey: "id")
@@ -113,8 +113,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveSiteInjctsDetailsInDB(json:PVESiteInjctsDetailsRes) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_SiteInjctsDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(json.id, forKey: "id")
@@ -130,8 +130,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveSerotypeDetailsInDB(json:PVESerotypeDetailsRes) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_SerotypeDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(json.id, forKey: "id")
@@ -147,8 +147,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveCustomerDetailsInDB(_ custId: NSNumber, custName: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "Customer_PVE", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(custId, forKey: "customerId")
@@ -168,8 +168,8 @@ class CoreDataHandlerPVE: NSObject {
     func saveBlankPdfInDB(fileName: String, pdfPathStr: String , pdfCompletePathStr: String ) {
         
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_PdfDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
@@ -190,8 +190,8 @@ class CoreDataHandlerPVE: NSObject {
     func saveOtherPdfInDB(fileName: String, otherPdfPath: String , otherPdfCompletePath: String ) {
         
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_OtherPdfDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(fileName, forKey: "fileName")
@@ -209,8 +209,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchpdf(_ fileName: NSString) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_PdfDetails")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "fileName == %@", fileName)
@@ -232,8 +230,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchCustomerWithCustId(_ custId: NSNumber) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "Complex_PVE")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "customerId == %@", custId)
@@ -258,12 +254,9 @@ class CoreDataHandlerPVE: NSObject {
         let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_CustomerComplexPopup")
         if valuee.count > 0 {
             
-            let customerArr = valuee.value(forKey: "customer")  as! NSArray
             let siteNameArr = valuee.value(forKey: "complexName")  as! NSArray
             let siteNameStr = siteNameArr[0] as! String
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: "syncId != %@ AND complexName == %@", argumentArray: [syncId, siteNameStr])
@@ -297,8 +290,6 @@ class CoreDataHandlerPVE: NSObject {
             let siteNameArr = valuee.value(forKey: "complexName")  as! NSArray
             let siteNameStr = siteNameArr[0] as! String
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: predicateStr, argumentArray: [currentUserId, customerStr, siteNameStr])
@@ -322,9 +313,6 @@ class CoreDataHandlerPVE: NSObject {
     func getSyncdAssementsArr(selectedBirdTypeId:Int, type:String, syncId:String) -> NSArray {
         
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentCategoriesDetails")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "id != %d AND syncId == %@", argumentArray: [selectedBirdTypeId, syncId])
@@ -348,9 +336,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchDraftAssementArr(selectedBirdTypeId:Int, type:String, syncId:String) -> NSArray {
         
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentCategoriesDetails")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "id != %d AND syncId == %@", argumentArray: [selectedBirdTypeId, syncId])
@@ -375,9 +360,6 @@ class CoreDataHandlerPVE: NSObject {
         
         let selectedBirdTypeId = sharedManager.getSessionValueForKeyFromDB(key: "selectedBirdTypeId")
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentCategoriesDetails")
         fetchRequest.returnsObjectsAsFaults = false
         // comment this for now so that we can see all the data as per our new ticket 2025
@@ -404,9 +386,6 @@ class CoreDataHandlerPVE: NSObject {
         let userId =  UserDefaults.standard.value(forKey: "Id") as? Int
         
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_CustomerComplexPopup")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateUserId, argumentArray: [userId!])
@@ -441,10 +420,6 @@ class CoreDataHandlerPVE: NSObject {
             
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
-            
-            
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: "syncedStatus == %@ AND type == %@ AND customerId == %@ AND complexId == %@ AND userId == %@", argumentArray: [false, type, customerId, complexIdStr, userIdStr])
@@ -476,8 +451,6 @@ class CoreDataHandlerPVE: NSObject {
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: "syncedStatus == %@ AND userId == %@", argumentArray: [false, userIdStr])
@@ -510,8 +483,6 @@ class CoreDataHandlerPVE: NSObject {
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: "syncId == %@ AND userId == %@", argumentArray: [id, userIdStr])
@@ -543,8 +514,6 @@ class CoreDataHandlerPVE: NSObject {
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: "syncedStatus == %@ AND userId == %@", argumentArray: [false, userIdStr])
@@ -580,10 +549,6 @@ class CoreDataHandlerPVE: NSObject {
             
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
-            
-            
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: "type == %@ AND customerId == %@ AND complexId == %@ AND userId == %@", argumentArray: [type, customerId, complexIdStr, userIdStr])
@@ -606,9 +571,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchSyncAssCatDetails(type:String, syncId:String) -> NSArray {
         
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentCategoriesDetails")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "type == %@ AND syncId == %@", argumentArray: [type, syncId])
@@ -650,9 +612,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchDraftForSyncId(type:String, syncId:String) -> NSArray {
         
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
@@ -676,9 +635,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchDetailsFor(entityName:String) -> NSArray {
         
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -699,9 +655,6 @@ class CoreDataHandlerPVE: NSObject {
     
     func fetchDetailsForEntity(entityName:String, id:Int, keyStr:String) -> NSArray {
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.returnsObjectsAsFaults = false
@@ -724,8 +677,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveComplexDetailsInDB(_ custId: NSNumber, userId: NSNumber, complexId: NSNumber, complexName: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "Complex_PVE", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(complexName, forKey: "complexName")
@@ -744,8 +697,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveEvaluationTypeInDB(_ evaluationId: NSNumber, evaluationName: String, isDeletd: Bool, moduleId:NSNumber) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_EvaluationType", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(evaluationId, forKey: "evaluationId")
@@ -764,8 +717,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveEvaluationForInDB(_ id: NSNumber, name: String, isDeletd: Bool) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_EvaluationFor", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(id, forKey: "id")
@@ -784,8 +737,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveAgeOfBirdsDetailsInDB(_ id: NSNumber, birdId: NSNumber, age: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_AgeOfBirds", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(id, forKey: "id")
@@ -804,9 +757,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchDetailsForBreedOfBirds(evaluationForId:NSNumber, type:NSNumber) -> NSArray {
         
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_BreedOfBirds")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -831,8 +781,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveBreedOfBirdsDetailsInDB(_ id: NSNumber, name: String, evaluationId: NSNumber, type: NSNumber) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_BreedOfBirds", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(id, forKey: "id")
@@ -852,8 +802,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveSiteIDNameDetailsInDB(_ id: NSNumber, siteId: NSNumber, siteName:String, complexId:NSNumber, customerId:NSNumber) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_SiteIDName", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(id, forKey: "id")
@@ -874,8 +824,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchSiteNameAsPercustomerId(_ customerId: NSNumber) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SiteIDName")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "customer_Id == %@", customerId)
@@ -896,8 +844,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveEvaluatorDetailsInDB(_ id: NSNumber, firstName: String, lastName: String, fullName:String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_Evaluator", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(id, forKey: "id")
@@ -916,8 +864,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveAssignUserDetailsInDB(_ id: NSNumber, firstName: String, lastName: String, fullName:String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_AssignUserDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(id, forKey: "id")
@@ -936,8 +884,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveHousingDetailsInDB(_ id: NSNumber, housingName: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         
         let entity = NSEntityDescription.entity(forEntityName: "PVE_Housing", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -956,8 +904,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveAssessmentCategoriesDetailsInDB(_ json:PVEAssessmentCategoriesDetailsRes) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_AssessmentCategoriesDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(json.id, forKey: "id")
@@ -980,8 +928,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveAssessmentQuestionInDB(_ dict: [String  :Any], json:PVEAssessmentCategoriesDetailsRes) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         
         let entity = NSEntityDescription.entity(forEntityName: "PVE_AssessmentQuestion", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -1022,8 +970,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchImgDetailsFromDB(_ seq_Number: NSNumber, syncId:String) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_ImageEntitySync")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "seq_Number == %@ AND syncId == %@", seq_Number, syncId)
@@ -1062,8 +1008,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchDraftAssQuestion(_ seq_Number: NSNumber, type:String, syncId:String) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "seq_Number == %@ AND syncId == %@", seq_Number, syncId)
@@ -1086,8 +1030,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchAssessmentQuestion(_ seq_Number: NSNumber) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqStr, seq_Number)
@@ -1112,9 +1054,6 @@ class CoreDataHandlerPVE: NSObject {
         isSelected = true
         var sumMarks = Int()
         var maxMarks = Int()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "seq_Number == %@ AND isSelected == %@ AND type == %@ AND syncId == %@", argumentArray: [seqNo, isSelected, type, syncId])
@@ -1151,9 +1090,6 @@ class CoreDataHandlerPVE: NSObject {
         var isSelected = true
         var sumMarks = Int()
         var maxMarks = Int()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqisSelectedStr, argumentArray: [seqNo, isSelected])
@@ -1191,9 +1127,6 @@ class CoreDataHandlerPVE: NSObject {
         var sumMarks = Int()
         var maxMarks = Int()
        
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqisSelectedStr, argumentArray: [seqNo, true])
@@ -1231,9 +1164,6 @@ class CoreDataHandlerPVE: NSObject {
         var sumMarks = Int()
         var maxMarks = Int()
        
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "seq_Number == %@ AND isSelected == %@ AND type == %@ AND syncId == %@", argumentArray: [seqNo, isSelected, type, syncId])
@@ -1275,8 +1205,6 @@ class CoreDataHandlerPVE: NSObject {
             var dataArray = NSArray()
             var sumMarks = Int()
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: "seq_Number == %@ AND isSelected == %@ AND syncId == %@", argumentArray: [seqNo, isSelected, syncId])
@@ -1320,8 +1248,6 @@ class CoreDataHandlerPVE: NSObject {
             var dataArray = NSArray()
             var sumMarks = Int()
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: predicateSeqisSelectedStr, argumentArray: [seqNo, isSelected])
@@ -1355,9 +1281,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func updateDraftAssDetails(_ seqNo: Int, id:Int, isSel:Bool, type:String, syncId:String) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqTypeSyncId, argumentArray: [seqNo, id, type, syncId])
@@ -1383,9 +1306,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func updateAssementDetails(_ seqNo: Int, id:Int, isSel:Bool ) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqId, argumentArray: [seqNo, id])
@@ -1412,9 +1332,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func updateDraftAssFieldTextDetails(_ seqNo: Int, id:Int, text:String, type:String, syncId:String) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqTypeSyncId, argumentArray: [seqNo, id, type, syncId])
@@ -1441,9 +1358,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func updateAssementFieldTextDetails(_ seqNo: Int, id:Int, text:String) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqId, argumentArray: [seqNo, id])
@@ -1470,9 +1384,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func updateDraftCommentAssDetails(_ seqNo: Int, rowId:Int, commentStr:String, type:String, syncId:String) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqTypeSyncId, argumentArray: [seqNo, rowId, type, syncId])
@@ -1497,9 +1408,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func updateCommentAssementDetails(_ seqNo: Int, rowId:Int, commentStr:String) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqId, argumentArray: [seqNo, rowId])
@@ -1526,8 +1434,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func updateStatusSyncImageDataInAssementDetails(_ imgSyncId:String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_ImageEntitySync")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "imgSyncId == %@", argumentArray: [imgSyncId])
@@ -1555,8 +1463,8 @@ class CoreDataHandlerPVE: NSObject {
         
         var managedObject = [NSManagedObject]()
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         
         let entity = NSEntityDescription.entity(forEntityName: "PVE_ImageEntitySync", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -1583,8 +1491,8 @@ class CoreDataHandlerPVE: NSObject {
         
         var managedObject = [NSManagedObject]()
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         
         let entity = NSEntityDescription.entity(forEntityName: "PVE_ImageEntity", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -1612,8 +1520,6 @@ class CoreDataHandlerPVE: NSObject {
     func getImageDataForCurrentAssementDetails(_ syncId:String, seqNumber: NSNumber, rowId:Int, entity:String) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         fetchRequest.returnsObjectsAsFaults = false
         if syncId.count > 0 {
@@ -1641,8 +1547,8 @@ class CoreDataHandlerPVE: NSObject {
     ///// to unselect aLL Questions
     func updateQuestionstoDeselect() {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
@@ -1675,8 +1581,6 @@ class CoreDataHandlerPVE: NSObject {
     func checkAtLeastOneSelectionInCategory(_ seq_Number: NSNumber) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqStr, seq_Number)
@@ -1698,8 +1602,6 @@ class CoreDataHandlerPVE: NSObject {
     func getSessionDetailsFromDB() -> NSArray {
         var dataArray = NSArray()
         var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Session")
         fetchRequest.returnsObjectsAsFaults = false
         do {
@@ -1717,8 +1619,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveUserInfoInDB(userId:Any) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         
         let entity = NSEntityDescription.entity(forEntityName: "PVE_UserInfo", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -1743,9 +1645,6 @@ class CoreDataHandlerPVE: NSObject {
     func updateUserInfoSavedInDB(_ text: Any, forAttribute:String ) {
         
         let userId =  UserDefaults.standard.value(forKey: "Id") as? Int
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_UserInfo")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateUserId, argumentArray: [userId!])
@@ -1770,8 +1669,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchUserInfoSavedInDB(_ userId: NSNumber) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_UserInfo")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateUserId, userId)
@@ -1793,9 +1690,6 @@ class CoreDataHandlerPVE: NSObject {
     
     // MARK: Update Switch State
     func updateLiveVaccineSavedInDB(id: Int, _ isSel:Bool , forAttribute:String , comment: String ,forComment:String) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "id == %@", argumentArray: [id])
@@ -1828,9 +1722,6 @@ class CoreDataHandlerPVE: NSObject {
     
     // MARK: Update Switch State in Draft
     func updateLiveVaccineSavedInDraft(_ isSel:Bool, id: Int, type:String, syncId:String , forAttribute:String  , comment:String ,forComment:String ) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
@@ -1866,9 +1757,6 @@ class CoreDataHandlerPVE: NSObject {
     
     // MARK: Update Switch Comment
     func updateComment(_ comment: String, forAttribute:String, type: String) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -1905,8 +1793,6 @@ class CoreDataHandlerPVE: NSObject {
             let complexNameArr = valuee.value(forKey: "complexName")  as! NSArray
             let complexNameStr = complexNameArr[0] as! String
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Session")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: predicateStr, argumentArray: [currentUserId, customerStr, complexNameStr])
@@ -1929,8 +1815,8 @@ class CoreDataHandlerPVE: NSObject {
         
         CoreDataHandlerPVE().updateQuestionstoDeselect()
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         
         let entity = NSEntityDescription.entity(forEntityName: "PVE_Session", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -2083,8 +1969,8 @@ class CoreDataHandlerPVE: NSObject {
         
         CoreDataHandlerPVE().updateQuestionstoDeselect()
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         
         let entity = NSEntityDescription.entity(forEntityName: "PVE_Session", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -2236,8 +2122,6 @@ class CoreDataHandlerPVE: NSObject {
             
             let customerIdArr = valuee.value(forKey: "customerId")  as! NSArray
             let customerId = customerIdArr[0] as! Int
-            
-            
             let complexNameArr = valuee.value(forKey: "complexName")  as! NSArray
             let complexNameStr = complexNameArr[0] as! String
             
@@ -2278,8 +2162,6 @@ class CoreDataHandlerPVE: NSObject {
             let complexIdArr = valuee.value(forKey: "complexId")  as! NSArray
             let complexIdStr = complexIdArr[0] as! Int
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Session")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: predicateUserId, argumentArray: [currentUserId])
@@ -2312,8 +2194,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveDratDetailsInDB(value: Any, forAttribute:String ) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_Draft", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(value, forKey: "dateCreated")
@@ -2354,9 +2236,6 @@ class CoreDataHandlerPVE: NSObject {
     func updateDraft(_ assessmentId: Int, text: Any, forAttribute:String ) {
         
         var dataArray = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Draft")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "sessionId == %@", argumentArray: [assessmentId])
@@ -2391,9 +2270,6 @@ class CoreDataHandlerPVE: NSObject {
     
     
     func updateSyncAssCatDetailsFor(_ syncId: String, text: Any, forAttribute:String ) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentCategoriesDetails")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
@@ -2422,8 +2298,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveSyncAssCatDetails(type:String, syncId:String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentCategoriesDetails")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -2473,9 +2349,6 @@ class CoreDataHandlerPVE: NSObject {
     
     
     func updateSyncAssQuestionsFor(_ syncId: String, text: Any, forAttribute:String ) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
@@ -2504,8 +2377,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveSyncAssQuestions(type:String, syncId:String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
@@ -2591,8 +2464,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveSyncImageDetailsInDB(syncId:String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_ImageEntity")
         fetchRequest.returnsObjectsAsFaults = false
         ///// Save Value In Table
@@ -2645,8 +2518,6 @@ class CoreDataHandlerPVE: NSObject {
             let imageDataBase64 = json["ImageBase64"].stringValue
             let seq_Number = 1
             
-            let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-            let managedContext = appDelegate!.managedObjectContext
             let entity = NSEntityDescription.entity(forEntityName: "PVE_ImageEntitySync", in: managedContext)
             let person = NSManagedObject(entity: entity!, insertInto: managedContext)
             
@@ -2985,8 +2856,6 @@ class CoreDataHandlerPVE: NSObject {
             let vaccinatorsViewModel = json["vaccinatorsViewModel"].arrayValue
             let vaccineInfoDetailsViewModel = json["vaccineInfoDetailsViewModel"].arrayValue
             
-            let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-            let managedContext = appDelegate!.managedObjectContext
             let entity = NSEntityDescription.entity(forEntityName: "PVE_Sync", in: managedContext)
             let person = NSManagedObject(entity: entity!, insertInto: managedContext)
             person.setValue(true, forKey: "syncedStatus")
@@ -3026,15 +2895,9 @@ class CoreDataHandlerPVE: NSObject {
             person.setValue(vaccineInformationCrewDetailsViewModel?["CrewLeaderName"], forKey: "cat_crewLeaderName")
             person.setValue(vaccineInformationCrewDetailsViewModel?["VaccineInfoType"], forKey: "cat_selectedVaccineInfoType")
             person.setValue(vaccineInformationCrewDetailsViewModel?["IsSerology"], forKey: "isFreeSerology")
-            
-            
             person.setValue(catchersViewModel, forKey: "cat_NoOfCatchersDetailsArr")
             dataPopulationMethod3(catchersViewModel, person, vaccinatorsViewModel)
-            
-            
             dataPopulationMethod1(person, vaccineInfoDetailsViewModel)
-            
-            
             person.setValue(json["Evaluation_Date"].string ?? "", forKey: "evaluationDate")
             
             let dateFormatter = DateFormatter()
@@ -3070,8 +2933,6 @@ class CoreDataHandlerPVE: NSObject {
             person.setValue(choleraVaccinesViewModel[2]["RightWingInj"].intValue, forKey: "injMuscleHit_RightWing_Field")
             person.setValue(choleraVaccinesViewModel[3]["LeftWingInj"].intValue, forKey: "injMissed_LeftWing_Field")
             person.setValue(choleraVaccinesViewModel[3]["RightWingInj"].intValue, forKey: "injMissed_RightWing_Field")
-            
-            
             person.setValue(inactivatedVaccinesViewModel[0]["IntraInj"].intValue, forKey: "injMuscleHit_IntramusculerInj_Field")
             person.setValue(inactivatedVaccinesViewModel[0]["SubInj"].intValue, forKey: "injMuscleHit_SubcutaneousInj_Field")
             
@@ -3119,9 +2980,6 @@ class CoreDataHandlerPVE: NSObject {
     
     
     func updateSyncAssQuestionsFor(_ syncId: String, id:Int, text: Any, forAttribute:String ) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "syncId == %@ AND id == %@", argumentArray: [syncId, id])
@@ -3208,8 +3066,8 @@ class CoreDataHandlerPVE: NSObject {
     
     func saveSyncDetailsInDB(maxScoreArray:NSArray, scoreArray:NSArray, categoryArray:NSArray, syncId:String, dataTypeStr:String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_Sync", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
@@ -3359,10 +3217,6 @@ class CoreDataHandlerPVE: NSObject {
             let customerStr = customerArr[0] as! String
             let complexNameArr = valuee.value(forKey: "complexName")  as! NSArray
             let complexNameStr = complexNameArr[0] as! String
-            
-            
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             fetchRequest.returnsObjectsAsFaults = false
             if syncId.count > 0{
@@ -3615,8 +3469,6 @@ class CoreDataHandlerPVE: NSObject {
             let customerStr = customerArr[0] as! String
             let complexNameArr = valuee.value(forKey: "complexName")  as! NSArray
             let complexNameStr = complexNameArr[0] as! String
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: predicateStr, argumentArray: [currentUserId, customerStr, complexNameStr])
@@ -3676,8 +3528,6 @@ class CoreDataHandlerPVE: NSObject {
             let complexNameArr = valuee.value(forKey: "complexName")  as! NSArray
             let complexNameStr = complexNameArr[0] as! String
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             fetchRequest.returnsObjectsAsFaults = false
             if syncId.count > 0{
@@ -3739,8 +3589,6 @@ class CoreDataHandlerPVE: NSObject {
             let complexNameArr = valuee.value(forKey: "complexName")  as! NSArray
             let complexNameStr = complexNameArr[0] as! String
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             fetchRequest.returnsObjectsAsFaults = false
             if syncId.count > 0{
@@ -3794,9 +3642,6 @@ class CoreDataHandlerPVE: NSObject {
     
     
     func updateStatusForSync(_ syncId: String, text: Any, forAttribute:String ) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
@@ -3826,9 +3671,6 @@ class CoreDataHandlerPVE: NSObject {
     
     func updateDraftSNAFor(_ syncId: String, syncedStatus:Bool, text: Any, forAttribute:String ) {
         
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
@@ -3856,9 +3698,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func updateDraftToSync(_ syncId: String, type: String, maxScoreArray:NSArray, scoreArray:NSArray, categoryArray:NSArray) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "syncId == %@ AND type == %@", argumentArray: [syncId, type])
@@ -3906,8 +3745,6 @@ class CoreDataHandlerPVE: NSObject {
             
             let currentUserId =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Sync")
             fetchRequest.returnsObjectsAsFaults = false
             let sort = NSSortDescriptor(key: "objEvaluationDate", ascending: true)
@@ -3947,8 +3784,8 @@ class CoreDataHandlerPVE: NSObject {
         let userId =  UserDefaults.standard.value(forKey: "Id") as? Int
         
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        
+
         let entity = NSEntityDescription.entity(forEntityName: "PVE_CustomerComplexPopup", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(customer, forKey: "customer")
@@ -3980,11 +3817,6 @@ class CoreDataHandlerPVE: NSObject {
         siteDetailsArray = CoreDataHandlerPVE().fetchSiteNameAsComplexId( complexId as NSNumber)
         siteIdArr = siteDetailsArray.value(forKey: "site_Id") as? NSArray ?? NSArray()
         siteNameArr = siteDetailsArray.value(forKey: "site_Name") as? NSArray ?? NSArray()
-        
-        
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
         let entity = NSEntityDescription.entity(forEntityName: "PVE_CustomerComplexPopup", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(customer, forKey: "customer")
@@ -4006,8 +3838,6 @@ class CoreDataHandlerPVE: NSObject {
     func fetchSiteNameAsComplexId(_ complexId: NSNumber) -> NSArray {
         
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SiteIDName")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "complex_Id == %@", complexId)
@@ -4027,9 +3857,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func updateLiveVaccineDetails(_ seqNo: Int, id:Int, isSel:Bool) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqId, argumentArray: [seqNo, id])
@@ -4058,9 +3885,6 @@ class CoreDataHandlerPVE: NSObject {
     
     
     func updateInactiveDetails(_ seqNo: Int, id:Int, isSel:Bool) {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSeqId, argumentArray: [seqNo, id])

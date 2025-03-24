@@ -13,7 +13,7 @@ class SanitationEmbrexQuestionMasterDAO{
     
     let userIdStr = "userId = %@"
     let userIdAssId = "userId = %@ AND assessmentId = %@"
-//    private init(){print("Initializer")}
+
     static let sharedInstance = SanitationEmbrexQuestionMasterDAO()
     
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext

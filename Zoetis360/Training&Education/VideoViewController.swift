@@ -36,9 +36,7 @@ class VideoViewController: UIViewController,WKNavigationDelegate,WKUIDelegate {
         hud1.bezelView.color = UIColor.black
        // hud1.label.text = appDelegateObj.loadingStr
     }
-    override func viewDidAppear(_ animated: Bool) {
-       
-    }
+
     @objc func loadHtmlFile() {
         
         let lngId = UserDefaults.standard.integer(forKey: "lngId")

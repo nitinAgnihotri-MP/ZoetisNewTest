@@ -729,7 +729,7 @@ class CoreDataHandlerPE: NSObject {
             assessmentObj.setValue(newAssessment.residue, forKey: "residue")
             assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
             //PE International changes
-            assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+            assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
             assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
             assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
             assessmentObj.setValue(NSNumber(value:newAssessment.countryID ?? 0), forKey: "countryID")
@@ -833,7 +833,7 @@ class CoreDataHandlerPE: NSObject {
                     assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
                     assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
                     assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
-                    assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+                    assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
                     assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
                     assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
                     assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
@@ -965,7 +965,7 @@ class CoreDataHandlerPE: NSObject {
         // PE International chnages
         assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
         assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
-        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
         assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
         assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
         assessmentObj.setValue(newAssessment.isNA, forKey: "isNA")
@@ -1081,7 +1081,7 @@ class CoreDataHandlerPE: NSObject {
         assessmentObj.setValue(newAssessment.residue, forKey: "residue")
         // chnages
         assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
-        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
         assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
         assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
         assessmentObj.setValue(newAssessment.extndMicro, forKey: "extndMicro")
@@ -1226,7 +1226,7 @@ class CoreDataHandlerPE: NSObject {
                 // PE Inte. Changes
                 userIDArray = dataArray.value(forKey: "countryID")  as? NSArray ?? []
                 peNewAssessment.countryID = userIDArray.firstObject as? Int ?? 0
-                userIDArray = dataArray.value(forKey: Constants.countryNamStr)  as? NSArray ?? []
+                userIDArray = dataArray.value(forKey: Constants.countryNamStrSmall)  as? NSArray ?? []
                 peNewAssessment.countryName = userIDArray.firstObject as? String ?? ""
                 
                 
@@ -1373,7 +1373,7 @@ class CoreDataHandlerPE: NSObject {
                 // PE Inte. Changes
                 userIDArray = dataArray.value(forKey: "countryID")  as? NSArray ?? []
                 peNewAssessment.countryID = userIDArray.firstObject as? Int ?? 0
-                userIDArray = dataArray.value(forKey: Constants.countryNamStr)  as? NSArray ?? []
+                userIDArray = dataArray.value(forKey: Constants.countryNamStrSmall)  as? NSArray ?? []
                 peNewAssessment.countryName = userIDArray.firstObject as? String ?? ""
                 
                 // PE Inte. Changes
@@ -1503,7 +1503,7 @@ class CoreDataHandlerPE: NSObject {
                     
                     
                     // PE International Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     
                     // PE International Changes
@@ -1614,7 +1614,7 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.residue = result.value(forKey: "residue") as? String ?? ""
                     
                     // PE International Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     
                     // PE International Changes
@@ -1749,7 +1749,7 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.doaS = result.value(forKey: "doaS") as? [Int] ?? []
                     
                     // PE International changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     
                     // PE International Changes
@@ -1872,7 +1872,7 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.hatcheryAntibioticsDoa = result.value(forKey: "hatcheryAntibioticsDoa")  as? Int ?? 0
                     peNewAssessment.doaS = result.value(forKey: "doaS") as? [Int] ?? []
                     // PE International changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     
                     // PE International Changes
@@ -2000,7 +2000,7 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.draftID = result.value(forKey: "draftID") as? String ?? ""
                     
                     // PE International Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     
                     // PE International Changes
@@ -2162,7 +2162,7 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.isNA = result.value(forKey: "isNA") as? Bool ?? false
                     
                     // PE International Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     
                     // PE International Changes
@@ -2307,7 +2307,7 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.personName = result.value(forKey: "personName")  as? String ?? ""
                     
                     // PE International Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     peNewAssessment.fluid = result.value(forKey: "fluid")  as? Bool ?? false
                     peNewAssessment.basicTransfer = result.value(forKey: "basic")  as? Bool ?? false
@@ -2473,7 +2473,7 @@ class CoreDataHandlerPE: NSObject {
                     
                     
                     // PE Internation Update's
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     peNewAssessment.fluid = result.value(forKey: "fluid")  as? Bool ?? false
                     peNewAssessment.basicTransfer = result.value(forKey: "basic")  as? Bool ?? false
@@ -2817,7 +2817,7 @@ class CoreDataHandlerPE: NSObject {
                 
                 
                 peNewAssessment.countryID = result.value(forKey: "countryID")   as? Int ?? 0
-                peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                 
                 
                 // PE International Changes
@@ -3008,7 +3008,7 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.hatcheryAntibioticsDoa = result.value(forKey: "hatcheryAntibioticsDoa")  as? Int ?? 0
                     peNewAssessment.doaS = result.value(forKey: "doaS") as? [Int] ?? []
                     // PE International Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID") as? Int ?? 0
                     
                     // PE International Changes
@@ -3081,7 +3081,7 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.rejectionComment = result.value(forKey: "rejectionComment") as? String ?? ""
                     peNewAssessment.notes = result.value(forKey: "notes")  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID") as? Int ?? 0
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     
                     // PE International Changes
                     peNewAssessment.clorineName = result.value(forKey: "clorineName")  as? String ?? ""
@@ -3286,7 +3286,7 @@ class CoreDataHandlerPE: NSObject {
         assessmentObj.setValue(newAssessment.residue, forKey: "residue")
         
         // PE International Changes
-        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
         assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
         assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
         assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
@@ -3423,7 +3423,7 @@ class CoreDataHandlerPE: NSObject {
                     
                     
                     // PE International Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID") as? Int ?? 0
                     
                     // PE International Changes
@@ -5940,7 +5940,7 @@ extension CoreDataHandlerPE {
             
             //   PE International Changes
             assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-            assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+            assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
             assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
             assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
             assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
@@ -6104,7 +6104,7 @@ extension CoreDataHandlerPE {
             
             // PE Intrenational Changes
             assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-            assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+            assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
             
             assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
             assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
@@ -6275,7 +6275,7 @@ extension CoreDataHandlerPE {
             assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
             
             // PE Intrenational Changes
-            assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+            assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
             assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
             assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
             assessmentObj.setValue(newAssessment.clorineName, forKey: "clorineName")
@@ -6505,7 +6505,7 @@ extension CoreDataHandlerPE {
         assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
         assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
         // PE Intrenational Changes
-        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
         assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
         
         
@@ -6669,7 +6669,7 @@ extension CoreDataHandlerPE {
         assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
         // PE Intrenational Changes
         assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
         assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
         assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
         assessmentObj.setValue(newAssessment.basic, forKey: "basic")
@@ -6832,7 +6832,7 @@ extension CoreDataHandlerPE {
         assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
         assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
         // PE Intrenational Changes
-        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
         assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
         assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
         assessmentObj.setValue(newAssessment.basic, forKey: "basic")
@@ -6987,7 +6987,7 @@ extension CoreDataHandlerPE {
         
         // PE Intrenational Changes
         assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
         assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
         assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
         assessmentObj.setValue(newAssessment.basic, forKey: "basic")
@@ -7147,7 +7147,7 @@ extension CoreDataHandlerPE {
         assessmentObj.setValue(newAssessment.ppmValue, forKey: "ppmValue")
         assessmentObj.setValue(newAssessment.sanitationValue, forKey: "sanitationValue")
         // PE Intrenational Changes
-        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+        assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
         assessmentObj.setValue(newAssessment.countryID, forKey: "countryID")
         assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
         assessmentObj.setValue(newAssessment.basic, forKey: "basic")
@@ -8154,7 +8154,7 @@ extension CoreDataHandlerPE {
                     assessmentObj.setValue(NSNumber(value:newAssessment.noOfEggs ?? 0), forKey: "noOfEggs")
                     assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
                     assessmentObj.setValue(newAssessment.refrigeratorNote, forKey: "refrigeratorNote")
-                    assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+                    assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
                     assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
                     assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
                     assessmentObj.setValue(NSNumber(value:newAssessment.countryID ?? 0), forKey: "countryID")
@@ -8231,7 +8231,7 @@ extension CoreDataHandlerPE {
                     assessmentObj.setValue(NSNumber(value:newAssessment.noOfEggs ?? 0), forKey: "noOfEggs")
                     assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
                     // PE International Changes
-                    assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStr)
+                    assessmentObj.setValue(newAssessment.countryName, forKey: Constants.countryNamStrSmall)
                     assessmentObj.setValue(NSNumber(value:newAssessment.countryID ?? 0), forKey: "countryID")
                     assessmentObj.setValue(newAssessment.basicTransfer, forKey: "basic")
                     assessmentObj.setValue(newAssessment.fluid, forKey: "fluid")
@@ -8412,7 +8412,7 @@ extension CoreDataHandlerPE {
                     peNewAssessment.sanitationValue = result.value(forKey: "sanitationValue") as? Bool ?? false
                     
                     // PE Intrenational Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     peNewAssessment.fluid = result.value(forKey: "fluid")  as? Bool ?? false
                     peNewAssessment.basicTransfer = result.value(forKey: "basic") as? Bool ?? false
@@ -8648,7 +8648,7 @@ extension CoreDataHandlerPE {
                     // PE Inte. Changes
                     userIDArray = dataArray.value(forKey: "countryID")  as? NSArray ?? []
                     peNewAssessment.countryID = userIDArray.firstObject as? Int ?? 0
-                    userIDArray = dataArray.value(forKey: Constants.countryNamStr)  as? NSArray ?? []
+                    userIDArray = dataArray.value(forKey: Constants.countryNamStrSmall)  as? NSArray ?? []
                     peNewAssessment.countryName = userIDArray.firstObject as? String ?? ""
                     
                     userIDArray = dataArray.value(forKey: "isEMRequested")  as? NSArray ?? []
@@ -8921,7 +8921,7 @@ extension CoreDataHandlerPE {
                 // PE Inte. Changes
                 userIDArray = dataArray.value(forKey: "countryID")  as? NSArray ?? []
                 peNewAssessment.countryID = userIDArray.firstObject as? Int ?? 0
-                userIDArray = dataArray.value(forKey: Constants.countryNamStr)  as? NSArray ?? []
+                userIDArray = dataArray.value(forKey: Constants.countryNamStrSmall)  as? NSArray ?? []
                 peNewAssessment.countryName = userIDArray.firstObject as? String ?? ""
                 
                 
@@ -9182,7 +9182,7 @@ extension CoreDataHandlerPE {
                 // PE Inte. Changes
                 userIDArray = dataArray.value(forKey: "countryID")  as? NSArray ?? []
                 peNewAssessment.countryID = userIDArray.firstObject as? Int ?? 0
-                userIDArray = dataArray.value(forKey: Constants.countryNamStr)  as? NSArray ?? []
+                userIDArray = dataArray.value(forKey: Constants.countryNamStrSmall)  as? NSArray ?? []
                 peNewAssessment.countryName = userIDArray.firstObject as? String ?? ""
                 
                 
@@ -9326,7 +9326,7 @@ extension CoreDataHandlerPE {
                     peNewAssessment.doaS = result.value(forKey: "doaS") as? [Int] ?? []
                     
                     // PE Intrenational Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStr)  as? String ?? ""
+                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
                     peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
                     peNewAssessment.fluid = result.value(forKey: "fluid")  as? Bool ?? false
                     peNewAssessment.basicTransfer = result.value(forKey: "basic") as? Bool ?? false

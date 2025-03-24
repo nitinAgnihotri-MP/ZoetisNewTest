@@ -375,18 +375,12 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
                 cell.sexLabel.text = selectedVal
                 selectedSexValue = selectedVal
                 
-                if selectedVal == "Female"
-                {
-                    selectedSexValue = "2"
-                }
-                else if selectedVal == "N/A"
-                {
-                    selectedSexValue = "0"
-                }
-                else
-                {
-                    selectedSexValue = "1"
-                }
+                let sexMapping: [String: String] = [
+                    "Female": "2",
+                    "N/A": "0"
+                ]
+
+                selectedSexValue = sexMapping[selectedVal] ?? "1"
                 
                 let pointInTable: CGPoint = sender.convert(sender.bounds.origin, to: self.bgTableView)
                 let cellIndexPath = self.bgTableView.indexPathForRow(at: pointInTable)
@@ -745,7 +739,7 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
 
 // MARK: - EXTENSION
 extension AllBirdsViewControllerTurkey {
-    //Checking in sequence of birds list is changed previously by swaping cells
+
     func setTemperaryObsNameArray() {
         let savedMovedBirdsSequences = CoreDataHandlerTurkey().fetchAllBirdsSwapedIndexes()
         if savedMovedBirdsSequences.count > 0 {

@@ -25,6 +25,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
     var accestoken = String()
     var pathArr = NSMutableArray()
     var defaultSession: Foundation.URLSession?
+    let pdfFileName = "pdf2.pdf"
 
     @IBOutlet weak var subHeader: UILabel!
     override func viewDidLoad() {
@@ -152,10 +153,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
                         self.downloadSize = 0.0
                         self.dataToDownload = NSMutableData()
                         self.downloadAndStorePDFFromURLWithString(self.pathArr.object(at: 0) as! String, completion: { (status) in
-                            if status == true
-                            {
-                                // self.loadHtmlFile()
-                            }
+                           
                         })
                         
                     }
@@ -265,7 +263,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
         func loadHtmlFile() {
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0]
-        let filePath = URL(fileURLWithPath: documentsDirectory).appendingPathComponent("pdf2.pdf").absoluteString
+        let filePath = URL(fileURLWithPath: documentsDirectory).appendingPathComponent(pdfFileName).absoluteString
         let req = URLRequest(url: URL(string: filePath)!)
             wkWebView.load(req)
 
@@ -284,7 +282,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
     {
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         let url = URL(fileURLWithPath: path)
-        let filePath = url.appendingPathComponent("pdf2.pdf").path
+        let filePath = url.appendingPathComponent(pdfFileName).path
 //        let fileLength = self.sizeForLocalFilePath(filePath) / 1048576
 //
 //        if fileLength < 2
@@ -396,7 +394,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
 
             //Get the local docs directory and append your local filename.
             var docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
-            docURL = docURL?.appendingPathComponent("pdf2.pdf")
+            docURL = docURL?.appendingPathComponent(pdfFileName)
             //Lastly, write your file to the disk.
             try? finaldata.write(to: docURL!, options: [.atomic])
             if self.checkPdfExitOnLocal() == false {

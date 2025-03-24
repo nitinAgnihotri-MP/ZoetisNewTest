@@ -4300,7 +4300,7 @@ extension PEDashboardViewController{
     private func getPostingAssessmentListByUser(){
         self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
         if ConnectionManager.shared.hasConnectivity() {
-            ZoetisWebServices.shared.getPostingAssessmentListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
+            ZoetisWebServices.shared.getPostedAssmntListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     return

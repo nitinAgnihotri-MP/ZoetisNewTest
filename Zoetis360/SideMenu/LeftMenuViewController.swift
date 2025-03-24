@@ -211,6 +211,121 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
         return cell
     }
     
+    fileprivate func offlineSetup(_ vlue: Bool, _ vlue1: Bool) {
+        if vlue == true{
+            let custArr = CoreDataHandler().fetchCustomer()
+            if(custArr.count == 0){
+                let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+                appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+            }
+            else{
+                SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC"), withCompletion: nil)
+            }
+        }
+        else if vlue1 == true{
+            let custArr = CoreDataHandlerTurkey().fetchCustomerTurkey()
+            if(custArr.count == 0){
+                let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                
+                let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+                appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+            }  else {
+                
+                SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC"), withCompletion: nil)
+            }
+        }
+    }
+    
+    fileprivate func syncTurkeyData() {
+        objApiSyncTurkey.delegeteSyncApiTurkey = self
+        if self.allSessionArrTurkey().count > 0 {
+            if WebClass.sharedInstance.connected() == true{
+                Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
+                self.callSyncApiTurkey()
+            } else {
+                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
+            }
+        } else {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC"), withCompletion: nil)
+        }
+    }
+    
+    fileprivate func syncChickenData() {
+        objApiSync.delegeteSyncApi = self
+        if self.allSessionArr().count > 0 {
+            if WebClass.sharedInstance.connected() == true{
+                Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
+                
+                self.callSyncApi()
+            } else {
+                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
+            }
+        }
+        else {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC"), withCompletion: nil)
+        }
+    }
+    
+    fileprivate func loadDashViewController() {
+        let val = UserDefaults.standard.integer(forKey: "chick")
+        if val  ==  4  {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "DashView_Controller"), withCompletion: nil)
+        } else {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "DashViewControllerTurkey"), withCompletion: nil)
+        }
+    }
+    
+    fileprivate func loadHelpViewChickenTurkey() {
+        let val = UserDefaults.standard.integer(forKey: "chick")
+        if val  ==  4 {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "helpView"), withCompletion: nil)
+        } else {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "HelpScreenVcTurkey"), withCompletion: nil)
+        }
+    }
+    
+    fileprivate func loadChickenTurkeySettings() {
+        let val = UserDefaults.standard.integer(forKey: "chick")
+        if val  ==  4 {
+            
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "setting"), withCompletion: nil)
+        }
+        else{
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "settingTurkey"), withCompletion: nil)
+        }
+    }
+    
+    fileprivate func loadReportChickenTurkey() {
+        let val = UserDefaults.standard.integer(forKey: "chick")
+        if val  ==  4 {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "Report"), withCompletion: nil)
+        } else {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "ReportTurkey"), withCompletion: nil)
+        }
+    }
+    
+    fileprivate func existingSessionChickenTurkey() {
+        let val = UserDefaults.standard.integer(forKey: "chick")
+        if val ==  4  {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "Existing"), withCompletion: nil)
+        } else {
+            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "ExistingTurkey"), withCompletion: nil)
+        }
+    }
+    
+    fileprivate func loadUnknownView() {
+        let val = UserDefaults.standard.integer(forKey: "chick")
+        if val  ==  4 {
+            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil)
+            
+        } else {
+            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierTurkey"), object: nil)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AllValidSessions.sharedInstance.complexName = ""
         switch indexPath.row {
@@ -229,12 +344,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
             UserDefaults.standard.set(false, forKey: "Unlinked")
             UserDefaults.standard.set(true, forKey: "nec")
             UserDefaults.standard.set(false, forKey: "backFromStep1")
-            let val = UserDefaults.standard.integer(forKey: "chick")
-            if val  ==  4  {
-                SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "DashView_Controller"), withCompletion: nil)
-            } else {
-                SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "DashViewControllerTurkey"), withCompletion: nil)
-            }
+            loadDashViewController()
             
         case 1:
             if UserDefaults.standard.integer(forKey: "Role") == 1 {
@@ -257,13 +367,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                 UserDefaults.standard.set(1, forKey: "sessionId")
                 UserDefaults.standard.set(0, forKey: "isBackWithoutFedd")
                 appDelegate.sendFeedVariable = ""
-                let val = UserDefaults.standard.integer(forKey: "chick")
-                if val  ==  4 {
-                    NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil)
-                    
-                } else {
-                    NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierTurkey"), object: nil)
-                }
+                loadUnknownView()
             }
         case 2:
             
@@ -283,12 +387,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                 UserDefaults.standard.set(false, forKey: "Unlinked")
                 UserDefaults.standard.set(true, forKey: "nec")
                 UserDefaults.standard.set(false, forKey: "backFromStep1")
-                let val = UserDefaults.standard.integer(forKey: "chick")
-                if val ==  4  {
-                    SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "Existing"), withCompletion: nil)
-                } else {
-                    SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "ExistingTurkey"), withCompletion: nil)
-                }
+                existingSessionChickenTurkey()
             }
         case 3:
             
@@ -321,12 +420,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                 UserDefaults.standard.set(false, forKey: "Unlinked")
                 UserDefaults.standard.set(true, forKey: "nec")
                 UserDefaults.standard.set(false, forKey: "backFromStep1")
-                let val = UserDefaults.standard.integer(forKey: "chick")
-                if val  ==  4 {
-                    SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "Report"), withCompletion: nil)
-                } else {
-                    SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "ReportTurkey"), withCompletion: nil)
-                }
+                loadReportChickenTurkey()
             }
             
         case 5:
@@ -345,12 +439,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
             UserDefaults.standard.set(false, forKey: "Unlinked")
             UserDefaults.standard.set(true, forKey: "nec")
             UserDefaults.standard.set(false, forKey: "backFromStep1")
-            let val = UserDefaults.standard.integer(forKey: "chick")
-            if val  ==  4 {
-                SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "helpView"), withCompletion: nil)
-            } else {
-                SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "HelpScreenVcTurkey"), withCompletion: nil)
-            }
+            loadHelpViewChickenTurkey()
             
         case 6:
             
@@ -370,14 +459,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                 UserDefaults.standard.set(true, forKey: "nec")
                 UserDefaults.standard.set(false, forKey: "backFromStep1")
                 
-                let val = UserDefaults.standard.integer(forKey: "chick")
-                if val  ==  4 {
-                    
-                    SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "setting"), withCompletion: nil)
-                }
-                else{
-                    SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "settingTurkey"), withCompletion: nil)
-                }
+                loadChickenTurkeySettings()
             }
             
         default:
@@ -403,61 +485,15 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                     UserDefaults.standard.set(true, forKey: "nec")
                     UserDefaults.standard.set(false, forKey: "backFromStep1")
                     if vlue == true{
-                        objApiSyncTurkey.delegeteSyncApiTurkey = self
-                        if self.allSessionArrTurkey().count > 0 {
-                            if WebClass.sharedInstance.connected() == true{
-                                Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
-                                self.callSyncApiTurkey()
-                            } else {
-                                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
-                            }
-                        } else {
-                            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC"), withCompletion: nil)
-                        }
+                        syncTurkeyData()
                     }
                     else if vlue1 == true{
-                        objApiSync.delegeteSyncApi = self
-                        if self.allSessionArr().count > 0 {
-                            if WebClass.sharedInstance.connected() == true{
-                                Helper.showGlobalProgressHUDWithTitle(UIApplication.shared.keyWindow!, title: NSLocalizedString("Data syncing...", comment: ""))
-                                
-                                self.callSyncApi()
-                            } else {
-                                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please go online and sync data before logging out.", comment: ""))
-                            }
-                        }
-                        else {
-                            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC"), withCompletion: nil)
-                        }
+                        syncChickenData()
                     }
                     
                 } else {
                     
-                    if vlue == true{
-                        let custArr = CoreDataHandler().fetchCustomer()
-                        if(custArr.count == 0){
-                            let appDelegate = UIApplication.shared.delegate as? AppDelegate
-                            let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                            appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
-                        }
-                        else{
-                            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC"), withCompletion: nil)
-                        }
-                    }
-                    else if vlue1 == true{
-                        let custArr = CoreDataHandlerTurkey().fetchCustomerTurkey()
-                        if(custArr.count == 0){
-                            let appDelegate = UIApplication.shared.delegate as? AppDelegate
-                            
-                            let alert = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Please connect to Internet, switching species is only allowed when device is connected to Internet.", comment: ""), preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                            appDelegate?.window?.rootViewController?.present(alert, animated: true, completion: nil)
-                        }  else {
-                            
-                            SlideNavigationController.sharedInstance().popAllAndSwitch(to: self.storyboard?.instantiateViewController(withIdentifier: "BirdsSelectionVC"), withCompletion: nil)
-                        }
-                    }
+                    offlineSetup(vlue, vlue1)
                 }
             }
         }

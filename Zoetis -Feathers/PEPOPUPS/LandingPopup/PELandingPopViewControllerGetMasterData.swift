@@ -489,7 +489,7 @@ extension PELandingPoupViewController{
     
     
     private func getPostingAssessmentListByUser(){
-        ZoetisWebServices.shared.getPostingAssessmentListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
+        ZoetisWebServices.shared.getPostedAssmntListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
             guard let `self` = self, error == nil else { return }
             self.handlGetPostingAssessmentListByUser(json)
           //  self.dismissGlobalHUD(self.view)

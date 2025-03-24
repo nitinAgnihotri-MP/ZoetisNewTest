@@ -128,15 +128,7 @@ class BacterialSurveyVC: BaseViewController {
             } else {
                 self.saveDataIntoDB(cell: cell)
             }
-        }
-        
-//        if let cell = bacterialSurveyTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? BacterialCaseInfoCell {
-//            if (cell.selectedCompanyTxt.text == "" && cell.siteTxt.text == "" && cell.reviewerTxt.text == ""  && cell.emailIdTxt.text == "") {
-//                
-//            } else {
-//                self.saveDataIntoDB(cell: cell)
-//            }
-//        }
+        }        
         NotificationCenter.default.post(name: NSNotification.Name("LeftMenuBtnNoti"), object: nil, userInfo: nil)
     }
     

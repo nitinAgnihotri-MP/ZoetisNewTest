@@ -148,6 +148,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
     var feedIdUpdate = NSNumber()
     
     var editfeed = String()
+    let mendatoryFieldMsg = "Fields marked as (*) are mandatory. Please fill all the fields."
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -548,18 +549,41 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         innerView.endEditing(true)
     }
     var countFarm = Int()
+    fileprivate func unlinkedDataValidation() {
+        if (trimmedString == "" ||  ageLbl.text == "" || farmNameTextfield.text == ""){
+            
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldMsg)
+            
+            if farmNameTextfield.text == ""  {
+                farmNameTextfield.layer.borderColor = UIColor.red.cgColor
+            }
+            if farmWeightTextField.text == ""  {
+                farmWeightTextField.layer.borderColor = UIColor.red.cgColor
+            }
+            ageUperBtnOutlet.setImage(UIImage(named: "dialer01-1"), for: .normal)
+            
+            if ageLbl.text != ""  {
+                ageUperBtnOutlet.setImage(UIImage(named: "dialer01"), for: .normal)
+            }
+        } else {
+            
+            feedProgramDisplayLabel.text = ""
+            self.insertdata()
+        }
+    }
+    
     @IBAction func addMoreAction(_ sender: UIButton) {
         
         countFarm =  (farmNameTextfield.text?.count)!
         
         if farmWeightTextField.text?.count == 1 && farmWeightTextField.text == "."  {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldMsg)
             farmWeightTextField.layer.borderColor = UIColor.red.cgColor
             farmWeightTextField.text = nil
         }
         else if farmWeightTextField.text == ""
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldMsg)
             farmWeightTextField.layer.borderColor = UIColor.red.cgColor
             farmWeightTextField.text = nil
         }
@@ -569,31 +593,12 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             
             if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
                 
-                if (trimmedString == "" ||  ageLbl.text == "" || farmNameTextfield.text == ""){
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
-                    
-                    if farmNameTextfield.text == ""  {
-                        farmNameTextfield.layer.borderColor = UIColor.red.cgColor
-                    }
-                    if farmWeightTextField.text == ""  {
-                        farmWeightTextField.layer.borderColor = UIColor.red.cgColor
-                    }
-                    ageUperBtnOutlet.setImage(UIImage(named: "dialer01-1"), for: .normal)
-                    
-                    if ageLbl.text != ""  {
-                        ageUperBtnOutlet.setImage(UIImage(named: "dialer01"), for: .normal)
-                    }
-                } else {
-                    
-                    feedProgramDisplayLabel.text = ""
-                    self.insertdata()
-                }
+                unlinkedDataValidation()
             }
             
             else  if (feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  ageLbl.text == "" || farmNameTextfield.text == "" )
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldMsg, comment: ""))
                 
                 feedProgramBtn.layer.borderColor = UIColor.red.cgColor
                 ageUperBtnOutlet.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
@@ -884,11 +889,11 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 autoSerchTable.reloadData()
             }
         } else {
-            
+            let aSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
             switch textField.tag {
                 
             case 40 :
-                let aSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
+               
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
                 
@@ -901,7 +906,6 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 
             case 18 :
                 
-                let aSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
                 
@@ -913,9 +917,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 return string == numberFiltered && newString.length <= maxLength
                 
             case 11 :
-                
-                // let aSet = NSCharacterSet(charactersIn: "0123456789/-&*.{print(appDelegateObj.testFuntion())}[],=").inverted
-                let aSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
+        
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
                 
@@ -934,30 +936,21 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 var result = true
                 if textField == farmWeightTextField {
                     
-                    let inverseSet = NSCharacterSet(charactersIn:"0123456789").inverted
-                    let components = string.components(separatedBy: inverseSet)
-                    let filtered = components.joined(separator: "")
-                    if filtered == string {
+                    let allowedCharacters = CharacterSet.decimalDigits.union(CharacterSet(charactersIn: ".")) // Allows numbers and dot only
+                    let filteredString = string.trimmingCharacters(in: allowedCharacters.inverted) // Remove unwanted characters
+
+                    if filteredString == string { // Check if input contains only allowed characters
                         return newString.length <= maxLength
-                    } else {
-                        if string == "." {
-                            let countdots = textField.text!.components(separatedBy:".").count - 1
-                            if countdots == 0 {
-                                if (newString.length) > 6 {
-                                    newString = newString.substring(to: newString.length - 1) as NSString
-                                    return false
-                                }
-                            } else {
-                                if countdots > 0 && string == "." {
-                                    return false
-                                } else {
-                                    return true
-                                }
-                            }
+                    } else if string == "." {
+                        let dotCount = textField.text?.filter { $0 == "." }.count ?? 0
+                        if dotCount == 0 {
+                            return newString.length <= maxLength
                         } else {
-                            return false
+                            return false // Prevent multiple dots
                         }
                     }
+                    return false
+
                 }
                 return true
             default:
@@ -1590,6 +1583,55 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
     }
     
     
+    fileprivate func feedProgramValiadtion(_ trimmedString: String) {
+        if strFeddUpdate == "" {
+            feedButton.layer.borderColor = UIColor.red.cgColor
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a feed program.", comment: ""))
+        }
+        if trimmedString == "" {
+            nameText.layer.borderColor = UIColor.red.cgColor
+            
+        } else {
+            nameText.layer.borderColor = UIColor.black.cgColor
+        }
+    }
+    
+    fileprivate func farmWeightValidation() {
+        let abc = feedButton.currentTitle!
+        
+        if abc == "" {
+            feedButton.layer.borderColor = UIColor.red.cgColor
+        }else{
+            feedButton.layer.borderColor = UIColor.black.cgColor
+        }
+        nameText.layer.borderColor = UIColor.red.cgColor
+        farmWeightText.layer.borderColor = UIColor.black.cgColor
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldMsg)
+    }
+    
+    fileprivate func farmNameValidation() {
+        nameText.layer.borderColor = UIColor.red.cgColor
+        let abc = feedButton.currentTitle!
+        if abc == ""{
+            feedButton.layer.borderColor = UIColor.red.cgColor
+        }else {
+            feedButton.layer.borderColor = UIColor.black.cgColor
+        }
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldMsg)
+    }
+    
+    fileprivate func farmOtherValidation() {
+        nameText.layer.borderColor = UIColor.red.cgColor
+        let abc = feedButton.currentTitle!
+        
+        if abc == "" {
+            feedButton.layer.borderColor = UIColor.red.cgColor
+        } else{
+            feedButton.layer.borderColor = UIColor.black.cgColor
+        }
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldMsg)
+    }
+    
     @objc func updatePressed(){
         Constants.isFromPsotingTurkey = true
         UserDefaults.standard.setValue(true, forKey: "postingTurkey")
@@ -1604,46 +1646,20 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
         
         if trimmedString == "" && strFeddUpdate == "" {
             
-            nameText.layer.borderColor = UIColor.red.cgColor
-            let abc = feedButton.currentTitle!
-            
-            if abc == "" {
-                feedButton.layer.borderColor = UIColor.red.cgColor
-            } else{
-                feedButton.layer.borderColor = UIColor.black.cgColor
-            }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
-            
-        }else if trimmedString == ""  {
-            
-            nameText.layer.borderColor = UIColor.red.cgColor
-            let abc = feedButton.currentTitle!
-            if abc == ""{
-                feedButton.layer.borderColor = UIColor.red.cgColor
-            }else {
-                feedButton.layer.borderColor = UIColor.black.cgColor
-            }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
-            
-        } else if trimmedString == "" && strFeedCheck == ""{
-            let abc = feedButton.currentTitle!
-            
-            if abc == "" {
-                feedButton.layer.borderColor = UIColor.red.cgColor
-            }else{
-                feedButton.layer.borderColor = UIColor.black.cgColor
-            }
-            nameText.layer.borderColor = UIColor.red.cgColor
-            farmWeightText.layer.borderColor = UIColor.black.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Fields marked as (*) are mandatory. Please fill all the fields.")
+            farmOtherValidation()
         }
-        
+        else if trimmedString == ""  {
+            
+            farmNameValidation()
+        }
+        else if trimmedString == "" && strFeedCheck == ""{
+            farmWeightValidation()
+        }
         if houseNoTxtFldTurkey.text == ""
         {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldMsg, comment: ""))
             houseNoTxtFldTurkey.layer.borderColor = UIColor.red.cgColor
             return
-            
         }
         
         else if trimmedString == "" {
@@ -1653,17 +1669,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Please enter farm name.")
             
         }else if strFarmNameFeedId == "" && strFeddUpdate == ""{
-            if strFeddUpdate == "" {
-                feedButton.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a feed program.", comment: ""))
-            }
-            if trimmedString == "" {
-                nameText.layer.borderColor = UIColor.red.cgColor
-                
-            } else {
-                nameText.layer.borderColor = UIColor.black.cgColor
-                
-            }
+            feedProgramValiadtion(trimmedString)
         }
         else if strFeedCheck == "" &&  strFeddUpdate == ""{
             farmWeightText.layer.borderColor = UIColor.black.cgColor
@@ -1760,29 +1766,33 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
         
         self.present(alertController, animated: true, completion: nil)
     }
+    fileprivate func matricBirdArr(_ indexPath: IndexPath) {
+        let str = abfArray[indexPath.row] as! String
+        abfLbl.text = str
+        
+        if indexPath.row == 0 {
+            butttnTag1 = 0
+            if valueStore == true {
+                
+                let sdds = metricArray[indexOfSelectedPerson]
+            }
+        } else if indexPath.row == 1 {
+            butttnTag1 = 1
+            if valueStore == true {
+                
+                let sdds = birdArray[indexOfSelectedPerson]
+            }
+        }
+        buttonPreddDroper()
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if tableView == droperTableView {
             
             if btnnTag == 1 {
                 
-                let str = abfArray[indexPath.row] as! String
-                abfLbl.text = str
-                
-                if indexPath.row == 0 {
-                    butttnTag1 = 0
-                    if valueStore == true {
-                        
-                        let sdds = metricArray[indexOfSelectedPerson]
-                    }
-                } else if indexPath.row == 1 {
-                    butttnTag1 = 1
-                    if valueStore == true {
-                        
-                        let sdds = birdArray[indexOfSelectedPerson]
-                    }
-                }
-                buttonPreddDroper()
+                matricBirdArr(indexPath)
             } else if btnnTag == 2 {
                 
                 let str = feedProgramArray[indexPath.row] as! FeedProgramTurkey

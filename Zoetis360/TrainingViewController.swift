@@ -124,8 +124,6 @@ class TrainingViewController: UIViewController, WKUIDelegate{
         if WebClass.sharedInstance.connected() {
             Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-            //(UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-//            let headerDict: HTTPHeaders = ["Authorization":accestoken]
             
             let headerDict: HTTPHeaders = [
                 "Authorization": accestoken,
@@ -285,6 +283,29 @@ extension TrainingViewController: UIScrollViewDelegate {
         }
     }
     // MARK: 🟠 Load HTML File
+    fileprivate func loadWebView() {
+        DispatchQueue.main.async {
+            if self.pathArr.count > 0{
+                for i in 0..<self.pathArr.count{
+                    let url = self.pathArr[i]
+                    if i == 0{
+                        self.webView2.load(URLRequest(url: url as! URL))
+                        self.webView2.uiDelegate = self
+                        self.pages.append(self.webView2)
+                    }else if i == 1{
+                        self.webView3.load(URLRequest(url: url as! URL))
+                        self.webView3.uiDelegate = self
+                        self.pages.append(self.webView3)
+                    }
+                }
+                Helper.dismissGlobalHUD(self.view)
+                self.setupScrollView(pages: self.pages)
+                self.pageControl.numberOfPages = self.pages.count
+                self.pageControl.currentPage = 0
+            }
+        }
+    }
+    
     @objc func loadHtmlFile() {
         
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
@@ -307,26 +328,7 @@ extension TrainingViewController: UIScrollViewDelegate {
         self.callWebApiforTutorial { (status) in
             if status == true
             {
-                DispatchQueue.main.async {
-                    if self.pathArr.count > 0{
-                        for i in 0..<self.pathArr.count{
-                            let url = self.pathArr[i]
-                            if i == 0{
-                                self.webView2.load(URLRequest(url: url as! URL))
-                                self.webView2.uiDelegate = self
-                                self.pages.append(self.webView2)
-                            }else if i == 1{
-                                self.webView3.load(URLRequest(url: url as! URL))
-                                self.webView3.uiDelegate = self
-                                self.pages.append(self.webView3)
-                            }
-                        }
-                        Helper.dismissGlobalHUD(self.view)
-                        self.setupScrollView(pages: self.pages)
-                        self.pageControl.numberOfPages = self.pages.count
-                        self.pageControl.currentPage = 0
-                    }
-                }
+                self.loadWebView()
             }
         }
     }

@@ -49,7 +49,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
     let buttonbg = UIButton ()
     var complexArr  = NSMutableArray()
     var lngId = NSInteger()
-    
+    let noHistoricalData = "No historical data."
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -100,7 +100,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
             
             return
         }
@@ -177,7 +177,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
             
             return
         }
@@ -264,7 +264,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
                 
                 if lastSessionDataArray.count == 0 {
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
                     return
                 }
                 
@@ -309,7 +309,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
                 
                 if lastSessionDataArray.count == 0 {
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
                     
                     return
                 }
@@ -351,7 +351,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
             
             if lastSessionDataArray.count == 0 {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
                 
                 return
             }

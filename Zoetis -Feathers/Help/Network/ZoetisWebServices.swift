@@ -605,7 +605,7 @@ extension ZoetisWebServices {
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
-    func getPostingAssessmentListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
+    func getPostedAssmntListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         
         let Id =  UserDefaults.standard.value(forKey: "Id") as? Int ?? 0
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")

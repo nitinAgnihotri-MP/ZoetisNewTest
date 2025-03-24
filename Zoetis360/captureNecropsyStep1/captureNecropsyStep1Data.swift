@@ -1195,35 +1195,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == droperTableView {
-            
-            do {
-                let cell = UITableViewCell ()
-                
-                if  btnTag == 5 {
-                    
-                    let vet : FeedProgram = feedProgramArray.object(at: indexPath.row) as! FeedProgram
-                    cell.selectionStyle = UITableViewCell.SelectionStyle.none
-                    cell.textLabel!.text = vet.feddProgramNam
-                    return cell
-                    
-                } else if  btnTag == 6 {
-                    
-                    if targetWeigh == 0 {
-                        
-                        cell.selectionStyle = UITableViewCell.SelectionStyle.none
-                        if let value = metricArray[indexPath.row].birdSize{
-                            cell.textLabel!.text = value
-                        }
-                    }
-                    else{
-                        cell.selectionStyle = UITableViewCell.SelectionStyle.none
-                        if let value = birdArray[indexPath.row].birdSize{
-                            cell.textLabel!.text = value
-                        }
-                    }
-                }
-                return cell
-            }
+            return getDropperTableViewCell(indexPath: indexPath)
         }
         else if tableView == autoSerchTable {
             
@@ -1280,6 +1252,30 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             }
             return Cell
         }
+    }
+    
+    
+    // MARK: - Helper Functions
+
+    private func getDropperTableViewCell(indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        cell.selectionStyle = .none
+        
+        switch btnTag {
+        case 5:
+            if let vet = feedProgramArray.object(at: indexPath.row) as? FeedProgram {
+                cell.textLabel?.text = vet.feddProgramNam
+            }
+        case 6:
+            let birdSize = targetWeigh == 0 ? metricArray[indexPath.row].birdSize : birdArray[indexPath.row].birdSize
+            if let value = birdSize {
+                cell.textLabel?.text = value
+            }
+        default:
+            break
+        }
+        
+        return cell
     }
     
     

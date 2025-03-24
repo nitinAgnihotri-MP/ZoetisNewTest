@@ -337,7 +337,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
             let keychainHelper = AccessTokenHelper()
             accestoken = keychainHelper.getFromKeychain(keyed: "aceesTokentype") ?? ""
-          //  accestoken = UserDefaults.standard.string(forKey: "aceesTokentype") ?? ""
             let headerDict: HTTPHeaders = [
                 "Authorization": accestoken,
                 "Cache-Control": "no-store, no-cache, must-revalidate, private"
@@ -347,10 +346,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             let Url = WebClass.sharedInstance.webUrl + "Setting/T_GetNecroCategoryObservationList?UserId=\(Id)&CountryId=\(countryId)"
             let urlString = URL(string: Url)
 
-            // Create a session with disabled caching
-//            let configuration = URLSessionConfiguration.default
-////            configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
-//            let session = Session(configuration: configuration)
             sessionManager.request(urlString!, method: .get, headers: headerDict).responseJSON { response in
                 guard let statusCode = response.response?.statusCode else {
                     print("Failed to get status code")

@@ -301,7 +301,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
                 
             }
             else {
-                synWebBtn.setTitle(refrigStr, for: .normal)
+                synWebBtn.setTitle(syncToWebStr, for: .normal)
                 self.synWebBtn.isEnabled = true
                 self.synWebBtn.alpha = 1.0
             }
@@ -2171,7 +2171,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
         self.synWebBtn.isEnabled = true
         self.synWebBtn.alpha = 1.0
         self.bckButton.isHidden = true
-        self.synWebBtn.setTitle(refrigStr, for: .normal)
+        self.synWebBtn.setTitle(syncToWebStr, for: .normal)
         self.tableview.isUserInteractionEnabled = true
         let cellsArray = self.collectionView.visibleCells
         if cellsArray.count > 0{
@@ -2266,7 +2266,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
                         extendedMicroSwitch.isHidden = true
                         UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
                         UserDefaults.standard.set(true, forKey:"ExtendedMicro")
-                        self.synWebBtn.setTitle(refrigStr, for: .normal)
+                        self.synWebBtn.setTitle(syncToWebStr, for: .normal)
                     }
                 }
                 else{

@@ -41,19 +41,14 @@ class BacterialSampleInfoCell: UITableViewCell {
     @IBAction func plusBtnAction(_ sender: UIButton) {
     
         let barcode = UserDefaults.standard.value(forKey: "barcode")
-  
-        
         guard let text =  noOfPlates.text  else {
             return
         }
         
-        if(text == "")
-        {
+        if (text == "") {
             noOfPlates.text = "enter a value"
-            
             return
-        }
-        else {
+        } else {
             let sessionId = UserDefaults.standard.integer(forKey: "sessionId")
             
             if let txtVale = Int(noOfPlates.text!) {  // Ensure safe conversion
@@ -63,27 +58,6 @@ class BacterialSampleInfoCell: UITableViewCell {
                 }
             }
         }
-
-//        else
-//        {
-//            
-//            var txtVale = Int()
-//            let sessionId = UserDefaults.standard.integer(forKey: "sessionId")
-//            txtVale =  Int(noOfPlates.text!)!
-//            
-//            for i in 0..<txtVale {
-//                var plate =  "\(String(describing: barcode!))-" + "\(i+1)"
-//                CoreDataHandlerMicro().saveSampleInfoDataInDB(plate, plateId: i, sampleDescriptiopn: "", additionalTests: "Bacterial", checkMark: "false",  microsporeCheck: "false", sessionId: sessionId)
-//            }
-//            
-//
-//        }
         delegate?.noOfPlates(count: Int(text)!, clicked: true)
-        
-     //
-        
     }
-    
-   
-
 }

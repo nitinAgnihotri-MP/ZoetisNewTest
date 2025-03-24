@@ -34,6 +34,8 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
     @IBOutlet weak var lblComplex: UILabel!
     @IBOutlet weak var btnComplex: UIButton!
     @IBOutlet weak var userNameLabel: UILabel!
+    let complexRequiredMsg = "Please select a complex first."
+    let noHistoricalData = "No historical data."
     
     
     @objc func methodOfReceivedNotification(notification: Notification){
@@ -208,13 +210,13 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
             self.preparedArray.removeAllObjects()
         }
         if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(complexRequiredMsg, comment: ""))
             return
         }
         
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
             return
         }
         verticalValues = CoreDataHandler().getObservationNameForGITract(refID: Regions.getObservationsGITract(countryID: Regions.countryId)) as! [String]
@@ -236,13 +238,13 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         
         if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(complexRequiredMsg, comment: ""))
             return
         }
         
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
             return
         }
     }
@@ -252,7 +254,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         UserDefaults.standard.set(false, forKey: "isCocci")
         if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(complexRequiredMsg, comment: ""))
             return
         }
         
@@ -261,7 +263,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         }
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
             return
         }
         verticalValues = CoreDataHandler().getObservationNameForImmune(refID: Regions.getObservationsForImmune(countryID: Regions.countryId)) as! [String]
@@ -282,13 +284,13 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         }
         if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(complexRequiredMsg, comment: ""))
             return
         }
         
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
             return
         }
         
@@ -315,7 +317,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         UserDefaults.standard.set(false, forKey: "isCocci")
         if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString("Please select a complex first.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString(complexRequiredMsg, comment: ""))
             return
         }
     }
@@ -327,7 +329,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         
         if lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a complex first.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(complexRequiredMsg, comment: ""))
             return
         }
         
@@ -337,7 +339,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
         }
         if AllValidSessions.sharedInstance.allValidSession.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
             return
         }
         verticalValues = CoreDataHandler().getObservationNameForSkelatal(refID: Regions.getobservationsSkeletal(countryID: Regions.countryId)) as! [String]
@@ -429,7 +431,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
                 
                 if lastSessionDataArray.count == 0 {
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
                     return
                 }
                 
@@ -466,7 +468,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
                 
                 if lastSessionDataArray.count == 0 {
                     
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
                     return
                 }
                 
@@ -501,7 +503,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
             
             if lastSessionDataArray.count == 0 {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
                 return
             }
             
@@ -612,7 +614,7 @@ extension Report_MainVCViewController {
         
         if lastSessionDataArray.count == 0 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
             return
         }
         

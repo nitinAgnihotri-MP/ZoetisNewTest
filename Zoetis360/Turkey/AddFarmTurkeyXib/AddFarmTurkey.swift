@@ -381,6 +381,20 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         }
     }
     
+    fileprivate func setOtherObservations(_ immune: ImmuneTurkey, _ formName: String, _ j: Int, _ necId: Int) {
+        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let array = (trimmed.components(separatedBy: ",") as [String])
+        if immune.refId == 58 {
+            
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: Int(array[3])! , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "" )
+            
+        } else {
+            
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
+            
+        }
+    }
+    
     func saveImmuneCat(_ formName: String , numberofBirds:Int) {
         var  necId = Int()
         
@@ -407,7 +421,8 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                         
                         CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
                         
-                    }  else if ( immune.measure! == "Actual"){
+                    }
+                    else if ( immune.measure! == "Actual"){
                         
                         setBirdsBodyWeight(immune, formName, necId, j)
                     }
@@ -417,17 +432,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                     }
                     else {
                         
-                        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        let array = (trimmed.components(separatedBy: ",") as [String])
-                        if immune.refId == 58 {
-                            
-                            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: Int(array[3])! , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "" )
-                            
-                        } else {
-                            
-                            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
-                            
-                        }
+                        setOtherObservations(immune, formName, j, necId)
                     }
                 }
             }
@@ -516,6 +521,16 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         }
     }
     
+    fileprivate func setGiTrectObservation(_ gitract: GITractTurkey, _ formName: String, _ j: Int, _ necId: Int) {
+        let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        if gitract.observationField == "Feed in Crop"{
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: true, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId! ,actualText: gitract.measure ?? "")
+        }
+        else {
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId! ,actualText: gitract.measure ?? "")
+        }
+    }
+    
     func saveGiTractCat(_ formName: String , numberofBirds:Int) {
         
         var necId = Int()
@@ -536,13 +551,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                     let gitract : GITractTurkey = gitract.object(at: i) as! GITractTurkey
                     
                     if gitract.measure! == "Y,N" {
-                        let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        if gitract.observationField == "Feed in Crop"{
-                            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: true, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId! ,actualText: gitract.measure ?? "")
-                        }
-                        else {
-                            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(gitract.observationId!),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId! ,actualText: gitract.measure ?? "")
-                        }
+                        setGiTrectObservation(gitract, formName, j, necId)
                     }
                     else if ( gitract.measure! == "Actual"){
                         
@@ -674,6 +683,50 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         droperTableView.reloadData()
     }
     // MARK: - Done Button IBACTIONS
+    fileprivate func setFarmNameWeightAge() {
+        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+        if  trimmedString == ""{
+            farmNameTextField.layer.borderColor = UIColor.red.cgColor
+        }
+        else if farmWeightTextField.text == ""{
+            farmWeightTextField.layer.borderColor = UIColor.red.cgColor
+        }
+        else if ageLbl.text == ""{
+            ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
+        }
+        if ageLbl.text != ""  {
+            ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: UIControl.State())
+        }
+    }
+    
+    fileprivate func validationCheckFarmNameWeigthAge() {
+        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+        
+        feedProgramBtnOtlet.layer.borderColor = UIColor.red.cgColor
+        ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
+        if feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
+            feedProgramBtnOtlet.layer.borderColor = UIColor.black.cgColor
+        }
+        if farmNameTextField.text == "" {
+            farmNameTextField.layer.borderColor = UIColor.red.cgColor
+        } else {
+            farmNameTextField.layer.borderColor = UIColor.black.cgColor
+        }
+        if farmWeightTextField.text == "" {
+            farmWeightTextField.layer.borderColor = UIColor.red.cgColor
+        } else {
+            farmWeightTextField.layer.borderColor = UIColor.black.cgColor
+        }
+        if houseNoTxtFld.text == "" {
+            houseNoTxtFld.layer.borderColor = UIColor.red.cgColor
+        } else {
+            houseNoTxtFld.layer.borderColor = UIColor.black.cgColor
+        }
+        if ageLbl.text != ""  {
+            ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: UIControl.State())
+        }
+    }
+    
     @IBAction func donebtnAction(_ sender: UIButton) {
         Constants.isFromPsotingTurkey = true
         UserDefaults.standard.setValue(true, forKey: "postingTurkey")
@@ -684,19 +737,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
             Constants.isForUnlinkedTurkey = true
             if (trimmedString == "" ||  ageLbl.text == "" ) {
                 
-                Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
-                if  trimmedString == ""{
-                    farmNameTextField.layer.borderColor = UIColor.red.cgColor
-                }
-                else if farmWeightTextField.text == ""{
-                    farmWeightTextField.layer.borderColor = UIColor.red.cgColor
-                }
-                else if ageLbl.text == ""{
-                    ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
-                }
-                if ageLbl.text != ""  {
-                    ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: UIControl.State())
-                }
+                setFarmNameWeightAge()
             } else{
                 feedProgramDisplayLabel.text = ""
                 self.hudAnimated1()
@@ -710,31 +751,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         }
         else if (trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  ageLbl.text == "" ||  houseNoTxtFld.text == "")  {
             
-            Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
-            
-            feedProgramBtnOtlet.layer.borderColor = UIColor.red.cgColor
-            ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
-            if feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
-                feedProgramBtnOtlet.layer.borderColor = UIColor.black.cgColor
-            }
-            if farmNameTextField.text == "" {
-                farmNameTextField.layer.borderColor = UIColor.red.cgColor
-            } else {
-                farmNameTextField.layer.borderColor = UIColor.black.cgColor
-            }
-            if farmWeightTextField.text == "" {
-                farmWeightTextField.layer.borderColor = UIColor.red.cgColor
-            } else {
-                farmWeightTextField.layer.borderColor = UIColor.black.cgColor
-            }
-            if houseNoTxtFld.text == "" {
-                houseNoTxtFld.layer.borderColor = UIColor.red.cgColor
-            } else {
-                houseNoTxtFld.layer.borderColor = UIColor.black.cgColor
-            }
-            if ageLbl.text != ""  {
-                ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: UIControl.State())
-            }
+            validationCheckFarmNameWeigthAge()
         }
         else{
             
@@ -1063,10 +1080,10 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                 autoSerchTable.reloadData()
             }
         } else {
-            
+            let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
             switch textField.tag {
             case 18 :
-                let aSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
+               
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
                 
@@ -1078,7 +1095,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                 return string == numberFiltered && newString.length <= maxLength
                 
             case 11 :
-                let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
+              
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
                 

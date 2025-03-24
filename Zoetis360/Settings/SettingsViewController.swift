@@ -61,7 +61,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         configuration.urlCache = nil
         return Session(configuration: configuration)
     }()
-    
+    let offlineMsgAlert = "You are currently offline. Please go online to sync data."
     // MARK: - **************** View Life Cycle ***********************************/
     override func viewDidLoad() {
         print("<<<<",self)
@@ -209,7 +209,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
                 self.callSyncApi()
             }
             else {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offlineMsgAlert, comment: ""))
             }
         } else {
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
@@ -678,7 +678,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
                 self.ssologoutMethod()
                 CoreDataHandler().deleteAllData("Custmer")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(offlineMsgAlert, comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
@@ -797,7 +797,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
     func failWithInternetConnection() {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offlineMsgAlert, comment: ""))
     }
     
     func printSyncLblCount(){

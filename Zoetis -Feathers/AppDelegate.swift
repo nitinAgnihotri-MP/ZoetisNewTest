@@ -74,12 +74,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     }
     
     func generateSeveyNumber() -> String{
-        var createServeyNo = String()
         let date = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "ddMMyy"
         let dateStr = formatter.string(from: date)
-        createServeyNo = "S"+dateStr
+        var createServeyNo = "S"+dateStr
         return createServeyNo
     }
     
@@ -98,9 +97,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         } else {
             UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
         }
-//        if userDefaults.value(forKey: "HasLaunchedOnce") == nil && (userDefaults.value(forKey: "HasLaunchedOnce") as? Bool)! == false { // App already launched
-//            UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
-//        }
         
         UserDefaults.standard.set(false, forKey: "hasLoggedIn")
         //        initiateLeftPenal()
@@ -114,19 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         Localizer.DoTheMagic()
         
         application.isStatusBarHidden = true
-        //        setUpSlideMenu()
         metricOrImperialClick = "Imperial"
-//        var i: Int?
-//        i = UserDefaults.standard.integer(forKey: "isFeed")
-//        if i != 1 {
-//            let feed = UserDefaults.standard.integer(forKey: "feedId")
-//            if feed>0 {
-//            } else {
-//                UserDefaults.standard.set(-1, forKey: "feedId")
-//                UserDefaults.standard.synchronize()
-//            }
-//        }
-        
         
         let isFeed = UserDefaults.standard.integer(forKey: "isFeed")
         if isFeed != 1 {
@@ -135,9 +119,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
                 UserDefaults.standard.set(-1, forKey: "feedId")
             }
         }
-        
-      //  var isNewPostingId = UserDefaults.standard.bool(forKey: "isNewPostingId")
-        
         
         if userDefaults.object(forKey: "ApplicationIdentifier") == nil {
             let uuID = Foundation.UUID().uuidString
@@ -230,12 +211,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         
         Messaging.messaging().apnsToken = deviceToken as Data
-        //showAlert("deviceToken: \(deviceToken)")
-        
-     //   let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
-        
-        //showAlert("deviceTokenString: \(deviceTokenString)")
-        //showAlert("Registered Notification")
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -246,12 +221,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if let messageID = userInfo[gcmMessageIDKey] {
-            //showAlert("Message ID: \(messageID)")
             print("Message ID:\(messageID)")
-            
         }
-        
-        
         completionHandler(UIBackgroundFetchResult.newData)
     }
     
@@ -267,7 +238,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     }
     
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingDelegate) {
-        //showAlert("Received data message: \(remoteMessage.description)")
         print("Received data message: \(remoteMessage.description)")
     }
     
@@ -471,19 +441,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
             }
         }
     }
-    
-    
 }
-
-
-
-// Helper function inserted by Swift 4.2 migrator.
-private func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
-    return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
-}
-
-
-
 
 extension AppDelegate : UNUserNotificationCenterDelegate {
     

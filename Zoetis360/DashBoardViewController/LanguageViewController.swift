@@ -18,7 +18,7 @@ class LanguageViewController: UIViewController {
     var arrayLanugage = ["English" , "French" , "Portuguese" ]
     var selectedIndex : Int?
     var arrayImg = [UIImage.init(named: "start_new_session") , UIImage.init(named: "open_existing_session") ,UIImage.init(named: "training&education") ]
-    
+    let messageprefLang = "Choose your Prefered Language"
     // MARK: 🟠 - VIEW LIFE CYCLE
     override func viewDidLoad() {
         print("<<<<",self)
@@ -28,16 +28,16 @@ class LanguageViewController: UIViewController {
         let  lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 1 {
             selectedIndex = 0
-            lblLanguageChoose.text = NSLocalizedString("Choose your Prefered Language", comment: "")
+            lblLanguageChoose.text = NSLocalizedString(messageprefLang, comment: "")
         }
         else if lngId == 3 {
             selectedIndex = 1
-            lblLanguageChoose.text = NSLocalizedString("Choose your Prefered Language", comment: "")
+            lblLanguageChoose.text = NSLocalizedString(messageprefLang, comment: "")
         }
         
         else {
             selectedIndex = 2
-            lblLanguageChoose.text = NSLocalizedString("Choose your Prefered Language", comment: "")
+            lblLanguageChoose.text = NSLocalizedString(messageprefLang, comment: "")
         }
     }
     // MARK: 🟠 - IBACTION

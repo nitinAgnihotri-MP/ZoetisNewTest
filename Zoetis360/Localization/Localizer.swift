@@ -67,9 +67,7 @@ extension Bundle {
         }
     }
 }
-func disableMethodSwizzling() {
-    
-}
+
 /// Exchange the implementation of two methods of the same Class
 func MethodSwizzleGivenClassName(cls: AnyClass, originalSelector: Selector, overrideSelector: Selector) {
     let origMethod: Method = class_getInstanceMethod(cls, originalSelector)!;

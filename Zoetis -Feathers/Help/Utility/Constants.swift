@@ -196,6 +196,7 @@ struct Constants {
     static let yyyyMMddHHmmss = "yyyy-MM-dd'T'HH:mm:ss"
     static let noIdFoundStr = "No id found"
     static let countryNamStr = "CountryName"
+    static let countryNamStrSmall = "countryName"
     static let coccidioStr = "Coccidiosis Control"
     static let mytoxinStr = "Mycotoxin Binders"
     static let dataAvailableStr = "Data available"
@@ -205,10 +206,11 @@ struct Constants {
     static let growth50 = "<50% growth plate."
     static let growth50GreaterStr = ">50% growth plate."
     static let yesStr = "Yes."
-    static let noStr = "Yes."
+    static let noStr = "No"
     static let alertStr = "Alert"
     static let areYouSureSaveAsmntStr = "Are you sure you want to save assessment in Draft?"
     static let areYouSureToLogoutStr = "Are you sure you want to Logout?"
+    static let postincIdPredicate = "postingId == %@"
 }
 
 enum ZoetisArt {

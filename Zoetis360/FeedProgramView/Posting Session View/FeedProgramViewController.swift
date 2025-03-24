@@ -577,7 +577,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         self.callSaveMethod(commonAray: serviceDataHldArr,tag: btnTag)
         
         cocodiceVacine =  CoreDataHandler().fetchCociVacLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
-        print(cocodiceVacine)
+      
         targetArray =  (UserDefaults.standard.value(forKey:"target") as? NSArray)!
         
         
