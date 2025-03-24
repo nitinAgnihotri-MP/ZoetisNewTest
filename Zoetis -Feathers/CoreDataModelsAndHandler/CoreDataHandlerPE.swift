@@ -1908,127 +1908,123 @@ class CoreDataHandlerPE: NSObject {
         
         fetchRequest.predicate = NSPredicate(format: userIdStr, userID)
         if ofCurrentDate ?? false {
-            var onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+            let onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
             fetchRequest.predicate = NSPredicate(format: " userID == %d AND evaluationDate == %@", userID,onGoingPeNewAssessment.evaluationDate ?? "")
         }
-
+        
         if ofCurrentAssessment ?? false {
-            var onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+            let onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
             fetchRequest.predicate = NSPredicate(format: userIdStr,userID)
-
+            
             if ofCurrentDate ?? false {
                 fetchRequest.predicate = NSPredicate(format: "userID == %d AND evaluationDate == %@", userID,onGoingPeNewAssessment.evaluationDate ?? "")
             }
         }
         
         fetchRequest.returnsObjectsAsFaults = false
-        do {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult {
-                for result in results {
-                    var peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
-                    peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
-                    peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
-                    peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
-                    peNewAssessment.customerId = result.value(forKey: "customerId")  as? Int ?? 0
-                    peNewAssessment.siteId = result.value(forKey: "siteId") as? Int ?? 0
-                    peNewAssessment.siteName = result.value(forKey: "siteName")  as? String ?? ""
-                    peNewAssessment.customerName = result.value(forKey: "customerName") as? String ?? ""
-                    peNewAssessment.firstname = result.value(forKey: "firstname")  as? String ?? ""
-                    peNewAssessment.evaluationDate = result.value(forKey: "evaluationDate") as? String ?? ""
-                    peNewAssessment.evaluatorName = result.value(forKey: "evaluatorName") as? String ?? ""
-                    peNewAssessment.evaluatorID = result.value(forKey: "evaluatorID")  as? Int ?? 0
-                    peNewAssessment.visitName =  result.value(forKey: "visitName") as? String ?? ""
-                    peNewAssessment.visitID = result.value(forKey: "visitID") as? Int ?? 0
-                    peNewAssessment.evaluationName = result.value(forKey: "evaluationName") as? String ?? ""
-                    peNewAssessment.evaluationID = result.value(forKey: "evaluationID")   as? Int ?? 0
-                    peNewAssessment.approver = result.value(forKey: "approver") as? String ?? ""
-                    peNewAssessment.notes = result.value(forKey: "notes")  as? String ?? ""
-                    peNewAssessment.refrigeratorNote = result.value(forKey: "refrigeratorNote") as? String ?? ""
-                    let hatcheryAntibiotics =  result.value(forKey: "hatcheryAntibiotics")   as? Int
-                    hatcheryAntibiotics == 1 ? 1 : 0
-                    peNewAssessment.hatcheryAntibiotics = hatcheryAntibiotics
-                    let camera =  result.value(forKey: "camera")  as? Int
-                    camera == 1 ? 1 : 0
-                    peNewAssessment.camera = camera
-                    let isFlopSelected =  result.value(forKey: "isFlopSelected")  as? Int
-                    isFlopSelected == 1 ? 1 : 0
-                    peNewAssessment.isFlopSelected = isFlopSelected
-                    peNewAssessment.catID = result.value(forKey: "catID")  as? Int ?? 0
-                    peNewAssessment.cID = result.value(forKey: "cID")  as? Int ?? 0
-                    peNewAssessment.catName = result.value(forKey: "catName")  as? String ?? ""
-                    peNewAssessment.catMaxMark = result.value(forKey: "catMaxMark")  as? Int ?? 0
-                    peNewAssessment.catResultMark =  result.value(forKey: "catResultMark") as? Int ?? 0
-                    peNewAssessment.catEvaluationID = result.value(forKey: "catEvaluationID")  as? Int ?? 0
-                    peNewAssessment.catISSelected = result.value(forKey: "catISSelected")  as? Int ?? 0
-                    peNewAssessment.assID = result.value(forKey: "assID")  as? Int ?? 0
-                    peNewAssessment.assDetail1 = result.value(forKey: "assDetail1") as? String ?? ""
-                    peNewAssessment.assDetail2 = result.value(forKey: "assDetail2") as? String ?? ""
-                    peNewAssessment.assMinScore = result.value(forKey: "assMinScore") as? Int ?? 0
-                    peNewAssessment.assMinScore = result.value(forKey: "assMinScore")  as? Int ?? 0
-                    peNewAssessment.draftNumber = result.value(forKey: "draftNumber")  as? Int ?? 0
-                    peNewAssessment.assCatType = result.value(forKey: "assCatType")  as? String ?? ""
-                    peNewAssessment.assModuleCatID = result.value(forKey: "assModuleCatID") as? Int ?? 0
-                    peNewAssessment.assModuleCatName = result.value(forKey: "assModuleCatName") as? String ?? ""
-                    peNewAssessment.note = result.value(forKey: "note") as? String ?? ""
-                    peNewAssessment.assStatus =  result.value(forKey: "assStatus")  as? Int ?? 0
-                    peNewAssessment.sig = result.value(forKey: "sig") as? Int ?? 0
-                    peNewAssessment.sig2 = result.value(forKey: "sig2") as? Int ?? 0
-                    peNewAssessment.sig_Date = result.value(forKey: "sig_Date") as? String ?? ""
-                    peNewAssessment.rejectionComment = result.value(forKey: "rejectionComment") as? String ?? ""
-                    peNewAssessment.isChlorineStrip = result.value(forKey: "isChlorineStrip") as? Int ?? 0
-                    peNewAssessment.isAutomaticFail = result.value(forKey: "isAutomaticFail") as? Int ?? 0
-                    peNewAssessment.sig_EmpID = result.value(forKey: "sig_EmpID") as? String ?? ""
-                    peNewAssessment.sig_EmpID2 = result.value(forKey: "sig_EmpID2") as? String ?? ""
-                    peNewAssessment.sig_Name = result.value(forKey: "sig_Name") as? String ?? ""
-                    peNewAssessment.sig_Name2 = result.value(forKey: "sig_Name2") as? String ?? ""
-                    peNewAssessment.sig_Phone = result.value(forKey: "sig_Phone") as? String ?? ""
-                    peNewAssessment.assMaxScore = result.value(forKey: "assMaxScore")  as? Int ?? 0
-                    peNewAssessment.assMinScore = result.value(forKey: "assMinScore")  as? Int ?? 0
-                    peNewAssessment.images = result.value(forKey: "images") as? [Int] ?? []
-                    peNewAssessment.isFlopSelected = result.value(forKey: "isFlopSelected") as? Int ?? 0
-                    peNewAssessment.sequenceNo = result.value(forKey: "sequenceNo") as? Int ?? 0
-                    peNewAssessment.sequenceNoo = result.value(forKey: "sequenceNoo") as? Int ?? 0
-                    peNewAssessment.breedOfBird = result.value(forKey: "breedOfBird") as? String ?? ""
-                    peNewAssessment.breedOfBirdOther = result.value(forKey: "breedOfBirdOther") as? String ?? ""
-                    peNewAssessment.incubation = result.value(forKey: "incubation") as? String ?? ""
-                    peNewAssessment.statusType = result.value(forKey: "statusType") as? Int ?? 0
-                    peNewAssessment.incubationOthers = result.value(forKey: "incubationOthers") as? String ?? ""
-                    peNewAssessment.micro = result.value(forKey: "micro") as? String ?? ""
-                    peNewAssessment.residue = result.value(forKey: "residue") as? String ?? ""
-                    peNewAssessment.draftID = result.value(forKey: "draftID") as? String ?? ""
-                    
-                    // PE International Changes
-                    peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
-                    peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
-                    
-                    // PE International Changes
-                    peNewAssessment.clorineName = result.value(forKey: "clorineName")  as? String ?? ""
-                    peNewAssessment.clorineId = result.value(forKey: "clorineId")  as? Int ?? 0
-                    
-                    peNewAssessment.isHandMix = result.value(forKey: "isHandMix") as? Bool ?? false
-                    peNewAssessment.ppmValue = result.value(forKey: "ppmValue")  as? String ?? ""
-                    
-                    peNewAssessment.fluid = result.value(forKey: "hatcheryAntibioticsDoa")  as? Bool ?? false
-                    peNewAssessment.basicTransfer = result.value(forKey: "basic")  as? Bool ?? false
-                    peNewAssessment.isNA = result.value(forKey: "isNA") as? Bool ?? false
-                    peNewAssessment.extndMicro = result.value(forKey: "extndMicro")  as? Bool ?? false
-                    peNewAssessment.isAllowNA = result.value(forKey: "isAllowNA") as? Bool ?? false
-                    peNewAssessment.rollOut = result.value(forKey: "rollOut") as? String ?? ""
-                    peNewAssessment.refrigeratorNote = result.value(forKey: "refrigeratorNote")  as? String ?? ""
-                    peNewAssessment.qSeqNo = result.value(forKey: "qSeqNo") as? Int ?? 0
-                    
-                    peNewAssessment.isEMRejected = result.value(forKey: "isEMRejected") as? Bool ?? false
-                    peNewAssessment.isPERejected = result.value(forKey: "isPERejected") as? Bool ?? false
-                    peNewAssessment.emRejectedComment = result.value(forKey: "emRejectedComment")  as? String ?? ""
-                    peNewAssessment.sanitationValue = result.value(forKey: "sanitationValue") as? Bool ?? false
-                    
-                    peNewAssessmentArray.append(peNewAssessment)
-                }
+        
+        if let results = try? managedContext.fetch(fetchRequest) as? [NSManagedObject] {
+            for result in results {
+                var peNewAssessment = PENewAssessment()
+                dataArray = results as NSArray
+                peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
+                peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
+                peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
+                peNewAssessment.customerId = result.value(forKey: "customerId")  as? Int ?? 0
+                peNewAssessment.siteId = result.value(forKey: "siteId") as? Int ?? 0
+                peNewAssessment.siteName = result.value(forKey: "siteName")  as? String ?? ""
+                peNewAssessment.customerName = result.value(forKey: "customerName") as? String ?? ""
+                peNewAssessment.firstname = result.value(forKey: "firstname")  as? String ?? ""
+                peNewAssessment.evaluationDate = result.value(forKey: "evaluationDate") as? String ?? ""
+                peNewAssessment.evaluatorName = result.value(forKey: "evaluatorName") as? String ?? ""
+                peNewAssessment.evaluatorID = result.value(forKey: "evaluatorID")  as? Int ?? 0
+                peNewAssessment.visitName =  result.value(forKey: "visitName") as? String ?? ""
+                peNewAssessment.visitID = result.value(forKey: "visitID") as? Int ?? 0
+                peNewAssessment.evaluationName = result.value(forKey: "evaluationName") as? String ?? ""
+                peNewAssessment.evaluationID = result.value(forKey: "evaluationID")   as? Int ?? 0
+                peNewAssessment.approver = result.value(forKey: "approver") as? String ?? ""
+                peNewAssessment.notes = result.value(forKey: "notes")  as? String ?? ""
+                peNewAssessment.refrigeratorNote = result.value(forKey: "refrigeratorNote") as? String ?? ""
+                let hatcheryAntibiotics =  result.value(forKey: "hatcheryAntibiotics")   as? Int
+                hatcheryAntibiotics == 1 ? 1 : 0
+                peNewAssessment.hatcheryAntibiotics = hatcheryAntibiotics
+                let camera =  result.value(forKey: "camera")  as? Int
+                camera == 1 ? 1 : 0
+                peNewAssessment.camera = camera
+                let isFlopSelected =  result.value(forKey: "isFlopSelected")  as? Int
+                isFlopSelected == 1 ? 1 : 0
+                peNewAssessment.isFlopSelected = isFlopSelected
+                peNewAssessment.catID = result.value(forKey: "catID")  as? Int ?? 0
+                peNewAssessment.cID = result.value(forKey: "cID")  as? Int ?? 0
+                peNewAssessment.catName = result.value(forKey: "catName")  as? String ?? ""
+                peNewAssessment.catMaxMark = result.value(forKey: "catMaxMark")  as? Int ?? 0
+                peNewAssessment.catResultMark =  result.value(forKey: "catResultMark") as? Int ?? 0
+                peNewAssessment.catEvaluationID = result.value(forKey: "catEvaluationID")  as? Int ?? 0
+                peNewAssessment.catISSelected = result.value(forKey: "catISSelected")  as? Int ?? 0
+                peNewAssessment.assID = result.value(forKey: "assID")  as? Int ?? 0
+                peNewAssessment.assDetail1 = result.value(forKey: "assDetail1") as? String ?? ""
+                peNewAssessment.assDetail2 = result.value(forKey: "assDetail2") as? String ?? ""
+                peNewAssessment.assMinScore = result.value(forKey: "assMinScore") as? Int ?? 0
+                peNewAssessment.assMinScore = result.value(forKey: "assMinScore")  as? Int ?? 0
+                peNewAssessment.draftNumber = result.value(forKey: "draftNumber")  as? Int ?? 0
+                peNewAssessment.assCatType = result.value(forKey: "assCatType")  as? String ?? ""
+                peNewAssessment.assModuleCatID = result.value(forKey: "assModuleCatID") as? Int ?? 0
+                peNewAssessment.assModuleCatName = result.value(forKey: "assModuleCatName") as? String ?? ""
+                peNewAssessment.note = result.value(forKey: "note") as? String ?? ""
+                peNewAssessment.assStatus =  result.value(forKey: "assStatus")  as? Int ?? 0
+                peNewAssessment.sig = result.value(forKey: "sig") as? Int ?? 0
+                peNewAssessment.sig2 = result.value(forKey: "sig2") as? Int ?? 0
+                peNewAssessment.sig_Date = result.value(forKey: "sig_Date") as? String ?? ""
+                peNewAssessment.rejectionComment = result.value(forKey: "rejectionComment") as? String ?? ""
+                peNewAssessment.isChlorineStrip = result.value(forKey: "isChlorineStrip") as? Int ?? 0
+                peNewAssessment.isAutomaticFail = result.value(forKey: "isAutomaticFail") as? Int ?? 0
+                peNewAssessment.sig_EmpID = result.value(forKey: "sig_EmpID") as? String ?? ""
+                peNewAssessment.sig_EmpID2 = result.value(forKey: "sig_EmpID2") as? String ?? ""
+                peNewAssessment.sig_Name = result.value(forKey: "sig_Name") as? String ?? ""
+                peNewAssessment.sig_Name2 = result.value(forKey: "sig_Name2") as? String ?? ""
+                peNewAssessment.sig_Phone = result.value(forKey: "sig_Phone") as? String ?? ""
+                peNewAssessment.assMaxScore = result.value(forKey: "assMaxScore")  as? Int ?? 0
+                peNewAssessment.assMinScore = result.value(forKey: "assMinScore")  as? Int ?? 0
+                peNewAssessment.images = result.value(forKey: "images") as? [Int] ?? []
+                peNewAssessment.isFlopSelected = result.value(forKey: "isFlopSelected") as? Int ?? 0
+                peNewAssessment.sequenceNo = result.value(forKey: "sequenceNo") as? Int ?? 0
+                peNewAssessment.sequenceNoo = result.value(forKey: "sequenceNoo") as? Int ?? 0
+                peNewAssessment.breedOfBird = result.value(forKey: "breedOfBird") as? String ?? ""
+                peNewAssessment.breedOfBirdOther = result.value(forKey: "breedOfBirdOther") as? String ?? ""
+                peNewAssessment.incubation = result.value(forKey: "incubation") as? String ?? ""
+                peNewAssessment.statusType = result.value(forKey: "statusType") as? Int ?? 0
+                peNewAssessment.incubationOthers = result.value(forKey: "incubationOthers") as? String ?? ""
+                peNewAssessment.micro = result.value(forKey: "micro") as? String ?? ""
+                peNewAssessment.residue = result.value(forKey: "residue") as? String ?? ""
+                peNewAssessment.draftID = result.value(forKey: "draftID") as? String ?? ""
+                
+                // PE International Changes
+                peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
+                peNewAssessment.countryID = result.value(forKey: "countryID")  as? Int ?? 0
+                
+                // PE International Changes
+                peNewAssessment.clorineName = result.value(forKey: "clorineName")  as? String ?? ""
+                peNewAssessment.clorineId = result.value(forKey: "clorineId")  as? Int ?? 0
+                
+                peNewAssessment.isHandMix = result.value(forKey: "isHandMix") as? Bool ?? false
+                peNewAssessment.ppmValue = result.value(forKey: "ppmValue")  as? String ?? ""
+                
+                peNewAssessment.fluid = result.value(forKey: "hatcheryAntibioticsDoa")  as? Bool ?? false
+                peNewAssessment.basicTransfer = result.value(forKey: "basic")  as? Bool ?? false
+                peNewAssessment.isNA = result.value(forKey: "isNA") as? Bool ?? false
+                peNewAssessment.extndMicro = result.value(forKey: "extndMicro")  as? Bool ?? false
+                peNewAssessment.isAllowNA = result.value(forKey: "isAllowNA") as? Bool ?? false
+                peNewAssessment.rollOut = result.value(forKey: "rollOut") as? String ?? ""
+                peNewAssessment.refrigeratorNote = result.value(forKey: "refrigeratorNote")  as? String ?? ""
+                peNewAssessment.qSeqNo = result.value(forKey: "qSeqNo") as? Int ?? 0
+                
+                peNewAssessment.isEMRejected = result.value(forKey: "isEMRejected") as? Bool ?? false
+                peNewAssessment.isPERejected = result.value(forKey: "isPERejected") as? Bool ?? false
+                peNewAssessment.emRejectedComment = result.value(forKey: "emRejectedComment")  as? String ?? ""
+                peNewAssessment.sanitationValue = result.value(forKey: "sanitationValue") as? Bool ?? false
+                
+                peNewAssessmentArray.append(peNewAssessment)
             }
-        } catch {
-            print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }

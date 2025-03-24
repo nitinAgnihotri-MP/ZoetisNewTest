@@ -378,6 +378,29 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
         }
     }
     
+    fileprivate func existedComplexForDate(_ newString: String?) {
+        if checkComplexName(complexName: searchWidComplexName.text!) == true {
+            
+            let necData = CoreDataHandler().FetchNecropsystep1neccIdAllwithId(sessiondate: strDateEn, newstring: newString!)
+            if necData.count>1{
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message:NSLocalizedString(sessionExistedMsg, comment: "") , preferredStyle: .alert)
+                let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
+                    UIAlertAction in
+                    self.searchWidComplexName.text = ""
+                }
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+            else{
+                self.CallPopoupStartNec()
+            }
+            
+        }  else  {
+            
+            Helper.showAlertMessage(self,titleStr: NSLocalizedString(Constants.alertStr, comment: "") , messageStr:  NSLocalizedString( "Complex doesn't exist.", comment: "") )
+        }
+    }
+    
     @IBAction func serchButtonAction(sender: AnyObject) {
         
         if(searchWidComplexName.text == "") || (lblDate.text == "" ){
@@ -419,26 +442,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
                 
                 if existingArray.count == 0 {
                     
-                    if checkComplexName(complexName: searchWidComplexName.text!) == true {
-                        
-                        let necData = CoreDataHandler().FetchNecropsystep1neccIdAllwithId(sessiondate: strDateEn, newstring: newString!)
-                        if necData.count>1{
-                            let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message:NSLocalizedString(sessionExistedMsg, comment: "") , preferredStyle: .alert)
-                            let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
-                                UIAlertAction in
-                                self.searchWidComplexName.text = ""
-                            }
-                            alertController.addAction(okAction)
-                            self.present(alertController, animated: true, completion: nil)
-                        }
-                        else{
-                            self.CallPopoupStartNec()
-                        }
-                        
-                    }  else  {
-                        
-                        Helper.showAlertMessage(self,titleStr: NSLocalizedString(Constants.alertStr, comment: "") , messageStr:  NSLocalizedString( "Complex doesn't exist.", comment: "") )
-                    }
+                    existedComplexForDate(newString)
                 }
                 else{
                     self.tblSession.alpha = 1

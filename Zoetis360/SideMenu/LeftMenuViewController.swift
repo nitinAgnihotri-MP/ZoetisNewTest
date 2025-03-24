@@ -326,6 +326,36 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
         }
     }
     
+    fileprivate func haveChickenTukeyBothAcess(_ vlue: Bool, _ vlue1: Bool) {
+        if ConnectionManager.shared.hasConnectivity() {
+            
+            UserDefaults.standard.set(0, forKey: "postingId")
+            UserDefaults.standard.set(0, forKey: "necUnLinked")
+            UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
+            swiftBlogs[0] = "slider_dashboard"
+            swiftBlogs[1] = "slider_start_new_session"
+            swiftBlogs[2] = "slider_open_existing"
+            swiftBlogs[3] = "slider_training"
+            swiftBlogs[4] = "slider_reports"
+            swiftBlogs[5] =  "slider_help"
+            swiftBlogs[6] = "slider_setings"
+            swiftBlogs[7] = "slider_switch"
+            UserDefaults.standard.set(false, forKey: "Unlinked")
+            UserDefaults.standard.set(true, forKey: "nec")
+            UserDefaults.standard.set(false, forKey: "backFromStep1")
+            if vlue == true{
+                syncTurkeyData()
+            }
+            else if vlue1 == true{
+                syncChickenData()
+            }
+            
+        } else {
+            
+            offlineSetup(vlue, vlue1)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AllValidSessions.sharedInstance.complexName = ""
         switch indexPath.row {
@@ -468,33 +498,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
             let vlue1 = UserDefaults.standard.bool(forKey: "Chicken")
             
             if birdTypeId ==  3 {
-                if ConnectionManager.shared.hasConnectivity() {
-                    
-                    UserDefaults.standard.set(0, forKey: "postingId")
-                    UserDefaults.standard.set(0, forKey: "necUnLinked")
-                    UserDefaults.standard.set(false, forKey: "ispostingIdIncrease")
-                    swiftBlogs[0] = "slider_dashboard"
-                    swiftBlogs[1] = "slider_start_new_session"
-                    swiftBlogs[2] = "slider_open_existing"
-                    swiftBlogs[3] = "slider_training"
-                    swiftBlogs[4] = "slider_reports"
-                    swiftBlogs[5] =  "slider_help"
-                    swiftBlogs[6] = "slider_setings"
-                    swiftBlogs[7] = "slider_switch"
-                    UserDefaults.standard.set(false, forKey: "Unlinked")
-                    UserDefaults.standard.set(true, forKey: "nec")
-                    UserDefaults.standard.set(false, forKey: "backFromStep1")
-                    if vlue == true{
-                        syncTurkeyData()
-                    }
-                    else if vlue1 == true{
-                        syncChickenData()
-                    }
-                    
-                } else {
-                    
-                    offlineSetup(vlue, vlue1)
-                }
+                haveChickenTukeyBothAcess(vlue, vlue1)
             }
         }
         self.tableView.reloadData()

@@ -621,16 +621,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
         return height
     }
     
-    fileprivate func cellForRowIfCondition(_ cell: BacterialCaseInfoCell) {
-        let data = progressSession.object(at: 0) as! ProgressSessionMicrobial
-        let firstName = UserDefaults.standard.value(forKey: "FirstName") as! String
-        
-        self.loggedInUser.text = firstName
-        cell.requestorTxt.text = firstName
-        cell.sampleColletedByTxt.text = firstName
-        
-        selectedEmailId = data.emailId ?? ""
-        
+    fileprivate func extractedFunc1(_ data: ProgressSessionMicrobial, _ cell: BacterialCaseInfoCell) {
         if data.company != "" {
             cell.selectedCompanyTxt.text =  data.company
             self.isCompanyFieldCheck = true
@@ -644,7 +635,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
         if data.emailId != "" && cell.emailIdTxt.text == "" {
             cell.emailIdTxt.text = data.emailId
         }
-
+        
         
         if data.site != "" && data.site != selectSiteString {
             self.isSiteFieldCheck = true
@@ -665,6 +656,19 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
         if (data.sampleCollectionDate != ""){
             cell.sampleCollectionDateTxt.text = data.sampleCollectionDate
         }
+    }
+    
+    fileprivate func cellForRowIfCondition(_ cell: BacterialCaseInfoCell) {
+        let data = progressSession.object(at: 0) as! ProgressSessionMicrobial
+        let firstName = UserDefaults.standard.value(forKey: "FirstName") as! String
+        
+        self.loggedInUser.text = firstName
+        cell.requestorTxt.text = firstName
+        cell.sampleColletedByTxt.text = firstName
+        
+        selectedEmailId = data.emailId ?? ""
+        
+        extractedFunc1(data, cell)
         
         barcodeForPlateId =  cell.barcodeTxt.text ?? " "
         bacterialSurveyTableView.allowsSelection = false
@@ -700,39 +704,42 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
         }
     }
     
+    fileprivate func extractedFunc(_ cell: BacterialCaseInfoCell) {
+        let nameString = String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "") + "\(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "").count > 0 ? " " : "")" + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
+        
+        let initials = nameString.components(separatedBy: " ").reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" }
+        
+        if(dateForBarcode == "") {
+            cell.barcodeTxt.text = initials + "-" + "\(defaultDateWithTimeStamp.replacingOccurrences(of: "/", with: ""))" + "" + "\(String(describing: cell.siteTxt.text!))" + "-B"
+        } else {
+            cell.barcodeTxt.text =  initials + "-" + "\(dateForBarcode.replacingOccurrences(of: "/", with: ""))" + "" + "\(String(describing: cell.siteTxt.text!))" + "-B"
+        }
+        self.globalBarcode = cell.barcodeTxt.text ?? ""
+    }
+    
     fileprivate func cellForRowElseCondition(_ cell: BacterialCaseInfoCell) {
         if !self.globalBarcode.isEmpty {
             cell.barcodeTxt.text = self.globalBarcode
         } else {
-            let nameString = String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "") + "\(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "").count > 0 ? " " : "")" + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
-            
-            let initials = nameString.components(separatedBy: " ").reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" }
-            
-            if(dateForBarcode == "") {
-                cell.barcodeTxt.text = initials + "-" + "\(defaultDateWithTimeStamp.replacingOccurrences(of: "/", with: ""))" + "" + "\(String(describing: cell.siteTxt.text!))" + "-B"
-            } else {
-                cell.barcodeTxt.text =  initials + "-" + "\(dateForBarcode.replacingOccurrences(of: "/", with: ""))" + "" + "\(String(describing: cell.siteTxt.text!))" + "-B"
-            }
-            self.globalBarcode = cell.barcodeTxt.text ?? ""
+            extractedFunc(cell)
         }
         
         if isPlusBtnClicked {
-            if(cell.selectedCompanyTxt.text == "")
-            {   cell.companyBtn.layer.masksToBounds = true
+            cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+            
+            if(cell.selectedCompanyTxt.text == "") {
+                cell.companyBtn.layer.masksToBounds = true
                 cell.companyBtn.layer.cornerRadius = 23
                 cell.companyBtn.layer.borderWidth = 1
                 cell.companyBtn.layer.borderColor = UIColor.red.cgColor
-            }  else {
-                cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
             }
+            cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
             
-            if(cell.siteTxt.text == "")
-            {   cell.buttonForCornerRadius.layer.masksToBounds = true
+            if (cell.siteTxt.text == "") {
+                cell.buttonForCornerRadius.layer.masksToBounds = true
                 cell.buttonForCornerRadius.layer.cornerRadius = 23
                 cell.buttonForCornerRadius.layer.borderWidth = 1
                 cell.buttonForCornerRadius.layer.borderColor = UIColor.red.cgColor
-            }  else {
-                cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
             }
         }
         

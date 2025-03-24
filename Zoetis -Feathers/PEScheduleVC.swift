@@ -103,6 +103,21 @@ extension PEScheduleVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     
+    fileprivate func navigateToDraftAssessmentFinalize(_ assessment: PENewAssessment, _ assessmentId: String) {
+        let delete  = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber!)
+        if delete{
+            if self.anyCategoryContainValueOrNot(serverAssessmentId:assessmentId){
+                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+                let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftAssesmentFinalize") as! PEDraftAssesmentFinalize
+                self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+                let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssessment") as! PEDraftStartNewAssessment
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if scheduledAssessmentsArr.count > 0 && scheduledAssessmentsArr.count > indexPath.row{
             if let assessmentId = scheduledAssessmentsArr[indexPath.row].serverAssessmentId{
@@ -116,18 +131,7 @@ extension PEScheduleVC: UITableViewDelegate, UITableViewDataSource{
                 
                 if let assessment = PEAssessmentsDAO.sharedInstance.getDraftAssessment(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessmentId){
                     
-                    let delete  = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber!)
-                    if delete{
-                        if self.anyCategoryContainValueOrNot(serverAssessmentId:assessmentId){
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftAssesmentFinalize") as! PEDraftAssesmentFinalize
-                            self.navigationController?.pushViewController(vc, animated: true)
-                        } else {
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssessment") as! PEDraftStartNewAssessment
-                            self.navigationController?.pushViewController(vc, animated: true)
-                        }
-                    }
+                    navigateToDraftAssessmentFinalize(assessment, assessmentId)
                 }
                 
                 else{

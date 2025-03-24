@@ -40,16 +40,8 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
         
         wkwebView.scrollView.maximumZoomScale = 4.0
         wkwebView.scrollView.minimumZoomScale = 1.0
-        //wkwebView.uidelegate = self
         wkwebView.uiDelegate = self
-        //        webView.isUserInteractionEnabled  = true
-        //        webView.scrollView.isScrollEnabled = true
-        //        webView.clearsContextBeforeDrawing = true
-        //
-        //        webView.scrollView.maximumZoomScale = 4.0
-        //        webView.scrollView.minimumZoomScale = 1.0
-        //
-        //        webView.scalesPageToFit = true
+
         self.subHeader.text = NSLocalizedString("Necropsy Manual", comment: "")
         self.makeBodyBackgroundTransparent()
         
@@ -125,10 +117,7 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
                         self.labelProgress.isHidden = false
                         self.lblOfflineMessage.isHidden = true
                         self.downloadSize = 0.0
-                        self.dataToDownload = NSMutableData()
-                        self.downloadAndStorePDFFromURLWithString(self.pathArr.object(at: 1) as! String, completion: { (status) in
-                        })
-                        
+                        self.dataToDownload = NSMutableData()                        
                     }
                     
                 }

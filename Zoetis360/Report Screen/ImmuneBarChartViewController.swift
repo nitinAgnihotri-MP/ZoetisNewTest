@@ -453,14 +453,14 @@ import Reachability
      
      // MARK: - METHODS AND FUNCTIONS
     func infoButtonAction() {
-       
+        appDelegateObj.testFuntion()
     }
     func stringForValue(_ value: Double,
                         axis: AxisBase?) -> String {
         return self.verticalValues[Int(value)]
     }
     func didFinishWithParsing(finishedArray : NSArray){
-    
+        appDelegateObj.testFuntion()
     }
   
     func moveFrame(_ isMove:Bool) {

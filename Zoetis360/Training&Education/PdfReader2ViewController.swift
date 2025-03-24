@@ -36,8 +36,8 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
 
     func loadWebView()
     {
-          wkWebView.uiDelegate = self
-                wkWebView.navigationDelegate = self
+        wkWebView.uiDelegate = self
+        wkWebView.navigationDelegate = self
         wkWebView.isUserInteractionEnabled  = true
         wkWebView.scrollView.isScrollEnabled = true
         wkWebView.clearsContextBeforeDrawing = true
@@ -45,15 +45,6 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
         wkWebView.scrollView.maximumZoomScale = 4.0
         wkWebView.scrollView.minimumZoomScale = 1.0
 
-//        webView.delegate = self
-//        webView.isUserInteractionEnabled  = true
-//        webView.scrollView.isScrollEnabled = true
-//        webView.clearsContextBeforeDrawing = true
-//
-//        webView.scrollView.maximumZoomScale = 4.0
-//        webView.scrollView.minimumZoomScale = 1.0
-//
-//        webView.scalesPageToFit = true
         self.subHeader.text = NSLocalizedString("Diagnosing Coccidiosis And Enteritis", comment: "")
         self.makeBodyBackgroundTransparent()
 
@@ -152,9 +143,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
                         self.lblOfflineMessage.isHidden = true
                         self.downloadSize = 0.0
                         self.dataToDownload = NSMutableData()
-                        self.downloadAndStorePDFFromURLWithString(self.pathArr.object(at: 0) as! String, completion: { (status) in
-                           
-                        })
+                      
                         
                     }
                     

@@ -272,22 +272,25 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 let dateObj = dateFormatter.date(from: dateString)
                 dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
                 
-                if lngIdFr == 3{
-                    if dateObj == nil {
-                        cell.sessionDateLbl.text = dateString
-                        
-                    } else {
-                        cell.sessionDateLbl.text = dateFormatter.string(from: dateObj!)
-                    }
+                if lngIdFr == 3 || lngIdFr == 4 {
+                    cell.sessionDateLbl.text = dateObj == nil ? dateString : dateFormatter.string(from: dateObj!)
                 }
-                if lngIdFr == 4{
-                    if dateObj == nil {
-                        cell.sessionDateLbl.text = dateString
-                        
-                    } else {
-                        cell.sessionDateLbl.text = dateFormatter.string(from: dateObj!)
-                    }
-                }
+//                if lngIdFr == 3{
+//                    if dateObj == nil {
+//                        cell.sessionDateLbl.text = dateString
+//                        
+//                    } else {
+//                        cell.sessionDateLbl.text = dateFormatter.string(from: dateObj!)
+//                    }
+//                }
+//                if lngIdFr == 4{
+//                    if dateObj == nil {
+//                        cell.sessionDateLbl.text = dateString
+//                        
+//                    } else {
+//                        cell.sessionDateLbl.text = dateFormatter.string(from: dateObj!)
+//                    }
+//                }
                 else{
                     let dateString = comlexDate
                     let dateFormatter = DateFormatter()

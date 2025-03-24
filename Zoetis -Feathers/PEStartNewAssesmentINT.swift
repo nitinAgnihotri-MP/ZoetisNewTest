@@ -2423,39 +2423,51 @@ extension PEStartNewAssessmentINT {
 // MARK: - UITextFieldDelegate
 
 extension PEStartNewAssessmentINT : UITextFieldDelegate{
+    fileprivate func eggsOtherTextFiledUISetUp() {
+        let superviewCurrent =  eggsOtherBtn.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
+    fileprivate func manufacturerOtherTextFieldSetupUi() {
+        let superviewCurrent =  manfacturerOtherBtn.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
+    fileprivate func breedOtherUiSetUp() {
+        let superviewCurrent = btnBreedOthers.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == txtBreedOfBirdsOthers{
-            let superviewCurrent = btnBreedOthers.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            breedOtherUiSetUp()
         }
         if textField == manfacturerOtherTxt{
-            let superviewCurrent =  manfacturerOtherBtn.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            manufacturerOtherTextFieldSetupUi()
         }
         if textField == eggsOtherTxt{
-            let superviewCurrent =  eggsOtherBtn.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            eggsOtherTextFiledUISetUp()
         }
         
     }

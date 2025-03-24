@@ -43,7 +43,9 @@ public protocol YouTubePlayerDelegate {
 // Make delegate methods optional by providing default implementations
 public extension YouTubePlayerDelegate {
     
-    func playerReady(_ videoPlayer: YouTubePlayerView) {}
+    func playerReady(_ videoPlayer: YouTubePlayerView) {
+        print("Player is ready.")
+    }
     func playerStateChanged(_ videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
            print("Player state changed to \(playerState).")
        }

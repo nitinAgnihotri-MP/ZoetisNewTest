@@ -572,6 +572,26 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         }
     }
     
+    fileprivate func farmNameAgeWeightValidation() {
+        if feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
+            feedProgramBtn.layer.borderColor = UIColor.black.cgColor
+        }
+        if farmNameTextfield.text == "" {
+            farmNameTextfield.layer.borderColor = UIColor.red.cgColor
+        } else {
+            farmNameTextfield.layer.borderColor = UIColor.black.cgColor
+        }
+        if farmWeightTextField.text == "" {
+            farmWeightTextField.layer.borderColor = UIColor.red.cgColor
+        } else {
+            farmWeightTextField.layer.borderColor = UIColor.black.cgColor
+        }
+        
+        if ageLbl.text != ""  {
+            ageUperBtnOutlet.setImage(UIImage(named: "dialer01"), for: UIControl.State())
+        }
+    }
+    
     @IBAction func addMoreAction(_ sender: UIButton) {
         
         countFarm =  (farmNameTextfield.text?.count)!
@@ -603,23 +623,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 feedProgramBtn.layer.borderColor = UIColor.red.cgColor
                 ageUperBtnOutlet.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
                 
-                if feedProgramDisplayLabel.text != NSLocalizedString(appDelegateObj.selectStr, comment: "")  {
-                    feedProgramBtn.layer.borderColor = UIColor.black.cgColor
-                }
-                if farmNameTextfield.text == "" {
-                    farmNameTextfield.layer.borderColor = UIColor.red.cgColor
-                } else {
-                    farmNameTextfield.layer.borderColor = UIColor.black.cgColor
-                }
-                if farmWeightTextField.text == "" {
-                    farmWeightTextField.layer.borderColor = UIColor.red.cgColor
-                } else {
-                    farmWeightTextField.layer.borderColor = UIColor.black.cgColor
-                }
-                
-                if ageLbl.text != ""  {
-                    ageUperBtnOutlet.setImage(UIImage(named: "dialer01"), for: UIControl.State())
-                }
+                farmNameAgeWeightValidation()
             } else {
                 self.insertdata()
             }
@@ -637,6 +641,17 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         }
         
     }
+    fileprivate func saveUnlinkedStepOneData(_ nec: Bool) {
+        CoreDataHandlerTurkey().autoIncrementidtableTurkey()
+        let autoD  = CoreDataHandlerTurkey().fetchFromAutoIncrementTurkey()
+        self.necId = autoD
+        
+        if nec == true {
+            self.saveDataforposting()
+        }
+        saveStep1Data()
+    }
+    
     func insertdata()  {
         farmNameTextfield.layer.borderColor = UIColor.black.cgColor
         
@@ -667,14 +682,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             else {
                 if UserDefaults.standard.bool(forKey:"Unlinked") == true {
                     
-                    CoreDataHandlerTurkey().autoIncrementidtableTurkey()
-                    let autoD  = CoreDataHandlerTurkey().fetchFromAutoIncrementTurkey()
-                    self.necId = autoD
-                    
-                    if nec == true {
-                        self.saveDataforposting()
-                    }
-                    saveStep1Data()
+                    saveUnlinkedStepOneData(nec)
                 }
                 else{
                     self.necId = UserDefaults.standard.integer(forKey:"postingId")

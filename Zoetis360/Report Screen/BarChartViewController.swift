@@ -37,6 +37,8 @@ class BarChartViewController: UIViewController,IAxisValueFormatter, ChartViewDel
     @IBOutlet weak var btnAllObservations: UIButton!
     @IBOutlet weak var btnAirSac: UIButton!
     
+    let respTractString = "Respiratory Tract"
+    
     // MARK: - VIEW LIFE CYCLE
     override func viewDidLoad() {
         print("<<<<",self)
@@ -101,8 +103,8 @@ class BarChartViewController: UIViewController,IAxisValueFormatter, ChartViewDel
         
         self.loadSingleSession()
         loassession()
-        self.btnAllObservations.isHidden = self.headerTitle! as String != NSLocalizedString("Respiratory Tract", comment: "")
-        self.btnAirSac.isHidden = self.headerTitle! as String != NSLocalizedString("Respiratory Tract", comment: "")
+        self.btnAllObservations.isHidden = self.headerTitle! as String != NSLocalizedString(respTractString, comment: "")
+        self.btnAirSac.isHidden = self.headerTitle! as String != NSLocalizedString(respTractString, comment: "")
     }
     
     

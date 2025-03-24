@@ -123,6 +123,32 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
     
     
     // MARK: 🟠 Done Button ACTION
+    fileprivate func unlinkedSessionRequiredFieldvalidation() {
+        if (trimmedString == "" ||  lblAge.text == "" ){
+            
+            showAlertIfNeeded(message: NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            
+            if trimmedString == ""{
+                farmNameTextField.layer.borderColor = UIColor.red.cgColor
+                farmNameTextField.text = ""
+            }
+            ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
+            if lblAge.text != ""  {
+                ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: UIControl.State())
+            }
+        }
+        else {
+            feedProgramDisplayLabel.text = ""
+            self.hudAnimated1()
+            self.insertData({ (status) in
+                if status == true
+                {
+                    self.hud.hide(animated: true)
+                }
+            })
+        }
+    }
+    
     @IBAction func doneBtnAction(_ sender: AnyObject) {
         Constants.isFromPsoting = true
         UserDefaults.standard.set(true, forKey: "postingSession")
@@ -131,29 +157,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         if UserDefaults.standard.bool(forKey: "Unlinked") == true{
             Constants.isForUnlinkedChicken = true
             
-            if (trimmedString == "" ||  lblAge.text == "" ){
-                
-                showAlertIfNeeded(message: NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
-                
-                if trimmedString == ""{
-                    farmNameTextField.layer.borderColor = UIColor.red.cgColor
-                    farmNameTextField.text = ""
-                }
-                ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())
-                if lblAge.text != ""  {
-                    ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: UIControl.State())
-                }
-            }
-            else {
-                feedProgramDisplayLabel.text = ""
-                self.hudAnimated1()
-                self.insertData({ (status) in
-                    if status == true
-                    {
-                        self.hud.hide(animated: true)
-                    }
-                })
-            }
+            unlinkedSessionRequiredFieldvalidation()
         }
         else if (trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  lblAge.text == "" ||  houseNoTextFld.text == "" )  {
             

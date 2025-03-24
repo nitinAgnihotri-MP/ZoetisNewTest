@@ -3208,6 +3208,203 @@ class CoreDataHandlerPVE: NSObject {
         pveSync.append(person)
     }
     
+    fileprivate func extractedFunc(_ currentField: String, _ tempArr: inout [[String : Any]], _ dict: [String : Any], _ text: Any, _ id: Any) {
+        if currentField == "otherAntigen"{
+            tempArr.append(["man" : dict["man"]!,
+                            "man_id" : dict["man_id"]!,
+                            "name" : dict["name"]!,
+                            "name_id" : dict["name_id"]!,
+                            "serotype" : dict["serotype"]!,
+                            "serotype_id" : dict["serotype_id"]!,
+                            "serial" : dict["serial"]!,
+                            "expDate" : dict["expDate"]!,
+                            "siteOfInj" : dict["siteOfInj"]!,
+                            "siteOfInj_id" : dict["siteOfInj_id"]!,
+                            "note" : dict["note"]!,
+                            "vaccine_id" : dict["vaccine_id"]!,
+                            "otherAntigen" : text,
+                            "showMore" : dict["showMore"]!])
+        }
+        
+        
+        if currentField == "showMore"{
+            tempArr.append(["man" : dict["man"]!,
+                            "man_id" : dict["man_id"]!,
+                            "name" : dict["name"]!,
+                            "name_id" : dict["name_id"]!,
+                            "serotype" : dict["serotype"]!,
+                            "serotype_id" : dict["serotype_id"]!,
+                            "serial" : dict["serial"]!,
+                            "expDate" : dict["expDate"]!,
+                            "siteOfInj" : dict["siteOfInj"]!,
+                            "siteOfInj_id" : dict["siteOfInj_id"]!,
+                            "note" : dict["note"]!,
+                            "vaccine_id" : dict["vaccine_id"]!,
+                            "otherAntigen" : dict["otherAntigen"]!,
+                            "showMore" : text])
+        }
+        
+        if currentField == "vaccine_id"{
+            tempArr.append(["man" : dict["man"]!,
+                            "man_id" : dict["man_id"]!,
+                            "name" : dict["name"]!,
+                            "name_id" : dict["name_id"]!,
+                            "serotype" : dict["serotype"]!,
+                            "serotype_id" : dict["serotype_id"]!,
+                            "serial" : dict["serial"]!,
+                            "expDate" : dict["expDate"]!,
+                            "siteOfInj" : dict["siteOfInj"]!,
+                            "siteOfInj_id" : dict["siteOfInj_id"]!,
+                            "note" : dict["note"]!,
+                            "vaccine_id" : id,
+                            "otherAntigen" : dict["otherAntigen"]!,
+                            "showMore" : dict["showMore"]!])
+        }
+    }
+    
+    fileprivate func extractedFunc1(_ currentField: String, _ tempArr: inout [[String : Any]], _ dict: [String : Any], _ text: Any, _ id: Any) {
+        if currentField == "expDate"{
+            tempArr.append(["man" : dict["man"]!,
+                            "man_id" : dict["man_id"]!,
+                            "name" : dict["name"]!,
+                            "name_id" : dict["name_id"]!,
+                            "serotype" : dict["serotype"]!,
+                            "serotype_id" : dict["serotype_id"]!,
+                            "serial" : dict["serial"]!,
+                            "expDate" : text,
+                            "siteOfInj" : dict["siteOfInj"]!,
+                            "siteOfInj_id" : dict["siteOfInj_id"]!,
+                            "note" : dict["note"]!,
+                            "vaccine_id" : dict["vaccine_id"]!,
+                            "otherAntigen" : dict["otherAntigen"]!,
+                            "showMore" : dict["showMore"]!])
+        }
+        if currentField == "siteOfInj"{
+            tempArr.append(["man" : dict["man"]!,
+                            "man_id" : dict["man_id"]!,
+                            "name" : dict["name"]!,
+                            "name_id" : dict["name_id"]!,
+                            "serotype" : dict["serotype"]!,
+                            "serotype_id" : dict["serotype_id"]!,
+                            "serial" : dict["serial"]!,
+                            "expDate" : dict["expDate"]!,
+                            "siteOfInj" : text,
+                            "siteOfInj_id" : id,
+                            "note" : dict["note"]!,
+                            "vaccine_id" : dict["vaccine_id"]!,
+                            "otherAntigen" : dict["otherAntigen"]!,
+                            "showMore" : dict["showMore"]!])
+        }
+        if currentField == "note"{
+            tempArr.append(["man" : dict["man"]!,
+                            "man_id" : dict["man_id"]!,
+                            "name" : dict["name"]!,
+                            "name_id" : dict["name_id"]!,
+                            "serotype" : dict["serotype"]!,
+                            "serotype_id" : dict["serotype_id"]!,
+                            "serial" : dict["serial"]!,
+                            "expDate" : dict["expDate"]!,
+                            "siteOfInj" : dict["siteOfInj"]!,
+                            "siteOfInj_id" : dict["siteOfInj_id"]!,
+                            "note" : text,
+                            "vaccine_id" : dict["vaccine_id"]!,
+                            "otherAntigen" : dict["otherAntigen"]!,
+                            "showMore" : dict["showMore"]!])
+        }
+    }
+    
+    fileprivate func extractedFunc2(_ currentField: String, _ text: Any, _ tempArr: inout [[String : Any]], _ dict: [String : Any], _ id: Any) {
+        if currentField == "serotype"{
+            
+            if text as? String == ""
+            {
+                tempArr.append(["man" : dict["man"]!,
+                                "man_id" : dict["man_id"]!,
+                                "name" : dict["name"]!,
+                                "name_id" : dict["name_id"]!,
+                                "serotype" : "",
+                                "serotype_id" : 0,
+                                "serial" : dict["serial"]!,
+                                "expDate" : dict["expDate"]!,
+                                "siteOfInj" : dict["siteOfInj"]!,
+                                "siteOfInj_id" : dict["siteOfInj_id"]!,
+                                "note" : dict["note"]!,
+                                "vaccine_id" : dict["vaccine_id"]!,
+                                "otherAntigen" : dict["otherAntigen"]!,
+                                "showMore" : dict["showMore"]!])
+            }
+            else
+            {
+                tempArr.append(["man" : dict["man"]!,
+                                "man_id" : dict["man_id"]!,
+                                "name" : dict["name"]!,
+                                "name_id" : dict["name_id"]!,
+                                "serotype" : text,
+                                "serotype_id" : id,
+                                "serial" : dict["serial"]!,
+                                "expDate" : dict["expDate"]!,
+                                "siteOfInj" : dict["siteOfInj"]!,
+                                "siteOfInj_id" : dict["siteOfInj_id"]!,
+                                "note" : dict["note"]!,
+                                "vaccine_id" : dict["vaccine_id"]!,
+                                "otherAntigen" : dict["otherAntigen"]!,
+                                "showMore" : dict["showMore"]!])
+            }
+            
+        }
+        if currentField == "serial"{
+            tempArr.append(["man" : dict["man"]!,
+                            "man_id" : dict["man_id"]!,
+                            "name" : dict["name"]!,
+                            "name_id" : dict["name_id"]!,
+                            "serotype" : dict["serotype"]!,
+                            "serotype_id" : dict["serotype_id"]!,
+                            "serial" : text,
+                            "expDate" : dict["expDate"]!,
+                            "siteOfInj" : dict["siteOfInj"]!,
+                            "siteOfInj_id" : dict["siteOfInj_id"]!,
+                            "note" : dict["note"]!,
+                            "vaccine_id" : dict["vaccine_id"]!,
+                            "otherAntigen" : dict["otherAntigen"]!,
+                            "showMore" : dict["showMore"]!])
+        }
+    }
+    
+    fileprivate func extractedFunc3(_ currentField: String, _ tempArr: inout [[String : Any]], _ text: Any, _ id: Any, _ dict: [String : Any]) {
+        if currentField == "man"{
+            tempArr.append(["man" : text,
+                            "man_id" : id,
+                            "name" : dict["name"]!,
+                            "name_id" : dict["name_id"]!,
+                            "serotype" : dict["serotype"]!,
+                            "serotype_id" : dict["serotype_id"]!,
+                            "serial" : dict["serial"]!,
+                            "expDate" : dict["expDate"]!,
+                            "siteOfInj" : dict["siteOfInj"]!,
+                            "siteOfInj_id" : dict["siteOfInj_id"]!,
+                            "note" : dict["note"]!,
+                            "vaccine_id" : dict["vaccine_id"]!,
+                            "otherAntigen" : dict["otherAntigen"]!,
+                            "showMore" : dict["showMore"]!])
+        }
+        if currentField == "name"{
+            tempArr.append(["man" : dict["man"]!,
+                            "man_id" : dict["man_id"]!,
+                            "name" : text,
+                            "name_id" : id,
+                            "serotype" : dict["serotype"]!,
+                            "serotype_id" : dict["serotype_id"]!,
+                            "serial" : dict["serial"]!,
+                            "expDate" : dict["expDate"]!,
+                            "siteOfInj" : dict["siteOfInj"]!,
+                            "siteOfInj_id" : dict["siteOfInj_id"]!,
+                            "note" : dict["note"]!,
+                            "vaccine_id" : dict["vaccine_id"]!,
+                            "otherAntigen" : dict["otherAntigen"]!,
+                            "showMore" : dict["showMore"]!])
+        }
+    }
+    
     func updateVacInfoArrFor(_ syncId: String, currentField:String, currentIndPath: NSIndexPath, text: Any, id: Any, forAttribute:String, entityName:String) {
         
         let currentUserId =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
@@ -3237,191 +3434,10 @@ class CoreDataHandlerPVE: NSObject {
                         
                         let dict = obj as [String: Any]
                         if (indx == currentIndPath.row) {
-                            if currentField == "man"{
-                                tempArr.append(["man" : text,
-                                                "man_id" : id,
-                                                "name" : dict["name"]!,
-                                                "name_id" : dict["name_id"]!,
-                                                "serotype" : dict["serotype"]!,
-                                                "serotype_id" : dict["serotype_id"]!,
-                                                "serial" : dict["serial"]!,
-                                                "expDate" : dict["expDate"]!,
-                                                "siteOfInj" : dict["siteOfInj"]!,
-                                                "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                "note" : dict["note"]!,
-                                                "vaccine_id" : dict["vaccine_id"]!,
-                                                "otherAntigen" : dict["otherAntigen"]!,
-                                                "showMore" : dict["showMore"]!])
-                            }
-                            if currentField == "name"{
-                                tempArr.append(["man" : dict["man"]!,
-                                                "man_id" : dict["man_id"]!,
-                                                "name" : text,
-                                                "name_id" : id,
-                                                "serotype" : dict["serotype"]!,
-                                                "serotype_id" : dict["serotype_id"]!,
-                                                "serial" : dict["serial"]!,
-                                                "expDate" : dict["expDate"]!,
-                                                "siteOfInj" : dict["siteOfInj"]!,
-                                                "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                "note" : dict["note"]!,
-                                                "vaccine_id" : dict["vaccine_id"]!,
-                                                "otherAntigen" : dict["otherAntigen"]!,
-                                                "showMore" : dict["showMore"]!])
-                            }
-                            if currentField == "serotype"{
-                                
-                                if text as? String == ""
-                                {
-                                    tempArr.append(["man" : dict["man"]!,
-                                                    "man_id" : dict["man_id"]!,
-                                                    "name" : dict["name"]!,
-                                                    "name_id" : dict["name_id"]!,
-                                                    "serotype" : "",
-                                                    "serotype_id" : 0,
-                                                    "serial" : dict["serial"]!,
-                                                    "expDate" : dict["expDate"]!,
-                                                    "siteOfInj" : dict["siteOfInj"]!,
-                                                    "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                    "note" : dict["note"]!,
-                                                    "vaccine_id" : dict["vaccine_id"]!,
-                                                    "otherAntigen" : dict["otherAntigen"]!,
-                                                    "showMore" : dict["showMore"]!])
-                                }
-                                else
-                                {
-                                    tempArr.append(["man" : dict["man"]!,
-                                                    "man_id" : dict["man_id"]!,
-                                                    "name" : dict["name"]!,
-                                                    "name_id" : dict["name_id"]!,
-                                                    "serotype" : text,
-                                                    "serotype_id" : id,
-                                                    "serial" : dict["serial"]!,
-                                                    "expDate" : dict["expDate"]!,
-                                                    "siteOfInj" : dict["siteOfInj"]!,
-                                                    "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                    "note" : dict["note"]!,
-                                                    "vaccine_id" : dict["vaccine_id"]!,
-                                                    "otherAntigen" : dict["otherAntigen"]!,
-                                                    "showMore" : dict["showMore"]!])
-                                }
-                                
-                            }
-                            if currentField == "serial"{
-                                tempArr.append(["man" : dict["man"]!,
-                                                "man_id" : dict["man_id"]!,
-                                                "name" : dict["name"]!,
-                                                "name_id" : dict["name_id"]!,
-                                                "serotype" : dict["serotype"]!,
-                                                "serotype_id" : dict["serotype_id"]!,
-                                                "serial" : text,
-                                                "expDate" : dict["expDate"]!,
-                                                "siteOfInj" : dict["siteOfInj"]!,
-                                                "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                "note" : dict["note"]!,
-                                                "vaccine_id" : dict["vaccine_id"]!,
-                                                "otherAntigen" : dict["otherAntigen"]!,
-                                                "showMore" : dict["showMore"]!])
-                            }
-                            if currentField == "expDate"{
-                                tempArr.append(["man" : dict["man"]!,
-                                                "man_id" : dict["man_id"]!,
-                                                "name" : dict["name"]!,
-                                                "name_id" : dict["name_id"]!,
-                                                "serotype" : dict["serotype"]!,
-                                                "serotype_id" : dict["serotype_id"]!,
-                                                "serial" : dict["serial"]!,
-                                                "expDate" : text,
-                                                "siteOfInj" : dict["siteOfInj"]!,
-                                                "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                "note" : dict["note"]!,
-                                                "vaccine_id" : dict["vaccine_id"]!,
-                                                "otherAntigen" : dict["otherAntigen"]!,
-                                                "showMore" : dict["showMore"]!])
-                            }
-                            if currentField == "siteOfInj"{
-                                tempArr.append(["man" : dict["man"]!,
-                                                "man_id" : dict["man_id"]!,
-                                                "name" : dict["name"]!,
-                                                "name_id" : dict["name_id"]!,
-                                                "serotype" : dict["serotype"]!,
-                                                "serotype_id" : dict["serotype_id"]!,
-                                                "serial" : dict["serial"]!,
-                                                "expDate" : dict["expDate"]!,
-                                                "siteOfInj" : text,
-                                                "siteOfInj_id" : id,
-                                                "note" : dict["note"]!,
-                                                "vaccine_id" : dict["vaccine_id"]!,
-                                                "otherAntigen" : dict["otherAntigen"]!,
-                                                "showMore" : dict["showMore"]!])
-                            }
-                            if currentField == "note"{
-                                tempArr.append(["man" : dict["man"]!,
-                                                "man_id" : dict["man_id"]!,
-                                                "name" : dict["name"]!,
-                                                "name_id" : dict["name_id"]!,
-                                                "serotype" : dict["serotype"]!,
-                                                "serotype_id" : dict["serotype_id"]!,
-                                                "serial" : dict["serial"]!,
-                                                "expDate" : dict["expDate"]!,
-                                                "siteOfInj" : dict["siteOfInj"]!,
-                                                "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                "note" : text,
-                                                "vaccine_id" : dict["vaccine_id"]!,
-                                                "otherAntigen" : dict["otherAntigen"]!,
-                                                "showMore" : dict["showMore"]!])
-                            }
-                            if currentField == "otherAntigen"{
-                                tempArr.append(["man" : dict["man"]!,
-                                                "man_id" : dict["man_id"]!,
-                                                "name" : dict["name"]!,
-                                                "name_id" : dict["name_id"]!,
-                                                "serotype" : dict["serotype"]!,
-                                                "serotype_id" : dict["serotype_id"]!,
-                                                "serial" : dict["serial"]!,
-                                                "expDate" : dict["expDate"]!,
-                                                "siteOfInj" : dict["siteOfInj"]!,
-                                                "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                "note" : dict["note"]!,
-                                                "vaccine_id" : dict["vaccine_id"]!,
-                                                "otherAntigen" : text,
-                                                "showMore" : dict["showMore"]!])
-                            }
-                            
-                            
-                            if currentField == "showMore"{
-                                tempArr.append(["man" : dict["man"]!,
-                                                "man_id" : dict["man_id"]!,
-                                                "name" : dict["name"]!,
-                                                "name_id" : dict["name_id"]!,
-                                                "serotype" : dict["serotype"]!,
-                                                "serotype_id" : dict["serotype_id"]!,
-                                                "serial" : dict["serial"]!,
-                                                "expDate" : dict["expDate"]!,
-                                                "siteOfInj" : dict["siteOfInj"]!,
-                                                "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                "note" : dict["note"]!,
-                                                "vaccine_id" : dict["vaccine_id"]!,
-                                                "otherAntigen" : dict["otherAntigen"]!,
-                                                "showMore" : text])
-                            }
-                            
-                            if currentField == "vaccine_id"{
-                                tempArr.append(["man" : dict["man"]!,
-                                                "man_id" : dict["man_id"]!,
-                                                "name" : dict["name"]!,
-                                                "name_id" : dict["name_id"]!,
-                                                "serotype" : dict["serotype"]!,
-                                                "serotype_id" : dict["serotype_id"]!,
-                                                "serial" : dict["serial"]!,
-                                                "expDate" : dict["expDate"]!,
-                                                "siteOfInj" : dict["siteOfInj"]!,
-                                                "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                                "note" : dict["note"]!,
-                                                "vaccine_id" : id,
-                                                "otherAntigen" : dict["otherAntigen"]!,
-                                                "showMore" : dict["showMore"]!])
-                            }
+                            extractedFunc3(currentField, &tempArr, text, id, dict)
+                            extractedFunc2(currentField, text, &tempArr, dict, id)
+                            extractedFunc1(currentField, &tempArr, dict, text, id)
+                            extractedFunc(currentField, &tempArr, dict, text, id)
                             
                         }else{
                             tempArr.append(["man" : dict["man"]!,
@@ -3530,11 +3546,10 @@ class CoreDataHandlerPVE: NSObject {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             fetchRequest.returnsObjectsAsFaults = false
-            if syncId.count > 0{
-                fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
-            }else{
-                fetchRequest.predicate = NSPredicate(format: predicateStr, argumentArray: [currentUserId, customerStr, complexNameStr])
-            }
+            let predicateStr1 = syncId.count > 0 ? predicateSync : predicateStr
+            let predicateArr = syncId.count > 0 ? [syncId] : [currentUserId, customerStr, complexNameStr]
+            fetchRequest.predicate = NSPredicate(format: predicateStr1, argumentArray: predicateArr)
+            
             do {
                 let tempObj = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 if tempObj!.count > 0 { // Atleast one was returned
@@ -3591,13 +3606,18 @@ class CoreDataHandlerPVE: NSObject {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             fetchRequest.returnsObjectsAsFaults = false
-            if syncId.count > 0{
-                fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
-                
-            }else{
-                fetchRequest.predicate = NSPredicate(format: predicateStr, argumentArray: [currentUserId, customerStr, complexNameStr])
-                
-            }
+            
+            let predicateStr1 = syncId.count > 0 ? predicateSync : predicateStr
+            let predicateArr = syncId.count > 0 ? [syncId] : [currentUserId, customerStr, complexNameStr]
+            fetchRequest.predicate = NSPredicate(format: predicateStr1, argumentArray: predicateArr)
+
+//            if syncId.count > 0{
+//                fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
+//                
+//            }else{
+//                fetchRequest.predicate = NSPredicate(format: predicateStr, argumentArray: [currentUserId, customerStr, complexNameStr])
+//                
+//            }
             do {
                 let tempObj = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 if tempObj!.count > 0 { // Atleast one was returned
