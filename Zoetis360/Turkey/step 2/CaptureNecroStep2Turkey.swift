@@ -111,6 +111,8 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     
     var turkeyBirdSex = NSArray ()
     var selectedSexValue: String = "N/A"
+    var noGrossLesionStr = "No gross lesions."
+    var oneBirdRequiredStr = "At least one bird is required under a Farm."
     var selectedFarmIndexTurkey = Int()
     
     // MARK: - VIEW LIFE CYCLE
@@ -1193,7 +1195,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             break
         case 7 :
             if lngId == 1{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Weak snap.")
                 obsDescArr.add("Folding bone rather than snap.")
             }
@@ -1349,31 +1351,36 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     }
     
     
+    fileprivate func extractedFunc(_ obsDescArr: NSMutableArray) -> NSMutableArray {
+        if lngId == 1 {
+            obsDescArr.add(noGrossLesionStr)
+            obsDescArr.add("<5 lesions/cm2.")
+            obsDescArr.add("5 lesions/cm2.")
+            obsDescArr.add("Lesions coalescent.")
+            obsDescArr.add("Lesions completely coalescent with petechial hemorrhage or red mucosa.")
+        } else if lngId == 5 {
+            obsDescArr.add(Constants.sinLesionStr)
+            obsDescArr.add(Constants.sinLesionStr)
+            obsDescArr.add(Constants.sinLesionStr)
+            obsDescArr.add(Constants.sinLesionStr)
+            obsDescArr.add(Constants.sinLesionStr)
+        }
+        
+        return obsDescArr
+    }
+    
     func setObsImageDescForCocodis(desc : Int) -> NSMutableArray {
-        let obsDescArr = NSMutableArray()
+        var obsDescArr = NSMutableArray()
         switch desc {
         case 23 :
             lngId = UserDefaults.standard.integer(forKey: "lngId")
-            if lngId == 1{
-                obsDescArr.add("No gross lesions.")
-                obsDescArr.add("<5 lesions/cm2.")
-                obsDescArr.add("5 lesions/cm2.")
-                obsDescArr.add("Lesions coalescent.")
-                obsDescArr.add("Lesions completely coalescent with petechial hemorrhage or red mucosa.")
-            }
-            else if lngId == 5{
-                obsDescArr.add(Constants.sinLesionStr)
-                obsDescArr.add(Constants.sinLesionStr)
-                obsDescArr.add(Constants.sinLesionStr)
-                obsDescArr.add(Constants.sinLesionStr)
-                obsDescArr.add(Constants.sinLesionStr)
-            }
+            obsDescArr = extractedFunc(obsDescArr)
             
             break
             
         case 24 :
             if lngId == 1{
-                obsDescArr.add("No gross lesions.")
+                obsDescArr.add(noGrossLesionStr)
                 obsDescArr.add("Few petechial hemorrhages.")
                 obsDescArr.add("Numerous patechiae.")
                 obsDescArr.add("Numerous petechiae and gut ballooning.")
@@ -1408,7 +1415,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
         case 26 :
             if lngId == 1{
-                obsDescArr.add("No gross lesions.")
+                obsDescArr.add(noGrossLesionStr)
                 obsDescArr.add("Petechiae without blood. ")
                 obsDescArr.add("Blood in the cecal contents; cecal wall somewhat thickened (normal contents) ")
                 obsDescArr.add("Blood or cecal cores present, walls greatly thickened (no contents).")
@@ -1531,7 +1538,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 5: [Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             28: [
-                1: ["Normal.", "Swollen glands.", "Swollen glands and enlarged.", "Greatly enlarged and flaccid."],
+                1: [Constants.normalStr, "Swollen glands.", "Swollen glands and enlarged.", "Greatly enlarged and flaccid."],
                 5: [Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr, Constants.sinLesionStr]
             ],
             29: [
@@ -1688,7 +1695,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             ],
             50: [
                 1: [
-                    "Normal.",
+                    Constants.normalStr,
                     "Slight mucus and/or slight hyperemia.",
                     "Copious mucus and/or moderate hyperemia.",
                     "Severe hyperemia and/or Hemorrhagic and/or Diphtheritic."
@@ -1697,7 +1704,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             ],
             51: [
                 1: [
-                    "Normal.",
+                    Constants.normalStr,
                     "Suds.",
                     "Frothy suds or single focus of exudates.",
                     "Multifocal to diffuse exudate or exudate + pericarditis.",
@@ -1711,7 +1718,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             639: [1: ["No.", Constants.yesStr]],
             636: [
                 1: [
-                    "Normal.",
+                    Constants.normalStr,
                     "Slight mucus and/or slight hyperemia.",
                     "Copious mucus and/or moderate hyperemia.",
                     "Severe hyperemia and/or Hemorrhagic and/or Diphtheritic."
@@ -1765,7 +1772,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
         case 50:
             if lngId == 1{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Slight mucus and/or slight hyperemia.")
                 obsDescArr.add("Copious mucus and/or moderate hyperemia.")
                 obsDescArr.add("Severe hyperemia and/or Hemorrhagic and/or Diphtheritic.")
@@ -1780,7 +1787,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
         case 51:
             if lngId == 1{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Suds.")
                 obsDescArr.add("Frothy suds or single focus of exudates.")
                 obsDescArr.add("Multifocal to diffuse exudate or exudate + pericarditis.")
@@ -1839,7 +1846,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             break
         case 636:
             if lngId == 1{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Slight mucus and/or slight hyperemia.")
                 obsDescArr.add("Copious mucus and/or moderate hyperemia.")
                 obsDescArr.add("Severe hyperemia and/or Hemorrhagic and/or Diphtheritic.")
@@ -3287,7 +3294,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     imagePicker.sourceType = .camera
                     imagePicker.cameraCaptureMode = .photo
                     
-                    present(imagePicker, animated: true, completion: {print(appDelegateObj.testFuntion())})
+                    present(imagePicker, animated: true)
                 } else {
                     postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
                 }
@@ -4102,7 +4109,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             if noOfBird == 1 {
                 
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"At least one bird is required under a Farm.")
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:oneBirdRequiredStr)
                 
                 traingleImageView.frame = CGRect(x: 276, y: 229, width: 24, height: 24)
                 
@@ -4254,7 +4261,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
         } else {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"At least one bird is required under a Farm.")
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:oneBirdRequiredStr)
         }
         
         traingleImageView.frame = CGRect(x: 276, y: 229, width: 24, height: 24)
@@ -6708,7 +6715,9 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
     }
     
-    func postingNotesdoneBtnFunc(_ notesText : String){print(appDelegateObj.testFuntion())}
+    func postingNotesdoneBtnFunc(_ notesText : String){
+        print(appDelegateObj.testFuntion())
+    }
     
     
     // MARK: - IBACTIONS
@@ -6769,7 +6778,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 let farm = self.farmArray.object(at: i) as! String
                 if farm == formName {
                     if (self.items.object(at: i) as AnyObject).count == 1 {
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"At least one bird is required under a Farm.")
+                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:self.oneBirdRequiredStr)
                         return
                     }
                 }

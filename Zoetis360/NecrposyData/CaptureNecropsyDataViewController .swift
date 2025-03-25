@@ -114,7 +114,9 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     
     let gigya =  Gigya.sharedInstance(GigyaAccount.self)
     var selectedBirdIndex = Int()
-    
+    let noDisposibleStr = "Non disponible."
+    let noGrossLesionStr = "No gross lesions."
+    let pasDeLesionStr = "Pas de lésion macroscopique."
     // MARK: 🟠 - VIEW LIFE CYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -1140,7 +1142,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         let defaultDescriptions: [Int: [String]] = [
             1: ["N/A.", "N/A."],
-            3: ["Non disponible.", "Non disponible."],
+            3: [self.noDisposibleStr, self.noDisposibleStr],
             4: ["N/A.", "N/A."]
         ]
         
@@ -1163,11 +1165,11 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 7:
             switch lngId {
             case 1:
-                descriptions = ["Normal.", "Weak snap.", "Folding bone rather than snap."]
+                descriptions = [Constants.normalStr, "Weak snap.", "Folding bone rather than snap."]
             case 3:
-                descriptions = ["Normal.", "Pression faible.", "Plier l'os plutôt que de casser."]
+                descriptions = [Constants.normalStr, "Pression faible.", "Plier l'os plutôt que de casser."]
             case 4:
-                descriptions = ["Normal.", "Moderada resistência.", "Ausência de resistência óssea."]
+                descriptions = [Constants.normalStr, "Moderada resistência.", "Ausência de resistência óssea."]
             default:
                 descriptions = ["No data available."]
             }
@@ -1188,14 +1190,14 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         case 23 :
             lngId = UserDefaults.standard.integer(forKey: "lngId")
             if lngId == 1{
-                obsDescArr.add("No gross lesions.")
+                obsDescArr.add(self.noGrossLesionStr)
                 obsDescArr.add("<5 lesions/cm2.")
                 obsDescArr.add("5 lesions/cm2.")
                 obsDescArr.add("Lesions coalescent.")
                 obsDescArr.add("Lesions completely coalescent with petechial hemorrhage or red mucosa.")
             }
             else if lngId == 3{
-                obsDescArr.add("Pas de lésion macroscopique.")
+                obsDescArr.add(self.pasDeLesionStr)
                 obsDescArr.add("<5 lésions/cm2.")
                 obsDescArr.add("5 lésions/cm2.")
                 obsDescArr.add("Lésions coalescentes.")
@@ -1213,14 +1215,14 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
         case 24 :
             if lngId == 1{
-                obsDescArr.add("No gross lesions.")
+                obsDescArr.add(self.noGrossLesionStr)
                 obsDescArr.add("Few petechial hemorrhages.")
                 obsDescArr.add("Numerous patechiae.")
                 obsDescArr.add("Numerous petechiae and gut ballooning.")
                 obsDescArr.add("Bloody and ballooned.")
             }
             else if lngId == 3{
-                obsDescArr.add("Pas de lésion macroscopique.")
+                obsDescArr.add(self.pasDeLesionStr)
                 obsDescArr.add("Quelques pétécchies.")
                 obsDescArr.add("Nombreuses pétécchies.")
                 obsDescArr.add("Nombreuses pétécchies et ballonement intestinal.")
@@ -1263,14 +1265,14 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
         case 26 :
             if lngId == 1{
-                obsDescArr.add("No gross lesions.")
+                obsDescArr.add(self.noGrossLesionStr)
                 obsDescArr.add("Petechiae without blood. ")
                 obsDescArr.add("Blood in the cecal contents; cecal wall somewhat thickened (normal contents). ")
                 obsDescArr.add("Blood or cecal cores present, walls greatly thickened (no contents).")
                 obsDescArr.add("Cecal wall greatly distended with blood or cores.")
             }
             else if lngId == 3{
-                obsDescArr.add("Pas de lésion macroscopique.")
+                obsDescArr.add(self.pasDeLesionStr)
                 obsDescArr.add("Pétécchies uniquement.")
                 obsDescArr.add("Sang dans le contenu caecal, paroi caecale un peu épaissie (contenu normal).")
                 obsDescArr.add("Sang ou caillot caecal présent, paroi légèrement épaissie (absence de contenu).")
@@ -1320,11 +1322,11 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 obsDescArr.add("N/A")
             }
             else if lngId == 3{
-                obsDescArr.add("Non disponible.")
-                obsDescArr.add("Non disponible.")
-                obsDescArr.add("Non disponible.")
-                obsDescArr.add("Non disponible.")
-                obsDescArr.add("Non disponible.")
+                obsDescArr.add(self.noDisposibleStr)
+                obsDescArr.add(self.noDisposibleStr)
+                obsDescArr.add(self.noDisposibleStr)
+                obsDescArr.add(self.noDisposibleStr)
+                obsDescArr.add(self.noDisposibleStr)
             }
             else if lngId == 4{
                 obsDescArr.add("N/A.")
@@ -1342,8 +1344,8 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 obsDescArr.add("N/A.")
             }
             else if lngId == 3{
-                obsDescArr.add("Non disponible.")
-                obsDescArr.add("Non disponible.")
+                obsDescArr.add(self.noDisposibleStr)
+                obsDescArr.add(self.noDisposibleStr)
             }
             else if lngId == 4{
                 obsDescArr.add("N/A.")
@@ -1381,19 +1383,19 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
         case 28 :
             if lngId == 1{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Swollen glands.")
                 obsDescArr.add("Swollen glands and enlarged.")
                 obsDescArr.add("Greatly enlarged and flaccid.")
             }
             else if lngId == 3{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Glandes gonflées.")
                 obsDescArr.add("Glandes gonflées et élargies.")
                 obsDescArr.add("Très élargi et mou."  )
             }
             else if lngId == 4{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Glândulas inchadas.")
                 obsDescArr.add("Glândulas inchadas e aumentadas.")
                 obsDescArr.add("Muito ampliado e flácido."  )
@@ -1415,7 +1417,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 obsDescArr.add("Erosion du muscle du gésier.")
             }
             else if lngId == 4{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Erosão que não atravessa a membrana coilínea.")
                 obsDescArr.add("Lesão severa que atravessa a membrana coilínea.")
                 obsDescArr.add("Erosões no músculo da moela.")
@@ -1705,19 +1707,19 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
         case 50:
             if lngId == 1{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Slight mucus and/or slight hyperemia.")
                 obsDescArr.add("Copious mucus and/or moderate hyperemia.")
                 obsDescArr.add("Severe hyperemia and/or Hemorrhagic and/or Diphtheritic.")
             }
             else if lngId == 3{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Léger mucus et/ou légère hyperhémie.")
                 obsDescArr.add("Mucus abondant et/ou hyperhémie modérée.")
                 obsDescArr.add("Hyperhémie sévère et/ou Hémorragique et/ou Diphtérique.")
             }
             else if lngId == 4{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Leve muco e/ou leve hiperemia.")
                 obsDescArr.add("Muco abundante e/ou hiperemia moderada.")
                 obsDescArr.add("Traqueíte severa com muco hemorrágico.")
@@ -1726,21 +1728,21 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
         case 51:
             if lngId == 1{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Suds.")
                 obsDescArr.add("Frothy suds or single focus of exudates.")
                 obsDescArr.add("Multifocal to diffuse exudate or exudate + pericarditis.")
                 obsDescArr.add("Pericarditis + perihepatitis.")
             }
             else if lngId == 3{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Mousse.")
                 obsDescArr.add("Mousseux ou foyer unique d'exsudat.")
                 obsDescArr.add("Exsudat multifocal à diffus ou exsudat + péricardite.")
                 obsDescArr.add("Péricardite + périhépatite.")
             }
             else if lngId == 4{
-                obsDescArr.add("Normal.")
+                obsDescArr.add(Constants.normalStr)
                 obsDescArr.add("Presença de espuma..")
                 obsDescArr.add("Espuma espessa ou foco simples de exsudato.")
                 obsDescArr.add("Exsudato multifocal ou difuso + pericardite.")
@@ -1836,10 +1838,10 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 obsDescArr.add("NA.")
                 obsDescArr.add("NA.")
             } else if lngId == 3 {
-                obsDescArr.add("Non disponible.")
-                obsDescArr.add("Non disponible.")
-                obsDescArr.add("Non disponible.")
-                obsDescArr.add("Non disponible.")
+                obsDescArr.add(self.noDisposibleStr)
+                obsDescArr.add(self.noDisposibleStr)
+                obsDescArr.add(self.noDisposibleStr)
+                obsDescArr.add(self.noDisposibleStr)
             }
             
         case 59:

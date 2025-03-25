@@ -164,7 +164,6 @@
 		10273090239598070042FA45 /* ZoetisApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10273083239598070042FA45 /* ZoetisApiManager.swift */; };
 		10273091239598070042FA45 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10273084239598070042FA45 /* Extensions.swift */; };
 		10273092239598070042FA45 /* iOSDevCenters+GIF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10273085239598070042FA45 /* iOSDevCenters+GIF.swift */; };
-		10273093239598070042FA45 /* LongPressReorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10273086239598070042FA45 /* LongPressReorder.swift */; };
 		10273094239598070042FA45 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10273088239598070042FA45 /* Constants.swift */; };
 		10273095239598070042FA45 /* UIViewController+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10273089239598070042FA45 /* UIViewController+Additions.swift */; };
 		10273096239598070042FA45 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1027308A239598070042FA45 /* UILabelExtension.swift */; };
@@ -1074,7 +1073,6 @@
 		10273083239598070042FA45 /* ZoetisApiManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoetisApiManager.swift; sourceTree = "<group>"; };
 		10273084239598070042FA45 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		10273085239598070042FA45 /* iOSDevCenters+GIF.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "iOSDevCenters+GIF.swift"; sourceTree = "<group>"; };
-		10273086239598070042FA45 /* LongPressReorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LongPressReorder.swift; sourceTree = "<group>"; };
 		10273088239598070042FA45 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		10273089239598070042FA45 /* UIViewController+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Additions.swift"; sourceTree = "<group>"; };
 		1027308A239598070042FA45 /* UILabelExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
@@ -2109,17 +2107,8 @@
 				1027308A239598070042FA45 /* UILabelExtension.swift */,
 				1027308B239598070042FA45 /* UIViewController+Alert.swift */,
 				1027308C239598070042FA45 /* TypeAlias.swift */,
-				1027309923959B280042FA45 /* LongPressTableviewReorder */,
 			);
 			path = Utility;
-			sourceTree = "<group>";
-		};
-		1027309923959B280042FA45 /* LongPressTableviewReorder */ = {
-			isa = PBXGroup;
-			children = (
-				10273086239598070042FA45 /* LongPressReorder.swift */,
-			);
-			path = LongPressTableviewReorder;
 			sourceTree = "<group>";
 		};
 		102BF3B623970F34007E10BE /* ModuleSelectionController */ = {
@@ -4627,7 +4616,6 @@
 				B7B8A72A24B77CFB0069DBA9 /* MasterDataTypesDTO.swift in Sources */,
 				10C1345C240865BC00767FF8 /* PEDraftHeader.swift in Sources */,
 				B729607424A7C5BC003237C7 /* CaptureNecropsyViewDataTurkey+CoreDataProperties.swift in Sources */,
-				10273093239598070042FA45 /* LongPressReorder.swift in Sources */,
 				B7B8A71224B77CFB0069DBA9 /* AddEmployeesDAO.swift in Sources */,
 				7889E1C7242E1D2800CA5139 /* featherTableViewCell.swift in Sources */,
 				B7B8A72824B77CFB0069DBA9 /* CustomerSitesDTO.swift in Sources */,

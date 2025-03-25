@@ -90,7 +90,7 @@ class captureNecropsyStep1Data: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var huseNoDwnOutlet: UIButton!
     @IBOutlet weak var checkBoxOutlet: UIButton!
     @IBOutlet weak var ageTextField: UITextField!
-    @IBOutlet weak var noOfDownoutlet: UIButton!
+  //  @IBOutlet weak var noOfDownoutlet: UIButton!
     @IBOutlet weak var noOfBirdsTextField: UITextField!
     @IBOutlet weak var noOfDownOutlet: UIButton!
     @IBOutlet weak var houseNotextField: UITextField!

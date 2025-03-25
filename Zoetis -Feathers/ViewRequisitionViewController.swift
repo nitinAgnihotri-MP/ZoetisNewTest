@@ -225,7 +225,7 @@ extension ViewRequisitionViewController: UITableViewDelegate, UITableViewDataSou
             cell.setCornerRadiusOfFirstAndLastCell(indexPath: indexPath)
             cell.showData(indexPath: indexPath)
             cell.pdfOfSubmittedRequisition = { sender in
-                
+                print(appDelegateObj.testFuntion())
             }
             cell.viewSubmittedRequisitionDetails = { sender in
                 self.pushToRequisitionControllers(detailsOfRequistion: self.arrViewRequisition[indexPath.row])

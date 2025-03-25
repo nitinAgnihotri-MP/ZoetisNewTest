@@ -78,6 +78,7 @@ class RefrigatorQuesCell: UITableViewCell {
     }
     
     @IBAction func buttonTap(_ sender: Any) {
+        print(appDelegateObj.testFuntion())
     }
     
 }

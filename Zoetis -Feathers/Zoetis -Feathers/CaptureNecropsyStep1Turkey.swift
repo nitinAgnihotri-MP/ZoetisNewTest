@@ -85,7 +85,7 @@ class CaptureNecropsyStep1Turkey: UIViewController, UITextFieldDelegate {
     var NoOFbirds = NSArray()
     var  postingId = Int()
     var captureNecropsy = [NSManagedObject]()
-    var houseNO = Int()
+   
     var age = Int()
     var noOfBirdscount = Int()
     var asb = Bool()

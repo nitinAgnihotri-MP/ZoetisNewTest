@@ -211,6 +211,7 @@ struct Constants {
     static let areYouSureSaveAsmntStr = "Are you sure you want to save assessment in Draft?"
     static let areYouSureToLogoutStr = "Are you sure you want to Logout?"
     static let postincIdPredicate = "postingId == %@"
+    static let normalStr = "Normal."
 }
 
 enum ZoetisArt {

@@ -151,6 +151,7 @@ class AddVaccinationTurkey: UIViewController, DropperDelegateTurkey, UITextField
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        dasdasd
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 5 {
             //lblHatchery.text = "Criadero"
