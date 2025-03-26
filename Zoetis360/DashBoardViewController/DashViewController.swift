@@ -106,6 +106,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     @IBOutlet weak var barChartViewView: BarChartView!
     @IBOutlet weak var syncCount: UILabel!
     let gigya =  Gigya.sharedInstance(GigyaAccount.self)
+    let offLineMsg = "You are currently offline. Please go online to sync data."
     private let sessionManager: Session = {
         let configuration = URLSessionConfiguration.default
         configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
@@ -1503,7 +1504,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         if WebClass.sharedInstance.connected() {
             ZoetisWebServices.shared.getCocciVaccineTurkeyResponce(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                          guard let _ = self, error == nil else {
-                             self?.showToastWithTimer(message: "Failed to get Cocci Program list", duration: 3.0)
+                             self?.showToastWithTimer(message: "Failed to get Cocci Vaccine's list", duration: 3.0)
                              self?.dismissGlobalHUD(self?.view ?? UIView())
                              
                              return
@@ -1843,7 +1844,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     } else {
                         // Handle the case where the array is empty
                         print("Hatchery strain list is empty.")
-                        self.showToastWithTimer(message: "No data available from the server.", duration: 3.0)
+                        self.showToastWithTimer(message: "No hatchery strain data found on the server.", duration: 3.0)
                         
                         // Call the next service
                         self.callGetFieldStrain()
@@ -1916,7 +1917,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     } else {
                         // Handle the case where the array is empty
                         print("Field Strain list is empty.")
-                        self.showToastWithTimer(message: "No data available from the server.", duration: 3.0)
+                        self.showToastWithTimer(message: "No field strain data found on the server.", duration: 3.0)
                         
                         // Call the next service
                         self.callGetDosage()
@@ -2069,7 +2070,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
       
             ZoetisWebServices.shared.getProductionTypeResponce(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
-                    self?.showToastWithTimer(message: "Failed to get Cocci Program list", duration: 3.0)
+                    self?.showToastWithTimer(message: "Failed to get Production type list", duration: 3.0)
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     
                     return
@@ -2197,8 +2198,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         
         if WebClass.sharedInstance.connected() {
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-          //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-//            let headers: HTTPHeaders = ["Authorization":accestoken]
             let Id = UserDefaults.standard.integer(forKey: "Id")
             let parameters = ["userId" :Id]
             let Url = WebClass.sharedInstance.webUrl + "Farm/GetFarmListByUserId"
@@ -2228,27 +2227,22 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 else{
                     switch response.result {
                     case let .success(value):
-                        if (value is NSArray)
-                        {
-                            let arr : NSArray = value as! NSArray
-                            self.getFormArray = NSMutableArray ()
-                            
-                            for  i in 0..<arr.count {
-                                let dictDat = NSMutableDictionary ()
-                                let tempDict = arr.object(at: i) as AnyObject
-                                dictDat.setValue(tempDict["CountryId"] as? Int, forKey: "CountryId")
-                                dictDat.setValue(tempDict["FarmId"] as? Int, forKey: "FarmId")
-                                dictDat.setValue(tempDict["FarmName"] as? String, forKey: "FarmName")
-                                self.getFormArray.add(dictDat)
+                        
+                        if let arr = value as? [[String: Any]] {
+                            let formArray = arr.map { tempDict in
+                                [
+                                    "CountryId": tempDict["CountryId"] as? Int ?? 0,
+                                    "FarmId": tempDict["FarmId"] as? Int ?? 0,
+                                    "FarmName": tempDict["FarmName"] as? String ?? ""
+                                ]
                             }
                             
                             CoreDataHandler().deleteAllData("FarmsList")
-                            self.callSaveMethodgetListFarms( self.getFormArray)
-                            self.callVeterianService()
+                            self.callSaveMethodgetListFarms(formArray as NSArray)
                         }
-                        else{
-                            self.callVeterianService()
-                        }
+
+                        self.callVeterianService()
+
                         break
                     case let .failure(error):
                         debugPrint(error.localizedDescription)
@@ -2333,7 +2327,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 self.callSyncApi()
             }
             else{
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offLineMsg, comment: ""))
             }
         }
         else{
@@ -2402,7 +2396,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offLineMsg, comment: ""))
     }
     // MARK: 🟠 Alert Message
     func promtSyncing (){
@@ -2430,7 +2424,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     }
                 }
                 else{
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(self.offLineMsg, comment: ""))
                 }
             }
             else{
@@ -2587,6 +2581,6 @@ extension DashViewController{
     func failWithInternetConnectionSyncdata(){
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offLineMsg, comment: ""))
     }
 }

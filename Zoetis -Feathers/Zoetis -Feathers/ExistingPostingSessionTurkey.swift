@@ -19,7 +19,7 @@ class ExistingPostingSessionTurkey: UIViewController, UITextFieldDelegate, necro
     @IBOutlet weak var tableView: UITableView!
     let buttonDroper = UIButton()
     let buttonbg1 = UIButton()
-    let buttonbg = UIButton()
+   
     var buttonback = UIButton()
     var customPopV: startNecrPopUpTurkey!
     var finializeB = NSNumber()

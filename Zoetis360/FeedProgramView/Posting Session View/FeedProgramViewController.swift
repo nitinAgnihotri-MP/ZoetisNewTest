@@ -80,7 +80,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
     var feedId = Int()
     var feedProgadd = String()
     var addfeed = String()
-    let buttonbg1 = UIButton ()
+    let logoutViewbg = UIButton ()
     var logOutPopView1 :UserListView!
     var datCount = 0
     
@@ -344,6 +344,26 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
     let feedTypeFive = "Feed type 5"
     let feedTypeSix = "Feed type 6"
     // MARK: - VIEW LIFE CYCLE
+    fileprivate func setDefaultText() {
+        
+        
+        let labels: [UILabel] = [
+            myCoxtinStarterDosage, myCoxtinGrowerDosage, myCoxtinFinisherDosge, myCoxtinWDDosage,
+            myCoxtin5DosageTextField, myCoxtin6DosageTextField,
+            antiDosageFirstTextField, antiDosageSecondTextField, antiDosageThirdTextField,
+            antiDosageFourTextField, antiDosageFivthTextField, antiDosageSixTextField,
+            alternativeDosageFirstText, alternativeDosageSecoondText, alternativeDosageThirdText,
+            alternativeDosageFourText, altrNativeDosage5Text, altrNativeDosage6Text
+        ]
+
+        for label in labels {
+            if label.text == appDelegateObj.selectStr {
+                label.text = selectedTextDefault
+            }
+        }
+
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -598,80 +618,26 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             startDatellbl.text = "Date de début"
             lblDate.text =  "Sélectionner une date"
             
-            if myCoxtinStarterDosage.text == appDelegateObj.selectStr {
-                myCoxtinStarterDosage.text = selectedTextDefault
-            }
-            if myCoxtinGrowerDosage.text == appDelegateObj.selectStr {
-                myCoxtinGrowerDosage.text = selectedTextDefault
-            }
-            if myCoxtinFinisherDosge.text == appDelegateObj.selectStr {
-                myCoxtinFinisherDosge.text = selectedTextDefault
-            }
-            if myCoxtinWDDosage.text == appDelegateObj.selectStr {
-                myCoxtinWDDosage.text = selectedTextDefault
-            }
-            if myCoxtin5DosageTextField.text == appDelegateObj.selectStr {
-                myCoxtin5DosageTextField.text = selectedTextDefault
-            }
-            if myCoxtin6DosageTextField.text == appDelegateObj.selectStr {
-                myCoxtin6DosageTextField.text = selectedTextDefault
-            }
-            if antiDosageFirstTextField.text == appDelegateObj.selectStr {
-                antiDosageFirstTextField.text = selectedTextDefault
-            }
-            if antiDosageSecondTextField.text == appDelegateObj.selectStr {
-                antiDosageSecondTextField.text = selectedTextDefault
-            }
-            if antiDosageThirdTextField.text == appDelegateObj.selectStr {
-                antiDosageThirdTextField.text = selectedTextDefault
-            }
-            if antiDosageFourTextField.text == appDelegateObj.selectStr {
-                antiDosageFourTextField.text = selectedTextDefault
-            }
-            if antiDosageFivthTextField.text == appDelegateObj.selectStr {
-                antiDosageFivthTextField.text = selectedTextDefault
-            }
-            if antiDosageSixTextField.text == appDelegateObj.selectStr {
-                antiDosageSixTextField.text = selectedTextDefault
-            }
-            if alternativeDosageFirstText.text == appDelegateObj.selectStr {
-                alternativeDosageFirstText.text = selectedTextDefault
-            }
-            if alternativeDosageSecoondText.text == appDelegateObj.selectStr {
-                alternativeDosageSecoondText.text = selectedTextDefault
-            }
-            if alternativeDosageThirdText.text == appDelegateObj.selectStr {
-                alternativeDosageThirdText.text = selectedTextDefault
-            }
-            if alternativeDosageFourText.text == appDelegateObj.selectStr {
-                alternativeDosageFourText.text = selectedTextDefault
-            }
-            if altrNativeDosage5Text.text == appDelegateObj.selectStr {
-                altrNativeDosage5Text.text = selectedTextDefault
-            }
-            if altrNativeDosage6Text.text == appDelegateObj.selectStr {
-                altrNativeDosage6Text.text = selectedTextDefault
-            }
-            if lngId == 1{
-                if starterDosageTextField.text == appDelegateObj.selectStr {
-                    starterDosageTextField.text = selectedTextDefault
-                }
-                if growerDosageCoccidiosisTEXT.text == appDelegateObj.selectStr {
-                    growerDosageCoccidiosisTEXT.text = selectedTextDefault
-                }
-                if finisherDosageTxtField.text == appDelegateObj.selectStr {
-                    finisherDosageTxtField.text = selectedTextDefault
-                }
-                if wdDosageTextField.text == appDelegateObj.selectStr {
-                    wdDosageTextField.text = selectedTextDefault
-                }
-                if feed5textField.text == appDelegateObj.selectStr {
-                    feed5textField.text = selectedTextDefault
-                }
-                if feed6TextField.text == appDelegateObj.selectStr {
-                    feed6TextField.text = selectedTextDefault
+            setDefaultText()
+            
+            
+            if lngId == 1 {
+                let labels: [UILabel] = [
+                    starterDosageTextField,
+                    growerDosageCoccidiosisTEXT,
+                    finisherDosageTxtField,
+                    wdDosageTextField,
+                    feed5textField,
+                    feed6TextField
+                ]
+                
+                for label in labels {
+                    if label.text == appDelegateObj.selectStr {
+                        label.text = selectedTextDefault
+                    }
                 }
             }
+
         }
         
         if lngId == 4 {
@@ -1088,7 +1054,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             
             
-            
+          
             for i in 0..<AntiboticArray.count{
                 
                 if AntiboticArray.count == 1{
@@ -1263,6 +1229,8 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         
         if AlternativeArray.count > 0 {
             
+            
+          
             for i in 0..<AlternativeArray.count{
                 
                 if AlternativeArray.count == 1{
@@ -4467,11 +4435,11 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
     func clickHelp() {
         
         
-        buttonbg1.frame = CGRect(x: 0,y: 0,width: 1024,height: 768)
+        logoutViewbg.frame = CGRect(x: 0,y: 0,width: 1024,height: 768)
         
-        buttonbg1.addTarget(self, action: #selector(FeedProgramViewController.logOytButtn), for: .touchUpInside)
-        buttonbg1.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.3)
-        self.view .addSubview(buttonbg1)
+        logoutViewbg.addTarget(self, action: #selector(FeedProgramViewController.logOytButtn), for: .touchUpInside)
+        logoutViewbg.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.3)
+        self.view .addSubview(logoutViewbg)
         
         
         logOutPopView1 = UserListView.loadFromNibNamed("UserListView") as! UserListView
@@ -4480,12 +4448,12 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         logOutPopView1.layer.cornerRadius = 8
         logOutPopView1.layer.borderWidth = 3
         logOutPopView1.layer.borderColor =  UIColor.clear.cgColor
-        self.buttonbg1 .addSubview(logOutPopView1)
+        self.logoutViewbg .addSubview(logOutPopView1)
         logOutPopView1.showView(self.view, frame1: CGRect(x: self.view.frame.size.width - 200,y: 60,width: 150,height: 60))
     }
     
     @objc func logOytButtn () {
-        buttonbg1.removeFromSuperview()
+        logoutViewbg.removeFromSuperview()
         logOutPopView1.removeFromSuperview()
         
     }

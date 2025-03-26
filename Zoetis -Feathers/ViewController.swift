@@ -253,13 +253,14 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         self?.apiKeyId = apiKeyId.rawValue as? NSNumber
                         
                         let environmentIs = Constants.Api.versionUrl
+                        let environmentMap: [String: Int] = [
+                            "stageapi": 0,
+                            "devapi": 1,
+                            "supportapi": 2
+                        ]
 
-                        let liveAlbums: Int = {
-                            if environmentIs.contains("stageapi") { return 0 }
-                            if environmentIs.contains("devapi") { return 1 }
-                            if environmentIs.contains("supportapi") { return 2 }
-                            return 3
-                        }()
+                        let liveAlbums = environmentMap.first { environmentIs.contains($0.key) }?.value ?? 3
+
 
                         // Determine the correct API key
                         let apiKey: String = (liveAlbums == 1 || liveAlbums == 2) ? "4_KkOJPb7zC89ubdZyo8pEWg" : (self?.apiKey ?? "")
@@ -1540,6 +1541,26 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     }
     
     // MARK: ************* ZoetisWebServices Calling to GetVaccination Data for Posted Session Data From Server  ***************************************/
+    fileprivate func saveFieldHatcheryStrainData(_ jsonArray: [JSON], _ self: ViewController) {
+        for item in jsonArray {
+            if let vaccinations = item["Vaccination"].array {
+                for vaccination in vaccinations {
+                    let posDict = vaccination.dictionaryObject ?? [:]
+                    for key in posDict.keys {
+                        if key.contains("hatchery") {
+                            CoreDataHandler().getHatcheryDataFromServer(posDict as NSDictionary)
+                        } else if key.contains("field") {
+                            CoreDataHandler().getFieldDataFromServer(posDict as NSDictionary)
+                        }
+                    }
+                }
+            }
+        }
+        DispatchQueue.global(qos: .background).async {
+            self.getPostingDataFromServerforFeed()
+        }
+    }
+    
     func getPostingDataFromServerforVaccination(){
         self.deleteAllData("HatcheryVac")
         self.deleteAllData("FieldVaccination")
@@ -1558,23 +1579,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 }
                 
                 if let jsonArray = JSON(json).array , !jsonArray.isEmpty  {
-                    for item in jsonArray {
-                        if let vaccinations = item["Vaccination"].array {
-                            for vaccination in vaccinations {
-                                let posDict = vaccination.dictionaryObject ?? [:]
-                                for key in posDict.keys {
-                                    if key.contains("hatchery") {
-                                        CoreDataHandler().getHatcheryDataFromServer(posDict as NSDictionary)
-                                    } else if key.contains("field") {
-                                        CoreDataHandler().getFieldDataFromServer(posDict as NSDictionary)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    DispatchQueue.global(qos: .background).async {
-                        self.getPostingDataFromServerforFeed()
-                    }
+                    saveFieldHatcheryStrainData(jsonArray, self)
                 } else {
                     DispatchQueue.global(qos: .background).async {
                         self.getPostingDataFromServerforFeed()

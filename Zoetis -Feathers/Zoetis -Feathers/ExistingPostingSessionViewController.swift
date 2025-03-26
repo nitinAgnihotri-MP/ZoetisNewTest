@@ -24,7 +24,7 @@ class ExistingPostingSessionViewController: UIViewController, UITableViewDelegat
     @IBOutlet weak var syncNotiCount: UILabel!
     var customPopView1: UserListView!
     let buttonbg1 = UIButton()
-    let buttonbg = UIButton()
+    let customePopUpBg = UIButton()
     var buttonback = UIButton()
     var customPopV: startNecropsyXib!
     var finializeB = NSNumber()

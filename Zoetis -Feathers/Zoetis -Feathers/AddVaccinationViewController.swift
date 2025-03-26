@@ -20,7 +20,7 @@ class AddVaccinationViewController: UIViewController, DropperDelegate, UITextFie
     let buttonbg = UIButton()
     var exitPopUP: popUP!
     var addVaciArray = NSArray()
-    var btnTag = NSInteger()
+   
     var postingId = NSNumber()
     var postingIdFromExisting = NSNumber()
     var postingIdFromExistingNavigate = String()
