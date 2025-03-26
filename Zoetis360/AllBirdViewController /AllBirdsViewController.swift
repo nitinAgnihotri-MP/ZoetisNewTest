@@ -699,7 +699,7 @@ extension AllBirdsViewController {
                 let fetchdata =  CoreDataHandler().fetchAllSeetingByObs(entityName: catName!, obsName: obsName!)
                 switch catName {
                 case "Skeleta":
-                    let objTable  = fetchdata.object(at: 0) as! Skeleta //: Skeleta = (fetchdata as? Skeleta)!
+                    let objTable  = fetchdata.object(at: 0) as! Skeleta
                     
                     if let quickIndex = objTable.quicklinkIndex as? Int {
                         if quickIndex > 0 {
@@ -708,7 +708,7 @@ extension AllBirdsViewController {
                         }
                     }
                 case "Coccidiosis":
-                    let objTable  = fetchdata.object(at: 0) as! Coccidiosis //: Skeleta = (fetchdata as? Skeleta)!
+                    let objTable  = fetchdata.object(at: 0) as! Coccidiosis
                     
                     if let quickIndex = objTable.quicklinkIndex as? Int {
                         if quickIndex > 0 {

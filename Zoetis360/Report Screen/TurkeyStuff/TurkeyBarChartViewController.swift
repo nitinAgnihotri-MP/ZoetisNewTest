@@ -38,7 +38,7 @@ class TurkeyBarChartViewController: UIViewController,IAxisValueFormatter,ChartVi
     @IBOutlet weak var btnAllObservations: UIButton!
     @IBOutlet weak var btnAirSac: UIButton!
     @IBOutlet weak var btnShare: UIButton!
-    
+    let respiratoryTractStr:NSString = "Respiratory Tract (Turkey) "
     
     // MARK: - VIEW LIFE CYCLE
     override func viewDidLoad() {
@@ -103,8 +103,8 @@ class TurkeyBarChartViewController: UIViewController,IAxisValueFormatter,ChartVi
         
         self.loadSingleSession()
         
-        self.btnAllObservations.isHidden = self.headerTitle != "Respiratory Tract (Turkey)"
-        self.btnAirSac.isHidden = self.headerTitle != "Respiratory Tract (Turkey)"
+        self.btnAllObservations.isHidden = self.headerTitle != respiratoryTractStr
+        self.btnAirSac.isHidden = self.headerTitle != respiratoryTractStr
         
     }
     override func didReceiveMemoryWarning() {
@@ -180,7 +180,7 @@ class TurkeyBarChartViewController: UIViewController,IAxisValueFormatter,ChartVi
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         //""
-        let imageToShare = image!.cropToBounds(image!, width: 958, height: self.headerTitle != "Respiratory Tract (Turkey)" ? 600 : 585 ,ismove: btnAirSac.isSelected ? false : true)
+        let imageToShare = image!.cropToBounds(image!, width: 958, height: self.headerTitle != respiratoryTractStr ? 600 : 585 ,ismove: btnAirSac.isSelected ? false : true)
         
         let activityViewController = UIActivityViewController(activityItems:[imageToShare,self.subjectString], applicationActivities: nil)
         activityViewController.setValue(self.subjectString, forKey: "subject")

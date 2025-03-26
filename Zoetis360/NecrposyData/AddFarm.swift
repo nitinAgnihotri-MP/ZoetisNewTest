@@ -187,10 +187,8 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         } else {
             self.hudAnimated1()
             self.insertData({ (status) in
-                if status == true
-                {
-                    self.hud.hide(animated: true)
-                }
+               self.hud.hide(animated: status)
+                
             })
         }
     }

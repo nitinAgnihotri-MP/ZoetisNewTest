@@ -186,6 +186,11 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     @IBOutlet weak var txtFldLivability: UITextField!
     @IBOutlet weak var btnLivability: UIButton!
     let gigya =  Gigya.sharedInstance(GigyaAccount.self)
+    let emptyDateLabel = "- Select Date -"
+    let frenchEmptyDateLabel = " - Sélectionner une date -"
+    let offlineMsg = "You are currently offline. Please go online to sync data."
+    let sameDateComplexValidationMsg = "Session for this date & complex already exist. Please select another date or complex."
+    let mendatoryFieldsMsg = "Fields marked as (*) are mandatory. Please fill all the fields."
     // MARK: ******************************************************
     
     // MARK: - View Life Cycle
@@ -353,10 +358,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
             if isPostingId == false{
                 
-                if lngId == 5{
-                    lblAddVacci.text = "Agregar vacunación"
-                }
-                else if lngId == 4 {
+               if lngId == 4 {
                     lblAddVacci.text = ""
                 }
                 else if lngId == 3 {
@@ -369,9 +371,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             else{
                 addVaccinationOutlet.backgroundColor = UIColor.gray
                 
-                if lngId == 5{
-                    lblAddVacci.text = "Agregar vacunación"
-                }else if lngId == 3 {
+                 if lngId == 3 {
                     lblAddVacci.text = "Ajouter une vaccination"
                 }
                 else{
@@ -381,7 +381,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         }
         
         if appDelegate.isFeedProgramClick == true{
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         if appDelegate.sendFeedVariable == "Feed" {
@@ -515,11 +515,9 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         if   self.postingArray.count == 0 || vetNam == "" {
             
             lblVeteration.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-            if lngId == 5{
-                lblDate.text = "- Seleccione fecha -"
-            }else if lngId == 3 {
+            if lngId == 3 {
                 
-                lblDate.text =  " - Sélectionner une date -"
+                lblDate.text =  frenchEmptyDateLabel
             }
             lblCustmer.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
             CustRepTextField.text = ""
@@ -648,18 +646,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             sliderBtnOutlet.alpha = 1
             backButtonFronNec.alpha = 0
         }
-        if lngId == 5{
-            
-            addVacIcon.frame = CGRect(x: 130, y: 722, width: 20, height: 20)
-            feedImagrIcon.frame = CGRect(x: 385, y: 723, width: 20, height: 20)
-            if(CoreDataHandler().fetchAddvacinationData(postingId as NSNumber).count == 0){
-                lblAddVacci.text = "Agregar vacunación"
-            }
-            else {
-                lblAddVacci.text = "Editar vacunación"
-            }
-            lblFeed.text = "Programa de alimentación"
-        } else if lngId == 3 {
+       if lngId == 3 {
             
             addVacIcon.frame = CGRect(x: 120, y: 724, width: 18, height: 18)
             feedImagrIcon.frame = CGRect(x: 399, y: 724, width: 18, height: 18)
@@ -766,7 +753,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     @IBAction func nextBtnAction(_ sender: AnyObject) {
         
         if (lblCustmer.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||
-            lblComplex.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "")   || lblVeteration.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblDate.text! == NSLocalizedString("- Select Date -", comment: "")){
+            lblComplex.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "")   || lblVeteration.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblDate.text! == NSLocalizedString(emptyDateLabel, comment: "")){
             
             btnDate.layer.borderColor = UIColor.red.cgColor
             btnCustmer.layer.borderColor = UIColor.red.cgColor
@@ -782,11 +769,11 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             if lblVeteration.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
                 btnVetration.layer.borderColor = UIColor.black.cgColor
             }
-            if lblDate.text != NSLocalizedString("- Select Date -", comment: "") {
+            if lblDate.text != NSLocalizedString(emptyDateLabel, comment: "") {
                 btnDate.layer.borderColor = UIColor.black.cgColor
             }
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
         }
         else
         {
@@ -940,7 +927,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         {
             if checkComplexNameandDate(strdate, complexName: lblComplex.text!) == true
             {
-                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: ""), preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString(sameDateComplexValidationMsg, comment: ""), preferredStyle: .alert)
                 let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
@@ -1036,9 +1023,9 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         view.endEditing(true)
         
         if (lblCustmer.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||
-            lblComplex.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "")  || lblVeteration.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text! == "" || lblDate.text! == NSLocalizedString("- Select Date -", comment: "") || lblCustmer.text! == "" ||
-            lblComplex.text! == "" || birdSize.text! == ""  || lblVeteration.text! == "" || lblVeteration.text! == "" || lblDate.text! == "" || lblDate.text == "- Sélectionner une date -"){
-            if lblDate.text == " - Sélectionner une date -" || lblDate.text == NSLocalizedString("- Select Date -", comment: "") {
+            lblComplex.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "")  || lblVeteration.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text! == "" || lblDate.text! == NSLocalizedString(emptyDateLabel, comment: "") || lblCustmer.text! == "" ||
+            lblComplex.text! == "" || birdSize.text! == ""  || lblVeteration.text! == "" || lblVeteration.text! == "" || lblDate.text! == "" || lblDate.text == frenchEmptyDateLabel){
+            if lblDate.text == frenchEmptyDateLabel || lblDate.text == NSLocalizedString(emptyDateLabel, comment: "") {
                 self.btnDate.layer.borderColor = UIColor.red.cgColor
             }
             
@@ -1057,21 +1044,17 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             }
             
             let lngId = UserDefaults.standard.integer(forKey: "lngId")
-            if lngId == 5{
-                if  lblDate.text != "- Seleccione fecha -"{
-                    btnDate.layer.borderColor = UIColor.black.cgColor
-                }
-            } else if lngId == 3{
-                if  lblDate.text != " - Sélectionner une date -"{
+             if lngId == 3{
+                if  lblDate.text != frenchEmptyDateLabel{
                     btnDate.layer.borderColor = UIColor.black.cgColor
                 }
             }
             else{
-                if lblDate.text != NSLocalizedString("- Select Date -", comment: "") {
+                if lblDate.text != NSLocalizedString(emptyDateLabel, comment: "") {
                     btnDate.layer.borderColor = UIColor.black.cgColor
                 }
             }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
             
         } else {
             
@@ -1159,14 +1142,14 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         view.endEditing(true)
         
         if (lblCustmer.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||
-            lblComplex.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text! == "" || lblDate.text! == NSLocalizedString("- Select Date -", comment: "") || lblCustmer.text! == "" ||
-            lblComplex.text! == "" || birdSize.text! == ""  || lblVeteration.text! == "" || lblVeteration.text! == "" || lblDate.text! == "" || lblDate.text == "- Sélectionner une date -") {
+            lblComplex.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text! == "" || lblDate.text! == NSLocalizedString(emptyDateLabel, comment: "") || lblCustmer.text! == "" ||
+            lblComplex.text! == "" || birdSize.text! == ""  || lblVeteration.text! == "" || lblVeteration.text! == "" || lblDate.text! == "" || lblDate.text == frenchEmptyDateLabel) {
             
-            if lblDate.text == " - Sélectionner une date -" || lblDate.text == NSLocalizedString("- Select Date -", comment: "") {
+            if lblDate.text == frenchEmptyDateLabel || lblDate.text == NSLocalizedString(emptyDateLabel, comment: "") {
                 self.btnDate.layer.borderColor = UIColor.red.cgColor
             }
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
             
             btnCustmer.layer.borderColor = UIColor.red.cgColor
             btnVetration.layer.borderColor = UIColor.red.cgColor
@@ -1183,19 +1166,12 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             }
             
             let lngId = UserDefaults.standard.integer(forKey: "lngId")
-            if lngId == 5{
-                if  lblDate.text != "- Seleccione fecha -"{
-                    btnDate.layer.borderColor = UIColor.black.cgColor
-                }
-                if lblVeteration.text != NSLocalizedString("- Seleccione -", comment: "") {
-                    btnVetration.layer.borderColor = UIColor.black.cgColor
-                }
-            } else if lngId == 3 {
-                if lblDate.text != NSLocalizedString("- Sélectionner une date -", comment: "") {
+            if lngId == 3 {
+                if lblDate.text != NSLocalizedString(frenchEmptyDateLabel, comment: "") {
                 }
             }
             else{
-                if lblDate.text != NSLocalizedString("- Select Date -", comment: "") {
+                if lblDate.text != NSLocalizedString(emptyDateLabel, comment: "") {
                     btnDate.layer.borderColor = UIColor.black.cgColor
                 }
             }
@@ -1437,7 +1413,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 droperTableView.reloadData()
             }
             else{
-                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message:NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: "") , preferredStyle: .alert)
+                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message:NSLocalizedString(sameDateComplexValidationMsg, comment: "") , preferredStyle: .alert)
                 let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.lblComplex.text = ""
@@ -1590,7 +1566,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 self.ssologoutMethod()
                 CoreDataHandler().deleteAllData("Custmer")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(offlineMsg, comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
@@ -1657,7 +1633,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             }
             else{
                 
-                if (lblCustmer.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || birdSize.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblDate.text == NSLocalizedString("- Select Date -", comment: "") ) || isPostingId == false{
+                if (lblCustmer.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || birdSize.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblDate.text == NSLocalizedString(emptyDateLabel, comment: "") ) || isPostingId == false{
                     
                     self.navigationController?.popViewController(animated: true)
                     return
@@ -1690,7 +1666,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             }
         }
         
-        if (lblCustmer.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || birdSize.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblDate.text == NSLocalizedString("- Select Date -", comment: "") ) || isPostingId == false{
+        if (lblCustmer.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || birdSize.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblDate.text == NSLocalizedString(emptyDateLabel, comment: "") ) || isPostingId == false{
             
             self.navigationController?.popViewController(animated: true)
         }
@@ -1766,7 +1742,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 }
                 else
                 {
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offlineMsg, comment: ""))
                 }
             }
             else{
@@ -1799,10 +1775,10 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     
     func noPopUpPosting() {
         if exitPopUP.tag == 40{
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         else if exitPopUP.tag == 50{
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         else{
             if UserDefaults.standard.bool(forKey: "Unlinked") == true{
@@ -2105,7 +2081,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 
                 if checkComplexNameandDate(strdate, complexName: lblComplex.text!) == true
                 {
-                    let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Session for this date & complex already exist. Please select another date or complex.", comment: ""), preferredStyle: .alert)
+                    let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString(sameDateComplexValidationMsg, comment: ""), preferredStyle: .alert)
                     let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                         UIAlertAction in
                         self.lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
@@ -2199,7 +2175,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if (textField == notesTextView ) {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         } else {
             CustRepTextField.returnKeyType = UIReturnKeyType.done
         }
@@ -2322,7 +2298,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(offlineMsg, comment: ""))
     }
     func printSyncLblCount()
     {

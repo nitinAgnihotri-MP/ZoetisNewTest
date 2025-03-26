@@ -71,6 +71,8 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
     var totalStr = String()
     var lngId = NSInteger()
     let noHistoricData = "No historical data."
+    let lastCocciSessioinTxt = "Coccidiosis Summary Last Session"
+    let EiMaximaGrossTxt = "Eimeria maxima gross"
     
     // MARK: - OUTLET
     @IBOutlet weak var syncNotificationLbl: UILabel!
@@ -106,7 +108,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         barChartView.xAxis.wordWrapEnabled = false
         barChartView.rightAxis.enabled = false
         chartNameLable.frame = CGRect(x: self.view.frame.midX - 300, y: 66, width: 600, height: 30)
-        chartNameLable.text = NSLocalizedString("Coccidiosis Summary Last Session", comment: "") as String
+        chartNameLable.text = NSLocalizedString(lastCocciSessioinTxt, comment: "") as String
         chartNameLable.textAlignment = .center
         self.view.addSubview(chartNameLable)
         chartNameLable.font = UIFont.systemFont(ofSize: 18)
@@ -138,7 +140,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
 
         //print(AllValidSessions.sharedInstance.allValidSession)
         barChartView.legend.verticalAlignment = .top
-        self.subjectString = NSLocalizedString("Coccidiosis Summary Last Session", comment: "") as NSString
+        self.subjectString = NSLocalizedString(lastCocciSessioinTxt, comment: "") as NSString
         self.BtnSummuaryPressed(self.btnLastSession)
     }
     func stringForValue(_ value: Double,
@@ -491,7 +493,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         self.incedenceText.isHidden = false
         lineChartView.isHidden = true
         barChartView.isHidden = false
-        self.subjectString = NSLocalizedString("Coccidiosis Summary Last Session", comment: "") as NSString
+        self.subjectString = NSLocalizedString(lastCocciSessioinTxt, comment: "") as NSString
         chartNameLable.text = self.subjectString as String
         for btn in self.view.subviews {
             if btn.isKind(of: UIButton.self) {
@@ -512,7 +514,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             self.preparedArray.removeAllObjects()
         }
         
-        verticalValues = [NSLocalizedString("Eimeria acervulina gross", comment: ""), NSLocalizedString("Eimeria maxima gross", comment: ""),NSLocalizedString("Eimeria maxima micro", comment: ""),NSLocalizedString("Eimeria tenella gross", comment: "")]
+        verticalValues = [NSLocalizedString("Eimeria acervulina gross", comment: ""), NSLocalizedString(EiMaximaGrossTxt, comment: ""),NSLocalizedString("Eimeria maxima micro", comment: ""),NSLocalizedString("Eimeria tenella gross", comment: "")]
         
         verticalValues = observationNameCrop(values: verticalValues) as! [String]
         
@@ -788,7 +790,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             var chartDataSet : LineChartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Acervulina_Gross_Array as NSArray as! [Float], lable: NSLocalizedString("Eimeria acervulina gross", comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
-            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Gross_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria maxima gross", comment: "") as NSString)!
+            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(EiMaximaGrossTxt, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
             chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Micro_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria maxima micro", comment: "") as NSString)!
@@ -950,7 +952,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             var chartDataSet : BarChartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Acervulina_Gross_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria acervulina gross", comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
-            chartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Maxima_Gross_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria maxima gross", comment: "") as NSString)!
+            chartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Maxima_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(EiMaximaGrossTxt, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
             chartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Maxima_Micro_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria maxima micro", comment: "") as NSString)!
@@ -1469,7 +1471,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
         self.btnHistorical.isSelected = false
         self.btnShare.isHidden = false
         self.incedenceText.isHidden = false
-        self.subjectString = NSLocalizedString("Coccidiosis Summary Last Session", comment: "") as NSString
+        self.subjectString = NSLocalizedString(lastCocciSessioinTxt, comment: "") as NSString
         chartNameLable.text = self.subjectString as String
         if self.preparedArray.count > 0 {
             self.preparedArray.removeAllObjects()
