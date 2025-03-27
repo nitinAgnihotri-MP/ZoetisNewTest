@@ -1105,7 +1105,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                     if value != nil {
                         if value is NSArray{
                             let arr : NSArray = value as! NSArray
-                            print(arr)
+                          
                             UserDefaults.standard.set("Yes", forKey: "Success")
                             if arr.count>0{
                                 CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramTurkey(self.postingId)

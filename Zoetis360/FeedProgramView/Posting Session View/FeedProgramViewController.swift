@@ -355,13 +355,13 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             alternativeDosageFirstText, alternativeDosageSecoondText, alternativeDosageThirdText,
             alternativeDosageFourText, altrNativeDosage5Text, altrNativeDosage6Text
         ]
-
+        
         for label in labels {
             if label.text == appDelegateObj.selectStr {
                 label.text = selectedTextDefault
             }
         }
-
+        
     }
     
     override func viewDidLoad() {
@@ -608,7 +608,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         self.callSaveMethod(commonAray: serviceDataHldArr,tag: btnTag)
         
         cocodiceVacine =  CoreDataHandler().fetchCociVacLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
-      
+        
         targetArray =  (UserDefaults.standard.value(forKey:"target") as? NSArray)!
         
         
@@ -637,7 +637,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                     }
                 }
             }
-
+            
         }
         
         if lngId == 4 {
@@ -724,304 +724,64 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         if cocciControlArray.count > 0 {
             
             for  i in 0..<cocciControlArray.count {
+                self.setupCocciMoleculeData()
                 
-                let str = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
-                if ((str?.count)! > 0)
-                {
-                    coccidsisStartrDrinking.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
-                    firstMolID =  (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:0) as? Int ?? 0
-                    
-                }
-                else
-                {
-                    coccidsisStartrDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                }
-                var str1 = String()
-                if cocciControlArray.count == 1{
-                    str1 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
-                }
-                else{
-                    
-                    str1 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String)!
-                }
-                if (str1.count) > 0
-                {
-                    coccidsisGrowerDrinking.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
-                    secoundMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:1) as? Int ?? 0
-                }
-                else
-                {
-                    coccidsisGrowerDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                    
-                }
-                var str2 = String()
-                if cocciControlArray.count == 1{
-                    str2 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
-                }
-                else{
-                    
-                    str2 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String)!
+                /// *********************** Dossage fields data setup for Coccidiosis ****************************************
+                let dosageArray = cocciControlArray.value(forKey: "dosage") as? [String] ?? []
+                
+                let labelFields: [UILabel?] = [
+                    starterDosageTextField,
+                    growerDosageCoccidiosisTEXT,
+                    finisherDosageTxtField,
+                    wdDosageTextField,
+                    feed5textField,
+                    feed6TextField
+                ]
+                
+                let textFields: [UITextField?] = [
+                    cocciDosFirstTextField,
+                    cocciDosSecTextField,
+                    cocciDosThrdTextField,
+                    cocciDosFourTextField,
+                    cocciDosFiveTextField,
+                    cocciDosSixTextField
+                ]
+                
+                // Loop through indices to set values properly
+                for i in 0..<min(labelFields.count, dosageArray.count) {
+                    if lngId == 1 {
+                        labelFields[i]?.text = dosageArray[i]  // Assign to UILabel
+                    } else if lngId == 4 {
+                        textFields[i]?.text = dosageArray[i]   // Assign to UITextField
+                    } else {
+                        labelFields[i]?.text = dosageArray[i]  // Default case
+                    }
                 }
                 
-                if (str2.count) > 0
-                {
+                /// *********************** to & From fields data setup for Coccidiosis ****************************************
+                ///
+                let fromTextFields: [UITextField] = [
+                    FromstarterDurationTextField, FromGrowerTextField, fromFinisherTextField,
+                    fromWDtextField, from5TextField, from6teXTfield
+                ]
+                
+                let toTextFields: [UITextField] = [
+                    toStarterTextField, toGrowerTextField, toFinisherTextField,
+                    toWdTextField, toFeed5TextFeidl, toFeed6TextField
+                ]
+                
+                if let fromDaysArray = cocciControlArray.value(forKey: "fromDays") as? [String],
+                   let toDaysArray = cocciControlArray.value(forKey: "toDays") as? [String] {
                     
-                    cocciFinisherDrinkingWater.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
-                    thirdMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:2) as? Int ?? 0
-                }
-                else
-                {
-                    cocciFinisherDrinkingWater.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+                    for (index, textField) in fromTextFields.enumerated() {
+                        textField.text = fromDaysArray.indices.contains(index) ? fromDaysArray[index] : nil
+                    }
                     
-                }
-                var str3 = String()
-                if cocciControlArray.count == 1{
-                    str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
-                }
-                else{
-                    
-                    str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String)!
+                    for (index, textField) in toTextFields.enumerated() {
+                        textField.text = toDaysArray.indices.contains(index) ? toDaysArray[index] : nil
+                    }
                 }
                 
-                if (str3.count) > 0
-                {
-                    
-                    coccidiosisWdDrinking.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
-                    fourthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:3) as? Int ?? 0
-                }
-                else
-                {
-                    coccidiosisWdDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                    
-                }
-                var str4 = String()
-                if cocciControlArray.count == 1{
-                    str4 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as! String
-                }
-                else{
-                    
-                    str4 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:4) as! String
-                }
-                
-                if (str4.count) > 0
-                {
-                    fivthMoleculelBL.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
-                    fifthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:4) as? Int ?? 0
-                }
-                else
-                {
-                    fivthMoleculelBL.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                    
-                }
-                var str5 = String()
-                if cocciControlArray.count == 1{
-                    str5 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as! String
-                }
-                else{
-                    
-                    str5 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:5) as! String
-                }
-                
-                if (str5.count) > 0
-                {
-                    sixthMoleculeLbl.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
-                    sixthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:5) as? Int ?? 0
-                }
-                else
-                {
-                    sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                }
-                
-                if cocciControlArray.count == 1{
-                    if lngId == 1{
-                        starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else if lngId == 4{
-                        cocciDosFirstTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else{
-                        starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }
-                }
-                else{
-                    if lngId == 1{
-                        starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
-                    }else if lngId == 4{
-                        cocciDosFirstTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
-                    }else{
-                        starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
-                    }
-                    
-                }
-                if cocciControlArray.count == 1{
-                    if lngId == 1{
-                        growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else if lngId == 4{
-                        cocciDosSecTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else{
-                        growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }
-                }
-                else{
-                    if lngId == 1{
-                        growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
-                    }else if lngId == 4{
-                        cocciDosSecTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
-                    }else{
-                        growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
-                    }
-                    
-                }
-                if cocciControlArray.count == 1{
-                    if lngId == 1{
-                        finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else if lngId == 4{
-                        cocciDosThrdTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else{
-                        finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }
-                    
-                }
-                else{
-                    if lngId == 1{
-                        finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
-                    }else if lngId == 4{
-                        cocciDosThrdTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
-                    }else{
-                        finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
-                    }
-                    
-                }
-                if cocciControlArray.count == 1{
-                    if lngId == 1{
-                        wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else if lngId == 4{
-                        cocciDosFourTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else{
-                        wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }
-                    
-                }
-                else{
-                    if lngId == 1{
-                        wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
-                    }else if lngId == 4{
-                        cocciDosFourTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
-                    }else{
-                        wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
-                    }
-                    
-                }
-                if cocciControlArray.count == 1{
-                    if lngId == 1{
-                        feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else if lngId == 4{
-                        cocciDosFiveTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else{
-                        feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }
-                    
-                }
-                else{
-                    if lngId == 1{
-                        feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
-                    }else if lngId == 4{
-                        cocciDosFiveTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
-                    }else{
-                        feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
-                    }
-                    
-                }
-                if cocciControlArray.count == 1{
-                    if lngId == 1{
-                        feed6TextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else if lngId == 4{
-                        cocciDosSecTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }else{
-                        cocciDosSixTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                    }
-                    
-                }
-                else{
-                    if lngId == 1{
-                        feed6TextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
-                    }else if lngId == 4{
-                        cocciDosSixTextField.text = (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
-                    }else{
-                        feed6TextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
-                    }
-                    
-                }
-                if cocciControlArray.count == 1{
-                    FromstarterDurationTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    FromstarterDurationTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
-                }
-                if cocciControlArray.count == 1{
-                    FromGrowerTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    FromGrowerTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
-                }
-                if cocciControlArray.count == 1{
-                    fromFinisherTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    fromFinisherTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
-                }
-                if cocciControlArray.count == 1{
-                    fromWDtextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    fromWDtextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
-                }
-                if cocciControlArray.count == 1{
-                    from5TextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    from5TextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
-                }
-                if cocciControlArray.count == 1{
-                    from6teXTfield.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    from6teXTfield.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
-                }
-                if cocciControlArray.count == 1{
-                    toStarterTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    toStarterTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
-                }
-                if cocciControlArray.count == 1{
-                    toGrowerTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    toGrowerTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
-                }
-                if cocciControlArray.count == 1{
-                    toFinisherTextField.text = (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    toFinisherTextField.text = (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
-                }
-                if cocciControlArray.count == 1{
-                    toWdTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    toWdTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
-                }
-                if cocciControlArray.count == 1{
-                    toFeed5TextFeidl.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    toFeed5TextFeidl.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
-                }
-                if cocciControlArray.count == 1{
-                    toFeed6TextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-                }
-                else{
-                    toFeed6TextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
-                }
                 if cocciControlArray.count == 1{
                     coccidiosisVaccineDrinkin.text =  (cocciControlArray.value(forKey:"coccidiosisVaccine") as AnyObject).object(at:i) as? String
                 }
@@ -1074,7 +834,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             }
             
             feedProgramTextField.text = feedPrograms.first
-
+            
         }
         /*********************  Alternative Data Bind  ****************************/
         if AlternativeArray.count > 0 {
@@ -1086,16 +846,16 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                   let feedPrograms = AlternativeArray.value(forKey: "feedProgram") as? [String] else { return }
             
             let alternativeMoleculeFields = [moleculeFeedType1Alternativ, moleculeFeedType2Alternativ, moleculeFeedType3Alternativ,
-                                  moleculeFeedType4Alternativ, moleculeFeedType5Alternativ, moleculeFeedType6Alternativ]
+                                             moleculeFeedType4Alternativ, moleculeFeedType5Alternativ, moleculeFeedType6Alternativ]
             
             let alternativeDosageFields = [alternativeDosageFirstText, alternativeDosageSecoondText, alternativeDosageThirdText,
-                                alternativeDosageFourText, altrNativeDosage5Text, altrNativeDosage6Text]
+                                           alternativeDosageFourText, altrNativeDosage5Text, altrNativeDosage6Text]
             
             let alternativeFromDurationFields = [alternativeFromFirstTextField, alternativeFromSecondTextField, alternativeFromthirdTextField,
-                                      alternativeFromFourTextField, from5TextAlternative, from6TextAlternative]
+                                                 alternativeFromFourTextField, from5TextAlternative, from6TextAlternative]
             
             let alternativetToDurationFields = [alternativeToFirstTextField, alternativeToSecondTextField, alternativeTothirdTextField,
-                                    alternativeToFourTextField, to5TextAlternative, to6TextAlternative]
+                                                alternativeToFourTextField, to5TextAlternative, to6TextAlternative]
             
             for i in 0..<min(AlternativeArray.count, 6) {
                 if let molecule = molecules[safe: i] {
@@ -1113,11 +873,11 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             }
             
             feedProgramTextField.text = feedPrograms.first
-
+            
         }
         
         /*********************  MyBlinder  ****************************/
-  
+        
         if MyCoxtinBindersArray.count > 0 {
             guard let molecules = MyCoxtinBindersArray.value(forKey: "molecule") as? [String],
                   let dosages = MyCoxtinBindersArray.value(forKey: "dosage") as? [String],
@@ -1126,16 +886,16 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                   let feedPrograms = MyCoxtinBindersArray.value(forKey: "feedProgram") as? [String] else { return }
             
             let mycotoxinMoleculeFields = [moleculeFeedType1MyCoxtin, moleculeFeedType2MyCoxtin, moleculeFeedType3MyCoxtin,
-                                  moleculeFeedType4MyCoxtin, moleculeFeedType5MyCoxtin, moleculeFeedType6MyCoxtin]
+                                           moleculeFeedType4MyCoxtin, moleculeFeedType5MyCoxtin, moleculeFeedType6MyCoxtin]
             
             let mycotoxinDosageFields = [myCoxtinStarterDosage, myCoxtinGrowerDosage, myCoxtinFinisherDosge,
-                                myCoxtinWDDosage, myCoxtin5DosageTextField, myCoxtin6DosageTextField]
+                                         myCoxtinWDDosage, myCoxtin5DosageTextField, myCoxtin6DosageTextField]
             
             let mycotoxinFromDurationFields = [myFromFirstTextField, myFromSecondTextField, myFromThirdTextField,
-                                      myFromFourTextField, from5TextFieldMycoxtin, from6TextFieldMycoxtin]
+                                               myFromFourTextField, from5TextFieldMycoxtin, from6TextFieldMycoxtin]
             
             let mycotoxinToDurationFields = [myToFirstTextField, myToSecondTextField, myToThirdTextField,
-                                    myToFourTextField, to5TextFieldMycoxtin, to6TextFieldMycoxtin]
+                                             myToFourTextField, to5TextFieldMycoxtin, to6TextFieldMycoxtin]
             
             for i in 0..<min(MyCoxtinBindersArray.count, 6) {
                 if let molecule = molecules[safe: i] {
@@ -1153,9 +913,9 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             }
             
             feedProgramTextField.text = feedPrograms.first
-
+            
         }
-      
+        
         if (UserDefaults.standard.bool(forKey:"Unlinked") == true){
             
             addFarmBtnOutlet.isHidden = false
@@ -1226,6 +986,54 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         myCotoxiinOutlet.setTitle(NSLocalizedString(Constants.mytoxinStr, comment: ""), for: .selected)
         
     }
+    
+    func setupCocciMoleculeData() {
+        let dosageKey = "molecule"
+        let moleculeIDKey = "dosemoleculeId"
+        
+        let moleculeLabels = [
+            coccidsisStartrDrinking,
+            coccidsisGrowerDrinking,
+            cocciFinisherDrinkingWater,
+            coccidiosisWdDrinking,
+            fivthMoleculelBL,
+            sixthMoleculeLbl
+        ]
+        
+        var moleculeIDs = [Int?](repeating: nil, count: moleculeLabels.count)
+        
+        guard let molecules = cocciControlArray.value(forKey: dosageKey) as? [String] else {
+            print("Error: 'molecule' key is missing or not an array")
+            return
+        }
+        
+        guard let moleculeIDsArray = cocciControlArray.value(forKey: moleculeIDKey) as? [Int] else {
+            print("Error: 'dosemoleculeId' key is missing or not an array")
+            return
+        }
+        
+        for index in 0..<moleculeLabels.count {
+            let molecule = index < molecules.count ? molecules[index] : ""
+            let moleculeID = index < moleculeIDsArray.count ? moleculeIDsArray[index] : 0
+            
+            if molecule.isEmpty {
+                moleculeLabels[index]?.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+            } else {
+                moleculeLabels[index]?.text = molecule
+                moleculeIDs[index] = moleculeID
+            }
+        }
+        
+        // Assign molecule IDs to respective variables
+        firstMolID = moleculeIDs[0] ?? 0
+        secoundMolID = moleculeIDs[1] ?? 0
+        thirdMolID = moleculeIDs[2] ?? 0
+        fourthMolID = moleculeIDs[3] ?? 0
+        fifthMolID = moleculeIDs[4] ?? 0
+        sixthMolID = moleculeIDs[5] ?? 0
+    }
+    
+    
     
     // MARK: - Set Corner Radius , color & Border Width of button's
     func styleButton(_ button: UIButton, cornerRadius: CGFloat, borderColor: UIColor, borderWidth: CGFloat) {
@@ -2171,7 +1979,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
     
     
     @IBAction func cocciDosageFeed1(_ sender: Any) {
- 
+        
         if  Bundle.main.versionNumber > "7.5.1"
         {
             if coccidsisStartrDrinking.text == appDelegateObj.selectStr
@@ -2201,7 +2009,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         tableViewpop()
         droperTableView.frame = CGRect(x: 445,y: 309,width: 230,height: 150)
         droperTableView.reloadData()
- 
+        
     }
     
     @IBAction func cocciDosageFeed2(_ sender: Any) {
@@ -2234,7 +2042,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         tableViewpop()
         droperTableView.frame = CGRect(x: 445,y: 365,width: 230,height: 150)
         droperTableView.reloadData()
-  }
+    }
     
     @IBAction func cocciDosageFeed3(_ sender: Any) {
         
@@ -2683,7 +2491,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                                         
                                         self.saveMyCoxtinDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
                                             
-                                           })
+                                        })
                                     }})
                             }})
                     }})
@@ -2846,7 +2654,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                     saveClickedFeedProgramData()
                 }
                 else if postingIdFromExistingNavigate == "Exting"{
-                   
+                    
                     saveExistedSessionFeedProgramData()
                 }
                 else{
@@ -3628,7 +3436,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 isClickOnAnyField = true
             }
             else if btnTag == 5 {
-               
+                
                 buttonCocotarget()
                 
                 isClickOnAnyField = true
@@ -3663,7 +3471,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 135: antiDosageFivthTextField,
                 136: antiDosageSixTextField
             ]
-
+            
             if let label = dosageFields[btnTag] {
                 label.text = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
                 isClickOnAnyField = true

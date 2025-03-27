@@ -639,14 +639,20 @@ extension PVEDraftSNAFinalizeAssement:  UIImagePickerControllerDelegate,UINaviga
             
             if  let cell = self.tblView.cellForRow(at: indexPath!) as? PVEVaccinationCrewSafetyCell
             {
-                let imgCount = Int(cell.imgCountBtn.titleLabel?.text ?? "0")
-                if imgCount == 5 {
-                    if cell.imgCountBtn.isHidden == true{
-                    }else{
-                        postAlert("Reached maximum!", message: "Reached maximum limit of images for this question.")
-                        return
-                    }
+                
+                if let imgCount = Int(cell.imgCountBtn.titleLabel?.text ?? "0"), imgCount == 5, !cell.imgCountBtn.isHidden {
+                    postAlert("Reached maximum!", message: "Reached maximum limit of images for this question.")
+                    return
                 }
+                
+//                let imgCount = Int(cell.imgCountBtn.titleLabel?.text ?? "0")
+//                if imgCount == 5 {
+//                    if cell.imgCountBtn.isHidden == true{
+//                    }else{
+//                        postAlert("Reached maximum!", message: "Reached maximum limit of images for this question.")
+//                        return
+//                    }
+//                }
             }
             
             
@@ -1356,6 +1362,27 @@ extension PVEDraftSNAFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vaccine
         
     }
     
+    fileprivate func setBorderForBtns(_ cell: PVEVaccineInfoDetailsCell) {
+        if cell.vacManTxtFld.text! == "" {
+            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacManBtn)
+        }
+        if cell.vacNameTxtFld.text! == "" {
+            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacNameBtn)
+        }
+        if cell.serotypeTxtFld.text! == "" {
+            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serotypeBtn)
+        }
+        if cell.serialTxtFld.text! == "" {
+            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serialBtn)
+        }
+        if cell.expiryTxtFld.text! == "" {
+            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.expiryBtn)
+        }
+        if cell.siteOfInjTxtFld.text! == ""{
+            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.siteOfInjBtn)
+        }
+    }
+    
     func vaccinatorInfoDetailPlusBtnTapped(clickedBtnIndPath: NSIndexPath) {
         
         for (indx, _) in vaccinInfoDetailArr.enumerated() {
@@ -1366,24 +1393,7 @@ extension PVEDraftSNAFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vaccine
             {
                 if cell.vacManTxtFld.text! == "" || cell.vacNameTxtFld.text! == "" || cell.serotypeTxtFld.text! == "" || cell.serialTxtFld.text! == "" || cell.expiryTxtFld.text! == "" || cell.siteOfInjTxtFld.text! == ""{
                     
-                    if cell.vacManTxtFld.text! == "" {
-                        self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacManBtn)
-                    }
-                    if cell.vacNameTxtFld.text! == "" {
-                        self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacNameBtn)
-                    }
-                    if cell.serotypeTxtFld.text! == "" {
-                        self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serotypeBtn)
-                    }
-                    if cell.serialTxtFld.text! == "" {
-                        self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serialBtn)
-                    }
-                    if cell.expiryTxtFld.text! == "" {
-                        self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.expiryBtn)
-                    }
-                    if cell.siteOfInjTxtFld.text! == ""{
-                        self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.siteOfInjBtn)
-                    }
+                    setBorderForBtns(cell)
                     
                 }
             }
@@ -1533,6 +1543,274 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
         }
     }
     
+    fileprivate func setupTeamCatcherUICell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemberCatchersCell", for: indexPath) as! PVETeamMemberCatchersCell
+        cell.currentIndPath = indexPath as NSIndexPath
+        cell.delegate = self
+        
+        if noOfCatcherArr.count > indexPath.row{
+            
+            if noOfCatcherArr[indexPath.row].keys.contains("name"){
+                cell.nameTxtField.text = noOfCatcherArr[indexPath.row]["name"] ?? ""
+            }else{
+                cell.nameTxtField.text = ""
+            }
+            if noOfCatcherArr[indexPath.row].keys.contains("email"){
+                cell.emailTxtField.text = noOfCatcherArr[indexPath.row]["email"] ?? ""
+            }else{
+                cell.emailTxtField.text = ""
+            }
+            if noOfCatcherArr[indexPath.row].keys.contains("mobile"){
+                cell.mobileTxtField.text = noOfCatcherArr[indexPath.row]["mobile"] ?? ""
+            }else{
+                cell.mobileTxtField.text = ""
+            }
+        }
+        else{
+            cell.nameTxtField.text = ""
+            cell.mobileTxtField.text = ""
+            cell.emailTxtField.text = ""
+        }
+        if cell.currentIndPath.row == 0 {
+            cell.teamMemberTitleLbl.isHidden = false
+        }else{
+            cell.teamMemberTitleLbl.isHidden = true
+        }
+        if cell.currentIndPath.row == 0 {
+            cell.teamMemberTitleLbl.isHidden = false
+        }else{
+            cell.teamMemberTitleLbl.isHidden = true
+        }
+        
+        return cell
+    }
+    
+    fileprivate func setupVaccinatorMemberCellUi(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemeberVaccinatorsCell", for: indexPath) as! PVETeamMemeberVaccinatorsCell
+        cell.currentIndPath = indexPath as NSIndexPath
+        cell.delegate = self
+        
+        if noOfVaccinatorsArr.count > indexPath.row{
+            
+            if noOfVaccinatorsArr[indexPath.row].keys.contains("name"){
+                cell.nameTxtField.text = noOfVaccinatorsArr[indexPath.row]["name"] ?? ""
+            }else{
+                cell.nameTxtField.text = ""
+            }
+            if noOfVaccinatorsArr[indexPath.row].keys.contains("email"){
+                cell.emailTxtField.text = noOfVaccinatorsArr[indexPath.row]["email"] ?? ""
+            }else{
+                cell.emailTxtField.text = ""
+            }
+            if noOfVaccinatorsArr[indexPath.row].keys.contains("mobile"){
+                cell.mobileTxtField.text = noOfVaccinatorsArr[indexPath.row]["mobile"] ?? ""
+            }else{
+                cell.mobileTxtField.text = ""
+            }
+        }  else{
+            cell.nameTxtField.text = ""
+            cell.mobileTxtField.text = ""
+            cell.emailTxtField.text = ""
+        }
+        
+        
+        if cell.currentIndPath.row == 0 {
+            cell.teamMemberTitleLbl.isHidden = false
+        }else{
+            cell.teamMemberTitleLbl.isHidden = true
+        }
+        
+        if cell.currentIndPath.row == 0 {
+            cell.teamMemberTitleLbl.isHidden = false
+        }else{
+            cell.teamMemberTitleLbl.isHidden = true
+        }
+        
+        if noOfVaccinatorsArr[indexPath.row]["serology"] ?? "" == "" {
+            cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
+        }else{
+            cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
+        }
+        
+        let housingStr = getDraftValueForKey(key: "housing") as! String
+        if housingStr == "Floor" {
+            cell.serologyView.isHidden = true
+        }else{
+            cell.serologyView.isHidden = false
+        }
+        return cell
+    }
+    
+    fileprivate func setUpVaccineInfoDetailCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccineInfoDetailsCell", for: indexPath) as! PVEVaccineInfoDetailsCell
+        cell.currentIndPath = indexPath as NSIndexPath
+        cell.delegate = self
+        cell.showMoreBtn.tag = indexPath.row
+        cell.showMoreBtn.addTarget(self, action: #selector(showMoreTapped), for: .touchUpInside)
+        
+        if vaccinInfoDetailArr.count > indexPath.row{
+            
+            if vaccinInfoDetailArr[indexPath.row].keys.contains("man"){
+                cell.vacManTxtFld.text = vaccinInfoDetailArr[indexPath.row]["man"]  as? String
+            }else{
+                cell.vacManTxtFld.text = ""
+            }
+            
+            if vaccinInfoDetailArr[indexPath.row].keys.contains("name"){
+                cell.vacNameTxtFld.text = vaccinInfoDetailArr[indexPath.row]["name"] as? String
+            }else{
+                cell.vacNameTxtFld.text = ""
+            }
+            
+            if vaccinInfoDetailArr[indexPath.row].keys.contains("serotype"){
+                
+                if vaccinInfoDetailArr[indexPath.row]["serotype"] as? String == ""
+                {
+                    cell.serotypeTxtFld.text = vaccinInfoDetailArr[indexPath.row]["serotype"]  as? String
+                }
+                else
+                {
+                    debugPrint(vaccinInfoDetailArr)
+                    
+                    if let jsonarray = ((vaccinInfoDetailArr as? NSArray)?.value(forKey: "serotype")) as? [String]{
+                        cell.serotypeTxtFld.text = vaccinInfoDetailArr[indexPath.row]["serotype_id"]  as? String
+                        
+                        
+                    }
+                    else
+                    {
+                        
+                        debugPrint(vaccinInfoDetailArr[indexPath.row])
+                        let antigenName =  (vaccinInfoDetailArr[indexPath.row]["serotype"] as? [String])!.joined(separator: ",")
+                        
+                        items.removeAll()
+                        itemsIds.removeAll()
+                        
+                        items = (vaccinInfoDetailArr[indexPath.row]["serotype"] as? [String])!
+                        itemsIds = (vaccinInfoDetailArr[indexPath.row]["serotype_id"] as? [String])!
+                        selectedDataArray.removeAll()
+                        
+                        for id in 0..<items.count {
+                            let item = draftSelectedData(id:  Int(itemsIds[id] as? String ?? "")!, name: items[id].capitalized)
+                            selectedDataArray.append(item)
+                        }
+                        cell.serotypeTxtFld.text = antigenName
+                    }
+                    
+                    
+                }
+            }
+            else{
+                cell.serotypeTxtFld.text = ""
+            }
+            if vaccinInfoDetailArr[indexPath.row]["serial"]  as? String == vaccinInfoDetailArr[indexPath.row]["name"]  as? String
+            {
+                cell.serialTxtFld.text = ""
+            }
+            else
+            {
+                if vaccinInfoDetailArr[indexPath.row].keys.contains("serial"){
+                    cell.serialTxtFld.text = vaccinInfoDetailArr[indexPath.row]["serial"]  as? String
+                }else{
+                    cell.serialTxtFld.text = ""
+                    
+                }
+                
+            }
+            
+            if vaccinInfoDetailArr[indexPath.row].keys.contains("expDate"){
+                cell.expiryTxtFld.text = vaccinInfoDetailArr[indexPath.row]["expDate"]  as? String
+            }else{
+                cell.expiryTxtFld.text = ""
+            }
+            
+            if vaccinInfoDetailArr[indexPath.row].keys.contains("note"){
+                cell.notetxtView.text = vaccinInfoDetailArr[indexPath.row]["note"] as? String
+            }else{
+                cell.notetxtView.text = ""
+            }
+            
+            if vaccinInfoDetailArr[indexPath.row].keys.contains("siteOfInj"){
+                cell.siteOfInjTxtFld.text = vaccinInfoDetailArr[indexPath.row]["siteOfInj"]  as? String
+            }else{
+                cell.siteOfInjTxtFld.text = ""
+            }
+            
+            if vaccinInfoDetailArr[indexPath.row].keys.contains("otherAntigen"){
+                cell.otherAntigenTxtFld.text = vaccinInfoDetailArr[indexPath.row]["otherAntigen"] as? String
+            }else{
+                cell.otherAntigenTxtFld.text = ""
+            }
+            
+            if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore"){
+                if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr
+                {
+                    cell.showMoreBtn.setImage(UIImage(named: "up"), for: .normal)
+                } else {
+                    cell.showMoreBtn.setImage(UIImage(named: "down"), for: .normal)
+                }
+            }
+            
+        }else{
+            cell.vacManTxtFld.text = ""
+            cell.vacNameTxtFld.text = ""
+            cell.serotypeTxtFld.text = ""
+            cell.serialTxtFld.text = ""
+            cell.expiryTxtFld.text = ""
+            cell.siteOfInjTxtFld.text = ""
+            cell.notetxtView.text = ""
+            cell.otherAntigenTxtFld.text = ""
+        }
+        
+        if vaccinInfoDetailArr[indexPath.row]["man"] as? String == ""{
+            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacManBtn)
+        }else{
+            self.sharedManager.setBorderBlue(btn: cell.vacManBtn)
+        }
+        
+        if vaccinInfoDetailArr[indexPath.row]["name"] as? String == ""{
+            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacNameBtn)
+        }else{
+            self.sharedManager.setBorderBlue(btn: cell.vacNameBtn)
+        }
+        
+        if vaccinInfoDetailArr[indexPath.row]["serotype"] as? String == ""{
+            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serotypeBtn)
+        }else{
+            self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
+        }
+        
+        if vaccinInfoDetailArr[indexPath.row]["serial"] as? String == ""{
+        }else{
+            self.sharedManager.setBorderBlue(btn: cell.serialBtn)
+        }
+        
+        if vaccinInfoDetailArr[indexPath.row]["expDate"] as? String == ""{
+        }else{
+            self.sharedManager.setBorderBlue(btn: cell.expiryBtn)
+        }
+        
+        if (vaccinInfoDetailArr[indexPath.row]["siteOfInj"] as? String) == ""{
+        }else{
+            self.sharedManager.setBorderBlue(btn: cell.siteOfInjBtn)
+        }
+        
+        cell.refreshVacNameField()
+        
+        let otherAntgnStr = vaccinInfoDetailArr[indexPath.row]["serotype"] as? [String]
+        let searchString = "Other"
+        let result = otherAntgnStr?.contains(where: searchString.contains) as? Bool
+        
+        if result == true
+        {
+            cell.refreshAntigenView(str:"Other")
+        } else{
+            cell.refreshAntigenView(str:"nk")
+        }
+        
+        return cell
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if currentSel_seq_Number == 2 {
@@ -1561,100 +1839,10 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
                 return cell
             }
             else if indexPath.section == 1 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemberCatchersCell", for: indexPath) as! PVETeamMemberCatchersCell
-                cell.currentIndPath = indexPath as NSIndexPath
-                cell.delegate = self
-                
-                if noOfCatcherArr.count > indexPath.row{
-                    
-                    if noOfCatcherArr[indexPath.row].keys.contains("name"){
-                        cell.nameTxtField.text = noOfCatcherArr[indexPath.row]["name"] ?? ""
-                    }else{
-                        cell.nameTxtField.text = ""
-                    }
-                    if noOfCatcherArr[indexPath.row].keys.contains("email"){
-                        cell.emailTxtField.text = noOfCatcherArr[indexPath.row]["email"] ?? ""
-                    }else{
-                        cell.emailTxtField.text = ""
-                    }
-                    if noOfCatcherArr[indexPath.row].keys.contains("mobile"){
-                        cell.mobileTxtField.text = noOfCatcherArr[indexPath.row]["mobile"] ?? ""
-                    }else{
-                        cell.mobileTxtField.text = ""
-                    }
-                }
-                else{
-                    cell.nameTxtField.text = ""
-                    cell.mobileTxtField.text = ""
-                    cell.emailTxtField.text = ""
-                }
-                if cell.currentIndPath.row == 0 {
-                    cell.teamMemberTitleLbl.isHidden = false
-                }else{
-                    cell.teamMemberTitleLbl.isHidden = true
-                }
-                if cell.currentIndPath.row == 0 {
-                    cell.teamMemberTitleLbl.isHidden = false
-                }else{
-                    cell.teamMemberTitleLbl.isHidden = true
-                }
-                
-                return cell
+                return setupTeamCatcherUICell(tableView, indexPath)
             }
             else if indexPath.section == 2 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemeberVaccinatorsCell", for: indexPath) as! PVETeamMemeberVaccinatorsCell
-                cell.currentIndPath = indexPath as NSIndexPath
-                cell.delegate = self
-                
-                if noOfVaccinatorsArr.count > indexPath.row{
-                    
-                    if noOfVaccinatorsArr[indexPath.row].keys.contains("name"){
-                        cell.nameTxtField.text = noOfVaccinatorsArr[indexPath.row]["name"] ?? ""
-                    }else{
-                        cell.nameTxtField.text = ""
-                    }
-                    if noOfVaccinatorsArr[indexPath.row].keys.contains("email"){
-                        cell.emailTxtField.text = noOfVaccinatorsArr[indexPath.row]["email"] ?? ""
-                    }else{
-                        cell.emailTxtField.text = ""
-                    }
-                    if noOfVaccinatorsArr[indexPath.row].keys.contains("mobile"){
-                        cell.mobileTxtField.text = noOfVaccinatorsArr[indexPath.row]["mobile"] ?? ""
-                    }else{
-                        cell.mobileTxtField.text = ""
-                    }
-                }  else{
-                    cell.nameTxtField.text = ""
-                    cell.mobileTxtField.text = ""
-                    cell.emailTxtField.text = ""
-                }
-                
-                
-                if cell.currentIndPath.row == 0 {
-                    cell.teamMemberTitleLbl.isHidden = false
-                }else{
-                    cell.teamMemberTitleLbl.isHidden = true
-                }
-                
-                if cell.currentIndPath.row == 0 {
-                    cell.teamMemberTitleLbl.isHidden = false
-                }else{
-                    cell.teamMemberTitleLbl.isHidden = true
-                }
-                
-                if noOfVaccinatorsArr[indexPath.row]["serology"] ?? "" == "" {
-                    cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
-                }else{
-                    cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
-                }
-                
-                let housingStr = getDraftValueForKey(key: "housing") as! String
-                if housingStr == "Floor" {
-                    cell.serologyView.isHidden = true
-                }else{
-                    cell.serologyView.isHidden = false
-                }
-                return cell
+                return setupVaccinatorMemberCellUi(tableView, indexPath)
             }
             else if indexPath.section == 3 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
@@ -1787,173 +1975,7 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
             }
             
             else if indexPath.section == 6 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccineInfoDetailsCell", for: indexPath) as! PVEVaccineInfoDetailsCell
-                cell.currentIndPath = indexPath as NSIndexPath
-                cell.delegate = self
-                cell.showMoreBtn.tag = indexPath.row
-                cell.showMoreBtn.addTarget(self, action: #selector(showMoreTapped), for: .touchUpInside)
-                
-                if vaccinInfoDetailArr.count > indexPath.row{
-                    
-                    if vaccinInfoDetailArr[indexPath.row].keys.contains("man"){
-                        cell.vacManTxtFld.text = vaccinInfoDetailArr[indexPath.row]["man"]  as? String
-                    }else{
-                        cell.vacManTxtFld.text = ""
-                    }
-                    
-                    if vaccinInfoDetailArr[indexPath.row].keys.contains("name"){
-                        cell.vacNameTxtFld.text = vaccinInfoDetailArr[indexPath.row]["name"] as? String
-                    }else{
-                        cell.vacNameTxtFld.text = ""
-                    }
-                    
-                    if vaccinInfoDetailArr[indexPath.row].keys.contains("serotype"){
-                        
-                        if vaccinInfoDetailArr[indexPath.row]["serotype"] as? String == ""
-                        {
-                            cell.serotypeTxtFld.text = vaccinInfoDetailArr[indexPath.row]["serotype"]  as? String
-                        }
-                        else
-                        {
-                            debugPrint(vaccinInfoDetailArr)
-                            
-                            if let jsonarray = ((vaccinInfoDetailArr as? NSArray)?.value(forKey: "serotype")) as? [String]{
-                                cell.serotypeTxtFld.text = vaccinInfoDetailArr[indexPath.row]["serotype_id"]  as? String
-                                
-                                
-                            }
-                            else
-                            {
-                                
-                                debugPrint(vaccinInfoDetailArr[indexPath.row])
-                                let antigenName =  (vaccinInfoDetailArr[indexPath.row]["serotype"] as? [String])!.joined(separator: ",")
-                                
-                                items.removeAll()
-                                itemsIds.removeAll()
-                                
-                                items = (vaccinInfoDetailArr[indexPath.row]["serotype"] as? [String])!
-                                itemsIds = (vaccinInfoDetailArr[indexPath.row]["serotype_id"] as? [String])!
-                                selectedDataArray.removeAll()
-                                
-                                for id in 0..<items.count {
-                                    let item = draftSelectedData(id:  Int(itemsIds[id] as? String ?? "")!, name: items[id].capitalized)
-                                    selectedDataArray.append(item)
-                                }
-                                cell.serotypeTxtFld.text = antigenName
-                            }
-                            
-                            
-                        }
-                    }
-                    else{
-                        cell.serotypeTxtFld.text = ""
-                    }
-                    if vaccinInfoDetailArr[indexPath.row]["serial"]  as? String == vaccinInfoDetailArr[indexPath.row]["name"]  as? String
-                    {
-                        cell.serialTxtFld.text = ""
-                    }
-                    else
-                    {
-                        if vaccinInfoDetailArr[indexPath.row].keys.contains("serial"){
-                            cell.serialTxtFld.text = vaccinInfoDetailArr[indexPath.row]["serial"]  as? String
-                        }else{
-                            cell.serialTxtFld.text = ""
-                            
-                        }
-                        
-                    }
-                    
-                    if vaccinInfoDetailArr[indexPath.row].keys.contains("expDate"){
-                        cell.expiryTxtFld.text = vaccinInfoDetailArr[indexPath.row]["expDate"]  as? String
-                    }else{
-                        cell.expiryTxtFld.text = ""
-                    }
-                    
-                    if vaccinInfoDetailArr[indexPath.row].keys.contains("note"){
-                        cell.notetxtView.text = vaccinInfoDetailArr[indexPath.row]["note"] as? String
-                    }else{
-                        cell.notetxtView.text = ""
-                    }
-                    
-                    if vaccinInfoDetailArr[indexPath.row].keys.contains("siteOfInj"){
-                        cell.siteOfInjTxtFld.text = vaccinInfoDetailArr[indexPath.row]["siteOfInj"]  as? String
-                    }else{
-                        cell.siteOfInjTxtFld.text = ""
-                    }
-                    
-                    if vaccinInfoDetailArr[indexPath.row].keys.contains("otherAntigen"){
-                        cell.otherAntigenTxtFld.text = vaccinInfoDetailArr[indexPath.row]["otherAntigen"] as? String
-                    }else{
-                        cell.otherAntigenTxtFld.text = ""
-                    }
-                    
-                    if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore"){
-                        if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr
-                        {
-                            cell.showMoreBtn.setImage(UIImage(named: "up"), for: .normal)
-                        } else {
-                            cell.showMoreBtn.setImage(UIImage(named: "down"), for: .normal)
-                        }
-                    }
-                    
-                }else{
-                    cell.vacManTxtFld.text = ""
-                    cell.vacNameTxtFld.text = ""
-                    cell.serotypeTxtFld.text = ""
-                    cell.serialTxtFld.text = ""
-                    cell.expiryTxtFld.text = ""
-                    cell.siteOfInjTxtFld.text = ""
-                    cell.notetxtView.text = ""
-                    cell.otherAntigenTxtFld.text = ""
-                }
-                
-                if vaccinInfoDetailArr[indexPath.row]["man"] as? String == ""{
-                    self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacManBtn)
-                }else{
-                    self.sharedManager.setBorderBlue(btn: cell.vacManBtn)
-                }
-                
-                if vaccinInfoDetailArr[indexPath.row]["name"] as? String == ""{
-                    self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacNameBtn)
-                }else{
-                    self.sharedManager.setBorderBlue(btn: cell.vacNameBtn)
-                }
-                
-                if vaccinInfoDetailArr[indexPath.row]["serotype"] as? String == ""{
-                    self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serotypeBtn)
-                }else{
-                    self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
-                }
-                
-                if vaccinInfoDetailArr[indexPath.row]["serial"] as? String == ""{
-                }else{
-                    self.sharedManager.setBorderBlue(btn: cell.serialBtn)
-                }
-                
-                if vaccinInfoDetailArr[indexPath.row]["expDate"] as? String == ""{
-                }else{
-                    self.sharedManager.setBorderBlue(btn: cell.expiryBtn)
-                }
-                
-                if (vaccinInfoDetailArr[indexPath.row]["siteOfInj"] as? String) == ""{
-                }else{
-                    self.sharedManager.setBorderBlue(btn: cell.siteOfInjBtn)
-                }
-                
-                cell.refreshVacNameField()
-                
-                let otherAntgnStr = vaccinInfoDetailArr[indexPath.row]["serotype"] as? [String]
-                let searchString = "Other"
-                let result = otherAntgnStr?.contains(where: searchString.contains) as? Bool
-                
-                if result == true
-                {
-                    cell.refreshAntigenView(str:"Other")
-                } else{
-                    cell.refreshAntigenView(str:"nk")
-                }
-                
-                return cell
+                return setUpVaccineInfoDetailCell(tableView, indexPath)
             }
             else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
@@ -2064,24 +2086,34 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 5 || section == 1 || section == 2 || section == 3 || section == 4  || section == 6{
-            if section == 1 {
-                if noOfCatcherArr.count > 0{
-                    return 85.0
-                }else{
-                    return 73.0
-                }
+            
+            if section == 1 || section == 2 {
+                let array = (section == 1) ? noOfCatcherArr : noOfVaccinatorsArr
+                return array.isEmpty ? 73.0 : 85.0
             }
-            if section == 2 {
-                if noOfVaccinatorsArr.count > 0{
-                    return 85.0
-                }else{
-                    return 73.0
-                }
-            }
-            if section == 4  {
-                return 43.0
-            }
-            if section == 5{
+
+            
+//            if section == 1 {
+//                if noOfCatcherArr.count > 0{
+//                    return 85.0
+//                }else{
+//                    return 73.0
+//                }
+//            }
+//            if section == 2 {
+//                if noOfVaccinatorsArr.count > 0{
+//                    return 85.0
+//                }else{
+//                    return 73.0
+//                }
+//            }
+//            if section == 4  {
+//                return 43.0
+//            }
+//            if section == 5{
+//                return 43.0
+//            }
+            if section == 4 || section == 5 {
                 return 43.0
             }
             if section == 6 {
@@ -2120,7 +2152,6 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
             headerView.numberr = noOfCatcherArr.count
             if headerView.noOfCatchersTxtFeild.text == "0"{
                 headerView.noOfCatchersTxtFeild.text = ""
-            }else{
             }
             return headerView
         }
@@ -2137,7 +2168,6 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
             headerView.numberr = noOfVaccinatorsArr.count
             if headerView.txtFeild.text == "0"{
                 headerView.txtFeild.text = ""
-            }else{
             }
             return headerView
         }

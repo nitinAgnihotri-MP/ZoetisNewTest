@@ -10153,7 +10153,7 @@ class CoreDataHandler : NSObject  {
                     else if  trimmedString == "EimeriaTenellaMicro"{
                         trimmedString = "TenellaMicro"
                     }
-                    else if trimmedString == "Male/Female"
+                    else if trimmedString == Constants.maleFemaleStr
                     {
                         trimmedString = "MaleFemale"
                     }

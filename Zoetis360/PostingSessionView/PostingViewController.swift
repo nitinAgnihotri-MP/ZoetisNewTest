@@ -191,6 +191,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     let offlineMsg = "You are currently offline. Please go online to sync data."
     let sameDateComplexValidationMsg = "Session for this date & complex already exist. Please select another date or complex."
     let mendatoryFieldsMsg = "Fields marked as (*) are mandatory. Please fill all the fields."
+    let ajouterStr = "Ajouter une vaccination"
     // MARK: ******************************************************
     
     // MARK: - View Life Cycle
@@ -362,7 +363,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                     lblAddVacci.text = ""
                 }
                 else if lngId == 3 {
-                    lblAddVacci.text = "Ajouter une vaccination"
+                    lblAddVacci.text = self.ajouterStr
                 }
                 else{
                     lblAddVacci.text = "Add vaccination"
@@ -372,7 +373,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 addVaccinationOutlet.backgroundColor = UIColor.gray
                 
                  if lngId == 3 {
-                    lblAddVacci.text = "Ajouter une vaccination"
+                     lblAddVacci.text = self.ajouterStr
                 }
                 else{
                     lblAddVacci.text = "Edit vaccination"
@@ -651,7 +652,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             addVacIcon.frame = CGRect(x: 120, y: 724, width: 18, height: 18)
             feedImagrIcon.frame = CGRect(x: 399, y: 724, width: 18, height: 18)
             if(CoreDataHandler().fetchAddvacinationData(postingId as NSNumber).count == 0){
-                lblAddVacci.text = "Ajouter une vaccination"
+                lblAddVacci.text = self.ajouterStr
             }
             else {
                 lblAddVacci.text = "Modifier la vaccination"
@@ -1619,9 +1620,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             
             if lblVeteration.text != ""{
                 let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel) {
-                    UIAlertAction in
-                }
+                let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel)
                 let okAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default) {
                     UIAlertAction in
                     self.navigationController?.popViewController(animated: true)

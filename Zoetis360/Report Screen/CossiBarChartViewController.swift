@@ -73,6 +73,9 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
     let noHistoricData = "No historical data."
     let lastCocciSessioinTxt = "Coccidiosis Summary Last Session"
     let EiMaximaGrossTxt = "Eimeria maxima gross"
+    let eimeriaStr = "Eimeria acervulina gross"
+    let eimeriaTenStr = "Eimeria tenella gross"
+    let eimeriaMaxStr = "Eimeria maxima micro"
     
     // MARK: - OUTLET
     @IBOutlet weak var syncNotificationLbl: UILabel!
@@ -514,7 +517,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             self.preparedArray.removeAllObjects()
         }
         
-        verticalValues = [NSLocalizedString("Eimeria acervulina gross", comment: ""), NSLocalizedString(EiMaximaGrossTxt, comment: ""),NSLocalizedString("Eimeria maxima micro", comment: ""),NSLocalizedString("Eimeria tenella gross", comment: "")]
+        verticalValues = [NSLocalizedString(eimeriaStr, comment: ""), NSLocalizedString(EiMaximaGrossTxt, comment: ""),NSLocalizedString(eimeriaMaxStr, comment: ""),NSLocalizedString(eimeriaTenStr, comment: "")]
         
         verticalValues = observationNameCrop(values: verticalValues) as! [String]
         
@@ -787,16 +790,16 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             
             preparedArray.removeAllObjects()
             
-            var chartDataSet : LineChartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Acervulina_Gross_Array as NSArray as! [Float], lable: NSLocalizedString("Eimeria acervulina gross", comment: "") as NSString)!
+            var chartDataSet : LineChartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Acervulina_Gross_Array as NSArray as! [Float], lable: NSLocalizedString(eimeriaStr, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
             chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(EiMaximaGrossTxt, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
-            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Micro_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria maxima micro", comment: "") as NSString)!
+            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Maxima_Micro_Array as NSArray as! [Float], lable:NSLocalizedString(eimeriaMaxStr, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
-            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Tenella_Gross_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria tenella gross", comment: "") as NSString)!
+            chartDataSet = setLineChartDataForFarm(verticalValuesForWeek as [String], values: self.Eimeria_Tenella_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(eimeriaTenStr, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
         }
         
@@ -949,16 +952,16 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             verticalValues.removeAll()
             verticalValues = farmNames1 as NSArray as! [String]
             
-            var chartDataSet : BarChartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Acervulina_Gross_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria acervulina gross", comment: "") as NSString)!
+            var chartDataSet : BarChartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Acervulina_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(eimeriaStr, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
             chartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Maxima_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(EiMaximaGrossTxt, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
-            chartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Maxima_Micro_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria maxima micro", comment: "") as NSString)!
+            chartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Maxima_Micro_Array as NSArray as! [Float], lable:NSLocalizedString(eimeriaMaxStr, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
-            chartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Tenella_Gross_Array as NSArray as! [Float], lable:NSLocalizedString("Eimeria tenella gross", comment: "") as NSString)!
+            chartDataSet = setChartDataForFarm(verticalValues as [String], values: self.Eimeria_Tenella_Gross_Array as NSArray as! [Float], lable:NSLocalizedString(eimeriaTenStr, comment: "") as NSString)!
             self.preparedArray.add(chartDataSet)
             
         }

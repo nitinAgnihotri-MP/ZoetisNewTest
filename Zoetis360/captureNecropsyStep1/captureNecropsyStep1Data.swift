@@ -800,6 +800,23 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     }
     
     
+    fileprivate func deleteNotesImageNecropsyData(necropsyId :NSNumber , farmWithoutAge:String) {
+        CoreDataHandler().deleteDataWithPostingIdStep2dataCaptureNecViewWithfarmName(necropsyId as NSNumber, farmName: farmWithoutAge, { (success) in
+            if success == true{
+                
+                CoreDataHandler().deleteDataWithPostingIdStep2NotesBirdWithFarmName(necropsyId as NSNumber, farmName: farmWithoutAge, { (success) in
+                    if success == true{
+                        
+                        CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necropsyId as NSNumber, farmName: farmWithoutAge, { (success) in
+                            if success == true{
+                                
+                                self.deleteSessionWithPostingId(necropsyId:necId as NSNumber)
+                            }
+                        })
+                    }})
+            }})
+    }
+    
     @objc func ClickDeleteBtton(_ sender: UIButton){
         let person = captureNecropsy[sender.tag]
         let indexpath = NSIndexPath(row:sender.tag, section: 0)
@@ -833,21 +850,9 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         let action1 = UIAlertAction(title:NSLocalizedString("Yes", comment: ""), style: .default) { (action) in
             CoreDataHandler().deleteDataWithPostingIdStep1dataWithfarmName(necId as NSNumber, farmName: farmArrayWithoutAge, { (success) in
                 if success == true{
-                    CoreDataHandler().deleteDataWithPostingIdStep2dataCaptureNecViewWithfarmName(necId as NSNumber, farmName: farmArrayWithoutAge, { (success) in
-                        if success == true{
-                            
-                            CoreDataHandler().deleteDataWithPostingIdStep2NotesBirdWithFarmName(necId as NSNumber, farmName: farmArrayWithoutAge, { (success) in
-                                if success == true{
-                                    
-                                    CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necId as NSNumber, farmName: farmArrayWithoutAge, { (success) in
-                                        if success == true{
-                                            
-                                            self.deleteSessionWithPostingId(necropsyId:necId as NSNumber)
-                                        }
-                                    })
-                                }})
-                        }})
-                }})
+                    self.deleteNotesImageNecropsyData(necropsyId: necId as NSNumber, farmWithoutAge: farmArrayWithoutAge)
+                }
+            })
         }
         let action2 = UIAlertAction(title:NSLocalizedString(Constants.noStr, comment: "") , style: .cancel) { (action) in
             cell?.backgroundColor = UIColor.clear

@@ -166,6 +166,43 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         }
     }
     // MARK: - METHODS AND FUNCTIONS
+    fileprivate func reloadAllCollectionViews() {
+        if self.dataSkeltaArray.count > 0
+        {
+            self.neccollectionView.dataSource = self
+            self.neccollectionView.delegate = self
+            self.neccollectionView.reloadData()
+        }
+        if self.farmArray.count > 0
+        {
+            self.formCollectionView.dataSource = self
+            self.formCollectionView.delegate = self
+            self.formCollectionView.reloadData()
+            
+            if self.postingIdFromExistingNavigate == "Exting"{
+                self.formCollectionView.selectItem(at: IndexPath(item: self.nsIndexPathFromExist, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+            }
+            else{
+                self.formCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+            }
+        }
+        
+        if self.items.count > 0
+        {
+            self.birdsCollectionView.dataSource = self
+            self.birdsCollectionView.delegate = self
+            self.birdsCollectionView.reloadData()
+            self.birdsCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+        }
+        
+        self.tableView.reloadData()
+        let rowToSelect:IndexPath = IndexPath(row: 0, section: 0)
+        
+        self.tableView.selectRow(at: rowToSelect, animated: true, scrollPosition: UITableView.ScrollPosition.none)
+        self.loaderView.alpha = 0
+        Helper.dismissGlobalHUD(self.view)
+    }
+    
     @objc func callFirstMethodToLoadView() {
         self.callLoad { (status) in
             
@@ -188,40 +225,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                                                     
                                                     if status == true
                                                     {
-                                                        if self.dataSkeltaArray.count > 0
-                                                        {
-                                                            self.neccollectionView.dataSource = self
-                                                            self.neccollectionView.delegate = self
-                                                            self.neccollectionView.reloadData()
-                                                        }
-                                                        if self.farmArray.count > 0
-                                                        {
-                                                            self.formCollectionView.dataSource = self
-                                                            self.formCollectionView.delegate = self
-                                                            self.formCollectionView.reloadData()
-                                                            
-                                                            if self.postingIdFromExistingNavigate == "Exting"{
-                                                                self.formCollectionView.selectItem(at: IndexPath(item: self.nsIndexPathFromExist, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-                                                            }
-                                                            else{
-                                                                self.formCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-                                                            }
-                                                        }
-                                                        
-                                                        if self.items.count > 0
-                                                        {
-                                                            self.birdsCollectionView.dataSource = self
-                                                            self.birdsCollectionView.delegate = self
-                                                            self.birdsCollectionView.reloadData()
-                                                            self.birdsCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-                                                        }
-                                                        
-                                                        self.tableView.reloadData()
-                                                        let rowToSelect:IndexPath = IndexPath(row: 0, section: 0)
-                                                        
-                                                        self.tableView.selectRow(at: rowToSelect, animated: true, scrollPosition: UITableView.ScrollPosition.none)
-                                                        self.loaderView.alpha = 0
-                                                        Helper.dismissGlobalHUD(self.view)
+                                                        reloadAllCollectionViews()
                                                         
                                                     }
                                                 })

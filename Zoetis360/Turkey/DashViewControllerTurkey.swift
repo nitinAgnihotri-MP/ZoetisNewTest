@@ -1203,7 +1203,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                         self?.getListFarms()
                     } else {
                         self?.getListFarms()
-                        print("No data received from the API.")
+                        print(Constants.noDataReceivedStr)
                         self?.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
                     }
                 }
@@ -1258,7 +1258,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                         self?.callSalesRepWebService()
                     } else {
                         // Handle the case where the array is empty or nil
-                        print("No data received from the API.")
+                        print(Constants.noDataReceivedStr)
                         self?.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
                     }
                 }
@@ -1412,7 +1412,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     self?.FeedProgramMoleculeService()
                 } else {
                     // Handle the case where the array is empty or nil
-                    print("No data received from the API.")
+                    print(Constants.noDataReceivedStr)
                     self?.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
                 }
             }

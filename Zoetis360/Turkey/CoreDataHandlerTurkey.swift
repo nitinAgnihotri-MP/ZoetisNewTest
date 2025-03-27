@@ -9373,7 +9373,7 @@ class CoreDataHandlerTurkey: NSObject {
                         trimmedString = "ProtozoaUndefined"
                     }
                     
-                    else if trimmedString == "Male/Female"
+                    else if trimmedString == Constants.maleFemaleStr
                     {
                         trimmedString = "MaleFemale"
                     }

@@ -212,6 +212,9 @@ struct Constants {
     static let areYouSureToLogoutStr = "Are you sure you want to Logout?"
     static let postincIdPredicate = "postingId == %@"
     static let normalStr = "Normal."
+    static let noDataReceivedStr = "No data received from the API."
+    static let maleFemaleStr = "Male/Female"
+    static let percentageAt = "%@(%@)"
 }
 
 enum ZoetisArt {

@@ -583,7 +583,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "0.0")
                         
-                        if immune.observationField == "Male/Female"
+                        if immune.observationField == Constants.maleFemaleStr
                         {
                             
                             CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "N/A")
@@ -594,7 +594,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                     
                     else if ( immune.measure! == "F,M"){  /// New Addition for Bird Sex
                         let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        if immune.observationField == "Male/Female"
+                        if immune.observationField == Constants.maleFemaleStr
                         {
                             CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating: immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "0")
                             

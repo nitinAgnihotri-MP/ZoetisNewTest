@@ -81,7 +81,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     let animationDuration: TimeInterval = 0.75
     let switchingInterval: TimeInterval = 5
     var langArray: [String] = []
-    
+    let helveticaLight = "HelveticaNeue-Light"
+    let cacheControl = "Cache-Control"
+    let authorization = "Authorization"
+    let unknownCodeStr = "Unknown code"
+    let invalidItemStructureStr = "Invalid item structure in array."
     // MARK: - OUTLETS
     
     @IBOutlet weak var syncBackImageView: UIImageView!
@@ -480,7 +484,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         toastLabel.textColor = UIColor.white
         toastLabel.textAlignment = .center;
-        toastLabel.font = UIFont(name: "HelveticaNeue-Light", size: 11.0) //UIFont(name: "Montserrat-Light", size: 14.0)
+        toastLabel.font = UIFont(name: helveticaLight, size: 11.0) //UIFont(name: "Montserrat-Light", size: 14.0)
         toastLabel.text = message
         toastLabel.numberOfLines = 3
         toastLabel.alpha = 1.0
@@ -531,8 +535,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             accestoken = keychainHelper.getFromKeychain(keyed: "aceesTokentype") ?? ""
            // accestoken = UserDefaults.standard.string(forKey: "aceesTokentype") ?? ""
             let headers: HTTPHeaders = [
-                "Authorization": accestoken,
-                "Cache-Control": "no-store, no-cache, must-revalidate, private"
+                authorization: accestoken,
+                cacheControl: "no-store, no-cache, must-revalidate, private"
             ]
             let Id = UserDefaults.standard.integer(forKey: "Id")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
@@ -768,7 +772,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -855,7 +859,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1012,7 +1016,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1039,7 +1043,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                         // Parse each item in the array
                         for item in arr {
                             guard let tempDict = item.dictionaryObject else {
-                                print("Invalid item structure in array.")
+                                print(self.invalidItemStructureStr)
                                 continue
                             }
                             
@@ -1099,7 +1103,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1125,7 +1129,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                         CoreDataHandler().deleteAllData("Sessiontype")
                         for item in arr {
                             guard let tempDict = item.dictionaryObject else {
-                                print("Invalid item structure in array.")
+                                print(self.invalidItemStructureStr)
                                 continue
                             }
                             
@@ -1184,7 +1188,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1209,7 +1213,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                         CoreDataHandler().deleteAllData("BirdSizePosting")
                         for item in arr {
                             guard let tempDict = item.dictionaryObject else {
-                                print("Invalid item structure in array.")
+                                print(self.invalidItemStructureStr)
                                 continue
                             }
                             
@@ -1295,7 +1299,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                         self.FeedProgramMoleculeService()
                     } else {
                         // Handle the case where the array is empty or nil
-                        print("No data received from the API.")
+                        print(Constants.noDataReceivedStr)
                         self.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
                     }
                 }
@@ -1404,7 +1408,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1459,8 +1463,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         if WebClass.sharedInstance.connected() {
             accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
             let headerDict: HTTPHeaders = [
-                "Authorization": accestoken,
-                "Cache-Control": "no-store, no-cache, must-revalidate, private"
+                authorization: accestoken,
+                cacheControl: "no-store, no-cache, must-revalidate, private"
             ]
             
             let Url = WebClass.sharedInstance.webUrl + "PostingSession/GetFeedProgramCatagoryAndMoleculeDetails"
@@ -1514,7 +1518,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                          // Check for the "errorResult" key and handle errors
                          if let errorResult = jsonResponse["errorResult"].dictionary {
                              let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                             let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                             let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                              
                              print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                              if errorCode == "401" || errorCode == "404"{
@@ -1590,7 +1594,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Target Weight Processing List API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1627,7 +1631,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                            self.getListFarms()
                        } else {
                            // Handle empty response
-                           print("No data received from the API.")
+                           print(Constants.noDataReceivedStr)
                            self.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
                            self.getListFarms()
                        }
@@ -1684,7 +1688,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                             
                         } else {
                             // Handle the case where the array is empty or nil
-                            print("No data received from the API.")
+                            print(Constants.noDataReceivedStr)
                             self.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
                             self.callSalesRepWebService()
                         }
@@ -1727,7 +1731,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1752,7 +1756,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                         CoreDataHandler().deleteAllData("Veteration")
                         for item in arr {
                             guard let tempDict = item.dictionaryObject else {
-                                print("Invalid item structure in array.")
+                                print(self.invalidItemStructureStr)
                                 continue
                             }
                             
@@ -1801,7 +1805,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1873,7 +1877,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1947,7 +1951,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2017,7 +2021,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2080,8 +2084,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
-                    
+                    let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
+                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
                         self!.loginMethod()
@@ -2106,7 +2110,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                         
                         for item in arr {
                             guard let tempDict = item.dictionaryObject else {
-                                print("Invalid item structure in array.")
+                                print(self.invalidItemStructureStr)
                                 continue
                             }
                             let dictData = NSMutableDictionary()
@@ -2204,8 +2208,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             let urlString = URL(string: Url)
             
             let headers: HTTPHeaders = [
-                "Authorization": accestoken,
-                "Cache-Control": "no-store, no-cache, must-revalidate, private"
+                authorization: accestoken,
+                cacheControl: "no-store, no-cache, must-revalidate, private"
             ]
             sessionManager.request(urlString!, method: .post, parameters:parameters, headers: headers).responseJSON { response in
                 
@@ -2402,13 +2406,13 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     func promtSyncing (){
         
         let alertController = UIAlertController(title: "", message: "", preferredStyle: .alert)
-        let titleFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: "HelveticaNeue-Light", size: 19.0)]
-        let messageFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: "HelveticaNeue-Light", size: 12.0)]
+        let titleFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: helveticaLight, size: 19.0)]
+        let messageFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: helveticaLight, size: 12.0)]
         let myMsgString = NSLocalizedString("Data available for sync. Do you want to sync now? \n\n\n *Note - Please don't minimize App while syncing.", comment: "")
         let titleAttrString = NSMutableAttributedString(string: NSLocalizedString(Constants.alertStr, comment: ""), attributes: convertToOptionalNSAttributedStringKeyDictionary(titleFont))
         var messageAttrString = NSMutableAttributedString(string: myMsgString , attributes: convertToOptionalNSAttributedStringKeyDictionary(messageFont))
         messageAttrString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: NSRange(location:50,length:52))
-        let font = UIFont(name: "HelveticaNeue-Light", size: 11.0)
+        let font = UIFont(name: helveticaLight, size: 11.0)
         messageAttrString.addAttribute(NSAttributedString.Key.font, value:font!, range: NSRange.init(location: 50 , length: 52))
         alertController.setValue(titleAttrString, forKey: "attributedTitle")
         alertController.setValue(messageAttrString, forKey: "attributedMessage")
@@ -2482,7 +2486,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded",
                                         "Accept": "application/json",
-                                        "Cache-Control": "no-store, no-cache, must-revalidate, private"]
+                                        cacheControl: "no-store, no-cache, must-revalidate, private"]
             
             let parameters:[String:String] = ["grant_type": "password","UserName" : CryptoHelper.encrypt(input: userName) as! String, "Password" : CryptoHelper.encrypt(input: pass) as! String,"LoginType": "Web","DeviceId":udid as! String]
             

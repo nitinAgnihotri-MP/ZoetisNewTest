@@ -375,7 +375,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
     fileprivate func setBirdSex(_ immune: ImmuneTurkey, _ formName: String, _ j: Int, _ necId: Int) {
         /// New Addition for Bird Sex
         let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        if immune.observationField == "Male/Female"
+        if immune.observationField == Constants.maleFemaleStr
         {
             CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeySex(catName: "Immune", obsName: immune.observationField!, formName: formName, obsVisibility: false, birdNo:  j + 1 as NSNumber, obsPoint: 1, index: j, obsId: Int(immune.observationId!), measure: trimmed, quickLink: immune.quicklinks!, necId: necId as NSNumber, isSync: true, lngId: lngId as NSNumber, refId: immune.refId!, actualText: "0")
         }

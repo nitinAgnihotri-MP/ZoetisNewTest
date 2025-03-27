@@ -117,6 +117,8 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     let noDisposibleStr = "Non disponible."
     let noGrossLesionStr = "No gross lesions."
     let pasDeLesionStr = "Pas de lésion macroscopique."
+    let noDataAvailStr = "No data available."
+    let semLesMacroStr = "Sem lesões macroscópicas."
     // MARK: 🟠 - VIEW LIFE CYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -670,7 +672,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             }
                             else if ( immune.measure! == "Actual"){
                                 let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                                if immune.observationField == "Male/Female"
+                                if immune.observationField == Constants.maleFemaleStr
                                 {
                                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0")
                                     
@@ -682,7 +684,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             
                             else if ( immune.measure! == "F,M"){  /// New Addition for Bird Sex
                                 let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                                if immune.observationField == "Male/Female"
+                                if immune.observationField == Constants.maleFemaleStr
                                 {
                                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0")
                                     
@@ -1153,9 +1155,9 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         switch desc {
         case 1:
-            descriptions = languageDescriptions[lngId] ?? defaultDescriptions[lngId] ?? ["No data available."]
+            descriptions = languageDescriptions[lngId] ?? defaultDescriptions[lngId] ?? [self.noDataAvailStr]
         case 2, 3, 4, 6, 8, 9, 11, 12, 13, 14, 16, 300, 10:
-            descriptions = yesNoDescriptions[lngId] ?? defaultDescriptions[lngId] ?? ["No data available."]
+            descriptions = yesNoDescriptions[lngId] ?? defaultDescriptions[lngId] ?? [self.noDataAvailStr]
         case 5:
             descriptions = [
                 Constants.noLesion,
@@ -1171,10 +1173,10 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             case 4:
                 descriptions = [Constants.normalStr, "Moderada resistência.", "Ausência de resistência óssea."]
             default:
-                descriptions = ["No data available."]
+                descriptions = [self.noDataAvailStr]
             }
         default:
-            descriptions = defaultDescriptions[lngId] ?? ["No data available."]
+            descriptions = defaultDescriptions[lngId] ?? [self.noDataAvailStr]
         }
         
         // Convert the array to NSMutableArray
@@ -1204,7 +1206,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 obsDescArr.add("lésions complètement coalescentes avec pétécchies ou muqueuse rouge.")
             }
             else if lngId == 4{
-                obsDescArr.add("Sem lesões macroscópicas.")
+                obsDescArr.add(self.semLesMacroStr)
                 obsDescArr.add("<5 lesões/cm2.")
                 obsDescArr.add("5 lesões/cm2.")
                 obsDescArr.add("Lesões coalescentes.")
@@ -1229,7 +1231,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 obsDescArr.add("Ballonné et sanguin.")
             }
             else if lngId == 4{
-                obsDescArr.add("Sem lesões macroscópicas.")
+                obsDescArr.add(self.semLesMacroStr)
                 obsDescArr.add("Petéquias externas podem aparecer e pequenas quantidades de muco alaranjado podem estar presentes.")
                 obsDescArr.add("Petéquias + conteúdo alterado podem aparecer em maior intensidade.")
                 obsDescArr.add("Petéquias + conteúdo laranja com alteração de mucosa, flocos de sangue/coágulos e inchaço.")
@@ -1279,7 +1281,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 obsDescArr.add("Paroi caecal très distendue avec du sang ou caillot.")
             }
             else if lngId == 4{
-                obsDescArr.add("Sem lesões macroscópicas.")
+                obsDescArr.add(self.semLesMacroStr)
                 obsDescArr.add("Poucas petéquias dispersas na parede dos cecos; ausência de espessamento das paredes dos cecos; presença de conteúdo cecal normal.")
                 obsDescArr.add("Lesões mais numerosas, com possibilidade de sangue no conteúdo cecal; parede do ceco um pouco espessada; pouco ou nenhum conteúdo cecal.")
                 obsDescArr.add("Enorme quantidade de sangue presente com paredes dos cecos fortemente espessadas; pouco ou nenhum conteúdo cecal. Perda da estrutura normal das pregas.")
@@ -3768,7 +3770,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 else if ( immune2.measure! == "F,M"){  /// New Addition for Bird Sex
                     let trimmed = immune2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    if immune2.observationField == "Male/Female"
+                    if immune2.observationField == Constants.maleFemaleStr
                     {
                         var necId = Int()
                         if postingIdFromExistingNavigate == "Exting"{
@@ -5193,7 +5195,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let image = UIImage(named:"image02")
                     cell.observationImage.image =  image
                     
-                    if immu.obsName == "Male/Female"
+                    if immu.obsName == Constants.maleFemaleStr
                     {
                         cell.birdSexView.isHidden = false
                         let n  = String(describing: immu.refId!)
@@ -5235,7 +5237,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let image = UIImage(named:"image02")
                     cell.observationImage.image =  image
                     
-                    if immu.obsName == "Male/Female"{
+                    if immu.obsName == Constants.maleFemaleStr{
                         cell.birdSexView.isHidden = false
                         let n  = String(describing: immu.refId!)
                         
