@@ -1061,6 +1061,18 @@ extension PVEDraftSNAFinalizeAssement: VaccinatorsPlusBtnDelegate,NoOfvaccinator
     
     
     // MARK: Switch for Live & Inactivated Vaccine In Draft
+    fileprivate func extractedFunc(_ seqArr: [Int]?, _ idArr: [Int]?, _ index: Int) {
+        if isLiveVaccineOn {
+            
+            CoreDataHandlerPVE().updateDraftAssDetails((seqArr!.first)!, id: idArr![index], isSel: !isLiveVaccineOn, type: "draft", syncId: currentTimeStamp)
+            
+        }
+        else
+        {
+            CoreDataHandlerPVE().updateDraftAssDetails((seqArr!.first)!, id: idArr![index], isSel: !isLiveVaccineOn, type: "draft", syncId: currentTimeStamp)
+        }
+    }
+    
     @objc func switchTapped(sender:UISwitch) {
         if sender.tag == 4 {
             
@@ -1072,15 +1084,7 @@ extension PVEDraftSNAFinalizeAssement: VaccinatorsPlusBtnDelegate,NoOfvaccinator
             if let dataArr = idArr {
                 for index in 0..<dataArr.count
                 {
-                    if isLiveVaccineOn {
-                        
-                        CoreDataHandlerPVE().updateDraftAssDetails((seqArr!.first)!, id: idArr![index], isSel: !isLiveVaccineOn, type: "draft", syncId: currentTimeStamp)
-                        
-                    }
-                    else
-                    {
-                        CoreDataHandlerPVE().updateDraftAssDetails((seqArr!.first)!, id: idArr![index], isSel: !isLiveVaccineOn, type: "draft", syncId: currentTimeStamp)
-                    }
+                    extractedFunc(seqArr, idArr, index)
                 }
             }
             
@@ -1459,38 +1463,55 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
-            if section == 3 {
-                return otherQuessArr.count
-            }
-            if section == 1 {
-                return noOfCatcherArr.count
-            }
-            if section == 2 {
-                return noOfVaccinatorsArr.count
-            }
-            if section == 4 {
-                if isLiveVaccineOn == true {
-                    return liveQuesArr.count
-                }
-                else{
-                    return 1
-                }
-            }
-            if section == 5 {
-                if isInActiveVaccineOn == true {
-                    return inactiveQuessArr.count
-                }
-                else{
-                    return 1
-                }
-                
-            }
-            if section == 6 {
-                return vaccinInfoDetailArr.count
-            }
-            else{
-                return 1
-            }
+            switch section {
+               case 3:
+                   return otherQuessArr.count
+               case 1:
+                   return noOfCatcherArr.count
+               case 2:
+                   return noOfVaccinatorsArr.count
+               case 4:
+                   return isLiveVaccineOn ? liveQuesArr.count : 1
+               case 5:
+                   return isInActiveVaccineOn ? inactiveQuessArr.count : 1
+               case 6:
+                   return vaccinInfoDetailArr.count
+               default:
+                   return 1
+               }
+            
+//            if section == 3 {
+//                return otherQuessArr.count
+//            }
+//            if section == 1 {
+//                return noOfCatcherArr.count
+//            }
+//            if section == 2 {
+//                return noOfVaccinatorsArr.count
+//            }
+//            if section == 4 {
+//                if isLiveVaccineOn == true {
+//                    return liveQuesArr.count
+//                }
+//                else{
+//                    return 1
+//                }
+//            }
+//            if section == 5 {
+//                if isInActiveVaccineOn == true {
+//                    return inactiveQuessArr.count
+//                }
+//                else{
+//                    return 1
+//                }
+//                
+//            }
+//            if section == 6 {
+//                return vaccinInfoDetailArr.count
+//            }
+//            else{
+//                return 1
+//            }
         }
         else if currentSel_seq_Number == 6 {
             

@@ -684,7 +684,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
     }
     // MARK: - Done Button IBACTIONS
     fileprivate func setFarmNameWeightAge() {
-        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.fieldsMarkedStr, comment: ""))
         if  trimmedString == ""{
             farmNameTextField.layer.borderColor = UIColor.red.cgColor
         }
@@ -700,7 +700,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
     }
     
     fileprivate func validationCheckFarmNameWeigthAge() {
-        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
+        Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.fieldsMarkedStr, comment: ""))
         
         feedProgramBtnOtlet.layer.borderColor = UIColor.red.cgColor
         ageUperBtnOutlet1.setImage(UIImage(named: "dialer01-1"), for: UIControl.State())

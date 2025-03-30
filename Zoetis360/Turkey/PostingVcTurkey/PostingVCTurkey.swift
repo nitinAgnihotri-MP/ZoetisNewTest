@@ -178,7 +178,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     
     let messageForExsistingComplex = "Session for this date & complex already exists. Please select another date or complex."
     let selectDateText = "- Select Date -"
-    let mendatoryFieldsMsg = "Fields marked as (*) are mandatory. Please fill all the fields."
+    let mendatoryFieldsMsg = Constants.fieldsMarkedStr
     @objc func methodOfReceivedNotification(notification: Notification){
         //Take Action on Notification
         UserDefaults.standard.set(0, forKey: "postingId")
@@ -1222,7 +1222,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 self.ssologoutMethod()
                 CoreDataHandlerTurkey().deleteAllDataTurkey("CustmerTurkey")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
@@ -2018,12 +2018,12 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     func didFinishApi(){
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
     }
     func failWithInternetConnection() {
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
     }
     
     // MARK: - TEXTVIEW DELEGATES

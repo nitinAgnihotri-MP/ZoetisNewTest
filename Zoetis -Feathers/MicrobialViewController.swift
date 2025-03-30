@@ -124,7 +124,7 @@ class MicrobialViewController: BaseViewController {
             
         } else {
             self.logoutAction()
-            //            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            //            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
         }
     }
     

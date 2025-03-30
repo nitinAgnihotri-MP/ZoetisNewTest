@@ -61,7 +61,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         configuration.urlCache = nil
         return Session(configuration: configuration)
     }()
-    let offlineMsgAlert = "You are currently offline. Please go online to sync data."
+    let offlineMsgAlert = Constants.currentlyOfflineStr
     // MARK: - **************** View Life Cycle ***********************************/
     override func viewDidLoad() {
         print("<<<<",self)
@@ -537,14 +537,14 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let Url = "Setting/SaveUserSetting"
             acessToken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
           //  acessToken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict = ["Authorization":acessToken]
+            let headerDict = [Constants.authorisationStr:acessToken]
             
             let urlString: String = WebClass.sharedInstance.webUrl.appending(Url)
             var request = URLRequest(url: NSURL(string: urlString)! as URL)
             
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
             request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as URLRequestConvertible)
@@ -791,7 +791,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
     func didFinishApi() {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
     }
     
     func failWithInternetConnection() {
@@ -882,12 +882,12 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             
             let Url = "Setting/SaveUserSetting"
             acessToken = (UserDefaults.standard.value(forKey:"aceesTokentype") as? String)!
-            let headerDict = ["Authorization":acessToken]
+            let headerDict = [Constants.authorisationStr:acessToken]
             let urlString: String = WebClass.sharedInstance.webUrl.appending(Url)
             let request = NSMutableURLRequest(url: NSURL(string: urlString)! as URL )
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
             request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as! URLRequestConvertible).responseJSON { response in

@@ -163,6 +163,21 @@ class PEStartNewAssessment: BaseViewController {
     }
     
     
+    fileprivate func setAllButtonsGradientBorder(_ btn: customButton?) {
+        let superviewCurrent =  btn?.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if  view.isKind(of:UIButton.self) {
+                    if view == self.evaluationDateButton{
+                        view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
+                    } else{
+                        view.setDropdownStartAsessmentView(imageName:"dd")
+                    }
+                }
+            }
+        }
+    }
+    
     private func setupUI(){
         self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.navigationBar.isHidden = true
@@ -199,18 +214,7 @@ class PEStartNewAssessment: BaseViewController {
             }
             
             for btn in btns{
-                let superviewCurrent =  btn?.superview
-                if superviewCurrent != nil {
-                    for view in superviewCurrent!.subviews {
-                        if  view.isKind(of:UIButton.self) {
-                            if view == self.evaluationDateButton{
-                                view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
-                            } else{
-                                view.setDropdownStartAsessmentView(imageName:"dd")
-                            }
-                        }
-                    }
-                }
+                self.setAllButtonsGradientBorder(btn)
             }
             self.notesTextView.layer.cornerRadius = 12
             self.notesTextView.layer.masksToBounds = true
@@ -325,6 +329,67 @@ class PEStartNewAssessment: BaseViewController {
         return otherCount
     }
     // MARK: - Setup UI
+    fileprivate func conditionForShowingFlockView() {
+        if selectedEvaluationType.text?.contains("Non") ?? false  {
+            self.flockAgeLower.isHidden = true
+            self.btnFlockImageLower.isHidden = true
+            self.heightFlockAge.constant = 78
+            self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected"
+        } else {
+            self.flockAgeLower.isHidden = false
+            self.btnFlockImageLower.isHidden = false
+            self.heightFlockAge.constant = 78
+            self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected*"
+        }
+        showFlockView()
+    }
+    
+    fileprivate func manufacturerOtherViewShowCondition() {
+        if let character = peNewAssessment.manufacturer?.character(at:0) {
+            if txtManufacturer.text?.contains("Other") ?? false{
+                showManufacturerOthers()
+            }
+            if character == constantToSave.character(at: 0){
+                showManufacturerOthers()
+                let str =  peNewAssessment.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
+                manfacturerOtherTxt.text = str
+                txtManufacturer.text = "Other"
+            }
+        }
+    }
+    
+    fileprivate func viewIsNotloadedForFirstTime() {
+        if peNewAssessment.isChlorineStrip == 1{
+            chlorineStripsSwitch.setOn(true, animated: false)
+            self.isAutomaticSwitch.setOn(false, animated: false)
+            isAutomaticFailView.isHidden = true
+            isAutomaticHeightConstraint.constant = 0
+        }else{
+            chlorineStripsSwitch.setOn(false, animated: false)
+            if peNewAssessment.isAutomaticFail == 1{
+                self.isAutomaticSwitch.setOn(true, animated: false)
+                isAutomaticFailView.isHidden = false
+                isAutomaticHeightConstraint.constant = 40
+            }else{
+                self.isAutomaticSwitch.setOn(false, animated: false)
+                isAutomaticFailView.isHidden = false
+                isAutomaticHeightConstraint.constant = 40
+            }
+        }
+    }
+    
+    fileprivate func extededPECondition(_ infoObj: PENewInfoVM?) {
+        if peNewAssessment.evaluationID == 1{
+            if infoObj != nil{
+                extendedPESwitch.isOn =  infoObj?.isExtendedPE ?? false
+            }
+            
+        }else{
+            self.peNewAssessment.isHandMix = false
+            self.inventoryView.isHidden = true
+        }
+    }
+    
     private func setUpDidLoad(){
         self.manfacturerOtherTxt.delegate = self
         self.eggsOtherTxt.delegate = self
@@ -427,18 +492,7 @@ class PEStartNewAssessment: BaseViewController {
         if selectedEvaluationType.text == "" {
             hideFlockView()
         } else {
-            if selectedEvaluationType.text?.contains("Non") ?? false  {
-                self.flockAgeLower.isHidden = true
-                self.btnFlockImageLower.isHidden = true
-                self.heightFlockAge.constant = 78
-                self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected"
-            } else {
-                self.flockAgeLower.isHidden = false
-                self.btnFlockImageLower.isHidden = false
-                self.heightFlockAge.constant = 78
-                self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected*"
-            }
-            showFlockView()
+            conditionForShowingFlockView()
         }
         
         selectedVisitText.text =  peNewAssessment.visitName ?? ""
@@ -492,17 +546,7 @@ class PEStartNewAssessment: BaseViewController {
         
         txtManufacturer.text = self.peNewAssessment.manufacturer ?? ""
         if  txtManufacturer.text != "" {
-            if let character = peNewAssessment.manufacturer?.character(at:0) {
-                if txtManufacturer.text?.contains("Other") ?? false{
-                    showManufacturerOthers()
-                }
-                if character == constantToSave.character(at: 0){
-                    showManufacturerOthers()
-                    let str =  peNewAssessment.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
-                    manfacturerOtherTxt.text = str
-                    txtManufacturer.text = "Other"
-                }
-            }
+            manufacturerOtherViewShowCondition()
         }
         let xx = String(self.peNewAssessment.noOfEggs ?? 000)
         if xx != "0" {
@@ -551,23 +595,7 @@ class PEStartNewAssessment: BaseViewController {
         let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: scheduledAssessment?.serverAssessmentId ?? "")
         
         if !Constants.isFirstTime{
-            if peNewAssessment.isChlorineStrip == 1{
-                chlorineStripsSwitch.setOn(true, animated: false)
-                self.isAutomaticSwitch.setOn(false, animated: false)
-                isAutomaticFailView.isHidden = true
-                isAutomaticHeightConstraint.constant = 0
-            }else{
-                chlorineStripsSwitch.setOn(false, animated: false)
-                if peNewAssessment.isAutomaticFail == 1{
-                    self.isAutomaticSwitch.setOn(true, animated: false)
-                    isAutomaticFailView.isHidden = false
-                    isAutomaticHeightConstraint.constant = 40
-                }else{
-                    self.isAutomaticSwitch.setOn(false, animated: false)
-                    isAutomaticFailView.isHidden = false
-                    isAutomaticHeightConstraint.constant = 40
-                }
-            }
+            viewIsNotloadedForFirstTime()
         }else{
             self.chlorineStripsSwitch.isOn = true
             isAutomaticSwitch.isOn = false
@@ -577,20 +605,7 @@ class PEStartNewAssessment: BaseViewController {
         }
         
         if peNewAssessment.evaluationID != nil{
-            if peNewAssessment.evaluationID == 1{
-                if infoObj != nil{
-                    extendedPESwitch.isOn =  infoObj?.isExtendedPE ?? false
-                }else{
-                    
-                }
-                if extendedPESwitch.isOn{
-                } else{
-                }
-                
-            }else{
-                self.peNewAssessment.isHandMix = false
-                self.inventoryView.isHidden = true
-            }
+            extededPECondition(infoObj)
         }else{
             self.peNewAssessment.isHandMix = false
             self.inventoryView.isHidden = true
@@ -2163,7 +2178,7 @@ extension PEStartNewAssessment{
                     
                     PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: extendedPESwitch.isOn, assessmentId: self.peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: self.chlorineStripsSwitch.isOn, isAutomaticFail: self.isAutomaticSwitch.isOn)
                     
-                    //"" PANDEY
+                   
                 }
             }
             if peNewAssessment.evaluationID != nil && peNewAssessment.evaluationID == 1{

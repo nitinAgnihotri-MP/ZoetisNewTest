@@ -92,7 +92,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
     
     var isFarmSelected:Bool?
     let summaryLastSession = "Microscopy Summary Last Session"
-    let noHistoricalData = "No historical data."
+    let noHistoricalData = Constants.noHisData
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -824,7 +824,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
             let farmName : NSString = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "farmName") as! NSString
             
             
-            self.farmNames.add(NSString(format: "%@(%@)",farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
+            self.farmNames.add(NSString(format: Constants.percentageStr,farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
             
             let necID = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "necropsyId") as! NSNumber
             
@@ -1092,7 +1092,7 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
     
     func failWithInternetConnection() {
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
     }
 }
 

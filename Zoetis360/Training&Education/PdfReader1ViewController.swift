@@ -52,7 +52,7 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
         if WebClass.sharedInstance.connected() {
             /*
             accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headers: HTTPHeaders = ["Authorization":accestoken]
+            let headers: HTTPHeaders = [Constants.authorisationStr:accestoken]
             let Url = WebClass.sharedInstance.webUrl + "PostingSession/GetTutorial"
             
             AF.request(Url, method: .get, headers: headers).responseJSON { response in

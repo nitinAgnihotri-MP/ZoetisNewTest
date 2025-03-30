@@ -215,7 +215,7 @@ import Reachability
 
         if recivedDataArray.count < 2 {
             
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.noHisData, comment: ""))
             self.incedenceText.isHidden = true
             self.btnShare.isHidden = true
             barChartView.clear()
@@ -299,7 +299,7 @@ import Reachability
                      
                      if lastSessionDataArray.count == 0 {
                          
-                         Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("No historical data.", comment: ""))
+                         Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.noHisData, comment: ""))
                          self.barChartView.clear()
                          return
                      }
@@ -318,7 +318,7 @@ import Reachability
                          
                          let farmName : NSString = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "farmName") as! NSString
                          
-                         self.farmNames.add(NSString(format: "%@(%@)",farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
+                         self.farmNames.add(NSString(format: Constants.percentageStr,farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
                          
                          let necID = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "necropsyId") as! NSNumber
                          

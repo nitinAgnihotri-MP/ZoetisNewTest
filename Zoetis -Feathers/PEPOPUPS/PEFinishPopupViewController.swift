@@ -246,8 +246,32 @@ class PEFinishPopupViewController: BaseViewController {
         
     }
     
+    fileprivate func showExtendedPESucessMsg(_ microAvailable: Bool, _ param: [String : String]) {
+        if microAvailable == true
+        {
+            if let extendedValue = UserDefaults.standard.value(forKey: "ExtendedMicro") as? Bool
+            {
+                if extendedValue == true {
+                    self.showExtendedMicroAlert(errorMsg: "Your PE & Extended Microbial Assessment has been submitted successfully", param: param)
+                }
+                else {
+                    
+                    if self.regionID == 3
+                    {
+                        self.showExtendedMicroAlert(errorMsg: "Are you sure, you want to submit the assessment without Extended Microbial?", param: param)
+                    }
+                }
+            }
+        }
+        else
+        {
+            self.validationSuccessFull?(param)
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     func submitRejectedAssessmentSignature(){
-        // not possible to break as per sonarqube
+       
         let  sig1 = Int(truncating: rejectedAssessments[0].sig ?? 0)
         if sig1 > 0 {
             DispatchQueue.main.async {
@@ -273,27 +297,7 @@ class PEFinishPopupViewController: BaseViewController {
                 
                 if let microAvailable =  UserDefaults.standard.value(forKey: "extendedAvailable") as? Bool
                 {
-                    if microAvailable == true
-                    {
-                        if let extendedValue = UserDefaults.standard.value(forKey: "ExtendedMicro") as? Bool
-                        {
-                            if extendedValue == true {
-                                self.showExtendedMicroAlert(errorMsg: "Your PE & Extended Microbial Assessment has been submitted successfully", param: param)
-                            }
-                            else {
-                                
-                                if self.regionID == 3
-                                {
-                                    self.showExtendedMicroAlert(errorMsg: "Are you sure, you want to submit the assessment without Extended Microbial?", param: param)
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        self.validationSuccessFull?(param)
-                        self.dismiss(animated: true, completion: nil)
-                    }
+                    self.showExtendedPESucessMsg(microAvailable, param)
                 }
                 else
                 {
@@ -374,12 +378,22 @@ class PEFinishPopupViewController: BaseViewController {
     
     // MARK: - IB ACTIONS
 
+    fileprivate func rejectedSignPosted() {
+        if rejectedAssessments.count > 0{
+            if rejectedAssessments[0].statusType == 2 {
+                submitRejectedAssessmentSignature()
+            }else{
+                self.validate()
+            }
+        }else{
+            self.validate()
+        }
+    }
+    
     @IBAction func doneClicked(_ sender: Any) {
         
         
         if golbalEvaluationID != 2 {
-          
-            
             var i = 0
             for item in  certificateData {
                 if certificateData[i].signatureImg != "" {
@@ -398,15 +412,7 @@ class PEFinishPopupViewController: BaseViewController {
         }
         
         if !isFromSchedule{
-            if rejectedAssessments.count > 0{
-                if rejectedAssessments[0].statusType == 2 {
-                    submitRejectedAssessmentSignature()
-                }else{
-                    self.validate()
-                }
-            }else{
-                self.validate()
-            }
+            rejectedSignPosted()
         }else{
             self.validate()
         }
@@ -707,10 +713,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
                                 {
                                     cell.showImgVw(true)
                                     cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
-                                    
                                 }
-                                
-                                //        }
                             }
                         }
                         
@@ -776,7 +779,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
                             maxMark  = String(peNewAssessmentArrayForCatQuest[indexPath.row].assMaxScore ?? 0)
                         }
                         
-                        var score = resultMark + "/" + maxMark
+                        let score = resultMark + "/" + maxMark
                         
                         
                         cell.lblResult.text = score
@@ -906,6 +909,38 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
     }
     
     
+    fileprivate func validatedExtendedPESubmittion(_ param: [String : String]) {
+        if let microAvailable =  UserDefaults.standard.value(forKey: "extendedAvailable") as? Bool
+        {
+            if microAvailable == true
+            {
+                if let extendedValue = UserDefaults.standard.value(forKey: "ExtendedMicro") as? Bool
+                {
+                    if extendedValue == true {
+                        self.showExtendedMicroAlert(errorMsg: "Your PE & Extended Microbial Assessment has been submitted successfully", param: param)
+                    }
+                    else {
+                        if self.regionID == 3
+                        {
+                            self.showExtendedMicroAlert(errorMsg: "Are you sure, you want to submit the assessment without Extended Microbial?", param: param)
+                        }
+                        
+                    }
+                }
+            }
+            else
+            {
+                self.validationSuccessFull?(param)
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+        else
+        {
+            self.validationSuccessFull?(param)
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     func validate(){
         
         if let signatureImage = self.signatureView.getSignature(scale: 10) {
@@ -944,35 +979,7 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
 
                 
                 if self.regionID == 3 {
-                    if let microAvailable =  UserDefaults.standard.value(forKey: "extendedAvailable") as? Bool
-                    {
-                        if microAvailable == true
-                        {
-                            if let extendedValue = UserDefaults.standard.value(forKey: "ExtendedMicro") as? Bool
-                            {
-                                if extendedValue == true {
-                                    self.showExtendedMicroAlert(errorMsg: "Your PE & Extended Microbial Assessment has been submitted successfully", param: param)
-                                }
-                                else {
-                                    if self.regionID == 3
-                                    {
-                                        self.showExtendedMicroAlert(errorMsg: "Are you sure, you want to submit the assessment without Extended Microbial?", param: param)
-                                    }
-                                    
-                                }
-                            }
-                        }
-                        else
-                        {
-                            self.validationSuccessFull?(param)
-                            self.dismiss(animated: true, completion: nil)
-                        }
-                    }
-                    else
-                    {
-                        self.validationSuccessFull?(param)
-                        self.dismiss(animated: true, completion: nil)
-                    }
+                    self.validatedExtendedPESubmittion(param)
                 }
                 
                 else {

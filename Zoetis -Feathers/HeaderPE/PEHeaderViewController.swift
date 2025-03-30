@@ -223,7 +223,7 @@ class PEHeaderViewController: BaseViewController {
             delegate?.syncBtnTapped()
             delegatePE?.getVaccinationServiceResponse(showHud: true)
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
         }
     }
     

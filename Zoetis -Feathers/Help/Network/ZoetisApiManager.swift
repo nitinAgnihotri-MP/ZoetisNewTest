@@ -12,7 +12,7 @@ typealias JSONDictionaryArray = [JSONDictionary]
 typealias SuccessBlock = (JSON) -> Void
 typealias ErrorBlock = (NSError) -> Void
 let apiHeaders = ["DeviceType":"ios", "UserId":"\(String(describing: UserDefaults.standard.value(forKey: "Id") ?? 0))",
-                  "Authorization":"\(AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype") ?? "")"]
+                  Constants.authorisationStr:"\(AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype") ?? "")"]
 
 extension Notification.Name {
     
@@ -98,7 +98,7 @@ enum ZoetisApiManager {
         
         var additionalHeaders: HTTPHeaders?
         additionalHeaders = ["DeviceType":"ios", "UserId":"\(String(describing: UserDefaults.standard.value(forKey: "Id") ?? 0))",
-                             "Authorization":"\(AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype") ?? "")"]
+                             Constants.authorisationStr:"\(AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype") ?? "")"]
         
         if imageKey != "" {
             guard let url = URL(string: URLString) else {

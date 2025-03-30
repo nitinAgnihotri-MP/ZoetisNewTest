@@ -407,12 +407,12 @@ class ApiSync: NSObject {
                 
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-                let headerDict = ["Authorization":accestoken]
+                let headerDict = [Constants.authorisationStr:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
                 
@@ -528,25 +528,25 @@ class ApiSync: NSObject {
                     var newLngId = pSession.lngId
                     
                     if (newLngId == 1){
-                        if routeName == "Wing-Web" {
+                        if routeName == Constants.wingWeb {
                             routeId = 1
                         }
-                        else if routeName == "Drinking Water" {
+                        else if routeName == Constants.drinkingWater {
                             routeId = 2
                         }
-                        else if routeName == "Spray" {
+                        else if routeName == Constants.sprayStr {
                             routeId = 3
                         }
-                        else if routeName == "In Ovo" {
+                        else if routeName == Constants.inOvo {
                             routeId = 4
                         }
                         else if routeName == "Subcutaneous" {
                             routeId = 5
                         }
-                        else if routeName == "Intramuscular" {
+                        else if routeName == Constants.intraMuscularStr {
                             routeId = 6
                         }
-                        else  if  routeName == "Eye Drop"{
+                        else  if  routeName == Constants.eyeDrop{
                             routeId = 7
                         }
                         else{
@@ -556,13 +556,13 @@ class ApiSync: NSObject {
                     else if newLngId == 4
                     {
                         
-                        if routeName == "Spray" {
+                        if routeName == Constants.sprayStr {
                             routeId = 21
                         }
-                        else if routeName == "In Ovo" {
+                        else if routeName == Constants.inOvo {
                             routeId = 22
                         }
-                        else if routeName == "Intramuscular" {
+                        else if routeName == Constants.intraMuscularStr {
                             routeId = 24
                         }
                         else if routeName == "Água De Bebida" {
@@ -582,25 +582,25 @@ class ApiSync: NSObject {
                         }
                     }
                     else{
-                        if routeName == "Wing-Web" {
+                        if routeName == Constants.wingWeb {
                             routeId = 1
                         }
-                        else if routeName == "Drinking Water" {
+                        else if routeName == Constants.drinkingWater {
                             routeId = 2
                         }
-                        else if routeName == "Spray" {
+                        else if routeName == Constants.sprayStr {
                             routeId = 3
                         }
-                        else if routeName == "In Ovo" {
+                        else if routeName == Constants.inOvo {
                             routeId = 4
                         }
                         else if routeName == "Subcutaneous" {
                             routeId = 5
                         }
-                        else if routeName == "Intramuscular" {
+                        else if routeName == Constants.intraMuscularStr {
                             routeId = 6
                         }
-                        else  if  routeName == "Eye Drop"{
+                        else  if  routeName == Constants.eyeDrop{
                             routeId = 7
                         }
                         else{
@@ -628,25 +628,25 @@ class ApiSync: NSObject {
                     var newLngId = pSession.lngId
                     
                     if newLngId == 1 {
-                        if routeName == "Wing-Web" {
+                        if routeName == Constants.wingWeb {
                             routeId = 1
                         }
-                        else if routeName == "Drinking Water" {
+                        else if routeName == Constants.drinkingWater {
                             routeId = 2
                         }
-                        else if routeName == "Spray" {
+                        else if routeName == Constants.sprayStr {
                             routeId = 3
                         }
-                        else if routeName == "In Ovo" {
+                        else if routeName == Constants.inOvo {
                             routeId = 4
                         }
                         else if routeName == "Subcutaneous" {
                             routeId = 5
                         }
-                        else if routeName == "Intramuscular" {
+                        else if routeName == Constants.intraMuscularStr {
                             routeId = 6
                         }
-                        else  if  routeName == "Eye Drop"{
+                        else  if  routeName == Constants.eyeDrop{
                             routeId = 7
                         }
                         else{
@@ -656,13 +656,13 @@ class ApiSync: NSObject {
                     else if newLngId == 4
                     {
                         
-                        if routeName == "Spray" {
+                        if routeName == Constants.sprayStr {
                             routeId = 21
                         }
-                        else if routeName == "In Ovo" {
+                        else if routeName == Constants.inOvo {
                             routeId = 22
                         }
-                        else if routeName == "Intramuscular" {
+                        else if routeName == Constants.intraMuscularStr {
                             routeId = 24
                         }
                         else if routeName == "Água De Bebida" {
@@ -683,25 +683,25 @@ class ApiSync: NSObject {
                     }
                  else
                     {
-                     if routeName == "Wing-Web" {
+                     if routeName == Constants.wingWeb {
                          routeId = 1
                      }
-                     else if routeName == "Drinking Water" {
+                     else if routeName == Constants.drinkingWater {
                          routeId = 2
                      }
-                     else if routeName == "Spray" {
+                     else if routeName == Constants.sprayStr {
                          routeId = 3
                      }
-                     else if routeName == "In Ovo" {
+                     else if routeName == Constants.inOvo {
                          routeId = 4
                      }
                      else if routeName == "Subcutaneous" {
                          routeId = 5
                      }
-                     else if routeName == "Intramuscular" {
+                     else if routeName == Constants.intraMuscularStr {
                          routeId = 6
                      }
-                     else  if  routeName == "Eye Drop"{
+                     else  if  routeName == Constants.eyeDrop{
                          routeId = 7
                      }
                      else{
@@ -748,12 +748,12 @@ class ApiSync: NSObject {
                 let Url = "/PostingSession//SaveMultipleVaccinationsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
              //   accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                let headerDict = [Constants.authorisationStr:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -1011,12 +1011,12 @@ class ApiSync: NSObject {
                 let Url = "PostingSession/SaveMultiplePostingsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
               //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                let headerDict = [Constants.authorisationStr:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1246,13 +1246,13 @@ class ApiSync: NSObject {
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
                // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                let headerDict = [Constants.authorisationStr:accestoken]
                 let Url = "PostingSession/SaveMultipleNecropsySyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -1466,13 +1466,13 @@ class ApiSync: NSObject {
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
                // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                let headerDict = [Constants.authorisationStr:accestoken]
                 let Url = "PostingSession/SaveBirdImageSyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDict, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1736,12 +1736,12 @@ class ApiSync: NSObject {
             let Url = "Setting/SaveUserSetting"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
            // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict = ["Authorization":accestoken]
+            let headerDict = [Constants.authorisationStr:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             var request = URLRequest(url: URL(string: urlString)! )
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
             request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1787,7 +1787,7 @@ class ApiSync: NSObject {
             let pass = PasswordService.shared.getPassword()
             let Url = "Token"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
-            let header = HTTPHeaders([HTTPHeader(name: "Content-Type", value: "application/x-www-form-urlencoded"), HTTPHeader(name: "Accept", value: "application/json")])
+            let header = HTTPHeaders([HTTPHeader(name: Constants.contentType, value: "application/x-www-form-urlencoded"), HTTPHeader(name: "Accept", value: Constants.applicationJson)])
             let parameters:[String:String] = ["grant_type": "password","UserName" : CryptoHelper.encrypt(input: userName) , "Password" : CryptoHelper.encrypt(input: pass) as! String,"LoginType": "Web","DeviceId":udid as! String]
             sessionManager.request(urlString, method: .post,parameters: parameters, headers: header).responseJSON { response in
                 switch response.result {
@@ -1795,11 +1795,11 @@ class ApiSync: NSObject {
                     let statusCode = response.response?.statusCode
                     let dict : NSDictionary = value as! NSDictionary
                     if statusCode == 400{
-                        _ = dict["error_description"]
+                        _ = dict[Constants.errorDescStr]
                     }
                     
                     else if statusCode == 401{
-                        _ = dict["error_description"]
+                        _ = dict[Constants.errorDescStr]
                     }
                     else{
                         

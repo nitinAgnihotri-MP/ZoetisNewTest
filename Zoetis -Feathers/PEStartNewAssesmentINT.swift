@@ -175,6 +175,21 @@ class PEStartNewAssessmentINT: BaseViewController {
         }
     }
     
+    fileprivate func setAllBtnGradientBorder(_ btn: customButton?) {
+        let superviewCurrent =  btn?.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if  view.isKind(of:UIButton.self) {
+                    if view == self.evaluationDateButton{
+                        view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
+                    } else{
+                        view.setDropdownStartAsessmentView(imageName:"dd")
+                    }
+                }
+            }
+        }
+    }
+    
     private func setupUI(){
         
         let btns = [customerButton,siteButton,evaluatorButton,visitButton,evaluationTypeButton,tsrButton,evaluationDateButton,btnBreed,btnBreedOthers,btnIncubation,manufacturerButton,numberOfEggsButton,countryBtn ,manfacturerOtherBtn,eggsOtherBtn , clorineBtn]
@@ -210,18 +225,7 @@ class PEStartNewAssessmentINT: BaseViewController {
             
             for btn in btns{
                 btn?.setTitle("", for: .normal)
-                let superviewCurrent =  btn?.superview
-                if superviewCurrent != nil {
-                    for view in superviewCurrent!.subviews {
-                        if  view.isKind(of:UIButton.self) {
-                            if view == self.evaluationDateButton{
-                                view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
-                            } else{
-                                view.setDropdownStartAsessmentView(imageName:"dd")
-                            }
-                        }
-                    }
-                }
+                self.setAllBtnGradientBorder(btn)
             }
             self.notesTextView.layer.cornerRadius = 12
             self.notesTextView.layer.masksToBounds = true
@@ -387,19 +391,12 @@ class PEStartNewAssessmentINT: BaseViewController {
         self.txtBreedOfBirdsOthers.delegate = self
         
         let dateFormatter = DateFormatter()
-//        dateFormatter.calendar = Calendar(identifier: .gregorian)
-//        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        
-       // let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
+
         if regionID != 3 {
             dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-//            dateFormatter.calendar = Calendar(identifier: .gregorian)
-//            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         }
         else{
             dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
-//            dateFormatter.calendar = Calendar(identifier: .gregorian)
-//            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         }
         
         let currentDate: NSDate = NSDate()
@@ -1041,6 +1038,46 @@ class PEStartNewAssessmentINT: BaseViewController {
         self.dismissGlobalHUD(self.view ?? UIView())
     }
     // MARK: - Next Button Action
+    fileprivate func showExtendedMicroUI() {
+        if isFlockAgeGreaterTheAllProd || isFlockAgeGreaterThen50Weeks {
+            
+            if isFromBack {
+                let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
+                if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
+                    
+                    showOnlyExtendedMicrobial()
+                } else{
+                    if !Constants.isMovementDone{
+                        self.fromBackNextBtnAction()
+                    }
+                }
+                
+            } else {
+                
+                self.okButtonTapped()
+            }
+        } else {
+            showAlert(title: Constants.alertStr, message: "Please enter the flock details.", owner: self)
+        }
+    }
+    
+    fileprivate func otherCaseTOShowExtendedMicroOption() {
+        if isFromBack {
+            let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
+            if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
+                showOnlyExtendedMicrobial()
+            }else{
+                if !Constants.isMovementDone{
+                    self.fromBackNextBtnAction()
+                }
+            }
+        } else {
+            
+            self.okButtonTapped()
+            
+        }
+    }
+    
     @IBAction func nextBtnAction(_ sender: Any) {
         self.view.endEditing(true)
         Constants.isFirstTime = false
@@ -1173,41 +1210,9 @@ class PEStartNewAssessmentINT: BaseViewController {
         }
         
         if self.allProductionViewHeightConstraint.constant == 60 {
-            if isFlockAgeGreaterTheAllProd || isFlockAgeGreaterThen50Weeks {
-                
-                if isFromBack {
-                    let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
-                    if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
-                        
-                        showOnlyExtendedMicrobial()
-                    } else{
-                        if !Constants.isMovementDone{
-                            self.fromBackNextBtnAction()
-                        }
-                    }
-                    
-                } else {
-                    
-                    self.okButtonTapped()
-                }
-            } else {
-                showAlert(title: Constants.alertStr, message: "Please enter the flock details.", owner: self)
-            }
+            showExtendedMicroUI()
         }else {
-            if isFromBack {
-                let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
-                if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
-                    showOnlyExtendedMicrobial()
-                }else{
-                    if !Constants.isMovementDone{
-                        self.fromBackNextBtnAction()
-                    }
-                }
-            } else {
-                
-                self.okButtonTapped()
-                
-            }
+            otherCaseTOShowExtendedMicroOption()
         }
     }
     
@@ -1288,6 +1293,146 @@ class PEStartNewAssessmentINT: BaseViewController {
         CoreDataHandlerPE().updateAlreadyInProgressInDB(newAssessment: self.peNewAssessment)
     }
     // MARK: - Add Red Background for blank field
+    fileprivate func setMendatoryRedBorderToOtherBreedBtn() {
+        if peNewAssessment.breedOfBird?.lowercased().contains("other") ?? false {
+            if peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "" {
+                
+            }else{
+                let superviewCurrent =  btnBreedOthers.superview
+                if superviewCurrent != nil {
+                    for view in superviewCurrent!.subviews {
+                        if view.isKind(of:UIButton.self) {
+                            view.layer.borderColor = UIColor.red.cgColor
+                            view.layer.borderWidth = 2.0
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func             setMendatoryRedBorderTomanufactrerOtherBtn() {
+        if (( self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
+            if manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "" {
+                
+            }else{
+                let superviewCurrent =  manfacturerOtherBtn.superview
+                if superviewCurrent != nil {
+                    for view in superviewCurrent!.subviews {
+                        if view.isKind(of:UIButton.self) {
+                            view.layer.borderColor = UIColor.red.cgColor
+                            view.layer.borderWidth = 2.0
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func             setMendatoryRedBorderToNumberOfEggsBtn() {
+        if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false) {
+            if eggsOtherTxt.text != nil && eggsOtherTxt.text != "" {
+                
+            }else{
+                let superviewCurrent =  eggsOtherBtn.superview
+                if superviewCurrent != nil {
+                    for view in superviewCurrent!.subviews {
+                        if view.isKind(of:UIButton.self) {
+                            view.layer.borderColor = UIColor.red.cgColor
+                            view.layer.borderWidth = 2.0
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func             setMendatoryRedBorderToEvaluationDate() {
+        let superviewCurrent =  evaluationDateButton.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
+    fileprivate func             setMendatoryRedBorderToCustomerBtn() {
+        let superviewCurrent =  customerButton.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
+    fileprivate func             setMendatoryRedBorderToTSRBtn() {
+        let superviewCurrent = tsrButton.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
+    fileprivate func             setMendatoryRedBorderToSiteBtn() {
+        let superviewCurrent =  siteButton.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
+    fileprivate func             setMendatoryRedBorderToEvaluationNameBtn() {
+        let superviewCurrent =  evaluationTypeButton.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+            
+        }
+    }
+    
+    fileprivate func             setMendatoryRedBorderToEvaluatorBtn() {
+        let superviewCurrent =  evaluatorButton.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                    
+                }
+            }
+        }
+    }
+    
+    fileprivate func             setMendatoryRedBorderToVisitBtn() {
+        let superviewCurrent =  visitButton.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
     func changeMandatorySuperviewToRed(){
         let date = self.peNewAssessment.evaluationDate ?? ""
         let customer = self.peNewAssessment.customerName ?? ""
@@ -1299,21 +1444,7 @@ class PEStartNewAssessmentINT: BaseViewController {
         let clorineName = self.peNewAssessment.clorineName ?? ""
         
         if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != ""{
-            if peNewAssessment.breedOfBird?.lowercased().contains("other") ?? false {
-                if peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "" {
-                    
-                }else{
-                    let superviewCurrent =  btnBreedOthers.superview
-                    if superviewCurrent != nil {
-                        for view in superviewCurrent!.subviews {
-                            if view.isKind(of:UIButton.self) {
-                                view.layer.borderColor = UIColor.red.cgColor
-                                view.layer.borderWidth = 2.0
-                            }
-                        }
-                    }
-                }
-            }
+            setMendatoryRedBorderToOtherBreedBtn()
         }else{
             let superviewCurrent =  btnBreed.superview
             if superviewCurrent != nil {
@@ -1327,21 +1458,7 @@ class PEStartNewAssessmentINT: BaseViewController {
         }
         
         if  self.txtManufacturer.text != nil &&  self.txtManufacturer.text != ""{
-            if (( self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-                if manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "" {
-                    
-                }else{
-                    let superviewCurrent =  manfacturerOtherBtn.superview
-                    if superviewCurrent != nil {
-                        for view in superviewCurrent!.subviews {
-                            if view.isKind(of:UIButton.self) {
-                                view.layer.borderColor = UIColor.red.cgColor
-                                view.layer.borderWidth = 2.0
-                            }
-                        }
-                    }
-                }
-            }
+            setMendatoryRedBorderTomanufactrerOtherBtn()
         }else{
             let superviewCurrent =  manufacturerButton.superview
             if superviewCurrent != nil {
@@ -1369,21 +1486,7 @@ class PEStartNewAssessmentINT: BaseViewController {
         }
         
         if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != ""{
-            if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false) {
-                if eggsOtherTxt.text != nil && eggsOtherTxt.text != "" {
-                    
-                }else{
-                    let superviewCurrent =  eggsOtherBtn.superview
-                    if superviewCurrent != nil {
-                        for view in superviewCurrent!.subviews {
-                            if view.isKind(of:UIButton.self) {
-                                view.layer.borderColor = UIColor.red.cgColor
-                                view.layer.borderWidth = 2.0
-                            }
-                        }
-                    }
-                }
-            }
+            setMendatoryRedBorderToNumberOfEggsBtn()
         }else{
             let superviewCurrent =  numberOfEggsButton.superview
             if superviewCurrent != nil {
@@ -1397,86 +1500,25 @@ class PEStartNewAssessmentINT: BaseViewController {
         }
         
         if (date.count > 0 ){} else  {
-            let superviewCurrent =  evaluationDateButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            setMendatoryRedBorderToEvaluationDate()
         }
         if (customer.count > 0 ){} else  {
-            let superviewCurrent =  customerButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            setMendatoryRedBorderToCustomerBtn()
         }
         if (selectedTSR.count > 0 ){} else  {
-            let superviewCurrent = tsrButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            setMendatoryRedBorderToTSRBtn()
         }
-        
-        
         if (site.count > 0 ){} else  {
-            let superviewCurrent =  siteButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            setMendatoryRedBorderToSiteBtn()
         }
         if (evaluationName.count > 0){} else  {
-            let superviewCurrent =  evaluationTypeButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-                
-            }
-            
+            setMendatoryRedBorderToEvaluationNameBtn()
         }
         if (evaluator.count  > 0){} else  {
-            let superviewCurrent =  evaluatorButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                        
-                    }
-                }
-            }
+            setMendatoryRedBorderToEvaluatorBtn()
         }
         if (reasonForVisit.count > 0){} else  {
-            let superviewCurrent =  visitButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            setMendatoryRedBorderToVisitBtn()
         }
         
         showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
@@ -2238,6 +2280,23 @@ extension PEStartNewAssessmentINT{
         
     }
     
+    fileprivate func extractedFunc(_ object: PECategory, _ peCategoryFilteredArray: inout [PECategory]) {
+        if(regionID == 3){
+            if peNewAssessment.evaluationID == object.evaluationID {
+                if object.id != 36{
+                    peCategoryFilteredArray.append(object)
+                }
+                
+            }
+        }
+        else{
+            if object.id != 36{
+                peCategoryFilteredArray.append(object)
+            }
+            
+        }
+    }
+    
     func okAction(){
         checkBackAndSave()
         jsonRe = (getJSON("QuestionAns") ?? JSON())
@@ -2255,21 +2314,7 @@ extension PEStartNewAssessmentINT{
         var peCategoryFilteredArray: [PECategory] =  []
         for object in pECategoriesAssesmentsResponse.peCategoryArray {
             
-            let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-            if(regionID == 3){
-                if peNewAssessment.evaluationID == object.evaluationID {
-                    if object.id != 36{
-                        peCategoryFilteredArray.append(object)
-                    }
-                    
-                }
-            }
-            else{
-                if object.id != 36{
-                    peCategoryFilteredArray.append(object)
-                }
-                
-            }
+            extractedFunc(object, &peCategoryFilteredArray)
             
         }
         

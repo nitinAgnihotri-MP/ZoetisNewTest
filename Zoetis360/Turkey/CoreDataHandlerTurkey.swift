@@ -318,19 +318,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute1Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -346,19 +346,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute2Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -374,19 +374,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute3Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -402,19 +402,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute4Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -430,19 +430,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute5Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -458,19 +458,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute6Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -485,19 +485,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute7Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -513,19 +513,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute8Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -541,19 +541,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain9"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute9Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -569,19 +569,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute10Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -597,19 +597,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "fieldStrain11"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute11Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -654,19 +654,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute1Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -696,19 +696,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute2Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -738,19 +738,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute3Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -779,19 +779,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute4Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -820,19 +820,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute5Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -860,19 +860,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute6Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -901,19 +901,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute7Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -942,19 +942,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute8Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -983,19 +983,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain9"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute9Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1024,19 +1024,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute10Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1067,19 +1067,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue("Other", forKey:"type")
                     switch dict.value(forKey: "fieldRoute11Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1122,19 +1122,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1149,19 +1149,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1176,19 +1176,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1202,19 +1202,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1228,19 +1228,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1254,19 +1254,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1280,19 +1280,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1306,19 +1306,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain8"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1333,19 +1333,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain9"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1359,19 +1359,19 @@ class CoreDataHandlerTurkey: NSObject {
                 person.setValue(dict.value(forKey: "hatcheryStrain10"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.sprayStr, forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inOvo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue("Intramuscular", forKey:"route")
+                    person.setValue(Constants.intraMuscularStr, forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1423,19 +1423,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue("Marek", forKey:"type")
                     switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1462,19 +1462,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1501,19 +1501,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1539,19 +1539,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1577,19 +1577,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1615,19 +1615,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1653,19 +1653,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1693,19 +1693,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "hatcheryStrain8"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1732,19 +1732,19 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "hatcheryStrain9"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1775,19 +1775,19 @@ class CoreDataHandlerTurkey: NSObject {
                     
                     switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.sprayStr, forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inOvo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue("Intramuscular", forKey:"route")
+                        person.setValue(Constants.intraMuscularStr, forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2083,7 +2083,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "SkeletaTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
         
         do
             
@@ -2155,7 +2155,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "SkeletaTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         
         do
         {
@@ -2248,7 +2248,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
         
         do
             
@@ -2325,7 +2325,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         
         do
         {
@@ -2417,7 +2417,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITractTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
         
         do
             
@@ -2486,7 +2486,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITractTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         
         do
         {
@@ -2577,7 +2577,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "RespiratoryTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
         
         do
             
@@ -2641,7 +2641,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "RespiratoryTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -2733,7 +2733,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "ImmuneTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
         
         do
             
@@ -2814,7 +2814,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "ImmuneTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         
         do
         {
@@ -2978,7 +2978,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "RouteTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         
         do
         {
@@ -3403,7 +3403,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocciProgramPostingTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         
         do
         {
@@ -3581,7 +3581,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "SessiontypeTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         
         do
         {
@@ -3638,7 +3638,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MoleculeFeeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         
         do
         {
@@ -4195,7 +4195,7 @@ class CoreDataHandlerTurkey: NSObject {
     // MARK: Delete Farms Details in Turkey
     func deleteDataWithPostingIdStep1dataTurkey (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyId, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -4217,7 +4217,7 @@ class CoreDataHandlerTurkey: NSObject {
     // MARK: Delete All data of Necropsy with posting ID in TURKEY
     func deleteDataWithPostingIdStep2dataCaptureNecViewTurkey (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyId, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -4241,7 +4241,7 @@ class CoreDataHandlerTurkey: NSObject {
     // MARK: Delete Notes With Posting ID in TURKEY
     func deleteDataWithPostingIdStep2NotesBirdTurkey (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyId, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -4264,7 +4264,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataWithPostingIdStep2CameraIamgeTurkey (_ postingId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyId, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -4509,7 +4509,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataWithPostingIdCaptureStepDataTurkey (_ necId: NSNumber)
     {
  
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyId, necId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -4994,7 +4994,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         do
         { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if fetchedResult!.count > 0
@@ -5054,7 +5054,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId,formName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyIdFarmName, necId,formName)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -5343,7 +5343,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.isSync, NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -5522,7 +5522,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.isSync, NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -5713,7 +5713,7 @@ class CoreDataHandlerTurkey: NSObject {
             let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
             do
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -5918,7 +5918,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -5998,7 +5998,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", isSync,postinID)
+        fetchRequest.predicate = NSPredicate(format: Constants.isSyncPostingId, isSync,postinID)
         do
             
         {
@@ -6133,7 +6133,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedId, postingId,feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6164,7 +6164,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: Constants.isSyncPostingId, NSNumber(booleanLiteral: isSync),postingID)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6258,7 +6258,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedId, postingId,feedId)
         
         do
         {
@@ -6292,7 +6292,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: Constants.isSyncPostingId, NSNumber(booleanLiteral: isSync),postingID)
         
         do {
             
@@ -6385,7 +6385,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedId, postingId,feedId)
         
         do
         {
@@ -6445,7 +6445,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: Constants.isSyncPostingId, NSNumber(booleanLiteral: isSync),postingID)
         
         do
         {
@@ -6481,7 +6481,7 @@ class CoreDataHandlerTurkey: NSObject {
             let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
             
             do
             {
@@ -6671,7 +6671,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6755,7 +6755,7 @@ class CoreDataHandlerTurkey: NSObject {
             let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
             do
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6898,7 +6898,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocoiVaccineTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6986,7 +6986,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -7058,7 +7058,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        // fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        // fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -7105,7 +7105,7 @@ class CoreDataHandlerTurkey: NSObject {
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
             
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
             
             do
             {
@@ -7316,7 +7316,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
         
         
         do
@@ -7504,7 +7504,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "FeedProgramTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
         
         do
         {
@@ -7902,7 +7902,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        //fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        //fetchRequest.predicate = NSPredicate(format: Constants.isSync, NSNumber(booleanLiteral: isSync))
         fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == 0", NSNumber(booleanLiteral: isSync))
         
         do
@@ -7940,7 +7940,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necropsyId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necropsyId)
         
         do
         {
@@ -8055,7 +8055,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         
         do
         {
@@ -8314,7 +8314,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -8344,7 +8344,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -8434,7 +8434,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         
         do
         {
@@ -8474,7 +8474,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         
         do
         {
@@ -8523,7 +8523,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId , formName , feedProgramName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyIdFarmName, necId , formName , feedProgramName)
         
         do
         {
@@ -8567,7 +8567,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId , formName )
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyIdFarmName, necId , formName )
         
         do
         {
@@ -8802,7 +8802,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         
         do
         {
@@ -8895,7 +8895,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         
         do
         {
@@ -9648,7 +9648,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataWithStep2dataTurkey (_ necId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyId, necId)
         let fetchUsers            = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchUsers.predicate   = fetchPredicate
         
@@ -9774,7 +9774,7 @@ class CoreDataHandlerTurkey: NSObject {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         
         do
         {
@@ -9812,7 +9812,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         
         do
         {
@@ -10138,7 +10138,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteImageForSingleTurkey(_ necId: NSNumber) {
         
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyId, necId)
         let fetchUsers   = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
         fetchUsers.predicate  = fetchPredicate
         do
@@ -10201,7 +10201,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate!.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         
         do
         {
@@ -10272,7 +10272,7 @@ class CoreDataHandlerTurkey: NSObject {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.isSync, NSNumber(booleanLiteral: isSync))
         fetchRequest.returnsObjectsAsFaults = false
         do
         {
@@ -10419,7 +10419,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataBirdNotesWithIdTurkey (_ necId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyId, necId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -10446,7 +10446,7 @@ class CoreDataHandlerTurkey: NSObject {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -11147,7 +11147,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necropsyId, farmName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyIdFarmName, necropsyId, farmName)
         
         do
         {
@@ -11186,7 +11186,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necropsyId ,farmName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necropsyIdFarmName, necropsyId ,farmName)
         
         do
         {
@@ -11531,7 +11531,7 @@ class CoreDataHandlerTurkey: NSObject {
     }
     func deleteDataWithPostingIdStep1dataWithfarmNameTurkey (_ postingId: NSNumber,farmName:String)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyIdFarmName, postingId,farmName)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -11601,7 +11601,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataWithPostingIdStep2CameraIamgeWithFarmNameTurkey (_ postingId: NSNumber,farmName:String)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.necropsyIdFarmName, postingId,farmName)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
         fetchUsers.predicate                = fetchPredicate
         

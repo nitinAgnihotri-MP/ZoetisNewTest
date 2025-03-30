@@ -338,8 +338,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             let keychainHelper = AccessTokenHelper()
             accestoken = keychainHelper.getFromKeychain(keyed: "aceesTokentype") ?? ""
             let headerDict: HTTPHeaders = [
-                "Authorization": accestoken,
-                "Cache-Control": "no-store, no-cache, must-revalidate, private"
+                Constants.authorisationStr: accestoken,
+                "Cache-Control": Constants.noStoreNoCacheMustRevalidatePrivate
             ]
             let Id = UserDefaults.standard.integer(forKey: "Id")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
@@ -432,9 +432,9 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
 
         let url = WebClass.sharedInstance.webUrl + "Token"
         let headers: HTTPHeaders = [
-            "Authorization": accestoken,
-            "Cache-Control": "no-store, no-cache, must-revalidate, private",
-            "Content-Type": "application/x-www-form-urlencoded",
+            Constants.authorisationStr: accestoken,
+            "Cache-Control": Constants.noStoreNoCacheMustRevalidatePrivate,
+            Constants.contentType: "application/x-www-form-urlencoded",
         ]
         let parameters: [String: String] = [
             "grant_type": "password",
@@ -463,7 +463,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
 
                 switch statusCode {
                 case 400, 401:
-                    debugPrint("Error: \(dict["error_description"] as? String ?? Constants.unknownErrorStr)")
+                    debugPrint("Error: \(dict[Constants.errorDescStr] as? String ?? Constants.unknownErrorStr)")
                 case 200:
                     let acessToken = (dict["access_token"] as? String)!
                     
@@ -627,8 +627,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
       //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
         // Set up headers and parameters
         let headers: HTTPHeaders = [
-            "Authorization": accestoken,
-            "Cache-Control": "no-store, no-cache, must-revalidate, private"
+            Constants.authorisationStr: accestoken,
+            "Cache-Control": Constants.noStoreNoCacheMustRevalidatePrivate
         ]
 
         let userId = UserDefaults.standard.integer(forKey: "Id")
@@ -763,7 +763,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1204,7 +1204,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     } else {
                         self?.getListFarms()
                         print(Constants.noDataReceivedStr)
-                        self?.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
+                        self?.showToastWithTimer(message: Constants.noDataReceived, duration: 3.0)
                     }
                 }
                 
@@ -1259,7 +1259,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     } else {
                         // Handle the case where the array is empty or nil
                         print(Constants.noDataReceivedStr)
-                        self?.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
+                        self?.showToastWithTimer(message: Constants.noDataReceived, duration: 3.0)
                     }
                 }
             })
@@ -1298,7 +1298,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1413,7 +1413,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 } else {
                     // Handle the case where the array is empty or nil
                     print(Constants.noDataReceivedStr)
-                    self?.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
+                    self?.showToastWithTimer(message: Constants.noDataReceived, duration: 3.0)
                 }
             }
             
@@ -1441,7 +1441,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1515,7 +1515,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1593,7 +1593,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1736,7 +1736,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1814,7 +1814,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1929,7 +1929,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2001,7 +2001,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2075,7 +2075,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2144,7 +2144,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2230,7 +2230,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknownCodeStr
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2381,13 +2381,13 @@ extension DashViewControllerTurkey :userlistProtocol,userLogOut {
     func didFinishApiSyncdata(){
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
     }
     
     func failWithInternetConnectionSyncdata(){
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
     }
     
 }

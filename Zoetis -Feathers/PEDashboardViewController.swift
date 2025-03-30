@@ -1164,7 +1164,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 self.logoutAction()
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
         }
         
     }
@@ -1312,7 +1312,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 self.accessPEArrayObjects()
                 
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
             }
         }else{
             if self.deletedAssessmentIdArray.count > 0{
@@ -1427,6 +1427,26 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     }
     
     // MARK: - Post Images to Server
+    fileprivate func ExtendedMicroApi(_ self: PEDashboardViewController) {
+        if self.regionID == 3
+        {
+            if HaveToCallExtendedMicro == true
+            {
+                var saveType = Int()
+                
+                if Constants.isDraftAssessment == true {
+                    saveType = 0
+                }
+                else {
+                    saveType = 1
+                }
+                
+                self.syncExtendedMicrobial(saveType: saveType, statusType: 0)
+            }
+            
+        }
+    }
+    
     func callRequest4(paramForImages:JSONDictionary){
         self.convertDictToJson(dict: paramForImages, apiName: "Test")
         callRequest4Int = callRequest4Int + 1
@@ -1461,23 +1481,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 if ConnectionManager.shared.hasConnectivity() {
                     if self.callRequest4Int == 0 {
                         
-                        if self.regionID == 3
-                        {
-                            if HaveToCallExtendedMicro == true
-                            {
-                                var saveType = Int()
-                                
-                                if Constants.isDraftAssessment == true {
-                                    saveType = 0
-                                }
-                                else {
-                                    saveType = 1
-                                }
-                                
-                                self.syncExtendedMicrobial(saveType: saveType, statusType: 0)
-                            }
-                            
-                        }
+                        ExtendedMicroApi(self)
                         
                         let syncArr = self.getAssessmentInOfflineFromDb()
                         if syncArr > 0{
@@ -1491,7 +1495,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                             for i in self.totalImageToSync{
                                 CoreDataHandlerPE().setImageStatusTrue(idArray: i)
                             }
-                            self.showToastWithTimer(message: "Data Sync has been completed.", duration: 2.0)
+                            self.showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
                             NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                             self.dismissGlobalHUD(self.view)
                         }
@@ -4947,6 +4951,30 @@ extension PEDashboardViewController{
     }
     
     // MARK: - Handle PE Posting Assessment List API Responce
+    fileprivate func extractedFunc(_ FrequencyValueStr: String, _ QCCount: String, _ PersonName: String, _ TextAmPm: String, _ PPMValue: String, _ AssessmentScore: Int, _ isNAValue: Bool, _ filterScoreData: inout [[String : Any]], _ questionMark: [String : Any], _ isNaSelectedArray: inout [[String : Any]]) {
+        if FrequencyValueStr.count > 0 {
+            CoreDataHandlerPE().updateFrequencyInAssessmentInProgress(frequency:FrequencyValueStr)
+        }
+        if QCCount.count > 0 {
+            CoreDataHandlerPE().updateQCCountInAssessmentInProgress(qcCount:QCCount)
+        }
+        if PersonName.count > 0 {
+            CoreDataHandlerPE().updatePersonNameInAssessmentInProgress(personName: PersonName)
+        }
+        if TextAmPm.count > 0 {
+            CoreDataHandlerPE().updateAMPMInAssessmentInProgress(ampmValue: TextAmPm)
+        }
+        if PPMValue.count > 0 {
+            CoreDataHandlerPE().updatePPMValueInAssessmentInProgress(PpmValue: PPMValue)
+        }
+        if AssessmentScore  ==  0 || (isNAValue)  {
+            filterScoreData.append(questionMark)
+        }
+        if isNAValue{
+            isNaSelectedArray.append(questionMark)
+        }
+    }
+    
     private func handlGetPostingAssessmentListByUser(_ json: JSON) {
         var dataDic : [String:Any] = [:]
         var dataArray : [Any] = []
@@ -5164,27 +5192,7 @@ extension PEDashboardViewController{
                         let PPMValue = questionMark["Chlorine_Value"] as? String ?? ""
                         let isNAValue = questionMark["IsNA"] as? Bool ?? false
                         
-                        if FrequencyValueStr.count > 0 {
-                            CoreDataHandlerPE().updateFrequencyInAssessmentInProgress(frequency:FrequencyValueStr)
-                        }
-                        if QCCount.count > 0 {
-                            CoreDataHandlerPE().updateQCCountInAssessmentInProgress(qcCount:QCCount)
-                        }
-                        if PersonName.count > 0 {
-                            CoreDataHandlerPE().updatePersonNameInAssessmentInProgress(personName: PersonName)
-                        }
-                        if TextAmPm.count > 0 {
-                            CoreDataHandlerPE().updateAMPMInAssessmentInProgress(ampmValue: TextAmPm)
-                        }
-                        if PPMValue.count > 0 {
-                            CoreDataHandlerPE().updatePPMValueInAssessmentInProgress(PpmValue: PPMValue)
-                        }
-                        if AssessmentScore  ==  0 || (isNAValue)  {
-                            filterScoreData.append(questionMark)
-                        }
-                        if isNAValue{
-                            isNaSelectedArray.append(questionMark)
-                        }
+                        extractedFunc(FrequencyValueStr, QCCount, PersonName, TextAmPm, PPMValue, AssessmentScore, isNAValue, &filterScoreData, questionMark, &isNaSelectedArray)
                     }
                     
                     var assArray : [Int] = []

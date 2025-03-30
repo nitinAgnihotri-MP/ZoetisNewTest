@@ -551,6 +551,37 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
 
 extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINavigationControllerDelegate{
     
+    fileprivate func checkCamera(_ sender: UIButton) {
+        let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
+        let indexPath = self.tblView.indexPathForRow(at:buttonPosition)
+        if  let cell = self.tblView.cellForRow(at: indexPath!) as? PVEVaccinationCrewSafetyCell
+        {
+            
+            guard let imgCountText = cell.imgCountBtn.titleLabel?.text,
+                  let imgCount = Int(imgCountText),
+                  imgCount < 5 || cell.imgCountBtn.isHidden else {
+                postAlert("Reached maximum!", message: "Reached maximum limit of images for this question.")
+                return
+            }
+            
+            
+        }
+        
+        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
+            if UIImagePickerController.availableCaptureModes(for: .rear) != nil {
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .camera
+                imagePicker.cameraCaptureMode = .photo
+                imagePicker.delegate = self
+                
+                imagePicker.view.tag = indexPath!.row
+                present(imagePicker, animated: true)
+            } else {
+                postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
+            }
+        }
+    }
+    
     @IBAction func cameraBtnAction(_ sender: UIButton) {
         
         let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
@@ -563,42 +594,7 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
             let isCameraOn = valueArr[0] as! String
             if isCameraOn == "true"{
                 
-                let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
-                let indexPath = self.tblView.indexPathForRow(at:buttonPosition)
-                if  let cell = self.tblView.cellForRow(at: indexPath!) as? PVEVaccinationCrewSafetyCell
-                {
-                    
-                    guard let imgCountText = cell.imgCountBtn.titleLabel?.text,
-                          let imgCount = Int(imgCountText),
-                          imgCount < 5 || cell.imgCountBtn.isHidden else {
-                        postAlert("Reached maximum!", message: "Reached maximum limit of images for this question.")
-                        return
-                    }
-                    
-                    
-//                    let imgCount = Int(cell.imgCountBtn.titleLabel?.text ?? "0")
-//                    if imgCount == 5 {
-//                        if cell.imgCountBtn.isHidden == true{
-//                        }else{
-//                            postAlert("Reached maximum!", message: "Reached maximum limit of images for this question.")
-//                            return
-//                        }
-//                    }
-                }
-                
-                if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
-                    if UIImagePickerController.availableCaptureModes(for: .rear) != nil {
-                        imagePicker.allowsEditing = false
-                        imagePicker.sourceType = .camera
-                        imagePicker.cameraCaptureMode = .photo
-                        imagePicker.delegate = self
-                        
-                        imagePicker.view.tag = indexPath!.row
-                        present(imagePicker, animated: true)
-                    } else {
-                        postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
-                    }
-                }
+                checkCamera(sender)
             }
         }
     }
@@ -1395,6 +1391,25 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
+            
+            switch section {
+              case 1:
+                  return noOfCatcherArr.count
+              case 2:
+                  return noOfVaccinatorsArr.count
+              case 3:
+                  return otherQuessArr.count
+              case 4:
+                  return isLiveVaccineOn ? liveQuesArr.count : 1
+              case 5:
+                  return isInActiveVaccineOn ? inactiveQuessArr.count : 1
+              case 6:
+                  return vaccinInfoDetailArr.count
+              default:
+                  return 1  // Fallback for unexpected section numbers
+              }
+            
+            /*
             if section == 3 {
                 return otherQuessArr.count
             }
@@ -1427,6 +1442,7 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
             else{
                 return 1
             }
+            */
         }
         else if currentSel_seq_Number == 6 { // Vaccine Evaluation Section
             
@@ -1484,6 +1500,115 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
         //return 0
     }
     
+    fileprivate func setupTeamMemberCellUI(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemeberVaccinatorsCell", for: indexPath) as! PVETeamMemeberVaccinatorsCell
+        cell.currentIndPath = indexPath as NSIndexPath
+        cell.delegate = self
+        
+        if noOfVaccinatorsArr.count > indexPath.row{
+            
+            if noOfVaccinatorsArr[indexPath.row].keys.contains("name"){
+                cell.nameTxtField.text = noOfVaccinatorsArr[indexPath.row]["name"] ?? ""
+                
+            }else{
+                cell.nameTxtField.text = ""
+            }
+            if noOfVaccinatorsArr[indexPath.row].keys.contains("email"){
+                cell.emailTxtField.text = noOfVaccinatorsArr[indexPath.row]["email"] ?? ""
+            }else{
+                cell.emailTxtField.text = ""
+            }
+            if noOfVaccinatorsArr[indexPath.row].keys.contains("mobile"){
+                cell.mobileTxtField.text = noOfVaccinatorsArr[indexPath.row]["mobile"] ?? ""
+            }else{
+                cell.mobileTxtField.text = ""
+            }
+        }
+        else{
+            cell.nameTxtField.text = ""
+            cell.mobileTxtField.text = ""
+            cell.emailTxtField.text = ""
+        }
+        
+        if cell.currentIndPath.row == 0 {
+            cell.teamMemberTitleLbl.isHidden = false
+        }else{
+            cell.teamMemberTitleLbl.isHidden = true
+        }
+        
+        if noOfVaccinatorsArr[indexPath.row]["serology"] ?? "" == "" {
+            cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
+        }else{
+            cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
+        }
+        
+        let housingStr = sharedManager.getSessionValueForKeyFromDB(key: "housing") as! String
+        if housingStr == "Floor" {
+            cell.serologyView.isHidden = true
+        }else{
+            cell.serologyView.isHidden = false
+        }
+        return cell
+    }
+    
+    fileprivate func setupCatcherCellUI(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemberCatchersCell", for: indexPath) as! PVETeamMemberCatchersCell
+        cell.currentIndPath = indexPath as NSIndexPath
+        cell.delegate = self
+        if noOfCatcherArr.count > indexPath.row{
+            
+            if noOfCatcherArr[indexPath.row].keys.contains("name"){
+                cell.nameTxtField.text = noOfCatcherArr[indexPath.row]["name"] ?? ""
+            }else{
+                cell.nameTxtField.text = ""
+            }
+            if noOfCatcherArr[indexPath.row].keys.contains("email"){
+                cell.emailTxtField.text = noOfCatcherArr[indexPath.row]["email"] ?? ""
+            }else{
+                cell.emailTxtField.text = ""
+            }
+            if noOfCatcherArr[indexPath.row].keys.contains("mobile"){
+                cell.mobileTxtField.text = noOfCatcherArr[indexPath.row]["mobile"] ?? ""
+            }else{
+                cell.mobileTxtField.text = ""
+            }
+        }else{
+            cell.nameTxtField.text = ""
+            cell.mobileTxtField.text = ""
+            cell.emailTxtField.text = ""
+        }
+        
+        if cell.currentIndPath.row == 0 {
+            cell.teamMemberTitleLbl.isHidden = false
+        }else{
+            cell.teamMemberTitleLbl.isHidden = true
+        }
+        
+        return cell
+    }
+    
+    fileprivate func setupCrewSaftyCellUI(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
+        cell.setCellAndControllsNew(qArr:otherQuessArr, currentIndd: indexPath as NSIndexPath)
+        cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
+        let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
+        if cameraState == "true"{
+            cell.cameraIcon.alpha = 1.0
+            cell.cameraBtn.alpha = 1.0
+        }else{
+            cell.cameraIcon.alpha = 0.2
+            cell.cameraBtn.alpha = 0.2
+        }
+        
+        if(indexPath.row % 2 == 0) {
+            cell.contentView.backgroundColor =  #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
+        } else {
+            cell.contentView.backgroundColor = #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
+        }
+        
+        return cell
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if currentSel_seq_Number == 2 {
@@ -1511,110 +1636,13 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                 return cell
             }
             else if indexPath.section == 1 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemberCatchersCell", for: indexPath) as! PVETeamMemberCatchersCell
-                cell.currentIndPath = indexPath as NSIndexPath
-                cell.delegate = self
-                if noOfCatcherArr.count > indexPath.row{
-                    
-                    if noOfCatcherArr[indexPath.row].keys.contains("name"){
-                        cell.nameTxtField.text = noOfCatcherArr[indexPath.row]["name"] ?? ""
-                    }else{
-                        cell.nameTxtField.text = ""
-                    }
-                    if noOfCatcherArr[indexPath.row].keys.contains("email"){
-                        cell.emailTxtField.text = noOfCatcherArr[indexPath.row]["email"] ?? ""
-                    }else{
-                        cell.emailTxtField.text = ""
-                    }
-                    if noOfCatcherArr[indexPath.row].keys.contains("mobile"){
-                        cell.mobileTxtField.text = noOfCatcherArr[indexPath.row]["mobile"] ?? ""
-                    }else{
-                        cell.mobileTxtField.text = ""
-                    }
-                }else{
-                    cell.nameTxtField.text = ""
-                    cell.mobileTxtField.text = ""
-                    cell.emailTxtField.text = ""
-                }
-                
-                if cell.currentIndPath.row == 0 {
-                    cell.teamMemberTitleLbl.isHidden = false
-                }else{
-                    cell.teamMemberTitleLbl.isHidden = true
-                }
-                
-                return cell
+                return setupCatcherCellUI(tableView, indexPath)
             }
             else if indexPath.section == 2 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemeberVaccinatorsCell", for: indexPath) as! PVETeamMemeberVaccinatorsCell
-                cell.currentIndPath = indexPath as NSIndexPath
-                cell.delegate = self
-                
-                if noOfVaccinatorsArr.count > indexPath.row{
-                    
-                    if noOfVaccinatorsArr[indexPath.row].keys.contains("name"){
-                        cell.nameTxtField.text = noOfVaccinatorsArr[indexPath.row]["name"] ?? ""
-                        
-                    }else{
-                        cell.nameTxtField.text = ""
-                    }
-                    if noOfVaccinatorsArr[indexPath.row].keys.contains("email"){
-                        cell.emailTxtField.text = noOfVaccinatorsArr[indexPath.row]["email"] ?? ""
-                    }else{
-                        cell.emailTxtField.text = ""
-                    }
-                    if noOfVaccinatorsArr[indexPath.row].keys.contains("mobile"){
-                        cell.mobileTxtField.text = noOfVaccinatorsArr[indexPath.row]["mobile"] ?? ""
-                    }else{
-                        cell.mobileTxtField.text = ""
-                    }
-                }
-                else{
-                    cell.nameTxtField.text = ""
-                    cell.mobileTxtField.text = ""
-                    cell.emailTxtField.text = ""
-                }
-                
-                if cell.currentIndPath.row == 0 {
-                    cell.teamMemberTitleLbl.isHidden = false
-                }else{
-                    cell.teamMemberTitleLbl.isHidden = true
-                }
-                
-                if noOfVaccinatorsArr[indexPath.row]["serology"] ?? "" == "" {
-                    cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
-                }else{
-                    cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
-                }
-                
-                let housingStr = sharedManager.getSessionValueForKeyFromDB(key: "housing") as! String
-                if housingStr == "Floor" {
-                    cell.serologyView.isHidden = true
-                }else{
-                    cell.serologyView.isHidden = false
-                }
-                return cell
+                return setupTeamMemberCellUI(tableView, indexPath)
             }
             else if indexPath.section == 3 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
-                cell.setCellAndControllsNew(qArr:otherQuessArr, currentIndd: indexPath as NSIndexPath)
-                cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-                let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
-                if cameraState == "true"{
-                    cell.cameraIcon.alpha = 1.0
-                    cell.cameraBtn.alpha = 1.0
-                }else{
-                    cell.cameraIcon.alpha = 0.2
-                    cell.cameraBtn.alpha = 0.2
-                }
-                
-                if(indexPath.row % 2 == 0) {
-                    cell.contentView.backgroundColor =  #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
-                } else {
-                    cell.contentView.backgroundColor = #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
-                }
-                
-                return cell
+                return setupCrewSaftyCellUI(tableView, indexPath)
             }
             else if indexPath.section == 4 {
                 
@@ -2033,11 +2061,7 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
             if section == 2 {
                 return vaccinatorHeaderHeight()
             }
-            if section == 4  {
-                return 43.0
-            }
-            if section == 5
-            {
+            if section == 4 || section == 5 {
                 return 43.0
             }
             if section == 6 {

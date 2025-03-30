@@ -60,10 +60,10 @@ class TrainingViewController: UIViewController, WKUIDelegate{
 //        accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
 //        
 //        let headerDict: HTTPHeaders = [
-//            "Authorization": accestoken,
-//            "Cache-Control": "no-store, no-cache, must-revalidate, private"
+//            Constants.authorisationStr: accestoken,
+//            "Cache-Control": Constants.noStoreNoCacheMustRevalidatePrivate
 //        ]
-////        let headerDict: HTTPHeaders = ["Authorization": accestoken]
+////        let headerDict: HTTPHeaders = [Constants.authorisationStr: accestoken]
 //        let url = WebClass.sharedInstance.webUrl + "PostingSession/GetTutorial"
 //        
 //        sessionManager.request(url, method: .get, headers: headerDict).responseJSON { response in
@@ -126,8 +126,8 @@ class TrainingViewController: UIViewController, WKUIDelegate{
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
             
             let headerDict: HTTPHeaders = [
-                "Authorization": accestoken,
-                "Cache-Control": "no-store, no-cache, must-revalidate, private"
+                Constants.authorisationStr: accestoken,
+                "Cache-Control": Constants.noStoreNoCacheMustRevalidatePrivate
             ]
             let Url = WebClass.sharedInstance.webUrl + "PostingSession/GetTutorial"
             

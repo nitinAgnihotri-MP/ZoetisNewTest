@@ -614,7 +614,7 @@ class QuestionnaireVC: BaseViewController {
     func  configureSafetyAwarenessVw(){
         removeAllBtn()
         if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-            print("Test Body")
+            print(appDelegateObj.testFuntion())
         }else{
             
             saveAsDraftBtn.isHidden = false
@@ -628,7 +628,7 @@ class QuestionnaireVC: BaseViewController {
     func  configureVaccineMixingVw(){
         removeAllBtn()
         if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-            print("Test Body")
+            print(appDelegateObj.testFuntion())
         }else{
             
             saveAsDraftBtn.isHidden = false

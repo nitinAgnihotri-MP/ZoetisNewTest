@@ -277,6 +277,64 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         print(appDelegateObj.testFuntion())
     }
     
+    fileprivate func setDayOfAgeArrData(_ cat: PENewAssessment) {
+        if cat.doa.count > 0 {
+            var idArr : [Int] = []
+            for obj in cat.doa {
+                if let data = CoreDataHandlerPE().getPEDOAData(doaId: obj),
+                   !idArr.contains(data.id ?? 0) {
+                    idArr.append(data.id ?? 0)
+                    dayOfAgeData.append(data)
+                }
+            }
+        }
+    }
+    
+    fileprivate func setAgeOfSprayDataArr(_ cat: PENewAssessment) {
+        if cat.doaS.count > 0 {
+            var idArr : [Int] = []
+            for obj in cat.doaS {
+                if let data = CoreDataHandlerPE().getPEDOAData(doaId: obj),
+                   let dataId = data.id,
+                   !idArr.contains(dataId) {
+                    idArr.append(dataId)
+                    dayOfAgeSData.append(data)
+                }
+            }
+        }
+    }
+    
+    fileprivate func SetinnovoDataArr(_ cat: PENewAssessment) {
+        if cat.inovoject.count > 0 {
+            var idArr : [Int] = []
+            for obj in cat.inovoject {
+                if let data = CoreDataHandlerPE().getPEDOAData(doaId: obj),
+                   let dataId = data.id,
+                   !idArr.contains(dataId) {
+                    idArr.append(dataId)
+                    inovojectData.append(data)
+                }
+            }
+        }
+    }
+    
+    fileprivate func setCertificateDataArr(_ cat: PENewAssessment) {
+        if cat.vMixer.count > 0 {
+            var idArr : [Int] = []
+            for obj in  cat.vMixer {
+                let data = CoreDataHandlerPE().getCertificateData(doaId: obj)
+                if idArr.contains(data!.id ?? 0){
+                    
+                }else{
+                    
+                    idArr.append(data!.id ?? 0)
+                    
+                    certificateData.append(data!)
+                }
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         self.navigationController?.navigationBar.isHidden = true
@@ -324,78 +382,15 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         }
         
         for cat in catArrayForCollectionIs{
-            if cat.doa.count > 0 {
-                var idArr : [Int] = []
-                for obj in cat.doa {
-                    if let data = CoreDataHandlerPE().getPEDOAData(doaId: obj),
-                       !idArr.contains(data.id ?? 0) {
-                        idArr.append(data.id ?? 0)
-                        dayOfAgeData.append(data)
-                    }
-                }
-                
-//                for obj in  cat.doa {
-//                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-//                    if data != nil {
-//                        if idArr.contains(data!.id ?? 0){
-//                        }else{
-//                            idArr.append(data!.id ?? 0)
-//                            dayOfAgeData.append(data!)
-//                        }
-//                    }
-//                }
-            }
+            setDayOfAgeArrData(cat)
         }
         
         for cat in catArrayForCollectionIs{
-            if cat.doaS.count > 0 {
-                var idArr : [Int] = []
-                for obj in cat.doaS {
-                    if let data = CoreDataHandlerPE().getPEDOAData(doaId: obj),
-                       let dataId = data.id,
-                       !idArr.contains(dataId) {
-                        idArr.append(dataId)
-                        dayOfAgeSData.append(data)
-                    }
-                }
-
-//                for obj in  cat.doaS {
-//                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-//                    if data != nil {
-//                        if idArr.contains(data!.id ?? 0){
-//                            
-//                        }else{
-//                            
-//                            idArr.append(data!.id ?? 0)
-//                            dayOfAgeSData.append(data!)
-//                        }
-//                    }
-//                }
-            }
+            setAgeOfSprayDataArr(cat)
         }
         
         for cat in catArrayForCollectionIs{
-            if cat.inovoject.count > 0 {
-                var idArr : [Int] = []
-                for obj in cat.inovoject {
-                    if let data = CoreDataHandlerPE().getPEDOAData(doaId: obj),
-                       let dataId = data.id,
-                       !idArr.contains(dataId) {
-                        idArr.append(dataId)
-                        inovojectData.append(data)
-                    }
-                }
-//                for obj in  cat.inovoject {
-//                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-//                    if idArr.contains(data!.id ?? 0){
-//                        
-//                    }else{
-//                        
-//                        idArr.append(data!.id ?? 0)
-//                        inovojectData.append(data!)
-//                    }
-//                }
-            }
+            SetinnovoDataArr(cat)
         }
         
         for cat in catArrayForCollectionIs {
@@ -481,8 +476,6 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                 }
             }
             
-            
-            
         }
         
         
@@ -493,20 +486,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         // DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [self] in
         certificateData.removeAll()
         for cat in catArrayForCollectionIs{
-            if cat.vMixer.count > 0 {
-                var idArr : [Int] = []
-                for obj in  cat.vMixer {
-                    let data = CoreDataHandlerPE().getCertificateData(doaId: obj)
-                    if idArr.contains(data!.id ?? 0){
-                        
-                    }else{
-                        
-                        idArr.append(data!.id ?? 0)
-                        
-                        certificateData.append(data!)
-                    }
-                }
-            }
+            setCertificateDataArr(cat)
         }
         //  }
         
@@ -3830,7 +3810,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     func setPEInovojectHeaderFooterView(_ tableView: UITableView , section:Int) -> PEInovojectHeaderFooterView {
         if selectedCategory?.sequenceNoo == 1 {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEInovojectHeaderFooterView" ) as! PEInovojectHeaderFooterView
-            headerView.lblTitle.text = "In Ovo"
+            headerView.lblTitle.text = Constants.inOvo
             headerView.txtCSize.text = peNewAssessment.iCS
             headerView.txtDType.text = peNewAssessment.iDT
             headerView.txtAntiBiotic.text = peNewAssessment.hatcheryAntibioticsText
