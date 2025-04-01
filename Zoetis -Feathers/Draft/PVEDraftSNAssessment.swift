@@ -721,6 +721,23 @@ extension PVEDraftSNAssessment {
         }
     }
     
+    fileprivate func textfieldValidation(_ evaluationForId: Int, _ cell: StartNewAssignmentCell) {
+        if (evaluationForId == 5 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0) || (evaluationForId == 0 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0) || (cell.breedOfBirdsFemaleTxtfield.text?.count == 0 ){
+            setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsFemaleBtn)
+            // }
+        }
+        if (evaluationForId == 5 && cell.breedOfBirdsFemaleOtherTxtfield.text?.count == 0 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false){
+            if cell.breedOfBirdsFemaleOtherTxtfield.text?.count == 0 {
+                setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsFemaleOtherBtn)
+            }
+        }
+        if (evaluationForId == 5 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false && cell.breedOfBirdsOtherTxtfield.text?.count == 0) || (evaluationForId == 4 && cell.breedOfBirdsOtherTxtfield.text?.count == 0 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false){
+            if cell.breedOfBirdsOtherTxtfield.text?.count == 0 {
+                setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsOtherBtn)
+            }
+        }
+    }
+    
     fileprivate func pveValidation(_ cell: StartNewAssignmentCell, _ evaluationForId: Int, _ isAllValidationOk: inout Bool) {
         if cell.customerTxtfield.text?.count == 0 {
             setBorderRedForMandatoryFiels(forBtn: cell.customerBtn)
@@ -751,20 +768,7 @@ extension PVEDraftSNAssessment {
             setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsBtn)
         }
         
-        if (evaluationForId == 5 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0) || (evaluationForId == 0 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0) || (cell.breedOfBirdsFemaleTxtfield.text?.count == 0 ){
-            setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsFemaleBtn)
-            // }
-        }
-        if (evaluationForId == 5 && cell.breedOfBirdsFemaleOtherTxtfield.text?.count == 0 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false){
-            if cell.breedOfBirdsFemaleOtherTxtfield.text?.count == 0 {
-                setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsFemaleOtherBtn)
-            }
-        }
-        if (evaluationForId == 5 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false && cell.breedOfBirdsOtherTxtfield.text?.count == 0) || (evaluationForId == 4 && cell.breedOfBirdsOtherTxtfield.text?.count == 0 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false){
-            if cell.breedOfBirdsOtherTxtfield.text?.count == 0 {
-                setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsOtherBtn)
-            }
-        }
+        textfieldValidation(evaluationForId, cell)
         showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
         isAllValidationOk = false
     }

@@ -476,40 +476,29 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
           
             if let index = self.generatePlateIndex()[key] {
                 self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].plateId = "\(self.currentRequisition.barCode)-\(index)"
-                print("your plate id in cell :\(index)  : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].plateId)")
-                if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY{
-                    cell.plateIdLabel.text = "\(self.currentRequisition.barCode)-\(index)"
-                    print("your plate id is here a: \(self.currentRequisition.barCode)-\(index)")
-                    cell.infoDetailButton.isHidden = false
-                    cell.plateIdLabel.isHidden = true
-                    saveButtonAndDraftBurronView.isHidden = true
-                    cell.infoIconImage.isHidden = true
+                cell.plateIdLabel.text = requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY ? "\(self.currentRequisition.barCode)-\(index)" : "\(index)"
+                cell.plateIdLabel.isHidden = requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY
+                cell.plateIdLabel.textAlignment = .center
+                cell.infoDetailButton.isHidden = requisitionSavedSessionType != .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY
+                saveButtonAndDraftBurronView.isHidden = true
+                cell.infoIconImage.isHidden = true
+                cell.addInfoPlate = { sender in
                     
-                    cell.addInfoPlate = { sender in
-                        
-                        let alert:UIAlertController = UIAlertController(title: "\(self.currentRequisition.barCode)-\(index)", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
-                        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
-                        alert.addAction(cancelAction)
-                        
-                        var popover:UIPopoverController?=nil
-                        popover = UIPopoverController(contentViewController: alert)
-                        popover!.present(from: sender.frame, in: cell, permittedArrowDirections: UIPopoverArrowDirection.down, animated: true)
-                        
-                    }
-                                                    
-                }else{
-                    cell.plateIdLabel.text = "\(index)"
-                    cell.plateIdLabel.textAlignment = .center
-                    cell.infoDetailButton.isHidden = true
-                    cell.plateIdLabel.isHidden = false
-                    cell.infoIconImage.isHidden = true
+                    let alert:UIAlertController = UIAlertController(title: "\(self.currentRequisition.barCode)-\(index)", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
+                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
+                    alert.addAction(cancelAction)
+                    
+                    var popover:UIPopoverController?=nil
+                    popover = UIPopoverController(contentViewController: alert)
+                    popover!.present(from: sender.frame, in: cell, permittedArrowDirections: UIPopoverArrowDirection.down, animated: true)
+                    
                 }
             }
            
             cell.sampleDescriptionTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].sampleDescription
             
-            if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
-                cell.searchBarLocation.isHidden = true
+                cell.searchBarLocation.isHidden = requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY
+                cell.searchBarLocation.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues
                 cell.locationValueTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues
                 cell.locationValueTextField.isHidden = false
                 saveButtonAndDraftBurronView.isHidden = true
@@ -517,100 +506,56 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
                 cell.noteButtonNew.isUserInteractionEnabled = false
               //  cell.isUserInteractionEnabled = false
                 cell.selectionStyle = .none
-            }
-            else {
-                cell.searchBarLocation.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues
-            }
+            
           
 //            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues.contains(stringOne) {
-                if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue == "" {
-                    cell.mediaTypeTextField.text =   self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault
-                    self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault ?? ""
-                    self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedMediaTypeId = 1
-                   
-                    }
-                    else {
-                        cell.mediaTypeTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue
-                    }
-
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue == "" {
-                cell.samplingTextField.text =   self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault
-                
-                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault ?? ""
-                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeId = 1
-                }
-                else {
-                    cell.samplingTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue
-                }
-
-            print("your section no. : \(indexPath.section - 1) and index no: \(indexPath.row) and note string : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].notes)")
- 
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues != "Other" {
-                //                cell.sampleDescriptionTextField.isEnabled = false
-                cell.sampleDescriptionButton.backgroundColor =  UIColor(red: 236/255, green: 236/255, blue: 236/255, alpha: 0.2)
-            } else {
-                //                cell.sampleDescriptionTextField.isEnabled = true
-                cell.sampleDescriptionButton.backgroundColor = .white
-            }
+            cell.mediaTypeTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue == "" ? self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault : self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue
             
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isBacterialChecked {
-                cell.bacterialCheckBoxButton.setImage(UIImage(named: "checkIcon"), for: .normal)
-            } else {
-                cell.bacterialCheckBoxButton.setImage(UIImage(named: "uncheckIcon"), for: .normal)
-            }
+            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault ?? ""
+            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedMediaTypeId = 1
+            
+            
+            cell.samplingTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue == ""  ? self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault : self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue
+            
+            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault ?? ""
+            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeId = 1
+            
+            
+            cell.sampleDescriptionButton.backgroundColor =  self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues != "Other" ? UIColor(red: 236/255, green: 236/255, blue: 236/255, alpha: 0.2) : .white
+            
+            cell.bacterialCheckBoxButton.setImage(UIImage(named: self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isBacterialChecked ? "checkIcon" : "uncheckIcon"), for: .normal)
+            
        //  cell.notesButton.setImage(UIImage(named: "PEComment"), for: .normal)
             print("note button is selected : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isSelectedNote)")
            // cell.notesButton.setImage(UIImage(named: "pe_comments"), for: .normal)
           //  DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
             if  self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].notes.count > 0 {
                     cell.noteButtonNew.setImage(UIImage(named: "PECommentSelected"), for: .normal)
-                    //checkIcon  PECommentSelected
-                 //   isSelectionStart = true
-                }
-                else{
-                  //  if isSelectionStart {
+                }else{
                     cell.noteButtonNew.contentMode = .scaleToFill
                     cell.noteButtonNew.setTitle("", for: .normal)
                    
                     cell.noteButtonNew.setImage(UIImage(named: "NewImgeComment"), for: .normal)
-                      //  cell.noteButtonNew.setImage(UIImage(named: "PEComment"), for: .normal)
-                   // }
                 }
-         //  }
-             
-           
-//
             
-//            cell.bacterialCheckBoxButton.isEnabled = !(self.currentRequisitionType == .bacterial)
-            
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isMicoscoreChecked {
-               // cell.micoscoreCheckBoxButton.setImage(UIImage(named: "checkIcon"), for: .normal)
-            } 
-            
-            if self.isSubmitButtonPressed && self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues.isEmpty {
-                cell.locationValueButton.layer.borderColor = UIColor.red.cgColor
-            } else {
-                cell.locationValueButton.layer.borderColor = defaultBorderColor
-            }
-            
+                cell.locationValueButton.layer.borderColor = self.isSubmitButtonPressed && self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues.isEmpty ? UIColor.red.cgColor : defaultBorderColor
+
+            cell.sampleDescriptionButton.layer.borderColor = defaultBorderColor
+
             if self.isSubmitButtonPressed && (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].sampleDescription == "") && (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues == "Other") {
                 cell.sampleDescriptionButton.layer.borderColor = UIColor.red.cgColor
-            } else {
-                cell.sampleDescriptionButton.layer.borderColor = defaultBorderColor
             }
             
-            cell.lineBetweenCellsView.isHidden = false
-            cell.lineBetweenCellsViewHeight.constant = 1
-            if (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated.count - 1) == indexPath.row {
-                cell.lineBetweenCellsView.isHidden = true
-                cell.lineBetweenCellsViewHeight.constant = 0
-            }
+            cell.lineBetweenCellsView.isHidden = (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated.count - 1) == indexPath.row
+            cell.lineBetweenCellsViewHeight.constant = (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated.count - 1) == indexPath.row ? 0 : 1
+            
             cell.isPlateIdGenerated = self.currentRequisition.isPlateIdGenerated
             cell.disableAllEventsAccordingToSavedSession()
             cell.disableAllEventsAccordingToPlateIdsGenerated()
             return cell
         }
     }
+    
     @objc func addInfoPopup(PlateID : String){
 
         showtoast(message: PlateID)

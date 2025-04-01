@@ -3405,6 +3405,56 @@ class CoreDataHandlerPVE: NSObject {
         }
     }
     
+    fileprivate func extractedFunc4(_ fetchRequest: NSFetchRequest<any NSFetchRequestResult>, _ forAttribute: String, _ currentIndPath: NSIndexPath, _ currentField: String, _ text: Any, _ id: Any) {
+        do {
+            let tempObj = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            if tempObj!.count > 0 { // Atleast one was returned
+                let dataArray = tempObj! as NSArray
+                let catchersArr = (dataArray[0] as AnyObject).value(forKey: forAttribute) as? [[String: Any]]
+                
+                var tempArr = [[String : Any]]()
+                
+                for (indx, obj) in catchersArr!.enumerated() {
+                    
+                    let dict = obj as [String: Any]
+                    if (indx == currentIndPath.row) {
+                        extractedFunc3(currentField, &tempArr, text, id, dict)
+                        extractedFunc2(currentField, text, &tempArr, dict, id)
+                        extractedFunc1(currentField, &tempArr, dict, text, id)
+                        extractedFunc(currentField, &tempArr, dict, text, id)
+                        
+                    }else{
+                        tempArr.append(["man" : dict["man"]!,
+                                        "man_id" : dict["man_id"]!,
+                                        "name" : dict["name"]!,
+                                        "name_id" : dict["name_id"]!,
+                                        "serotype" : dict["serotype"]!,
+                                        "serotype_id" : dict["serotype_id"]!,
+                                        "serial" : dict["serial"]!,
+                                        "expDate" : dict["expDate"]!,
+                                        "siteOfInj" : dict["siteOfInj"]!,
+                                        "siteOfInj_id" : dict["siteOfInj_id"]!,
+                                        "note" : dict["note"]!,
+                                        "otherAntigen" : dict["otherAntigen"]!,
+                                        "vaccine_id" : dict["vaccine_id"]!,
+                                        "showMore" : dict["showMore"]!])
+                    }
+                }
+                
+                tempObj![0].setValue(tempArr, forKey: forAttribute)
+            }
+            
+            do {
+                try managedContext.save()
+            }
+            catch {
+                //   print("Saving Core Data Failed: \(error)")
+            }
+        } catch {
+            //   print("Fetch Failed: \(error)")
+        }
+    }
+    
     func updateVacInfoArrFor(_ syncId: String, currentField:String, currentIndPath: NSIndexPath, text: Any, id: Any, forAttribute:String, entityName:String) {
         
         let currentUserId =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
@@ -3416,60 +3466,12 @@ class CoreDataHandlerPVE: NSObject {
             let complexNameStr = complexNameArr[0] as! String
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             fetchRequest.returnsObjectsAsFaults = false
-            if syncId.count > 0{
+            if syncId.count > 0 {
                 fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
-                
-            }else{
+            } else {
                 fetchRequest.predicate = NSPredicate(format: predicateStr, argumentArray: [currentUserId, customerStr, complexNameStr])
             }
-            do {
-                let tempObj = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                if tempObj!.count > 0 { // Atleast one was returned
-                    let dataArray = tempObj! as NSArray
-                    let catchersArr = (dataArray[0] as AnyObject).value(forKey: forAttribute) as? [[String: Any]]
-                    
-                    var tempArr = [[String : Any]]()
-                    
-                    for (indx, obj) in catchersArr!.enumerated() {
-                        
-                        let dict = obj as [String: Any]
-                        if (indx == currentIndPath.row) {
-                            extractedFunc3(currentField, &tempArr, text, id, dict)
-                            extractedFunc2(currentField, text, &tempArr, dict, id)
-                            extractedFunc1(currentField, &tempArr, dict, text, id)
-                            extractedFunc(currentField, &tempArr, dict, text, id)
-                            
-                        }else{
-                            tempArr.append(["man" : dict["man"]!,
-                                            "man_id" : dict["man_id"]!,
-                                            "name" : dict["name"]!,
-                                            "name_id" : dict["name_id"]!,
-                                            "serotype" : dict["serotype"]!,
-                                            "serotype_id" : dict["serotype_id"]!,
-                                            "serial" : dict["serial"]!,
-                                            "expDate" : dict["expDate"]!,
-                                            "siteOfInj" : dict["siteOfInj"]!,
-                                            "siteOfInj_id" : dict["siteOfInj_id"]!,
-                                            "note" : dict["note"]!,
-                                            "otherAntigen" : dict["otherAntigen"]!,
-                                            "vaccine_id" : dict["vaccine_id"]!,
-                                            "showMore" : dict["showMore"]!])
-                        }
-                    }
-                    
-                    tempObj![0].setValue(tempArr, forKey: forAttribute)
-                }
-                
-                do {
-                    try managedContext.save()
-                }
-                catch {
-                    //   print("Saving Core Data Failed: \(error)")
-                }
-            } catch {
-                //   print("Fetch Failed: \(error)")
-            }
-            
+            extractedFunc4(fetchRequest, forAttribute, currentIndPath, currentField, text, id)
         }
     }
     
@@ -3550,8 +3552,8 @@ class CoreDataHandlerPVE: NSObject {
             let predicateArr = syncId.count > 0 ? [syncId] : [currentUserId, customerStr, complexNameStr]
             fetchRequest.predicate = NSPredicate(format: predicateStr1, argumentArray: predicateArr)
             
-            do {
-                let tempObj = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+//            do {
+                let tempObj = try? managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 if tempObj!.count > 0 { // Atleast one was returned
                     let dataArray = tempObj! as NSArray
                     let catchersArr = (dataArray[0] as AnyObject).value(forKey: forAttribute) as? [[String: String]]
@@ -3580,16 +3582,10 @@ class CoreDataHandlerPVE: NSObject {
                     tempObj![0].setValue(catchersDetailArr, forKey: forAttribute)
                 }
                 
-                do {
-                    try managedContext.save()
-                }
-                catch {
-                    //   print("Saving Core Data Failed: \(error)")
-                }
-            } catch {
-                //   print("Fetch Failed: \(error)")
-            }
-            
+//                do {
+                try? managedContext.save()
+//                }
+//            }
         }
     }
     
@@ -3610,16 +3606,9 @@ class CoreDataHandlerPVE: NSObject {
             let predicateStr1 = syncId.count > 0 ? predicateSync : predicateStr
             let predicateArr = syncId.count > 0 ? [syncId] : [currentUserId, customerStr, complexNameStr]
             fetchRequest.predicate = NSPredicate(format: predicateStr1, argumentArray: predicateArr)
-
-//            if syncId.count > 0{
-//                fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
-//                
-//            }else{
-//                fetchRequest.predicate = NSPredicate(format: predicateStr, argumentArray: [currentUserId, customerStr, complexNameStr])
-//                
-//            }
-            do {
-                let tempObj = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            
+//            do {
+                let tempObj = try? managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 if tempObj!.count > 0 { // Atleast one was returned
                     let dataArray = tempObj! as NSArray
                     let catchersArr = (dataArray[0] as AnyObject).value(forKey: forAttribute) as? [[String: String]]
@@ -3648,15 +3637,8 @@ class CoreDataHandlerPVE: NSObject {
                     tempObj![0].setValue(catchersDetailArr, forKey: forAttribute)
                 }
                 
-                do {
-                    try managedContext.save()
-                }
-                catch {
-                }
-            } catch {
-                //   print("Fetch Failed: \(error)")
-            }
-            
+                try? managedContext.save()
+//            }
         }
     }
     

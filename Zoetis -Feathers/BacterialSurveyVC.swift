@@ -717,13 +717,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
         self.globalBarcode = cell.barcodeTxt.text ?? ""
     }
     
-    fileprivate func cellForRowElseCondition(_ cell: BacterialCaseInfoCell) {
-        if !self.globalBarcode.isEmpty {
-            cell.barcodeTxt.text = self.globalBarcode
-        } else {
-            extractedFunc(cell)
-        }
-        
+    fileprivate func extractedFunc2(_ cell: BacterialCaseInfoCell) {
         if isPlusBtnClicked {
             cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
             
@@ -742,6 +736,16 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
                 cell.buttonForCornerRadius.layer.borderColor = UIColor.red.cgColor
             }
         }
+    }
+    
+    fileprivate func cellForRowElseCondition(_ cell: BacterialCaseInfoCell) {
+        if !self.globalBarcode.isEmpty {
+            cell.barcodeTxt.text = self.globalBarcode
+        } else {
+            extractedFunc(cell)
+        }
+        
+        extractedFunc2(cell)
         
         let firstName = UserDefaults.standard.value(forKey: "FirstName") as! String
         self.loggedInUser.text = firstName

@@ -327,7 +327,6 @@
 		214E0AED242E0476005F8653 /* PVESessionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 214E0AE8242E0472005F8653 /* PVESessionHeader.xib */; };
 		214E0AEE242E0476005F8653 /* PVESessionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214E0AE9242E0475005F8653 /* PVESessionHeader.swift */; };
 		214E0AF7242E04BC005F8653 /* PVEDraftHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 214E0AF0242E04A6005F8653 /* PVEDraftHeader.xib */; };
-		214E0AF8242E04BC005F8653 /* PVEDraftSNAFinalizeAssement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214E0AF1242E04AB005F8653 /* PVEDraftSNAFinalizeAssement.swift */; };
 		214E0AF9242E04BC005F8653 /* PVE_DraftCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214E0AF2242E04AE005F8653 /* PVE_DraftCell.swift */; };
 		214E0AFA242E04BC005F8653 /* PVEDraftSNAssessment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214E0AF3242E04B2005F8653 /* PVEDraftSNAssessment.swift */; };
 		214E0AFB242E04BC005F8653 /* PVE_DraftCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 214E0AF4242E04B5005F8653 /* PVE_DraftCell.xib */; };
@@ -343,6 +342,7 @@
 		21EA29E42434DD6D002720C9 /* PVE_SyncAssessmentCategoriesDetails+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA29E22434DD6D002720C9 /* PVE_SyncAssessmentCategoriesDetails+CoreDataProperties.swift */; };
 		21EA29E72434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA29E52434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataClass.swift */; };
 		21EA29E82434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA29E62434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataProperties.swift */; };
+		25B15F9A2D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B15F992D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift */; };
 		27276A791D5C867800C134BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276A781D5C867800C134BA /* AppDelegate.swift */; };
 		27276A861D5C867800C134BA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27276A841D5C867800C134BA /* LaunchScreen.storyboard */; };
 		27276A911D5C867900C134BA /* Zoetis__FeathersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276A901D5C867900C134BA /* Zoetis__FeathersTests.swift */; };
@@ -1237,7 +1237,6 @@
 		214E0AE8242E0472005F8653 /* PVESessionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PVESessionHeader.xib; sourceTree = "<group>"; };
 		214E0AE9242E0475005F8653 /* PVESessionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PVESessionHeader.swift; sourceTree = "<group>"; };
 		214E0AF0242E04A6005F8653 /* PVEDraftHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PVEDraftHeader.xib; sourceTree = "<group>"; };
-		214E0AF1242E04AB005F8653 /* PVEDraftSNAFinalizeAssement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PVEDraftSNAFinalizeAssement.swift; sourceTree = "<group>"; };
 		214E0AF2242E04AE005F8653 /* PVE_DraftCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PVE_DraftCell.swift; sourceTree = "<group>"; };
 		214E0AF3242E04B2005F8653 /* PVEDraftSNAssessment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PVEDraftSNAssessment.swift; sourceTree = "<group>"; };
 		214E0AF4242E04B5005F8653 /* PVE_DraftCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PVE_DraftCell.xib; sourceTree = "<group>"; };
@@ -1253,6 +1252,7 @@
 		21EA29E22434DD6D002720C9 /* PVE_SyncAssessmentCategoriesDetails+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PVE_SyncAssessmentCategoriesDetails+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		21EA29E52434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PVE_SyncAssessmentQuestion+CoreDataClass.swift"; sourceTree = "<group>"; };
 		21EA29E62434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PVE_SyncAssessmentQuestion+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		25B15F992D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PVEDraftSNAFinalizeAssement.swift; sourceTree = "<group>"; };
 		2710EC831D92847100732812 /* ReachabilitySwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReachabilitySwift.framework; path = "../../Library/Developer/Xcode/DerivedData/Zoetis_-Feathers-hciltnkizjyghrbxxeagaaejwgni/Build/Products/Debug-iphonesimulator/ReachabilitySwift/ReachabilitySwift.framework"; sourceTree = "<group>"; };
 		27276A751D5C867800C134BA /* PoultryView 360.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PoultryView 360.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27276A781D5C867800C134BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -2374,7 +2374,7 @@
 				214E0AF4242E04B5005F8653 /* PVE_DraftCell.xib */,
 				214E0AF5242E04B8005F8653 /* PVEDraftHeader.swift */,
 				214E0AF0242E04A6005F8653 /* PVEDraftHeader.xib */,
-				214E0AF1242E04AB005F8653 /* PVEDraftSNAFinalizeAssement.swift */,
+				25B15F992D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift */,
 				214E0AF3242E04B2005F8653 /* PVEDraftSNAssessment.swift */,
 				214E0AF6242E04BB005F8653 /* PVEDraftViewController.swift */,
 			);
@@ -4588,7 +4588,6 @@
 				00CEAB1224C70553002E9E2C /* SubmittedCertificationsService.swift in Sources */,
 				214E0AC3242E038F005F8653 /* PVE_VaccineManDetails+CoreDataClass.swift in Sources */,
 				B729605824A7C5BC003237C7 /* PostingSessionTurkey+CoreDataProperties.swift in Sources */,
-				214E0AF8242E04BC005F8653 /* PVEDraftSNAFinalizeAssement.swift in Sources */,
 				B729608124A7C5BC003237C7 /* CocciProgramPostingTurkey+CoreDataProperties.swift in Sources */,
 				7889E23C242E265800CA5139 /* ViewRequisitionVC.swift in Sources */,
 				214E0AFA242E04BC005F8653 /* PVEDraftSNAssessment.swift in Sources */,
@@ -4874,6 +4873,7 @@
 				B729610924A7C5BC003237C7 /* PdfReader1ViewController.swift in Sources */,
 				B72960F124A7C5BC003237C7 /* BirdPhotoCapture+CoreDataProperties.swift in Sources */,
 				B72960A724A7C5BC003237C7 /* ImageViewTurkeyController.swift in Sources */,
+				25B15F9A2D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift in Sources */,
 				B72960EE24A7C5BC003237C7 /* BirdPhotoCapture+CoreDataClass.swift in Sources */,
 				B729604524A7C5BC003237C7 /* UnlinkedNecropsyControllerCell.swift in Sources */,
 				214E0AE2242E03E7005F8653 /* PVESiteInjctsDetailsResponse.swift in Sources */,
@@ -5542,12 +5542,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Zoetis -Feathers/UAT-PV360Debug.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1.0;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 776FM8RFF2;
+				DEVELOPMENT_TEAM = 6KQJ7MAVSK;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "";
 				FILE_SHARING_ENABLED = YES;
@@ -5568,11 +5566,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 7.6.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mp.PV360;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mp.PV360.test;
 				PRODUCT_NAME = "PoultryView 360";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PV360;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Zoetis-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
@@ -5588,12 +5585,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Zoetis -Feathers/UAT-PV360.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1.0;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 776FM8RFF2;
+				DEVELOPMENT_TEAM = 6KQJ7MAVSK;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "";
 				FILE_SHARING_ENABLED = NO;
@@ -5614,11 +5609,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 7.6.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mp.PV360;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mp.PV360.test;
 				PRODUCT_NAME = "PoultryView 360";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PV360;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Zoetis-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;

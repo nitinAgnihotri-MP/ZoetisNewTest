@@ -1897,21 +1897,7 @@ class CoreDataHandlerPE: NSObject {
     }
     
     
-    func getDraftAssessmentArrayPEObject(ofCurrentAssessment:Bool?=false,ofCurrentDate:Bool?=false) -> [PENewAssessment] {
-        var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-        
-        fetchRequest.predicate = NSPredicate(format: userIdStr, userID)
-        if ofCurrentDate ?? false {
-            let onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-            fetchRequest.predicate = NSPredicate(format: " userID == %d AND evaluationDate == %@", userID,onGoingPeNewAssessment.evaluationDate ?? "")
-        }
-        
+    fileprivate func extractedFunc2(_ ofCurrentAssessment: Bool?, _ fetchRequest: NSFetchRequest<any NSFetchRequestResult>, _ userID: Int, _ ofCurrentDate: Bool?) -> NSFetchRequest<NSFetchRequestResult> {
         if ofCurrentAssessment ?? false {
             let onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
             fetchRequest.predicate = NSPredicate(format: userIdStr,userID)
@@ -1921,12 +1907,32 @@ class CoreDataHandlerPE: NSObject {
             }
         }
         
+        return fetchRequest
+    }
+    
+    func getDraftAssessmentArrayPEObject(ofCurrentAssessment:Bool?=false,ofCurrentDate:Bool?=false) -> [PENewAssessment] {
+        var peNewAssessmentArray : [PENewAssessment] = []
+//        var dataArray = NSArray()
+//        var userIDArray = NSArray()
+        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
+        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        
+        fetchRequest.predicate = NSPredicate(format: userIdStr, userID)
+        if ofCurrentDate ?? false {
+            let onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+            fetchRequest.predicate = NSPredicate(format: " userID == %d AND evaluationDate == %@", userID,onGoingPeNewAssessment.evaluationDate ?? "")
+        }
+        
+        fetchRequest = extractedFunc2(ofCurrentAssessment, fetchRequest, userID, ofCurrentDate)
+        
         fetchRequest.returnsObjectsAsFaults = false
         
         if let results = try? managedContext.fetch(fetchRequest) as? [NSManagedObject] {
             for result in results {
-                var peNewAssessment = PENewAssessment()
-                dataArray = results as NSArray
+                let peNewAssessment = PENewAssessment()
+//                dataArray = results as NSArray
                 peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
                 peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                 peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
@@ -1946,14 +1952,14 @@ class CoreDataHandlerPE: NSObject {
                 peNewAssessment.notes = result.value(forKey: "notes")  as? String ?? ""
                 peNewAssessment.refrigeratorNote = result.value(forKey: "refrigeratorNote") as? String ?? ""
                 let hatcheryAntibiotics =  result.value(forKey: "hatcheryAntibiotics")   as? Int
-                hatcheryAntibiotics == 1 ? 1 : 0
-                peNewAssessment.hatcheryAntibiotics = hatcheryAntibiotics
+                peNewAssessment.hatcheryAntibiotics = hatcheryAntibiotics == 1 ? 1 : 0
+                
                 let camera =  result.value(forKey: "camera")  as? Int
-                camera == 1 ? 1 : 0
-                peNewAssessment.camera = camera
+                peNewAssessment.camera = camera == 1 ? 1 : 0
+                
                 let isFlopSelected =  result.value(forKey: "isFlopSelected")  as? Int
-                isFlopSelected == 1 ? 1 : 0
-                peNewAssessment.isFlopSelected = isFlopSelected
+                peNewAssessment.isFlopSelected = isFlopSelected == 1 ? 1 : 0
+                
                 peNewAssessment.catID = result.value(forKey: "catID")  as? Int ?? 0
                 peNewAssessment.cID = result.value(forKey: "cID")  as? Int ?? 0
                 peNewAssessment.catName = result.value(forKey: "catName")  as? String ?? ""
@@ -5797,6 +5803,17 @@ extension CoreDataHandlerPE {
     
     
     
+    fileprivate func getStatusType(_ newAssessment: PENewAssessment, _ assessmentObj: NSManagedObject) -> Int {
+        if newAssessment.isEMRejected == true && newAssessment.isPERejected == true {
+            return 2
+        } else if newAssessment.isEMRejected == true && newAssessment.isPERejected == false {
+            return 2
+        } else if newAssessment.isEMRejected == false && newAssessment.isPERejected == true {
+            return 2
+        } else {
+            return 0
+        }
+    }
     
     fileprivate func extractedFunc(_ newAssessmentArray: [PENewAssessment], _ formate: inout String, _ isfromDraft: Bool?, _ isfromRejected: Bool?, _ draftNumber: Int) {
         for newAssessment in newAssessmentArray {
@@ -5812,7 +5829,6 @@ extension CoreDataHandlerPE {
             formate = formate.replacingOccurrences(of:"PM", with: "")
             formate = formate.replacingOccurrences(of:"AM", with: "")
             
-            print(formate)
             assessmentObj.setValue(0, forKey: "asyncStatus")
             if isfromDraft ?? false {
                 assessmentObj.setValue(newAssessment.draftID, forKey: "draftID")
@@ -5853,17 +5869,10 @@ extension CoreDataHandlerPE {
             
             assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
             if isfromRejected == true {
-                assessmentObj.setValue(0, forKey: "statusType")
-                
-                if newAssessment.isEMRejected == true && newAssessment.isPERejected == true {
-                    assessmentObj.setValue(2, forKey: "statusType")
-                } else if newAssessment.isEMRejected == true && newAssessment.isPERejected == false {
-                    assessmentObj.setValue(2, forKey: "statusType")
-                } else if newAssessment.isEMRejected == false && newAssessment.isPERejected == true {
-                    assessmentObj.setValue(2, forKey: "statusType")
-                }
+                let statusType = getStatusType(newAssessment, assessmentObj)
+                assessmentObj.setValue(statusType, forKey: "statusType")
             }
-            //
+            
             let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
             let camera = newAssessment.camera == 1 ? 1 : 0
             let flock = newAssessment.isFlopSelected == 1 ? 1:0
@@ -5950,17 +5959,12 @@ extension CoreDataHandlerPE {
             assessmentObj.setValue(newAssessment.clorineId, forKey: "clorineId")
             assessmentObj.setValue(newAssessment.IsEMRequested, forKey: "isEMRequested")
             
-            
             assessmentObj.setValue(newAssessment.isPERejected, forKey: "isPERejected")
             assessmentObj.setValue(newAssessment.emRejectedComment, forKey: "emRejectedComment")
             assessmentObj.setValue(newAssessment.isEMRejected, forKey: "isEMRejected")
             
+            try? managedContext.save()
             
-            
-            do {
-                try managedContext.save()
-            } catch {
-            }
             customerData.append(assessmentObj)
         }
     }
@@ -6148,16 +6152,16 @@ extension CoreDataHandlerPE {
             let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInOffline", in: managedContext)
             let assessmentObj = NSManagedObject(entity: entity!, insertInto: managedContext)
             
+            assessmentObj.setValue(0, forKey: "asyncStatus")
             if newAssessment.isPERejected == false && newAssessment.isEMRejected == true {
                 assessmentObj.setValue(1, forKey: "asyncStatus")
-            } else {
-                assessmentObj.setValue(0, forKey: "asyncStatus")
             }
             
             if fromDraft ?? false {
                 formate = newAssessment.draftID ?? dd
                 newAssessment.isEMRejected = false
             }
+            
             let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
             assessmentObj.setValue(currentServerAssessmentId, forKey: "serverAssessmentId")
             assessmentObj.setValue(formate, forKey: "dataToSubmitID")
@@ -6294,11 +6298,8 @@ extension CoreDataHandlerPE {
             assessmentObj.setValue(newAssessment.emRejectedComment, forKey: "emRejectedComment")
             assessmentObj.setValue(newAssessment.isEMRejected, forKey: "isEMRejected")
             
-            do {
-                try managedContext.save()
-                
-            } catch {
-            }
+            try? managedContext.save()
+
             customerData.append(assessmentObj)
             if fromDraft ?? false {
                 self.deleteDraftByDrafyNumber(String(newAssessment.draftID ?? ""))

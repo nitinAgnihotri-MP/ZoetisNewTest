@@ -54,17 +54,13 @@ class PVEVaccineInfoTypeCell: UITableViewCell {
     
     func refreshFreeSerologyBtnState() {
         var isFreeSerology = Bool()
-        if timeStampStr.count > 0{
+        if timeStampStr.count > 0 {
             isFreeSerology = getDraftValueForKey(key: "isFreeSerology") as! Bool
-        }else{
+        } else {
             isFreeSerology = sharedManager.getSessionValueForKeyFromDB(key: "isFreeSerology") as! Bool
         }
         
-        if isFreeSerology == false{
-            serologySelUnSelectImg.image = UIImage(named: "uncheckIconPE")
-        }else{
-            serologySelUnSelectImg.image = UIImage(named: "checkIconPE")
-        }
+        serologySelUnSelectImg.image = isFreeSerology == false ? UIImage(named: "uncheckIconPE") : UIImage(named: "checkIconPE")
     }
     
     func getDraftValueForKey(key:String) -> Any{
@@ -80,14 +76,8 @@ class PVEVaccineInfoTypeCell: UITableViewCell {
         }else{
             selectedVaccineInfoType = sharedManager.getSessionValueForKeyFromDB(key: "cat_selectedVaccineInfoType") as! String
         }
-        
-        if selectedVaccineInfoType == "contract"{
-            contractImg.image = UIImage(named: "radioActive")
-            companyImg.image = UIImage(named: "radioInactive")
-        }else{
-            contractImg.image = UIImage(named: "radioInactive")
-            companyImg.image = UIImage(named: "radioActive")
-        }
+        contractImg.image = selectedVaccineInfoType == "contract" ? UIImage(named: "radioActive") : UIImage(named: "radioInactive")
+        companyImg.image = selectedVaccineInfoType == "contract" ? UIImage(named: "radioInactive") : UIImage(named: "radioActive")
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
