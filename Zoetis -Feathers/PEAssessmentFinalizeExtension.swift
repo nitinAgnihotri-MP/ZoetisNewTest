@@ -1297,7 +1297,7 @@
 //    func setPEInovojectHeaderFooterView(_ tableView: UITableView , section:Int) -> PEInovojectHeaderFooterView {
 //        if selectedCategory?.sequenceNo == 1 {
 //            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEInovojectHeaderFooterView" ) as! PEInovojectHeaderFooterView
-//            headerView.lblTitle.text = Constants.inOvo
+//            headerView.lblTitle.text = "In Ovo"
 //            headerView.txtCSize.text = peNewAssessment.iCS
 //            headerView.txtDType.text = peNewAssessment.iDT
 //            headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn1)
@@ -3174,7 +3174,7 @@
 //    func setPEInovojectHeaderFooterView(_ tableView: UITableView , section:Int) -> PEInovojectHeaderFooterView {
 //        if selectedCategory?.sequenceNo == 1 {
 //            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEInovojectHeaderFooterView" ) as! PEInovojectHeaderFooterView
-//            headerView.lblTitle.text = Constants.inOvo
+//            headerView.lblTitle.text = "In Ovo"
 //            headerView.txtCSize.text = peNewAssessment.iCS
 //            headerView.txtDType.text = peNewAssessment.iDT
 //            headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn1)

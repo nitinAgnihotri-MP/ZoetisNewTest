@@ -377,7 +377,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.loginLoaderMessage)
             let Url = "Token"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
-            let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded","Accept": Constants.applicationJson]
+            let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded","Accept": "application/json"]
             let parameters:[String:String] = ["grant_type": "password","UserName" : CryptoHelper.encrypt(input:Email), "Password" : "" , "LoginType": "App","DeviceId":udid as! String,"ChkEnvironment":WebClass.sharedInstance.ChkEnvironmentLive , "GUID":GUID , "GUIDSignature":GUIDSignature, "SignatureTimestamp":SignatureTimestamp , "AppVersion": "\(Bundle.main.versionNumber)" , "TokenVersion":"V2"]
             
             sessionManager.request(urlString, method: .post,parameters: parameters, headers: headers).responseJSON { response in
@@ -447,7 +447,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     
                     if (dict.value(forKey: "error") as? String) ?? ""  == "invalid_grant"{
                         self.ssologoutMethod()
-                        let errorMSg = dict[Constants.errorDescStr]
+                        let errorMSg = dict["error_description"]
                         let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
                         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                             UIAlertAction in
@@ -461,7 +461,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     }
                     if statusCode == 401{
                         self.ssologoutMethod()
-                        let errorMSg = dict[Constants.errorDescStr]
+                        let errorMSg = dict["error_description"]
                         let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
                         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                             UIAlertAction in
@@ -2082,7 +2082,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let url = "PostingSession/T_GetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
                                                         //(UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict: HTTPHeaders = [Constants.authorisationStr: accestoken]
+            let headerDict: HTTPHeaders = ["Authorization": accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
                 let statusCode =  response.response?.statusCode
@@ -2260,7 +2260,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             id = UserDefaults.standard.value(forKey: "Id") as! Int
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
            // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict: HTTPHeaders = [Constants.authorisationStr:accestoken]
+            let headerDict: HTTPHeaders = ["Authorization":accestoken]
             let dev = "iOS"
             let url = "PostingSession/T_GetFeedListByUser?UserId=\(id)&DeviceType=\(dev)"
             let urlString: String = WebClass.sharedInstance.webUrl + url
@@ -2477,7 +2477,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let dev = "iOS"
             let url = "PostingSession/T_GetBirdNotesListByUser?UserId=\(id)&DeviceType=\(dev)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-            let headerDict: HTTPHeaders = [Constants.authorisationStr: accestoken]
+            let headerDict: HTTPHeaders = ["Authorization": accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url
             
             let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedNotes.latestUrl + "\(id)&DeviceType=\(Constants.deviceType)"

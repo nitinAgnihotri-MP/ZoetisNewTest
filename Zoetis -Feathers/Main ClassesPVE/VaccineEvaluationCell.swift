@@ -88,6 +88,118 @@ class VaccineEvaluationCell: UITableViewCell {
     }
     //--------------------------------------------------------------
     
+    fileprivate func extractedFunc(_ injCenter_LeftWing: Int, _ injWingBand_LeftWing: Int, _ injMuscleHit_LeftWing: Int, _ injMissed_LeftWing: Int) {
+        //------------------------------------------------------------
+        
+        //----Getting Total of #Inj left Wing Web & percent calculations
+        
+        let totalOfLeftWingWeb : Int = injCenter_LeftWing + injWingBand_LeftWing + injMuscleHit_LeftWing + injMissed_LeftWing
+        subQLeftTotal.text = "\(totalOfLeftWingWeb)"
+        
+        if injCenter_LeftWing != 0 && totalOfLeftWingWeb != 0{
+            injCenter_LeftWing_Percent.text = getPercentOForLeftRightWingWeb(value: injCenter_LeftWing, total: totalOfLeftWingWeb)
+        }
+        if injWingBand_LeftWing != 0 && totalOfLeftWingWeb != 0{
+            injWingBand_LeftWing_Percent.text = getPercentOForLeftRightWingWeb(value: injWingBand_LeftWing, total: totalOfLeftWingWeb)
+        }
+        if injMuscleHit_LeftWing != 0 && totalOfLeftWingWeb != 0{
+            injMuscleHit_LeftWing_Percent.text = getPercentOForLeftRightWingWeb(value: injMuscleHit_LeftWing, total: totalOfLeftWingWeb)
+        }
+        if injMissed_LeftWing != 0 && totalOfLeftWingWeb != 0{
+            injMissed_LeftWing_Percent.text = getPercentOForLeftRightWingWeb(value: injMissed_LeftWing, total: totalOfLeftWingWeb)
+        }
+    }
+    
+    fileprivate func extractedFunc1(_ totalOfRightWingWeb: Int, _ injCenter_RightWing: Int, _ injWingBand_RightWing: Int, _ injMuscleHit_RightWing: Int, _ injMissed_RightWing: Int) {
+        subQRightTotal.text = "\(totalOfRightWingWeb)"
+        
+        if injCenter_RightWing != 0 && totalOfRightWingWeb != 0{
+            injCenter_RightWing_Percent.text = getPercentOForLeftRightWingWeb(value: injCenter_RightWing, total: totalOfRightWingWeb)
+        }
+        if injWingBand_RightWing != 0 && totalOfRightWingWeb != 0{
+            injWingBand_RightWing_Percent.text = getPercentOForLeftRightWingWeb(value: injWingBand_RightWing, total: totalOfRightWingWeb)
+        }
+        if injMuscleHit_RightWing != 0 && totalOfRightWingWeb != 0{
+            injMuscleHit_RightWing_Percent.text = getPercentOForLeftRightWingWeb(value: injMuscleHit_RightWing, total: totalOfRightWingWeb)
+        }
+        if injMissed_RightWing != 0 && totalOfRightWingWeb != 0{
+            injMissed_RightWing_Percent.text = getPercentOForLeftRightWingWeb(value: injMissed_RightWing, total: totalOfRightWingWeb)
+        }
+    }
+    
+    fileprivate func extractedFunc2() {
+        if centerTotalLbl.text == "0"{
+            centerTotalLbl.text = ""
+        }
+        if wingBandTotalLbl.text == "0"{
+            wingBandTotalLbl.text = ""
+        }
+        if muscleHitTotalLbl.text == "0"{
+            muscleHitTotalLbl.text = ""
+        }
+        if missedTotalLbl.text == "0"{
+            missedTotalLbl.text = ""
+        }
+    }
+    
+    fileprivate func extractedFunc3(_ choleraVacScore: Double, _ inactivatedVacScore: Double) {
+        // ----------------------------
+        
+        //----- Get Vaccine Evaluation Final Score -------
+        
+        let vacEvalFinalScore : Double = choleraVacScore * 10 + inactivatedVacScore * 20
+        sharedManager.vaccineEvaluationScoreTotal = vacEvalFinalScore
+        //----------------------
+        resetFields()
+        
+        if timeStampStr.count > 0{
+            saveOtherValuesForServerForDraft()
+        }else{
+            saveOtherValuesForServer()
+        }
+    }
+    
+    fileprivate func extractedFunc4(_ injMuscleHit_IntramusculerInj: Int, _ totalOfIntramusculerInj: Int, _ injMissed_IntramusculerInj: Int, _ injMuscleHit_SubcutaneousInj: Int, _ totalOfSubcutaneousInj: Int, _ injMissed_SubcutaneousInj: Int) {
+        if injMuscleHit_IntramusculerInj != 0 && totalOfIntramusculerInj != 0{
+            injMuscleHit_IntramusculerInj_Percent.text = getPercentOForLeftRightWingWeb(value: injMuscleHit_IntramusculerInj, total: totalOfIntramusculerInj)
+        }
+        if injMissed_IntramusculerInj != 0 && totalOfIntramusculerInj != 0{
+            injMissed_IntramusculerInj_Percent.text = getPercentOForLeftRightWingWeb(value: injMissed_IntramusculerInj, total: totalOfIntramusculerInj)
+        }
+        if injMuscleHit_SubcutaneousInj != 0 && totalOfSubcutaneousInj != 0{
+            injMuscleHit_SubcutaneousInj_Percent.text = getPercentOForLeftRightWingWeb(value: injMuscleHit_SubcutaneousInj, total: totalOfSubcutaneousInj)
+        }
+        if injMissed_SubcutaneousInj != 0 && totalOfSubcutaneousInj != 0{
+            injMissed_SubcutaneousInj_Percent.text = getPercentOForLeftRightWingWeb(value: injMissed_SubcutaneousInj, total: totalOfSubcutaneousInj)
+        }
+    }
+    
+    fileprivate func extractedFunc5(_ injCenter_LeftWing: Int, _ leftRightInjTotal: Int, _ injCenter_RightWing: Int, _ injWingBand_LeftWing: Int, _ injWingBand_RightWing: Int, _ injMuscleHit_LeftWing: Int, _ injMuscleHit_RightWing: Int, _ injMissed_LeftWing: Int, _ injMissed_RightWing: Int) {
+        if (injCenter_LeftWing != 0 && leftRightInjTotal != 0) || (injCenter_RightWing != 0 && leftRightInjTotal != 0){
+            injCenter_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injCenter_LeftWing, RightValue: injCenter_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
+        }
+        if (injWingBand_LeftWing != 0 && leftRightInjTotal != 0) || (injWingBand_RightWing != 0 && leftRightInjTotal != 0){
+            injWingBand_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injWingBand_LeftWing, RightValue: injWingBand_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
+        }
+        if (injMuscleHit_LeftWing != 0 && leftRightInjTotal != 0) || (injMuscleHit_RightWing != 0 && leftRightInjTotal != 0){
+            injMuscleHit_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injMuscleHit_LeftWing, RightValue: injMuscleHit_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
+        }
+        if (injMissed_LeftWing != 0 && leftRightInjTotal != 0) || (injMissed_RightWing != 0 && leftRightInjTotal != 0){
+            injMissed_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injMissed_LeftWing, RightValue: injMissed_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
+        }
+    }
+    
+    fileprivate func extractedFunc6(_ totalForMuscleMIssed: Int, _ injMuscleHit_IntramusculerInj: Int, _ injMuscleHit_SubcutaneousInj: Int, _ totalForMuscleHitInj: Int, _ injMissed_IntramusculerInj: Int, _ injMissed_SubcutaneousInj: Int, _ totalForMissedInj: Int) {
+        injTotal_For_Inactivated.text = "\(totalForMuscleMIssed)"
+        
+        if injMuscleHit_IntramusculerInj + injMuscleHit_SubcutaneousInj != 0 && totalForMuscleMIssed != 0{
+            injMuscleHit_Percent.text = getPercentOForLeftRightWingWeb(value: totalForMuscleHitInj, total: totalForMuscleMIssed)
+        }
+        if injMissed_IntramusculerInj + injMissed_SubcutaneousInj != 0 && totalForMuscleMIssed != 0{
+            injMissed_Percent.text = getPercentOForLeftRightWingWeb(value: totalForMissedInj, total: totalForMuscleMIssed)
+        }
+    }
+    
     func refreshVacEvalFields(){
         
         var injCenter_LeftWing = Int()
@@ -111,7 +223,7 @@ class VaccineEvaluationCell: UITableViewCell {
             injMuscleHit_RightWing = getDraftValueForKey(key: "injMuscleHit_RightWing_Field") as! Int
             injMissed_RightWing = getDraftValueForKey(key: "injMissed_RightWing_Field") as! Int
             
-        }else{
+        } else {
             injCenter_LeftWing = sharedManager.getSessionValueForKeyFromDB(key: "injCenter_LeftWing_Field") as! Int
             injWingBand_LeftWing = sharedManager.getSessionValueForKeyFromDB(key: "injWingBand_LeftWing_Field") as! Int
             injMuscleHit_LeftWing = sharedManager.getSessionValueForKeyFromDB(key: "injMuscleHit_LeftWing_Field") as! Int
@@ -139,18 +251,7 @@ class VaccineEvaluationCell: UITableViewCell {
         muscleHitTotalLbl.text = getTotalForHashInject(leftValue: injMuscleHit_LeftWing, RightValue: injMuscleHit_RightWing)
         missedTotalLbl.text = getTotalForHashInject(leftValue: injMissed_LeftWing, RightValue: injMissed_RightWing)
         
-        if centerTotalLbl.text == "0"{
-            centerTotalLbl.text = ""
-        }
-        if wingBandTotalLbl.text == "0"{
-            wingBandTotalLbl.text = ""
-        }
-        if muscleHitTotalLbl.text == "0"{
-            muscleHitTotalLbl.text = ""
-        }
-        if missedTotalLbl.text == "0"{
-            missedTotalLbl.text = ""
-        }
+        extractedFunc2()
         
         let leftRightInjTotal = injCenter_LeftWing + injCenter_RightWing + injWingBand_LeftWing + injWingBand_RightWing + injMuscleHit_LeftWing + injMuscleHit_RightWing + injMissed_LeftWing + injMissed_RightWing
         leftRightInjTotalLbl.text = "\(leftRightInjTotal)"
@@ -158,63 +259,16 @@ class VaccineEvaluationCell: UITableViewCell {
             leftRightInjTotalLbl.text = ""
         }
         
-        // ------------------------------------------------------------------
+        extractedFunc5(injCenter_LeftWing, leftRightInjTotal, injCenter_RightWing, injWingBand_LeftWing, injWingBand_RightWing, injMuscleHit_LeftWing, injMuscleHit_RightWing, injMissed_LeftWing, injMissed_RightWing)
         
-        
-        //-------------Set Percent Of %Inj Left Right-----------------
-        
-        if (injCenter_LeftWing != 0 && leftRightInjTotal != 0) || (injCenter_RightWing != 0 && leftRightInjTotal != 0){
-            injCenter_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injCenter_LeftWing, RightValue: injCenter_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
-        }
-        if (injWingBand_LeftWing != 0 && leftRightInjTotal != 0) || (injWingBand_RightWing != 0 && leftRightInjTotal != 0){
-            injWingBand_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injWingBand_LeftWing, RightValue: injWingBand_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
-        }
-        if (injMuscleHit_LeftWing != 0 && leftRightInjTotal != 0) || (injMuscleHit_RightWing != 0 && leftRightInjTotal != 0){
-            injMuscleHit_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injMuscleHit_LeftWing, RightValue: injMuscleHit_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
-        }
-        if (injMissed_LeftWing != 0 && leftRightInjTotal != 0) || (injMissed_RightWing != 0 && leftRightInjTotal != 0){
-            injMissed_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injMissed_LeftWing, RightValue: injMissed_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
-        }
-        
-        //------------------------------------------------------------
-        
-        //----Getting Total of #Inj left Wing Web & percent calculations
-        
-        let totalOfLeftWingWeb : Int = injCenter_LeftWing + injWingBand_LeftWing + injMuscleHit_LeftWing + injMissed_LeftWing
-        subQLeftTotal.text = "\(totalOfLeftWingWeb)"
-        
-        if injCenter_LeftWing != 0 && totalOfLeftWingWeb != 0{
-            injCenter_LeftWing_Percent.text = getPercentOForLeftRightWingWeb(value: injCenter_LeftWing, total: totalOfLeftWingWeb)
-        }
-        if injWingBand_LeftWing != 0 && totalOfLeftWingWeb != 0{
-            injWingBand_LeftWing_Percent.text = getPercentOForLeftRightWingWeb(value: injWingBand_LeftWing, total: totalOfLeftWingWeb)
-        }
-        if injMuscleHit_LeftWing != 0 && totalOfLeftWingWeb != 0{
-            injMuscleHit_LeftWing_Percent.text = getPercentOForLeftRightWingWeb(value: injMuscleHit_LeftWing, total: totalOfLeftWingWeb)
-        }
-        if injMissed_LeftWing != 0 && totalOfLeftWingWeb != 0{
-            injMissed_LeftWing_Percent.text = getPercentOForLeftRightWingWeb(value: injMissed_LeftWing, total: totalOfLeftWingWeb)
-        }
+        extractedFunc(injCenter_LeftWing, injWingBand_LeftWing, injMuscleHit_LeftWing, injMissed_LeftWing)
         
         //----------------------------------------------------------------------------------------------------
         
         //----Getting Total of #Inj Right Wing Web
         
         let totalOfRightWingWeb : Int = injCenter_RightWing + injWingBand_RightWing + injMuscleHit_RightWing + injMissed_RightWing
-        subQRightTotal.text = "\(totalOfRightWingWeb)"
-        
-        if injCenter_RightWing != 0 && totalOfRightWingWeb != 0{
-            injCenter_RightWing_Percent.text = getPercentOForLeftRightWingWeb(value: injCenter_RightWing, total: totalOfRightWingWeb)
-        }
-        if injWingBand_RightWing != 0 && totalOfRightWingWeb != 0{
-            injWingBand_RightWing_Percent.text = getPercentOForLeftRightWingWeb(value: injWingBand_RightWing, total: totalOfRightWingWeb)
-        }
-        if injMuscleHit_RightWing != 0 && totalOfRightWingWeb != 0{
-            injMuscleHit_RightWing_Percent.text = getPercentOForLeftRightWingWeb(value: injMuscleHit_RightWing, total: totalOfRightWingWeb)
-        }
-        if injMissed_RightWing != 0 && totalOfRightWingWeb != 0{
-            injMissed_RightWing_Percent.text = getPercentOForLeftRightWingWeb(value: injMissed_RightWing, total: totalOfRightWingWeb)
-        }
+        extractedFunc1(totalOfRightWingWeb, injCenter_RightWing, injWingBand_RightWing, injMuscleHit_RightWing, injMissed_RightWing)
         
         var injMuscleHit_IntramusculerInj = Int()
         var injMissed_IntramusculerInj = Int()
@@ -247,32 +301,14 @@ class VaccineEvaluationCell: UITableViewCell {
         intraInjLeftTotal.text = "\(totalOfIntramusculerInj)"
         subInjRightTotal.text = "\(totalOfSubcutaneousInj)"
         
-        if injMuscleHit_IntramusculerInj != 0 && totalOfIntramusculerInj != 0{
-            injMuscleHit_IntramusculerInj_Percent.text = getPercentOForLeftRightWingWeb(value: injMuscleHit_IntramusculerInj, total: totalOfIntramusculerInj)
-        }
-        if injMissed_IntramusculerInj != 0 && totalOfIntramusculerInj != 0{
-            injMissed_IntramusculerInj_Percent.text = getPercentOForLeftRightWingWeb(value: injMissed_IntramusculerInj, total: totalOfIntramusculerInj)
-        }
-        if injMuscleHit_SubcutaneousInj != 0 && totalOfSubcutaneousInj != 0{
-            injMuscleHit_SubcutaneousInj_Percent.text = getPercentOForLeftRightWingWeb(value: injMuscleHit_SubcutaneousInj, total: totalOfSubcutaneousInj)
-        }
-        if injMissed_SubcutaneousInj != 0 && totalOfSubcutaneousInj != 0{
-            injMissed_SubcutaneousInj_Percent.text = getPercentOForLeftRightWingWeb(value: injMissed_SubcutaneousInj, total: totalOfSubcutaneousInj)
-        }
+        extractedFunc4(injMuscleHit_IntramusculerInj, totalOfIntramusculerInj, injMissed_IntramusculerInj, injMuscleHit_SubcutaneousInj, totalOfSubcutaneousInj, injMissed_SubcutaneousInj)
         
         let totalForMuscleHitInj : Int = injMuscleHit_IntramusculerInj + injMuscleHit_SubcutaneousInj
         let totalForMissedInj : Int = injMissed_IntramusculerInj + injMissed_SubcutaneousInj
         injMuscleHit_Total.text = "\(totalForMuscleHitInj)"
         injMissed_Total.text = "\(totalForMissedInj)"
         let totalForMuscleMIssed : Int = totalForMuscleHitInj + totalForMissedInj
-        injTotal_For_Inactivated.text = "\(totalForMuscleMIssed)"
-        
-        if injMuscleHit_IntramusculerInj + injMuscleHit_SubcutaneousInj != 0 && totalForMuscleMIssed != 0{
-            injMuscleHit_Percent.text = getPercentOForLeftRightWingWeb(value: totalForMuscleHitInj, total: totalForMuscleMIssed)
-        }
-        if injMissed_IntramusculerInj + injMissed_SubcutaneousInj != 0 && totalForMuscleMIssed != 0{
-            injMissed_Percent.text = getPercentOForLeftRightWingWeb(value: totalForMissedInj, total: totalForMuscleMIssed)
-        }
+        extractedFunc6(totalForMuscleMIssed, injMuscleHit_IntramusculerInj, injMuscleHit_SubcutaneousInj, totalForMuscleHitInj, injMissed_IntramusculerInj, injMissed_SubcutaneousInj, totalForMissedInj)
         //-------------------------------
         
         var choleraVacScore = Double()
@@ -286,20 +322,7 @@ class VaccineEvaluationCell: UITableViewCell {
             inactivatedVacScore = getScoreForCholeraVaccine(value: totalForMuscleHitInj, total: totalForMuscleMIssed)
             scoreInactivatedVaccine.text = "\(String(format: "%.2f", inactivatedVacScore  * 20))"
         }
-        // ----------------------------
-        
-        //----- Get Vaccine Evaluation Final Score -------
-        
-        let vacEvalFinalScore : Double = choleraVacScore * 10 + inactivatedVacScore * 20
-        sharedManager.vaccineEvaluationScoreTotal = vacEvalFinalScore
-        //----------------------
-        resetFields()
-        
-        if timeStampStr.count > 0{
-            saveOtherValuesForServerForDraft()
-        }else{
-            saveOtherValuesForServer()
-        }
+        extractedFunc3(choleraVacScore, inactivatedVacScore)
         
     }
     
@@ -586,19 +609,7 @@ extension VaccineEvaluationCell: UITextFieldDelegate{
         return true
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        guard CharacterSet(charactersIn: "1234567890").isSuperset(of: CharacterSet(charactersIn: string)) else {
-            return false
-        }
-        
-        let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
-        print(newString)
-        
-        if newString.count > 8{
-            return false
-        }
-        
+    fileprivate func extractedFunc7(_ textField: UITextField, _ newString: String) {
         //---- Left Wing Web ----
         if textField == injCenter_LeftWing_Field{
             if timeStampStr.count > 0 {
@@ -633,6 +644,9 @@ extension VaccineEvaluationCell: UITextFieldDelegate{
                 CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMissed_LeftWing_Field")
             }
         }
+    }
+    
+    fileprivate func extractedFunc8(_ textField: UITextField, _ newString: String) {
         // --------------------------------------------------------------
         
         //---- Left Wing Web ----
@@ -669,7 +683,9 @@ extension VaccineEvaluationCell: UITextFieldDelegate{
                 CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMissed_RightWing_Field")
             }
         }
-        
+    }
+    
+    fileprivate func extractedFunc9(_ textField: UITextField, _ newString: String) {
         if textField == injMuscleHit_IntramusculerInj_Field{
             if timeStampStr.count > 0 {
                 CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "injMuscleHit_IntramusculerInj_Field")
@@ -702,6 +718,24 @@ extension VaccineEvaluationCell: UITextFieldDelegate{
                 CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMissed_SubcutaneousInj_Field")
             }
         }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        guard CharacterSet(charactersIn: "1234567890").isSuperset(of: CharacterSet(charactersIn: string)) else {
+            return false
+        }
+        
+        let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
+        print(newString)
+        
+        if newString.count > 8{
+            return false
+        }
+        
+        extractedFunc7(textField, newString)
+        extractedFunc8(textField, newString)
+        extractedFunc9(textField, newString)
         return true
     }
     

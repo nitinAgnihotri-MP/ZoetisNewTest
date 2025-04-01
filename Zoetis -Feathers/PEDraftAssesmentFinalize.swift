@@ -4304,32 +4304,32 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     fileprivate func sectionOneRefrigeratorUnitValue(_ array: NSArray, _ footerView: RefrigatorTempProbeCell) {
-        for i in 7...9{
+        for i in 7...9 {
             let ar = array[i] as? PE_AssessmentInProgress
             
-            for j in 0..<self.refrigtorProbeArray.count{
-                if(ar?.assID == self.refrigtorProbeArray[j].id){
-                    if(i == 7){
+            for j in 0..<self.refrigtorProbeArray.count {
+                if(ar?.assID == self.refrigtorProbeArray[j].id) {
+                    switch i {
+                    case 7:
                         footerView.topTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                        if(self.refrigtorProbeArray[j].value != 0.0){
+                        if(self.refrigtorProbeArray[j].value != 0.0) {
                             footerView.topValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
                         }
-                    }
-                    if(i == 8){
+                    case 8:
                         footerView.middleTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                        if(self.refrigtorProbeArray[j].value != 0.0){
+                        if(self.refrigtorProbeArray[j].value != 0.0) {
                             footerView.middleValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
                         }
-                    }
-                    if(i == 9){
+                    case 9:
                         footerView.bottomTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                        if(self.refrigtorProbeArray[j].value != 0.0){
+                        if (self.refrigtorProbeArray[j].value != 0.0) {
                             footerView.bottomValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
                         }
+                    default:
+                        break
                     }
                 }
             }
-            
         }
     }
     
@@ -4867,7 +4867,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     func setPEInovojectHeaderFooterView(_ tableView: UITableView , section:Int) -> PEInovojectHeaderFooterView {
         if selectedCategory?.sequenceNoo == 1{
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEInovojectHeaderFooterView" ) as! PEInovojectHeaderFooterView
-            headerView.lblTitle.text = Constants.inOvo
+            headerView.lblTitle.text = "In Ovo"
             headerView.txtCSize.text = peNewAssessment.iCS
             headerView.txtDType.text = peNewAssessment.iDT
             headerView.txtAntiBiotic.text = peNewAssessment.hatcheryAntibioticsText

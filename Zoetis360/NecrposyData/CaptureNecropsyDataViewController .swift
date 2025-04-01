@@ -4086,7 +4086,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 {
                     if (self.items.object(at: i) as AnyObject).count == 1
                     {
-                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+                        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
                         return
                     }
                 }
@@ -6328,7 +6328,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             }
             else
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }
         else
@@ -6407,13 +6407,13 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     func didFinishApi()
     {
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     
     func failWithInternetConnection()
     {
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
 }

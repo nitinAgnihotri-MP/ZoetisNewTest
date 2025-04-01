@@ -19,9 +19,9 @@ class ReportComposerDaignostic: NSObject {
     
     let logoImageURL = WebClass.sharedInstance.connected() == true ? "https://mypoultryview360.com/Images/logo.png" : Bundle.main.path(forResource:"logo", ofType: "png")
     
-    let birdsMargin = Regions.countryId == 40 ? Constants.merginLeft : "margin-left:-180px"
+    let birdsMargin = Regions.countryId == 40 ? "margin-left:-40px" : "margin-left:-180px"
     
-    let birdsMarginHistory = Regions.countryId == 40 ? Constants.merginLeft : "margin-left:-225px"
+    let birdsMarginHistory = Regions.countryId == 40 ? "margin-left:-40px" : "margin-left:-225px"
     
     let birdsMarginSummary = Regions.countryId == 40 ? "margin-left:-60px" : "margin-left:-130px"
     
@@ -34,6 +34,7 @@ class ReportComposerDaignostic: NSObject {
     var pdfFilename: String!
     
     var meanAge = Float()
+    
     override init() {
         super.init()
     }
@@ -58,7 +59,7 @@ class ReportComposerDaignostic: NSObject {
         switch countryID {
         case 35: margin = "margin-left:-50px"
             break
-        case 40: margin = Constants.merginLeft
+        case 40: margin = "margin-left:-40px"
             break
         default:
             break
@@ -100,7 +101,7 @@ class ReportComposerDaignostic: NSObject {
             
             HTMLContent = HTMLContent!.replacingOccurrences(of:"#reportTitle#", with: items[0]["isCocciHistory"]?.boolValue == true ? NSLocalizedString("Necropsy Historical Report", comment: "") : NSLocalizedString("Necropsy Summary Report", comment: ""))
             
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#digHisMargn#", with: items[0]["isCocciHistory"]?.boolValue == true ? "margin-left:-20px":Constants.merginLeft)
+            HTMLContent = HTMLContent!.replacingOccurrences(of:"#digHisMargn#", with: items[0]["isCocciHistory"]?.boolValue == true ? "margin-left:-20px":"margin-left:-40px")
             
             HTMLContent = HTMLContent!.replacingOccurrences(of:"#typeDate#", with: typeDate)
             
@@ -108,7 +109,7 @@ class ReportComposerDaignostic: NSObject {
             
             HTMLContent = HTMLContent!.replacingOccurrences(of:"#LOGO_IMAGE#", with: logoImageURL!)
             
-            HTMLContent = HTMLContent!.replacingOccurrences(of:Constants.displayStr, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.displayNone : "")
+            HTMLContent = HTMLContent!.replacingOccurrences(of:"#display:none#", with: items[0]["isCocciHistory"]?.boolValue == true ? "display:none" : "")
             //HTMLContent = HTMLContent!.replacingOccurrences(of: "logo.png\"", with: "logo.png\"")
             
             var allItems = ""
@@ -458,7 +459,7 @@ class ReportComposerDaignostic: NSObject {
                     
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FarmName#", with: items[i]["isCocciHistory"]?.boolValue == true ? items[i]["sessionDate"]! as! String : items[i]["farmName"]! as! String)
                     
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayStr, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.displayNone : "")
+                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display:none#", with: items[0]["isCocciHistory"]?.boolValue == true ? "display:none" : "")
                     
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#birds#", with: items[i]["birds"]! as! String)
                     birdsTotal = birdsTotal+items[i]["birds"]!.integerValue
@@ -642,24 +643,24 @@ class ReportComposerDaignostic: NSObject {
                         
                         if items[i]["meanAge"]!.integerValue > 13 && items[i]["meanAge"]!.integerValue < 25
                         {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotalStr, with: "14 - 24 \(NSLocalizedString("Days", comment: ""))")
+                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"Complex Total", with: "14 - 24 \(NSLocalizedString("Days", comment: ""))")
                         }
                         else if items[i]["meanAge"]!.integerValue > 0 && items[i]["meanAge"]!.integerValue < 14
                         {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotalStr, with: "01 - 13 \(NSLocalizedString("Days", comment: ""))")
+                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"Complex Total", with: "01 - 13 \(NSLocalizedString("Days", comment: ""))")
                         }
                         else if items[i]["meanAge"]!.integerValue > 24 && items[i]["meanAge"]!.integerValue < 33
                         {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotalStr, with: "25 - 32 \(NSLocalizedString("Days", comment: ""))")
+                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"Complex Total", with: "25 - 32 \(NSLocalizedString("Days", comment: ""))")
                         }
                         
                         else  if items[i]["meanAge"]!.integerValue > 32 && items[i]["meanAge"]!.integerValue < 43
                         {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotalStr, with: "33 - 41 \(NSLocalizedString("Days", comment: ""))")
+                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"Complex Total", with: "33 - 41 \(NSLocalizedString("Days", comment: ""))")
                         }
                         
                         else  if items[i]["meanAge"]!.integerValue > 42 && items[i]["meanAge"]!.integerValue < 81{
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotalStr, with: NSLocalizedString("42 days or older", comment: ""))
+                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"Complex Total", with: NSLocalizedString("42 days or older", comment: ""))
                         }
                         
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TotalBirds#", with: NSString(format: "%d",birdsTotal_Spliter) as String )
@@ -702,7 +703,7 @@ class ReportComposerDaignostic: NSObject {
                             itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Active_Bursa_TOTAL#", with: NSString(format: "%.1f",Active_Bursa_Spliter/Float(index_Spliter)) as String)
                         }
                         
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayStr, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.displayNone : "")
+                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display:none#", with: items[0]["isCocciHistory"]?.boolValue == true ? "display:none" : "")
                         
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Foot_Pad_Lesions_Mean_Total#", with: NSString(format: "%.1f",(Foot_Pad_Lesions_Mean_Spliter/Foot_Pad_Lesions_Mean_Birds_Spliter).isNaN ? 0 : Foot_Pad_Lesions_Mean_Spliter/Foot_Pad_Lesions_Mean_Birds_Spliter) as String)
                         
@@ -775,7 +776,7 @@ class ReportComposerDaignostic: NSObject {
                         
                     } else{
                         
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display#", with: Constants.displayNone )
+                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display#", with: "display:none" )
                     }
                     
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Sick#", with: items[i]["isSick"]!.intValue == 0 ? "" : "checked")
@@ -786,7 +787,7 @@ class ReportComposerDaignostic: NSObject {
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TotalBirds#", with: NSString(format: "%d",birdsTotal) as String )
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MeanAge#", with: NSString(format: "%.0f",round(meanAge/Float(items.count))) as String)
                     
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayStr, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.displayNone : "")
+                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display:none#", with: items[0]["isCocciHistory"]?.boolValue == true ? "display:none" : "")
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left:-40px;", with: items[0]["isCocciHistory"]?.boolValue == true ? birdsMarginHistory : birdsMarginSummary)
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left: -20px;", with: items[0]["isCocciHistory"]?.boolValue == true ? ageMarginHistory : ageMarginSummary)
                     itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left:-140px", with: items[0]["isCocciHistory"]?.boolValue == true ? "margin-left:-180px" : "margin-left:-140px")

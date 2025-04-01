@@ -148,7 +148,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
     var feedIdUpdate = NSNumber()
     
     var editfeed = String()
-    let mendatoryFieldMsg = Constants.fieldsMarkedStr
+    let mendatoryFieldMsg = "Fields marked as (*) are mandatory. Please fill all the fields."
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()

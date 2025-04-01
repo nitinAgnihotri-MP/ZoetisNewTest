@@ -35,7 +35,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
     @IBOutlet weak var btnComplex: UIButton!
     @IBOutlet weak var userNameLabel: UILabel!
     let complexRequiredMsg = "Please select a complex first."
-    let noHistoricalData = Constants.noHisData
+    let noHistoricalData = "No historical data."
     
     
     @objc func methodOfReceivedNotification(notification: Notification){
@@ -626,7 +626,7 @@ extension Report_MainVCViewController {
             
             let farmName : NSString = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "farmName") as! NSString
             
-            farmNames.add(NSString(format: Constants.percentageStr,farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
+            farmNames.add(NSString(format: "%@(%@)",farmName,(lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "age") as! NSString))
             
             let necID = (lastSessionDataArray.object(at: f) as AnyObject).value(forKey: "necropsyId") as! NSNumber
             

@@ -179,39 +179,74 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         self.endEditing(true)
     }
     
+    fileprivate func extractedFunc(_ newString: String) {
+        if timeStampStr.count > 0 {
+            CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "ageOfBirds")
+        }else{
+            CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "ageOfBirds")
+        }
+        self.sharedManager.setBorderBlue(btn: ageOfBirdsBtn)
+    }
+    
+    fileprivate func extractedFunc1(_ newString: String) {
+        if timeStampStr.count > 0 {
+            CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString ?? "", forAttribute: "houseNumber")
+        }else{
+            CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "houseNumber")
+        }
+    }
+    
+    fileprivate func extractedFunc2(_ newString: String) {
+        if timeStampStr.count > 0 {
+            CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "noOfBirds")
+        }else{
+            CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "noOfBirds")
+        }
+        self.sharedManager.setBorderBlue(btn: noOfBirdsBtn)
+    }
+    
+    fileprivate func extractedFunc3(_ newString: String) {
+        if timeStampStr.count > 0 {
+            CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString ?? "", forAttribute: "breedOfBirdsOther")
+        }else{
+            CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "breedOfBirdsOther")
+        }
+        self.sharedManager.setBorderBlue(btn: breedOfBirdsOtherBtn)
+    }
+    
+    fileprivate func extractedFunc4(_ newString: String) {
+        if timeStampStr.count > 0 {
+            CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString ?? "", forAttribute: "breedOfBirdsFemaleOther")
+        }else{
+            CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "breedOfBirdsFemaleOther")
+        }
+        self.sharedManager.setBorderBlue(btn: breedOfBirdsFemaleOtherBtn)
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield{
-            guard CharacterSet(charactersIn: "1234567890").isSuperset(of: CharacterSet(charactersIn: string)) else {
+        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield,
+            CharacterSet(charactersIn: "1234567890").isSuperset(of: CharacterSet(charactersIn: string)){
                 return false
-            }
-            
         }
         
         var newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
         
         if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield{
-            if newString.count > 5{
+            if newString.count > 5 {
                 return false
             }
             let sum = newString.compactMap{$0.wholeNumberValue}.reduce(0, +)
-            if sum == 0 && newString.count > 0{
+            if sum == 0 && newString.count > 0 {
                 newString = "0"
                 return false
             }
-            
         }
         
-        if textField == ageOfBirdsTxtfield{
-            
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "ageOfBirds")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "ageOfBirds")
-            }
-            self.sharedManager.setBorderBlue(btn: ageOfBirdsBtn)
+        if textField == ageOfBirdsTxtfield {
+            extractedFunc(newString)
         }
-        if textField == farmNameTxtfield{
+        if textField == farmNameTxtfield {
             if newString.count > 40{
                 return false
             }
@@ -219,25 +254,16 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
             CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "farm")
             self.sharedManager.setBorderBlue(btn: farmNameBtn)
         }
-        if textField == houseNoTxtfield{
+        if textField == houseNoTxtfield {
             if newString.count > 40{
                 return false
             }
             
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString ?? "", forAttribute: "houseNumber")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "houseNumber")
-            }
+            extractedFunc1(newString)
             self.sharedManager.setBorderBlue(btn: houseNoBtn)
         }
         if textField == noOfBirdsTxtfield{
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "noOfBirds")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "noOfBirds")
-            }
-            self.sharedManager.setBorderBlue(btn: noOfBirdsBtn)
+            extractedFunc2(newString)
         }
         
         if textField == breedOfBirdsOtherTxtfield{
@@ -245,24 +271,13 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
                 return false
             }
             
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString ?? "", forAttribute: "breedOfBirdsOther")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "breedOfBirdsOther")
-            }
-            self.sharedManager.setBorderBlue(btn: breedOfBirdsOtherBtn)
+            extractedFunc3(newString)
         }
         if textField == breedOfBirdsFemaleOtherTxtfield{
             if newString.count > 40{
                 return false
             }
-            
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString ?? "", forAttribute: "breedOfBirdsFemaleOther")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "breedOfBirdsFemaleOther")
-            }
-            self.sharedManager.setBorderBlue(btn: breedOfBirdsFemaleOtherBtn)
+            extractedFunc4(newString)
         }
         let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
         

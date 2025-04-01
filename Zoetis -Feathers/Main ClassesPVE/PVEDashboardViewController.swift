@@ -261,7 +261,7 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
                 print("success")
                 if !isToastShown {
                     self.isToastShown = true
-                    showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
+                    showToastWithTimer(message: "Data sync has been completed.", duration: 2.0)
                     
                 }
                 DispatchQueue.main.async {
@@ -705,47 +705,80 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         checkDataForSync(isNotification: true)
     }
     
-    func singleDataSync(id: String){
+    fileprivate func extractedFunc(_ syncData: NSArray) {
+        for (_, val) in syncData.enumerated() {
+            
+            let json = createSyncRequest(dict: val as AnyObject)
+            let currentAssessmentQuestJson = getQuestionsDetails(dict: val as AnyObject)
+            let forImgArrJson = getImageDetails(dict: val as AnyObject)
+            
+            let jsonDictAssessmentQuestionImages = ["AssessmentQuestionImages" : forImgArrJson]
+            if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDictAssessmentQuestionImages, options: .prettyPrinted),
+               let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
+            }
+            
+            let syncId = json["syncId"] as! String
+            let tempArr = [json]
+            let jsonDict = ["AssessmentDataDetails" : tempArr]
+            
+            if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),
+               let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
+            }
+            
+            ZoetisWebServices.shared.postStartNewAssessmentDetailForPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
+                guard let `self` = self, error == nil else { return }
+                
+                self.stopHud()
+                self.isResponseCalled = false
+                self.handleSyncResponse(json, syncId: syncId, assessmentScoreDict: currentAssessmentQuestJson, forImgArrJson: forImgArrJson)
+            })
+        }
+    }
+    
+    func singleDataSync(id: String) {
         Constants.liveComment = ""
         Constants.inactiveComment = ""
         if CodeHelper.sharedInstance.reachability.connection != .unavailable{
             
             let syncData = CoreDataHandlerPVE().fetchSingleDataForSync(id: id)
-            if syncData.count > 0{
-                
+            if syncData.count > 0 {
                 self.showGlobalProgressHUDWithTitle(self.view, title: "")
-                
-                for (_, val) in syncData.enumerated(){
-                    
-                    let json = createSyncRequest(dict: val as AnyObject)
-                    let currentAssessmentQuestJson = getQuestionsDetails(dict: val as AnyObject)
-                    let forImgArrJson = getImageDetails(dict: val as AnyObject)
-                    
-                    let jsonDictAssessmentQuestionImages = ["AssessmentQuestionImages" : forImgArrJson]
-                    if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDictAssessmentQuestionImages, options: .prettyPrinted),
-                       let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-                    }
-                    
-                    let syncId = json["syncId"] as! String
-                    let tempArr = [json]
-                    let jsonDict = ["AssessmentDataDetails" : tempArr]
-                    
-                    if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),
-                       let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-                    }
-                    
-                    ZoetisWebServices.shared.postStartNewAssessmentDetailForPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                        guard let `self` = self, error == nil else { return }
-                        
-                        self.stopHud()
-                        self.isResponseCalled = false
-                        self.handleSyncResponse(json, syncId: syncId, assessmentScoreDict: currentAssessmentQuestJson, forImgArrJson: forImgArrJson)
-                    })
-                }
+                extractedFunc(syncData)
                 showtoast(message: "Data syncing")
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        }
+    }
+    
+    fileprivate func extractedFunc1(_ syncArr: NSArray) {
+        for (_, val) in syncArr.enumerated(){
+            if !isSync {
+                self.isSync = true
+                let json = createSyncRequest(dict: val as AnyObject)
+                let currentAssessmentQuestJson = getQuestionsDetails(dict: val as AnyObject)
+                let forImgArrJson = getImageDetails(dict: val as AnyObject)
+                
+                let jsonDictAssessmentQuestionImages = ["AssessmentQuestionImages" : forImgArrJson]
+                if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDictAssessmentQuestionImages, options: .prettyPrinted),
+                   let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
+                }
+                
+                
+                let syncId = json["syncId"] as! String
+                let tempArr = [json]
+                let jsonDict = ["AssessmentDataDetails" : tempArr]
+                
+                if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),
+                   let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
+                }
+                
+                ZoetisWebServices.shared.postStartNewAssessmentDetailForPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
+                    guard let `self` = self, error == nil else { return }
+                    self.isResponseCalled = false
+                    self.handleSyncResponse(json, syncId: syncId, assessmentScoreDict: currentAssessmentQuestJson, forImgArrJson: forImgArrJson)
+                })
+            }
         }
     }
     
@@ -761,37 +794,10 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 dismissGlobalHUD(self.view)
                 self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + "*Note - Please don't minimize App while syncing.")
                 
-                for (_, val) in syncArr.enumerated(){
-                    if !isSync {
-                        self.isSync = true
-                        let json = createSyncRequest(dict: val as AnyObject)
-                        let currentAssessmentQuestJson = getQuestionsDetails(dict: val as AnyObject)
-                        let forImgArrJson = getImageDetails(dict: val as AnyObject)
-                        
-                        let jsonDictAssessmentQuestionImages = ["AssessmentQuestionImages" : forImgArrJson]
-                        if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDictAssessmentQuestionImages, options: .prettyPrinted),
-                           let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-                        }
-                        
-                        
-                        let syncId = json["syncId"] as! String
-                        let tempArr = [json]
-                        let jsonDict = ["AssessmentDataDetails" : tempArr]
-                        
-                        if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),
-                           let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-                        }
-                        
-                        ZoetisWebServices.shared.postStartNewAssessmentDetailForPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                            guard let `self` = self, error == nil else { return }
-                            self.isResponseCalled = false
-                            self.handleSyncResponse(json, syncId: syncId, assessmentScoreDict: currentAssessmentQuestJson, forImgArrJson: forImgArrJson)
-                        })
-                    }
-                }
+                extractedFunc1(syncArr)
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     
@@ -822,6 +828,67 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         }
     }
     
+    fileprivate func extractedFunc2(_ tempImgArrDict: [[String : Any]], _ syncId: String) {
+        for (indx, obj) in tempImgArrDict.enumerated(){
+            
+            self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + "*Note - Please don't minimize App while syncing.")
+            ZoetisWebServices.shared.postSaveAssessmentImagesDetailsForPVE(controller: self, parameters: obj, completion: { [weak self] (json, error) in
+                guard let `self` = self, error == nil else { return }
+                
+                if self.isResponseCalled == false {
+                    self.isResponseCalled = true
+                    self.handleImageSyncResponse(json, syncId: syncId)
+                    
+                }
+                
+            })
+        }
+    }
+    
+    fileprivate func extractedFunc3(_ chunkArr: [[Int]], _ ModuleAssessmentIdArrrrr: inout [Int], _ forImgArrJson: [[String : Any]], _ tempImgArrDict: inout [[String : Any]]) {
+        for (currntIndx, indArr) in chunkArr.enumerated(){
+            
+            
+            var chunkImgArrToSend = [[String : Any]]()
+            
+            for (indx, obj) in indArr.enumerated(){
+                ModuleAssessmentIdArrrrr.append(forImgArrJson[obj-1]["ModuleAssessmentId"] as! Int)
+                chunkImgArrToSend.append(forImgArrJson[obj-1])
+                
+                CoreDataHandlerPVE().updateStatusSyncImageDataInAssementDetails(forImgArrJson[obj-1]["imgSyncId"] as! String)
+            }
+            
+            let jsonDict = ["AssessmentQuestionImages" : chunkImgArrToSend]
+            tempImgArrDict.append(jsonDict)
+            
+        }
+    }
+    
+    fileprivate func extractedFunc4(_ syncArr: NSArray) {
+        if !Constants.syncToWebTapped {
+            if syncArr.count > 0 {
+                
+                self.isSync = false
+                self.syncBtnTapped()
+                
+            } else {
+                
+                showToastWithTimer(message: "Data sync has been completed.", duration: 2.0)
+                DispatchQueue.main.async {
+                    self.dismissGlobalHUD(self.view)
+                    self.stopHud()
+                }
+                
+                self.refreshCountHideUnhide()
+            }
+        } else {
+            Constants.syncToWebTapped = false
+            self.dismissGlobalHUD(self.view)
+            self.refreshCountHideUnhide()
+            
+        }
+    }
+    
     private func handleSyncScoreResponse(_ json: JSON,  syncId:String, forImgArrJson:[[String: Any]]) {
         
         if json["StatusCode"] == 200 {
@@ -836,72 +903,20 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 var ModuleAssessmentIdArrrrr = [Int]()
                 var tempImgArrDict = [[String: Any]]()
                 
-                for (currntIndx, indArr) in chunkArr.enumerated(){
-                    
-                    
-                    var chunkImgArrToSend = [[String : Any]]()
-                    
-                    for (indx, obj) in indArr.enumerated(){
-                        ModuleAssessmentIdArrrrr.append(forImgArrJson[obj-1]["ModuleAssessmentId"] as! Int)
-                        chunkImgArrToSend.append(forImgArrJson[obj-1])
-                        
-                        CoreDataHandlerPVE().updateStatusSyncImageDataInAssementDetails(forImgArrJson[obj-1]["imgSyncId"] as! String)
-                    }
-                    
-                    let jsonDict = ["AssessmentQuestionImages" : chunkImgArrToSend]
-                    tempImgArrDict.append(jsonDict)
-                    
-                }
+                extractedFunc3(chunkArr, &ModuleAssessmentIdArrrrr, forImgArrJson, &tempImgArrDict)
                 
-                
-                
-                for (indx, obj) in tempImgArrDict.enumerated(){
-                    
-                    self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + "*Note - Please don't minimize App while syncing.")
-                    ZoetisWebServices.shared.postSaveAssessmentImagesDetailsForPVE(controller: self, parameters: obj, completion: { [weak self] (json, error) in
-                        guard let `self` = self, error == nil else { return }
-                        
-                        if self.isResponseCalled == false {
-                            self.isResponseCalled = true
-                            self.handleImageSyncResponse(json, syncId: syncId)
-                            
-                        }
-                        
-                    })
-                }
+                extractedFunc2(tempImgArrDict, syncId)
                 dismissGlobalHUD(self.view)
                 
                 let jsonDict = ["AssessmentQuestionImages" : forImgArrJson]
                 
                 
-            }else{
+            } else {
                 CoreDataHandlerPVE().updateStatusForSync(syncId, text: true, forAttribute: "syncedStatus")
                 
                 let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
                 peHeaderViewController.labelSyncCount.text = "\(syncArr.count)"
-                if !Constants.syncToWebTapped {
-                    if syncArr.count > 0 {
-                        
-                        self.isSync = false
-                        self.syncBtnTapped()
-                        
-                    }
-                    else {
-                        
-                        showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
-                        DispatchQueue.main.async {
-                            self.dismissGlobalHUD(self.view)
-                            self.stopHud()
-                        }
-                        
-                        self.refreshCountHideUnhide()
-                    }
-                } else {
-                    Constants.syncToWebTapped = false
-                    self.dismissGlobalHUD(self.view)
-                    self.refreshCountHideUnhide()
-                    
-                }
+                extractedFunc4(syncArr)
             }
         }
     }
@@ -1579,7 +1594,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         let request = NSMutableURLRequest(url: url! as URL)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.setValue("\(String(describing: UserDefaults.standard.value(forKey: "Id") ?? 0))", forHTTPHeaderField: "UserId") //**
-        request.setValue("\(String(describing: UserDefaults.standard.value(forKey: "aceesTokentype") ?? ""))", forHTTPHeaderField: Constants.authorisationStr) //**
+        request.setValue("\(String(describing: UserDefaults.standard.value(forKey: "aceesTokentype") ?? ""))", forHTTPHeaderField: "Authorization") //**
         
         request.httpMethod = method
         

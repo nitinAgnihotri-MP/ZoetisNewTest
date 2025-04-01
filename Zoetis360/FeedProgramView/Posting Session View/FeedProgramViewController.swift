@@ -334,9 +334,9 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
     let selectedTextDefault = "- Sélectionner -"
     let placeholderText = " Digitar"
     let feedPrgramvalidationMsg = "Please enter feed program."
-    let offlineDataMsg = Constants.currentlyOfflineStr
+    let offlineDataMsg = "You are currently offline. Please go online to sync data."
     let moleculeFeedMsg = "Please select the molecule feed."
-    let syncCompletedMs = Constants.dataSyncCompleted
+    let syncCompletedMs = "Data sync has been completed."
     let feedTypeOne = "Feed type 1"
     let feedTypeTwo = "Feed type 2"
     let feedTypeThree = "Feed type 3"
@@ -2490,7 +2490,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                                     if status == true {
                                         
                                         self.saveMyCoxtinDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
-											print(status)
+                                            
                                         })
                                     }})
                             }})

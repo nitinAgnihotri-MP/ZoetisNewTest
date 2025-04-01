@@ -197,7 +197,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return dataArray
         
@@ -220,7 +220,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return dataArray
     }
@@ -243,7 +243,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return dataArray
@@ -280,7 +280,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return postingArrayVetArray
     }
@@ -301,41 +301,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute1Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -343,11 +343,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
 //                case 22:
-//                    person.setValue(Constants.inOvo, forKey:"route")
+//                    person.setValue("In Ovo", forKey:"route")
 //                case 24:
-//                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+//                    person.setValue("Intramuscular", forKey:"route")
 //                case 21:
-//                    person.setValue(Constants.sprayStr, forKey:"route")
+//                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -362,41 +362,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute2Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -404,11 +404,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -424,41 +424,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute3Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -466,11 +466,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -485,41 +485,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute4Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -527,11 +527,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -547,41 +547,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute5Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -589,11 +589,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -609,41 +609,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute6Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -651,11 +651,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -671,41 +671,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute7Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -713,11 +713,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -733,41 +733,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute8Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -775,11 +775,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -796,41 +796,41 @@ class CoreDataHandler : NSObject  {
                 switch dict.value(forKey: "fieldRoute9Id") as! Int {
                     
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -838,11 +838,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -858,41 +858,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute10Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -900,11 +900,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -921,41 +921,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain11"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute11Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -963,11 +963,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1013,41 +1013,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute1Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1055,11 +1055,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1087,41 +1087,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute2Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1129,11 +1129,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1162,41 +1162,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute3Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1204,11 +1204,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1236,41 +1236,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute4Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1278,11 +1278,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1310,41 +1310,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute5Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1352,11 +1352,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1383,41 +1383,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute6Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1425,11 +1425,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1457,41 +1457,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute7Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1499,11 +1499,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1531,41 +1531,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute8Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1573,11 +1573,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1606,41 +1606,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain9"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute9Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1648,11 +1648,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1681,41 +1681,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute10Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1723,11 +1723,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1755,41 +1755,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Other", forKey:"type")
                     switch dict.value(forKey: "fieldRoute11Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -1797,11 +1797,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1843,41 +1843,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -1885,11 +1885,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1903,41 +1903,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -1945,11 +1945,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1963,41 +1963,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -2005,11 +2005,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2023,41 +2023,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -2065,11 +2065,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2083,41 +2083,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -2125,11 +2125,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2143,41 +2143,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -2185,11 +2185,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2203,41 +2203,41 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -2245,11 +2245,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2265,41 +2265,41 @@ class CoreDataHandler : NSObject  {
                 
                 switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -2307,11 +2307,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2328,41 +2328,41 @@ class CoreDataHandler : NSObject  {
                 switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
                     
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -2370,11 +2370,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2391,41 +2391,41 @@ class CoreDataHandler : NSObject  {
                 switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
                     
                 case 1:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 2:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 3:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue(Constants.wingWeb, forKey:"route")
+                    person.setValue("Wing-Web", forKey:"route")
                 case 13:
-                    person.setValue(Constants.drinkingWater, forKey:"route")
+                    person.setValue("Drinking Water", forKey:"route")
                 case 14:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 15:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 16:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 17:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 18:
-                    person.setValue(Constants.eyeDrop, forKey:"route")
+                    person.setValue("Eye Drop", forKey:"route")
                 case 20:
                     person.setValue("Água De Bebida", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 19:
                     person.setValue("Membrana Da Asa", forKey:"route")
                 case 25:
@@ -2433,11 +2433,11 @@ class CoreDataHandler : NSObject  {
                 case 23:
                     person.setValue("Subcutânea", forKey:"route")
                 case 22:
-                    person.setValue(Constants.inOvo, forKey:"route")
+                    person.setValue("In Ovo", forKey:"route")
                 case 24:
-                    person.setValue(Constants.intraMuscularStr, forKey:"route")
+                    person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue(Constants.sprayStr, forKey:"route")
+                    person.setValue("Spray", forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2483,41 +2483,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Marek", forKey:"type")
                     switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -2525,11 +2525,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2556,41 +2556,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -2598,11 +2598,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2628,41 +2628,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -2670,11 +2670,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2700,41 +2700,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -2742,11 +2742,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2771,41 +2771,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -2813,11 +2813,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2843,41 +2843,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -2885,11 +2885,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2915,41 +2915,41 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -2957,11 +2957,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2992,41 +2992,41 @@ class CoreDataHandler : NSObject  {
                     
                     switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -3034,11 +3034,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -3065,41 +3065,41 @@ class CoreDataHandler : NSObject  {
                     switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
                         
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -3107,11 +3107,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -3138,41 +3138,41 @@ class CoreDataHandler : NSObject  {
                     
                     switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
                     case 1:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 2:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 3:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue(Constants.wingWeb, forKey:"route")
+                        person.setValue("Wing-Web", forKey:"route")
                     case 13:
-                        person.setValue(Constants.drinkingWater, forKey:"route")
+                        person.setValue("Drinking Water", forKey:"route")
                     case 14:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 15:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 16:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 17:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 18:
-                        person.setValue(Constants.eyeDrop, forKey:"route")
+                        person.setValue("Eye Drop", forKey:"route")
                     case 20:
                         person.setValue("Água De Bebida", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 19:
                         person.setValue("Membrana Da Asa", forKey:"route")
                     case 25:
@@ -3180,11 +3180,11 @@ class CoreDataHandler : NSObject  {
                     case 23:
                         person.setValue("Subcutânea", forKey:"route")
                     case 22:
-                        person.setValue(Constants.inOvo, forKey:"route")
+                        person.setValue("In Ovo", forKey:"route")
                     case 24:
-                        person.setValue(Constants.intraMuscularStr, forKey:"route")
+                        person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue(Constants.sprayStr, forKey:"route")
+                        person.setValue("Spray", forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -3279,7 +3279,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return FieldVaccindataArray
         
@@ -3307,7 +3307,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return FieldVaccindataArray
         
@@ -3336,7 +3336,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return FieldVaccindataArray
     }
@@ -3371,7 +3371,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -3405,7 +3405,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -3470,7 +3470,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Skeleta")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
+        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
         
         do
             
@@ -3497,7 +3497,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     // MARK: 🟢 *************** Fetch Settings data for Skleta *********************************************
@@ -3523,7 +3523,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return dataSkeletaArray
@@ -3536,7 +3536,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Skeleta")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         
         do
         {
@@ -3552,7 +3552,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return dataSkeletaArray
     }
@@ -3614,7 +3614,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Coccidiosis")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
+        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
         
         do {
             
@@ -3639,7 +3639,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     // MARK: 🟠 Update Quick Link for All observation Category
@@ -3714,7 +3714,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return necropsyStep1Array
@@ -3739,7 +3739,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch  {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return dataCociiaArray
@@ -3752,7 +3752,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "Coccidiosis")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         
         do
         {
@@ -3765,7 +3765,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return dataCociiaArray
@@ -3837,7 +3837,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITract")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
+        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
         
         do
             
@@ -3864,7 +3864,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     // MARK: 🟠 ************ Fetch data Of GiTract* ***************************************/
@@ -3891,7 +3891,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return dataGiTractArray
     }
@@ -3919,7 +3919,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return dataGiTractArray
@@ -3933,7 +3933,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITract")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -3948,7 +3948,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return dataGiTractArray
@@ -4022,7 +4022,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Respiratory")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
+        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
         do
             
         {
@@ -4046,7 +4046,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     // MARK: 🟠************ Fetch all Respiratory details* ***************************************/
@@ -4071,7 +4071,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return dataRespiratoryArray
     }
@@ -4082,7 +4082,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Respiratory")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -4097,7 +4097,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return dataRespiratoryArray
     }
@@ -4166,7 +4166,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Immune")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refId, refId)
+        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
         do
             
         {
@@ -4192,7 +4192,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -4219,7 +4219,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return dataImmuneArray
     }
@@ -4230,7 +4230,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "Immune")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         
         do
         {
@@ -4246,7 +4246,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return dataImmuneArray
@@ -4315,7 +4315,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return routeArray
@@ -4328,7 +4328,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "Route")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         
         do
         {
@@ -4344,7 +4344,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return routeArray
         
@@ -4411,7 +4411,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return custArray
         
@@ -4439,7 +4439,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return custArray
         
@@ -4504,7 +4504,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return SalesRepDataArray
         
@@ -4575,7 +4575,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return VeterianTypeArray
         
@@ -4601,7 +4601,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return VeterianTypeArray
         
@@ -4673,7 +4673,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return CocoiiProgramArray
     }
@@ -4686,7 +4686,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocciProgramPosting")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         
         do
         {
@@ -4703,7 +4703,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return CocoiiProgramArray
         
@@ -4777,7 +4777,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return BirdSizeArray
@@ -4846,7 +4846,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return SessionTypeArray
@@ -4860,7 +4860,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "Sessiontype")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         
         do
         {
@@ -4876,7 +4876,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return SessionTypeArray
@@ -4946,7 +4946,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return BreedTypeArray
@@ -5026,7 +5026,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return postingArray
@@ -5051,7 +5051,7 @@ class CoreDataHandler : NSObject  {
                 
             }
         } catch {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return postingArray
@@ -5079,7 +5079,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return complexArray
@@ -5186,7 +5186,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return generationArray
@@ -5216,7 +5216,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return productionArray
@@ -5290,7 +5290,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return complexArray
@@ -5369,7 +5369,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return loginArray
@@ -5397,7 +5397,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return loginArray
@@ -5427,7 +5427,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         CustmerRep.append(person)
@@ -5456,7 +5456,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return custRep
     }
@@ -5484,7 +5484,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return custRep
@@ -5510,14 +5510,14 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
     // MARK: - 🔴 Delete Necropsy Step 1 Data with Posting ID
     func deleteDataWithPostingIdStep1data (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: Constants.necropsyId, postingId)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -5531,7 +5531,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5539,7 +5539,7 @@ class CoreDataHandler : NSObject  {
     func deleteDataWithPostingIdStep2dataCaptureNecView (_ postingId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: Constants.necropsyId, postingId)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -5553,14 +5553,14 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     // MARK: - 🔴 Delete Birds Notes Step 2 Data with Posting ID
     func deleteDataWithPostingIdStep2NotesBird (_ postingId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: Constants.necropsyId, postingId)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -5574,7 +5574,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5582,7 +5582,7 @@ class CoreDataHandler : NSObject  {
     func deleteDataWithPostingIdStep2CameraIamge (_ postingId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: Constants.necropsyId, postingId)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -5596,7 +5596,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     // MARK: - 🔴 Delete Hatchery Vaccine Data with Posting ID
@@ -5617,7 +5617,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -5639,7 +5639,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5663,7 +5663,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5685,7 +5685,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5706,7 +5706,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5728,7 +5728,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5750,7 +5750,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5773,7 +5773,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5795,7 +5795,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     // MARK: - 🔴 Delete MyCotoxin Binder Feed Data with Posting ID
@@ -5816,14 +5816,14 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
     // MARK: - 🔴 Delete Captured Feed Data with Necropsy ID
     func deleteDataWithPostingIdCaptureStepData (_ necId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: Constants.necropsyId, necId)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchUsers.predicate                = fetchPredicate
         
@@ -5838,7 +5838,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -5875,7 +5875,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -5893,7 +5893,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -5923,7 +5923,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         return auto!
         
@@ -5985,7 +5985,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         postingSession.append(contact1)
@@ -6057,7 +6057,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -6101,7 +6101,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -6189,7 +6189,7 @@ class CoreDataHandler : NSObject  {
         do {
             try managedContext.save()
         } catch {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         postingSession.append(contact1)
@@ -6276,7 +6276,7 @@ class CoreDataHandler : NSObject  {
         do {
             try managedContext.save()
         } catch {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         postingSession.append(contact1)
@@ -6328,7 +6328,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }
@@ -6340,7 +6340,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         do
         { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if fetchedResult!.count > 0
@@ -6390,7 +6390,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -6402,7 +6402,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyIdFarmName, necId,formName)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId,formName)
         do
         { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if fetchedResult!.count > 0
@@ -6424,7 +6424,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -6454,7 +6454,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -6484,7 +6484,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -6540,7 +6540,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -6636,7 +6636,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -6679,7 +6679,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSession")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.isSync, NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -6736,7 +6736,7 @@ class CoreDataHandler : NSObject  {
             }}
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         
@@ -6769,7 +6769,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
     }
     
@@ -6794,7 +6794,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return postingArray
@@ -6824,7 +6824,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
         return postingArray
@@ -6840,7 +6840,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSession")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.isSync, NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -6870,7 +6870,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSession")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.isSync, NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -7003,7 +7003,7 @@ class CoreDataHandler : NSObject  {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
+            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
             
             do
             {
@@ -7232,7 +7232,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
+        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -7311,7 +7311,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.isSyncPostingId, isSync,postinID)
+        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", isSync,postinID)
         do
             
         {
@@ -7453,7 +7453,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedId, postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
         
         do
         {
@@ -7487,7 +7487,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.isSyncPostingId, NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
         do
             
         {
@@ -7578,7 +7578,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedId, postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
         
         do
         {
@@ -7611,7 +7611,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.isSyncPostingId, NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
         
         do
         {
@@ -7699,7 +7699,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedId, postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
         
         do
             
@@ -7758,7 +7758,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.isSyncPostingId, NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
         
         do
         {
@@ -7793,7 +7793,7 @@ class CoreDataHandler : NSObject  {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
+            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
             
             do
             {
@@ -7996,7 +7996,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
+        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -8087,7 +8087,7 @@ class CoreDataHandler : NSObject  {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
+            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
             
             do
             {
@@ -8287,7 +8287,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
+        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -8371,7 +8371,7 @@ class CoreDataHandler : NSObject  {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
+            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
             
             do
             {
@@ -8565,7 +8565,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
+        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
         
         do
         {
@@ -8726,7 +8726,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "FeedProgram")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.feedIdStr, feedId)
+        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
         
         do
         {
@@ -9068,7 +9068,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necropsyId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necropsyId)
         
         do
         {
@@ -9178,7 +9178,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         
         do
         {
@@ -9391,7 +9391,7 @@ class CoreDataHandler : NSObject  {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -9420,7 +9420,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -9487,7 +9487,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         
         do
         {
@@ -9527,7 +9527,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         
         do
         {
@@ -9564,7 +9564,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyIdFarmName, necId , formName , feedProgramName)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId , formName , feedProgramName)
         
         do
         {
@@ -9597,7 +9597,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyIdFarmName, necId , formName )
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId , formName )
         
         do
         {
@@ -9740,7 +9740,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         
         do
         {
@@ -9821,7 +9821,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -10328,7 +10328,7 @@ class CoreDataHandler : NSObject  {
     // MARK: - 🔴 Delete Step 2 data for Captured Necropsy
     func deleteDataWithStep2data (_ necId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: Constants.necropsyId, necId)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
         let fetchUsers            = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
         fetchUsers.predicate   = fetchPredicate
         do
@@ -10385,7 +10385,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         
         do
         {
@@ -10425,7 +10425,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         
         do
         {
@@ -10683,7 +10683,7 @@ class CoreDataHandler : NSObject  {
     func deleteImageForSingle (_ necId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: Constants.necropsyId, necId)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -10757,7 +10757,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -10824,7 +10824,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "BirdPhotoCapture")
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId,necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@",necId)
         fetchRequest.returnsObjectsAsFaults = false
         
         do
@@ -10855,7 +10855,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
-        fetchRequest.predicate = NSPredicate(format: Constants.isSync, NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
         fetchRequest.returnsObjectsAsFaults = false
         do
         {
@@ -11074,7 +11074,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocoiVaccine")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         
         do
         {
@@ -11129,7 +11129,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MoleCuleFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.lngId, lngId)
+        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
         
         do
         {
@@ -11156,7 +11156,7 @@ class CoreDataHandler : NSObject  {
     func deleteDataBirdNotesWithId (_ necId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: Constants.necropsyId, necId)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
         let fetchUsers   = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
         fetchUsers.predicate   = fetchPredicate
         do
@@ -11179,7 +11179,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyId, necId)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -11995,7 +11995,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necropsyIdFarmName, necropsyId, farmName)
+        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necropsyId, farmName)
         
         do
         {
@@ -12300,7 +12300,7 @@ class CoreDataHandler : NSObject  {
     func deleteDataWithPostingIdStep1dataWithfarmName (_ postingId: NSNumber,farmName:String, _ completion: (_ status: Bool) -> Void)
     {
         
-        let fetchPredicate = NSPredicate(format: Constants.necropsyIdFarmName, postingId,farmName)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", postingId,farmName)
         let fetchUsers = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchUsers.predicate = fetchPredicate
         do        {
@@ -12362,7 +12362,7 @@ class CoreDataHandler : NSObject  {
     // MARK: - 🔴 Delete Necropsy capyured Image for specific Posting ID
     func deleteDataWithPostingIdStep2CameraIamgeWithFarmName (_ postingId:NSNumber,farmName:String, _ completion: (_ status: Bool) -> Void) {
         
-        let fetchPredicate = NSPredicate(format: Constants.necropsyIdFarmName, postingId,farmName)
+        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", postingId,farmName)
         let fetchUsers = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
         fetchUsers.predicate = fetchPredicate
         do {

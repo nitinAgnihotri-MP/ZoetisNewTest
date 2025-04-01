@@ -49,7 +49,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
     let buttonbg = UIButton ()
     var complexArr  = NSMutableArray()
     var lngId = NSInteger()
-    let noHistoricalData = Constants.noHisData
+    let noHistoricalData = "No historical data."
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -441,7 +441,9 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         let activityViewController = UIActivityViewController(activityItems:[template as Any,self.subjectString], applicationActivities: nil)
         activityViewController.setValue(self.subjectString, forKey: "subject")
         activityViewController.popoverPresentationController?.sourceView = self.btnShare
-        self.navigationController?.present(activityViewController, animated: true)
+        self.navigationController?.present(activityViewController, animated: true, completion: {
+            
+        })
     }
     func didFinishWithParsing(finishedArray : NSArray){
         

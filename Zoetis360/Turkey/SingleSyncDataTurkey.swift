@@ -376,13 +376,13 @@ class SingleSyncDataTurkey: NSObject {
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
               //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = [Constants.authorisationStr:accestoken]
+                let headerDict = ["Authorization":accestoken]
                 
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -479,19 +479,19 @@ class SingleSyncDataTurkey: NSObject {
                 
                 let routeName = pSession.route
                 var routeId = NSNumber()
-                if routeName == Constants.drinkingWater {
+                if routeName == "Drinking Water" {
                     routeId = 2
-                } else if routeName == Constants.wingWeb {
+                } else if routeName == "Wing-Web" {
                     routeId = 1
-                } else if routeName == Constants.sprayStr {
+                } else if routeName == "Spray" {
                     routeId = 3
-                } else if routeName == Constants.inOvo {
+                } else if routeName == "In Ovo" {
                     routeId = 4
                 } else if routeName == "Subcutaneous" {
                     routeId = 5
-                } else if routeName == Constants.intraMuscularStr {
+                } else if routeName == "Intramuscular" {
                     routeId = 6
-                } else  if  routeName == Constants.eyeDrop{
+                } else  if  routeName == "Eye Drop"{
                     routeId = 7
                 }
                 else{
@@ -515,25 +515,25 @@ class SingleSyncDataTurkey: NSObject {
                 
                 var fieldStrain1 = String()
                 var routeId = NSNumber()
-                if routeName == Constants.drinkingWater {
+                if routeName == "Drinking Water" {
                     routeId = 2
                 }
-                else if routeName == Constants.wingWeb {
+                else if routeName == "Wing-Web" {
                     routeId = 1
                 }
-                else if routeName == Constants.sprayStr {
+                else if routeName == "Spray" {
                     routeId = 3
                 }
-                else if routeName == Constants.inOvo {
+                else if routeName == "In Ovo" {
                     routeId = 4
                 }
                 else if routeName == "Subcutaneous" {
                     routeId = 5
                 }
-                else if routeName == Constants.intraMuscularStr {
+                else if routeName == "Intramuscular" {
                     routeId = 6
                 }
-                else  if  routeName == Constants.eyeDrop{
+                else  if  routeName == "Eye Drop"{
                     routeId = 7
                 }
                 else{
@@ -584,12 +584,12 @@ class SingleSyncDataTurkey: NSObject {
                 let Url = "/PostingSession/SaveMultipleVaccinationsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
                // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = [Constants.authorisationStr:accestoken]
+                let headerDict = ["Authorization":accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -725,12 +725,12 @@ class SingleSyncDataTurkey: NSObject {
                 let Url = "PostingSession/T_SaveMultiplePostingsSyncData"
                // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-                let headerDict = [Constants.authorisationStr:accestoken]
+                let headerDict = ["Authorization":accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.httpBody = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -990,13 +990,13 @@ class SingleSyncDataTurkey: NSObject {
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
                // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = [Constants.authorisationStr:accestoken]
+                let headerDict = ["Authorization":accestoken]
                 let Url = "PostingSession/T_SaveMultipleNecropsySyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1220,13 +1220,13 @@ class SingleSyncDataTurkey: NSObject {
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
                // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = [Constants.authorisationStr:accestoken]
+                let headerDict = ["Authorization":accestoken]
                 let Url = "PostingSession/SaveBirdImageSyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDict, options: [])
                 
@@ -1423,12 +1423,12 @@ class SingleSyncDataTurkey: NSObject {
             let Url = "Setting/SaveUserSetting"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
           //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict = [Constants.authorisationStr:accestoken]
+            let headerDict = ["Authorization":accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             var request = URLRequest(url: URL(string: urlString)! )
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
-            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1474,7 +1474,7 @@ class SingleSyncDataTurkey: NSObject {
             
             let Url = "Token"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
-            let headers: HTTPHeaders = [Constants.contentType: "application/x-www-form-urlencoded", "Accept": Constants.applicationJson]
+            let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"]
             let parameters:[String:String] = ["grant_type": "password","UserName" : CryptoHelper.encrypt(input: userName) as! String, "Password" : CryptoHelper.encrypt(input: pass) as! String, "LoginType": "Web", "DeviceId":udid as! String]
             sessionManager.request(urlString, method: .post, parameters: parameters, headers: headers).responseJSON { response in
                 switch response.result {
@@ -1482,11 +1482,11 @@ class SingleSyncDataTurkey: NSObject {
                     let statusCode = response.response?.statusCode
                     let dict : NSDictionary = value as! NSDictionary
                     if statusCode == 400{
-                        _ = dict[Constants.errorDescStr]
+                        _ = dict["error_description"]
                     }
                     
                     else if statusCode == 401{
-                        _ = dict[Constants.errorDescStr]
+                        _ = dict["error_description"]
                     }
                     else{
                         let acessToken = (dict.value(forKey: "access_token") as? String)!

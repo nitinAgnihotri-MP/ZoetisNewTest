@@ -41,7 +41,7 @@ struct Constants {
     static var isEMCalledFromDraft : Bool = false
     static var isAssessmentRejected : Bool = false
     static var appInstalledFirstTime : Bool = false
-    static var offline = Constants.currentlyOfflineStr
+    static var offline = "You are currently offline. Please go online to sync data."
     static var isForUnlinkedTurkey = false
     static var isForUnlinkedChicken = false
     static var SelectedFarmChicken : Int = 0
@@ -214,37 +214,7 @@ struct Constants {
     static let normalStr = "Normal."
     static let noDataReceivedStr = "No data received from the API."
     static let maleFemaleStr = "Male/Female"
-    static let percentageAt = Constants.percentageStr
-    static let applicationJson = "application/json"
-    static let contentType = "Content-Type"
-    static let wingWeb = "Wing-Web"
-    static let drinkingWater = "Drinking Water"
-    static let inOvo = "In Ovo"
-    static let eyeDrop = "Eye Drop"
-	static let currentlyOfflineStr = "You are currently offline. Please go online to sync data."
-	static let dataSyncCompleted = "Data sync has been completed."
-	static let fieldsMarkedStr = "Fields marked as (*) are mandatory. Please fill all the fields."
-	static let unknownCodeStr = "Unknown code"
-	static let errorDescStr = "error_description"
-	static let sprayStr = "Spray"
-	static let intraMuscularStr = "Intramuscular"
-	static let noStoreNoCacheMustRevalidatePrivate = "no-store, no-cache, must-revalidate, private"
-	static let authorisationStr = "Authorization"
-	static let noDataReceived = "No data received from the server."
-	static let percentageStr = "%@(%@)"
-	static let displayStr = "#display:none#"
-	static let complexTotalStr = "Complex Total"
-	static let displayNone = "display:none"
-	static let noHisData = "No historical data."
-	static let merginLeft = "margin-left:-40px"
-	static let refId = "refId == %@"
-	static let lngId = "lngId == %@"
-	static let necropsyId = "necropsyId == %@"
-	static let necropsyIdFarmName = "necropsyId == %@ AND farmName == %@"
-	static let isSync = "isSync == %@"
-	static let feedIdStr = "feedId == %@"
-	static let isSyncPostingId = "isSync == %@ AND postingId == %@"
-	static let postingIdFeedId = "postingId == %@ AND feedId = %@"
+    static let percentageAt = "%@(%@)"
 }
 
 enum ZoetisArt {

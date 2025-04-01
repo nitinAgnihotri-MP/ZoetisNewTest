@@ -703,7 +703,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             }
             else
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }
         else{
@@ -750,14 +750,14 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     // MARK: 🟠 Failed With Internet Connection offline
     func failWithInternetConnection()
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
     func printSyncLblCount()

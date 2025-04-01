@@ -159,7 +159,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
             }
             else
             {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         }
         else{
@@ -712,14 +712,14 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     
     func failWithInternetConnection()
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
     // MARK: 🟠 Print Sync Count.

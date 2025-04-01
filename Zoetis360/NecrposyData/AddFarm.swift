@@ -126,7 +126,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
     fileprivate func unlinkedSessionRequiredFieldvalidation() {
         if (trimmedString == "" ||  lblAge.text == "" ){
             
-            showAlertIfNeeded(message: NSLocalizedString(Constants.fieldsMarkedStr, comment: ""))
+            showAlertIfNeeded(message: NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
             if trimmedString == ""{
                 farmNameTextField.layer.borderColor = UIColor.red.cgColor
@@ -161,7 +161,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         }
         else if (trimmedString == "" || feedProgramDisplayLabel.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") ||  lblAge.text == "" ||  houseNoTextFld.text == "" )  {
             
-            showAlertIfNeeded(message: NSLocalizedString(Constants.fieldsMarkedStr, comment: ""))
+            showAlertIfNeeded(message: NSLocalizedString("Fields marked as (*) are mandatory. Please fill all the fields.", comment: ""))
             
             feedProgramOutlet.layer.borderColor = UIColor.red.cgColor
             

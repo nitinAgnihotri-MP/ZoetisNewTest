@@ -1905,7 +1905,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         if selectedCategory?.sequenceNoo == 1 {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEInovojectHeaderFooterView" ) as! PEInovojectHeaderFooterView
             headerView.isUserInteractionEnabled = false
-            headerView.lblTitle.text = Constants.inOvo
+            headerView.lblTitle.text = "In Ovo"
             headerView.txtCSize.text = peNewAssessment.iCS
             headerView.txtDType.text = peNewAssessment.iDT
             headerView.txtAntiBiotic.text = peNewAssessment.hatcheryAntibioticsText
@@ -4110,7 +4110,7 @@ extension PEViewAssesmentFinalize{
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }else{
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     

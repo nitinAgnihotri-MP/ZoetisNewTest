@@ -2395,7 +2395,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                             }
                             else {
                                 
-                                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+                                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
                             }
                         } else{
                             
@@ -3435,7 +3435,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 self.ssologoutMethod()
                 CoreDataHandlerTurkey().deleteAllDataTurkey("CustmerTurkey")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)

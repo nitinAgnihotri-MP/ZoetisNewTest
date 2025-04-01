@@ -177,7 +177,7 @@ extension SidePanelViewController: UITableViewDataSource , UITableViewDelegate{
         let arr = arrayMenuOptions[indexPath.row]
         delegate?.didSelectLeftPenal(indexPath.row, selectedDetails: arr)
         if indexPath.row == 5 {
-            print(appDelegateObj.testFuntion())
+            print("Test Body")
         }
         
     }

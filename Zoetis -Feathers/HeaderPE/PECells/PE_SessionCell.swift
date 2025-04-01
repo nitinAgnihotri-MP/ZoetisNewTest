@@ -106,6 +106,92 @@ class PE_SessionCell: UITableViewCell {
     
     
     
+    fileprivate func extractedFunc(_ peNewAssessment: PENewAssessment) {
+        if peNewAssessment.IsEMRequested == false {
+            if peNewAssessment.extndMicro == false {
+                extendedMicroLbl.text = Constants.noStr
+                emstatus.text = "N/A"
+                
+                editBtn.isHidden = true
+                editImage.isHidden = true
+                editBtn.isUserInteractionEnabled = false
+            } else {
+                if peNewAssessment.sanitationValue == false
+                {
+                    extendedMicroLbl.text = "N/A"
+                    editBtn.isHidden = true
+                    editImage.isHidden = true
+                    editBtn.isUserInteractionEnabled = false
+                    emstatus.text = Constants.noStr
+                } else {
+                    extendedMicroLbl.text = "Incomplete"
+                    editBtn.isHidden = false
+                    editImage.isHidden = false
+                    editBtn.isUserInteractionEnabled = true
+                    emstatus.text = "In Progress"
+                }
+            }
+            
+        } else {
+            extendedMicroLbl.text = "Completed"
+            editBtn.isHidden = true
+            editImage.isHidden = true
+            editBtn.isUserInteractionEnabled = false
+            if peNewAssessment.isEMRejected == true && peNewAssessment.isPERejected == false {
+                emstatus.text = "Rejected"
+            } else if peNewAssessment.isEMRejected == false && peNewAssessment.isPERejected == false  {
+                emstatus.text = "Submitted"
+            } else {
+                emstatus.text = "Submitted"
+            }
+        }
+    }
+    
+    fileprivate func extractedFunc1(_ peNewAssessment: PENewAssessment) {
+        if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == true {
+            emstatus.text = "Rejected"
+            emRejectedComentBtn.isHidden = false
+            lblAction.text = "Rejected"
+            infoButton.isHidden = false
+            
+            if peNewAssessment.extndMicro == false{
+                extendedMicroLbl.text = Constants.noStr
+            }
+            else{
+                extendedMicroLbl.text = "Yes"
+            }
+        } else if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true {
+            emstatus.text = "Rejected"
+            emRejectedComentBtn.isHidden = false
+            lblAction.text = "Approved"
+            infoButton.isHidden = true
+            
+            if peNewAssessment.extndMicro == false{
+                extendedMicroLbl.text = Constants.noStr
+            }
+            else{
+                extendedMicroLbl.text = "Yes"
+            }
+        } else if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == false {
+            lblAction.text = "Rejected"
+            if peNewAssessment.sanitationValue == false{
+                extendedMicroLbl.text = Constants.noStr
+                emstatus.text = "N/A"
+            }
+            
+        } else if peNewAssessment.IsEMRequested == false && peNewAssessment.sanitationValue == false {
+            lblAction.text = "Rejected"
+            if peNewAssessment.extndMicro == false{
+                extendedMicroLbl.text = Constants.noStr
+                emstatus.text = "N/A"
+            }
+        } else {
+            extendedMicroLbl.text = Constants.noStr
+            emstatus.text = "N/A"
+            emRejectedComentBtn.isHidden = true
+        }
+    }
+    
     func config(peNewAssessment:PENewAssessment, index: IndexPath)  {
         self.tapGestureOnLabel1 = { (sender) in
             let assId = "C-" + "\(peNewAssessment.dataToSubmitID ?? "")"
@@ -128,117 +214,13 @@ class PE_SessionCell: UITableViewCell {
         
         if !Constants.isFromRejected {
             lblAction.text = "Submitted"
-            if peNewAssessment.IsEMRequested == false {
-                if peNewAssessment.extndMicro == false
-                {
-                    extendedMicroLbl.text = Constants.noStr
-                    emstatus.text = "N/A"
-                    
-                    editBtn.isHidden = true
-                    editImage.isHidden = true
-                    editBtn.isUserInteractionEnabled = false
-                }
-                else
-                {
-                    if peNewAssessment.sanitationValue == false
-                    {
-                        extendedMicroLbl.text = "N/A"
-                        editBtn.isHidden = true
-                        editImage.isHidden = true
-                        editBtn.isUserInteractionEnabled = false
-                        emstatus.text = Constants.noStr
-                    }
-                    else
-                        
-                    {
-                        extendedMicroLbl.text = "Incomplete"
-                        editBtn.isHidden = false
-                        editImage.isHidden = false
-                        editBtn.isUserInteractionEnabled = true
-                        emstatus.text = "In Progress"
-                    }
-                    
-                  
-                }
-                
-            }
-            else {
-                extendedMicroLbl.text = "Completed"
-                editBtn.isHidden = true
-                editImage.isHidden = true
-                editBtn.isUserInteractionEnabled = false
-                if peNewAssessment.isEMRejected == true && peNewAssessment.isPERejected == false {
-                    emstatus.text = "Rejected"
-                }
-                else if peNewAssessment.isEMRejected == false && peNewAssessment.isPERejected == false  {
-                    emstatus.text = "Submitted"
-                } else {
-                    emstatus.text = "Submitted"
-                }
-              
-            }
-        }
-        else {
+            extractedFunc(peNewAssessment)
+        } else {
             editBtn.isHidden = true
             editImage.isHidden = true
             
-            
-            if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == true
-            {
-                emstatus.text = "Rejected"
-                emRejectedComentBtn.isHidden = false
-                lblAction.text = "Rejected"
-                infoButton.isHidden = false
-                
-                if peNewAssessment.extndMicro == false{
-                    extendedMicroLbl.text = Constants.noStr
-                }
-                else{
-                    extendedMicroLbl.text = "Yes"
-                }
-            }
-            else if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
-            {
-                emstatus.text = "Rejected"
-                emRejectedComentBtn.isHidden = false
-                lblAction.text = "Approved"
-                infoButton.isHidden = true
-                
-                if peNewAssessment.extndMicro == false{
-                    extendedMicroLbl.text = Constants.noStr
-                }
-                else{
-                    extendedMicroLbl.text = "Yes"
-                }
-            }
-            
-            else if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == false
-            {
-                lblAction.text = "Rejected"
-                if peNewAssessment.sanitationValue == false{
-                    extendedMicroLbl.text = Constants.noStr
-                    emstatus.text = "N/A"
-                }
-                
-            }
-            
-            else if peNewAssessment.IsEMRequested == false && peNewAssessment.sanitationValue == false
-            {
-                lblAction.text = "Rejected"
-                if peNewAssessment.extndMicro == false{
-                    extendedMicroLbl.text = Constants.noStr
-                    emstatus.text = "N/A"
-                }
-            }
-         
-             else {
-                 extendedMicroLbl.text = Constants.noStr
-                 emstatus.text = "N/A"
-                 emRejectedComentBtn.isHidden = true
-            }
- 
+            extractedFunc1(peNewAssessment)
         }
-
         
         var AssessmentId = peNewAssessment.dataToSubmitNumber ?? 0
         if AssessmentId == 0 {
@@ -260,18 +242,9 @@ class PE_SessionCell: UITableViewCell {
         if !Constants.isFromRejected{
             lblAssessment.text = DisplayId
         }
-
-        
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
-    // MARK: - IBACTIONS
-
-//    @IBAction func idInfoClicked(sender: UIButton) {
-//    }
-    
-    
 }

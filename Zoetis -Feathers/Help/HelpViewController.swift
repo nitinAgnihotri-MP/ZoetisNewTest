@@ -155,7 +155,7 @@ class HelpViewController: UIViewController, userLogOut, UIScrollViewDelegate, sy
                 
                 self.callSyncApi()
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
             }
         } else {
             Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("Data not available for syncing.", comment: ""))
@@ -231,13 +231,13 @@ class HelpViewController: UIViewController, userLogOut, UIScrollViewDelegate, sy
     func didFinishApi() {
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
+        Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("Data sync has been completed.", comment: ""))
     }
     
     func failWithInternetConnection() {
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+        Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
     }
     
 }

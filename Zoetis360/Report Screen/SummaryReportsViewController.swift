@@ -49,7 +49,7 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
     var complexArr  = NSMutableArray()
     
     var lngId = NSInteger()
-let noHistoricData = Constants.noHisData
+let noHistoricData = "No historical data."
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         lngId = UserDefaults.standard.integer(forKey: "lngId")

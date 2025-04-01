@@ -1486,7 +1486,7 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
 //                else{
 //                    return 1
 //                }
-//
+//                
 //            }
 //            if section == 6 {
 //                return vaccinInfoDetailArr.count
@@ -1786,10 +1786,10 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
         
         let otherAntgnStr = vaccinInfoDetailArr[indexPath.row]["serotype"] as? [String]
         let searchString = "Other"
-        let result = otherAntgnStr?.contains(where: searchString.contains) as? Bool
-        let antigenStr = result == true ? "Other" : "nk"
-        
-        cell.refreshAntigenView(str:antigenStr)
+        if let result = otherAntgnStr?.contains(where: searchString.contains) as? Bool {
+            let antigenStr = result ? "Other" : "nk"
+            cell.refreshAntigenView(str:antigenStr)
+        }
         return cell
     }
     
@@ -1815,7 +1815,7 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
                 cell.contentView.backgroundColor = #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
             }
             return cell
-        } else if  isLiveVaccineOn == false{
+        } else {
             
             let isSelecteLivedArr = liveQuesArr.value(forKey: "liveComment") as? [String]
             let liveComment: String!
@@ -1828,18 +1828,6 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
             cell.QuesIdArr = liveQuesArr
             cell.notetxtView.text = liveComment
             return cell
-        } else {
-            let isSelecteLivedArr = liveQuesArr.value(forKey: "liveComment") as? [String]
-            let liveComment = isSelecteLivedArr![0]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "switchVaccineNote", for: indexPath) as! Vaccine_NoteTypeCell
-            cell.currentIndPath = indexPath as NSIndexPath
-            cell.notetxtView.text =  "\(liveComment)"
-            cell.type = "draft"
-            cell.timeStampStr = currentTimeStamp
-            cell.SwitchState = isLiveVaccineOn
-            cell.QuesIdArr = liveQuesArr
-            return cell
-            
         }
     }
     

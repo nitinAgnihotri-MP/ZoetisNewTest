@@ -181,51 +181,55 @@ extension PVEVaccineInfoDetailsCell: UITextFieldDelegate{
         self.endEditing(true)
     }
     
+    fileprivate func extractedFunc(_ newString: String) {
+        if newString.count > 0 {
+            delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, Str: newString, fieldType: "otherAntigen")
+        }else{
+            delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, Str: "", fieldType: "otherAntigen")
+        }
+    }
+    
+    fileprivate func extractedFunc1(_ newString: String) {
+        self.sharedManager.setBorderBlue(btn: serialBtn)
+        
+        if newString.count > 0 {
+            delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, serialStr: newString)
+            
+        } else {
+            delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, serialStr: "")
+        }
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
-        if textField == vacNameTxtFld{
-            if newString.count > 40{
+        if textField == vacNameTxtFld {
+            if newString.count > 40 {
                 return false
             }
             if newString.count > 0 {
                 self.sharedManager.setBorderBlue(btn: vacNameBtn)
                 delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, vacNameStr: newString)
-            }else{
+            } else {
                 delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, vacNameStr: "")
             }
             
-        }
-        else if textField == otherAntigenTxtFld{
+        } else if textField == otherAntigenTxtFld {
             if newString.count > 40{
                 return false
             }
-            if newString.count > 0 {
-                delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, Str: newString, fieldType: "otherAntigen")
-            }else{
-                delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, Str: "", fieldType: "otherAntigen")
-            }
+            extractedFunc(newString)
             
-        }
-        else  if textField == serialTxtFld {
+        } else if textField == serialTxtFld {
             
-            if newString.count > 40{
+            if newString.count > 40 {
                 return false
             }
             
-            
-            self.sharedManager.setBorderBlue(btn: serialBtn)
-            
-            if newString.count > 0 {
-                delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, serialStr: newString)
-                
-            }else{
-                delegate?.updateVaccineInfoDetailsArrInDB(currentIndPath: currentIndPath, serialStr: "")
-            }
+            extractedFunc1(newString)
         }
         return true
     }
-    
 }
 
 

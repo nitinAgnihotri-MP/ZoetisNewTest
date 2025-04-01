@@ -704,7 +704,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }else{
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     
@@ -2382,7 +2382,7 @@ extension PEViewStartNewAssesmentINT{
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }else{
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.currentlyOfflineStr, comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     // MARK: - Create SYNC Request for Score

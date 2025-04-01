@@ -40,6 +40,9 @@ class infoLink: UIView {
         let transitionOptions = UIView.AnimationOptions.transitionCurlDown
         UIView.transition(with: self, duration: 0.75, options: transitionOptions, animations: {
             self.alpha = 1
+            
+        }, completion: { finished in
+           
         })
         return self
     }
