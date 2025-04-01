@@ -185,19 +185,22 @@ class ApiSync: NSObject {
             if isSyncPostingArrWithData == false{
                 isSyncPostingArrWithData = true
                 let pSession =  postingArrWithAllData.object(at: i) as! PostingSession
-                sessionId = pSession.postingId ?? 0
-                timestamp = pSession.timeStamp ?? ""
-                var actualTimestampStr =  pSession.actualTimeStamp ?? ""
+                sessionId = pSession.postingId!
+                timestamp = pSession.timeStamp!
+                var actualTimestampStr =  pSession.actualTimeStamp
+                if actualTimestampStr == nil {
+                    actualTimestampStr = ""
+                }
                 self.postingIdArr.add(sessionId)
                 tempArrTime.add(timestamp)
-                actualTmestamp.add(actualTimestampStr)
+                actualTmestamp.add(actualTimestampStr!)
             }
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession =  necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId ?? 0
+            sessionId = nIdSession.necropsyId!
             self.postingIdArr.add(sessionId)
         }
         
@@ -260,7 +263,7 @@ class ApiSync: NSObject {
                     let mainDict = NSMutableDictionary()
                     let antiboticFeed = fetchAntibotic.object(at: i) as! AntiboticFeed
                     let dosage = antiboticFeed.dosage
-                    let feedId = antiboticFeed.feedId as! Int
+                    var feedId = antiboticFeed.feedId as! Int
                     let startDate =  antiboticFeed.feedDate
                     let feedProgram = antiboticFeed.feedProgram
                     let fromDays = antiboticFeed.fromDays
@@ -301,7 +304,7 @@ class ApiSync: NSObject {
                     let mainDict = NSMutableDictionary()
                     let antiboticFeed = fetchAlternative.object(at: i) as! AlternativeFeed
                     let dosage = antiboticFeed.dosage
-                    let feedId = antiboticFeed.feedId as! Int
+                    var feedId = antiboticFeed.feedId as! Int
                     let startDate = antiboticFeed.feedDate
                     let feedProgram = antiboticFeed.feedProgram
                     let fromDays = antiboticFeed.fromDays
@@ -398,8 +401,8 @@ class ApiSync: NSObject {
             }
         }
         do {
-             //guard let
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+                        
+            let jsonData = try! JSONSerialization.data(withJSONObject: sessionDictMain, options: JSONSerialization.WritingOptions.prettyPrinted)
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -407,6 +410,7 @@ class ApiSync: NSObject {
                 
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
+               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
                 let headerDict = ["Authorization":accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -414,7 +418,7 @@ class ApiSync: NSObject {
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
+                request.httpBody = try! JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -740,7 +744,7 @@ class ApiSync: NSObject {
         sessionDictWithVac.setValue(sessionArr, forKey: "Vaccinations")
         
         do {
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+            let jsonData = try! JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted)
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -754,7 +758,7 @@ class ApiSync: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
+                request.httpBody = try! JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
                     
@@ -1003,7 +1007,7 @@ class ApiSync: NSObject {
         postingDictOnServer.setValue(postingServerArray, forKey: "PostingSessions")
         
         do {
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+            let jsonData = try! JSONSerialization.data(withJSONObject: postingDictOnServer, options: JSONSerialization.WritingOptions.prettyPrinted)
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -1017,7 +1021,7 @@ class ApiSync: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
+                request.httpBody = try! JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -1240,7 +1244,7 @@ class ApiSync: NSObject {
         }
         sessionWithAllforms.setValue(sessionArr, forKey: "Session")
         do {
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+            let jsonData = try! JSONSerialization.data(withJSONObject: sessionWithAllforms, options: JSONSerialization.WritingOptions.prettyPrinted)
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             if WebClass.sharedInstance.connected() {
@@ -1253,7 +1257,7 @@ class ApiSync: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
+                request.httpBody = try! JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
                     
@@ -1459,7 +1463,7 @@ class ApiSync: NSObject {
         sessionDict.setValue(sessionArr, forKey: "Sessions")
         
         do {
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+            let jsonData = try! JSONSerialization.data(withJSONObject: sessionDict, options: JSONSerialization.WritingOptions.prettyPrinted)
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -1473,7 +1477,7 @@ class ApiSync: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDict, options: [])
+                request.httpBody = try! JSONSerialization.data(withJSONObject: sessionDict, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
@@ -1727,7 +1731,7 @@ class ApiSync: NSObject {
         }
         
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+        let jsonData = try! JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted)
         var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
         jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
        
@@ -1742,7 +1746,7 @@ class ApiSync: NSObject {
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
+            request.httpBody = try! JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                 let statusCode =  response.response?.statusCode
