@@ -434,7 +434,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         let headers: HTTPHeaders = [
             "Authorization": accestoken,
             "Cache-Control": "no-store, no-cache, must-revalidate, private",
-            "Content-Type": "application/x-www-form-urlencoded",
+            Constants.contentType: "application/x-www-form-urlencoded",
         ]
         let parameters: [String: String] = [
             "grant_type": "password",

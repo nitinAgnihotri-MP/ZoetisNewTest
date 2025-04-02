@@ -174,6 +174,15 @@ class VaccineEvaluationCell: UITableViewCell {
         }
     }
     
+    fileprivate func extractedFunc10(_ injMuscleHit_LeftWing: Int, _ leftRightInjTotal: Int, _ injMuscleHit_RightWing: Int, _ injMissed_LeftWing: Int, _ injMissed_RightWing: Int) {
+        if (injMuscleHit_LeftWing != 0 && leftRightInjTotal != 0) || (injMuscleHit_RightWing != 0 && leftRightInjTotal != 0){
+            injMuscleHit_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injMuscleHit_LeftWing, RightValue: injMuscleHit_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
+        }
+        if (injMissed_LeftWing != 0 && leftRightInjTotal != 0) || (injMissed_RightWing != 0 && leftRightInjTotal != 0){
+            injMissed_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injMissed_LeftWing, RightValue: injMissed_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
+        }
+    }
+    
     fileprivate func extractedFunc5(_ injCenter_LeftWing: Int, _ leftRightInjTotal: Int, _ injCenter_RightWing: Int, _ injWingBand_LeftWing: Int, _ injWingBand_RightWing: Int, _ injMuscleHit_LeftWing: Int, _ injMuscleHit_RightWing: Int, _ injMissed_LeftWing: Int, _ injMissed_RightWing: Int) {
         if (injCenter_LeftWing != 0 && leftRightInjTotal != 0) || (injCenter_RightWing != 0 && leftRightInjTotal != 0){
             injCenter_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injCenter_LeftWing, RightValue: injCenter_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
@@ -181,12 +190,7 @@ class VaccineEvaluationCell: UITableViewCell {
         if (injWingBand_LeftWing != 0 && leftRightInjTotal != 0) || (injWingBand_RightWing != 0 && leftRightInjTotal != 0){
             injWingBand_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injWingBand_LeftWing, RightValue: injWingBand_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
         }
-        if (injMuscleHit_LeftWing != 0 && leftRightInjTotal != 0) || (injMuscleHit_RightWing != 0 && leftRightInjTotal != 0){
-            injMuscleHit_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injMuscleHit_LeftWing, RightValue: injMuscleHit_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
-        }
-        if (injMissed_LeftWing != 0 && leftRightInjTotal != 0) || (injMissed_RightWing != 0 && leftRightInjTotal != 0){
-            injMissed_LeftRight_PercentLbl.text = getPercentOfInjLeftRight(leftValue: injMissed_LeftWing, RightValue: injMissed_RightWing, totalOfHashInjLeftRight: leftRightInjTotal)
-        }
+        extractedFunc10(injMuscleHit_LeftWing, leftRightInjTotal, injMuscleHit_RightWing, injMissed_LeftWing, injMissed_RightWing)
     }
     
     fileprivate func extractedFunc6(_ totalForMuscleMIssed: Int, _ injMuscleHit_IntramusculerInj: Int, _ injMuscleHit_SubcutaneousInj: Int, _ totalForMuscleHitInj: Int, _ injMissed_IntramusculerInj: Int, _ injMissed_SubcutaneousInj: Int, _ totalForMissedInj: Int) {
@@ -609,22 +613,32 @@ extension VaccineEvaluationCell: UITextFieldDelegate{
         return true
     }
     
+    fileprivate func extractedFunc11(_ textField: UITextField, _ newString: String) {
+        if textField == injMissed_LeftWing_Field{
+            if timeStampStr.count > 0 {
+                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "injMissed_LeftWing_Field")
+                setSyncStatus()
+            }else{
+                CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMissed_LeftWing_Field")
+            }
+        }
+    }
+    
     fileprivate func extractedFunc7(_ textField: UITextField, _ newString: String) {
         //---- Left Wing Web ----
         if textField == injCenter_LeftWing_Field{
             if timeStampStr.count > 0 {
                 CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "injCenter_LeftWing_Field")
                 setSyncStatus()
-            }else{
+            } else {
                 CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injCenter_LeftWing_Field")
             }
         }
-        if textField == injWingBand_LeftWing_Field{
+        if textField == injWingBand_LeftWing_Field {
             if timeStampStr.count > 0 {
                 CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "injWingBand_LeftWing_Field")
                 setSyncStatus()
-            }else{
-                
+            } else {
                 CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injWingBand_LeftWing_Field")
             }
         }
@@ -636,12 +650,16 @@ extension VaccineEvaluationCell: UITextFieldDelegate{
                 CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMuscleHit_LeftWing_Field")
             }
         }
-        if textField == injMissed_LeftWing_Field{
+        extractedFunc11(textField, newString)
+    }
+    
+    fileprivate func extractedFunc12(_ textField: UITextField, _ newString: String) {
+        if textField == injMissed_RightWing_Field{
             if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "injMissed_LeftWing_Field")
+                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "injMissed_RightWing_Field")
                 setSyncStatus()
             }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMissed_LeftWing_Field")
+                CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMissed_RightWing_Field")
             }
         }
     }
@@ -675,12 +693,16 @@ extension VaccineEvaluationCell: UITextFieldDelegate{
                 CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMuscleHit_RightWing_Field")
             }
         }
-        if textField == injMissed_RightWing_Field{
+        extractedFunc12(textField, newString)
+    }
+    
+    fileprivate func extractedFunc13(_ textField: UITextField, _ newString: String) {
+        if textField == injMissed_SubcutaneousInj_Field{
             if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "injMissed_RightWing_Field")
+                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "injMissed_SubcutaneousInj_Field")
                 setSyncStatus()
             }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMissed_RightWing_Field")
+                CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMissed_SubcutaneousInj_Field")
             }
         }
     }
@@ -710,14 +732,7 @@ extension VaccineEvaluationCell: UITextFieldDelegate{
                 CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMuscleHit_SubcutaneousInj_Field")
             }
         }
-        if textField == injMissed_SubcutaneousInj_Field{
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "injMissed_SubcutaneousInj_Field")
-                setSyncStatus()
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: Int(newString) ?? 0, forAttribute: "injMissed_SubcutaneousInj_Field")
-            }
-        }
+        extractedFunc13(textField, newString)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

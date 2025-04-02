@@ -377,7 +377,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.loginLoaderMessage)
             let Url = "Token"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
-            let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded","Accept": "application/json"]
+            let headers: HTTPHeaders = [Constants.contentType: "application/x-www-form-urlencoded","Accept": "application/json"]
             let parameters:[String:String] = ["grant_type": "password","UserName" : CryptoHelper.encrypt(input:Email), "Password" : "" , "LoginType": "App","DeviceId":udid as! String,"ChkEnvironment":WebClass.sharedInstance.ChkEnvironmentLive , "GUID":GUID , "GUIDSignature":GUIDSignature, "SignatureTimestamp":SignatureTimestamp , "AppVersion": "\(Bundle.main.versionNumber)" , "TokenVersion":"V2"]
             
             sessionManager.request(urlString, method: .post,parameters: parameters, headers: headers).responseJSON { response in

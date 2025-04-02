@@ -301,9 +301,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute1Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -315,9 +315,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -362,9 +362,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute2Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -376,9 +376,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -424,9 +424,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute3Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -438,9 +438,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -485,9 +485,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute4Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -499,9 +499,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -547,9 +547,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute5Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -561,9 +561,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -609,9 +609,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute6Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -623,9 +623,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -671,9 +671,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute7Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -685,9 +685,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -733,9 +733,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute8Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -747,9 +747,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -796,9 +796,9 @@ class CoreDataHandler : NSObject  {
                 switch dict.value(forKey: "fieldRoute9Id") as! Int {
                     
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -810,9 +810,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -858,9 +858,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute10Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -872,9 +872,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -921,9 +921,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "fieldStrain11"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute11Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -935,9 +935,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -1013,9 +1013,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute1Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1027,9 +1027,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1087,9 +1087,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute2Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1101,9 +1101,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1162,9 +1162,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute3Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1176,9 +1176,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1236,9 +1236,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute4Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1250,9 +1250,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1310,9 +1310,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute5Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1324,9 +1324,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1383,9 +1383,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute6Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1397,9 +1397,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1457,9 +1457,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute7Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1471,9 +1471,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1531,9 +1531,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute8Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1545,9 +1545,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1606,9 +1606,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain9"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute9Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1620,9 +1620,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1681,9 +1681,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
                     switch dict.value(forKey: "fieldRoute10Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1695,9 +1695,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1755,9 +1755,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Other", forKey:"type")
                     switch dict.value(forKey: "fieldRoute11Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -1769,9 +1769,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -1843,9 +1843,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -1857,9 +1857,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -1903,9 +1903,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -1917,9 +1917,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -1963,9 +1963,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -1977,9 +1977,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -2023,9 +2023,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -2037,9 +2037,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -2083,9 +2083,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -2097,9 +2097,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -2143,9 +2143,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -2157,9 +2157,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -2203,9 +2203,9 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
                 switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -2217,9 +2217,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -2265,9 +2265,9 @@ class CoreDataHandler : NSObject  {
                 
                 switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -2279,9 +2279,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -2328,9 +2328,9 @@ class CoreDataHandler : NSObject  {
                 switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
                     
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -2342,9 +2342,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -2391,9 +2391,9 @@ class CoreDataHandler : NSObject  {
                 switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
                     
                 case 1:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
@@ -2405,9 +2405,9 @@ class CoreDataHandler : NSObject  {
                 case 7:
                     person.setValue("Eye Drop", forKey:"route")
                 case 12:
-                    person.setValue("Wing-Web", forKey:"route")
+                    person.setValue(Constants.wingWeb, forKey:"route")
                 case 13:
-                    person.setValue("Drinking Water", forKey:"route")
+                    person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
                     person.setValue("Spray", forKey:"route")
                 case 15:
@@ -2483,9 +2483,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Marek", forKey:"type")
                     switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -2497,9 +2497,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -2556,9 +2556,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -2570,9 +2570,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -2628,9 +2628,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -2642,9 +2642,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -2700,9 +2700,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -2714,9 +2714,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -2771,9 +2771,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -2785,9 +2785,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -2843,9 +2843,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -2857,9 +2857,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -2915,9 +2915,9 @@ class CoreDataHandler : NSObject  {
                     person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
                     switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -2929,9 +2929,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -2992,9 +2992,9 @@ class CoreDataHandler : NSObject  {
                     
                     switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -3006,9 +3006,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -3065,9 +3065,9 @@ class CoreDataHandler : NSObject  {
                     switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
                         
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -3079,9 +3079,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:
@@ -3138,9 +3138,9 @@ class CoreDataHandler : NSObject  {
                     
                     switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
                     case 1:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 2:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
@@ -3152,9 +3152,9 @@ class CoreDataHandler : NSObject  {
                     case 7:
                         person.setValue("Eye Drop", forKey:"route")
                     case 12:
-                        person.setValue("Wing-Web", forKey:"route")
+                        person.setValue(Constants.wingWeb, forKey:"route")
                     case 13:
-                        person.setValue("Drinking Water", forKey:"route")
+                        person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
                         person.setValue("Spray", forKey:"route")
                     case 15:

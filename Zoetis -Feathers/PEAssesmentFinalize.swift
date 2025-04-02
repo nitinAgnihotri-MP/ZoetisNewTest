@@ -1338,17 +1338,15 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         inputFormatter.dateFormat = ddmmyyStr
                         let showDate = inputFormatter.date(from: date ?? "")
                         inputFormatter.dateFormat = ddmmyyStr
+                        
+                        cell.certDateSelectBtn.setTitle(date, for: .normal)
                         if(showDate != nil) {
                             let resultString = inputFormatter.string(from: showDate!)
                             cell.certDateSelectBtn.setTitle(resultString, for: .normal)
-                        } else {
-                            cell.certDateSelectBtn.setTitle(date, for: .normal)
                         }
-                        
                     } else {
                         cell.certDateSelectBtn.setTitle(date, for: .normal)
                     }
-                    
                     cell.certDateSelectBtn.layer.borderColor = UIColor(red: 0.0, green: 200.0, blue: 226.0, alpha: 1.0).cgColor
                     dateBlock?(date , false ,true, count )
                 }
@@ -1366,12 +1364,6 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 if(cell.certDateSelectBtn.titleLabel?.text != ""){
                     self.view.endEditing(true)
                     let superviewCurrent =  cell.certDateSelectBtn.superview
-                    if superviewCurrent != nil {
-                        for view in superviewCurrent!.subviews {
-                            if view.isKind(of:UIButton.self) {
-                            }
-                        }
-                    }
                     
                     let storyBoard : UIStoryboard = UIStoryboard(name: "Selection", bundle:nil)
                     let datePickerPopupViewController = storyBoard.instantiateViewController(withIdentifier: "DatePickerPopupViewController") as? DatePickerPopupViewController

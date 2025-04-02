@@ -2484,7 +2484,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             let pass =  PasswordService.shared.getPassword()
             let Url = "Token"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
-            let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded",
+            let headers: HTTPHeaders = [Constants.contentType: "application/x-www-form-urlencoded",
                                         "Accept": "application/json",
                                         cacheControl: "no-store, no-cache, must-revalidate, private"]
             

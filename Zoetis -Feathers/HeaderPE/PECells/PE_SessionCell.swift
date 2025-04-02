@@ -147,31 +147,37 @@ class PE_SessionCell: UITableViewCell {
         }
     }
     
+    fileprivate func extractedFunc2(_ peNewAssessment: PENewAssessment) {
+        emstatus.text = "Rejected"
+        emRejectedComentBtn.isHidden = false
+        lblAction.text = "Rejected"
+        infoButton.isHidden = false
+        
+        if peNewAssessment.extndMicro == false {
+            extendedMicroLbl.text = Constants.noStr
+        } else {
+            extendedMicroLbl.text = "Yes"
+        }
+    }
+    
+    fileprivate func extractedFunc3(_ peNewAssessment: PENewAssessment) {
+        emstatus.text = "Rejected"
+        emRejectedComentBtn.isHidden = false
+        lblAction.text = "Approved"
+        infoButton.isHidden = true
+        
+        if peNewAssessment.extndMicro == false{
+            extendedMicroLbl.text = Constants.noStr
+        } else {
+            extendedMicroLbl.text = "Yes"
+        }
+    }
+    
     fileprivate func extractedFunc1(_ peNewAssessment: PENewAssessment) {
         if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == true {
-            emstatus.text = "Rejected"
-            emRejectedComentBtn.isHidden = false
-            lblAction.text = "Rejected"
-            infoButton.isHidden = false
-            
-            if peNewAssessment.extndMicro == false{
-                extendedMicroLbl.text = Constants.noStr
-            }
-            else{
-                extendedMicroLbl.text = "Yes"
-            }
+            extractedFunc2(peNewAssessment)
         } else if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true {
-            emstatus.text = "Rejected"
-            emRejectedComentBtn.isHidden = false
-            lblAction.text = "Approved"
-            infoButton.isHidden = true
-            
-            if peNewAssessment.extndMicro == false{
-                extendedMicroLbl.text = Constants.noStr
-            }
-            else{
-                extendedMicroLbl.text = "Yes"
-            }
+            extractedFunc3(peNewAssessment)
         } else if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == false {
             lblAction.text = "Rejected"
             if peNewAssessment.sanitationValue == false{

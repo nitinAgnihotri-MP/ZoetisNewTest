@@ -421,7 +421,7 @@ class SingleSyncData: NSObject {
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: [])
                 
                 
@@ -525,16 +525,16 @@ class SingleSyncData: NSObject {
                 let newLngId = UserDefaults.standard.integer(forKey: "lngId")
                 
                 if newLngId == 1 {
-                    if routeName == "Wing-Web" {
+                    if routeName == Constants.wingWeb {
                         routeId = 1
                     }
-                    else if routeName == "Drinking Water" {
+                    else if routeName == Constants.drinkingWater {
                         routeId = 2
                     }
                     else if routeName == "Spray" {
                         routeId = 3
                     }
-                    else if routeName == "In Ovo" {
+                    else if routeName == Constants.inOvoStr {
                         routeId = 4
                     }
                     else if routeName == "Subcutaneous" {
@@ -543,7 +543,7 @@ class SingleSyncData: NSObject {
                     else if routeName == "Intramuscular" {
                         routeId = 6
                     }
-                    else  if  routeName == "Eye Drop"{
+                    else  if  routeName == Constants.eveDrop{
                         routeId = 7
                     }
                     else{
@@ -555,7 +555,7 @@ class SingleSyncData: NSObject {
                     if routeName == "Spray" {
                         routeId = 21
                     }
-                    else if routeName == "In Ovo" {
+                    else if routeName == Constants.inOvoStr {
                         routeId = 22
                     }
                     else if routeName == "Intramuscular" {
@@ -599,16 +599,16 @@ class SingleSyncData: NSObject {
                 let newLngId = UserDefaults.standard.integer(forKey: "lngId")
                 
                 if newLngId == 1 {
-                    if routeName == "Wing-Web" {
+                    if routeName == Constants.wingWeb {
                         routeId = 1
                     }
-                    else if routeName == "Drinking Water" {
+                    else if routeName == Constants.drinkingWater {
                         routeId = 2
                     }
                     else if routeName == "Spray" {
                         routeId = 3
                     }
-                    else if routeName == "In Ovo" {
+                    else if routeName == Constants.inOvoStr {
                         routeId = 4
                     }
                     else if routeName == "Subcutaneous" {
@@ -617,7 +617,7 @@ class SingleSyncData: NSObject {
                     else if routeName == "Intramuscular" {
                         routeId = 6
                     }
-                    else  if  routeName == "Eye Drop"{
+                    else  if  routeName == Constants.eveDrop{
                         routeId = 7
                     }
                     else{
@@ -629,7 +629,7 @@ class SingleSyncData: NSObject {
                     if routeName == "Spray" {
                         routeId = 21
                     }
-                    else if routeName == "In Ovo" {
+                    else if routeName == Constants.inOvoStr {
                         routeId = 22
                     }
                     else if routeName == "Intramuscular" {
@@ -705,7 +705,7 @@ class SingleSyncData: NSObject {
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -870,7 +870,7 @@ class SingleSyncData: NSObject {
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1036,7 +1036,7 @@ class SingleSyncData: NSObject {
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1254,7 +1254,7 @@ class SingleSyncData: NSObject {
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDict, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1444,7 +1444,7 @@ class SingleSyncData: NSObject {
             var request = URLRequest(url: URL(string: urlString)! )
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
             request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -1494,7 +1494,7 @@ class SingleSyncData: NSObject {
             
             let Url = "Token"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
-            let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded","Accept": "application/json"]
+            let headers: HTTPHeaders = [Constants.contentType: "application/x-www-form-urlencoded","Accept": Constants.applicationJson]
             let parameters:[String:String] = ["grant_type": "password","UserName" : CryptoHelper.encrypt(input: userName) as! String, "Password" : CryptoHelper.encrypt(input: pass) as! String,"LoginType": "Web","DeviceId":udid as! String]
             
             sessionManager.request(urlString, method: .post,parameters: parameters, headers: headers).responseJSON { response in

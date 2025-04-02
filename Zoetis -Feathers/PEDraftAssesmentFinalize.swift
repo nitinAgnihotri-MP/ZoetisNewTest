@@ -4282,29 +4282,33 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    fileprivate func extractedFunc15(_ ar: PE_AssessmentInProgress?, _ j: Int, _ i: Int, _ footerView: RefrigatorTempProbeCell) {
+        if(ar?.assID == self.refrigtorProbeArray[j].id) {
+            switch i {
+            case 7:
+                footerView.topTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
+                if(self.refrigtorProbeArray[j].value != 0.0) {
+                    footerView.topValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
+                }
+            case 8:
+                footerView.middleTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
+                if(self.refrigtorProbeArray[j].value != 0.0) {
+                    footerView.middleValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
+                }
+            case 9:
+                footerView.bottomTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
+                if (self.refrigtorProbeArray[j].value != 0.0) {
+                    footerView.bottomValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
+                }
+            default:
+                break
+            }
+        }
+    }
+    
     fileprivate func extractedFunc6(_ ar: PE_AssessmentInProgress?, _ i: Int, _ footerView: RefrigatorTempProbeCell) {
         for j in 0..<self.refrigtorProbeArray.count {
-            if(ar?.assID == self.refrigtorProbeArray[j].id) {
-                switch i {
-                case 7:
-                    footerView.topTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                    if(self.refrigtorProbeArray[j].value != 0.0) {
-                        footerView.topValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                    }
-                case 8:
-                    footerView.middleTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                    if(self.refrigtorProbeArray[j].value != 0.0) {
-                        footerView.middleValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                    }
-                case 9:
-                    footerView.bottomTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                    if (self.refrigtorProbeArray[j].value != 0.0) {
-                        footerView.bottomValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                    }
-                default:
-                    break
-                }
-            }
+            extractedFunc15(ar, j, i, footerView)
         }
     }
     
@@ -4890,7 +4894,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    fileprivate func extractedFunc9() {
+    fileprivate func extractedFunc9(headerView:PEInovojectHeaderFooterView,section:Int) {
         var bagSizeArray = NSArray()
         var bagSizeIDArray = NSArray()
         var bagSizeDetailsArray = NSArray()
@@ -4908,7 +4912,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    fileprivate func extractedFunc10() {
+    fileprivate func extractedFunc10(headerView:PEInovojectHeaderFooterView,section:Int) {
         var vManufacutrerNameArray = NSArray()
         var vManufacutrerIDArray = NSArray()
         var vManufacutrerDetailsArray = NSArray()
@@ -4928,7 +4932,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     func setPEInovojectHeaderFooterView(_ tableView: UITableView , section:Int) -> PEInovojectHeaderFooterView {
         if selectedCategory?.sequenceNoo == 1{
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEInovojectHeaderFooterView" ) as! PEInovojectHeaderFooterView
-            headerView.lblTitle.text = "In Ovo"
+            headerView.lblTitle.text = Constants.inOvoStr
             headerView.txtCSize.text = peNewAssessment.iCS
             headerView.txtDType.text = peNewAssessment.iDT
             headerView.txtAntiBiotic.text = peNewAssessment.hatcheryAntibioticsText
@@ -4979,10 +4983,10 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             
             headerView.dTypeCompletion =
             {[unowned self] ( error) in
-                extractedFunc10()
+                extractedFunc10(headerView:headerView,section:section)
             }
             headerView.cSizeCompletion = {[unowned self] ( error) in
-                extractedFunc9()
+                extractedFunc9(headerView:headerView,section:section)
             }
             return headerView
         } else {

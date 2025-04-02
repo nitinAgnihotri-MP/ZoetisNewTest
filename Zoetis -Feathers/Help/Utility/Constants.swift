@@ -215,6 +215,12 @@ struct Constants {
     static let noDataReceivedStr = "No data received from the API."
     static let maleFemaleStr = "Male/Female"
     static let percentageAt = "%@(%@)"
+    static let applicationJson = "application/json"
+    static let contentType = "Content-Type"
+    static let wingWeb = "Wing-Web"
+    static let drinkingWater = "Drinking Water"
+    static let inOvoStr = "In Ovo"
+    static let eveDrop = "Eye Drop"
 }
 
 enum ZoetisArt {

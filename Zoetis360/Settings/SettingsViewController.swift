@@ -544,7 +544,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
             request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as URLRequestConvertible)
@@ -887,7 +887,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             let request = NSMutableURLRequest(url: NSURL(string: urlString)! as URL )
             request.httpMethod = "POST"
             request.allHTTPHeaderFields = headerDict
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
             request.httpBody = try? JSONSerialization.data(withJSONObject: outerDict, options: [])
             
             sessionManager.request(request as! URLRequestConvertible).responseJSON { response in

@@ -1592,7 +1592,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         
         let url = NSURL(string: address)
         let request = NSMutableURLRequest(url: url! as URL)
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: Constants.contentType)
         request.setValue("\(String(describing: UserDefaults.standard.value(forKey: "Id") ?? 0))", forHTTPHeaderField: "UserId") //**
         request.setValue("\(String(describing: UserDefaults.standard.value(forKey: "aceesTokentype") ?? ""))", forHTTPHeaderField: "Authorization") //**
         

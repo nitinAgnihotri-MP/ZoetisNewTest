@@ -1905,7 +1905,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         if selectedCategory?.sequenceNoo == 1 {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEInovojectHeaderFooterView" ) as! PEInovojectHeaderFooterView
             headerView.isUserInteractionEnabled = false
-            headerView.lblTitle.text = "In Ovo"
+            headerView.lblTitle.text = Constants.inOvoStr
             headerView.txtCSize.text = peNewAssessment.iCS
             headerView.txtDType.text = peNewAssessment.iDT
             headerView.txtAntiBiotic.text = peNewAssessment.hatcheryAntibioticsText
