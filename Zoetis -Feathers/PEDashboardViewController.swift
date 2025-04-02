@@ -563,6 +563,27 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         return false
     }
     // MARK: - Set Chart for Assessment Submitted Offline
+    fileprivate func extractedFunc1() {
+        let date = resultCatfirstAssessment[0].evaluationDate ?? ""
+        var text2 = date + ""  + "(" + (resultCatfirstAssessment[0].customerName ?? "") + ", "
+        text2 = text2  + (resultCatfirstAssessment[0].siteName ?? "") + ")"
+        var resultInAssessment : [Double] = []
+        date1Label.text = date
+        date1Label.isHidden = false
+        var dataPoints : [String] = []
+        if resultCatfirstAssessment.count > 0 {
+            for obj in resultCatfirstAssessment {
+                resultInAssessment.append(Double(truncating: obj.catResultMark ?? 0))
+                let name = obj.catName ?? ""
+                var data = changeStringToArrayLevel3(name:name)
+                data = data + "(" + (obj.catMaxMark?.stringValue ?? "") + ")"
+                dataPoints.append(data )
+            }
+        }
+        let unitsSold = resultInAssessment
+        setChart(values: unitsSold,dataPoints:dataPoints,barChart: barChart1 )
+    }
+    
     private func setChartForAssesmentSubmittedOffline(count:Int){
         if count  > 0 {
             if count > 2 || count == 2 {
@@ -586,24 +607,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
                 setChart(values: unitsSold1,dataPoints:dataPoints1,barChart: barChart2 )
             }
             if count == 1 {
-                let date = resultCatfirstAssessment[0].evaluationDate ?? ""
-                var text2 = date + ""  + "(" + (resultCatfirstAssessment[0].customerName ?? "") + ", "
-                text2 = text2  + (resultCatfirstAssessment[0].siteName ?? "") + ")"
-                var resultInAssessment : [Double] = []
-                date1Label.text = date
-                date1Label.isHidden = false
-                var dataPoints : [String] = []
-                if resultCatfirstAssessment.count > 0 {
-                    for obj in resultCatfirstAssessment {
-                        resultInAssessment.append(Double(truncating: obj.catResultMark ?? 0))
-                        let name = obj.catName ?? ""
-                        var data = changeStringToArrayLevel3(name:name)
-                        data = data + "(" + (obj.catMaxMark?.stringValue ?? "") + ")"
-                        dataPoints.append(data )
-                    }
-                }
-                let unitsSold = resultInAssessment
-                setChart(values: unitsSold,dataPoints:dataPoints,barChart: barChart1 )
+                extractedFunc1()
             }
         }
     }
@@ -1264,8 +1268,24 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     }
     
     // MARK: - Sync Extended Microbial
-    func syncExtendedMicrobial (saveType: Int , statusType: Int)
-    {
+    fileprivate func extractedFunc2(_ obj: PENewAssessment) {
+        if obj.vMixer.count > 0 {
+            var idArr : [Int] = []
+            for objn in  obj.vMixer {
+                let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
+                if idArr.contains(data!.id ?? 0) {
+                    
+                } else {
+                    idArr.append(data!.id ?? 0)
+                    if data != nil {
+                        self.certificateData.append(data!)
+                    }
+                }
+            }
+        }
+    }
+    
+    func syncExtendedMicrobial (saveType: Int , statusType: Int) {
         var extendedMicroArr : [JSONDictionary]  = []
         
         if peAssessmentSyncArray.count > 0 {
@@ -1276,27 +1296,13 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 var arrIDs = [NSNumber]()
                 
                 self.certificateData.removeAll()
-                if obj.vMixer.count > 0 {
-                    var idArr : [Int] = []
-                    for objn in  obj.vMixer {
-                        let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
-                        if idArr.contains(data!.id ?? 0){
-                            
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                self.certificateData.append(data!)
-                            }
-                        }
-                    }
-                }
+                extractedFunc2(obj)
                 
-                let jsonExtendedMicro = self.createSyncRequestForExtendedMicro(dict: obj , certificationData : self.certificateData, saveType: saveType )
+                let jsonExtendedMicro =  self.createSyncRequestForExtendedMicro(dict: obj , certificationData : self.certificateData, saveType: saveType )
                 extendedMicroArr.append(jsonExtendedMicro)
                 
                 let ExtendedMicroparam = ["ExtendedMicrobialData":extendedMicroArr] as JSONDictionary
                 self.convertDictToJson(dict: ExtendedMicroparam,apiName: "Assessment_AddEMAssessment")
-                
                 self.callExtendedMicro(param: ExtendedMicroparam)
                 
             }
@@ -1509,48 +1515,48 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     }
     
     // MARK: - Call Extended Micro
-    func callExtendedMicro(param:JSONDictionary){
+    fileprivate func extractedFunc3(_ self: PEDashboardViewController) {
+        if self.objAssessment.IsEMRequested == true {
+            CoreDataHandlerPE().updateIsEMRequestedInAssessmentSwitch(isEMRequested: false, AssessmentId: objAssessment.serverAssessmentId ?? "")
+            CoreDataHandlerPE().updateIsEMRequestedInAssessmentSwitchOffline(isEMRequested: false, AssessmentId: objAssessment.serverAssessmentId ?? "")
+        } else {
+            if self.saveTypeString.contains(11) {
+                if self.saveTypeString.contains(00) {
+                    _ = CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
+                }
+                _ = CoreDataHandlerPE().updateOfflineStatus(assessment: self.objAssessment)
+            } else {
+                _ = CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
+            }
+        }
+    }
+    
+    fileprivate func extractedFunc4(_ self: PEDashboardViewController) {
+        if self.saveTypeString.contains(11) {
+            if self.saveTypeString.contains(00) {
+                _ = CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
+            }
+            _ = CoreDataHandlerPE().updateOfflineStatus(assessment: self.objAssessment)
+        } else {
+            _ = CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
+        }
+    }
+    
+    func callExtendedMicro(param:JSONDictionary) {
         
         ZoetisWebServices.shared.sendExtendedMicroToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
             guard let `self` = self, error == nil else { return }
-            if json["StatusCode"]  == 200{
-                if self.saveTypeString.contains(11)
-                {
-                    if self.saveTypeString.contains(00) {
-                        CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
-                    }
-                    CoreDataHandlerPE().updateOfflineStatus(assessment: self.objAssessment)
-                } else {
-                    CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
-                }
+            if json["StatusCode"]  == 200 {
+                extractedFunc4(self)
                 self.dismissGlobalHUD(self.view)
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                 
             } else {
-                // Condition added if APi failed because of any reason , so that user can finish this from the view session
-                          if self.objAssessment.IsEMRequested == true
-                          {
-                              CoreDataHandlerPE().updateIsEMRequestedInAssessmentSwitch(isEMRequested: false, AssessmentId: objAssessment.serverAssessmentId ?? "")
-                              CoreDataHandlerPE().updateIsEMRequestedInAssessmentSwitchOffline(isEMRequested: false, AssessmentId: objAssessment.serverAssessmentId ?? "")
-                          }
-                          else {
-                              if self.saveTypeString.contains(11)
-                              {
-                                  if self.saveTypeString.contains(00) {
-                                      CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
-                                  }
-                                  CoreDataHandlerPE().updateOfflineStatus(assessment: self.objAssessment)
-                              } else {
-                                  CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
-                              }
-                          }
-                          
-                          self.dismissGlobalHUD(self.view)
-//                self.dismissGlobalHUD(self.view)
-//                self.showAlert(title: "Error", message: "Error in Extended Micro data sync", owner: self)
+                extractedFunc3(self)
+                self.dismissGlobalHUD(self.view)
             }
         })
     }
@@ -1816,6 +1822,35 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     // MARK: - Create Sync Request for Score Data
+    fileprivate func extractedFunc5(_ dictArray: PENewAssessment, _ QCCount: inout String, _ TextAmPm: inout String, _ PPMValue: inout String, _ PersonName: inout String, _ FrequencyValue: inout Int) {
+        if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12 {
+            QCCount =  dictArray.qcCount ?? ""
+        } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous" {
+            TextAmPm =  dictArray.ampmValue ?? ""
+        } else if  dictArray.rollOut == "Y" && dictArray.sequenceNoo == 5  && dictArray.qSeqNo == 5 {
+            PPMValue =  dictArray.ppmValue ?? ""
+        } else if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 1 {
+            PersonName =  dictArray.personName ?? ""
+            let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
+            let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
+            let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
+            if dictArray.frequency?.count ?? 0 > 0 {
+                if visitNameArray.contains(dictArray.frequency ?? ""){
+                    let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
+                    FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
+                }
+            }
+        }
+    }
+    
+    fileprivate func extractedFunc6(_ dictArray: PENewAssessment, _ score: inout Int) {
+        if dictArray.assStatus == 1 {
+            score = dictArray.assMaxScore ?? 0
+        } else {
+            score = dictArray.assMinScore ?? 0
+        }
+    }
+    
     func createSyncRequestForScore(dictArray: PENewAssessment) -> JSONDictionary{
         
         var UniID = dictArray.dataToSubmitID ?? ""
@@ -1830,11 +1865,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         var DisplayId = dictArray.evaluationDate
         DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
         DisplayId = "C-" + UniID
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
+        extractedFunc6(dictArray, &score)
         var TextAmPm = ""
         var PersonName = ""
         var FrequencyValue = 32
@@ -1842,35 +1873,10 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         var PPMValue = ""
         let assID =  dictArray.assID ?? 0
         
-        if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12
-        {
-            QCCount =  dictArray.qcCount ?? ""
-        } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous"
-        {
-            TextAmPm =  dictArray.ampmValue ?? ""
-        }
-        else if  dictArray.rollOut == "Y" && dictArray.sequenceNoo == 5  && dictArray.qSeqNo == 5
-        {
-            PPMValue =  dictArray.ppmValue ?? ""
-        }
-        
-        else if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 1
-        {
-            PersonName =  dictArray.personName ?? ""
-            let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
-            let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
-            let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-            if dictArray.frequency?.count ?? 0 > 0 {
-                if visitNameArray.contains(dictArray.frequency ?? ""){
-                    let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
-                    FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
-                }
-            }
-        }
-        
+        extractedFunc5(dictArray, &QCCount, &TextAmPm, &PPMValue, &PersonName, &FrequencyValue)
         
         var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
+        if let id = dictArray.serverAssessmentId {
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
         
@@ -1894,10 +1900,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 "isNA":dictArray.isNA ?? false
             ] as JSONDictionary
             return json
-        }
-        
-        else
-        {
+        } else {
             let json = [
                 "DisplayId":DisplayId?.prefix(22) ?? "",
                 "AppAssessmentId": String(AssessmentId),
@@ -1916,7 +1919,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             ] as JSONDictionary
             return json
         }
-        
     }
     // MARK: - Create Sync Request for Comment's
     func createSyncRequestForComment(dictArray: PENewAssessment) -> JSONDictionary{
@@ -2030,6 +2032,24 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         
     }
     // MARK: - Create Sync Request for Inovoject's Data
+    fileprivate func extractedFunc7(_ vNameArrayIS: NSArray, _ inovojectData: InovojectData, _ VaccineId: inout Int, _ vNameIDArrayIS: NSArray, _ ManufacturerId: inout Int, _ vNameMfgIdArrayIS: NSArray, _ otherVaccine: inout String) {
+        if vNameArrayIS.contains(inovojectData.name){
+            let indexOfe = vNameArrayIS.index(of: inovojectData.name)
+            VaccineId = vNameIDArrayIS[indexOfe] as? Int ?? 0
+            ManufacturerId = vNameMfgIdArrayIS[indexOfe] as? Int ?? 0
+        } else if (inovojectData.name != ""){
+            otherVaccine = inovojectData.name ?? ""
+        }
+    }
+    
+    fileprivate func extractedFunc8(_ dictArray: PENewAssessment, _ score: inout Int) {
+        if dictArray.assStatus == 1 {
+            score = dictArray.assMaxScore ?? 0
+        } else {
+            score = dictArray.assMinScore ?? 0
+        }
+    }
+    
     func createSyncRequestForInvoject(dictArray: PENewAssessment,inovojectData :InovojectData) -> JSONDictionary{
         
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
@@ -2051,11 +2071,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
         
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
+        extractedFunc8(dictArray, &score)
         var DisplayId = dictArray.evaluationDate
         DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
         var siteId = String(dictArray.siteId ?? 0)
@@ -2110,13 +2126,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         vNameIDArrayIS = vNameDetailsArrayIS.value(forKey: "id") as? NSArray ?? NSArray()
         vNameMfgIdArrayIS = vNameDetailsArrayIS.value(forKey: "mfgId") as? NSArray ?? NSArray()
         
-        if vNameArrayIS.contains(inovojectData.name){
-            let indexOfe = vNameArrayIS.index(of: inovojectData.name)
-            VaccineId = vNameIDArrayIS[indexOfe] as? Int ?? 0
-            ManufacturerId = vNameMfgIdArrayIS[indexOfe] as? Int ?? 0
-        } else if (inovojectData.name != ""){
-            otherVaccine = inovojectData.name ?? ""
-        }
+        extractedFunc7(vNameArrayIS, inovojectData, &VaccineId, vNameIDArrayIS, &ManufacturerId, vNameMfgIdArrayIS, &otherVaccine)
         var y = 2
         
         let DManufacturerId = 0
@@ -3209,10 +3219,134 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         
     }
     // MARK: - Post Request for Extended Microbial's
+    fileprivate func extractedFunc9(_ statusType: inout Int, _ dict: PENewAssessment, _ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ saveType: Int, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
+        if statusType == 2 {
+            
+            if dict.isEMRejected == true  || dict.isPERejected == true {
+                statusType = 0
+            }
+            json = [
+                "AssessmentId":serverAssessmentId,
+                "DeviceId": deviceIDFORSERVER,
+                "UserId": UserId,
+                "EvaluationId": EvaluationId ?? 0,
+                "SaveType":saveType,
+                "Status_Type":statusType,
+                "IsEMRequested" : isEMRequested,
+                "IsSendEmail": true,
+                "appVersion": appVersion,
+                "SanitationEmbrexScoresDataModel":extendedData
+            ] as JSONDictionary
+        }else{
+            json = [
+                "AssessmentId":serverAssessmentId,
+                "DeviceId": deviceIDFORSERVER,
+                "UserId": UserId,
+                "EvaluationId": EvaluationId ?? 0,
+                "SaveType":saveType,
+                "Status_Type":statusType,
+                "IsEMRequested" : isEMRequested,
+                "IsSendEmail": true,
+                "appVersion": appVersion,
+                "SanitationEmbrexScoresDataModel":extendedData
+            ] as JSONDictionary
+        }
+    }
+    
+    fileprivate func extractedFunc10(_ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
+        if Constants.isAssessmentRejected == true {
+            json = [
+                "AssessmentId":serverAssessmentId,
+                "DeviceId": deviceIDFORSERVER,
+                "UserId": UserId,
+                "EvaluationId": EvaluationId ?? 0,
+                "SaveType":0,
+                "Status_Type":0,
+                "IsEMRequested" : isEMRequested,
+                "IsSendEmail": true,
+                "appVersion": appVersion,
+                "SanitationEmbrexScoresDataModel":extendedData
+            ] as JSONDictionary
+        } else {
+            json = [
+                "AssessmentId":serverAssessmentId,
+                "DeviceId": deviceIDFORSERVER,
+                "UserId": UserId,
+                "EvaluationId": EvaluationId ?? 0,
+                "SaveType":1,
+                "Status_Type":0,
+                "IsEMRequested" : isEMRequested,
+                "IsSendEmail": true,
+                "appVersion": appVersion,
+                "SanitationEmbrexScoresDataModel":extendedData
+            ] as JSONDictionary
+        }
+    }
+    
+    fileprivate func extractedFunc11(_ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
+        if Constants.isAssessmentRejected == true {
+            json = [
+                "AssessmentId":serverAssessmentId,
+                "DeviceId": deviceIDFORSERVER,
+                "UserId": UserId,
+                "EvaluationId": EvaluationId ?? 0,
+                "SaveType":0,
+                "Status_Type":0,
+                "IsEMRequested" : isEMRequested,
+                "IsSendEmail": true,
+                "appVersion": appVersion,
+                "SanitationEmbrexScoresDataModel":extendedData
+            ] as JSONDictionary
+        } else {
+            json = [
+                "AssessmentId":serverAssessmentId,
+                "DeviceId": deviceIDFORSERVER,
+                "UserId": UserId,
+                "EvaluationId": EvaluationId ?? 0,
+                "SaveType":1,
+                "Status_Type":0,
+                "IsEMRequested" : isEMRequested,
+                "IsSendEmail": true,
+                "appVersion": appVersion,
+                "SanitationEmbrexScoresDataModel":extendedData
+            ] as JSONDictionary
+        }
+    }
+    
+    fileprivate func extractedFunc12(_ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
+        if Constants.isAssessmentRejected == true {
+            json = [
+                "AssessmentId":serverAssessmentId,
+                "DeviceId": deviceIDFORSERVER,
+                "UserId": UserId,
+                "EvaluationId": EvaluationId ?? 0,
+                "SaveType":1,
+                "Status_Type":0,
+                "IsEMRequested" : isEMRequested,
+                "IsSendEmail": true,
+                "appVersion": appVersion,
+                "SanitationEmbrexScoresDataModel":extendedData
+            ] as JSONDictionary
+        } else {
+            json = [
+                "AssessmentId":serverAssessmentId,
+                "DeviceId": deviceIDFORSERVER,
+                "UserId": UserId,
+                "EvaluationId": EvaluationId ?? 0,
+                "SaveType":1,
+                "Status_Type":0,
+                "IsEMRequested" : isEMRequested,
+                "IsSendEmail": true,
+                "appVersion": appVersion,
+                "SanitationEmbrexScoresDataModel":extendedData
+            ] as JSONDictionary
+        }
+    }
+    
     func createSyncRequestForExtendedMicro(dict: PENewAssessment ,certificationData : [PECertificateData], saveType: Int) -> JSONDictionary{
         debugPrint("dict---\(dict)")
         var idArr = [String]()
-        for val in tempArr{
+        for val in tempArr {
             let id = val["AssessmentId"] as? Int64 ?? 0
             if id != 0{
                 idArr.append("\(id)")
@@ -3261,141 +3395,15 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         tempArr.removeAll()
         
         if saveType == 0 {
-            if statusType == 2 {
-                
-                if dict.isEMRejected == true  || dict.isPERejected == true {
-                    statusType = 0
-                }
-                json = [
-                    "AssessmentId":serverAssessmentId,
-                    "DeviceId": deviceIDFORSERVER,
-                    "UserId": UserId,
-                    "EvaluationId": EvaluationId ?? 0,
-                    "SaveType":saveType,
-                    "Status_Type":statusType,
-                    "IsEMRequested" : isEMRequested,
-                    "IsSendEmail": true,
-                    "appVersion": appVersion,
-                    "SanitationEmbrexScoresDataModel":extendedData
-                ] as JSONDictionary
-            }else{
-                json = [
-                    "AssessmentId":serverAssessmentId,
-                    "DeviceId": deviceIDFORSERVER,
-                    "UserId": UserId,
-                    "EvaluationId": EvaluationId ?? 0,
-                    "SaveType":saveType,
-                    "Status_Type":statusType,
-                    "IsEMRequested" : isEMRequested,
-                    "IsSendEmail": true,
-                    "appVersion": appVersion,
-                    "SanitationEmbrexScoresDataModel":extendedData
-                ] as JSONDictionary
-            }
+            extractedFunc9(&statusType, dict, &json, serverAssessmentId, UserId, EvaluationId, saveType, isEMRequested, appVersion, extendedData)
         } else {
-            
-            if dict.isPERejected == true && dict.isEMRejected == true
-            {
-                if Constants.isAssessmentRejected == true
-                {
-                    json = [
-                        "AssessmentId":serverAssessmentId,
-                        "DeviceId": deviceIDFORSERVER,
-                        "UserId": UserId,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "SaveType":0,
-                        "Status_Type":0,
-                        "IsEMRequested" : isEMRequested,
-                        "IsSendEmail": true,
-                        "appVersion": appVersion,
-                        "SanitationEmbrexScoresDataModel":extendedData
-                    ] as JSONDictionary
-                }
-                else
-                {
-                    json = [
-                        "AssessmentId":serverAssessmentId,
-                        "DeviceId": deviceIDFORSERVER,
-                        "UserId": UserId,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "SaveType":1,
-                        "Status_Type":0,
-                        "IsEMRequested" : isEMRequested,
-                        "IsSendEmail": true,
-                        "appVersion": appVersion,
-                        "SanitationEmbrexScoresDataModel":extendedData
-                    ] as JSONDictionary
-                }
-            }
-            else  if dict.isPERejected == false && dict.isEMRejected == true
-            {
-                if Constants.isAssessmentRejected == true
-                {
-                    json = [
-                        "AssessmentId":serverAssessmentId,
-                        "DeviceId": deviceIDFORSERVER,
-                        "UserId": UserId,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "SaveType":0,
-                        "Status_Type":0,
-                        "IsEMRequested" : isEMRequested,
-                        "IsSendEmail": true,
-                        "appVersion": appVersion,
-                        "SanitationEmbrexScoresDataModel":extendedData
-                    ] as JSONDictionary
-                }
-                else
-                {
-                    json = [
-                        "AssessmentId":serverAssessmentId,
-                        "DeviceId": deviceIDFORSERVER,
-                        "UserId": UserId,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "SaveType":1,
-                        "Status_Type":0,
-                        "IsEMRequested" : isEMRequested,
-                        "IsSendEmail": true,
-                        "appVersion": appVersion,
-                        "SanitationEmbrexScoresDataModel":extendedData
-                    ] as JSONDictionary
-                }
-            }
-            
-            else  if dict.isPERejected == true && dict.isEMRejected == false
-            {
-                if Constants.isAssessmentRejected == true
-                {
-                    json = [
-                        "AssessmentId":serverAssessmentId,
-                        "DeviceId": deviceIDFORSERVER,
-                        "UserId": UserId,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "SaveType":1,
-                        "Status_Type":0,
-                        "IsEMRequested" : isEMRequested,
-                        "IsSendEmail": true,
-                        "appVersion": appVersion,
-                        "SanitationEmbrexScoresDataModel":extendedData
-                    ] as JSONDictionary
-                }
-                else
-                {
-                    json = [
-                        "AssessmentId":serverAssessmentId,
-                        "DeviceId": deviceIDFORSERVER,
-                        "UserId": UserId,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "SaveType":1,
-                        "Status_Type":0,
-                        "IsEMRequested" : isEMRequested,
-                        "IsSendEmail": true,
-                        "appVersion": appVersion,
-                        "SanitationEmbrexScoresDataModel":extendedData
-                    ] as JSONDictionary
-                }
-            }
-            else
-            {
+            if dict.isPERejected == true && dict.isEMRejected == true {
+                extractedFunc10(&json, serverAssessmentId, UserId, EvaluationId, isEMRequested, appVersion, extendedData)
+            } else if dict.isPERejected == false && dict.isEMRejected == true {
+                extractedFunc11(&json, serverAssessmentId, UserId, EvaluationId, isEMRequested, appVersion, extendedData)
+            } else if dict.isPERejected == true && dict.isEMRejected == false {
+                extractedFunc12(&json, serverAssessmentId, UserId, EvaluationId, isEMRequested, appVersion, extendedData)
+            } else {
                 json = [
                     "AssessmentId":serverAssessmentId,
                     "DeviceId": deviceIDFORSERVER,
@@ -3412,8 +3420,8 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             Constants.isAssessmentRejected = false
         }
         return json
-        
     }
+    
     // MARK: - Logout Action
     func logoutAction() {
         self.ssologoutMethod()
@@ -3427,8 +3435,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     // MARK:  /*********** Logout SSO Account **************/
-    func ssologoutMethod()
-    {
+    func ssologoutMethod() {
         gigya.logout() { result in
             switch result {
             case .success(let data):
@@ -3633,6 +3640,51 @@ extension PEDashboardViewController: UITableViewDataSource,UITableViewDelegate{
         return 56
     }
     
+    fileprivate func extractedFunc13(_ assessment: PENewAssessment, _ assessmentId: String) {
+        let delete = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber!)
+        if delete {
+            if self.anyCategoryContainValueOrNot(serverAssessmentId:assessmentId){
+                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+                let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftAssesmentFinalize") as! PEDraftAssesmentFinalize
+                self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                
+                if regionID == 3 {
+                    let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+                    let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssessment") as! PEDraftStartNewAssessment
+                    self.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+                    let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssesmentINT") as! PEDraftStartNewAssesmentINT
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        }
+    }
+    
+    fileprivate func extractedFunc14(_ indexPath: IndexPath) {
+        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
+        if regionID == 3 {
+            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+            let vc = storyBoard.instantiateViewController(withIdentifier: "PEStartNewAssessment") as! PEStartNewAssessment
+            vc.navigationController?.navigationBar.isHidden = true
+            vc.scheduledAssessment = upcomingCertificationsArr[indexPath.row]
+            vc.scheduledAssessment?.scheduledDate = Date()
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+            let vc = storyBoard.instantiateViewController(withIdentifier: "PEStartNewAssessmentINT") as! PEStartNewAssessmentINT
+            vc.scheduledAssessment = upcomingCertificationsArr[indexPath.row]
+            vc.scheduledAssessment?.scheduledDate = Date()
+            let pervioudAssesID = UserDefaults.standard.value(forKey: "assIID") as? String ?? ""
+            if(pervioudAssesID  != upcomingCertificationsArr[indexPath.row].serverAssessmentId){
+                UserDefaults.standard.set(upcomingCertificationsArr[indexPath.row].refrigeratorNote ?? "", forKey:"re_note")
+                UserDefaults.standard.set(upcomingCertificationsArr[indexPath.row].assID ,forKey:"assIID")
+            }
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         Constants.isPPmValueChanged = false
         Constants.switchCount = 0
@@ -3647,33 +3699,12 @@ extension PEDashboardViewController: UITableViewDataSource,UITableViewDelegate{
                 userDefault.set(upcomingCertificationsArr[indexPath.row].siteId, forKey: "PE_Selected_Site_Id")
                 userDefault.set(upcomingCertificationsArr[indexPath.row].siteName, forKey: "PE_Selected_Site_Name")
                 
-                if let assessment = PEAssessmentsDAO.sharedInstance.getDraftAssessment(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessmentId){
+                if let assessment = PEAssessmentsDAO.sharedInstance.getDraftAssessment(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessmentId) {
                     
-                    let delete  = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber!)
-                    if delete{
-                        if self.anyCategoryContainValueOrNot(serverAssessmentId:assessmentId){
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftAssesmentFinalize") as! PEDraftAssesmentFinalize
-                            self.navigationController?.pushViewController(vc, animated: true)
-                        } else {
-                            
-                            if regionID == 3 {
-                                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                                let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssessment") as! PEDraftStartNewAssessment
-                                self.navigationController?.pushViewController(vc, animated: true)
-                            }
-                            else {
-                                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                                let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssesmentINT") as! PEDraftStartNewAssesmentINT
-                                self.navigationController?.pushViewController(vc, animated: true)
-                            }
-                        }
-                    }
-                }
-                
-                else{
+                    extractedFunc13(assessment, assessmentId)
+                } else {
                     
-                    if anyCategoryContainValueOrNot(serverAssessmentId: assessmentId){
+                    if anyCategoryContainValueOrNot(serverAssessmentId: assessmentId) {
                         let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
                         let vc = storyBoard.instantiateViewController(withIdentifier: "PEAssesmentFinalize") as! PEAssesmentFinalize
                         vc.scheduledAssessment = upcomingCertificationsArr[indexPath.row]
@@ -3687,27 +3718,7 @@ extension PEDashboardViewController: UITableViewDataSource,UITableViewDelegate{
                         self.navigationController?.pushViewController(vc, animated: true)
                     } else {
                         
-                        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-                        if regionID == 3 {
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEStartNewAssessment") as! PEStartNewAssessment
-                            vc.navigationController?.navigationBar.isHidden = true
-                            vc.scheduledAssessment = upcomingCertificationsArr[indexPath.row]
-                            vc.scheduledAssessment?.scheduledDate = Date()
-                            navigationController?.pushViewController(vc, animated: true)
-                        }
-                        else{
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEStartNewAssessmentINT") as! PEStartNewAssessmentINT
-                            vc.scheduledAssessment = upcomingCertificationsArr[indexPath.row]
-                            vc.scheduledAssessment?.scheduledDate = Date()
-                            let pervioudAssesID = UserDefaults.standard.value(forKey: "assIID") as? String ?? ""
-                            if(pervioudAssesID  != upcomingCertificationsArr[indexPath.row].serverAssessmentId){
-                                UserDefaults.standard.set(upcomingCertificationsArr[indexPath.row].refrigeratorNote ?? "", forKey:"re_note")
-                                UserDefaults.standard.set(upcomingCertificationsArr[indexPath.row].assID ,forKey:"assIID")
-                            }
-                            navigationController?.pushViewController(vc, animated: true)
-                        }
+                        extractedFunc14(indexPath)
                     }
                 }
             }
@@ -4356,6 +4367,26 @@ extension PEDashboardViewController{
     }
     
     // MARK: - Get Scheduled assessment List
+    fileprivate func extractedFunc15(_ status: String?) {
+        let mainQueue = OperationQueue.main
+        mainQueue.addOperation{
+            if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
+                let userDefault = UserDefaults.standard
+                let customerId = userDefault.integer(forKey: "PE_Selected_Customer_Id")
+                let siteId = userDefault.integer(forKey: "PE_Selected_Site_Id")
+                
+                self.upcomingCertificationsArr = PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , customerId: Int64(customerId), siteId: Int64(siteId))
+                if self.upcomingCertificationsArr.count > 0 {
+                    self.alertLbl.isHidden = true
+                } else {
+                    self.alertLbl.isHidden = false
+                }
+                self.popupTblVw.reloadData()
+                self.dashboardTblVw.reloadData()
+            }
+        }
+    }
+    
     private func getScheduledAssessments(){
         if ConnectionManager.shared.hasConnectivity() {
             PEDataService.sharedInstance.getScheduledAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound, viewController: self, completion: { [weak self] (status, error) in
@@ -4363,30 +4394,10 @@ extension PEDashboardViewController{
                     self?.dismissGlobalHUD(self?.view ?? UIView());
                     return
                 }
-                let mainQueue = OperationQueue.main
-                mainQueue.addOperation{
-                    if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
-                        let userDefault = UserDefaults.standard
-                        let customerId = userDefault.integer(forKey: "PE_Selected_Customer_Id") ?? 0
-                        let siteId = userDefault.integer(forKey: "PE_Selected_Site_Id") ?? 0
-                        
-                        self?.upcomingCertificationsArr =  PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , customerId: Int64(customerId), siteId: Int64(siteId))
-                        if self?.upcomingCertificationsArr.count ?? 0 > 0
-                        {
-                            self?.alertLbl.isHidden = true
-                        }
-                        else{
-                            self?.alertLbl.isHidden = false
-                        }
-                        self?.popupTblVw.reloadData()
-                        self?.dashboardTblVw.reloadData()
-                    }
-                }
-                
+                self?.extractedFunc15(status)
                 self?.peHeaderViewController.titleofSync = "0"
                 self?.peHeaderViewController.viewDidLoad()
                 self?.dismissGlobalHUD(self?.view ?? UIView())
-                
                 
                 if self?.regionID == 3 {
                     let callGetPosting = UserDefaults.standard.value(forKey: "haveToCallGetPosting") as? Bool
@@ -4398,7 +4409,7 @@ extension PEDashboardViewController{
                     }
                 }
             })
-        }else{
+        } else {
             self.dismissGlobalHUD(self.view ?? UIView())
         }
     }
