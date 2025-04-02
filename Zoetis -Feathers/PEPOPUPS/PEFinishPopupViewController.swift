@@ -472,18 +472,29 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
     func numberOfSections(in tableView: UITableView) -> Int {
         return catArrayForCollectionIs.count
     }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        var  peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
-        
-        if isFromDraft {
-            peNewAssessmentArray = CoreDataHandlerPE().getDraftOnGoingAssessmentArrayPEObject()
+    fileprivate func catArrayManage(_ section: Int, _ peNewAssessmentArrayForCatQuest: [PENewAssessment]) -> Int {
+        if catArrayForCollectionIs[section].isOpened {
+            if section == 0 {
+                if golbalEvaluationID != 2 {
+                    if  catArrayForCollectionIs[section].isOpened {
+                        return 2
+                    } else {
+                        return 1
+                    }
+                } else {
+                    return peNewAssessmentArrayForCatQuest.count
+                }
+            } else {
+                return peNewAssessmentArrayForCatQuest.count
+            }
+        } else {
+            return 1
         }
-        
-        var peNewAssessmentArrayForCatQuest  : [PENewAssessment] = []
-        let catID = catArrayForCollectionIs[section].catID
+    }
+    
+    fileprivate func peNewAssessmentManage(_ peNewAssessmentArray: [PENewAssessment], _ catID: Int?, _ section: Int, _ peNewAssessmentArrayForCatQuest: inout [PENewAssessment]) {
         for cat in peNewAssessmentArray {
-            if  catID == cat.catID{
+            if catID == cat.catID{
                 golbalEvaluationID = (cat.evaluationID)!
                 if (cat.evaluationID)! != 2 {
                     if firstTime {
@@ -497,29 +508,21 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
                 peNewAssessmentArrayForCatQuest.append(cat)
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if  catArrayForCollectionIs[section].isOpened {
-            
-            if section == 0 {
-                if golbalEvaluationID != 2 {
-                    if  catArrayForCollectionIs[section].isOpened {
-                        return 2
-                    }
-                    else {
-                        return 1
-                    }
-                }
-                else {
-                    return peNewAssessmentArrayForCatQuest.count
-                }
-            }
-            else {
-                return peNewAssessmentArrayForCatQuest.count
-            }
+        var  peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
+        
+        if isFromDraft {
+            peNewAssessmentArray = CoreDataHandlerPE().getDraftOnGoingAssessmentArrayPEObject()
         }
-        else {
-            return 1
-        }
+        
+        var peNewAssessmentArrayForCatQuest  : [PENewAssessment] = []
+        let catID = catArrayForCollectionIs[section].catID
+        peNewAssessmentManage(peNewAssessmentArray, catID, section, &peNewAssessmentArrayForCatQuest)
+        
+        return catArrayManage(section, peNewAssessmentArrayForCatQuest)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -941,6 +944,15 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
         }
     }
     
+    fileprivate func handleRegion(_ param: [String : String]) {
+        if self.regionID == 3 {
+            self.validatedExtendedPESubmittion(param)
+        } else {
+            self.validationSuccessFull?(param)
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     func validate(){
         
         if let signatureImage = self.signatureView.getSignature(scale: 10) {
@@ -964,7 +976,7 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
                     CoreDataHandlerPE().saveImageInPEFinishModule(imageId: imageCount+1, imageData: imageData!)
                 }
                 imageCountID = imageCount+1
-                var param : [String:String] = ["sig":String(imageCountID),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: appDelegateObj.mmddyyStr) ]
+                var param : [String:String] = ["sig":String(imageCountID),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName,"sig_Name2":self.hatheryManagerName2,"sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: appDelegateObj.mmddyyStr) ]
                 let signatureImage2 = self.signatureView2.getSignature(scale: 10)
                 
                 let imageData2 = signatureImage2?.jpegData(compressionQuality: 0.1)
@@ -973,23 +985,11 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
                     let imageCount2 = self.getImageCountInPEModule()
                     CoreDataHandlerPE().saveImageInPEFinishModule(imageId: imageCount2+1, imageData: imageData2!)
                     imageCountID2 = imageCount2+1
-                    param  = ["sig":String(imageCountID),"sig2":String(imageCountID2),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName ?? "","sig_Name2":self.hatheryManagerName2 ?? "","sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: appDelegateObj.mmddyyStr) ]
+                    param  = ["sig":String(imageCountID),"sig2":String(imageCountID2),"sig_EmpID":self.txtEmployeeID.text ?? "","sig_EmpID2":self.txtEmployeeID2.text ?? "","sig_Name":self.hatheryManagerName,"sig_Name2":self.hatheryManagerName2,"sig_Phone":self.txtPhone.text ?? "","sig_Date":Date().stringFormat(format: appDelegateObj.mmddyyStr) ]
                 }
                 print("params are",param)
-
-                
-                if self.regionID == 3 {
-                    self.validatedExtendedPESubmittion(param)
-                }
-                
-                else {
-                    self.validationSuccessFull?(param)
-                    self.dismiss(animated: true, completion: nil)
-                }
-                
-                  
+                self.handleRegion(param)
             }
-                
         } else {
             if hatheryManagerName == "" {
                 hatcheryManagerNameView.layer.borderColor = UIColor.red.cgColor

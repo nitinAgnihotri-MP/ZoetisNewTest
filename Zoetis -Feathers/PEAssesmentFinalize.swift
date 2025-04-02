@@ -1224,7 +1224,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     
-    fileprivate func extractedFunc8(indexPath:IndexPath,cell:PlateInfoCell) {
+    fileprivate func dropDownVIewNewCompletion(indexPath:IndexPath,cell:PlateInfoCell) {
         self.tableviewIndexPath = indexPath
         let plateTypes = PlateTypesDAO.sharedInstance.fetchPlateTypes(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "")
         let arr = plateTypes.map{ $0.value}
@@ -1327,7 +1327,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    fileprivate func extractedFunc11(_ cell: VaccineMixerCell) {
+    fileprivate func certDateCompletion(_ cell: VaccineMixerCell) {
         cell.certDateCompletion = { [unowned self] (count) in
             
             if cell.vaccNameField.text != "" {
@@ -1357,7 +1357,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    fileprivate func extractedFunc12(_ cell: VaccineMixerCell) {
+    fileprivate func changedDateCompletion(_ cell: VaccineMixerCell) {
         cell.changedDateCompletion  = {[unowned self] ( index) in
             chnagedIndexPathRow = index ?? 0
             if cell.vaccNameField.text != "" {
@@ -1379,7 +1379,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    fileprivate func extractedFunc13(_ cell: VaccineMixerCell) {
+    fileprivate func dateBlockCompletion(_ cell: VaccineMixerCell) {
         dateBlock = { [unowned self] (date , certifiedExpery , isReCert  ,Count) in
             
             certificateData[Count].certificateDate = date
@@ -1413,7 +1413,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    fileprivate func extractedFunc15(_ indexPath: IndexPath, _ cell: VaccineMixerCell) {
+    fileprivate func changedDateCompletion(_ indexPath: IndexPath, _ cell: VaccineMixerCell) {
         changedDate = {  [unowned self] (date) in
             
             self.tableviewIndexPath = indexPath
@@ -1427,7 +1427,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    fileprivate func extractedFunc16(_ indexPath: IndexPath, _ cell: VaccineMixerCell) {
+    fileprivate func nameblockCompletion(_ indexPath: IndexPath, _ cell: VaccineMixerCell) {
         nameblock = {[unowned self] ( error) in
             self.tableviewIndexPath = indexPath
             self.certificateData[self.tableviewIndexPath.row].name = error
@@ -1465,9 +1465,38 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    fileprivate func extractedFunc8(_ cell: VaccineMixerCell, _ indexPath: IndexPath) -> UITableViewCell {
+        cell.certDateSelectBtn.tag = indexPath.row
+        cell.vaccNameField.tag = indexPath.row
+        cell.calenderBtn.tag = indexPath.row
+        cell.vaccNameField.delegate = self
+        if certificateData.count > 0 {
+            cell.config(data:certificateData[indexPath.row])
+            extractedFunc10(indexPath, cell)
+        }
+        certDateCompletion(cell)
+        
+        changedDateCompletion(cell)
+        
+        changedDateCompletion(indexPath, cell)
+        
+        dateBlockCompletion(cell)
+        
+        nameblockCompletion(indexPath, cell)
+        
+        updateNameblock = {[unowned self] ( error) in
+            if certificateData.count > 0 {
+                self.certificateData[self.chnagedVaccineNameIndexPathRow].name = error
+                CoreDataHandlerPE().updateVMixerInDB(peCertificateData:  self.certificateData[self.chnagedVaccineNameIndexPathRow], id:  self.certificateData[self.chnagedVaccineNameIndexPathRow].id ?? 0)
+                cell.vaccNameField.resignFirstResponder()
+            }
+        }
+        return cell
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if checkForTraning(){
+        if checkForTraning() {
             
             if indexPath.section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName == extendedMicStr{// "Sanitation and Embrex Evaluation"{
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PlateInfoCell", for: indexPath) as! PlateInfoCell
@@ -1477,7 +1506,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
                 cell.plateTypeCompletion = {
                     [unowned self] ( error) in
-                    extractedFunc8(indexPath: indexPath, cell: cell)
+                    dropDownVIewNewCompletion(indexPath: indexPath, cell: cell)
                 }
                 cell.commentsCompletion = {[unowned self] ( error) in
                     extractedFunc9(indexPath: indexPath, cell: cell, tableView: tableView)
@@ -1488,38 +1517,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
             if(selectedCategory?.catName == refridFreezerNitro) {
                 
-                return  setUpRerigatorQuesCell(tableView, cellForRowAt: indexPath)
+                return setUpRerigatorQuesCell(tableView, cellForRowAt: indexPath)
             } else {
                 if indexPath.section == 1 {
                     if let cell = tableView.dequeueReusableCell(withIdentifier: VaccineMixerCell.identifier) as? VaccineMixerCell {
-                        cell.certDateSelectBtn.tag = indexPath.row
-                        cell.vaccNameField.tag = indexPath.row
-                        cell.calenderBtn.tag = indexPath.row
-                        cell.vaccNameField.delegate = self
-                        
-                        
-                        if certificateData.count > 0 {
-                            cell.config(data:certificateData[indexPath.row])
-                            extractedFunc10(indexPath, cell)
-                        }
-                        extractedFunc11(cell)
-                        
-                        extractedFunc12(cell)
-                        
-                        extractedFunc15(indexPath, cell)
-                        
-                        extractedFunc13(cell)
-                        
-                        extractedFunc16(indexPath, cell)
-                        
-                        updateNameblock = {[unowned self] ( error) in
-                            if certificateData.count > 0 {
-                                self.certificateData[self.chnagedVaccineNameIndexPathRow].name = error
-                                CoreDataHandlerPE().updateVMixerInDB(peCertificateData:  self.certificateData[self.chnagedVaccineNameIndexPathRow], id:  self.certificateData[self.chnagedVaccineNameIndexPathRow].id ?? 0)
-                                cell.vaccNameField.resignFirstResponder()
-                            }
-                        }
-                        return cell
+                        return extractedFunc8(cell, indexPath)
                     }
                 }
                 return extractedFunc14(indexPath, tableView)

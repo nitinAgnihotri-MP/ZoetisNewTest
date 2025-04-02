@@ -926,6 +926,21 @@ class PEDraftStartNewAssessment: BaseViewController {
     }
     
     // MARK: Next Button Action
+    fileprivate func extractedFunc() {
+        if isFromBack {
+            
+            let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
+            if sanitationQuesArr.count == 0 && extendedPESwitch.isOn {
+                self.showOnlyExtendedMicrobial()
+            } else {
+                self.fromBackNextBtnAction()
+            }
+            
+        } else {
+            self.okButtonTapped()
+        }
+    }
+    
     @IBAction func nextBtnAction(_ sender: Any) {
         
         self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { [self] status in
@@ -957,23 +972,14 @@ class PEDraftStartNewAssessment: BaseViewController {
             return
         }
         
-        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != ""{
+        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != "" {
             if (peNewAssessment.breedOfBird?.lowercased().contains("other") ?? false) {
                 guard let otherText = peNewAssessment.breedOfBirdOther, !otherText.isEmpty else {
                     changeMandatorySuperviewToRed()
                     return
                 }
             }
-
-//            if ((peNewAssessment.breedOfBird?.lowercased().contains("other")) ?? false) {
-//                if peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "" {
-//                    
-//                }else{
-//                    changeMandatorySuperviewToRed()
-//                    return
-//                }
-//            }
-        }else{
+        } else {
             changeMandatorySuperviewToRed()
             return
         }
@@ -985,60 +991,31 @@ class PEDraftStartNewAssessment: BaseViewController {
                     return
                 }
             }
-
-//            if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-//                if manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "" {
-//                    
-//                }else{
-//                    changeMandatorySuperviewToRed()
-//                    return
-//                }
-//            }
-        }else{
+        } else {
             changeMandatorySuperviewToRed()
             return
         }
         
-        if peNewAssessment.incubation != nil && peNewAssessment.incubation != ""{
+        if peNewAssessment.incubation != nil && peNewAssessment.incubation != "" {
             
-        }else{
+        } else {
             changeMandatorySuperviewToRed()
             return
         }
         
-        if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != ""{
+        if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != "" {
             if (txtNumberOfEggs.text?.lowercased().contains("other") ?? false) {
                 guard let otherText = eggsOtherTxt.text, !otherText.isEmpty else {
                     changeMandatorySuperviewToRed()
                     return
                 }
             }
-//            if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false) {
-//                if eggsOtherTxt.text != nil && eggsOtherTxt.text != "" {
-//                    
-//                }else{
-//                    changeMandatorySuperviewToRed()
-//                    return
-//                }
-//            }
-        }else{
+        } else {
             changeMandatorySuperviewToRed()
             return
         }
         
-        if isFromBack {
-            
-            let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
-            if sanitationQuesArr.count == 0 && extendedPESwitch.isOn{
-                
-                self.showOnlyExtendedMicrobial()
-            } else{
-                self.fromBackNextBtnAction()
-            }
-            
-        } else {
-            self.okButtonTapped()
-        }
+        extractedFunc()
         
     }
     

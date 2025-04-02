@@ -239,6 +239,66 @@ class PEStartNewAssessmentINT: BaseViewController {
     
     /* Manually assign constraints */
     // MARK: - Manually assign constraints
+    fileprivate func handleSwitchZeroIndex(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
+            }
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 100))
+            }
+        }
+    }
+    
+    fileprivate func handleSwitchOneIndex(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
+            }
+        case 2:
+            notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 30))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 85))
+            }
+        }
+    }
+    
+    fileprivate func handleSwitchtwoIndex(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                if heightManufacturerView.constant == 94{
+                    notesTop.constant = CGFloat(((leftConst * 55 ) - 55))
+                }else{
+                    notesTop.constant = CGFloat(((leftConst * 55 ) - 25))
+                }
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
+            }
+        case 2:
+            notesTop.constant = CGFloat(((leftConst * 55 ) - 35))
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }
+        }
+    }
+    
     func assignConstraint(otherEgg:Int = 0){
         let leftConst = leftConstraint()
         var rightConst = rightConstraint() //+ otherEgg
@@ -248,60 +308,11 @@ class PEStartNewAssessmentINT: BaseViewController {
         
         switch leftConst {
         case 0:
-            
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
-                }
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 100))
-                }
-            }
+            handleSwitchZeroIndex(rightConst, leftConst)
         case 1:
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
-                }
-            case 2:
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 30))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 85))
-                }
-            }
+            handleSwitchOneIndex(rightConst, leftConst)
         case 2:
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    if heightManufacturerView.constant == 94{
-                        notesTop.constant = CGFloat(((leftConst * 55 ) - 55))
-                    }else{
-                        notesTop.constant = CGFloat(((leftConst * 55 ) - 25))
-                    }
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
-                }
-            case 2:
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 35))
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }
-            }
+            handleSwitchtwoIndex(rightConst, leftConst)
         default:
             break;
         }
@@ -732,6 +743,62 @@ class PEStartNewAssessmentINT: BaseViewController {
     
     /* Get offline stored session(Eggs and Incubation) */
     // MARK: - Get offline stored session(Eggs and Incubation)
+    fileprivate func handleValidation1(_ submitedAssess: PENewAssessment) {
+        if txtNumberOfEggs.text  == "Other" {
+            showEggsOthers()
+        } else {
+            hideEggsOthers()
+        }
+        if txtIncubation.text == "" {
+            txtIncubation.text =  submitedAssess.incubation
+        }
+        self.peNewAssessment.incubation = txtIncubation.text
+        if txtNumberOfEggs.text  == "Other" {
+            self.peNewAssessment.noOfEggs = Int64((eggsOtherTxt.text ?? "") + "000")
+        } else {
+            self.peNewAssessment.noOfEggs = Int64(txtNumberOfEggs.text ?? "")
+        }
+        if txtManufacturer.text  == "Other" {
+            self.peNewAssessment.manufacturer = "S" + (manfacturerOtherTxt.text ?? "")
+        } else {
+            self.peNewAssessment.manufacturer = txtManufacturer.text
+        }
+    }
+    
+    fileprivate func handleValidation2(_ submitedAssess: PENewAssessment) {
+        if txtNumberOfEggs.text == "" {
+            if submitedAssess.noOfEggs ?? 0 > 0 {
+                txtNumberOfEggs.text = String(submitedAssess.noOfEggs ?? 0)
+            }
+            let xx = String(submitedAssess.noOfEggs ?? 000)
+            if xx != "0" {
+                let last3 = String(xx.suffix(3))
+                if last3 ==  "000" {
+                    showEggsOthers()
+                    let str =  xx.replacingOccurrences(of: "000", with: "")
+                    eggsOtherTxt.text = str
+                    txtNumberOfEggs.text = "Other"
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleValidation3(_ submitedAssess: PENewAssessment) {
+        if txtManufacturer.text  == "" {
+            txtManufacturer.text = submitedAssess.manufacturer ?? ""
+            if  txtManufacturer.text != "" {
+                if let character = submitedAssess.manufacturer?.character(at:0) {
+                    if character == constantToSave.character(at: 0){
+                        showManufacturerOthers()
+                        let str =  submitedAssess.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
+                        manfacturerOtherTxt.text = str
+                        txtManufacturer.text = "Other"
+                    }
+                }
+            }
+        }
+    }
+    
     private func getSubmittedAssessmentorEggsAndIncubation() {
         var submitedAssess : PENewAssessment = PENewAssessment()
         let offlineSubmitedArray  = CoreDataHandlerPE().getSessionForViewAssessmentArrayPEObject(ofCurrentAssessment:true)
@@ -739,58 +806,14 @@ class PEStartNewAssessmentINT: BaseViewController {
             for obj in offlineSubmitedArray {
                 submitedAssess = obj
             }
-            if  txtManufacturer.text  == "" {
-                txtManufacturer.text = submitedAssess.manufacturer ?? ""
-                if  txtManufacturer.text != "" {
-                    if let character = submitedAssess.manufacturer?.character(at:0) {
-                        if character == constantToSave.character(at: 0){
-                            showManufacturerOthers()
-                            let str =  submitedAssess.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
-                            manfacturerOtherTxt.text = str
-                            txtManufacturer.text = "Other"
-                        }
-                    }
-                }
-            }
-            if txtManufacturer.text  == "Other"{
+            handleValidation3(submitedAssess)
+            if txtManufacturer.text  == "Other" {
                 showManufacturerOthers()
-            }else{
+            } else {
                 hideManufacturerOthers()
             }
-            if  txtNumberOfEggs.text == "" {
-                if submitedAssess.noOfEggs ?? 0 > 0 {
-                    txtNumberOfEggs.text = String(submitedAssess.noOfEggs ?? 0)
-                }
-                let xx = String(submitedAssess.noOfEggs ?? 000)
-                if xx != "0" {
-                    let last3 = String(xx.suffix(3))
-                    if last3 ==  "000" {
-                        showEggsOthers()
-                        let str =  xx.replacingOccurrences(of: "000", with: "")
-                        eggsOtherTxt.text = str
-                        txtNumberOfEggs.text = "Other"
-                    }
-                }
-            }
-            if txtNumberOfEggs.text  == "Other"{
-                showEggsOthers()
-            }else{
-                hideEggsOthers()
-            }
-            if  txtIncubation.text == "" {
-                txtIncubation.text =  submitedAssess.incubation
-            }
-            self.peNewAssessment.incubation = txtIncubation.text
-            if txtNumberOfEggs.text  == "Other"{
-                self.peNewAssessment.noOfEggs = Int64((eggsOtherTxt.text ?? "") + "000")
-            }else{
-                self.peNewAssessment.noOfEggs = Int64(txtNumberOfEggs.text ?? "")
-            }
-            if txtManufacturer.text  == "Other"{
-                self.peNewAssessment.manufacturer = "S" + (manfacturerOtherTxt.text ?? "")
-            }else{
-                self.peNewAssessment.manufacturer = txtManufacturer.text
-            }
+            handleValidation2(submitedAssess)
+            handleValidation1(submitedAssess)
         }
     }
     
@@ -1759,9 +1782,25 @@ class PEStartNewAssessmentINT: BaseViewController {
     
     /* Types of evaluation selected */
     // MARK: - Evalutation Type Button Action
-    @IBAction func evaluationClicked(_ sender: Any) {
-        
-        let superviewCurrent =  evaluationTypeButton.superview
+    fileprivate func handleNon(_ selectedVal: String) {
+        if selectedVal.contains("Non") {
+            let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
+            if infoObj != nil{
+                PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: false, assessmentId: self.peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: self.chlorineStripsSwitch.isOn, isAutomaticFail: self.isAutomaticSwitch.isOn)
+            }
+            self.allProductionViewHeightConstraint.constant = 60
+            self.flockAgeLower.isHidden = true
+            self.btnFlockImageLower.isHidden = true
+            self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected"
+        } else {
+            self.allProductionViewHeightConstraint.constant = 60
+            self.flockAgeLower.isHidden = false
+            self.btnFlockImageLower.isHidden = false
+            self.flockAgeLbl.text = breaderFlock
+        }
+    }
+    
+    fileprivate func validateSuperviewCurrent(_ superviewCurrent: UIView?) {
         if superviewCurrent != nil {
             for view in superviewCurrent!.subviews {
                 if view.isKind(of:UIButton.self) {
@@ -1770,13 +1809,19 @@ class PEStartNewAssessmentINT: BaseViewController {
                 }
             }
         }
+    }
+    
+    @IBAction func evaluationClicked(_ sender: Any) {
+        
+        let superviewCurrent =  evaluationTypeButton.superview
+        validateSuperviewCurrent(superviewCurrent)
         
         var evaluationIDArray = NSArray()
         var evaluationNameArray = NSArray()
         let evaluationDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_EvaluationType")
         evaluationNameArray = evaluationDetailsArray.value(forKey: "evaluationName") as? NSArray ?? NSArray()
         evaluationIDArray = evaluationDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if  evaluationNameArray.count > 0 {
+        if evaluationNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: evaluationNameArray as? [String] ?? [String](), kWidth: evaluationTypeButton.frame.width, kAnchor: evaluationTypeButton, yheight: evaluationTypeButton.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectedEvaluationType.text = selectedVal
                 self.isFlockAgeGreaterTheAllProd = false
@@ -1785,39 +1830,16 @@ class PEStartNewAssessmentINT: BaseViewController {
                 self.btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
                 self.showFlockView()
                 
-                if selectedVal.contains("Non")  {
-                    let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
-                    if infoObj != nil{
-                        PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: false, assessmentId: self.peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: self.chlorineStripsSwitch.isOn, isAutomaticFail: self.isAutomaticSwitch.isOn)
-                    }
-                    self.allProductionViewHeightConstraint.constant = 60
-                    self.flockAgeLower.isHidden = true
-                    self.btnFlockImageLower.isHidden = true
-                    self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected"
-                } else {
-                    self.allProductionViewHeightConstraint.constant = 60
-                    self.flockAgeLower.isHidden = false
-                    self.btnFlockImageLower.isHidden = false
-                    self.flockAgeLbl.text = breaderFlock
-                }
-                
-                
+                handleNon(selectedVal)
                 self.peNewAssessment.evaluationName = selectedVal
                 let indexOfItem = evaluationNameArray.index(of: selectedVal)
                 self.peNewAssessment.evaluationID = evaluationIDArray[indexOfItem] as? Int
                 
-                if self.peNewAssessment.evaluationID != nil && self.peNewAssessment.evaluationID == 1{
+                if self.peNewAssessment.evaluationID != nil && self.peNewAssessment.evaluationID == 1 {
                     
-                }else{
+                } else {
                     let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
-                    
-                    let hasSelectedExtendedPE = infoObj?.isExtendedPE ?? false
-                    if hasSelectedExtendedPE{
-                        
-                    }
-                    
                 }
-                
                 self.checkBackAndSave()
             }
             self.dropHiddenAndShow()
@@ -2288,8 +2310,7 @@ extension PEStartNewAssessmentINT{
                 }
                 
             }
-        }
-        else{
+        } else {
             if object.id != 36{
                 peCategoryFilteredArray.append(object)
             }
@@ -2297,25 +2318,26 @@ extension PEStartNewAssessmentINT{
         }
     }
     
-    func okAction(){
+    fileprivate func validateExtendedPESwitch() {
+        if extendedPESwitch {
+            let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: scheduledAssessment?.serverAssessmentId ?? "")
+            
+            if sanitationQuesArr.count == 0 {
+                SanitationEmbrexQuestionMasterDAO.sharedInstance.saveAssessmentQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
+            }
+        }
+    }
+    
+    func okAction() {
         checkBackAndSave()
         jsonRe = (getJSON("QuestionAns") ?? JSON())
         questionInfo = (getJSON("QuestionAnsInfo") ?? JSON())
         infoImageDataResponse = InfoImageDataResponse(questionInfo)
         pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(jsonRe)
-        if extendedPESwitch {
-            let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: scheduledAssessment?.serverAssessmentId ?? "")
-            
-            if sanitationQuesArr.count == 0{
-                SanitationEmbrexQuestionMasterDAO.sharedInstance.saveAssessmentQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
-            }
-            
-        }
+        validateExtendedPESwitch()
         var peCategoryFilteredArray: [PECategory] =  []
         for object in pECategoriesAssesmentsResponse.peCategoryArray {
-            
             extractedFunc(object, &peCategoryFilteredArray)
-            
         }
         
         if peCategoryFilteredArray.count > 0 {
@@ -2323,7 +2345,7 @@ extension PEStartNewAssessmentINT{
             peNewAssessmentWas = self.peNewAssessment
             CoreDataHandler().deleteAllData("PE_AssessmentInProgress",predicate: NSPredicate(format: "userID == %d AND serverAssessmentId = %@", peNewAssessmentWas.userID ?? 0, peNewAssessmentWas.serverAssessmentId ?? ""))
             
-            for  cat in  peCategoryFilteredArray {
+            for cat in  peCategoryFilteredArray {
                 for (index, ass) in cat.assessmentQuestions.enumerated(){
                     var peNewAssessmentNew = PENewAssessment()
                     peNewAssessmentNew = peNewAssessmentWas
@@ -2348,9 +2370,7 @@ extension PEStartNewAssessmentINT{
                     if regionID == 3{
                         peNewAssessmentNew.assStatus = 1
                         peNewAssessmentNew.catResultMark = cat.maxMark
-                    }
-                    else
-                    {
+                    } else {
                         peNewAssessmentNew.assStatus = 0
                         peNewAssessmentNew.catResultMark = 0
                     }
@@ -2373,11 +2393,7 @@ extension PEStartNewAssessmentINT{
                     
                 }
             }
-            if peNewAssessment.evaluationID != nil && peNewAssessment.evaluationID == 1{
-                if extendedPESwitch{
-                    
-                }
-            }
+            
             isMovedForward = true
             let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
             let vc = storyBoard.instantiateViewController(withIdentifier: "PEAssesmentFinalize") as? PEAssesmentFinalize

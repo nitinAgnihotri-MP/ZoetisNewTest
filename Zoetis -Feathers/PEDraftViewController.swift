@@ -123,10 +123,148 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    fileprivate func deleteCompletion(_ cell: PE_DraftCell, _ indexPath: IndexPath) {
+        cell.deleteCompletion  = {[unowned self] ( error) in
+            let assessment = self.peAssessmentDraftArray[indexPath.row]
+            var date = assessment.evaluationDate
+            date = date?.replacingOccurrences(of: "/", with: "")
+            
+            var siteId = String(assessment.siteId ?? 0)
+            
+            let draftID = assessment.draftID ?? ""
+            date = "C-" + draftID.prefix(20)
+            
+            
+            let errorMSg = "Are you sure you want to delete the assessment" + (date ?? "") + "?"
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
+                _ in
+                CoreDataHandlerPE().deleteDraftByDrafyNumber(assessment.draftID ?? "")
+                CoreDataHandlerPE().deleteDraftByAssessmentId(assessment.draftID ?? "")
+                
+                CoreDataHandlerPE().deleteRefregratorDataByStartAssessment(assessment.serverAssessmentId ?? "")
+                CoreDataHandlerPE().deleteDraftedRefregratorDataByAssessmentId(assessment.draftID ?? "")
+                
+                PEDeletedDraftsDAO.sharedInstance.saveDeletedAssessmentsInfo(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "" , serverAssessmentId: assessment.serverAssessmentId ?? "")
+                PEInfoDAO.sharedInstance.deleteInfoObj(assessment.serverAssessmentId ?? "")
+                SanitationEmbrexQuestionMasterDAO.sharedInstance.deleteExistingSanitationQues(assessment.serverAssessmentId ?? "")
+                
+                PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:"Schedule",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessment.serverAssessmentId ?? "")
+                self.deleteDeletedAssessments()
+                
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+            
+        }
+    }
+    
+    fileprivate func                 editCompletion(_ cell: PE_DraftCell, _ indexPath: IndexPath) {
+        cell.editCompletion  = {[unowned self] ( error) in
+            
+            Constants.isPPmValueChanged = false
+            Constants.switchCount = 0
+            Constants.isfromDraftStartVC = true
+            let assessment = self.peAssessmentDraftArray[indexPath.row]
+            UserDefaults.standard.set(assessment.serverAssessmentId ?? "", forKey: "currentServerAssessmentId")
+            let pervioudAssesID = UserDefaults.standard.value(forKey: "assIID") as? String ?? ""
+            if(pervioudAssesID  != assessment.serverAssessmentId){
+                UserDefaults.standard.set(assessment.refrigeratorNote ?? "", forKey:"re_note")
+                UserDefaults.standard.set(assessment.serverAssessmentId ,forKey:"assIID")
+            }
+            let userDefault = UserDefaults.standard
+            userDefault.set(assessment.customerId, forKey: "PE_Selected_Customer_Id")
+            userDefault.set(assessment.customerName, forKey: "PE_Selected_Customer_Name")
+            userDefault.set(assessment.siteId, forKey: "PE_Selected_Site_Id")
+            userDefault.set(assessment.siteName, forKey: "PE_Selected_Site_Name")
+            if assessment.statusType == 2{
+                UserDefaults.standard.setValue(true, forKey: "isFromDraft")
+                UserDefaults.standard.synchronize()
+            }else{
+                UserDefaults.standard.setValue(false, forKey: "isFromDraft")
+                UserDefaults.standard.synchronize()
+            }
+            let delete  = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber ?? 0)
+            if delete{
+                deleteDraftAssessment()
+            }
+        }
+    }
+    
+    fileprivate func deleteCompletionElse(_ cell: PE_DraftIntCell, _ indexPath: IndexPath) {
+        cell.deleteCompletion  = {[unowned self] ( error) in
+            let assessment = self.peAssessmentDraftArray[indexPath.row]
+            var date = assessment.evaluationDate
+            date = date?.replacingOccurrences(of: "/", with: "")
+            
+            var siteId = String(assessment.siteId ?? 0)
+            
+            let draftID = assessment.draftID ?? ""
+            date = "C-" + draftID.prefix(20)
+            
+            
+            let errorMSg = "Are you sure you want to delete the assessment" + (date ?? "") + "?"
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
+                _ in
+                CoreDataHandlerPE().deleteDraftByDrafyNumber(assessment.draftID ?? "")
+                CoreDataHandlerPE().deleteDraftByAssessmentId(assessment.draftID ?? "")
+                
+                CoreDataHandlerPE().deleteRefregratorDataByStartAssessment(assessment.serverAssessmentId ?? "")
+                CoreDataHandlerPE().deleteDraftedRefregratorDataByAssessmentId(assessment.draftID ?? "")
+                
+                PEDeletedDraftsDAO.sharedInstance.saveDeletedAssessmentsInfo(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "" , serverAssessmentId: assessment.serverAssessmentId ?? "")
+                PEInfoDAO.sharedInstance.deleteInfoObj(assessment.serverAssessmentId ?? "")
+                SanitationEmbrexQuestionMasterDAO.sharedInstance.deleteExistingSanitationQues(assessment.serverAssessmentId ?? "")
+                
+                PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:"Schedule",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessment.serverAssessmentId ?? "")
+                self.deleteDeletedAssessments()
+                
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+            
+        }
+    }
+    
+    fileprivate func                 editCompletionElse(_ cell: PE_DraftIntCell, _ indexPath: IndexPath) {
+        cell.editCompletion  = {[unowned self] ( error) in
+            let assessment = self.peAssessmentDraftArray[indexPath.row]
+            let pervioudAssesID = UserDefaults.standard.value(forKey: "assIID") as? String ?? ""
+            if(pervioudAssesID  != assessment.serverAssessmentId){
+                UserDefaults.standard.set(assessment.refrigeratorNote ?? "", forKey:"re_note")
+                UserDefaults.standard.set(assessment.serverAssessmentId ,forKey:"assIID")
+            }
+            
+            UserDefaults.standard.set(assessment.serverAssessmentId ?? "", forKey: "currentServerAssessmentId")
+            
+            let userDefault = UserDefaults.standard
+            userDefault.set(assessment.customerId, forKey: "PE_Selected_Customer_Id")
+            userDefault.set(assessment.customerName, forKey: "PE_Selected_Customer_Name")
+            userDefault.set(assessment.siteId, forKey: "PE_Selected_Site_Id")
+            userDefault.set(assessment.siteName, forKey: "PE_Selected_Site_Name")
+            if assessment.statusType == 2{
+                UserDefaults.standard.setValue(true, forKey: "isFromDraft")
+                UserDefaults.standard.synchronize()
+            }else{
+                UserDefaults.standard.setValue(false, forKey: "isFromDraft")
+                UserDefaults.standard.synchronize()
+            }
+            let delete  = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber ?? 0)
+            if delete{
+                deleteDraftAssessment()
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        if regionID == 3{
-            if let cell = tableView.dequeueReusableCell(withIdentifier: PE_DraftCell.identifier) as? PE_DraftCell{
+        if regionID == 3 {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: PE_DraftCell.identifier) as? PE_DraftCell {
                 cell.selectionStyle = .none
                 cell.config(peNewAssessment:peAssessmentDraftArray[indexPath.row])
                 cell.rejectIndicatorBtn.tag = indexPath.row
@@ -136,141 +274,19 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
                 cell.extendedRejectedComment.addTarget(self, action: #selector(addExtendedInfoPopup(sender:)), for: .touchUpInside)
                 
                 popFlagArray.append(false)
-                cell.deleteCompletion  = {[unowned self] ( error) in
-                    let assessment = self.peAssessmentDraftArray[indexPath.row]
-                    var date = assessment.evaluationDate
-                    date = date?.replacingOccurrences(of: "/", with: "")
-                    
-                    var siteId = String(assessment.siteId ?? 0)
-                    
-                    let draftID = assessment.draftID ?? ""
-                    date = "C-" + draftID.prefix(20)
-                    
-                    
-                    let errorMSg = "Are you sure you want to delete the assessment" + (date ?? "") + "?"
-                    let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
-                        _ in
-                        CoreDataHandlerPE().deleteDraftByDrafyNumber(assessment.draftID ?? "")
-                        CoreDataHandlerPE().deleteDraftByAssessmentId(assessment.draftID ?? "")
-                        
-                        CoreDataHandlerPE().deleteRefregratorDataByStartAssessment(assessment.serverAssessmentId ?? "")
-                        CoreDataHandlerPE().deleteDraftedRefregratorDataByAssessmentId(assessment.draftID ?? "")
-                        
-                        PEDeletedDraftsDAO.sharedInstance.saveDeletedAssessmentsInfo(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "" , serverAssessmentId: assessment.serverAssessmentId ?? "")
-                        PEInfoDAO.sharedInstance.deleteInfoObj(assessment.serverAssessmentId ?? "")
-                        SanitationEmbrexQuestionMasterDAO.sharedInstance.deleteExistingSanitationQues(assessment.serverAssessmentId ?? "")
-                        
-                        PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:"Schedule",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessment.serverAssessmentId ?? "")
-                        self.deleteDeletedAssessments()
-                        
-                    }
-                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
-                    alertController.addAction(okAction)
-                    alertController.addAction(cancelAction)
-                    self.present(alertController, animated: true, completion: nil)
-                    
-                }
-                cell.editCompletion  = {[unowned self] ( error) in
-                    
-                    Constants.isPPmValueChanged = false
-                    Constants.switchCount = 0
-                    Constants.isfromDraftStartVC = true
-                    let assessment = self.peAssessmentDraftArray[indexPath.row]
-                    UserDefaults.standard.set(assessment.serverAssessmentId ?? "", forKey: "currentServerAssessmentId")
-                    let pervioudAssesID = UserDefaults.standard.value(forKey: "assIID") as? String ?? ""
-                    if(pervioudAssesID  != assessment.serverAssessmentId){
-                        UserDefaults.standard.set(assessment.refrigeratorNote ?? "", forKey:"re_note")
-                        UserDefaults.standard.set(assessment.serverAssessmentId ,forKey:"assIID")
-                    }
-                    let userDefault = UserDefaults.standard
-                    userDefault.set(assessment.customerId, forKey: "PE_Selected_Customer_Id")
-                    userDefault.set(assessment.customerName, forKey: "PE_Selected_Customer_Name")
-                    userDefault.set(assessment.siteId, forKey: "PE_Selected_Site_Id")
-                    userDefault.set(assessment.siteName, forKey: "PE_Selected_Site_Name")
-                    if assessment.statusType == 2{
-                        UserDefaults.standard.setValue(true, forKey: "isFromDraft")
-                        UserDefaults.standard.synchronize()
-                    }else{
-                        UserDefaults.standard.setValue(false, forKey: "isFromDraft")
-                        UserDefaults.standard.synchronize()
-                    }
-                    let delete  = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber ?? 0)
-                    if delete{
-                        deleteDraftAssessment()
-                    }
-                }
+                deleteCompletion(cell, indexPath)
+                editCompletion(cell, indexPath)
                 return cell
             }
-        }else{
-            if let cell = tableView.dequeueReusableCell(withIdentifier: PE_DraftIntCell.identifier) as? PE_DraftIntCell{
+        } else {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: PE_DraftIntCell.identifier) as? PE_DraftIntCell {
                 cell.selectionStyle = .none
                 cell.config(peNewAssessment:peAssessmentDraftArray[indexPath.row])
                 cell.rejectIndicatorBtn.tag = indexPath.row
                 cell.rejectIndicatorBtn.addTarget(self, action: #selector(addInfoPopup(sender:)), for: .touchUpInside)
                 popFlagArray.append(false)
-                cell.deleteCompletion  = {[unowned self] ( error) in
-                    let assessment = self.peAssessmentDraftArray[indexPath.row]
-                    var date = assessment.evaluationDate
-                    date = date?.replacingOccurrences(of: "/", with: "")
-                    
-                    var siteId = String(assessment.siteId ?? 0)
-                    
-                    let draftID = assessment.draftID ?? ""
-                    date = "C-" + draftID.prefix(20)
-                    
-                    
-                    let errorMSg = "Are you sure you want to delete the assessment" + (date ?? "") + "?"
-                    let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
-                        _ in
-                        CoreDataHandlerPE().deleteDraftByDrafyNumber(assessment.draftID ?? "")
-                        CoreDataHandlerPE().deleteDraftByAssessmentId(assessment.draftID ?? "")
-                        
-                        CoreDataHandlerPE().deleteRefregratorDataByStartAssessment(assessment.serverAssessmentId ?? "")
-                        CoreDataHandlerPE().deleteDraftedRefregratorDataByAssessmentId(assessment.draftID ?? "")
-                        
-                        PEDeletedDraftsDAO.sharedInstance.saveDeletedAssessmentsInfo(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "" , serverAssessmentId: assessment.serverAssessmentId ?? "")
-                        PEInfoDAO.sharedInstance.deleteInfoObj(assessment.serverAssessmentId ?? "")
-                        SanitationEmbrexQuestionMasterDAO.sharedInstance.deleteExistingSanitationQues(assessment.serverAssessmentId ?? "")
-                        
-                        PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:"Schedule",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessment.serverAssessmentId ?? "")
-                        self.deleteDeletedAssessments()
-                        
-                    }
-                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
-                    alertController.addAction(okAction)
-                    alertController.addAction(cancelAction)
-                    self.present(alertController, animated: true, completion: nil)
-                    
-                }
-                cell.editCompletion  = {[unowned self] ( error) in
-                    let assessment = self.peAssessmentDraftArray[indexPath.row]
-                    let pervioudAssesID = UserDefaults.standard.value(forKey: "assIID") as? String ?? ""
-                    if(pervioudAssesID  != assessment.serverAssessmentId){
-                        UserDefaults.standard.set(assessment.refrigeratorNote ?? "", forKey:"re_note")
-                        UserDefaults.standard.set(assessment.serverAssessmentId ,forKey:"assIID")
-                    }
-                    
-                    UserDefaults.standard.set(assessment.serverAssessmentId ?? "", forKey: "currentServerAssessmentId")
-                    
-                    let userDefault = UserDefaults.standard
-                    userDefault.set(assessment.customerId, forKey: "PE_Selected_Customer_Id")
-                    userDefault.set(assessment.customerName, forKey: "PE_Selected_Customer_Name")
-                    userDefault.set(assessment.siteId, forKey: "PE_Selected_Site_Id")
-                    userDefault.set(assessment.siteName, forKey: "PE_Selected_Site_Name")
-                    if assessment.statusType == 2{
-                        UserDefaults.standard.setValue(true, forKey: "isFromDraft")
-                        UserDefaults.standard.synchronize()
-                    }else{
-                        UserDefaults.standard.setValue(false, forKey: "isFromDraft")
-                        UserDefaults.standard.synchronize()
-                    }
-                    let delete  = CoreDataHandlerPE().deleteDraftAndMoveToSessionInProgress(assessment.draftNumber ?? 0)
-                    if delete{
-                        deleteDraftAssessment()
-                    }
-                }
+                deleteCompletionElse(cell, indexPath)
+                editCompletionElse(cell, indexPath)
                 return cell
             }
         }
@@ -279,10 +295,10 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        if regionID == 3{
+        if regionID == 3 {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEDraftHeader" ) as! PEDraftHeader
             return headerView
-        }else{
+        } else {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEDraftIntHeader" ) as! PEDraftIntHeader
             return headerView
         }

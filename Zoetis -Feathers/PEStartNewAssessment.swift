@@ -2082,7 +2082,63 @@ extension PEStartNewAssessment{
         
     }
     
-    func okAction(){
+    fileprivate func peCategoryArray(_ peCategoryFilteredArray: inout [PECategory]) {
+        for object in pECategoriesAssesmentsResponse.peCategoryArray {
+            if peNewAssessment.evaluationID == object.evaluationID {
+                if object.sequenceNo != 12 {
+                    peCategoryFilteredArray.append(object)
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleFilteredArrayAndNewAssessment(_ peCategoryFilteredArray: [PECategory], _ peNewAssessmentWas: PENewAssessment) {
+        for cat in peCategoryFilteredArray {
+            for (index, ass) in cat.assessmentQuestions.enumerated(){
+                var peNewAssessmentNew = PENewAssessment()
+                peNewAssessmentNew = peNewAssessmentWas
+                peNewAssessmentNew.cID = index
+                peNewAssessmentNew.catID = cat.id
+                peNewAssessmentNew.catName = cat.categoryName
+                peNewAssessmentNew.catMaxMark = cat.maxMark
+                peNewAssessmentNew.sequenceNo = cat.id
+                peNewAssessmentNew.sequenceNoo = cat.sequenceNo
+                peNewAssessmentNew.catResultMark = cat.maxMark
+                peNewAssessmentNew.catEvaluationID = cat.evaluationID
+                peNewAssessmentNew.catISSelected = cat.isSelected ? 1:0
+                peNewAssessmentNew.assID = ass.id
+                peNewAssessmentNew.assDetail1 = ass.assessment
+                peNewAssessmentNew.evaluationID = cat.evaluationID
+                peNewAssessmentNew.assDetail2 = ass.assessment2
+                peNewAssessmentNew.assMinScore = ass.minScore
+                peNewAssessmentNew.assMaxScore = ass.maxScore
+                peNewAssessmentNew.assCatType = ass.cateType
+                peNewAssessmentNew.assModuleCatID = ass.moduleCatId
+                peNewAssessmentNew.assModuleCatName = ass.moduleCatName
+                peNewAssessmentNew.assStatus = 1
+                peNewAssessmentNew.isChlorineStrip = self.peNewAssessment.isChlorineStrip
+                peNewAssessmentNew.isAutomaticFail = self.peNewAssessment.isAutomaticFail
+                peNewAssessmentNew.informationImage = ass.informationImage
+                peNewAssessmentNew.serverAssessmentId = peNewAssessmentWas.serverAssessmentId
+                peNewAssessmentNew.sanitationEmbrex = peNewAssessmentWas.sanitationEmbrex
+                peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
+                peNewAssessmentNew.isAllowNA = ass.isAllowNA
+                peNewAssessmentNew.rollOut = ass.rollOut
+                peNewAssessmentNew.isNA = ass.isNA
+                peNewAssessmentNew.qSeqNo = ass.qSeqNo
+                peNewAssessmentNew.IsEMRequested = peNewAssessmentWas.IsEMRequested
+                peNewAssessmentNew.sanitationValue = peNewAssessmentWas.sanitationValue
+                peNewAssessmentNew.extndMicro = peNewAssessmentWas.extndMicro
+                peNewAssessmentNew.isHandMix = peNewAssessmentWas.isHandMix
+                peNewAssessmentNew.ppmValue = peNewAssessmentWas.ppmValue
+                CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:self.peNewAssessment)
+                
+                PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: extendedPESwitch.isOn, assessmentId: self.peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: self.chlorineStripsSwitch.isOn, isAutomaticFail: self.isAutomaticSwitch.isOn)
+            }
+        }
+    }
+    
+    func okAction() {
         checkBackAndSave()
         jsonRe = (getJSON("QuestionAns") ?? JSON())
         questionInfo = (getJSON("QuestionAnsInfo") ?? JSON())
@@ -2097,27 +2153,16 @@ extension PEStartNewAssessment{
             
         }
         var peCategoryFilteredArray: [PECategory] =  []
-        for object in pECategoriesAssesmentsResponse.peCategoryArray{
-            if peNewAssessment.evaluationID == object.evaluationID{
-                
-                if object.sequenceNo != 12{
-                    peCategoryFilteredArray.append(object)
-                }
-            }
-        }
+        peCategoryArray(&peCategoryFilteredArray)
         
-        // let categoryCount = filterCategoryCount()
         if peCategoryFilteredArray.count > 0 {
             var peNewAssessmentWas = PENewAssessment()
             
             peNewAssessmentWas = self.peNewAssessment
             
-            if handmixSwitch.isOn
-            {
+            if handmixSwitch.isOn {
                 peNewAssessmentWas.isHandMix = true
-            }
-            else
-            {
+            } else {
                 peNewAssessmentWas.isHandMix = false
             }
             
@@ -2126,8 +2171,7 @@ extension PEStartNewAssessment{
                 peNewAssessmentWas.IsEMRequested = true
                 peNewAssessmentWas.sanitationValue = true
                 peNewAssessmentWas.extndMicro = true
-            }
-            else {
+            } else {
                 peNewAssessmentWas.IsEMRequested = false
                 peNewAssessmentWas.sanitationValue = false
                 //Raman's code for extended microbial switch
@@ -2136,56 +2180,8 @@ extension PEStartNewAssessment{
             }
             CoreDataHandler().deleteAllData("PE_AssessmentInProgress",predicate: NSPredicate(format: "userID == %d AND serverAssessmentId = %@", peNewAssessmentWas.userID ?? 0, peNewAssessmentWas.serverAssessmentId ?? ""))
             CoreDataHandler().deleteAllData("PE_Refrigator")
-            for  cat in  peCategoryFilteredArray {
-                for (index, ass) in cat.assessmentQuestions.enumerated(){
-                    var peNewAssessmentNew = PENewAssessment()
-                    peNewAssessmentNew = peNewAssessmentWas
-                    peNewAssessmentNew.cID = index
-                    peNewAssessmentNew.catID = cat.id
-                    peNewAssessmentNew.catName = cat.categoryName
-                    peNewAssessmentNew.catMaxMark = cat.maxMark
-                    peNewAssessmentNew.sequenceNo = cat.id
-                    peNewAssessmentNew.sequenceNoo = cat.sequenceNo
-                    peNewAssessmentNew.catResultMark = cat.maxMark
-                    peNewAssessmentNew.catEvaluationID = cat.evaluationID
-                    peNewAssessmentNew.catISSelected = cat.isSelected ? 1:0
-                    peNewAssessmentNew.assID = ass.id
-                    peNewAssessmentNew.assDetail1 = ass.assessment
-                    peNewAssessmentNew.evaluationID = cat.evaluationID
-                    peNewAssessmentNew.assDetail2 = ass.assessment2
-                    peNewAssessmentNew.assMinScore = ass.minScore
-                    peNewAssessmentNew.assMaxScore = ass.maxScore
-                    peNewAssessmentNew.assCatType = ass.cateType
-                    peNewAssessmentNew.assModuleCatID = ass.moduleCatId
-                    peNewAssessmentNew.assModuleCatName = ass.moduleCatName
-                    peNewAssessmentNew.assStatus = 1
-                    peNewAssessmentNew.isChlorineStrip = self.peNewAssessment.isChlorineStrip
-                    peNewAssessmentNew.isAutomaticFail = self.peNewAssessment.isAutomaticFail
-                    peNewAssessmentNew.informationImage = ass.informationImage
-                    peNewAssessmentNew.serverAssessmentId = peNewAssessmentWas.serverAssessmentId
-                    peNewAssessmentNew.sanitationEmbrex = peNewAssessmentWas.sanitationEmbrex
-                    peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
-                    peNewAssessmentNew.isAllowNA = ass.isAllowNA
-                    peNewAssessmentNew.rollOut = ass.rollOut
-                    peNewAssessmentNew.isNA = ass.isNA
-                    peNewAssessmentNew.qSeqNo = ass.qSeqNo
-                    peNewAssessmentNew.IsEMRequested = peNewAssessmentWas.IsEMRequested
-                    peNewAssessmentNew.sanitationValue = peNewAssessmentWas.sanitationValue
-                    peNewAssessmentNew.extndMicro = peNewAssessmentWas.extndMicro
-                    peNewAssessmentNew.isHandMix = peNewAssessmentWas.isHandMix
-                    peNewAssessmentNew.ppmValue = peNewAssessmentWas.ppmValue
-                    CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:self.peNewAssessment)
-                    
-                    PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: extendedPESwitch.isOn, assessmentId: self.peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: self.chlorineStripsSwitch.isOn, isAutomaticFail: self.isAutomaticSwitch.isOn)
-                    
-                   
-                }
-            }
-            if peNewAssessment.evaluationID != nil && peNewAssessment.evaluationID == 1{
-                if extendedPESwitch.isOn{
-                    
-                }
-            }
+            handleFilteredArrayAndNewAssessment(peCategoryFilteredArray, peNewAssessmentWas)
+            
             isMovedForward = true
             let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
             let vc = storyBoard.instantiateViewController(withIdentifier: "PEAssesmentFinalize") as? PEAssesmentFinalize
@@ -2201,9 +2197,6 @@ extension PEStartNewAssessment{
                 return
             }
         }
-        
-        
-        
     }
     
     

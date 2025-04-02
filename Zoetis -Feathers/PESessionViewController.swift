@@ -252,12 +252,40 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         
     }
     
+    fileprivate func handleRegion(indexPath:IndexPath) {
+        if self.regionID == 3 {
+            if self.peAssessmentRejectedArray[indexPath.row].isEMRejected == true && self.peAssessmentRejectedArray[indexPath.row].isPERejected == true {
+                Constants.isAssessmentRejected = true
+                self.moveAssessmentTodraft(index: indexPath.row)
+            } else if self.peAssessmentRejectedArray[indexPath.row].isEMRejected == true && self.peAssessmentRejectedArray[indexPath.row].isPERejected == false {
+                Constants.isAssessmentRejected = true
+                self.movePEToDraft(index: indexPath.row)
+            } else {
+                self.moveAssessmentTodraft(index: indexPath.row)
+            }
+        } else {
+            self.moveAssessmentTodraft(index: indexPath.row)
+        }
+    }
+    
+    fileprivate func handleYesAction(indexPath:IndexPath) {
+        let rejectedCountIS = UserDefaults.standard.value(forKey: "rejectedCountIS") as? Int ?? 0
+        if rejectedCountIS - 1  < 0 {
+            UserDefaults.standard.setValue(0, forKey: "rejectedCountIS")
+        } else {
+            UserDefaults.standard.setValue(rejectedCountIS - 1, forKey: "rejectedCountIS")
+        }
+        
+        UserDefaults.standard.set(self.peAssessmentRejectedArray[indexPath.row].serverAssessmentId , forKey: "currentServerAssessmentId")
+        self.sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId:  self.peAssessmentRejectedArray[indexPath.row].serverAssessmentId ?? "")
+        self.handleRegion(indexPath: indexPath)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if !Constants.isFromRejected{
             
             let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-            if regionID == 3
-            {
+            if regionID == 3 {
                 let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
                 
                 let vc = storyBoard.instantiateViewController(withIdentifier: "PEViewStartNewAssessment") as? PEViewStartNewAssessment
@@ -274,9 +302,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
                 if vc != nil{
                     navigationController?.pushViewController(vc!, animated: true)
                 }
-            }
-            else
-            {
+            } else {
                 let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
                 let vc = storyBoard.instantiateViewController(withIdentifier: "PEViewStartNewAssesmentINT") as? PEViewStartNewAssesmentINT
                 vc?.peNewAssessment = peAssessmentDraftArray[indexPath.row]
@@ -289,49 +315,17 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
                 userDefault.set(peAssessmentDraftArray[indexPath.row].siteId, forKey: "PE_Selected_Site_Id")
                 userDefault.set(peAssessmentDraftArray[indexPath.row].siteName, forKey: "PE_Selected_Site_Name")
                 
-                if vc != nil{
+                if vc != nil {
                     navigationController?.pushViewController(vc!, animated: true)
                 }
             }
-            
-        }else{
+        } else {
             let allAssesmentArr = CoreDataHandlerPE().getRejectedAssessmentArrayPEObject(ofCurrentAssessment:true)
             let errorMSg = "Are you sure you want to move assessment to draft?"
             let alertController = UIAlertController(title: "Move Assessment to Draft", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
-                let rejectedCountIS = UserDefaults.standard.value(forKey: "rejectedCountIS") as? Int ?? 0
-                if rejectedCountIS - 1  < 0
-                {
-                    UserDefaults.standard.setValue(0, forKey: "rejectedCountIS")
-                } else {
-                    UserDefaults.standard.setValue(rejectedCountIS - 1, forKey: "rejectedCountIS")
-                }
-                
-                UserDefaults.standard.set(self.peAssessmentRejectedArray[indexPath.row].serverAssessmentId , forKey: "currentServerAssessmentId")
-                self.sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId:  self.peAssessmentRejectedArray[indexPath.row].serverAssessmentId ?? "")
-                if self.regionID == 3
-                {
-                    if self.peAssessmentRejectedArray[indexPath.row].isEMRejected == true && self.peAssessmentRejectedArray[indexPath.row].isPERejected == true
-                    {
-                        Constants.isAssessmentRejected = true
-                        self.moveAssessmentTodraft(index: indexPath.row)
-                    }
-                    else if self.peAssessmentRejectedArray[indexPath.row].isEMRejected == true && self.peAssessmentRejectedArray[indexPath.row].isPERejected == false
-                    {
-                        Constants.isAssessmentRejected = true
-                        self.movePEToDraft(index: indexPath.row)
-                    }
-                    else
-                    {
-                        self.moveAssessmentTodraft(index: indexPath.row)
-                    }
-                }
-                else
-                {
-                    self.moveAssessmentTodraft(index: indexPath.row)
-                }
-                
+                self.handleYesAction(indexPath: indexPath)
             }
             let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) 
             

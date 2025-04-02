@@ -120,8 +120,7 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
             self.setTemperaryObsNameArray()
             
             self.bgTableView.reloadData()
-        }
-        else{
+        } else {
             Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"No quicklink is selected. Please go to Settings and select quicklink.")
         }
     }

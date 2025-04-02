@@ -3343,6 +3343,18 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     
+    fileprivate func assesmentIdCOnfigure(_ AssessmentId: inout Int, _ dict: PENewAssessment, _ Draft: inout Int, _ Complete: inout Int) {
+        if AssessmentId == 0 {
+            if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
+                deviceIDFORSERVER = dict.assDetail2 ?? ""
+            }
+            AssessmentId = dict.draftNumber ?? 0
+            Draft = 1
+            Complete = 0
+            saveTypeString.append(00)
+        }
+    }
+    
     func createSyncRequestForExtendedMicro(dict: PENewAssessment ,certificationData : [PECertificateData], saveType: Int) -> JSONDictionary{
         debugPrint("dict---\(dict)")
         var idArr = [String]()
@@ -3370,15 +3382,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             
         }
         var AssessmentId = dict.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
-                deviceIDFORSERVER = dict.assDetail2 ?? ""
-            }
-            AssessmentId = dict.draftNumber ?? 0
-            Draft = 1
-            Complete = 0
-            saveTypeString.append(00)
-        }
+        assesmentIdCOnfigure(&AssessmentId, dict, &Draft, &Complete)
         var serverAssessmentId:Int64 = 0
         if dict.serverAssessmentId != nil{
             serverAssessmentId = Int64( dict.serverAssessmentId ?? "") ?? 0

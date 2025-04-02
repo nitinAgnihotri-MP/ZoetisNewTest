@@ -1594,6 +1594,18 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         }
     }
     
+    fileprivate func assessmentIdConfigure(_ AssessmentId: inout Int, _ dict: PENewAssessment, _ Draft: inout Int, _ Complete: inout Int, _ SaveType: inout Int) {
+        if AssessmentId == 0 {
+            if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
+                deviceIDFORSERVER = dict.assDetail2 ?? ""
+            }
+            AssessmentId = dict.draftNumber ?? 0
+            Draft = 1
+            Complete = 0
+            SaveType = 0
+        }
+    }
+    
     func createSyncRequestForExtendedMicro(dict: PENewAssessment ,certificationData : [PECertificateData]) -> JSONDictionary{
         
         CoreDataHandlerPE().updateOfflineIsEMRejected(isEMRejected: false)
@@ -1633,15 +1645,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         let deviceIdForServer = "\(UniID)_1_iOS_\(udid)"
         deviceIDFORSERVER = deviceIdForServer
         
-        if AssessmentId == 0 {
-            if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
-                deviceIDFORSERVER = dict.assDetail2 ?? ""
-            }
-            AssessmentId = dict.draftNumber ?? 0
-            Draft = 1
-            Complete = 0
-            SaveType = 0
-        }
+        assessmentIdConfigure(&AssessmentId, dict, &Draft, &Complete, &SaveType)
         if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
             deviceIDFORSERVER = dict.assDetail2 ?? ""
         }
@@ -1879,8 +1883,26 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         
     }
     
+    fileprivate func indexPathZeroConfigure(_ indexPath: IndexPath, _ assessment: PE_AssessmentInProgress?) -> CGFloat {
+        if (indexPath.section == 0) {
+            if selectedCategory?.sequenceNoo == 3 && assessment?.rollOut == "Y" && assessment?.qSeqNo == 1{
+                var height:CGFloat = CGFloat()
+                height = 120
+                return height
+            } else {
+                var height:CGFloat = CGFloat()
+                height = 70
+                return height
+            }
+        } else {
+            var height:CGFloat = CGFloat()
+            height = 0
+            return height
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if checkForTraning(){
+        if checkForTraning() {
             if(selectedCategory?.catName != refrigrateStr) {
                 if indexPath.section == 1 {
                     var height:CGFloat = CGFloat()
@@ -1893,28 +1915,14 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
         }
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigrateStr{
+        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigrateStr {
             var height:CGFloat = CGFloat()
             height = 70
             return height
         }
         let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
         if selectedCategory?.sequenceNoo == 3 {
-            if (indexPath.section == 0) {
-                if selectedCategory?.sequenceNoo == 3 && assessment?.rollOut == "Y" && assessment?.qSeqNo == 1{
-                    var height:CGFloat = CGFloat()
-                    height = 120
-                    return height
-                } else {
-                    var height:CGFloat = CGFloat()
-                    height = 70
-                    return height
-                }
-            } else {
-                var height:CGFloat = CGFloat()
-                height = 0
-                return height
-            }
+            return indexPathZeroConfigure(indexPath, assessment)
         }
         
         if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigrateStr {

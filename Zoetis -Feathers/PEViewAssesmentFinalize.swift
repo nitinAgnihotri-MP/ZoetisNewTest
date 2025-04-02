@@ -629,51 +629,73 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    fileprivate func handleDefaultCase() -> Int {
+        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigStr{
+            return 1
+        } else if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr{
+            return 3
+        } else {
+            return 1
+        }
+    }
+    
+    fileprivate func handleCatArrayForTable() -> Int {
+        var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
+        if assessment?.sequenceNoo == 1  {
+            if checkForTraning(){
+                return 5
+            } else {
+                return 4
+            }
+        } else if assessment?.sequenceNoo == 3 {
+            if regionID != 3{
+                return 1
+            } else {
+                if peNewAssessment.evaluationID == 1{
+                    return 1
+                } else {
+                    return 2
+                }
+            }
+        } else if assessment?.sequenceNoo == 1 {
+            return 5
+        }
+        return handleDefaultCase()
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         if catArrayForTableIs.count > 0 {
-            var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
-            if assessment?.sequenceNoo == 1  {
-                if checkForTraning(){
-                    return 5
-                } else {
-                    return 4
-                }
-            } else if assessment?.sequenceNoo == 3 {
-                if regionID != 3{
-                    return 1
-                }
-                else
-                {
-                    if peNewAssessment.evaluationID == 1{
-                        return 1
-                    }
-                    else{
-                        return 2
-                    }
-                }
-                
-            }
-            else if assessment?.sequenceNoo == 1 {
-                return 5
-            }
-            if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigStr{
-                return 1
-            }
-            if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr{
-                return 3
-            }
-            else {
-                return 1
-            }
+            return handleCatArrayForTable()
         }
         if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigStr{
             return 1
-        }
-        if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr{
+        } else if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr{
             return 3
         }
         
         return 2
+    }
+    
+    fileprivate func handleCheckForTrainingFailCase(_ section: Int) -> Int {
+        var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
+        if assessment?.sequenceNoo == 3 {
+            if section == 0 {
+                return catArrayForTableIs.count                }
+            if section == 1 {
+                return 1
+            }
+        } else {
+            if section == 1 {
+                return inovojectData.count
+            }
+            if section == 2 {
+                return dayOfAgeData.count
+            }
+            if section == 3 {
+                return dayOfAgeSData.count
+            }
+        }
+        return catArrayForTableIs.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -700,32 +722,28 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
             return catArrayForTableIs.count
         } else {
-            var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
-            if assessment?.sequenceNoo == 3 {
-                if section == 0 {
-                    return catArrayForTableIs.count                }
-                if section == 1 {
-                    return 1
-                }
-            } else {
-                if section == 1 {
-                    return inovojectData.count
-                }
-                if section == 2 {
-                    return dayOfAgeData.count
-                }
-                if section == 3 {
-                    return dayOfAgeSData.count
-                }
-            }
-            return catArrayForTableIs.count
+            return handleCheckForTrainingFailCase(section)
         }
         
     }
     
     
+    fileprivate func handleCatNameValidation(_ indexPath: IndexPath, _ assDetail1Height: CGFloat) -> CGFloat? {
+        if(selectedCategory?.catName != refrigStr) {
+            if indexPath.section > 0 {
+                var height:CGFloat = CGFloat()
+                height = 130
+                return height
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if checkForTraning(){
+        if checkForTraning() {
             if(selectedCategory?.catName != refrigStr){
                 if indexPath.section == 1 {
                     var height:CGFloat = CGFloat()
@@ -745,42 +763,34 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
         let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
         if selectedCategory?.sequenceNoo == 3 {
-            if (indexPath.section == 0){
+            if (indexPath.section == 0) {
                 if selectedCategory?.sequenceNoo == 3 && assessment?.rollOut == "Y" && assessment?.qSeqNo == 1{
                     var height:CGFloat = CGFloat()
                     height = 120
                     return height
-                }
-                else {
+                } else {
                     var height:CGFloat = CGFloat()
                     height = 70
                     return height
                 }
-            }
-            else {
+            } else {
                 var height:CGFloat = CGFloat()
                 height = 0
                 return height
             }
         }
-        
+        var assDetail1Height:CGFloat = CGFloat()
+        assDetail1Height = self.estimatedHeightOfLabel(text: assessment?.assDetail1 ?? "") + 50
+
         if selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refrigStr{
             var height:CGFloat = CGFloat()
             height = 80
             return height
             
         }
-        if(selectedCategory?.catName != refrigStr){
-            if indexPath.section > 0 {
-                var height:CGFloat = CGFloat()
-                height = 130
-                return height
-            }
-        }
+        return handleCatNameValidation(indexPath, assDetail1Height) ?? assDetail1Height
         
-        var height:CGFloat = CGFloat()
-        height = self.estimatedHeightOfLabel(text: assessment?.assDetail1 ?? "") + 50
-        return height
+//        return assDetail1Height
         
     }
     
