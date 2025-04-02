@@ -342,6 +342,8 @@
 		21EA29E42434DD6D002720C9 /* PVE_SyncAssessmentCategoriesDetails+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA29E22434DD6D002720C9 /* PVE_SyncAssessmentCategoriesDetails+CoreDataProperties.swift */; };
 		21EA29E72434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA29E52434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataClass.swift */; };
 		21EA29E82434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA29E62434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataProperties.swift */; };
+		25034AAD2D9D7CC9004829BB /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25034AAC2D9D7CC9004829BB /* NetworkManager.swift */; };
+		25034AAF2D9DA1BC004829BB /* PEViewStartNewAssessment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25034AAE2D9DA1BC004829BB /* PEViewStartNewAssessment.swift */; };
 		25B15F9A2D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B15F992D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift */; };
 		27276A791D5C867800C134BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276A781D5C867800C134BA /* AppDelegate.swift */; };
 		27276A861D5C867800C134BA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27276A841D5C867800C134BA /* LaunchScreen.storyboard */; };
@@ -769,7 +771,6 @@
 		B72961CF24A7CC23003237C7 /* BarChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B729619224A7CC22003237C7 /* BarChartViewController.swift */; };
 		B72961D024A7CC23003237C7 /* SummaryReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B729619324A7CC22003237C7 /* SummaryReportsViewController.swift */; };
 		B743C04824A91D2A00E7C0A8 /* Zoetis__Feathers.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B743C04224A91D2A00E7C0A8 /* Zoetis__Feathers.xcdatamodeld */; };
-		B77B27262429F4DF004D06C4 /* PEViewStartNewAssessment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B27252429F4DF004D06C4 /* PEViewStartNewAssessment.swift */; };
 		B77B27282429F525004D06C4 /* PEViewAssesmentFinalize.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B27272429F525004D06C4 /* PEViewAssesmentFinalize.swift */; };
 		B7969E4224B6475F008F9E2A /* PEAssessmentFinalizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7969E4124B6475F008F9E2A /* PEAssessmentFinalizeExtension.swift */; };
 		B7AEA26F242CC7BF00D4BAF0 /* PEDraftAssesmentFinalize.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AEA26E242CC7BE00D4BAF0 /* PEDraftAssesmentFinalize.swift */; };
@@ -1252,6 +1253,8 @@
 		21EA29E22434DD6D002720C9 /* PVE_SyncAssessmentCategoriesDetails+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PVE_SyncAssessmentCategoriesDetails+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		21EA29E52434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PVE_SyncAssessmentQuestion+CoreDataClass.swift"; sourceTree = "<group>"; };
 		21EA29E62434E24A002720C9 /* PVE_SyncAssessmentQuestion+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PVE_SyncAssessmentQuestion+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		25034AAC2D9D7CC9004829BB /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		25034AAE2D9DA1BC004829BB /* PEViewStartNewAssessment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PEViewStartNewAssessment.swift; sourceTree = "<group>"; };
 		25B15F992D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PVEDraftSNAFinalizeAssement.swift; sourceTree = "<group>"; };
 		2710EC831D92847100732812 /* ReachabilitySwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReachabilitySwift.framework; path = "../../Library/Developer/Xcode/DerivedData/Zoetis_-Feathers-hciltnkizjyghrbxxeagaaejwgni/Build/Products/Debug-iphonesimulator/ReachabilitySwift/ReachabilitySwift.framework"; sourceTree = "<group>"; };
 		27276A751D5C867800C134BA /* PoultryView 360.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PoultryView 360.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1699,7 +1702,6 @@
 		B743C04524A91D2A00E7C0A8 /* Turkey_Zoetis_Feathers42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Turkey_Zoetis_Feathers42.xcdatamodel; sourceTree = "<group>"; };
 		B743C04624A91D2A00E7C0A8 /* Turkey_Zoetis_Feathers 43.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Turkey_Zoetis_Feathers 43.xcdatamodel"; sourceTree = "<group>"; };
 		B743C04724A91D2A00E7C0A8 /* Turkey_Zoetis_Feathers.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Turkey_Zoetis_Feathers.xcdatamodel; sourceTree = "<group>"; };
-		B77B27252429F4DF004D06C4 /* PEViewStartNewAssessment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PEViewStartNewAssessment.swift; sourceTree = "<group>"; };
 		B77B27272429F525004D06C4 /* PEViewAssesmentFinalize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PEViewAssesmentFinalize.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		B7969E4124B6475F008F9E2A /* PEAssessmentFinalizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PEAssessmentFinalizeExtension.swift; sourceTree = "<group>"; };
 		B7AEA26E242CC7BE00D4BAF0 /* PEDraftAssesmentFinalize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PEDraftAssesmentFinalize.swift; sourceTree = "<group>"; };
@@ -2093,6 +2095,7 @@
 		10273081239598070042FA45 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				25034AAC2D9D7CC9004829BB /* NetworkManager.swift */,
 				10273082239598070042FA45 /* ZoetisWebServices.swift */,
 				10273083239598070042FA45 /* ZoetisApiManager.swift */,
 			);
@@ -2207,9 +2210,9 @@
 				1005EFF423A2F77400505E71 /* PEStartNewAssessment.swift */,
 				00CC26AC296C7426005E9205 /* PEStartNewAssesmentINT.swift */,
 				1005EFF623A305CC00505E71 /* PEAssesmentFinalize.swift */,
+				25034AAE2D9DA1BC004829BB /* PEViewStartNewAssessment.swift */,
 				B7969E4124B6475F008F9E2A /* PEAssessmentFinalizeExtension.swift */,
 				10C134622408A19A00767FF8 /* PESessionViewController.swift */,
-				B77B27252429F4DF004D06C4 /* PEViewStartNewAssessment.swift */,
 				00CC26AE296C76F8005E9205 /* PEViewStartNewAssesmentINT.swift */,
 				B77B27272429F525004D06C4 /* PEViewAssesmentFinalize.swift */,
 				10C134582408607D00767FF8 /* PEDraftViewController.swift */,
@@ -4720,6 +4723,7 @@
 				214E0ABD242E038F005F8653 /* PVE_SurveyTypeDetails+CoreDataProperties.swift in Sources */,
 				C490782B23C4D075004ADC07 /* SidePanelViewController.swift in Sources */,
 				00206520269D8E5D008553F3 /* PE_AssessmentRejected.swift in Sources */,
+				25034AAF2D9DA1BC004829BB /* PEViewStartNewAssessment.swift in Sources */,
 				214E0A9C242E038F005F8653 /* PVE_Housing+CoreDataProperties.swift in Sources */,
 				214E0A4B242E02CD005F8653 /* PVEStartNewAssessment.swift in Sources */,
 				B72961CE24A7CC23003237C7 /* ReportsCalculation.swift in Sources */,
@@ -4855,7 +4859,6 @@
 				00183C562558681500E17B01 /* PENewInfoVM.swift in Sources */,
 				7889E1DD242E1F1C00CA5139 /* FeatherPulpRequisitionModel.swift in Sources */,
 				9C406E1A297038040074DA9A /* SetFrezzerPointCell.swift in Sources */,
-				B77B27262429F4DF004D06C4 /* PEViewStartNewAssessment.swift in Sources */,
 				7889E1E5242E1FA000CA5139 /* FeatherPulpVC.swift in Sources */,
 				214E0A51242E02CD005F8653 /* PVEVaccineInfoTypeCell.swift in Sources */,
 				214E0AE0242E03E7005F8653 /* PVEGetEvaluationForResponse.swift in Sources */,
@@ -4910,6 +4913,7 @@
 				102B0FA023A4E78E00115440 /* DatePickerPopupViewController.swift in Sources */,
 				00CC26AF296C76F8005E9205 /* PEViewStartNewAssesmentINT.swift in Sources */,
 				B729606E24A7C5BC003237C7 /* PostingSessionTurkey+CoreDataClass.swift in Sources */,
+				25034AAD2D9D7CC9004829BB /* NetworkManager.swift in Sources */,
 				7889E22F242E25FC00CA5139 /* DraftViewController.swift in Sources */,
 				214E0AD8242E03E7005F8653 /* PVEVaccineManDetailsResponse.swift in Sources */,
 				B7B8A72024B77CFB0069DBA9 /* MasterQuestionsDTO.swift in Sources */,

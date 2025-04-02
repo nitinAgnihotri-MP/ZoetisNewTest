@@ -696,85 +696,112 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
         print(appDelegateObj.testFuntion())
     }
     
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
+//            if section == 3 {
+//                return otherQuessArr.count
+//            }
+//            if section == 1 {
+//                return noOfCatcherArr.count
+//            }
+//            if section == 2 {
+//                return noOfVaccinatorsArr.count
+//            }
+//            if section == 4 {
+//                if isLiveVaccineOn == true {
+//                    return liveQuesArr.count
+//                }
+//                else{
+//                    return 1
+//                }
+//            }
+//            if section == 5 {
+//                if isInActiveVaccineOn == true {
+//                    return inactiveQuessArr.count
+//                } else {
+//                    return 1
+//                }
+//            }
+//            if section == 6 {
+//                return vaccinInfoDetailArr.count
+//            } else{
+//                return 1
+//            }
+//        } else if currentSel_seq_Number == 6 { // Vaccine Evaluation Section
+//            
+//            return 1
+//        } else {
+//            return questionsArr.count
+//        }
+//    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
-            if section == 3 {
-                return otherQuessArr.count
-            }
-            if section == 1 {
-                return noOfCatcherArr.count
-            }
-            if section == 2 {
-                return noOfVaccinatorsArr.count
-            }
-            if section == 4 {
-                if isLiveVaccineOn == true {
-                    return liveQuesArr.count
-                }
-                else{
-                    return 1
-                }
-            }
-            if section == 5 {
-                if isInActiveVaccineOn == true {
-                    return inactiveQuessArr.count
-                }
-                else{
-                    return 1
-                }
-                
-            }
-            if section == 6 {
-                return vaccinInfoDetailArr.count
-            }
-            else{
-                return 1
-            }
+        guard currentSel_seq_Number == 2 else {
+            return currentSel_seq_Number == 6 ? 1 : questionsArr.count
         }
-        else if currentSel_seq_Number == 6 { // Vaccine Evaluation Section
-            
+
+        switch section {
+        case 1:
+            return noOfCatcherArr.count
+        case 2:
+            return noOfVaccinatorsArr.count
+        case 3:
+            return otherQuessArr.count
+        case 4:
+            return isLiveVaccineOn ? liveQuesArr.count : 1
+        case 5:
+            return isInActiveVaccineOn ? inactiveQuessArr.count : 1
+        case 6:
+            return vaccinInfoDetailArr.count
+        default:
             return 1
-        }
-        else{
-            return questionsArr.count
         }
     }
     
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
+//            if indexPath.section == 0 {
+//                return 200.0
+//            } else if indexPath.section == 1 || indexPath.section == 2{
+//                return 60.0 //\\\ ---Vaccine Info Detail Cell-----
+//            } else if indexPath.section == 4 || indexPath.section == 5{
+//                return 80.0 //\\\ ---Crew Safty Cell-----
+//            } else if indexPath.section == 6{
+//                
+//                if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore") {
+//                    if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr {
+//                        return 93
+//                    } else {
+//                        return 300
+//                    }
+//                } else {
+//                    return 300
+//                }
+//            } else {
+//                return 80.0
+//            }
+//        } else if currentSel_seq_Number == 6 {
+//            return 1350.0
+//        } else {
+//            return 80.0
+//        }
+//    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
-            if indexPath.section == 0 {
-                return 200.0
+        switch currentSel_seq_Number {
+        case 2:  // Vaccine Preparation Section
+            switch indexPath.section {
+            case 0: return 200.0
+            case 1, 2: return 60.0  // Vaccine Info Detail Cell
+            case 4, 5: return 80.0  // Crew Safety Cell
+            case 6:
+                let showMore = (vaccinInfoDetailArr[indexPath.row]["showMore"] as? String) ?? Constants.noStr
+                return showMore == Constants.noStr ? 93.0 : 300.0
+            default: return 80.0
             }
-            else if indexPath.section == 1 || indexPath.section == 2{
-                return 60.0 //\\\ ---Vaccine Info Detail Cell-----
-            }
-            else if indexPath.section == 4 || indexPath.section == 5{
-                return 80.0 //\\\ ---Crew Safty Cell-----
-            }
-            else if indexPath.section == 6{
-                
-                if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore"){
-                    if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr
-                    {
-                        return 93
-                    }
-                    else
-                    {
-                        return 300
-                    }
-                }
-                else
-                {
-                    return 300
-                }
-            }
-            else{
-                return 80.0
-            }
-        }
-        else if currentSel_seq_Number == 6 {
+        case 6:
             return 1350.0
-        }else{
+        default:
             return 80.0
         }
     }

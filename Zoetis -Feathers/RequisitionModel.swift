@@ -242,6 +242,21 @@ class RequisitionModel {
     
     
     //MARK: - Reset Data into model for session in progress
+    fileprivate func manageHeaders(_ headers: NSArray) {
+        for item in headers {
+            if let headerObject = item as? Microbial_LocationTypeHeaders {
+                let header = LocationTypeHeaderModel(headerObject: headerObject)
+                if header.numberOfPlateIDCreated.count > 0 {
+                    if let locationTypeId = header.selectedLocationTypeId {
+                        selectedLocationTypes.append(locationTypeId)
+                    }
+                }
+                
+                self.actualCreatedHeaders.append(header)
+            }
+        }
+    }
+    
     func configureDataIfSessionInProgress() {
         let enviromentalSessionInProgress = CoreDataHandlerMicro().fetchAllData("Microbial_EnviromentalSessionInProgress")
         if enviromentalSessionInProgress.count > 0 {
@@ -255,22 +270,26 @@ class RequisitionModel {
         if headers.count > 0 {
             self.actualCreatedHeaders = []
             self.selectedLocationTypes = []
-            for item in headers {
-                if let headerObject = item as? Microbial_LocationTypeHeaders {
-                    let header = LocationTypeHeaderModel(headerObject: headerObject)
-                    if header.numberOfPlateIDCreated.count > 0 {
-                        if let locationTypeId = header.selectedLocationTypeId {
-                            selectedLocationTypes.append(locationTypeId)
-                        }
-                    }
-                    
-                    self.actualCreatedHeaders.append(header)
-                }
-            }
+            manageHeaders(headers)
         }
     }
     
     //MARK: - Set data saved in draft
+    fileprivate func handleHeadersValidations(_ headers: [Microbial_LocationTypeHeadersSubmitted]) {
+        for item in headers {
+            if let headerObject = item as? Microbial_LocationTypeHeadersSubmitted {
+                let header = LocationTypeHeaderModel(headerObject: headerObject)
+                if header.numberOfPlateIDCreated.count > 0 {
+                    if let locationTypeId = header.selectedLocationTypeId {
+                        selectedLocationTypes.append(locationTypeId)
+                    }
+                }
+                
+                self.actualCreatedHeaders.append(header)
+            }
+        }
+    }
+    
     func configureDataFromDrafts(draftData: Microbial_EnviromentalSurveyFormSubmitted) {
         self.setDataOfDraftOrSubmittedRequisition(draftData)
         
@@ -280,25 +299,11 @@ class RequisitionModel {
             if headers.count > 0 {
                 self.actualCreatedHeaders = []
                 self.selectedLocationTypes = []
-                for item in headers {
-                    if let headerObject = item as? Microbial_LocationTypeHeadersSubmitted {
-                        let header = LocationTypeHeaderModel(headerObject: headerObject)
-                        if header.numberOfPlateIDCreated.count > 0 {
-                            if let locationTypeId = header.selectedLocationTypeId {
-                                selectedLocationTypes.append(locationTypeId)
-                            }
-                        }
-                        
-                        self.actualCreatedHeaders.append(header)
-                    }
-                }
+                handleHeadersValidations(headers)
             }
         }
-
     }
     
-    
-     
     func configureDataIfSessionInProgress_FeatherPulp() {
         let enviromentalSessionInProgress = CoreDataHandlerMicro().fetchAllData("Microbial_EnviromentalSessionInProgress")
         if enviromentalSessionInProgress.count > 0 {
@@ -525,27 +530,35 @@ class RequisitionModel {
         self.locationTypeValuesArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Microbial_LocationValues") as? [Microbial_LocationValues] ?? []
     }
     
+    fileprivate func handleEnvLocationTypeArr(_ locationTypes: inout [String], _ locationTypeIds: inout [Int]) {
+        for object in environmentalLocationTypeArray {
+            if let text = object.text {
+                locationTypes.append(text)
+            }
+            if let locationTypeId = object.id {
+                locationTypeIds.append(Int(truncating: locationTypeId))
+            }
+        }
+    }
+    
+    fileprivate func handleBacterialLocationTypeArray(_ locationTypes: inout [String], _ locationTypeIds: inout [Int]) {
+        for object in bacterialLocationTypeArray {
+            if let text = object.text {
+                locationTypes.append(text)
+            }
+            if let locationTypeId = object.id {
+                locationTypeIds.append(Int(truncating: locationTypeId))
+            }
+        }
+    }
+    
     func getAllLocationTypes() -> (locationTypes: [String], locationTypeIds: [Int]) {
         var locationTypes = [String]()
         var locationTypeIds = [Int]()
         if requisitionType == .enviromental{
-            for object in environmentalLocationTypeArray {
-                if let text = object.text {
-                    locationTypes.append(text)
-                }
-                if let locationTypeId = object.id {
-                    locationTypeIds.append(Int(truncating: locationTypeId))
-                }
-            }
-        }else{
-            for object in bacterialLocationTypeArray {
-                if let text = object.text {
-                    locationTypes.append(text)
-                }
-                if let locationTypeId = object.id {
-                    locationTypeIds.append(Int(truncating: locationTypeId))
-                }
-            }
+            handleEnvLocationTypeArr(&locationTypes, &locationTypeIds)
+        } else{
+            handleBacterialLocationTypeArray(&locationTypes, &locationTypeIds)
         }
         return (locationTypes, locationTypeIds)
     }
@@ -623,27 +636,27 @@ class RequisitionModel {
     
     
     //MARK:- Generate Barcode Using "B-", Date and Selected Site
+    fileprivate func populateNewArray(_ initialsZ: [String], _ newArray: inout [String]) {
+        for item in initialsZ {
+            if item != "" {
+                newArray.append(item)
+            }
+        }
+    }
+    
     func generatebarCode() {
+        
         if self.site.isEmpty {
-                                                                                                                                          
             switch self.requisitionType {
             case .bacterial:
                 self.barCode = "B-"
             case .enviromental:
                 self.barCode = "E-"
-//            case .feathurePulp:
-//                self.barCode = "F-"
             }
             return
         }
         
         let nameString = String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "") + "\(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? "").count > 0 ? " " : "")" + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
-        print("your first name zz: \(String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""))")
-                        print("your middle name : \(String(UserDefaults.standard.value(forKey: "MiddleName") as? String ?? ""))")
-                        print("your last name : \(String(UserDefaults.standard.value(forKey: "LastName") as? String ?? ""))")
-        print("your name string is : \(nameString)")
-//        var first = $0.first.codingKey.stringValue
-//        var seconed = $1.first.codingKey.stringValue
         var initials = ""
         let initialsZ = nameString.components(separatedBy: " ")
         if initialsZ.count > 0 {
@@ -651,11 +664,7 @@ class RequisitionModel {
             var newArray : [String] = []
             newArray.removeAll()
             
-            for item in initialsZ {
-                if item != "" {
-                    newArray.append(item)
-                }
-            }
+            populateNewArray(initialsZ, &newArray)
             let first = initialsZ[0]
             if let seconed = newArray[1] as? String{
                 
@@ -663,9 +672,6 @@ class RequisitionModel {
                 if arrayofstring.count > 0 {
                     var firstChar = arrayofstring[0]
                     initials = firstChar
-                }
-                else {
-                    print("no string coming")
                 }
             }
         }
@@ -675,8 +681,6 @@ class RequisitionModel {
             self.barCode = initials + "-" + "\(String(describing: sampleCollectionDate.replacingOccurrences(of: "/", with: "")))" + "-" + String(self.siteIdForBarcode) + "-B"
         case .enviromental:
             self.barCode = initials + "-" + "\(String(describing: sampleCollectionDate.replacingOccurrences(of: "/", with: "")))" + "-" + String(self.siteIdForBarcode) + "-E"
-//        case .feathurePulp:
-//            self.barCode = initials + "-" + "\(String(describing: sampleCollectionDate.replacingOccurrences(of: "/", with: "")))" + "-" + String(self.siteIdForBarcode) + "-F"
         }
     }
     
@@ -715,8 +719,6 @@ class RequisitionModel {
             }
         }
     }
-    
-    
     
     //MARK: - Set data into model from Draft Or Saved Rquisition
     func setDataOfDraftOrSubmittedRequisition(_ managedObject: Microbial_EnviromentalSurveyFormSubmitted) {

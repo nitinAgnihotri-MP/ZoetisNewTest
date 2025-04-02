@@ -698,29 +698,33 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         return catArrayForTableIs.count
     }
     
+    fileprivate func getNoOfRowsInSection(_ section: Int) -> Int {
+        if section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigStr {
+            return sanitationQuesArr.count
+        }
+        
+        if (selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr){
+            return 2
+        }
+        if section == 1 {
+            return certificateData.count
+        }
+        if section == 2 {
+            return inovojectData.count
+        }
+        if section == 3 {
+            return dayOfAgeData.count
+        }
+        if section == 4 {
+            return dayOfAgeSData.count
+        }
+        return catArrayForTableIs.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if checkForTraning(){
-            if section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigStr {
-                return sanitationQuesArr.count
-            }
-            
-            if (selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr){
-                return 2
-            }
-            if section == 1 {
-                return certificateData.count
-            }
-            if section == 2 {
-                return inovojectData.count
-            }
-            if section == 3 {
-                return dayOfAgeData.count
-            }
-            if section == 4 {
-                return dayOfAgeSData.count
-            }
-            return catArrayForTableIs.count
+            return getNoOfRowsInSection(section)
         } else {
             return handleCheckForTrainingFailCase(section)
         }
@@ -739,6 +743,24 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
         } else {
             return nil
+        }
+    }
+    
+    fileprivate func handleSeqNo3(_ indexPath: IndexPath, _ assessment: PE_AssessmentInProgress?) -> CGFloat {
+        if (indexPath.section == 0) {
+            if selectedCategory?.sequenceNoo == 3 && assessment?.rollOut == "Y" && assessment?.qSeqNo == 1{
+                var height:CGFloat = CGFloat()
+                height = 120
+                return height
+            } else {
+                var height:CGFloat = CGFloat()
+                height = 70
+                return height
+            }
+        } else {
+            var height:CGFloat = CGFloat()
+            height = 0
+            return height
         }
     }
     
@@ -763,21 +785,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
         let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
         if selectedCategory?.sequenceNoo == 3 {
-            if (indexPath.section == 0) {
-                if selectedCategory?.sequenceNoo == 3 && assessment?.rollOut == "Y" && assessment?.qSeqNo == 1{
-                    var height:CGFloat = CGFloat()
-                    height = 120
-                    return height
-                } else {
-                    var height:CGFloat = CGFloat()
-                    height = 70
-                    return height
-                }
-            } else {
-                var height:CGFloat = CGFloat()
-                height = 0
-                return height
-            }
+            return handleSeqNo3(indexPath, assessment)
         }
         var assDetail1Height:CGFloat = CGFloat()
         assDetail1Height = self.estimatedHeightOfLabel(text: assessment?.assDetail1 ?? "") + 50
@@ -789,9 +797,6 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             
         }
         return handleCatNameValidation(indexPath, assDetail1Height) ?? assDetail1Height
-        
-//        return assDetail1Height
-        
     }
     
     func estimatedHeightOfLabel(text: String) -> CGFloat {
@@ -2348,6 +2353,30 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
         appDelegateObj.testFuntion()
     }
     // MARK:  Check for Last Category
+    fileprivate func manageBckButton(_ count: Int) {
+        if let cat = catArrayForCollectionIs[count] as? PENewAssessment {
+            if cat.sequenceNo == selectedCategory?.sequenceNo {
+                bckButton.isHidden = true
+            } else {
+                bckButton.isHidden = false
+            }
+        } else {
+            bckButton.isHidden = false
+        }
+    }
+    
+    fileprivate func manageBackButton2() {
+        if let cat = catArrayForCollectionIs[0] as? PENewAssessment{
+            if cat.sequenceNo == selectedCategory?.sequenceNo{
+                bckButton.isHidden = false
+            }  else {
+                bckButton.isHidden = true
+            }
+        } else {
+            bckButton.isHidden = true
+        }
+    }
+    
     func chechForLastCategory(){
         var  peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: peNewAssessment.serverAssessmentId ?? "")
         var catArrayForCollectionIsAre : [PENewAssessment] = []
@@ -2362,32 +2391,11 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
         
         let count = catArrayForCollectionIs.count - 1
         if count > 0 {
-            if let cat = catArrayForCollectionIs[count] as? PENewAssessment {
-                if cat.sequenceNo == selectedCategory?.sequenceNo {
-                    bckButton.isHidden = true
-                    
-                } else {
-                    bckButton.isHidden = false
-                }
-            }
-            else {
-                bckButton.isHidden = false
-                
-            }
-            
-            if let cat = catArrayForCollectionIs[0] as? PENewAssessment{
-                if cat.sequenceNo == selectedCategory?.sequenceNo{
-                    bckButton.isHidden = false
-                }  else {
-                    bckButton.isHidden = true
-                }
-            } else {
-                bckButton.isHidden = true
-            }
+            manageBckButton(count)
+            manageBackButton2()
             
             for cat in catArrayForCollectionIsAre {
                 if cat.catResultMark == 0 {
-                    
                     return
                 }
             }
@@ -3050,6 +3058,12 @@ extension PEViewAssesmentFinalize{
         
     }
     // MARK: Create Sync request for Inovoject Data
+    fileprivate func         manageHatcheryAntibiotics(_ HatcheryAntibiotics: Bool, _ AntibioticInformation: inout String, _ inovojectData: InovojectData) {
+        if HatcheryAntibiotics {
+            AntibioticInformation =  inovojectData.invoHatchAntibioticText ?? ""
+        }
+    }
+    
     func createSyncRequestForInvoject(dictArray: PENewAssessment,inovojectData :InovojectData) -> JSONDictionary{
         
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
@@ -3072,11 +3086,10 @@ extension PEViewAssesmentFinalize{
         if let id = dictArray.serverAssessmentId{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
-        
-        if  dictArray.assStatus == 1 {
+        score = dictArray.assMinScore ?? 0
+
+        if dictArray.assStatus == 1 {
             score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
         }
         var DisplayId = dictArray.evaluationDate
         DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
@@ -3120,11 +3133,11 @@ extension PEViewAssesmentFinalize{
         vNameDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
         vNameArray = vNameDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
         vNameIDArray = vNameDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        VaccineId = 0
+
         if vNameArray.contains(inovojectData.vaccineMan){
             let indexOfe = vNameArray.index(of: inovojectData.vaccineMan) // 3
             VaccineId = vNameIDArray[indexOfe] as? Int ?? 0
-        } else {
-            VaccineId = 0
         }
         
         var vNameDetailsArrayIS = NSArray()
@@ -3140,7 +3153,7 @@ extension PEViewAssesmentFinalize{
             let indexOfe = vNameArrayIS.index(of: inovojectData.name) // 3
             VaccineId = vNameIDArrayIS[indexOfe] as? Int ?? 0
             ManufacturerId = vNameMfgIdArrayIS[indexOfe] as? Int ?? 0
-        } else if (inovojectData.name != ""){
+        } else if (inovojectData.name != "") {
             otherVaccine = inovojectData.name ?? ""
         }
         var y = 2
@@ -3161,9 +3174,7 @@ extension PEViewAssesmentFinalize{
         
         let ampulePerBag = Int(inovojectData.ampulePerBag ?? "0")
         var AntibioticInformation  =  ""
-        if HatcheryAntibiotics {
-            AntibioticInformation =  inovojectData.invoHatchAntibioticText ?? ""
-        }
+        manageHatcheryAntibiotics(HatcheryAntibiotics, &AntibioticInformation, inovojectData)
         var json = [
             "VaccineId":  VaccineId == 0 ? "" : VaccineId,
             "AmpulePerbag":ampulePerBag == 0 ? "" : ampulePerBag,
@@ -3898,6 +3909,13 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: ------------ Extended Micro Create Sync Request --------------
+    fileprivate func configureDict(_ dict: PENewAssessment) {
+        //  print("draft id id",dict.assDetail2 )
+        if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
+            deviceIDFORSERVER = dict.assDetail2 ?? ""
+        }
+    }
+    
     func createSyncRequestForExtendedMicro(dict: PENewAssessment ,certificationData : [PECertificateData]) -> JSONDictionary{
         
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
@@ -3929,10 +3947,7 @@ extension PEViewAssesmentFinalize{
         deviceIDFORSERVER = deviceIdForServer
         
         if AssessmentId == 0 {
-            //  print("draft id id",dict.assDetail2 )
-            if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
-                deviceIDFORSERVER = dict.assDetail2 ?? ""
-            }
+            configureDict(dict)
             AssessmentId = dict.draftNumber ?? 0
             Draft = 1
             Complete = 0
@@ -3985,18 +4000,17 @@ extension PEViewAssesmentFinalize{
         // dict.evaluationDate = dateSig
         
         var json : JSONDictionary = JSONDictionary()
+        let convertDateFormatter = DateFormatter()
+        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+        convertDateFormatter.timeZone = Calendar.current.timeZone
+        convertDateFormatter.locale = Calendar.current.locale
+
         if dateSig != ""{
             dict.evaluationDate = dateSig
-        }else {
-            let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
-            convertDateFormatter.timeZone = Calendar.current.timeZone
-            convertDateFormatter.locale = Calendar.current.locale
         }
         let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
         let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
         if regionId == 3 {
-            
             let inputFormatter = DateFormatter()
             inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
             
@@ -4010,12 +4024,8 @@ extension PEViewAssesmentFinalize{
                 // Convert the Date object back to a string
                 let formattedDateString = outputFormatter.string(from: date)
                 dict.evaluationDate = evaluationDate
-            } else {
-                print(appDelegateObj.invalidDateStr)
             }
-        }
-        else
-        {
+        } else {
             let inputFormatter = DateFormatter()
             inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             
@@ -4026,8 +4036,6 @@ extension PEViewAssesmentFinalize{
                 
                 let formattedDateString = outputFormatter.string(from: date)
                 dict.evaluationDate = evaluationDate
-            } else {
-                print(appDelegateObj.invalidDateStr)
             }
         }
         
@@ -4037,17 +4045,15 @@ extension PEViewAssesmentFinalize{
         let appVersion = "\(Bundle.main.versionNumber)"
         
         var saveType = 0
-        if self.extendedMicroSwitch.isOn
-        {
+        
+        self.peNewAssessment.IsEMRequested = false
+        CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: false)
+        saveType = 0
+
+        if self.extendedMicroSwitch.isOn {
             saveType = 1
             self.peNewAssessment.IsEMRequested = true
             CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: true)
-        }
-        else
-        {
-            self.peNewAssessment.IsEMRequested = false
-            CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: false)
-            saveType = 0
         }
         
         tempArr.removeAll()
@@ -4070,6 +4076,14 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: ------------ Call Extended Micro Sync API --------------
+    fileprivate func navigateBack() {
+        for controller in self.navigationController!.viewControllers as Array {
+            if controller.isKind(of: PEDashboardViewController.self) {
+                self.navigationController!.popToViewController(controller, animated: true)
+            }
+        }
+    }
+    
     func callExtendedMicro(param:JSONDictionary){
         
         ZoetisWebServices.shared.sendExtendedMicroToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
@@ -4087,11 +4101,7 @@ extension PEViewAssesmentFinalize{
                     let alertController = UIAlertController(title: "Success!", message: errorMSg, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
                         _ in
-                        for controller in self.navigationController!.viewControllers as Array {
-                            if controller.isKind(of: PEDashboardViewController.self) {
-                                self.navigationController!.popToViewController(controller, animated: true)
-                            }
-                        }
+                        self.navigateBack()
                     }
                     alertController.addAction(okAction)
                     self.present(alertController, animated: true, completion: nil)
@@ -4125,30 +4135,7 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Post request for Score
-    func createSyncRequestForScore(dictArray: PENewAssessment) -> JSONDictionary{
-        var UniID = dictArray.dataToSubmitID ?? ""
-        if UniID == "" {
-            UniID = dictArray.draftID ?? ""
-        }
-        var AssessmentId = dictArray.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            AssessmentId = dictArray.draftNumber ?? 0
-        }
-        var score = 0
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        DisplayId = "C-" + UniID
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
-        var TextAmPm = ""
-        var PersonName = ""
-        var FrequencyValue = 32
-        var QCCount = ""
-        var PPMValue = ""
-        let assID =  dictArray.assID ?? 0
+    fileprivate func populateParams(_ dictArray: PENewAssessment, _ QCCount: inout String, _ TextAmPm: inout String, _ PPMValue: inout String, _ PersonName: inout String, _ FrequencyValue: inout Int) {
         if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12 {
             QCCount =  dictArray.qcCount ?? ""
         } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous" {
@@ -4166,6 +4153,33 @@ extension PEViewAssesmentFinalize{
                 FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
             }
         }
+    }
+    
+    func createSyncRequestForScore(dictArray: PENewAssessment) -> JSONDictionary{
+        var UniID = dictArray.dataToSubmitID ?? ""
+        if UniID == "" {
+            UniID = dictArray.draftID ?? ""
+        }
+        var AssessmentId = dictArray.dataToSubmitNumber ?? 0
+        if AssessmentId == 0 {
+            AssessmentId = dictArray.draftNumber ?? 0
+        }
+        var score = 0
+        var DisplayId = dictArray.evaluationDate
+        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
+        DisplayId = "C-" + UniID
+        
+        score = dictArray.assMinScore ?? 0
+        if dictArray.assStatus == 1 {
+            score = dictArray.assMaxScore ?? 0
+        }
+        var TextAmPm = ""
+        var PersonName = ""
+        var FrequencyValue = 32
+        var QCCount = ""
+        var PPMValue = ""
+        let assID =  dictArray.assID ?? 0
+        populateParams(dictArray, &QCCount, &TextAmPm, &PPMValue, &PersonName, &FrequencyValue)
         
         var serverAssessmentId:Int64 = 0
         if let id = dictArray.serverAssessmentId {
@@ -4266,22 +4280,7 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Handle Sync Response
-    private func handleSyncResponse(_ json: JSON) {
-        
-        let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
-        let dNumber = peNewAssessment.draftNumber ?? 0
-        var  getOfflineArray : [PENewAssessment] = []
-        var  getDraftArray : [PENewAssessment] = []
-        if sNumber != 0 {
-            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
-        }
-        if dNumber != 0 {
-            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
-        }
-        callRequest4Int = 0
-        
-        totalImageToSync = []
-        
+    fileprivate func handleOfflineArray(_ getOfflineArray: [PENewAssessment]) {
         if getOfflineArray.count > 0 {
             var carColIdArray : [Int] = []
             var catArray : [PENewAssessment] = []
@@ -4311,6 +4310,25 @@ extension PEViewAssesmentFinalize{
             self.callRequest3(param:param)
             
         }
+    }
+    
+    private func handleSyncResponse(_ json: JSON) {
+        
+        let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
+        let dNumber = peNewAssessment.draftNumber ?? 0
+        var  getOfflineArray : [PENewAssessment] = []
+        var  getDraftArray : [PENewAssessment] = []
+        if sNumber != 0 {
+            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
+        }
+        if dNumber != 0 {
+            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
+        }
+        callRequest4Int = 0
+        
+        totalImageToSync = []
+        
+        handleOfflineArray(getOfflineArray)
         
         if getDraftArray.count > 0 {
             var carColIdArray : [Int] = []

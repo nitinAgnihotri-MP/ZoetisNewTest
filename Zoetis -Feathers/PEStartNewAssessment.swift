@@ -1683,16 +1683,20 @@ class PEStartNewAssessment: BaseViewController {
     
     /* Types of evaluation selected */
     // MARK: - Evaluation type Button Action
+    fileprivate func changeBorderOfView(_ superviewCurrent: UIView?) {
+        for view in superviewCurrent!.subviews {
+            if view.isKind(of:UIButton.self) {
+                view.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
+                view.layer.borderWidth = 2.0
+            }
+        }
+    }
+    
     @IBAction func evaluationClicked(_ sender: Any) {
         //fetchEvaluatorTypes
         let superviewCurrent =  evaluationTypeButton.superview
         if superviewCurrent != nil {
-            for view in superviewCurrent!.subviews {
-                if view.isKind(of:UIButton.self) {
-                    view.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
+            changeBorderOfView(superviewCurrent)
         }
         
         
@@ -1701,7 +1705,7 @@ class PEStartNewAssessment: BaseViewController {
         let evaluationDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_EvaluationType")
         evaluationNameArray = evaluationDetailsArray.value(forKey: "evaluationName") as? NSArray ?? NSArray()
         evaluationIDArray = evaluationDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if  evaluationNameArray.count > 0 {
+        if evaluationNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: evaluationNameArray as? [String] ?? [String](), kWidth: evaluationTypeButton.frame.width, kAnchor: evaluationTypeButton, yheight: evaluationTypeButton.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectedEvaluationType.text = selectedVal
                 self.isFlockAgeGreaterTheAllProd = false

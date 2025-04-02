@@ -480,6 +480,18 @@ class PEViewStartNewAssesmentINT: BaseViewController {
         
     }
     // MARK: Setup UI
+    fileprivate func validateSuperView(_ superviewCurrent: UIView?) {
+        for view in superviewCurrent!.subviews {
+            if view.isKind(of:UIButton.self) {
+                if view == evaluationDateButton{
+                    view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
+                } else{
+                    view.setDropdownStartAsessmentView(imageName:"dd")
+                }
+            }
+        }
+    }
+    
     func setupUI(){
         
         self.navigationController?.navigationBar.isHidden = true
@@ -496,16 +508,9 @@ class PEViewStartNewAssesmentINT: BaseViewController {
         for btn in btns{
             btn?.setTitle("", for: .normal)
             let superviewCurrent =  btn?.superview
-            if superviewCurrent != nil{
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        if view == evaluationDateButton{
-                            view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
-                        } else{
-                            view.setDropdownStartAsessmentView(imageName:"dd")
-                        }
-                    }
-                }}
+            if superviewCurrent != nil {
+                validateSuperView(superviewCurrent)
+            }
         }
         notesTextView.layer.cornerRadius = 12
         notesTextView.layer.masksToBounds = true
@@ -1598,6 +1603,16 @@ extension PEViewStartNewAssesmentINT{
         return json
     }
     // MARK: - Create Sync Request for Inovoject Data
+    fileprivate func handleDoaDilManOther(_ doaDilManOther: String, _ json: inout [String : Any], _ ManufacturerId: Int) {
+        if doaDilManOther == "" {
+            json.removeValue(forKey: "DiluentsMfgOtherName")
+        }
+        if ManufacturerId == 0  {
+            json["ManufacturerId"] =  ManufacturerId == 0 ? "" : ManufacturerId
+            json.removeValue(forKey: "ManufacturerId")
+        }
+    }
+    
     func createSyncRequestForInvoject(dictArray: PENewAssessment,inovojectData :InovojectData) -> JSONDictionary{
         
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
@@ -1663,11 +1678,10 @@ extension PEViewStartNewAssesmentINT{
         vNameDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
         vNameArray = vNameDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
         vNameIDArray = vNameDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if vNameArray.contains(inovojectData.vaccineMan){
+        VaccineId = 0
+        if vNameArray.contains(inovojectData.vaccineMan) {
             let indexOfe = vNameArray.index(of: inovojectData.vaccineMan)
             VaccineId = vNameIDArray[indexOfe] as? Int ?? 0
-        } else {
-            VaccineId = 0
         }
         
         var vNameDetailsArrayIS = NSArray()
@@ -1731,13 +1745,7 @@ extension PEViewStartNewAssesmentINT{
         ] as JSONDictionary
         let doaDilManOther =  inovojectData.doaDilManOther ?? ""
         
-        if doaDilManOther == "" {
-            json.removeValue(forKey: "DiluentsMfgOtherName")
-        }
-        if ManufacturerId == 0  {
-            json["ManufacturerId"] =  ManufacturerId == 0 ? "" : ManufacturerId
-            json.removeValue(forKey: "ManufacturerId")
-        }
+        handleDoaDilManOther(doaDilManOther, &json, ManufacturerId)
         return json
         
     }
@@ -2386,6 +2394,25 @@ extension PEViewStartNewAssesmentINT{
         }
     }
     // MARK: - Create SYNC Request for Score
+    fileprivate func manageParams(_ dictArray: PENewAssessment, _ QCCount: inout String, _ TextAmPm: inout String, _ PersonName: inout String, _ FrequencyValue: inout Int) {
+        if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12 {
+            QCCount =  dictArray.qcCount ?? ""
+        } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous" {
+            TextAmPm =  dictArray.ampmValue ?? ""
+        } else if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 1 {
+            PersonName =  dictArray.personName ?? ""
+            let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
+            let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
+            let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
+            if dictArray.frequency?.count ?? 0 > 0 {
+                if visitNameArray.contains(dictArray.frequency ?? ""){
+                    let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
+                    FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
+                }
+            }
+        }
+    }
+    
     func createSyncRequestForScore(dictArray: PENewAssessment) -> JSONDictionary{
         
         var UniID = dictArray.dataToSubmitID ?? ""
@@ -2400,36 +2427,18 @@ extension PEViewStartNewAssesmentINT{
         var DisplayId = dictArray.evaluationDate
         DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
         DisplayId = "C-" + UniID
-        if  dictArray.assStatus == 1 {
+        
+        score = dictArray.assMinScore ?? 0
+        if dictArray.assStatus == 1 {
             score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
         }
         var TextAmPm = ""
         var PersonName = ""
         var FrequencyValue = 32
         var QCCount = ""
         
-        let assID =  dictArray.assID ?? 0
-        if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12
-        {
-            QCCount =  dictArray.qcCount ?? ""
-        } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous"
-        {
-            TextAmPm =  dictArray.ampmValue ?? ""
-        } else if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 1
-        {
-            PersonName =  dictArray.personName ?? ""
-            let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
-            let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
-            let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-            if dictArray.frequency?.count ?? 0 > 0 {
-                if visitNameArray.contains(dictArray.frequency ?? ""){
-                    let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
-                    FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
-                }
-            }
-        }
+        let assID = dictArray.assID ?? 0
+        manageParams(dictArray, &QCCount, &TextAmPm, &PersonName, &FrequencyValue)
         
         var serverAssessmentId:Int64 = 0
         if let id = dictArray.serverAssessmentId{
@@ -2528,22 +2537,7 @@ extension PEViewStartNewAssesmentINT{
         
     }
     // MARK: - Handle Sync API Rresponce
-    private func handleSyncResponse(_ json: JSON) {
-        
-        let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
-        let dNumber = peNewAssessment.draftNumber ?? 0
-        var  getOfflineArray : [PENewAssessment] = []
-        var  getDraftArray : [PENewAssessment] = []
-        if sNumber != 0 {
-            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
-        }
-        if dNumber != 0 {
-            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
-        }
-        callRequest4Int = 0
-        
-        totalImageToSync = []
-        
+    fileprivate func handleOfflineArr(_ getOfflineArray: [PENewAssessment]) {
         if getOfflineArray.count > 0 {
             var carColIdArray : [Int] = []
             var catArray : [PENewAssessment] = []
@@ -2573,6 +2567,25 @@ extension PEViewStartNewAssesmentINT{
             self.callRequest3(param:param)
             
         }
+    }
+    
+    private func handleSyncResponse(_ json: JSON) {
+        
+        let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
+        let dNumber = peNewAssessment.draftNumber ?? 0
+        var  getOfflineArray : [PENewAssessment] = []
+        var  getDraftArray : [PENewAssessment] = []
+        if sNumber != 0 {
+            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
+        }
+        if dNumber != 0 {
+            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
+        }
+        callRequest4Int = 0
+        
+        totalImageToSync = []
+        
+        handleOfflineArr(getOfflineArray)
         
         if getDraftArray.count > 0 {
             var carColIdArray : [Int] = []

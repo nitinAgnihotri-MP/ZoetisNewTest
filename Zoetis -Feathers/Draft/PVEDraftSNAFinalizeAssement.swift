@@ -2068,70 +2068,70 @@ extension PVEDraftSNAFinalizeAssement: UITableViewDelegate, UITableViewDataSourc
         
     }
     
+    fileprivate func extractedFunc12(_ headerView: NoOfCatchersHeader) {
+        headerView.delegate = self
+        headerView.headerImg.image = noOfCatcherArr.count > 0 ? UIImage(named: "footerNavigationExpand") : UIImage(named: "footerNavigationRounded")
+        
+        headerView.noOfCatchersTxtFeild.text = "\(noOfCatcherArr.count)"
+        headerView.numberr = noOfCatcherArr.count
+        
+        if headerView.noOfCatchersTxtFeild.text == "0" {
+            headerView.noOfCatchersTxtFeild.text = ""
+        }
+    }
+    
+    fileprivate func headerConfiguration(_ headerView: NoOfVaccinatorsHeader) {
+        headerView.delegate = self
+        
+        headerView.headerImg.image = noOfVaccinatorsArr.count > 0 ? UIImage(named: "footerNavigationExpand") : UIImage(named: "footerNavigationRounded")
+        
+        headerView.txtFeild.text = "\(noOfVaccinatorsArr.count)"
+        headerView.numberr = noOfVaccinatorsArr.count
+        if headerView.txtFeild.text == "0" {
+            headerView.txtFeild.text = ""
+        }
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if section == 1 {
-            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfCatchersHeader" ) as? NoOfCatchersHeader {
-                headerView.delegate = self
-                headerView.headerImg.image = noOfCatcherArr.count > 0 ? UIImage(named: "footerNavigationExpand") : UIImage(named: "footerNavigationRounded")
-                
-                headerView.noOfCatchersTxtFeild.text = "\(noOfCatcherArr.count)"
-                headerView.numberr = noOfCatcherArr.count
-                
-                if headerView.noOfCatchersTxtFeild.text == "0" {
-                    headerView.noOfCatchersTxtFeild.text = ""
-                }
-                
+        if section == 1, let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfCatchersHeader" ) as? NoOfCatchersHeader  {
+//            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfCatchersHeader" ) as? NoOfCatchersHeader {
+                extractedFunc12(headerView)
                 return headerView
-            }
-        }
-        if section == 2 {
-            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfVaccinatorsHeader" ) as? NoOfVaccinatorsHeader {
-                headerView.delegate = self
-                
-                headerView.headerImg.image = noOfVaccinatorsArr.count > 0 ? UIImage(named: "footerNavigationExpand") : UIImage(named: "footerNavigationRounded")
-                
-                headerView.txtFeild.text = "\(noOfVaccinatorsArr.count)"
-                headerView.numberr = noOfVaccinatorsArr.count
-                if headerView.txtFeild.text == "0" {
-                    headerView.txtFeild.text = ""
-                }
+//            }
+        } else if section == 2, let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfVaccinatorsHeader" ) as? NoOfVaccinatorsHeader {
+//            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfVaccinatorsHeader" ) as? NoOfVaccinatorsHeader {
+                headerConfiguration(headerView)
                 return headerView
-            }
-        }
-        if section == 4 {
-            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "liveVaccineHeader" ) as? liveVaccineHeader {
+//            }
+        } else if section == 3, let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "QuestionCellHeader" ) as? QuestionCellHeader {
+//            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "QuestionCellHeader" ) as? QuestionCellHeader {
+                return headerView
+//            }
+        } else if section == 4, let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "liveVaccineHeader" ) as? liveVaccineHeader {
+//            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "liveVaccineHeader" ) as? liveVaccineHeader {
                 
                 headerView.vaccineNameLbl.text = "Live Vaccines"
                 headerView.vacineSwitch.tag = section
                 headerView.vacineSwitch.isOn = isLiveVaccineOn
                 headerView.vacineSwitch.addTarget(self, action: #selector(switchTapped), for:UIControl.Event.valueChanged)
                 return headerView
-            }
-        }
-        
-        if section == 5 {
-            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "liveVaccineHeader" ) as? liveVaccineHeader {
+//            }
+        } else if section == 5, let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "liveVaccineHeader" ) as? liveVaccineHeader {
+//            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "liveVaccineHeader" ) as? liveVaccineHeader {
                 
                 headerView.vaccineNameLbl.text = "Inactivated Vaccines"
                 headerView.vacineSwitch.tag = section
                 headerView.vacineSwitch.isOn = isInActiveVaccineOn
                 headerView.vacineSwitch.addTarget(self, action: #selector(switchTapped), for:UIControl.Event.valueChanged)
                 return headerView
-            }
-        }
-        if section == 6 {
+//            }
+        } else {
             if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "VaccineInformationHeader" ) as? VaccineInformationHeader {
                 headerView.currntSection = section
                 
                 headerView.headerImg.image = vaccinInfoDetailArr.count > 0 ? UIImage(named: "footerNavigationExpand") : UIImage(named: "footerNavigationRounded")
                 headerView.delegate = self
-                return headerView
-            }
-        }
-        
-        if section == 3 {
-            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "QuestionCellHeader" ) as? QuestionCellHeader {
                 return headerView
             }
         }

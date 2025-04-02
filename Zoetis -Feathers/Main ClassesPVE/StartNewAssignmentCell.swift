@@ -223,6 +223,12 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         self.sharedManager.setBorderBlue(btn: breedOfBirdsFemaleOtherBtn)
     }
     
+    fileprivate func validateAgeOfBirdsTxtfield(_ textField: UITextField, _ newString: String) {
+        if textField == ageOfBirdsTxtfield {
+            extractedFunc(newString)
+        }
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield,
@@ -232,7 +238,7 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         
         var newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
         
-        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield{
+        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield {
             if newString.count > 5 {
                 return false
             }
@@ -243,43 +249,36 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
             }
         }
         
-        if textField == ageOfBirdsTxtfield {
-            extractedFunc(newString)
-        }
+        validateAgeOfBirdsTxtfield(textField, newString)
         if textField == farmNameTxtfield {
             if newString.count > 40{
                 return false
+            } else {
+                return true
             }
             
             CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "farm")
             self.sharedManager.setBorderBlue(btn: farmNameBtn)
-        }
-        if textField == houseNoTxtfield {
-            if newString.count > 40{
+        } else if textField == houseNoTxtfield {
+            if newString.count > 40 {
                 return false
             }
-            
             extractedFunc1(newString)
             self.sharedManager.setBorderBlue(btn: houseNoBtn)
-        }
-        if textField == noOfBirdsTxtfield{
+            
+        } else if textField == noOfBirdsTxtfield {
             extractedFunc2(newString)
-        }
-        
-        if textField == breedOfBirdsOtherTxtfield{
-            if newString.count > 40{
+        } else if textField == breedOfBirdsOtherTxtfield{
+            if newString.count > 40 {
                 return false
             }
-            
             extractedFunc3(newString)
-        }
-        if textField == breedOfBirdsFemaleOtherTxtfield{
-            if newString.count > 40{
+        } else if textField == breedOfBirdsFemaleOtherTxtfield {
+            if newString.count > 40 {
                 return false
             }
             extractedFunc4(newString)
         }
-        let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
         
         return true
     }
