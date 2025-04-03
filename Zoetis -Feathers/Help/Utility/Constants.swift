@@ -244,8 +244,9 @@ struct Constants {
     static let necFarmNamePredicate  = "necropsyId == %@ AND farmName == %@"
     static let necIdPredicate = "necropsyId == %@"
     static let langIdPredicate = "lngId == %@"
-    static let  refIdPredicater = "refId == %@"
+    static let refIdPredicater = "refId == %@"
     static let postIdStatusPredicator  = "postingId == %@ AND isSync == %@"
+    static let cacheControl  = "Cache-Control"
 }
 
 enum ZoetisArt {

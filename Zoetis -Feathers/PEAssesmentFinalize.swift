@@ -1577,6 +1577,43 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    fileprivate func handleBagSizeValidation(_ bagSizeArray: NSArray, _ indexPath: IndexPath,_ cell: InovojectNewTableViewCell) {
+        if bagSizeArray.count > 0 {
+            self.dropDownVIewNew(arrayData: bagSizeArray as? [String] ?? [String](), kWidth:  cell.tfBagSize.frame.width, kAnchor: cell.tfBagSize, yheight: cell.tfBagSize.bounds.height) { [unowned self] selectedVal, index  in
+                cell.tfBagSize.text = selectedVal
+                self.inovojectData[indexPath.row].bagSizeType = selectedVal
+                
+                let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
+                if c == 0 {
+                    self.showtoast(message: incompleteDataStr)
+                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
+                    
+                    return
+                }
+                let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
+                let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
+                if a != 0 && b != 0 {
+                    let x = a * b
+                    let y = c/0.05
+                    let z = x/y
+                    
+                    let r  = Rational(approximating: z)
+                    let n = String(r.numerator)
+                    let d = String(r.denominator)
+                    self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
+                    if regionID == 3 {
+                        self.inovojectData[indexPath.row].dosage = n + "/" + d
+                    }
+                }
+                CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
+                UIView.performWithoutAnimation {
+                    self.tableview.reloadData()
+                }
+            }
+            self.dropHiddenAndShow()
+        }
+    }
+    
     fileprivate func manageBagSizeCompletion(_ cell: InovojectNewTableViewCell, _ indexPath: IndexPath) {
         cell.bagSizeCompletion = {[unowned self] ( error) in
             var bagSizeArray = NSArray()
@@ -1585,40 +1622,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             bagSizeDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BagSizes")
             bagSizeArray = bagSizeDetailsArray.value(forKey: "size") as? NSArray ?? NSArray()
             bagSizeIDArray = bagSizeDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-            if bagSizeArray.count > 0 {
-                self.dropDownVIewNew(arrayData: bagSizeArray as? [String] ?? [String](), kWidth:  cell.tfBagSize.frame.width, kAnchor: cell.tfBagSize, yheight: cell.tfBagSize.bounds.height) { [unowned self] selectedVal, index  in
-                    cell.tfBagSize.text = selectedVal
-                    self.inovojectData[indexPath.row].bagSizeType = selectedVal
-                    
-                    let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
-                    if c == 0 {
-                        self.showtoast(message: incompleteDataStr)
-                        CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
-                        
-                        return
-                    }
-                    let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
-                    let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
-                    if a != 0 && b != 0 {
-                        let x = a * b
-                        let y = c/0.05
-                        let z = x/y
-                        
-                        let r  = Rational(approximating: z)
-                        let n = String(r.numerator)
-                        let d = String(r.denominator)
-                        self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
-                        if regionID == 3 {
-                            self.inovojectData[indexPath.row].dosage = n + "/" + d
-                        }
-                    }
-                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
-                    UIView.performWithoutAnimation {
-                        self.tableview.reloadData()
-                    }
-                }
-                self.dropHiddenAndShow()
-            }
+            handleBagSizeValidation(bagSizeArray,indexPath,cell)
         }
     }
     
@@ -1669,6 +1673,36 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    fileprivate func handleManufecturer(_ vManufacutrerNameArray: NSArray,_ indexPath:IndexPath,_ cell:InovojectNewTableViewCell) {
+        if vManufacutrerNameArray.count > 0 {
+            self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleBag.frame.width, kAnchor: cell.tfAmpleBag, yheight: cell.tfAmpleBag.bounds.height) { [unowned self] selectedVal, index  in
+                self.inovojectData[indexPath.row].ampulePerBag = selectedVal
+                let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
+                let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
+                let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
+                if  b != 0 && a != 0 && b != 0{
+                    let x = a * b
+                    let y = c/0.05
+                    let z = x/y
+                    
+                    let r  = Rational(approximating: z)
+                    let n = String(r.numerator)
+                    let d = String(r.denominator)
+                    self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
+                    
+                    if regionID == 3 {
+                        self.inovojectData[indexPath.row].dosage = n + "/" + d
+                    }
+                }
+                CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
+                UIView.performWithoutAnimation {
+                    self.tableview.reloadData()
+                }
+            }
+            self.dropHiddenAndShow()
+        }
+    }
+    
     fileprivate func manageAmplePerBagCompletion(_ cell: InovojectNewTableViewCell, _ indexPath: IndexPath) {
         cell.amplePerBagCompletion = {[unowned self] ( error) in
             self.tableviewIndexPath = indexPath
@@ -1677,39 +1711,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             var vManufacutrerDetailsArray = NSArray()
             vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmplePerBag")
             vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "bagNo") as? NSArray ?? NSArray()
-            if  vManufacutrerNameArray.count > 0 {
-                self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleBag.frame.width, kAnchor: cell.tfAmpleBag, yheight: cell.tfAmpleBag.bounds.height) { [unowned self] selectedVal, index  in
-                    self.inovojectData[indexPath.row].ampulePerBag = selectedVal
-                    let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
-                    if c == 0 {
-                    }
-                    
-                    let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
-                    let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
-                    if  b != 0 && a != 0 && b != 0{
-                        let x = a * b
-                        let y = c/0.05
-                        let z = x/y
-                        
-                        let r  = Rational(approximating: z)
-                        let n = String(r.numerator)
-                        let d = String(r.denominator)
-                        if regionID == 3 {
-                            self.inovojectData[indexPath.row].dosage = n + "/" + d
-                        }
-                        else
-                        {
-                            self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
-                        }
-                        
-                    }
-                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
-                    UIView.performWithoutAnimation {
-                        self.tableview.reloadData()
-                    }
-                }
-                self.dropHiddenAndShow()
-            }
+            handleManufecturer(vManufacutrerNameArray,indexPath,cell)
         }
     }
     

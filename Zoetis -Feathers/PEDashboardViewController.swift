@@ -1407,7 +1407,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 }
                 self.group.leave()
                 
-            } else {
             }
         })
     }

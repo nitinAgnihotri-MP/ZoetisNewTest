@@ -342,7 +342,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             accestoken = keychainHelper.getFromKeychain(keyed: Constants.accessToken) ?? ""
             let headerDict: HTTPHeaders = [
                 Constants.authorization: accestoken,
-                "Cache-Control": Constants.noStoreNoCache
+                Constants.cacheControl: Constants.noStoreNoCache
             ]
             let Id = UserDefaults.standard.integer(forKey: "Id")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
@@ -436,7 +436,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         let url = WebClass.sharedInstance.webUrl + "Token"
         let headers: HTTPHeaders = [
             Constants.authorization: accestoken,
-            "Cache-Control": Constants.noStoreNoCache,
+            Constants.cacheControl: Constants.noStoreNoCache,
             Constants.contentType: "application/x-www-form-urlencoded",
         ]
         let parameters: [String: String] = [
@@ -649,7 +649,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         // Set up headers and parameters
         let headers: HTTPHeaders = [
             Constants.authorization: accestoken,
-            "Cache-Control": Constants.noStoreNoCache
+            Constants.cacheControl: Constants.noStoreNoCache
         ]
 
         let userId = UserDefaults.standard.integer(forKey: "Id")

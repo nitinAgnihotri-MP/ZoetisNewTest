@@ -93,7 +93,6 @@ class CoreDataHandlerMicro: NSObject {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 dataArray = results as NSArray
-            } else {
             }
         } catch {
             print(appDelegateObj.testFuntion())

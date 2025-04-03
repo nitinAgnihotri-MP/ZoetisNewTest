@@ -1241,6 +1241,23 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
         }
     }
     
+    fileprivate func handlePersonCell(_ person: NSManagedObject, _ Cell: CapNecropsyStep1TblCell) {
+        let abfLbl = person.value(forKey: "abf") as? String
+        
+        if abfLbl == "Conventional" || abfLbl == "C" {
+            
+            Cell.abfLbl.text = "C"
+            
+        } else if abfLbl == "Antibiotic free" || abfLbl == "A" {
+            
+            Cell.abfLbl.text = "A"
+            
+        } else if abfLbl == appDelegateObj.selectStr {
+            
+            Cell.abfLbl.text = ""
+        }
+    }
+    
     fileprivate func setFarmDetailInCell(_ indexPath: IndexPath, _ Cell: CapNecropsyStep1TblCell) {
         let person = captureNecropsy[indexPath.row]
         
@@ -1279,20 +1296,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
         Cell.deleteButton.addTarget(self, action: #selector(CaptureNecropsyStep1Turkey.ClickDeleteBtton(_:)), for: .touchUpInside)
         Cell.editBtn.tag = indexPath.row
         Cell.editBtn.addTarget(self, action: #selector(CaptureNecropsyStep1Turkey.ClickEditBtton(_:)), for: .touchUpInside)
-        let abfLbl = person.value(forKey: "abf") as? String
-        
-        if abfLbl == "Conventional" || abfLbl == "C" {
-            
-            Cell.abfLbl.text = "C"
-            
-        } else if abfLbl == "Antibiotic free" || abfLbl == "A" {
-            
-            Cell.abfLbl.text = "A"
-            
-        } else if abfLbl == appDelegateObj.selectStr {
-            
-            Cell.abfLbl.text = ""
-        }
+        handlePersonCell(person, Cell)
         
         Cell.sexLbl.text = person.value(forKey: "sex") as? String
         Cell.sickLbl.text = person.value(forKey: "sick") as? String

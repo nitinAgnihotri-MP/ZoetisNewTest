@@ -2621,7 +2621,6 @@ class CoreDataHandlerTurkey: NSObject {
                 dataRespiratoryArray = results as NSArray
                 
                 
-            } else {
             }
         }
         catch
@@ -5630,8 +5629,7 @@ class CoreDataHandlerTurkey: NSObject {
             if let results = fetchedResult
             {
                 postingArray  = results as NSArray
-           } else {
-            }
+           }
         }
         catch
         {

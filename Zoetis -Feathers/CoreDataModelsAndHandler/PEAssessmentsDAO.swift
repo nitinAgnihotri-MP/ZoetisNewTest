@@ -78,7 +78,6 @@ class PEAssessmentsDAO{
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 dataArray = results as NSArray
-            } else {
             }
         } catch {
             print(message)

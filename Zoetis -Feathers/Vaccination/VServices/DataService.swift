@@ -13,34 +13,51 @@ class DataService{
     private init(){print("Initializer")}
     static let sharedInstance = DataService()
     
+    fileprivate func handleResponse(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != ""{
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData{
+                let vaccinationCertificationObj = try? jsonDecoder.decode([VaccinationCertificationsResponseDTO].self, from: data)
+                VaccinationDashboardDAO.sharedInstance.saveUpcomingCertifications(certificationDTOArr: vaccinationCertificationObj ?? [VaccinationCertificationsResponseDTO](), loginUserId: loginuserId)
+                if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
+                    completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+                } else {
+                    completion(appDelegateObj.noDataFoundStr, nil)
+                }
+            }
+        }
+    }
+    
     func getScheduledCertifications(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
         
         let url = ZoetisWebServices.EndPoint.getUpcomingCertifications.latestUrl + loginuserId
-        debugPrint(url)
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
             guard let _ = self, error == nil else{ completion(nil, error) ;return  ;}
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationCertificationObj = try? jsonDecoder.decode([VaccinationCertificationsResponseDTO].self, from: data)
-                            VaccinationDashboardDAO.sharedInstance.saveUpcomingCertifications(certificationDTOArr: vaccinationCertificationObj ?? [VaccinationCertificationsResponseDTO](), loginUserId: loginuserId)
-                            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }else{
-                                completion(appDelegateObj.noDataFoundStr, nil)
-                            }
-                        }
+                    self?.handleResponse(loginuserId, responseStr, jsonDecoder) { (json2, error2) in
+                        completion(json2,error2)
                     }
                 }
-            }
-            else{
+            } else {
                 completion(appDelegateObj.noDataFoundStr, nil)
             }
         })
+    }
+    
+    fileprivate func handleMasterQuestionsResponse(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != ""{
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData{
+                let vaccinationMasterQuestionsResponseObj = try? jsonDecoder.decode(CertificationQuestionTypesDTO.self, from: data)
+                if vaccinationMasterQuestionsResponseObj != nil{
+                    QuestionnaireDAO.sharedInstance.saveQuestionData(dtoObj: vaccinationMasterQuestionsResponseObj!, userId: loginuserId)
+                }
+                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+            }
+        }
     }
     
     func getCertificationMasterQuestions(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
@@ -51,21 +68,25 @@ class DataService{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationMasterQuestionsResponseObj = try? jsonDecoder.decode(CertificationQuestionTypesDTO.self, from: data)
-                            if vaccinationMasterQuestionsResponseObj != nil{
-                                QuestionnaireDAO.sharedInstance.saveQuestionData(dtoObj: vaccinationMasterQuestionsResponseObj!, userId: loginuserId)
-                            }
-                            completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            
-                        }
+                    self?.handleMasterQuestionsResponse(loginuserId,responseStr, jsonDecoder) { (json2,error2) in
+                        completion(json2,error2)
                     }
-                    
                 }
             }
         })
+    }
+    
+    fileprivate func getDropDownMaster(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != ""{
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData{
+                let vaccinationMasterQuestionsResponseObj = try? jsonDecoder.decode(MasterDataTypesDTO.self, from: data)
+                if vaccinationMasterQuestionsResponseObj != nil{
+                    AddEmployeesDAO.sharedInstance.saveDropdownMasterData(dtoObj:vaccinationMasterQuestionsResponseObj! , loginUserId: loginuserId)
+                }
+                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+            }
+        }
     }
     
     func getDropdownMasterData(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
@@ -76,22 +97,27 @@ class DataService{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationMasterQuestionsResponseObj = try? jsonDecoder.decode(MasterDataTypesDTO.self, from: data)
-                            if vaccinationMasterQuestionsResponseObj != nil{
-                                AddEmployeesDAO.sharedInstance.saveDropdownMasterData(dtoObj:vaccinationMasterQuestionsResponseObj! , loginUserId: loginuserId)
-                            }
-                            completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                        }
+                    self?.getDropDownMaster(loginuserId,responseStr, jsonDecoder) {(json2, error2) in
+                        completion(json2,error2)
                     }
-                    
                 }
             }
         })
         
         
+    }
+    
+    fileprivate func handleEmployeById(_ loginuserId:String, _ responseStr: String, _ jsonDecoder: JSONDecoder,_ customerId:String, _ siteId:String,completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != ""{
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData{
+                let employeesArr = try? jsonDecoder.decode([EmployeesInformationDTO].self, from: data)
+                if employeesArr != nil{
+                    AddEmployeesDAO.sharedInstance.saveEmployees(loginUserId: loginuserId, customerId: customerId, siteId: siteId, empoyeeDTO: employeesArr!)
+                    completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+                }
+            }
+        }
     }
     
     func getEmployeesById(loginuserId:String, viewController:UIViewController, customerId:String, siteId:String, completion: @escaping (String?, NSError?) -> Void){
@@ -102,24 +128,12 @@ class DataService{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let employeesArr = try? jsonDecoder.decode([EmployeesInformationDTO].self, from: data)
-                            if employeesArr != nil{
-                                AddEmployeesDAO.sharedInstance.saveEmployees(loginUserId: loginuserId, customerId: customerId, siteId: siteId, empoyeeDTO: employeesArr!)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }
-                            
-                            
-                            
-                        }
+                    self?.handleEmployeById(loginuserId,responseStr, jsonDecoder, customerId, siteId) { (json2,error2) in
+                        completion(json2,error2)
                     }
-                    
                 }
             }
         })
-        
     }
     
     func getFilledCertObj(certificationId:String, userId:String, siteId:String, customerId:String, fssId: Int = 0 , FsrId: String, trainingId: Int = 0)-> [String:Any]?{
@@ -347,20 +361,13 @@ class DataService{
         }
         else {
             let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: fssId, FsrId: Int(fsrId) ?? 0)
-            if fssId == 0
-            {
+            if fssId == 0 {
                 shippingInfoDB?.id = 0
-            }
-            else
-            {
+            } else {
                 shippingInfoDB?.id =  Int(certificationId) ?? 0
             }
             
-            if let id = shippingInfoDB?.fssID {
-                
-                print("ID is: \(id)")
-            } else {
-            }
+            
             shippingInfoDB?.trainingID =  Int(certificationId) ?? 0
             if shippingInfoDB != nil {
                 shippingArr.append(shippingInfoDB!)
@@ -411,7 +418,7 @@ class DataService{
                             }
                             operatorObj.Roles = roleDTOArr
                         }
-                    } catch{
+                    } catch {
                         
                     }
                     
@@ -453,12 +460,10 @@ class DataService{
                 if qustionTypeObj.questionCategories != nil && qustionTypeObj.questionCategories!.count > 0{
                     for categoryObj in qustionTypeObj.questionCategories!{
                         let questionAnswerDTO =  QuestionAnswerDTO()
-                        if categoryObj.categoryId != nil && categoryObj.categoryId != ""
-                        {
+                        if categoryObj.categoryId != nil && categoryObj.categoryId != "" {
                             questionAnswerDTO.catId = Int64(categoryObj.categoryId!)
                         }
-                        if categoryObj.typeId != nil && categoryObj.typeId != ""
-                        {
+                        if categoryObj.typeId != nil && categoryObj.typeId != "" {
                             questionAnswerDTO.TypeId = Int64(categoryObj.typeId!)
                         }
                         
@@ -512,20 +517,30 @@ class DataService{
                                     attendeeDetails.append(attendeeObj)
                                 }
                             }
-                            
                         }
                         questionAnswerDTO.AddAttendeeDetails = attendeeDetails
                         questionArr.append(questionAnswerDTO)
                     }
-                    
                 }
             }
         }
-        
         if questionArr.count > 0{
             return questionArr
         }
         return nil
+    }
+    
+    fileprivate func handleVaccinationCust(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != ""{
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData{
+                let vaccinationCertificationObj = try? jsonDecoder.decode([CustomerDTO].self, from: data)
+                if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
+                    VaccinationCustomersDAO.sharedInstance.insertCustomers(userId: loginuserId, customerDTOArr: vaccinationCertificationObj!)
+                    completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+                }
+            }
+        }
     }
     
     func getVaccinationCustomers(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
@@ -538,27 +553,28 @@ class DataService{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationCertificationObj = try? jsonDecoder.decode([CustomerDTO].self, from: data)
-                            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                VaccinationCustomersDAO.sharedInstance.insertCustomers(userId: loginuserId, customerDTOArr: vaccinationCertificationObj!)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }
-                        }
+                    self?.handleVaccinationCust(loginuserId,responseStr, jsonDecoder) { (json2,error2) in
+                        completion(json2,error2)
                     }
-                    
-                }else{
-                    
                 }
             }
-            
-            
-            
         })
     }
     
+    
+    fileprivate func handleVaccinationsites(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != ""{
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData{
+                let vaccinationCertificationObj = try? jsonDecoder.decode([CustomerSitesDTO].self, from: data)
+                if vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
+                    VaccinationCustomersDAO.sharedInstance.insertCustomerSites(userId: loginuserId
+                                                                               , customerDTOArr: vaccinationCertificationObj!)
+                    completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+                }
+            }
+        }
+    }
     
     func getVaccinationCustomerSites(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
         
@@ -572,27 +588,25 @@ class DataService{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationCertificationObj = try? jsonDecoder.decode([CustomerSitesDTO].self, from: data)
-                            
-                            
-                            //  print(vaccinationCertificationObj!.count)// ?? 100)
-                            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                VaccinationCustomersDAO.sharedInstance.insertCustomerSites(userId: loginuserId
-                                                                                           , customerDTOArr: vaccinationCertificationObj!)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }
-                            
-                        }
-                        
+                    self?.handleVaccinationsites(loginuserId,responseStr, jsonDecoder) { (json2, error2) in
+                        completion(json2,error2)
                     }
-                    
                 }
             }
-            
         })
+    }
+    
+    fileprivate func hsndleVaccFSMList(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != "" {
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData {
+                let vaccinationCertificationObj = try? jsonDecoder.decode([FSMListDTO].self, from: data)
+                if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
+                    VaccinationCustomersDAO.sharedInstance.insertFSMList(userId: loginuserId, FSMListDTOArr:vaccinationCertificationObj!)
+                    completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+                }
+            }
+        }
     }
     
     func getVaccinationFSMList(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
@@ -602,30 +616,29 @@ class DataService{
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
             guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
             if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
+                if let response = responseJSONDict["Data"] {
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationCertificationObj = try? jsonDecoder.decode([FSMListDTO].self, from: data)
-                            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                VaccinationCustomersDAO.sharedInstance.insertFSMList(userId: loginuserId, FSMListDTOArr:vaccinationCertificationObj!)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }
-                        }
+                    self?.hsndleVaccFSMList(loginuserId,responseStr, jsonDecoder) { (json2,error2) in
+                        completion(json2,error2)
                     }
-                    
                 }
             }
-            
         })
     }
     
-    
-    
-    
-    
+    fileprivate func handleVaccStateLst(_ countryId: String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != ""{
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData{
+                let vaccinationCertificationObj = try? jsonDecoder.decode([StateListDTO].self, from: data)
+                if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
+                    VaccinationCustomersDAO.sharedInstance.insertStateList(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", StateListDTOArr:vaccinationCertificationObj!)
+                    completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+                }
+            }
+        }
+    }
     
     func getVaccinationStateList(countryId: String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
         // let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
@@ -637,24 +650,26 @@ class DataService{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationCertificationObj = try? jsonDecoder.decode([StateListDTO].self, from: data)
-                            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                VaccinationCustomersDAO.sharedInstance.insertStateList(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", StateListDTOArr:vaccinationCertificationObj!)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }
-                        }
+                    self?.handleVaccStateLst(countryId,responseStr, jsonDecoder) { (json2,error2) in
+                        completion(json2,error2)
                     }
-                    
                 }
             }
-            
         })
     }
     
-    
+    fileprivate func handleVaccCountryList(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != ""{
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData{
+                let vaccinationCertificationObj = try? jsonDecoder.decode([CountryListDTO].self, from: data)
+                if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
+                    VaccinationCustomersDAO.sharedInstance.insertCountryList(userId: loginuserId, CountryListDTOArr:vaccinationCertificationObj!)
+                    completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+                }
+            }
+        }
+    }
     
     func getVaccinationCountryList(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
         
@@ -666,20 +681,11 @@ class DataService{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationCertificationObj = try? jsonDecoder.decode([CountryListDTO].self, from: data)
-                            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                VaccinationCustomersDAO.sharedInstance.insertCountryList(userId: loginuserId, CountryListDTOArr:vaccinationCertificationObj!)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }
-                        }
+                    self?.handleVaccCountryList(loginuserId,responseStr, jsonDecoder){ (json2,error2) in
+                        completion(json2,error2)
                     }
-                    
                 }
             }
-            
         })
     }
     
@@ -700,8 +706,7 @@ class DataService{
                             do {
                                 let model = try JSONDecoder().decode([GetSubmittedCertificationsDTO].self, from: data)
                                 debugPrint(model)
-                            }
-                            catch {
+                            } catch {
                                 //print(error.localizedDescription)
                                 debugPrint(String(describing: error))
                             }
@@ -713,14 +718,10 @@ class DataService{
                                 completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
                             }
                             completion(appDelegateObj.noDataFoundStr, nil)
-                            
                         }
-                        
                     }
-                    
                 }
             }
-            
         })
     }
     
@@ -757,14 +758,10 @@ class DataService{
                             }
                         }
                     }
-                    
                 }
             }
-            
         })
     }
-    
-    
 }
 
 

@@ -129,7 +129,7 @@ class TrainingViewController: UIViewController, WKUIDelegate{
             
             let headerDict: HTTPHeaders = [
                 Constants.authorization: accestoken,
-                "Cache-Control": Constants.noStoreNoCache
+                Constants.cacheControl: Constants.noStoreNoCache
             ]
             let Url = WebClass.sharedInstance.webUrl + "PostingSession/GetTutorial"
             

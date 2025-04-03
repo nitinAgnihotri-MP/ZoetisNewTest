@@ -511,6 +511,14 @@ class PEStartNewAssessment: BaseViewController {
         }
     }
     
+    fileprivate func handleSelectedTSRValidation() {
+        if let selectedTSR = scheduledAssessment?.selectedTSR{
+            if selectedTSR != ""{
+                peNewAssessment.selectedTSR = selectedTSR
+            }
+        }
+    }
+    
     private func setUpDidLoad() {
         self.manfacturerOtherTxt.delegate = self
         self.eggsOtherTxt.delegate = self
@@ -557,11 +565,7 @@ class PEStartNewAssessment: BaseViewController {
         if let selectedTSRID = scheduledAssessment?.selectedTSRID{
             peNewAssessment.selectedTSRID = selectedTSRID
         }
-        if let selectedTSR = scheduledAssessment?.selectedTSR{
-            if selectedTSR != ""{
-                peNewAssessment.selectedTSR = selectedTSR
-            }
-        }
+        handleSelectedTSRValidation()
         
         peNewAssessment.serverAssessmentId = scheduledAssessment?.serverAssessmentId
         notesTextView.text =  peNewAssessment.notes

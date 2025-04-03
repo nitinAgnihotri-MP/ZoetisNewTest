@@ -4380,7 +4380,6 @@ extension PEViewAssesmentFinalize{
             
             if json["StatusCode"]  == 200{
                 self.handleSyncResponse(mjson)
-            } else {
             }
         })
     }
@@ -4638,6 +4637,24 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Call Request for images
+    fileprivate func handleSyncArrCount(_ syncArr: Int) {
+        if syncArr > 0 {
+            self.showtoast(message: appDelegateObj.dataSynedSuccess)
+            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+            self.dismissGlobalHUD(self.view)
+            self.syncBtnTapped(showHud: true)
+            
+        } else {
+            for i in self.totalImageToSync{
+                CoreDataHandlerPE().setImageStatusTrue(idArray: i)
+            }
+            
+            self.showtoast(message: appDelegateObj.dataSynedSuccess)
+            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+            self.dismissGlobalHUD(self.view)
+        }
+    }
+    
     fileprivate func handleSync(_ self: PEViewAssesmentFinalize) {
         if ConnectionManager.shared.hasConnectivity() {
             if self.callRequest4Int == 0 {
@@ -4647,21 +4664,7 @@ extension PEViewAssesmentFinalize{
                     }
                 }
                 let syncArr = self.getAllAssessmentInOfflineFromDb()
-                if syncArr > 0 {
-                    self.showtoast(message: appDelegateObj.dataSynedSuccess)
-                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                    self.dismissGlobalHUD(self.view)
-                    self.syncBtnTapped(showHud: true)
-                    
-                } else {
-                    for i in self.totalImageToSync{
-                        CoreDataHandlerPE().setImageStatusTrue(idArray: i)
-                    }
-                    
-                    self.showtoast(message: appDelegateObj.dataSynedSuccess)
-                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                    self.dismissGlobalHUD(self.view)
-                }
+                handleSyncArrCount(syncArr)
             }
         }
     }

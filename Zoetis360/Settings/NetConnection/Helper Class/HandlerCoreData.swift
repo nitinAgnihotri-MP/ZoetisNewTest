@@ -215,7 +215,6 @@ class CoreDataHandler : NSObject  {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 dataArray = results as NSArray
-            } else {
             }
         }
         catch
@@ -238,7 +237,6 @@ class CoreDataHandler : NSObject  {
                 
                 dataArray = results as NSArray
                 
-            } else {
             }
         }
         catch
@@ -3760,7 +3758,6 @@ class CoreDataHandler : NSObject  {
             
             if let results = fetchedResult {
                 dataCociiaArray = results as NSArray
-            } else {
             }
         }
         catch
@@ -8323,7 +8320,6 @@ class CoreDataHandler : NSObject  {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 AlternativeArray = results as NSArray
-            } else {
             }
         }
         catch {
@@ -9120,8 +9116,7 @@ class CoreDataHandler : NSObject  {
                 
                 postingArray = sortedArray as NSArray
             }
-            else {
-            }
+           
         }
         catch  {
             print(appDelegateObj.testFuntion())
@@ -9336,8 +9331,7 @@ class CoreDataHandler : NSObject  {
             if let results = fetchedResult {
                 necropsyStep1Array = results as NSArray
             }
-            else {
-            }
+           
         }
         catch {
             print(appDelegateObj.testFuntion())
@@ -11880,8 +11874,7 @@ class CoreDataHandler : NSObject  {
             {
                 farmsArrReturn = results as NSArray
             }
-            else {
-            }
+           
             
         }
         catch

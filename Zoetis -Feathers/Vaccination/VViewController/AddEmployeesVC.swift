@@ -576,6 +576,34 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             employeesTblVw.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         }
     }
+    fileprivate func gpSupervisorJobTxtField(_ textField: UITextField) {
+        if self.curentCertification?.supervisorJobTitle != textField.text
+        {
+            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+        }
+    }
+    
+    fileprivate func gpSupervisorTxtFld(_ textField: UITextField) {
+        if self.curentCertification?.supervisorName != textField.text
+        {
+            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+        }
+    }
+    
+    fileprivate func gpColleagueJobTitleTxtFld(_ textField: UITextField) {
+        if self.curentCertification?.colleagueJobTitle != textField.text
+        {
+            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+        }
+    }
+    
+    fileprivate func gpColleagueTxtFld(_ textField: UITextField) {
+        if self.curentCertification?.colleagueName != textField.text
+        {
+            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+        }
+    }
+    
     @objc func textFieldEditingDidChange(_ textField: UITextField){
         
         switch textField {
@@ -587,8 +615,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             break;
             
         case managerTxtFld:
-            if curentCertification?.fsmName != textField.text
-            {
+            if curentCertification?.fsmName != textField.text {
                 self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
             }
             if self.showRedFieldsValidation{
@@ -598,38 +625,25 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             break;
             
         case costShippingTxtFld:
-            if curentCertification?.customerShippingId != textField.text
-            {
+            if curentCertification?.customerShippingId != textField.text {
                 self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
             }
             curentCertification?.customerShippingId = textField.text
             
         case gpColleagueTxtFld:
-            if self.curentCertification?.colleagueName != textField.text
-            {
-                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-            }
+            gpColleagueTxtFld(textField)
             self.curentCertification?.colleagueName = textField.text
             
         case gpColleagueJobTitleTxtFld:
-            if self.curentCertification?.colleagueJobTitle != textField.text
-            {
-                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-            }
+            gpColleagueJobTitleTxtFld(textField)
             self.curentCertification?.colleagueJobTitle = textField.text
             
         case gpSupervisorTxtFld:
-            if self.curentCertification?.supervisorName != textField.text
-            {
-                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-            }
+            gpSupervisorTxtFld(textField)
             self.curentCertification?.supervisorName = textField.text
             
         case gpSupervisorJobTitleTxtFld:
-            if self.curentCertification?.supervisorJobTitle != textField.text
-            {
-                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-            }
+            gpSupervisorJobTxtField(textField)
             self.curentCertification?.supervisorJobTitle = textField.text
         default:
             break;

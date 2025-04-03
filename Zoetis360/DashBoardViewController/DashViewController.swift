@@ -82,7 +82,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     let switchingInterval: TimeInterval = 5
     var langArray: [String] = []
     let helveticaLight = "HelveticaNeue-Light"
-    let cacheControl = "Cache-Control"
+    let cacheControl = Constants.cacheControl
     let authorization = Constants.authorization
     let unknownCodeStr = Constants.unknowCode
     let invalidItemStructureStr = "Invalid item structure in array."

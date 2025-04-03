@@ -423,7 +423,6 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 }
             } else if appDelegate.sendFeedVariable == "vaccination"{
                 
-            } else {
             }
         } else {
             postingId = UserDefaults.standard.integer(forKey: "postingId")

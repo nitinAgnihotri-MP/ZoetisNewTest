@@ -2622,7 +2622,6 @@ extension PEViewStartNewAssessment{
             if json["StatusCode"]  == 200{
                 self.handleSyncResponse(mjson)
                 
-            } else {
             }
         })
     }
