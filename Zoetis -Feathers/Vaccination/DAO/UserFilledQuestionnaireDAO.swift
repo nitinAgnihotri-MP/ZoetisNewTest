@@ -32,6 +32,45 @@ final public  class UserFilledQuestionnaireDAO{
         return vaccinationQuestionObj
     }
     
+    fileprivate func handleQuestionCatObj(_ questionCategoriesObj: [VaccinationQuestionCategories], _ certificationId: String, _ questTypeObj: VaccinationQuestionTypes, _ userId: String, _ moQuestTypeObj: VaccinationFilledQuestionTypes) {
+        for questCategory in questionCategoriesObj{
+            let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
+            questCategoryMOObj.certificationId = certificationId
+            questCategoryMOObj.categoryId =    questCategory.categoryId
+            questCategoryMOObj.categoryName = questCategory.categoryName
+            
+            questCategoryMOObj.typeName = questTypeObj.typename
+            questCategoryMOObj.typeId
+            = questTypeObj.typeid
+            
+            questCategoryMOObj.userId = userId
+            
+            if let questions = questCategory.questions?.allObjects as? Array<VaccinationQuestions>{
+                
+                for questionObj in questions{
+                    let questionMOObj = getVaccinationQuestionsObj()
+                    questionMOObj.certificationId = certificationId
+                    questionMOObj.userId = userId
+                    questionMOObj.questionDescription = questionObj.questionDescription
+                    questionMOObj.categoryId
+                    = questCategory.categoryId
+                    questionMOObj.categoryName = questCategory.categoryName
+                    questionMOObj.questionId = questionObj.questionId
+                    questionMOObj.typeId = questTypeObj.typeid
+                    questionMOObj.typeName = questTypeObj.typename
+                    
+                    questionMOObj.sequenceNo = questionObj.sequenceNo
+                    questionMOObj.questionType
+                    = questionObj.questionType
+                    
+                    questCategoryMOObj.addToQuestions(questionMOObj)
+                    
+                }
+            }
+            moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
+        }
+    }
+    
     private func convertQuestMOtoMO(dtoObjQuestTypes: [VaccinationQuestionTypes], userId:String, certificationId:String){
         
         if dtoObjQuestTypes.count  > 0{
@@ -44,50 +83,13 @@ final public  class UserFilledQuestionnaireDAO{
                 
                 if let questionCategoriesObj = questTypeObj.questionCategories?.allObjects as? Array<VaccinationQuestionCategories>{
                     
-                    for questCategory in questionCategoriesObj{
-                        let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
-                        questCategoryMOObj.certificationId = certificationId
-                        questCategoryMOObj.categoryId =    questCategory.categoryId
-                        questCategoryMOObj.categoryName = questCategory.categoryName
-                        
-                        questCategoryMOObj.typeName = questTypeObj.typename
-                        questCategoryMOObj.typeId
-                        = questTypeObj.typeid
-                        
-                        questCategoryMOObj.userId = userId
-                        
-                        if let questions = questCategory.questions?.allObjects as? Array<VaccinationQuestions>{
-                            
-                            for questionObj in questions{
-                                let questionMOObj = getVaccinationQuestionsObj()
-                                questionMOObj.certificationId = certificationId
-                                questionMOObj.userId = userId
-                                questionMOObj.questionDescription = questionObj.questionDescription
-                                questionMOObj.categoryId
-                                = questCategory.categoryId
-                                questionMOObj.categoryName = questCategory.categoryName
-                                questionMOObj.questionId = questionObj.questionId
-                                questionMOObj.typeId = questTypeObj.typeid
-                                questionMOObj.typeName = questTypeObj.typename
-                                
-                                questionMOObj.sequenceNo = questionObj.sequenceNo
-                                questionMOObj.questionType
-                                = questionObj.questionType
-                                
-                                questCategoryMOObj.addToQuestions(questionMOObj)
-                                
-                            }
-                        }
-                        moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
-                    }
+                    handleQuestionCatObj(questionCategoriesObj, certificationId, questTypeObj, userId, moQuestTypeObj)
                 }
             }
         }
-        
-        
     }
     
-    private func convertMotoVM(moObj:[VaccinationFilledQuestionTypes])-> QuestionnaireVM{
+    private func convertMotoVM(moObj:[VaccinationFilledQuestionTypes])-> QuestionnaireVM {
         var questionnaireVMObj = QuestionnaireVM()
         var questionTypeArr = [VaccinationQuestionTypeVM]()
         for questionTypeMoObj in moObj{
@@ -98,7 +100,7 @@ final public  class UserFilledQuestionnaireDAO{
         return questionnaireVMObj
     }
     
-    func getQuestionTypeVMObj(_ moObj:VaccinationFilledQuestionTypes)-> VaccinationQuestionTypeVM{
+    func getQuestionTypeVMObj(_ moObj:VaccinationFilledQuestionTypes)-> VaccinationQuestionTypeVM {
         
         var questionTypeObj = VaccinationQuestionTypeVM()
         questionTypeObj.typeId = moObj.typeid
@@ -119,9 +121,7 @@ final public  class UserFilledQuestionnaireDAO{
         
         if moObj.typeid == "12" && questionTypeObj.questionCategories?[0].categoryName == "Vaccine Preparation & Sterility" {
             return questionTypeObj
-        }
-        else
-        {
+        } else {
             questionTypeObj.questionCategories?.sort {first,second in
                 if first.categoryName != nil && second.categoryName != nil{
                     return (first.categoryName?.lowercased())! < (second.categoryName?.lowercased())!
@@ -130,11 +130,6 @@ final public  class UserFilledQuestionnaireDAO{
                 
             }
         }
-        
-        
-        
-        
-        
         return questionTypeObj
     }
     
@@ -155,8 +150,6 @@ final public  class UserFilledQuestionnaireDAO{
             }
         }
         
-        
-        
         if moObj.typeId == "12" {
             vaccinationObj.questionArr = questionArr
             
@@ -166,9 +159,7 @@ final public  class UserFilledQuestionnaireDAO{
             }
             vaccinationObj.employees = getCategoryEmployees(certificationId: moObj.certificationId ?? "", userId: moObj.userId ?? "", categoryId: moObj.categoryId ?? "", typeId: moObj.typeId ?? "")
             return vaccinationObj
-        }
-        else
-        {
+        } else {
             vaccinationObj.questionArr = questionArr
             vaccinationObj.questionArr?.sort {first,second in
                 (first.questionDescription?.lowercased())! < (second.questionDescription?.lowercased())!

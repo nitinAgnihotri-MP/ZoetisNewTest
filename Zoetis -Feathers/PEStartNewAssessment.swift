@@ -227,6 +227,66 @@ class PEStartNewAssessment: BaseViewController {
     
     /* Manually assign constraints */
     
+    fileprivate func handleCase0(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
+            }
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 100))
+            }
+        }
+    }
+    
+    fileprivate func handleCase1(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
+            }
+        case 2:
+            notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 30))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 85))
+            }
+        }
+    }
+    
+    fileprivate func handleCase2(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                if heightManufacturerView.constant == 94{
+                    notesTop.constant = CGFloat(((leftConst * 55 ) - 55))
+                }else{
+                    notesTop.constant = CGFloat(((leftConst * 55 ) - 25))
+                }
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
+            }
+        case 2:
+            notesTop.constant = CGFloat(((leftConst * 55 ) - 35))
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }
+        }
+    }
+    
     func assignConstraint(otherEgg:Int = 0){
         let leftConst = leftConstraint()
         var rightConst = rightConstraint() //+ otherEgg
@@ -236,60 +296,11 @@ class PEStartNewAssessment: BaseViewController {
         
         switch leftConst {
         case 0:
-            
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
-                }
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 100))
-                }
-            }
+            handleCase0(rightConst, leftConst)
         case 1:
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
-                }
-            case 2:
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 30))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 85))
-                }
-            }
+            handleCase1(rightConst, leftConst)
         case 2:
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    if heightManufacturerView.constant == 94{
-                        notesTop.constant = CGFloat(((leftConst * 55 ) - 55))
-                    }else{
-                        notesTop.constant = CGFloat(((leftConst * 55 ) - 25))
-                    }
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
-                }
-            case 2:
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 35))
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 10))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }
-            }
+            handleCase2(rightConst, leftConst)
         default:
             break;
         }
@@ -390,7 +401,117 @@ class PEStartNewAssessment: BaseViewController {
         }
     }
     
-    private func setUpDidLoad(){
+    fileprivate func peAssCamera() {
+        if peNewAssessment.camera == 1 {
+            cameraSwitch.setOn(true, animated: false)
+        } else {
+            cameraSwitch.setOn(false, animated: false)
+        }
+    }
+    
+    fileprivate func         isHandMix() {
+        if peNewAssessment.isHandMix ==  true {
+            handmixSwitch.isOn = true
+        } else {
+            handmixSwitch.isOn = false
+        }
+    }
+    
+    fileprivate func extractedFunc() {
+        if peNewAssessment.hatcheryAntibiotics == 1{
+            hatcherySwitch.setOn(true, animated: false)
+        } else {
+            hatcherySwitch.setOn(false, animated: false)
+        }
+    }
+    
+    fileprivate func handleManufacturer() {
+        if peNewAssessment.manufacturer == "Other"{
+            showManufacturerOthers()
+        } else {
+            hideManufacturerOthers()
+        }
+    }
+    
+    fileprivate func handleNoOfEggs(_ xx: String) {
+        if xx != "0" {
+            let last3 = String(xx.suffix(3))
+            if last3 ==  "000" {
+                showEggsOthers()
+                let str =  xx.replacingOccurrences(of: "000", with: "")
+                eggsOtherTxt.text = str
+                txtNumberOfEggs.text = "Other"
+            }
+        }
+    }
+    
+    fileprivate func evaluationID(_ infoObj: PENewInfoVM?) {
+        if peNewAssessment.evaluationID != nil {
+            extededPECondition(infoObj)
+        } else {
+            self.peNewAssessment.isHandMix = false
+            self.inventoryView.isHidden = true
+            
+        }
+    }
+    
+    fileprivate func handleSelectedTSRID() {
+        if peNewAssessment.selectedTSRID == nil || peNewAssessment.selectedTSRID == 0{
+            tsrButton.isUserInteractionEnabled = true
+            selectedTSR.alpha = 1
+        } else {
+            selectedTSR.text = peNewAssessment.selectedTSR
+            tsrButton.isUserInteractionEnabled = false
+            selectedTSR.isUserInteractionEnabled = false
+            selectedTSR.alpha = 0.6
+        }
+    }
+    
+    fileprivate func handleCharacter() {
+        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
+            if character == constantToSave.character(at: 0){
+                showBreedOthers()
+                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
+                txtBreedOfBirdsOthers.text = str
+                txtBreedOfBird.text = "Other"
+            }
+        }
+    }
+    
+    fileprivate func handlBbreedOfBird() {
+        if peNewAssessment.breedOfBird == "Other"{
+            showBreedOthers()
+        } else {
+            hideBreedOthers()
+        }
+    }
+    
+    fileprivate func extractedFunc1(_ strdate1: String) {
+        if peNewAssessment.evaluationDate == "" {
+            selectedEvaluationDateText.text = strdate1
+            self.peNewAssessment.evaluationDate = strdate1
+        } else {
+            selectedEvaluationDateText.text = peNewAssessment.evaluationDate ?? strdate1
+        }
+    }
+    
+    
+    
+    fileprivate func handleBreeder() {
+        if peNewAssessment.isFlopSelected == 1 ||  peNewAssessment.isFlopSelected == 3 ||  peNewAssessment.isFlopSelected == 4 {
+            isFlockAgeGreaterTheAllProd = true
+            btnFlockAgeGreater.setImage(UIImage(named: "checkIconPE"), for: .normal)
+            isFlockAgeGreaterThen50Weeks = false
+            btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+        } else if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5 {
+            isFlockAgeGreaterTheAllProd = false
+            btnFlockAgeGreater.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+            isFlockAgeGreaterThen50Weeks = true
+            btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
+        }
+    }
+    
+    private func setUpDidLoad() {
         self.manfacturerOtherTxt.delegate = self
         self.eggsOtherTxt.delegate = self
         self.eggsOtherTxt.keyboardType = .numberPad
@@ -449,39 +570,15 @@ class PEStartNewAssessment: BaseViewController {
         var defautUsername =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
         let LastName =  UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
         defautUsername = defautUsername + LastName
-        if peNewAssessment.evaluationDate == "" {
-            selectedEvaluationDateText.text = strdate1
-            self.peNewAssessment.evaluationDate = strdate1
-        } else {
-            selectedEvaluationDateText.text = peNewAssessment.evaluationDate ?? strdate1
-        }
+        extractedFunc1(strdate1)
         self.peNewAssessment.evaluationID = peNewAssessment.evaluationID
         selectedEvaluatorText.text =  peNewAssessment.evaluatorName ?? defautUsername
         selectedEvaluationType.text = peNewAssessment.evaluationName ?? ""
-        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
-            if character == constantToSave.character(at: 0){
-                showBreedOthers()
-                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-                txtBreedOfBirdsOthers.text = str
-                txtBreedOfBird.text = "Other"
-            }
-        }
-        if peNewAssessment.breedOfBird == "Other"{
-            showBreedOthers()
-        } else {
-            hideBreedOthers()
-        }
+        handleCharacter()
+        handlBbreedOfBird()
         txtBreedOfBird.text = self.peNewAssessment.breedOfBird
-        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
-            
-            if character == constantToSave.character(at: 0){
-                showBreedOthers()
-                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-                txtBreedOfBirdsOthers.text = str
-                txtBreedOfBird.text = "Other"
-            }
-        }
-        txtBreedOfBirdsOthers.text =    self.peNewAssessment.breedOfBirdOther
+        handleCharacter()
+        txtBreedOfBirdsOthers.text = self.peNewAssessment.breedOfBirdOther
         txtIncubation.text =  self.peNewAssessment.incubation
         if self.peNewAssessment.manufacturer?.count ?? "".count > 0 {
             txtManufacturer.text = self.peNewAssessment.manufacturer
@@ -496,27 +593,10 @@ class PEStartNewAssessment: BaseViewController {
         }
         
         selectedVisitText.text =  peNewAssessment.visitName ?? ""
-        if peNewAssessment.camera == 1{
-            cameraSwitch.setOn(true, animated: false)
-        } else {
-            cameraSwitch.setOn(false, animated: false)
-        }
+        peAssCamera()
+        isHandMix()
         
-        
-        if peNewAssessment.isHandMix ==  true
-        {
-            handmixSwitch.isOn = true
-        }
-        else
-        {
-            handmixSwitch.isOn = false
-        }
-        
-        if peNewAssessment.hatcheryAntibiotics == 1{
-            hatcherySwitch.setOn(true, animated: false)
-        } else {
-            hatcherySwitch.setOn(false, animated: false)
-        }
+        extractedFunc()
         
         labelEvaluationDate.addLabelWithAstric(placeHolder: "Evaluation Date")
         labelCustomer.addLabelWithAstric(placeHolder: "Customer")
@@ -538,52 +618,23 @@ class PEStartNewAssessment: BaseViewController {
         
         hideManufacturerOthers()
         hideEggsOthers()
-        if peNewAssessment.manufacturer == "Other"{
-            showManufacturerOthers()
-        } else {
-            hideManufacturerOthers()
-        }
+        handleManufacturer()
         
         txtManufacturer.text = self.peNewAssessment.manufacturer ?? ""
         if  txtManufacturer.text != "" {
             manufacturerOtherViewShowCondition()
         }
         let xx = String(self.peNewAssessment.noOfEggs ?? 000)
-        if xx != "0" {
-            let last3 = String(xx.suffix(3))
-            if last3 ==  "000" {
-                showEggsOthers()
-                let str =  xx.replacingOccurrences(of: "000", with: "")
-                eggsOtherTxt.text = str
-                txtNumberOfEggs.text = "Other"
-            }
-        }
+        handleNoOfEggs(xx)
         
         txtBreedOfBird.text = self.peNewAssessment.breedOfBird
-        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
-            if character == constantToSave.character(at: 0){
-                showBreedOthers()
-                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-                txtBreedOfBirdsOthers.text = str
-                txtBreedOfBird.text = "Other"
-            }
-        }
-        txtBreedOfBirdsOthers.text =    self.peNewAssessment.breedOfBirdOther
+        handleCharacter()
+        txtBreedOfBirdsOthers.text = self.peNewAssessment.breedOfBirdOther
         getSubmittedAssessmentorEggsAndIncubation()
         
-        if peNewAssessment.isFlopSelected == 1 ||  peNewAssessment.isFlopSelected == 3 ||  peNewAssessment.isFlopSelected == 4 {
-            isFlockAgeGreaterTheAllProd = true
-            btnFlockAgeGreater.setImage(UIImage(named: "checkIconPE"), for: .normal)
-            isFlockAgeGreaterThen50Weeks = false
-            btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-        } else  if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5  {
-            isFlockAgeGreaterTheAllProd = false
-            btnFlockAgeGreater.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-            isFlockAgeGreaterThen50Weeks = true
-            btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
-        }
+        handleBreeder()
         
-        let  peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
+        let peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
         for obj in peNewAssessmentArray {
             let assessment = obj
             let imageCount = assessment.images
@@ -604,25 +655,10 @@ class PEStartNewAssessment: BaseViewController {
             isAutomaticFailView.isHidden = true
         }
         
-        if peNewAssessment.evaluationID != nil{
-            extededPECondition(infoObj)
-        }else{
-            self.peNewAssessment.isHandMix = false
-            self.inventoryView.isHidden = true
-            
-        }
+        evaluationID(infoObj)
         checkBackAndSave()
         
-        if peNewAssessment.selectedTSRID == nil || peNewAssessment.selectedTSRID == 0{
-            tsrButton.isUserInteractionEnabled = true
-            selectedTSR.alpha = 1
-        } else {
-            selectedTSR.text = peNewAssessment.selectedTSR
-            tsrButton.isUserInteractionEnabled = false
-            selectedTSR.isUserInteractionEnabled = false
-            selectedTSR.alpha = 0.6
-        }
-        
+        handleSelectedTSRID()
     }
     
     /* Extended PE scope */
@@ -2362,7 +2398,7 @@ extension PEStartNewAssessment {
 // MARK: - UITextFieldDelegate
 
 extension PEStartNewAssessment : UITextFieldDelegate{
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    fileprivate func handleTxtBreedOfBirdsOthers(_ textField: UITextField) {
         if textField == txtBreedOfBirdsOthers{
             let superviewCurrent = btnBreedOthers.superview
             if superviewCurrent != nil {
@@ -2374,7 +2410,10 @@ extension PEStartNewAssessment : UITextFieldDelegate{
                 }
             }
         }
-        if textField == manfacturerOtherTxt{
+    }
+    
+    fileprivate func handleManfacturerOtherTxt(_ textField: UITextField) {
+        if textField == manfacturerOtherTxt {
             let superviewCurrent =  manfacturerOtherBtn.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -2385,7 +2424,10 @@ extension PEStartNewAssessment : UITextFieldDelegate{
                 }
             }
         }
-        if textField == eggsOtherTxt{
+    }
+    
+    fileprivate func handleEggsOtherTxt(_ textField: UITextField) {
+        if textField == eggsOtherTxt {
             let superviewCurrent =  eggsOtherBtn.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -2398,14 +2440,20 @@ extension PEStartNewAssessment : UITextFieldDelegate{
         }
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        handleTxtBreedOfBirdsOthers(textField)
+        handleManfacturerOtherTxt(textField)
+        handleEggsOtherTxt(textField)
+    }
+    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        
         return true;
     }
+    
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        
         return true;
     }
+    
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         if textField == self.txtBreedOfBirdsOthers {
             self.peNewAssessment.breedOfBird = constantToSave + (textField.text ?? "")

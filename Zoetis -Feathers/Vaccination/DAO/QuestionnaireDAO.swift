@@ -15,58 +15,55 @@ final  public class QuestionnaireDAO{
     static let sharedInstance = QuestionnaireDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     let userIdStr = "userId = %@"
-    private func convertDTOtoMO(dtoObj: CertificationQuestionTypesDTO, userId:String){
+    
+    
+    fileprivate func handleQuestionCategories(_ questTypeObj: CertificateQuestionTypesInternalDTO, _ userId: String, _ moQuestTypeObj: VaccinationQuestionTypes) {
+        if let questionCategoriesObj = questTypeObj.questionCategories {
+            for questCategory in questionCategoriesObj{
+                let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
+                questCategoryMOObj.categoryId = questCategory.catId?.description
+                questCategoryMOObj.categoryName = questCategory.categorieName
+                questCategoryMOObj.typeName = questTypeObj.typeName
+                questCategoryMOObj.typeId = questTypeObj.typeId?.description
+                questCategoryMOObj.userId = userId
+                
+                if let questions = questCategory.moduleAssessments {
+                    for questionObj in questions{
+                        let questionMOObj = getVaccinationQuestionsObj()
+                        questionMOObj.userId = userId
+                        questionMOObj.questionDescription = questionObj.assessment
+                        questionMOObj.categoryId
+                        = questCategory.catId?.description
+                        questionMOObj.categoryName = questCategory.categorieName
+                        questionMOObj.questionId = questionObj.id?.description
+                        questionMOObj.typeId = questTypeObj.typeId?.description
+                        questionMOObj.typeName = questTypeObj.typeName
+                        questionMOObj.sequenceNo = questionObj.sequenceNo as NSNumber?
+                        questionMOObj.questionType = questionObj.types
+                        
+                        questCategoryMOObj.addToQuestions(questionMOObj)
+                    }
+                }
+                moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
+            }
+        }
+    }
+    
+    private func convertDTOtoMO(dtoObj: CertificationQuestionTypesDTO, userId:String) {
         
-        if let dtoObjQuestTypes = dtoObj.certificateQuestionTypes{
+        if let dtoObjQuestTypes = dtoObj.certificateQuestionTypes {
             if dtoObjQuestTypes.count  > 0{
-                for questTypeObj in dtoObjQuestTypes{
-                    
-                    
+                for questTypeObj in dtoObjQuestTypes {
                     let moQuestTypeObj = getVaccinationQuestionsTypeObj()
                     moQuestTypeObj.userId = userId
                     moQuestTypeObj.typeid = questTypeObj.typeId?.description
                     
                     moQuestTypeObj.typename = questTypeObj.typeName
                     
-                    if let questionCategoriesObj = questTypeObj.questionCategories{
-                        
-                        for questCategory in questionCategoriesObj{
-                            let questCategoryMOObj = getVaccinationQuestionsCategoryObj()
-                            questCategoryMOObj.categoryId = questCategory.catId?.description
-                            questCategoryMOObj.categoryName = questCategory.categorieName
-                            questCategoryMOObj.typeName = questTypeObj.typeName
-                            questCategoryMOObj.typeId = questTypeObj.typeId?.description
-                            questCategoryMOObj.userId = userId
-                            
-                            if let questions = questCategory.moduleAssessments{
-                                for questionObj in questions{
-                                    let questionMOObj = getVaccinationQuestionsObj()
-                                    questionMOObj.userId = userId
-                                    questionMOObj.questionDescription = questionObj.assessment
-                                    questionMOObj.categoryId
-                                    = questCategory.catId?.description
-                                    questionMOObj.categoryName = questCategory.categorieName
-                                    questionMOObj.questionId = questionObj.id?.description
-                                    questionMOObj.typeId = questTypeObj.typeId?.description
-                                    questionMOObj.typeName = questTypeObj.typeName
-                                    questionMOObj.sequenceNo = questionObj.sequenceNo as NSNumber?
-                                    questionMOObj.questionType = questionObj.types
-                                    
-                                    questCategoryMOObj.addToQuestions(questionMOObj)
-                                  
-                                }
-                                
-                            }
-                            
-                           
-                           
-                            moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
-                        }
-                    }
+                    handleQuestionCategories(questTypeObj, userId, moQuestTypeObj)
                 }
             }
         }
-        
     }
     
     private func convertMotoVM(moObj:[VaccinationQuestionTypes])-> QuestionnaireVM{

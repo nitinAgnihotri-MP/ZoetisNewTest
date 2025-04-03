@@ -335,6 +335,74 @@ class PEDraftStartNewAssessment: BaseViewController {
     }
     
     
+    fileprivate func handleCase0(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 30))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
+            }
+        case 2:
+            notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+        default:
+            notesTop.constant = CGFloat(((leftConst * 55 ) + 100))
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }
+        }
+    }
+    
+    fileprivate func handleCase1(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                if heightManufacturerView.constant == 94{
+                    notesTop.constant = CGFloat(((leftConst * 55 )) - 20)
+                }else{
+                    notesTop.constant = CGFloat(((leftConst * 55 )) + 20)
+                }
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 )) + 20)
+            }
+        case 2:
+            notesTop.constant = CGFloat(((leftConst * 55 ) - 20))
+        default:
+            
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 75))
+            }
+        }
+    }
+    
+    fileprivate func handleCase2(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+            
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                if heightManufacturerView.constant == 94{
+                    notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
+                }else{
+                    notesTop.constant = CGFloat(((leftConst * 55 ) - 35))
+                }
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
+            }
+        case 2:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 85))
+            }
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) ) - 30)
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            }
+        }
+    }
+    
     func assignConstraint(otherEgg:Int = 0){
         let leftConst = leftConstraint()
         var rightConst = rightConstraint()
@@ -344,67 +412,11 @@ class PEDraftStartNewAssessment: BaseViewController {
         
         switch leftConst {
         case 0:
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 30))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
-                }
-            case 2:
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-            default:
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 100))
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }
-            }
+            handleCase0(rightConst, leftConst)
         case 1:
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    if heightManufacturerView.constant == 94{
-                        notesTop.constant = CGFloat(((leftConst * 55 )) - 20)
-                    }else{
-                        notesTop.constant = CGFloat(((leftConst * 55 )) + 20)
-                    }
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 )) + 20)
-                }
-            case 2:
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 20))
-            default:
-                
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 75))
-                }
-            }
+            handleCase1(rightConst, leftConst)
         case 2:
-            switch rightConst {
-                
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    if heightManufacturerView.constant == 94{
-                        notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
-                    }else{
-                        notesTop.constant = CGFloat(((leftConst * 55 ) - 35))
-                    }
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
-                }
-            case 2:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 85))
-                }
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) ) - 30)
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }
-            }
+            handleCase2(rightConst, leftConst)
         default:
             break;
         }
@@ -1238,6 +1250,72 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
     }
     
+    fileprivate func handleNumberOfEggsButton() {
+        let superviewCurrent = numberOfEggsButton.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleBtnIncubation() {
+        let superviewCurrent =  btnIncubation.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleBtnBreed() {
+        let superviewCurrent =  btnBreed.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleParams(_ date: String, _ customer: String, _ site: String, _ evaluationName: String, _ evaluator: String) {
+        if (date.count > 0){} else  {
+            setBorderEvaluationDateField()
+        }
+        if (customer.count > 0 ){} else  {
+            setBorderForCustomerBtn()
+        }
+        if (site.count > 0){} else  {
+            setBorderForSiteBtn()
+        }
+        if (evaluationName.count > 0){} else  {
+            setBorderForEvaluationName()
+        }
+        if (evaluator.count  > 0){} else  {
+            setEvaluatorBorderField()
+        }
+    }
+    
+    fileprivate func handleManufacturerButton() {
+        let superviewCurrent =  manufacturerButton.superview
+        if superviewCurrent != nil {
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
+                }
+            }
+        }
+    }
+    
     func changeMandatorySuperviewToRed(){
         let date = self.peNewAssessment.evaluationDate ?? ""
         let customer = self.peNewAssessment.customerName ?? ""
@@ -1249,75 +1327,30 @@ class PEDraftStartNewAssessment: BaseViewController {
         if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != ""{
             setBorderBreedOtherField()
         }else{
-            let superviewCurrent =  btnBreed.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            handleBtnBreed()
         }
         
-        if  self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
+        if self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
             setBorderManufctrerOtherField()
         }else{
-            let superviewCurrent =  manufacturerButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            handleManufacturerButton()
         }
         
         if peNewAssessment.incubation != nil && peNewAssessment.incubation != ""{
             
         }else{
-            let superviewCurrent =  btnIncubation.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            handleBtnIncubation()
         }
         
         if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != ""{
             setBorderForNmbrOfEggsField()
         }else{
-            let superviewCurrent =  numberOfEggsButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
+            handleNumberOfEggsButton()
         }
         
-        if (date.count > 0 ?? 0){} else  {
-            setBorderEvaluationDateField()
-        }
-        if (customer.count > 0 ?? 0 ){} else  {
-            setBorderForCustomerBtn()
-        }
-        if (site.count > 0 ?? 0){} else  {
-            setBorderForSiteBtn()
-        }
-        if (evaluationName.count ?? 0 > 0){} else  {
-            setBorderForEvaluationName()
-        }
-        if (evaluator.count ?? 0  > 0){} else  {
-            setEvaluatorBorderField()
-        }
-        if (reasonForVisit.count ?? 0 > 0){} else  {
+        handleParams(date, customer, site, evaluationName, evaluator)
+        
+        if (reasonForVisit.count > 0){} else  {
             setBorderForVisitType()
         }
         

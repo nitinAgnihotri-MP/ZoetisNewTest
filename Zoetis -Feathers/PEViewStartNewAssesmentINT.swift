@@ -116,7 +116,6 @@ class PEViewStartNewAssesmentINT: BaseViewController {
     
     var regionID = Int()
     
-    
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -148,6 +147,28 @@ class PEViewStartNewAssesmentINT: BaseViewController {
         selectedSiteText.text =  peNewAssessment.siteName
         
         let defautUsername =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
+        viewDidLoadConfig1(strdate1, defautUsername)
+        txtBreedOfBirdsOthers.text =    self.peNewAssessment.breedOfBirdOther
+        txtIncubation.text =  self.peNewAssessment.incubation
+        txtIncubationOthers.text =   self.peNewAssessment.incubationOthers
+        
+        handleViewDidLoad2()
+        
+        hideManufacturerOthers()
+        hideEggsOthers()
+        txtManufacturer.text = self.peNewAssessment.manufacturer ?? ""
+        handleViewDidLoad5()
+        manfacturerOtherTxt.isUserInteractionEnabled = false
+        eggsOtherTxt.isUserInteractionEnabled = false
+        txtManufacturer.isUserInteractionEnabled = false
+        txtNumberOfEggs.isUserInteractionEnabled = false
+        
+        handleViewDidLoad3()
+        handleViewDidLoad4()
+        
+    }
+    
+    fileprivate func viewDidLoadConfig1(_ strdate1: String, _ defautUsername: String) {
         if peNewAssessment.evaluationDate == "" {
             selectedEvaluationDateText.text = strdate1
             self.peNewAssessment.evaluationDate = strdate1
@@ -186,10 +207,9 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                 txtBreedOfBird.text = "Other"
             }
         }
-        txtBreedOfBirdsOthers.text =    self.peNewAssessment.breedOfBirdOther
-        txtIncubation.text =  self.peNewAssessment.incubation
-        txtIncubationOthers.text =   self.peNewAssessment.incubationOthers
-        
+    }
+    
+    fileprivate func handleViewDidLoad2() {
         if selectedEvaluationType.text == "" {
             hideFlockView()
         } else {
@@ -207,8 +227,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
         countryTxt.text = peNewAssessment.countryName ?? ""
         clorineTxtFld.text = peNewAssessment.clorineName ?? ""
         
-        if clorineTxtFld.text == ""
-        {
+        if clorineTxtFld.text == "" {
             clorineViewHeightConstranit.constant = 60
         }
         
@@ -239,11 +258,69 @@ class PEViewStartNewAssesmentINT: BaseViewController {
         } else {
             print(appDelegateObj.testFuntion())
         }
+    }
+    
+    fileprivate func handleViewDidLoad3() {
+        if peNewAssessment.isFlopSelected == 1 ||  peNewAssessment.isFlopSelected == 3 ||  peNewAssessment.isFlopSelected == 4 {
+            isFlockAgeGreaterTheAllProd = true
+            btnFlockAgeGreater.setImage(UIImage(named: "checkIconPE"), for: .normal)
+            isFlockAgeGreaterThen50Weeks = false
+            btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+        } else if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5  {
+            isFlockAgeGreaterTheAllProd = false
+            btnFlockAgeGreater.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+            isFlockAgeGreaterThen50Weeks = true
+            btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
+        }
         
-        hideManufacturerOthers()
-        hideEggsOthers()
-        txtManufacturer.text = self.peNewAssessment.manufacturer ?? ""
-        if  txtManufacturer.text != "" {
+        if peNewAssessment.extndMicro == true {
+            extendedPEBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
+        } else{
+            extendedPEBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+        }
+        
+        if peNewAssessment.basicTransfer == true {
+            basicNewBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
+        } else {
+            basicNewBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+        }
+        
+        if peNewAssessment.fluid == true {
+            inovoBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
+        } else {
+            inovoBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+        }
+    }
+    
+    fileprivate func handleViewDidLoad4() {
+        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
+        
+        if peNewAssessment?.isAutomaticFail ?? 0 == 1{
+            isAutomaticSwitch.isOn = true
+        } else {
+            isAutomaticSwitch.isOn = false
+        }
+        if peNewAssessment.clorineName != ""{
+            clorineViewHeightConstranit.constant = 100
+            if peNewAssessment?.isAutomaticFail ?? 0 == 1 {
+                isAutomaticSwitch.isOn = true
+            } else {
+                isAutomaticSwitch.isOn = false
+            }
+        } else {
+            clorineViewHeightConstranit.constant = 60
+            self.isAutomaticFailView.isHidden = true
+        }
+        
+        showExtendedPE()
+        enableExtendedPE(flag:false)
+        if infoObj != nil {
+            extendedPESwitch = infoObj?.isExtendedPE ?? false
+        }
+    }
+    
+    fileprivate func handleViewDidLoad5() {
+        if txtManufacturer.text != "" {
             if let character = peNewAssessment.manufacturer?.character(at:0) {
                 if txtManufacturer.text == "Other"{
                     showManufacturerOthers()
@@ -266,70 +343,6 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                 txtNumberOfEggs.text = "Other"
             }
         }
-        manfacturerOtherTxt.isUserInteractionEnabled = false
-        eggsOtherTxt.isUserInteractionEnabled = false
-        txtManufacturer.isUserInteractionEnabled = false
-        txtNumberOfEggs.isUserInteractionEnabled = false
-        
-        if peNewAssessment.isFlopSelected == 1 ||  peNewAssessment.isFlopSelected == 3 ||  peNewAssessment.isFlopSelected == 4 {
-            isFlockAgeGreaterTheAllProd = true
-            btnFlockAgeGreater.setImage(UIImage(named: "checkIconPE"), for: .normal)
-            isFlockAgeGreaterThen50Weeks = false
-            btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-        } else  if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5  {
-            isFlockAgeGreaterTheAllProd = false
-            btnFlockAgeGreater.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-            isFlockAgeGreaterThen50Weeks = true
-            btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
-        }
-        
-        if peNewAssessment.extndMicro == true
-        {
-            extendedPEBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
-        } else{
-            extendedPEBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-        }
-        
-        if peNewAssessment.basicTransfer == true
-        {
-            basicNewBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
-        } else{
-            basicNewBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-        }
-        
-        if peNewAssessment.fluid == true
-        {
-            inovoBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
-        } else{
-            inovoBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-        }
-        
-        
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
-        
-        if peNewAssessment?.isAutomaticFail ?? 0 == 1{
-            isAutomaticSwitch.isOn = true
-        }else{
-            isAutomaticSwitch.isOn = false
-        }
-        if peNewAssessment.clorineName != ""{
-            clorineViewHeightConstranit.constant = 100
-            if peNewAssessment?.isAutomaticFail ?? 0 == 1{
-                isAutomaticSwitch.isOn = true
-            }else{
-                isAutomaticSwitch.isOn = false
-            }
-        }else{
-            clorineViewHeightConstranit.constant = 60
-            self.isAutomaticFailView.isHidden = true
-        }
-        
-        showExtendedPE()
-        enableExtendedPE(flag:false)
-        if infoObj != nil{
-            extendedPESwitch =  infoObj?.isExtendedPE ?? false
-        }
-        
     }
     
     // MARK:  Assign Constraint
@@ -2884,47 +2897,54 @@ extension PEViewStartNewAssesmentINT{
         return syncCount + syncCount2
     }
     // MARK: - POST API for Images
-    func callRequest4(paramForImages:JSONDictionary){
+    fileprivate func handleJsonData(_ self: PEViewStartNewAssesmentINT) {
+        if ConnectionManager.shared.hasConnectivity() {
+            if self.callRequest4Int == 0 {
+                let syncArr = self.getAssessmentInOfflineFromDb()
+                if syncArr > 0{
+                    self.syncBtnTapped(showHud: false)
+                } else {
+                    for i in self.totalImageToSync{
+                        CoreDataHandlerPE().setImageStatusTrue(idArray: i)
+                    }
+                    self.showtoast(message: appDelegateObj.dataSynedSuccess)
+                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+                    self.dismissGlobalHUD(self.view)
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleNoError(_ error: NSError?) {
+        if error != nil {
+            let syncArr = self.getAssessmentInOfflineFromDb()
+            if syncArr > 0{
+                self.syncBtnTapped(showHud: false)
+            } else {
+                self.showtoast(message: appDelegateObj.dataSynedSuccess)
+                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+            }
+        }
+    }
+    
+    func callRequest4(paramForImages:JSONDictionary) {
         
         callRequest4Int = callRequest4Int + 1
         ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages, completion: { [weak self] (json, error) in
             self?.callRequest4Int = self!.callRequest4Int - 1
             
-            if error != nil {
-                let syncArr = self?.getAssessmentInOfflineFromDb()
-                if syncArr ?? 0 > 0{
-                    self?.syncBtnTapped(showHud: false)
-                } else {
-                    self?.showtoast(message: appDelegateObj.dataSynedSuccess)
-                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                }
-            }
+            self?.handleNoError(error)
             guard let `self` = self, error == nil else { return }
-            if json["StatusCode"]  == 200{
-                if self.saveTypeString.contains(11)
-                {
+            if json["StatusCode"]  == 200 {
+                if self.saveTypeString.contains(11) {
                     if self.saveTypeString.contains(00) {
-                        CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
+                        _ = CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
                     }
-                    CoreDataHandlerPE().updateOfflineStatus(assessment: self.peNewAssessment)
+                    _ = CoreDataHandlerPE().updateOfflineStatus(assessment: self.peNewAssessment)
                 } else {
-                    CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
+                    _ = CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
                 }
-                if ConnectionManager.shared.hasConnectivity() {
-                    if self.callRequest4Int == 0 {
-                        let syncArr = self.getAssessmentInOfflineFromDb()
-                        if syncArr > 0{
-                            self.syncBtnTapped(showHud: false)
-                        } else {
-                            for i in self.totalImageToSync{
-                                CoreDataHandlerPE().setImageStatusTrue(idArray: i)
-                            }
-                            self.showtoast(message: appDelegateObj.dataSynedSuccess)
-                            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                            self.dismissGlobalHUD(self.view)
-                        }
-                    }
-                }
+                handleJsonData(self)
             } else {
                 self.dismissGlobalHUD(self.view)
             }

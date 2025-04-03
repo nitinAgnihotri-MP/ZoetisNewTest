@@ -2180,6 +2180,76 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
         }
     }
     
+    fileprivate func handlecellsArr(_ cellsArray: [UICollectionViewCell], _ indexPath: IndexPath) {
+        for cell in cellsArray{
+            if cell as! PECategoryCell == self.collectionView.cellForItem(at: indexPath) as! PECategoryCell{
+                (cell as! PECategoryCell).imageview.image = UIImage(named: "tabSelect") ?? UIImage()
+                
+            }else{
+                (cell as! PECategoryCell).imageview.image = UIImage(named: "tabUnselect") ?? UIImage()
+            }
+        }
+    }
+    
+    fileprivate func handleRefrid() {
+        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
+        if regionID != 3 {
+            if(selectedCategory?.catName == refrigStr){
+                showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
+            } else {
+                showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
+            }
+        }
+    }
+    
+    fileprivate func handleBooleans() {
+        categoarylabelText = ""
+        self.tableview.isUserInteractionEnabled = true
+        lblextenderMicro.isHidden = true
+        extendedMicroSwitch.isHidden = true
+        extendedMicroSwitch.isUserInteractionEnabled = false
+        catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
+        if(checkCategoryisNA()) {
+            self.btnNA.isSelected = true
+        } else {
+            self.btnNA.isSelected = false
+        }
+    }
+    
+    fileprivate func handleSubmitExtend() {
+        if self.submitExtend == true {
+            self.extendedMicroSwitch.isOn = true
+            self.synWebBtn.isEnabled = true
+            self.synWebBtn.alpha = 1.0
+            UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
+            UserDefaults.standard.set(true, forKey:"ExtendedMicro")
+            
+        } else {
+            self.extendedMicroSwitch.isOn = false
+            self.synWebBtn.isEnabled = false
+            self.synWebBtn.alpha = 0.3
+            UserDefaults.standard.setValue(false, forKey: "extendedAvailable")
+            UserDefaults.standard.set(false, forKey:"ExtendedMicro")
+        }
+    }
+    
+    fileprivate func handleIsEmRequired() {
+        if self.peNewAssessment.IsEMRequested == false {
+            handleSubmitExtend()
+            lblextenderMicro.isHidden = false
+            extendedMicroSwitch.isHidden = false
+            self.synWebBtn.setTitle("Finish Extended Microbial", for: .normal)
+        } else {
+            self.synWebBtn.isEnabled = true
+            self.synWebBtn.alpha = 1.0
+            lblextenderMicro.isHidden = true
+            extendedMicroSwitch.isHidden = true
+            UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
+            UserDefaults.standard.set(true, forKey:"ExtendedMicro")
+            self.synWebBtn.setTitle(syncToWebStr, for: .normal)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         categoarylabelText = ""
@@ -2190,14 +2260,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
         self.tableview.isUserInteractionEnabled = true
         let cellsArray = self.collectionView.visibleCells
         if cellsArray.count > 0{
-            for cell in cellsArray{
-                if cell as! PECategoryCell == self.collectionView.cellForItem(at: indexPath) as! PECategoryCell{
-                    (cell as! PECategoryCell).imageview.image = UIImage(named: "tabSelect") ?? UIImage()
-                    
-                }else{
-                    (cell as! PECategoryCell).imageview.image = UIImage(named: "tabUnselect") ?? UIImage()
-                }
-            }
+            handlecellsArr(cellsArray, indexPath)
         }
         
         
@@ -2226,7 +2289,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
             selectedCategory?.catISSelected = 0
             viewForMultiSignature.isHidden = true
             self.updateCategoryInDb(assessment:selectedCategory!)
-            if catArrayForCollectionIs.count > indexPath.row{
+            if catArrayForCollectionIs.count > indexPath.row {
                 let selectedCategoryIS = catArrayForCollectionIs[indexPath.row]
                 collectionviewIndexPath = indexPath
                 selectedCategory = catArrayForCollectionIs[indexPath.row]
@@ -2237,7 +2300,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
                 let totalMark = selectedCategory?.catMaxMark ?? 0
                 totalScoreLabel.text = String(totalMark)
                 resultScoreLabel.text = String(0)
-                if(selectedCategory?.catName == refrigStr){
+                if(selectedCategory?.catName == refrigStr) {
                     lblextenderMicro.isHidden = true
                     extendedMicroSwitch.isHidden = true
                     extendedMicroSwitch.isUserInteractionEnabled = false
@@ -2245,79 +2308,26 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
                         let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
                         refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
                     }
-                    
                 }
-                if(selectedCategory?.catName == appDelegateObj.extendedMicrobialStr){
+                
+                if(selectedCategory?.catName == appDelegateObj.extendedMicrobialStr) {
                     categoarylabelText = appDelegateObj.extendedMicrobialStr
                     
                     selectedCategory?.sequenceNoo = 12
                     extendedMicroSwitch.isUserInteractionEnabled = true
-                    if self.peNewAssessment.IsEMRequested == false {
-                        if self.submitExtend == true {
-                            self.extendedMicroSwitch.isOn = true
-                            self.synWebBtn.isEnabled = true
-                            self.synWebBtn.alpha = 1.0
-                            UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
-                            UserDefaults.standard.set(true, forKey:"ExtendedMicro")
-                            
-                        }
-                        else {
-                            self.extendedMicroSwitch.isOn = false
-                            self.synWebBtn.isEnabled = false
-                            self.synWebBtn.alpha = 0.3
-                            UserDefaults.standard.setValue(false, forKey: "extendedAvailable")
-                            UserDefaults.standard.set(false, forKey:"ExtendedMicro")
-                        }
-                        
-                        lblextenderMicro.isHidden = false
-                        extendedMicroSwitch.isHidden = false
-                        self.synWebBtn.setTitle("Finish Extended Microbial", for: .normal)
-                        
-                        
-                    } else {
-                        self.synWebBtn.isEnabled = true
-                        self.synWebBtn.alpha = 1.0
-                        lblextenderMicro.isHidden = true
-                        extendedMicroSwitch.isHidden = true
-                        UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
-                        UserDefaults.standard.set(true, forKey:"ExtendedMicro")
-                        self.synWebBtn.setTitle(syncToWebStr, for: .normal)
-                    }
-                }
-                else{
-                    categoarylabelText = ""
-                    self.tableview.isUserInteractionEnabled = true
-                    lblextenderMicro.isHidden = true
-                    extendedMicroSwitch.isHidden = true
-                    extendedMicroSwitch.isUserInteractionEnabled = false
-                    catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                    if(checkCategoryisNA()){
-                        self.btnNA.isSelected = true
-                    }
-                    else{
-                        self.btnNA.isSelected = false
-                    }
+                    handleIsEmRequired()
+                } else {
+                    handleBooleans()
                 }
                 tableview.reloadData()
                 updateScore()
-                
-                let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-                if regionID != 3
-                {
-                    if(selectedCategory?.catName == refrigStr){
-                        showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
-                    }
-                    else{
-                        //                        showHideNA(sequenceNo:selectedCategory?.sequenceNo ?? 0,catName: selectedCategory?.catName ?? "")
-                        showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
-                    }
-                }
-                
+                handleRefrid()
                 refreshTableView()
             }
         }
         synWebBtn.isHidden = false
     }
+    
     // MARK:  Show Hide is NA
     func showHideNA(sequenceNoo:Int,catName:String){
         
@@ -4628,6 +4638,45 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Call Request for images
+    fileprivate func handleSync(_ self: PEViewAssesmentFinalize) {
+        if ConnectionManager.shared.hasConnectivity() {
+            if self.callRequest4Int == 0 {
+                if regionID == 3 {
+                    if peNewAssessment.IsEMRequested == true {
+                        self.syncExtendedMicrobial()
+                    }
+                }
+                let syncArr = self.getAllAssessmentInOfflineFromDb()
+                if syncArr > 0 {
+                    self.showtoast(message: appDelegateObj.dataSynedSuccess)
+                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+                    self.dismissGlobalHUD(self.view)
+                    self.syncBtnTapped(showHud: true)
+                    
+                } else {
+                    for i in self.totalImageToSync{
+                        CoreDataHandlerPE().setImageStatusTrue(idArray: i)
+                    }
+                    
+                    self.showtoast(message: appDelegateObj.dataSynedSuccess)
+                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+                    self.dismissGlobalHUD(self.view)
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleSaveTypeString(_ self: PEViewAssesmentFinalize) {
+        if self.saveTypeString.contains(11) {
+            if self.saveTypeString.contains(00) {
+                CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
+            }
+            CoreDataHandlerPE().updateOfflineStatus(assessment: self.peNewAssessment)
+        } else {
+            CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
+        }
+    }
+    
     func callRequest4(paramForImages:JSONDictionary){
         callRequest4Int = callRequest4Int + 1
         ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages, completion: { [weak self] (json, error) in
@@ -4644,49 +4693,11 @@ extension PEViewAssesmentFinalize{
             }
             guard let `self` = self, error == nil else { return }
             if json["StatusCode"]  == 200{
-                if self.saveTypeString.contains(11)
-                {
-                    if self.saveTypeString.contains(00) {
-                        CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
-                    }
-                    CoreDataHandlerPE().updateOfflineStatus(assessment: self.peNewAssessment)
-                } else {
-                    CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
-                }
-                if ConnectionManager.shared.hasConnectivity() {
-                    
-                    if self.callRequest4Int == 0 {
-                        
-                        if regionID == 3
-                        {
-                            if peNewAssessment.IsEMRequested == true {
-                                self.syncExtendedMicrobial()
-                            }
-                        }
-                        
-                        let syncArr = self.getAllAssessmentInOfflineFromDb()
-                        if syncArr > 0{
-                            
-                            self.showtoast(message: appDelegateObj.dataSynedSuccess)
-                            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                            self.dismissGlobalHUD(self.view)
-                            self.syncBtnTapped(showHud: true)
-                            
-                        } else {
-                            for i in self.totalImageToSync{
-                                CoreDataHandlerPE().setImageStatusTrue(idArray: i)
-                            }
-                            
-                            self.showtoast(message: appDelegateObj.dataSynedSuccess)
-                            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                            self.dismissGlobalHUD(self.view)
-                        }
-                    }
-                }
+                handleSaveTypeString(self)
+                handleSync(self)
             } else {
                 self.dismissGlobalHUD(self.view)
             }
-            
         })
     }
     

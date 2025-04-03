@@ -1241,79 +1241,104 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 5 || section == 1 || section == 2 || section == 3 || section == 4  || section == 6{
-            if section == 1 {
-                if noOfCatcherArr.count > 0{
-                    return 85.0
-                }else{
-                    return 73.0
-                }
-            }
-            if section == 2 {
-                if noOfVaccinatorsArr.count > 0{
-                    return 85.0
-                }else{
-                    return 73.0
-                }
-            }
-            if section == 4  {
-                return 43.0
-            }
-            if section == 5{
-                return 43.0
-            }
-            if section == 6 {
-                if vaccinInfoDetailArr.count > 0{
-                    return 85.0
-                }else{
-                    return 73.0
-                }
-            }
-            if section == 3 {
-                return 73.0
-            }
-            else{
-                return 60.0
-            }
-        }else{
+        switch section {
+        case 1:
+            return noOfCatcherArr.isEmpty ? 73.0 : 85.0
+        case 2:
+            return noOfVaccinatorsArr.isEmpty ? 73.0 : 85.0
+        case 3:
+            return 73.0
+        case 4, 5:
+            return 43.0
+        case 6:
+            return vaccinInfoDetailArr.isEmpty ? 73.0 : 85.0
+        case 0:
             return 0.0
+        default:
+            return 60.0
         }
+    }
+
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        if section == 5 || section == 1 || section == 2 || section == 3 || section == 4  || section == 6{
+//            if section == 1 {
+//                if noOfCatcherArr.count > 0{
+//                    return 85.0
+//                }else{
+//                    return 73.0
+//                }
+//            }
+//            if section == 2 {
+//                if noOfVaccinatorsArr.count > 0{
+//                    return 85.0
+//                }else{
+//                    return 73.0
+//                }
+//            }
+//            if section == 4  {
+//                return 43.0
+//            }
+//            if section == 5{
+//                return 43.0
+//            }
+//            if section == 6 {
+//                if vaccinInfoDetailArr.count > 0{
+//                    return 85.0
+//                }else{
+//                    return 73.0
+//                }
+//            }
+//            if section == 3 {
+//                return 73.0
+//            }
+//            else{
+//                return 60.0
+//            }
+//        }else{
+//            return 0.0
+//        }
+//    }
+    
+    fileprivate func handleSection1(_ tableView: UITableView) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfCatchersHeader" ) as! NoOfCatchersHeader
+        headerView.isUserInteractionEnabled = false
+        if noOfCatcherArr.count  > 0{
+            headerView.headerImg.image = UIImage(named: "footerNavigationExpand")
+        }else{
+            headerView.headerImg.image = UIImage(named: "footerNavigationRounded")
+        }
+        
+        headerView.noOfCatchersTxtFeild.text = "\(noOfCatcherArr.count)"
+        headerView.numberr = noOfCatcherArr.count
+        if headerView.noOfCatchersTxtFeild.text == "0"{
+            headerView.noOfCatchersTxtFeild.text = ""
+        }
+        return headerView
+    }
+    
+    fileprivate func handleSection2(_ tableView: UITableView) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfVaccinatorsHeader" ) as! NoOfVaccinatorsHeader
+        headerView.isUserInteractionEnabled = false
+        if noOfVaccinatorsArr.count > 0{
+            headerView.headerImg.image = UIImage(named: "footerNavigationExpand")
+        }else{
+            headerView.headerImg.image = UIImage(named: "footerNavigationRounded")
+        }
+        headerView.txtFeild.text = "\(noOfVaccinatorsArr.count)"
+        headerView.numberr = noOfVaccinatorsArr.count
+        if headerView.txtFeild.text == "0"{
+            headerView.txtFeild.text = ""
+        }
+        return headerView
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 1 {
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfCatchersHeader" ) as! NoOfCatchersHeader
-            headerView.isUserInteractionEnabled = false
-            if noOfCatcherArr.count  > 0{
-                headerView.headerImg.image = UIImage(named: "footerNavigationExpand")
-            }else{
-                headerView.headerImg.image = UIImage(named: "footerNavigationRounded")
-            }
-            
-            headerView.noOfCatchersTxtFeild.text = "\(noOfCatcherArr.count)"
-            headerView.numberr = noOfCatcherArr.count
-            if headerView.noOfCatchersTxtFeild.text == "0"{
-                headerView.noOfCatchersTxtFeild.text = ""
-            }else{
-            }
-            return headerView
+            return handleSection1(tableView)
         }
         if section == 2 {
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfVaccinatorsHeader" ) as! NoOfVaccinatorsHeader
-            headerView.isUserInteractionEnabled = false
-            if noOfVaccinatorsArr.count > 0{
-                headerView.headerImg.image = UIImage(named: "footerNavigationExpand")
-            }else{
-                headerView.headerImg.image = UIImage(named: "footerNavigationRounded")
-            }
-            headerView.txtFeild.text = "\(noOfVaccinatorsArr.count)"
-            headerView.numberr = noOfVaccinatorsArr.count
-            if headerView.txtFeild.text == "0"{
-                headerView.txtFeild.text = ""
-            }else{
-            }
-            return headerView
+            return handleSection2(tableView)
         }
         
         if section == 4 {
@@ -1351,9 +1376,7 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "QuestionCellHeader" ) as! QuestionCellHeader
             headerView.isUserInteractionEnabled = false
             return headerView
-        }
-        
-        else{
+        } else {
             return UIView()
         }
     }

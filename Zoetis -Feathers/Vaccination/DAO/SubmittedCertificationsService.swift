@@ -12,42 +12,43 @@ final  public class SubmittedCertificationsService{
     private init(){print("Initializer")}
     static let sharedInstance = SubmittedCertificationsService()
     
+    fileprivate func handleCertObj(_ certObj: VaccinationCertificationVM?, _ status: inout VaccinationCertificationStatus) {
+        if let trainingId = certObj?.trainingStatus {
+            
+            switch Int64(trainingId) {
+            case 1:
+                var status = VaccinationCertificationStatus.inProgress
+            case 2:
+                status = VaccinationCertificationStatus.draft
+            case 3 :
+                status = VaccinationCertificationStatus.submitted
+            case 4:
+                status = VaccinationCertificationStatus.submitted
+            default:
+                status = VaccinationCertificationStatus.rejected
+            }
+        }
+    }
+    
     func insertData(userId:String, _ certificationArr:[GetSubmittedCertificationsDTO]){
         for certificationObj in certificationArr{
             let certObj = getCertificationVMObj(certificationObj.trainingSchedulesInfo)
-            if certObj != nil{
+            if certObj != nil {
                 let startedObj = VaccinationDashboardDAO.sharedInstance.onlyScheduledCertStatusVM(userId: userId, certificationId: certObj?.certificationId ?? "")
-                if startedObj == nil{
+                if startedObj == nil {
                     
                     VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId:userId, lastModuleName:VaccinationModuleNames.none, certificationId:certObj?.certificationId ?? "", subModule:"", certificationCategoryId: certObj?.certificationCategoryId ?? "",  certObj: certObj!)
                     var status = VaccinationCertificationStatus.inProgress
-                    if let trainingId = certObj?.trainingStatus {
-                        
-                        switch Int64(trainingId) {
-                        case 1:
-                            var status = VaccinationCertificationStatus.inProgress
-                        case 2:
-                            status = VaccinationCertificationStatus.draft
-                        case 3 :
-                            status = VaccinationCertificationStatus.submitted
-                        case 4:
-                            status = VaccinationCertificationStatus.submitted
-                        default:
-                            status = VaccinationCertificationStatus.rejected
-                        }                               }
+                    handleCertObj(certObj, &status)
                     let dateFormatterObj =  DateFormatter()
                     
                     dateFormatterObj.timeZone = Calendar.current.timeZone
                     dateFormatterObj.locale = Calendar.current.locale
                     dateFormatterObj.dateFormat = Constants.yyyyMMddHHmmss
-                    //                    dateFormatterObj.calendar = Calendar(identifier: .gregorian)
-                    //                    dateFormatterObj.timeZone = TimeZone(secondsFromGMT: 0)
-                    
                     
                     VaccinationDashboardDAO.sharedInstance.updateSubmittedDate(userId:userId,  certificationId: certObj?.certificationId ?? "", status: status,certCategoryId:certObj?.certificationCategoryId ?? "", certObj: certObj!,submittedDate: certObj?.submittedDate )
                     
-                    
-                    if let employeeArr = certificationObj.operatorInfo{
+                    if let employeeArr = certificationObj.operatorInfo {
                         let employeeArr = certificationObj.operatorInfo
                         var i:Int32 = 1
                         for employee in employeeArr!{
@@ -121,57 +122,80 @@ final  public class SubmittedCertificationsService{
         return empObj
     }
     
+    fileprivate func handleCertObj(_ certObj: inout VaccinationCertificationVM, _ certData: GetSubmittedTrainingSchedulesInfoDTO) {
+        certObj.syncStatus = VaccinationCertificationSyncStatus.synced.rawValue
+        certObj.fsrName = certData.assignToName
+        if let assignToId = certData.assingToID{
+            certObj.fsrId = String(assignToId)
+        }
+        certObj.certificationTypeName = certData.certificateType
+        certObj.certification_Type_Id = certData.certification_Type_Id
+        if let certTypeId = certData.certificateTypeID{
+            certObj.certificationTypeId = String(certTypeId)
+        }
+        if let customerId = certData.customerID{
+            certObj.customerId = String(customerId)
+        }
+        certObj.customerName = certData.customerName
+        if let siteId = certData.siteID{
+            certObj.siteId = String(siteId)
+        }
+        certObj.siteName = certData.siteName
+        certObj.customerShippingId = certData.custShipping
+        certObj.deviceId = certData.deviceID
+        
+        if let existingSite  = certData.existingSite{
+            certObj.isExistingSite = existingSite
+        }else{
+            certObj.isExistingSite = false
+        }
+        certObj.fsrSignature = certData.fsrSignatureBase64
+        certObj.hatcheryManagerSign = certData.hatcheryManagerSignatureBase64
+        certObj.fsmName = certData.hatcheryManagerName
+    }
+    
+    fileprivate func handleCertObjCertData(_ certObj: inout VaccinationCertificationVM, _ certData: GetSubmittedTrainingSchedulesInfoDTO) {
+        certObj.certificationCategoryId = VaccinationConstants
+            .LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID
+        certObj.certificationCategoryName = VaccinationConstants
+            .LookupMaster.SAFETY_CERTIFICATION_CATEGORY_VALUE
+        if let dId = certData.deviceID {
+            if dId != ""{
+                let deviceIdComponents = dId.components(separatedBy: "_")
+                if deviceIdComponents.count > 1{
+                    let safetyCertId = deviceIdComponents[1]
+                    certObj.certificationId = safetyCertId
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleTrainingStatus(_ certData: GetSubmittedTrainingSchedulesInfoDTO, _ certObj: inout VaccinationCertificationVM) {
+        if let trainingId = certData.trainingStatus {
+            certObj.trainingStatus = String(trainingId)
+            switch trainingId {
+            case 1:
+                certObj.certificationStatus
+                = VaccinationCertificationStatus.inProgress.rawValue
+            case 2:
+                certObj.certificationStatus = VaccinationCertificationStatus.draft.rawValue
+            case 3 :
+                certObj.certificationStatus = VaccinationCertificationStatus.submitted.rawValue
+            case 4:
+                certObj.certificationStatus = VaccinationCertificationStatus.submitted.rawValue
+            default:
+                certObj.certificationStatus = VaccinationCertificationStatus.rejected.rawValue
+            }
+        }
+    }
+    
     func getCertificationVMObj(_ trainingData:GetSubmittedTrainingSchedulesInfoDTO?)-> VaccinationCertificationVM?{
         if let certData = trainingData{
             var certObj = VaccinationCertificationVM()
             
-            certObj.syncStatus = VaccinationCertificationSyncStatus.synced.rawValue
-            certObj.fsrName = certData.assignToName
-            if let assignToId = certData.assingToID{
-                certObj.fsrId = String(assignToId)
-            }
-            certObj.certificationTypeName = certData.certificateType
-            certObj.certification_Type_Id = certData.certification_Type_Id
-            if let certTypeId = certData.certificateTypeID{
-                certObj.certificationTypeId = String(certTypeId)
-            }
-            if let customerId = certData.customerID{
-                certObj.customerId = String(customerId)
-            }
-            certObj.customerName = certData.customerName
-            if let siteId = certData.siteID{
-                certObj.siteId = String(siteId)
-            }
-            certObj.siteName = certData.siteName
-            certObj.customerShippingId = certData.custShipping
-            certObj.deviceId = certData.deviceID
+            handleCertObj(&certObj, certData)
+            handleTrainingStatus(certData, &certObj)
             
-            if let existingSite  = certData.existingSite{
-                certObj.isExistingSite = existingSite
-            }else{
-                certObj.isExistingSite = false
-            }
-            certObj.fsrSignature = certData.fsrSignatureBase64
-            certObj.hatcheryManagerSign = certData.hatcheryManagerSignatureBase64
-            certObj.fsmName = certData.hatcheryManagerName
-            
-            if let trainingId = certData.trainingStatus{
-                certObj.trainingStatus = String(trainingId)
-                switch trainingId {
-                case 1:
-                    certObj.certificationStatus
-                    = VaccinationCertificationStatus.inProgress.rawValue
-                case 2:
-                    certObj.certificationStatus = VaccinationCertificationStatus.draft.rawValue
-                    
-                case 3 :
-                    certObj.certificationStatus = VaccinationCertificationStatus.submitted.rawValue
-                case 4:
-                    certObj.certificationStatus = VaccinationCertificationStatus.submitted.rawValue
-                default:
-                    certObj.certificationStatus = VaccinationCertificationStatus.rejected.rawValue
-                }
-            }
             if let id = certData.id{
                 certObj.systemCertificationId = String(id)
                 certObj.certificationId = String(id)
@@ -187,26 +211,11 @@ final  public class SubmittedCertificationsService{
             if certObj.certification_Type_Id == 1 {
                 certObj.certificationCategoryId = "2"
                 certObj.certificationCategoryName = "Operator"
-            }
-            else {
-                certObj.certificationCategoryId = VaccinationConstants
-                    .LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID
-                certObj.certificationCategoryName = VaccinationConstants
-                    .LookupMaster.SAFETY_CERTIFICATION_CATEGORY_VALUE
-                if let dId = certData.deviceID{
-                    if dId != ""{
-                        let deviceIdComponents = dId.components(separatedBy: "_")
-                        if deviceIdComponents.count > 1{
-                            let safetyCertId = deviceIdComponents[1]
-                            certObj.certificationId = safetyCertId
-                        }
-                    }
-                    
-                }
+            } else {
+                handleCertObjCertData(&certObj, certData)
             }
             return certObj
         }
         return nil
     }
-    
 }

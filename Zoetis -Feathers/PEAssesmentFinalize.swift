@@ -1553,80 +1553,209 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    func setupInovojectCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> InovojectNewTableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: InovojectNewTableViewCell.identifier) as? InovojectNewTableViewCell{
-            if indexPath.row % 2 == 0{
-                cell.contentView.backgroundColor = UIColor.white
-            } else{
-                cell.contentView.backgroundColor = UIColor.getHeaderTopGradient()
-            }
-            
-            cell.config(data:inovojectData[indexPath.row])
-            if inovojectData[indexPath.row].invoHatchAntibiotic == 1 {
-                cell.showHatcheryAnitibiotics()
-            } else {
-                cell.hideHatcheryAntibiotics()
-            }
-            if inovojectData[indexPath.row].vaccineMan?.lowercased().containsCaseInsensitive(string: "other") ?? false {
-                cell.showOthersConstraint()
-            } else {
-                cell.hideOthersConstraint()
-            }
-            
-            cell.diluentManuCompletion = {[unowned self] ( error) in
-                extractedFunc7(cell: cell, indexPath: indexPath)
-            }
-            cell.bagSizeCompletion = {[unowned self] ( error) in
-                var bagSizeArray = NSArray()
-                var bagSizeIDArray = NSArray()
-                var bagSizeDetailsArray = NSArray()
-                bagSizeDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BagSizes")
-                bagSizeArray = bagSizeDetailsArray.value(forKey: "size") as? NSArray ?? NSArray()
-                bagSizeIDArray = bagSizeDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                if bagSizeArray.count > 0 {
-                    self.dropDownVIewNew(arrayData: bagSizeArray as? [String] ?? [String](), kWidth:  cell.tfBagSize.frame.width, kAnchor: cell.tfBagSize, yheight: cell.tfBagSize.bounds.height) { [unowned self] selectedVal, index  in
-                        cell.tfBagSize.text = selectedVal
-                        self.inovojectData[indexPath.row].bagSizeType = selectedVal
-                        
-                        let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
-                        if c == 0 {
-                            self.showtoast(message: incompleteDataStr)
-                            CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
-                            
-                            return
-                        }
-                        let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
-                        let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
-                        if a != 0 && b != 0 {
-                            let x = a * b
-                            let y = c/0.05
-                            let z = x/y
-                            
-                            let r  = Rational(approximating: z)
-                            let n = String(r.numerator)
-                            let d = String(r.denominator)
-                            
-                            if regionID == 3 {
-                                self.inovojectData[indexPath.row].dosage = n + "/" + d
-                            }
-                            else
-                            {
-                                self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
-                            }
-                        }
+    fileprivate func cellConfiguration(_ indexPath: IndexPath, _ cell: InovojectNewTableViewCell) {
+        if indexPath.row % 2 == 0{
+            cell.contentView.backgroundColor = UIColor.white
+        } else{
+            cell.contentView.backgroundColor = UIColor.getHeaderTopGradient()
+        }
+        
+        cell.config(data:inovojectData[indexPath.row])
+        if inovojectData[indexPath.row].invoHatchAntibiotic == 1 {
+            cell.showHatcheryAnitibiotics()
+        } else {
+            cell.hideHatcheryAntibiotics()
+        }
+        if inovojectData[indexPath.row].vaccineMan?.lowercased().containsCaseInsensitive(string: "other") ?? false {
+            cell.showOthersConstraint()
+        } else {
+            cell.hideOthersConstraint()
+        }
+        
+        cell.diluentManuCompletion = {[unowned self] ( error) in
+            extractedFunc7(cell: cell, indexPath: indexPath)
+        }
+    }
+    
+    fileprivate func manageBagSizeCompletion(_ cell: InovojectNewTableViewCell, _ indexPath: IndexPath) {
+        cell.bagSizeCompletion = {[unowned self] ( error) in
+            var bagSizeArray = NSArray()
+            var bagSizeIDArray = NSArray()
+            var bagSizeDetailsArray = NSArray()
+            bagSizeDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BagSizes")
+            bagSizeArray = bagSizeDetailsArray.value(forKey: "size") as? NSArray ?? NSArray()
+            bagSizeIDArray = bagSizeDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+            if bagSizeArray.count > 0 {
+                self.dropDownVIewNew(arrayData: bagSizeArray as? [String] ?? [String](), kWidth:  cell.tfBagSize.frame.width, kAnchor: cell.tfBagSize, yheight: cell.tfBagSize.bounds.height) { [unowned self] selectedVal, index  in
+                    cell.tfBagSize.text = selectedVal
+                    self.inovojectData[indexPath.row].bagSizeType = selectedVal
+                    
+                    let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
+                    if c == 0 {
+                        self.showtoast(message: incompleteDataStr)
                         CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
-                        UIView.performWithoutAnimation {
-                            self.tableview.reloadData()
+                        
+                        return
+                    }
+                    let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
+                    let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
+                    if a != 0 && b != 0 {
+                        let x = a * b
+                        let y = c/0.05
+                        let z = x/y
+                        
+                        let r  = Rational(approximating: z)
+                        let n = String(r.numerator)
+                        let d = String(r.denominator)
+                        self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
+                        if regionID == 3 {
+                            self.inovojectData[indexPath.row].dosage = n + "/" + d
                         }
                     }
-                    self.dropHiddenAndShow()
+                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
+                    UIView.performWithoutAnimation {
+                        self.tableview.reloadData()
+                    }
+                }
+                self.dropHiddenAndShow()
+            }
+        }
+    }
+    
+    fileprivate func handleAmpleSizeCompletion(_ cell: InovojectNewTableViewCell, _ indexPath: IndexPath) {
+        cell.ampleSizeCompletion = {[unowned self] ( error) in
+            self.tableviewIndexPath = indexPath
+            var vManufacutrerNameArray = NSArray()
+            _ = NSArray()
+            var vManufacutrerDetailsArray = NSArray()
+            vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+            vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "size") as? NSArray ?? NSArray()
+            
+            self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleSize.frame.width, kAnchor: cell.tfAmpleSize, yheight: cell.tfAmpleSize.bounds.height) { [unowned self] selectedVal, index  in
+                
+                let  selectedValIS = selectedVal.replacingOccurrences(of: " ", with: "")
+                let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
+                if c == 0 {
+                    self.showtoast(message: incompleteDataStr)
+                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
+                    
+                    return
+                }
+                self.inovojectData[indexPath.row].ampuleSize = selectedValIS
+                let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
+                let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
+                if a != 0 {
+                    let x = a * b
+                    let y = c/0.05
+                    let z = x/y
+                    
+                    let r  = Rational(approximating: z)
+                    let n = String(r.numerator)
+                    let d = String(r.denominator)
+                    if regionID == 3 {
+                        self.inovojectData[indexPath.row].dosage = n + "/" + d
+                    }
+                    else
+                    {
+                        self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
+                    }
+                }
+                CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
+                UIView.performWithoutAnimation {
+                    self.tableview.reloadData()
                 }
             }
+            self.dropHiddenAndShow()
+        }
+    }
+    
+    fileprivate func manageAmplePerBagCompletion(_ cell: InovojectNewTableViewCell, _ indexPath: IndexPath) {
+        cell.amplePerBagCompletion = {[unowned self] ( error) in
+            self.tableviewIndexPath = indexPath
+            
+            var vManufacutrerNameArray = NSArray()
+            var vManufacutrerDetailsArray = NSArray()
+            vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmplePerBag")
+            vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "bagNo") as? NSArray ?? NSArray()
+            if  vManufacutrerNameArray.count > 0 {
+                self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleBag.frame.width, kAnchor: cell.tfAmpleBag, yheight: cell.tfAmpleBag.bounds.height) { [unowned self] selectedVal, index  in
+                    self.inovojectData[indexPath.row].ampulePerBag = selectedVal
+                    let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
+                    if c == 0 {
+                    }
+                    
+                    let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
+                    let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
+                    if  b != 0 && a != 0 && b != 0{
+                        let x = a * b
+                        let y = c/0.05
+                        let z = x/y
+                        
+                        let r  = Rational(approximating: z)
+                        let n = String(r.numerator)
+                        let d = String(r.denominator)
+                        if regionID == 3 {
+                            self.inovojectData[indexPath.row].dosage = n + "/" + d
+                        }
+                        else
+                        {
+                            self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
+                        }
+                        
+                    }
+                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
+                    UIView.performWithoutAnimation {
+                        self.tableview.reloadData()
+                    }
+                }
+                self.dropHiddenAndShow()
+            }
+        }
+    }
+    
+    fileprivate func manageNameCompletion(_ cell: InovojectNewTableViewCell, _ indexPath: IndexPath) {
+        cell.nameCompletion = {[unowned self] ( text) in
+            self.tableviewIndexPath = indexPath
+            
+            var vManufacutrerNameArray = NSArray()
+            var vManufacutrerIDArray = NSArray()
+            var vManufacutrerDetailsArray = NSArray()
+            vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+            vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+            vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+            var _ : [Int] = []
+            var vNameFilterArray : [String] = []
+            var vNameArray = NSArray()
+            _ = NSArray()
+            var vNameDetailsArray = NSArray()
+            _ = NSArray()
+            vNameDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
+            vNameArray = vNameDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+            vNameFilterArray = vNameArray as? [String] ?? []
+            
+            if vNameFilterArray.count > 0 {
+                self.dropDownVIewNew(arrayData: vNameFilterArray as? [String] ?? [String](), kWidth: cell.tfVaccineMan.frame.width, kAnchor: cell.tfVaccineMan, yheight: cell.tfVaccineMan.bounds.height) { [unowned self] selectedVal, index  in
+                    self.inovojectData[indexPath.row].name = selectedVal
+                    
+                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
+                    
+                    UIView.performWithoutAnimation {
+                        self.tableview.reloadData()
+                    }
+                }
+                self.dropHiddenAndShow()
+            }
+        }
+    }
+    
+    func setupInovojectCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> InovojectNewTableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: InovojectNewTableViewCell.identifier) as? InovojectNewTableViewCell{
+            cellConfiguration(indexPath, cell)
+            manageBagSizeCompletion(cell, indexPath)
             cell.programCompletion = {[unowned self] ( text) in
                 self.inovojectData[indexPath.row].invoProgramName = text ?? ""
                 
-                if self.inovojectData.count > 0 && self.inovojectData[indexPath.row].invoProgramName != ""
-                {
+                if self.inovojectData.count > 0 && self.inovojectData[indexPath.row].invoProgramName != "" {
                     CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
                 }
                 self.tableview.reloadData()
@@ -1655,125 +1784,10 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
                 CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
             }
-            cell.ampleSizeCompletion  = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                var vManufacutrerNameArray = NSArray()
-                _ = NSArray()
-                var vManufacutrerDetailsArray = NSArray()
-                vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "size") as? NSArray ?? NSArray()
-                
-                self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleSize.frame.width, kAnchor: cell.tfAmpleSize, yheight: cell.tfAmpleSize.bounds.height) { [unowned self] selectedVal, index  in
-                    
-                    let  selectedValIS = selectedVal.replacingOccurrences(of: " ", with: "")
-                    let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
-                    if c == 0 {
-                        self.showtoast(message: incompleteDataStr)
-                        CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
-                        
-                        return
-                    }
-                    self.inovojectData[indexPath.row].ampuleSize = selectedValIS
-                    let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
-                    let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
-                    if a != 0 {
-                        let x = a * b
-                        let y = c/0.05
-                        let z = x/y
-                        
-                        let r  = Rational(approximating: z)
-                        let n = String(r.numerator)
-                        let d = String(r.denominator)
-                        if regionID == 3 {
-                            self.inovojectData[indexPath.row].dosage = n + "/" + d
-                        }
-                        else
-                        {
-                            self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
-                        }
-                    }
-                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
-                    UIView.performWithoutAnimation {
-                        self.tableview.reloadData()
-                    }
-                }
-                self.dropHiddenAndShow()
-            }
             
-            cell.amplePerBagCompletion  = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                
-                var vManufacutrerNameArray = NSArray()
-                var vManufacutrerDetailsArray = NSArray()
-                vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmplePerBag")
-                vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "bagNo") as? NSArray ?? NSArray()
-                if  vManufacutrerNameArray.count > 0 {
-                    self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleBag.frame.width, kAnchor: cell.tfAmpleBag, yheight: cell.tfAmpleBag.bounds.height) { [unowned self] selectedVal, index  in
-                        self.inovojectData[indexPath.row].ampulePerBag = selectedVal
-                        let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
-                        if c == 0 {
-                        }
-                        
-                        let a = Double(self.inovojectData[indexPath.row].ampulePerBag ?? "0") ?? 0
-                        let b = Double(self.inovojectData[indexPath.row].ampuleSize ?? "0") ?? 0
-                        if  b != 0 && a != 0 && b != 0{
-                            let x = a * b
-                            let y = c/0.05
-                            let z = x/y
-                            
-                            let r  = Rational(approximating: z)
-                            let n = String(r.numerator)
-                            let d = String(r.denominator)
-                            if regionID == 3 {
-                                self.inovojectData[indexPath.row].dosage = n + "/" + d
-                            }
-                            else
-                            {
-                                self.inovojectData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
-                            }
-                            
-                        }
-                        CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
-                        UIView.performWithoutAnimation {
-                            self.tableview.reloadData()
-                        }
-                    }
-                    self.dropHiddenAndShow()
-                }
-            }
-            
-            cell.nameCompletion  = {[unowned self] ( text) in
-                self.tableviewIndexPath = indexPath
-                
-                var vManufacutrerNameArray = NSArray()
-                var vManufacutrerIDArray = NSArray()
-                var vManufacutrerDetailsArray = NSArray()
-                vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                var _ : [Int] = []
-                var vNameFilterArray : [String] = []
-                var vNameArray = NSArray()
-                _ = NSArray()
-                var vNameDetailsArray = NSArray()
-                _ = NSArray()
-                vNameDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                vNameArray = vNameDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                vNameFilterArray = vNameArray as? [String] ?? []
-                
-                if  vNameFilterArray.count > 0 {
-                    self.dropDownVIewNew(arrayData: vNameFilterArray as? [String] ?? [String](), kWidth: cell.tfVaccineMan.frame.width, kAnchor: cell.tfVaccineMan, yheight: cell.tfVaccineMan.bounds.height) { [unowned self] selectedVal, index  in
-                        self.inovojectData[indexPath.row].name = selectedVal
-                        
-                        CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
-                        
-                        UIView.performWithoutAnimation {
-                            self.tableview.reloadData()
-                        }
-                    }
-                    self.dropHiddenAndShow()
-                }
-            }
+            handleAmpleSizeCompletion(cell, indexPath)
+            manageAmplePerBagCompletion(cell, indexPath)
+            manageNameCompletion(cell, indexPath)
             
             return cell
         }
@@ -1783,45 +1797,144 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     // MARK: - Setup day of age
     
-    func setupDayOfAgeCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> InovojectCell {
-        
-        if let cell = tableView.dequeueReusableCell(withIdentifier: InovojectCell.identifier) as? InovojectCell{
-            cell.config(data:dayOfAgeData[indexPath.row],isDayOfAge:true)
+    fileprivate func handleVaccineManufacturerCompletion(_ cell: InovojectCell, _ indexPath: IndexPath) {
+        cell.vaccineManufacturerCompletion = {[unowned self] ( error) in
+            self.tableviewIndexPath = indexPath
             
-            cell.vaccineManufacturerCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
+            var vManufacutrerNameArray = NSArray()
+            var vManufacutrerIDArray = NSArray()
+            var vManufacutrerDetailsArray = NSArray()
+            vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+            vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+            vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+            if  vManufacutrerNameArray.count > 0 {
+                self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfVaccineMan.frame.width, kAnchor: cell.tfVaccineMan, yheight: cell.tfVaccineMan.bounds.height) { [unowned self] selectedVal, index  in
+                    self.dayOfAgeData[indexPath.row].vaccineMan = selectedVal
+                    if selectedVal == "Other"{
+                        UIView.performWithoutAnimation {
+                            self.tableview.reloadData()
+                        }
+                    } else {
+                        UIView.performWithoutAnimation {
+                            self.tableview.reloadData()
+                        }
+                        
+                    }
+                    self.dayOfAgeData[indexPath.row].name = ""
+                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeData[indexPath.row])
+                    UIView.performWithoutAnimation {
+                        self.tableview.reloadData()
+                    }
+                }
+                self.dropHiddenAndShow()
+            }
+            
+        }
+    }
+    
+    fileprivate func handleAmplePerBagCompletion(_ cell: InovojectCell, _ indexPath: IndexPath) {
+        cell.amplePerBagCompletion = {[unowned self] ( error) in
+            self.tableviewIndexPath = indexPath
+            
+            var vManufacutrerNameArray = NSArray()
+            _ = NSArray()
+            var vManufacutrerDetailsArray = NSArray()
+            vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmplePerBag")
+            vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "bagNo") as? NSArray ?? NSArray()
+            if  vManufacutrerNameArray.count > 0 {
                 
+                self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleBag.frame.width, kAnchor: cell.tfAmpleBag, yheight: cell.tfAmpleBag.bounds.height) { [unowned self] selectedVal, index  in
+                    
+                    self.dayOfAgeData[indexPath.row].ampulePerBag = selectedVal
+                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeData[indexPath.row])
+                    UIView.performWithoutAnimation {
+                        self.tableview.reloadData()
+                    }
+                }
+            }
+            self.dropHiddenAndShow()
+        }
+    }
+    
+    fileprivate func handleNameCompletion(_ cell: InovojectCell, _ indexPath: IndexPath) {
+        cell.nameCompletion = {[unowned self] (text) in
+            self.tableviewIndexPath = indexPath
+            if text != "" {
+                self.dayOfAgeData[indexPath.row].name = text
+                CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeData[indexPath.row])
+                
+                UIView.performWithoutAnimation {
+                    self.tableview.reloadData()
+                }
+            } else {
+                var ManufacturerId = 0
                 var vManufacutrerNameArray = NSArray()
                 var vManufacutrerIDArray = NSArray()
                 var vManufacutrerDetailsArray = NSArray()
                 vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
                 vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
                 vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                if  vManufacutrerNameArray.count > 0 {
-                    self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfVaccineMan.frame.width, kAnchor: cell.tfVaccineMan, yheight: cell.tfVaccineMan.bounds.height) { [unowned self] selectedVal, index  in
-                        self.dayOfAgeData[indexPath.row].vaccineMan = selectedVal
-                        if selectedVal == "Other"{
-                            UIView.performWithoutAnimation {
-                                self.tableview.reloadData()
-                            }
-                        } else {
-                            UIView.performWithoutAnimation {
-                                self.tableview.reloadData()
-                            }
-                            
-                        }
-                        self.dayOfAgeData[indexPath.row].name = ""
+                let xxx = self.dayOfAgeData[indexPath.row].vaccineMan ?? ""
+                if xxx != "" {
+                    let indexOfd = vManufacutrerNameArray.index(of: xxx)
+                    ManufacturerId = vManufacutrerIDArray[indexOfd] as? Int ?? 0
+                }
+                var indexArray : [Int] = []
+                var vNameFilterArray : [String] = []
+                var vNameArray = NSArray()
+                var vNameIDArray = NSArray()
+                var vNameDetailsArray = NSArray()
+                var vNameMfgIdArray = NSArray()
+                vNameDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
+                vNameArray = vNameDetailsArray.value(forKey: "name")  as? NSArray ?? NSArray()
+                vNameIDArray = vNameDetailsArray.value(forKey: "id")  as? NSArray ?? NSArray()
+                vNameIDArray = vNameDetailsArray.value(forKey: "id")  as? NSArray ?? NSArray()
+                vNameMfgIdArray = vNameDetailsArray.value(forKey: "mfgId")  as? NSArray ?? NSArray()
+                var x = -1
+                for obj in vNameMfgIdArray {
+                    x = x + 1
+                    if obj as? Int ?? 0 == ManufacturerId {
+                        _ = vNameMfgIdArray.index(of: obj) // 3
+                        indexArray.append(x)
+                    }
+                }
+                _ = vNameMfgIdArray.index(of: ManufacturerId)
+                for index in indexArray {
+                    
+                    _ = vNameArray[index] as? String ?? ""
+                }
+                vNameFilterArray = vNameArray as? [String] ?? [String]()
+                
+                
+                if vNameFilterArray.count > 0 {
+                    self.dropDownVIewNew(arrayData: vNameFilterArray as? [String] ?? [String](), kWidth: cell.tfName.frame.width, kAnchor: cell.tfName, yheight: cell.tfName.bounds.height) { [unowned self] selectedVal, index  in
+                        self.dayOfAgeData[indexPath.row].name = selectedVal
+                        let manufId = vNameMfgIdArray[index] as? Int64 ?? 0
+                        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName")  as? NSArray ?? NSArray()
+                        vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id")  as? NSArray ?? NSArray()
+                        _ =  vManufacutrerIDArray.index(of: manufId as? Int64 ?? 0)
+                        
                         CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeData[indexPath.row])
+                        
                         UIView.performWithoutAnimation {
                             self.tableview.reloadData()
                         }
                     }
                     self.dropHiddenAndShow()
                 }
-                
             }
+            self.view.endEditing(true)
+        }
+    }
+    
+    func setupDayOfAgeCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> InovojectCell {
+        
+        if let cell = tableView.dequeueReusableCell(withIdentifier: InovojectCell.identifier) as? InovojectCell{
+            cell.config(data:dayOfAgeData[indexPath.row],isDayOfAge:true)
             
-            cell.ampleSizeCompletion  = {[unowned self] ( error) in
+            handleVaccineManufacturerCompletion(cell, indexPath)
+            
+            cell.ampleSizeCompletion = {[unowned self] ( error) in
                 self.tableviewIndexPath = indexPath
                 
                 var vManufacutrerNameArray = NSArray()
@@ -1840,27 +1953,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 self.dropHiddenAndShow()
             }
             
-            cell.amplePerBagCompletion  = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                
-                var vManufacutrerNameArray = NSArray()
-                _ = NSArray()
-                var vManufacutrerDetailsArray = NSArray()
-                vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmplePerBag")
-                vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "bagNo") as? NSArray ?? NSArray()
-                if  vManufacutrerNameArray.count > 0 {
-                    
-                    self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleBag.frame.width, kAnchor: cell.tfAmpleBag, yheight: cell.tfAmpleBag.bounds.height) { [unowned self] selectedVal, index  in
-                        
-                        self.dayOfAgeData[indexPath.row].ampulePerBag = selectedVal
-                        CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeData[indexPath.row])
-                        UIView.performWithoutAnimation {
-                            self.tableview.reloadData()
-                        }
-                    }
-                }
-                self.dropHiddenAndShow()
-            }
+            handleAmplePerBagCompletion(cell, indexPath)
             
             cell.doseCompletion  = {[unowned self] ( error) in
                 var vManufacutrerNameArray = NSArray()
@@ -1882,77 +1975,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
             
-            cell.nameCompletion  = {[unowned self] ( text) in
-                self.tableviewIndexPath = indexPath
-                if text != "" {
-                    self.dayOfAgeData[indexPath.row].name = text
-                    CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeData[indexPath.row])
-                    
-                    UIView.performWithoutAnimation {
-                        self.tableview.reloadData()
-                    }
-                }else {
-                    var ManufacturerId = 0
-                    var vManufacutrerNameArray = NSArray()
-                    var vManufacutrerIDArray = NSArray()
-                    var vManufacutrerDetailsArray = NSArray()
-                    vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                    vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                    vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    let xxx = self.dayOfAgeData[indexPath.row].vaccineMan ?? ""
-                    if xxx != "" {
-                        let indexOfd = vManufacutrerNameArray.index(of: xxx)
-                        ManufacturerId = vManufacutrerIDArray[indexOfd] as? Int ?? 0
-                    } else {
-                        
-                    }
-                    var indexArray : [Int] = []
-                    var vNameFilterArray : [String] = []
-                    var vNameArray = NSArray()
-                    var vNameIDArray = NSArray()
-                    var vNameDetailsArray = NSArray()
-                    var vNameMfgIdArray = NSArray()
-                    vNameDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
-                    vNameArray = vNameDetailsArray.value(forKey: "name")  as? NSArray ?? NSArray()
-                    vNameIDArray = vNameDetailsArray.value(forKey: "id")  as? NSArray ?? NSArray()
-                    vNameIDArray = vNameDetailsArray.value(forKey: "id")  as? NSArray ?? NSArray()
-                    vNameMfgIdArray = vNameDetailsArray.value(forKey: "mfgId")  as? NSArray ?? NSArray()
-                    var x = -1
-                    for obj in vNameMfgIdArray {
-                        x = x + 1
-                        if obj as? Int ?? 0 == ManufacturerId
-                        {
-                            _ = vNameMfgIdArray.index(of: obj) // 3
-                            indexArray.append(x)
-                        }
-                    }
-                    _ = vNameMfgIdArray.index(of: ManufacturerId)
-                    for index in indexArray {
-                        
-                        _ = vNameArray[index] as? String ?? ""
-                    }
-                    vNameFilterArray = vNameArray as? [String] ?? [String]()
-                    
-                    
-                    if  vNameFilterArray.count > 0 {
-                        self.dropDownVIewNew(arrayData: vNameFilterArray as? [String] ?? [String](), kWidth: cell.tfName.frame.width, kAnchor: cell.tfName, yheight: cell.tfName.bounds.height) { [unowned self] selectedVal, index  in
-                            self.dayOfAgeData[indexPath.row].name = selectedVal
-                            let manufId = vNameMfgIdArray[index] as? Int64 ?? 0
-                            vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName")  as? NSArray ?? NSArray()
-                            vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id")  as? NSArray ?? NSArray()
-                            _ =  vManufacutrerIDArray.index(of: manufId as? Int64 ?? 0)
-                            
-                            CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeData[indexPath.row])
-                            
-                            UIView.performWithoutAnimation {
-                                self.tableview.reloadData()
-                            }
-                        }
-                        self.dropHiddenAndShow()
-                    }
-                }
-                self.view.endEditing(true)
-            }
+            handleNameCompletion(cell, indexPath)
             DispatchQueue.main.async {
                 cell.gradientVIew.setGradient(topGradientColor: UIColor.getGradientUpperColor(), bottomGradientColor: UIColor.getGradientLowerColor())
             }

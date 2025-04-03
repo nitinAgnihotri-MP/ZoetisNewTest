@@ -1453,7 +1453,33 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     
-    func callRequest4(paramForImages:JSONDictionary){
+    fileprivate func checkSyncArr() {
+        if ConnectionManager.shared.hasConnectivity() {
+            if self.callRequest4Int == 0 {
+                
+                ExtendedMicroApi(self)
+                
+                let syncArr = self.getAssessmentInOfflineFromDb()
+                if syncArr > 0 {
+                    self.isSync = false
+                    self.dismissGlobalHUD(self.view)
+                    self.syncBtnTapped(showHud: false)
+                    Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
+                } else {
+                    self.dismissGlobalHUD(self.view)
+                    Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
+                    for i in self.totalImageToSync {
+                        CoreDataHandlerPE().setImageStatusTrue(idArray: i)
+                    }
+                    self.showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
+                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+                    self.dismissGlobalHUD(self.view)
+                }
+            }
+        }
+    }
+    
+    func callRequest4(paramForImages:JSONDictionary) {
         self.convertDictToJson(dict: paramForImages, apiName: "Test")
         callRequest4Int = callRequest4Int + 1
         Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
@@ -1473,9 +1499,8 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             }
             guard let `self` = self, error == nil else { return }
             self.dismissGlobalHUD(self.view)
-            if json["StatusCode"]  == 200{
-                if self.saveTypeString.contains(11)
-                {
+            if json["StatusCode"]  == 200 {
+                if self.saveTypeString.contains(11) {
                     if self.saveTypeString.contains(00) {
                         CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
                     }
@@ -1484,33 +1509,10 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                     CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
                 }
                 
-                if ConnectionManager.shared.hasConnectivity() {
-                    if self.callRequest4Int == 0 {
-                        
-                        ExtendedMicroApi(self)
-                        
-                        let syncArr = self.getAssessmentInOfflineFromDb()
-                        if syncArr > 0{
-                            self.isSync = false
-                            self.dismissGlobalHUD(self.view)
-                            self.syncBtnTapped(showHud: false)
-                            Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
-                        } else {
-                            self.dismissGlobalHUD(self.view)
-                            Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
-                            for i in self.totalImageToSync{
-                                CoreDataHandlerPE().setImageStatusTrue(idArray: i)
-                            }
-                            self.showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
-                            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                            self.dismissGlobalHUD(self.view)
-                        }
-                    }
-                }
+                checkSyncArr()
             } else {
                 self.dismissGlobalHUD(self.view)
             }
-            
         })
     }
     
@@ -3902,15 +3904,47 @@ extension PEDashboardViewController{
         }
     }
     // MARK: - Get All Assessment's Category Responce
+    fileprivate func handleVaccineCertificate(_ jsonData: Data?, _ jsonDecoder: JSONDecoder) {
+        if let data = jsonData {
+            let vaccinationCertificationObj = try? jsonDecoder.decode([ExtendedPECategoryDTO].self, from: data)
+            
+            if vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0 {
+                let index = vaccinationCertificationObj?.firstIndex(where: {
+                    $0.id == 36
+                })
+                if index != nil {
+                    let embrex =  vaccinationCertificationObj![index!]
+                    SanitationEmbrexQuestionMasterDAO.sharedInstance.saveExtendedPEQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", plateTypeDTO: [embrex])
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleResponseJSONDict(_ json: JSON) {
+        let mainQueue = OperationQueue.main
+        mainQueue.addOperation{
+            if let responseJSONDict = json.dictionary {
+                if let response = responseJSONDict["Data"] {
+                    let jsonDecoder = JSONDecoder()
+                    let responseStr = response.description
+                    if responseStr != "" {
+                        let jsonData = try? Data(responseStr.utf8)
+                        self.handleVaccineCertificate(jsonData, jsonDecoder)
+                    }
+                }
+            }
+            self.handleAssessmentCategoriesResponse(json)
+        }
+    }
+    
     internal func fetchtAssessmentCategoriesResponse(){
         if ConnectionManager.shared.hasConnectivity() {
             var evalTypeId = ""
             let regionId = UserDefaults.standard.integer(forKey: "Regionid")
+            evalTypeId = String(peNewAssessment?.evalType?.id ?? 1)
+
             if regionId == 3 {
                 evalTypeId = String(peNewAssessment?.evalType?.id ?? 0)
-            }
-            else {
-                evalTypeId = String(peNewAssessment?.evalType?.id ?? 1)
             }
             
             ZoetisWebServices.shared.getAssessmentCategoriesDetailsPE(controller: self, evalType:evalTypeId, moduleID: "1"  , parameters: [:], completion: { [weak self] (json, error) in
@@ -3918,33 +3952,7 @@ extension PEDashboardViewController{
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     return
                 }
-                let mainQueue = OperationQueue.main
-                mainQueue.addOperation{
-                    if let responseJSONDict = json.dictionary{
-                        if let response = responseJSONDict["Data"]{
-                            
-                            let jsonDecoder = JSONDecoder()
-                            let responseStr = response.description
-                            if responseStr != ""{
-                                let jsonData = try? Data(responseStr.utf8)
-                                if let data = jsonData{
-                                    let vaccinationCertificationObj = try? jsonDecoder.decode([ExtendedPECategoryDTO].self, from: data)
-                                    
-                                    if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                        let index = vaccinationCertificationObj?.firstIndex(where: {
-                                            $0.id == 36
-                                        })
-                                        if index != nil{
-                                            let embrex =  vaccinationCertificationObj![index!]
-                                            SanitationEmbrexQuestionMasterDAO.sharedInstance.saveExtendedPEQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", plateTypeDTO: [embrex])
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    self?.handleAssessmentCategoriesResponse(json)
-                }
+                self?.handleResponseJSONDict(json)
             })
         }else{
             self.showToastWithTimer(message: "Failed to get Question's List", duration: 3.0)
@@ -4645,6 +4653,56 @@ extension PEDashboardViewController{
     }
     
     // MARK: - Get Vaccine Service Responce
+    fileprivate func handlePEAssessmentArray(_ peAssessmentArray: inout [PENewAssessment]) {
+        for obj in peAssessmentArray {
+            if obj.statusType ?? 0 == 3{
+                if self.scheduleAssessmentIdArray.count > 0 {
+                    if !(self.scheduleAssessmentIdArray.contains(obj.serverAssessmentId ?? "")) {
+                        self.deletedAssessmentIdArray.append(obj.serverAssessmentId!)
+                        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+                        let index = peAssessmentArray.firstIndex(of: obj) ?? 0
+                        peAssessmentArray.remove(at: index)
+                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self.userIdStr, userID, obj.serverAssessmentId ?? ""))
+                    }
+                } else {
+                    self.deletedAssessmentIdArray.append(obj.serverAssessmentId!)
+                    let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+                    let index = peAssessmentArray.index(of: obj) ?? 0
+                    peAssessmentArray.remove(at: index)
+                    CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self.userIdStr, userID, obj.serverAssessmentId ?? ""))
+                }
+            }
+        }
+    }
+    
+    fileprivate func handlePEAssrray(_ peAssessmentNewArray: [PENewAssessment], _ peAssessmentArray: [PENewAssessment],_ showHud:Bool) {
+        if peAssessmentNewArray.count > 0{
+            if self.deletedAssessmentIdArray.count > 0 {
+                let alertController = UIAlertController(title: Constants.alertStr, message: String(format: "%d assessment(s) has been removed from the web. App data will be updated.", self.deletedAssessmentIdArray.count ?? 0), preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                    _ in
+                    if peAssessmentArray.count > 0{
+                        self.syncBtnTapped(showHud: showHud)
+                    }else{
+                        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+                        for id in self.deletedAssessmentIdArray {
+                            CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self.userIdStr, userID, id))
+                        }
+                        self.peHeaderViewController.titleofSync = "0"
+                        self.peHeaderViewController.viewDidLoad()
+                        self.getScheduledAssessments()
+                    }
+                }
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+            } else {
+                self.syncBtnTapped(showHud: showHud)
+            }
+         }else {
+            self.syncBtnTapped(showHud: showHud)
+        }
+    }
+    
     func getVaccinationServiceResponse(showHud:Bool){
         self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
         let id = UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound
@@ -4677,51 +4735,8 @@ extension PEDashboardViewController{
             self?.deletedAssessmentIdArray = []
             peAssessmentArray = self?.getAllDateArrayStoredNew() ?? []
             let peAssessmentNewArray = self?.getAllDateArrayStored() ?? []
-            for obj in peAssessmentArray{
-                if obj.statusType ?? 0 == 3{
-                    if self?.scheduleAssessmentIdArray.count ?? 0 > 0{
-                        if !(self?.scheduleAssessmentIdArray.contains(obj.serverAssessmentId ?? "") ?? true){
-                            self?.deletedAssessmentIdArray.append(obj.serverAssessmentId!)
-                            let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-                            let index = peAssessmentArray.index(of: obj) ?? 0
-                            peAssessmentArray.remove(at: index)
-                            CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self!.userIdStr, userID, obj.serverAssessmentId ?? ""))
-                        }
-                    }else{
-                        self?.deletedAssessmentIdArray.append(obj.serverAssessmentId!)
-                        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-                        let index = peAssessmentArray.index(of: obj) ?? 0
-                        peAssessmentArray.remove(at: index)
-                        CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self!.userIdStr, userID, obj.serverAssessmentId ?? ""))
-                    }
-                }
-            }
-            
-            if peAssessmentNewArray.count > 0{
-                if self?.deletedAssessmentIdArray.count ?? 0 > 0{
-                    let alertController = UIAlertController(title: Constants.alertStr, message: String(format: "%d assessment(s) has been removed from the web. App data will be updated.", self?.deletedAssessmentIdArray.count ?? 0), preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                        _ in
-                        if peAssessmentArray.count > 0{
-                            self?.syncBtnTapped(showHud: showHud)
-                        }else{
-                            let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-                            for id in self?.deletedAssessmentIdArray ?? []{
-                                CoreDataHandlerPE().deleteExisitingData(entityName: "PE_AssessmentInOffline", predicate: NSPredicate(format: self!.userIdStr, userID, id))
-                            }
-                            self?.peHeaderViewController.titleofSync = "0"
-                            self?.peHeaderViewController.viewDidLoad()
-                            self?.getScheduledAssessments()
-                        }
-                    }
-                    alertController.addAction(okAction)
-                    self?.present(alertController, animated: true, completion: nil)
-                }else{
-                    self?.syncBtnTapped(showHud: showHud)
-                }
-            }else{
-                self?.syncBtnTapped(showHud: showHud)
-            }
+            self?.handlePEAssessmentArray(&peAssessmentArray)
+            self?.handlePEAssrray(peAssessmentNewArray, peAssessmentArray,showHud)
         })
     }
 }
