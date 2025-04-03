@@ -261,7 +261,7 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
                 print("success")
                 if !isToastShown {
                     self.isToastShown = true
-                    showToastWithTimer(message: "Data sync has been completed.", duration: 2.0)
+                    showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
                     
                 }
                 DispatchQueue.main.async {
@@ -747,7 +747,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 showtoast(message: "Data syncing")
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
         }
     }
     
@@ -797,7 +797,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 extractedFunc1(syncArr)
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
         }
     }
     
@@ -873,7 +873,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 
             } else {
                 
-                showToastWithTimer(message: "Data sync has been completed.", duration: 2.0)
+                showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
                 DispatchQueue.main.async {
                     self.dismissGlobalHUD(self.view)
                     self.stopHud()
@@ -1594,7 +1594,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         let request = NSMutableURLRequest(url: url! as URL)
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: Constants.contentType)
         request.setValue("\(String(describing: UserDefaults.standard.value(forKey: "Id") ?? 0))", forHTTPHeaderField: "UserId") //**
-        request.setValue("\(String(describing: UserDefaults.standard.value(forKey: "aceesTokentype") ?? ""))", forHTTPHeaderField: "Authorization") //**
+        request.setValue("\(String(describing: UserDefaults.standard.value(forKey: Constants.accessToken) ?? ""))", forHTTPHeaderField: Constants.authorization) //**
         
         request.httpMethod = method
         

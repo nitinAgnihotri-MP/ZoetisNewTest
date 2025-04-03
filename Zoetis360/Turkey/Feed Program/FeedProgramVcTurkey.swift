@@ -1328,6 +1328,62 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         }
     }
     
+    fileprivate func setTargetWeightArrData(_ i: Int) {
+        let scaleType = (targetArray.value(forKey:"ScaleType") as AnyObject).object(at:i) as! String
+        
+        if "Metric" == scaleType {
+            
+            arrTagetMetric.add((targetArray.value(forKey:"TargetWeightProcessingName") as AnyObject).object(at:i) as! String)
+            
+        } else if("Imperial" == scaleType){
+            arrTargetImp.add((targetArray.value(forKey:"TargetWeightProcessingName") as AnyObject).object(at:i) as! String)
+        }
+    }
+    
+    fileprivate func setSelectedFarmName() {
+        let ftitle = NSMutableString()
+        
+        for i in 0..<feedNameArr.count
+        {
+            let farms = feedNameArr.object(at:i) as! CaptureNecropsyDataTurkey
+            let strfarmName = farms.farmName! as String
+            // addFarmSelectLbl.text = strfarmName
+            var label:UILabel
+            if (i == 0){
+                label = UILabel()
+                label.frame = CGRect(x: 50, y: 519, width: 111, height: 21)
+                ftitle.append( strfarmName + " " )
+                
+            }
+            
+            else{
+                
+                label  = UILabel()
+                label.frame = CGRect(x: 50, y: 519, width: 111*(CGFloat(i)+1)+10, height: 21)
+                
+                ftitle.append(", " + strfarmName + " " )
+                
+            }
+            
+            label.textAlignment = NSTextAlignment.center
+            label.backgroundColor = UIColor.red
+            
+            addFarmSelectLbl.text = ftitle as String
+        }
+    }
+    
+    fileprivate func setDifferentVaccinationDatainArr() {
+        if addfeed == "addfeed" {
+            feedProgadd = "ExtingFeeed"
+        }
+        else{
+            cocciControlArray = CoreDataHandlerTurkey().fetchAllCocciControlTurkey(self.FeedIdFromExisting as NSNumber)
+            AntiboticArray = CoreDataHandlerTurkey().fetchAntiboticTurkey(self.FeedIdFromExisting as NSNumber)
+            AlternativeArray = CoreDataHandlerTurkey().fetchAlternativeTurkey(self.FeedIdFromExisting as NSNumber)
+            MyCoxtinBindersArray = CoreDataHandlerTurkey().fetchMyBindersTurkey(self.FeedIdFromExisting as NSNumber)
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         spacingInTxtField()
         
@@ -1345,15 +1401,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         arrTargetImp.removeAllObjects()
         arrTagetMetric.removeAllObjects()
         for i in 0..<targetArray.count{
-            let scaleType = (targetArray.value(forKey:"ScaleType") as AnyObject).object(at:i) as! String
-            
-            if "Metric" == scaleType {
-                
-                arrTagetMetric.add((targetArray.value(forKey:"TargetWeightProcessingName") as AnyObject).object(at:i) as! String)
-                
-            } else if("Imperial" == scaleType){
-                arrTargetImp.add((targetArray.value(forKey:"TargetWeightProcessingName") as AnyObject).object(at:i) as! String)
-            }
+            setTargetWeightArrData(i)
         }
         
         if navigatePostingsession == "PostingFeedProgram"{
@@ -1365,15 +1413,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         }
         
         else if postingIdFromExistingNavigate == "Exting"{
-            if addfeed == "addfeed" {
-                feedProgadd = "ExtingFeeed"
-            }
-            else{
-                cocciControlArray = CoreDataHandlerTurkey().fetchAllCocciControlTurkey(self.FeedIdFromExisting as NSNumber)
-                AntiboticArray = CoreDataHandlerTurkey().fetchAntiboticTurkey(self.FeedIdFromExisting as NSNumber)
-                AlternativeArray = CoreDataHandlerTurkey().fetchAlternativeTurkey(self.FeedIdFromExisting as NSNumber)
-                MyCoxtinBindersArray = CoreDataHandlerTurkey().fetchMyBindersTurkey(self.FeedIdFromExisting as NSNumber)
-            }
+            setDifferentVaccinationDatainArr()
             
         } else {
             
@@ -1432,35 +1472,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 
                 if (feedNameArr.count > 0)
                 {
-                    let ftitle = NSMutableString()
-                    
-                    for i in 0..<feedNameArr.count
-                    {
-                        let farms = feedNameArr.object(at:i) as! CaptureNecropsyDataTurkey
-                        let strfarmName = farms.farmName! as String
-                        // addFarmSelectLbl.text = strfarmName
-                        var label:UILabel
-                        if (i == 0){
-                            label = UILabel()
-                            label.frame = CGRect(x: 50, y: 519, width: 111, height: 21)
-                            ftitle.append( strfarmName + " " )
-                            
-                        }
-                        
-                        else{
-                            
-                            label  = UILabel()
-                            label.frame = CGRect(x: 50, y: 519, width: 111*(CGFloat(i)+1)+10, height: 21)
-                            
-                            ftitle.append(", " + strfarmName + " " )
-                            
-                        }
-                        
-                        label.textAlignment = NSTextAlignment.center
-                        label.backgroundColor = UIColor.red
-                        
-                        addFarmSelectLbl.text = ftitle as String
-                    }
+                    setSelectedFarmName()
                 }
                 
             }
@@ -2215,7 +2227,6 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                                                     CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(self.postingId)
                                                 }
                                                 
-                                                ////print("MyCoxtin")
                                                 
                                             }})
                                     }})
@@ -2237,14 +2248,13 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                             
                             if status == true {
                                 
-                                
                                 self.saveAlternativeDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
                                     
                                     if status == true {
                                         
-                                        
                                         self.saveMyCoxtinDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                            
+                                           
+                                            print("My coxtin Data saved")
                                         })
                                     }})
                             }})
@@ -2287,6 +2297,32 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                             }})
                     }})
             }})
+    }
+    
+    fileprivate func callSyncApiMethd() {
+        if self.exitPopUP.tag == 10{
+            if self.allSessionArr().count > 0
+            {
+                if ConnectionManager.shared.hasConnectivity() {
+                    Helper.showGlobalProgressHUDWithTitle(self.view,title : NSLocalizedString("Data syncing...", comment: ""))
+                    self.callSyncApi()
+                }
+                else {
+                    
+                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.offline, comment: ""))
+                }
+            } else{
+                
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
+            }
+            
+        }
+        else if self.exitPopUP.tag == 20{
+            self.clickHelp()
+        }
+        else{
+            self.navigationController?.popViewController(animated:true)
+        }
     }
     
     func callSaveMethod (btnTagSave : Int) {
@@ -2386,28 +2422,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 appDelegate.strImpFedd = feedImpandMetric
                 appDelegate.newColor = datCount + 1
                 if (exitPopUP != nil){
-                    if self.exitPopUP.tag == 10{
-                        if self.allSessionArr().count > 0
-                        {
-                            if ConnectionManager.shared.hasConnectivity() {
-                                Helper.showGlobalProgressHUDWithTitle(self.view,title : NSLocalizedString("Data syncing...", comment: ""))
-                                self.callSyncApi()
-                            }
-                            else {
-                                
-                                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
-                            }
-                        } else{
-                            
-                            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
-                        }
-                        
-                    }
-                    else if self.exitPopUP.tag == 20{
-                        self.clickHelp()
-                    }
-                    else{
-                        self.navigationController?.popViewController(animated:true)}
+                    callSyncApiMethd()
                 }
                 else{
                     self.navigationController?.popViewController(animated:true)}
@@ -3084,47 +3099,8 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         } else {
             
             let cell:UITableViewCell = tableView.cellForRow(at: indexPath as IndexPath)!
-            if btnTag == 0 {
-                
-                if Allbuttonbg == 0 {
-                    
-                    
-                    coccidsisStartrDrinking.text = (cocciControlArrayfromServer.value(forKey:"desc") as AnyObject).object(at:indexPath.row) as? String
-                    firstMolID = (cocciControlArrayfromServer.value(forKey:"moleculeId") as AnyObject).object(at:indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-                }
-                else if Allbuttonbg == 1 {
-                    coccidsisGrowerDrinking.text = (cocciControlArrayfromServer.value(forKey:"desc") as AnyObject).object(at:indexPath.row) as? String
-                    secoundMolID = (cocciControlArrayfromServer.value(forKey:"moleculeId") as AnyObject).object(at:indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-                }
-                
-                else if Allbuttonbg == 2 {
-                    cocciFinisherDrinkingWater.text = (cocciControlArrayfromServer.value(forKey:"desc") as AnyObject).object(at:indexPath.row) as? String
-                    thirdMolID = (cocciControlArrayfromServer.value(forKey:"moleculeId") as AnyObject).object(at:indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-                }
-                else if Allbuttonbg == 3 {
-                    
-                    coccidiosisWdDrinking.text = (cocciControlArrayfromServer.value(forKey:"desc") as AnyObject).object(at:indexPath.row) as? String
-                    fourthMolID = (cocciControlArrayfromServer.value(forKey:"moleculeId") as AnyObject).object(at:indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-                }
-                else if Allbuttonbg == 40 {
-                    fivthMoleculelBL.text = (cocciControlArrayfromServer.value(forKey:"desc") as AnyObject).object(at:indexPath.row) as? String
-                    fifthMolID = (cocciControlArrayfromServer.value(forKey:"moleculeId") as AnyObject).object(at:indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-                }
-                else if Allbuttonbg == 50 {
-                    
-                    sixthMoleculeLbl.text = (cocciControlArrayfromServer.value(forKey:"desc") as AnyObject).object(at:indexPath.row) as? String
-                    sixthMolID = (cocciControlArrayfromServer.value(forKey:"moleculeId") as AnyObject).object(at:indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-                }
-            }
-        
-            
-            else if btnTag == 4 {
+           
+            if btnTag == 4 {
                 
                 coccidiosisVaccineDrinkin.text = (cocodiceVacine.value(forKey:"cocoiiVacname") as AnyObject).object(at:indexPath.row) as? String
                 CocoiVacId = ((cocodiceVacine.value(forKey:"cocvaccId") as AnyObject).object(at:indexPath.row) as? NSNumber)!
@@ -3275,6 +3251,44 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 antiDosageSixTextField.text = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
                 isClickOnAnyField = true
                 
+            }
+            
+            if btnTag == 0 {
+                // Not sure this will work will check when we get the issue
+                switch Allbuttonbg {
+                case 0:
+                    coccidsisStartrDrinking.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    firstMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+                    
+                case 1:
+                    coccidsisGrowerDrinking.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    secoundMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+
+                case 2:
+                    cocciFinisherDrinkingWater.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    thirdMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+
+                case 3:
+                    coccidiosisWdDrinking.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    fourthMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+
+                case 40:
+                    fivthMoleculelBL.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    fifthMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+
+                case 50:
+                    sixthMoleculeLbl.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    sixthMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+
+                default:
+                    break
+                }
             }
             
         }
@@ -3435,7 +3449,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 self.ssologoutMethod()
                 CoreDataHandlerTurkey().deleteAllDataTurkey("CustmerTurkey")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)

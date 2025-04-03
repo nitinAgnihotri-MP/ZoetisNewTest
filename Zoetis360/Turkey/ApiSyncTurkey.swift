@@ -427,8 +427,8 @@ class ApiSyncTurkey: NSObject {
             if WebClass.sharedInstance.connected() {
                 
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+                let headerDict = [Constants.authorization:accestoken]
                 
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -438,7 +438,7 @@ class ApiSyncTurkey: NSObject {
                 if let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: []) {
                     request.httpBody = jsonData
                 } else {
-                    print("Failed to serialize JSON data")
+                    print(Constants.failedSerilazedJSON)
                 }
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -660,9 +660,9 @@ class ApiSyncTurkey: NSObject {
             
             if WebClass.sharedInstance.connected() {
                 let Url = "/PostingSession/SaveMultipleVaccinationsSyncData"
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -676,7 +676,7 @@ class ApiSyncTurkey: NSObject {
                 if let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: []) {
                     request.httpBody = jsonData
                 } else {
-                    print("Failed to serialize JSON data")
+                    print(Constants.failedSerilazedJSON)
                     // Handle error case, such as not making the request
                 }
                 
@@ -719,6 +719,19 @@ class ApiSyncTurkey: NSObject {
             }
         }
     }
+    fileprivate func necropsyDataApiFailed(_ encodingError: AFError, _ response: AFDataResponse<Any>) {
+        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+            self.delegeteSyncApiTurkey.failWithErrorInternal()
+            debugPrint(err)
+        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+            // other failures
+            debugPrint (encodingError)
+            debugPrint (responseString)
+            self.delegeteSyncApiTurkey.failWithErrorInternal()
+            
+        }
+    }
+    
     /********************* Save Posting data On Server ***************************/
     
     func savePostingDataOnServer(){
@@ -928,9 +941,9 @@ class ApiSyncTurkey: NSObject {
                 
                 
                 let Url = "PostingSession/T_SaveMultiplePostingsSyncData"
-               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-                let headerDict = ["Authorization":accestoken]
+               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+                let headerDict = [Constants.authorization:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
@@ -939,7 +952,7 @@ class ApiSyncTurkey: NSObject {
                 if let jsonData = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: []) {
                     request.httpBody = jsonData
                 } else {
-                    print("Failed to serialize JSON data")
+                    print(Constants.failedSerilazedJSON)
                 }
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
@@ -963,16 +976,7 @@ class ApiSyncTurkey: NSObject {
                         
                     case .failure(let encodingError):
                         
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            self.delegeteSyncApiTurkey.failWithErrorInternal()
-                            debugPrint(err)
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            // other failures
-                            debugPrint (encodingError)
-                            debugPrint (responseString)
-                            self.delegeteSyncApiTurkey.failWithErrorInternal()
-                        
-                        }
+                        self.necropsyDataApiFailed(encodingError, response)
                     }
                 }
             }
@@ -1181,9 +1185,9 @@ class ApiSyncTurkey: NSObject {
         do {
       
             if WebClass.sharedInstance.connected() {
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 let Url = "PostingSession/T_SaveMultipleNecropsySyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -1194,7 +1198,7 @@ class ApiSyncTurkey: NSObject {
                 if let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: []) {
                     request.httpBody = jsonData
                 } else {
-                    print("Failed to serialize JSON data")
+                    print(Constants.failedSerilazedJSON)
                     // Handle error case, such as not making the request
                 }
                 
@@ -1431,9 +1435,9 @@ class ApiSyncTurkey: NSObject {
    
             
             if WebClass.sharedInstance.connected() {
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-              //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 
                 let Url = "PostingSession/SaveBirdImageSyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
@@ -1445,7 +1449,7 @@ class ApiSyncTurkey: NSObject {
                 if let jsonData = try? JSONSerialization.data(withJSONObject: sessionDict, options: []) {
                     request.httpBody = jsonData
                 } else {
-                    print("Failed to serialize JSON data")
+                    print(Constants.failedSerilazedJSON)
                     // Handle error case, such as not making the request
                 }
                 
@@ -1711,9 +1715,9 @@ class ApiSyncTurkey: NSObject {
         if WebClass.sharedInstance.connected() {
             
             let Url = "Setting/T_SaveUserSetting"
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-            //accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict = ["Authorization":accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+            //accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict = [Constants.authorization:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             var request = URLRequest(url: URL(string: urlString)! )
             request.httpMethod = "POST"
@@ -1795,8 +1799,8 @@ class ApiSyncTurkey: NSObject {
                         
                         
                         let keychainHelper = AccessTokenHelper()
-                        keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: "aceesTokentype")
-//                        UserDefaults.standard.set(aceesTokentype,forKey: "aceesTokentype")
+                        keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
+//                        UserDefaults.standard.set(aceesTokentype,forKey: Constants.accessToken)
 //                        UserDefaults.standard.synchronize()
                         self.feedprogram()
                     }

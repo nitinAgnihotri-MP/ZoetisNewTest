@@ -318,7 +318,7 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
             var Id = Int()
             Id =  UserDefaults.standard.value(forKey: "Id") as! Int
             let Url = "Login/UpdateUserLog"
-            accesTokn = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
+            accesTokn = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             let parameters = ["UserID" :Id,"DeviceId":udid as! String,"LoginType":"iOS"] as [String : Any]
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             

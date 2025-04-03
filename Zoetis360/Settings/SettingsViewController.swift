@@ -61,7 +61,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         configuration.urlCache = nil
         return Session(configuration: configuration)
     }()
-    let offlineMsgAlert = "You are currently offline. Please go online to sync data."
+    let offlineMsgAlert = Constants.offline
     // MARK: - **************** View Life Cycle ***********************************/
     override func viewDidLoad() {
         print("<<<<",self)
@@ -535,9 +535,9 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         if WebClass.sharedInstance.connected() {
             
             let Url = "Setting/SaveUserSetting"
-            acessToken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-          //  acessToken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict = ["Authorization":acessToken]
+            acessToken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+          //  acessToken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict = [Constants.authorization:acessToken]
             
             let urlString: String = WebClass.sharedInstance.webUrl.appending(Url)
             var request = URLRequest(url: NSURL(string: urlString)! as URL)
@@ -791,7 +791,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
     func didFinishApi() {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
     }
     
     func failWithInternetConnection() {
@@ -881,8 +881,8 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         if WebClass.sharedInstance.connected() {
             
             let Url = "Setting/SaveUserSetting"
-            acessToken = (UserDefaults.standard.value(forKey:"aceesTokentype") as? String)!
-            let headerDict = ["Authorization":acessToken]
+            acessToken = (UserDefaults.standard.value(forKey:Constants.accessToken) as? String)!
+            let headerDict = [Constants.authorization:acessToken]
             let urlString: String = WebClass.sharedInstance.webUrl.appending(Url)
             let request = NSMutableURLRequest(url: NSURL(string: urlString)! as URL )
             request.httpMethod = "POST"

@@ -89,7 +89,10 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     @IBOutlet weak var ActiveSessionButton: UIButton!
     @IBOutlet weak var ReportsButton: UIButton!
     @IBOutlet weak var startSessionButton: UIButton!
+    let lightFontName = "HelveticaNeue-Light"
     let gigya =  Gigya.sharedInstance(GigyaAccount.self)
+    
+    let noDataAvalbl = "No data available from the server."
     
     private let sessionManager: Session = {
            let configuration = URLSessionConfiguration.default
@@ -336,10 +339,10 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         if WebClass.sharedInstance.connected() {
             Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.loadingStr)
             let keychainHelper = AccessTokenHelper()
-            accestoken = keychainHelper.getFromKeychain(keyed: "aceesTokentype") ?? ""
+            accestoken = keychainHelper.getFromKeychain(keyed: Constants.accessToken) ?? ""
             let headerDict: HTTPHeaders = [
-                "Authorization": accestoken,
-                "Cache-Control": "no-store, no-cache, must-revalidate, private"
+                Constants.authorization: accestoken,
+                "Cache-Control": Constants.noStoreNoCache
             ]
             let Id = UserDefaults.standard.integer(forKey: "Id")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
@@ -432,8 +435,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
 
         let url = WebClass.sharedInstance.webUrl + "Token"
         let headers: HTTPHeaders = [
-            "Authorization": accestoken,
-            "Cache-Control": "no-store, no-cache, must-revalidate, private",
+            Constants.authorization: accestoken,
+            "Cache-Control": Constants.noStoreNoCache,
             Constants.contentType: "application/x-www-form-urlencoded",
         ]
         let parameters: [String: String] = [
@@ -471,8 +474,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     let aceesTokentype: String = tokenType + " " + acessToken
                     _ = dict["HasAccess"]! as AnyObject
                     let keychainHelper = AccessTokenHelper()
-                    keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: "aceesTokentype")
-//                    UserDefaults.standard.set(aceesTokentype,forKey: "aceesTokentype")
+                    keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
+//                    UserDefaults.standard.set(aceesTokentype,forKey: Constants.accessToken)
 //                    UserDefaults.standard.synchronize()
                     self.callWebService()
                 default:
@@ -487,14 +490,14 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     func promtSyncing (){
         
         let alertController = UIAlertController(title: "", message: "", preferredStyle: .alert)
-        let titleFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: "HelveticaNeue-Light", size: 19.0)]
-        let messageFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: "HelveticaNeue-Light", size: 12.0)]
+        let titleFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: lightFontName, size: 19.0)]
+        let messageFont = [convertFromNSAttributedStringKey(NSAttributedString.Key.font) : UIFont(name: lightFontName, size: 12.0)]
         
         var myString = "Data available for sync. Do you want to sync now? \n\n\n *Note - Please don't minimize App while syncing."
         let titleAttrString = NSMutableAttributedString(string: Constants.alertStr, attributes: convertToOptionalNSAttributedStringKeyDictionary(titleFont))
         var messageAttrString = NSMutableAttributedString(string: myString , attributes: convertToOptionalNSAttributedStringKeyDictionary(messageFont))
         messageAttrString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: NSRange(location:50,length:52))
-        let font = UIFont(name: "HelveticaNeue-Light", size: 11.0)
+        let font = UIFont(name: lightFontName, size: 11.0)
         messageAttrString.addAttribute(NSAttributedString.Key.font, value:font!, range: NSRange.init(location: 50 , length: 52))
         
         alertController.setValue(titleAttrString, forKey: "attributedTitle")
@@ -614,6 +617,24 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     // ******************************* Get FormList From Server ************************************* //
     
     
+    fileprivate func saveFarmNameGetVetList(_ farmsArray: [[String : Any]]) {
+        self.getFormArray = NSMutableArray()
+        
+        // Process farm data
+        for farm in farmsArray {
+            let farmDict = NSMutableDictionary()
+            farmDict["CountryId"] = farm["CountryId"] as? Int
+            farmDict["FarmId"] = farm["FarmId"] as? Int
+            farmDict["FarmName"] = farm["FarmName"] as? String
+            self.getFormArray.add(farmDict)
+        }
+        
+        // Save to Core Data
+        CoreDataHandlerTurkey().deleteAllDataTurkey("FarmsListTurkey")
+        self.callSaveMethodgetListFarms(self.getFormArray)
+        self.callVeterianService()
+    }
+    
     func getListFarms() {
         guard WebClass.sharedInstance.connected() else {
             // Offline mode: Fetch data from Core Data
@@ -623,12 +644,12 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             }
             return
         }
-        accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-      //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
+        accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+      //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
         // Set up headers and parameters
         let headers: HTTPHeaders = [
-            "Authorization": accestoken,
-            "Cache-Control": "no-store, no-cache, must-revalidate, private"
+            Constants.authorization: accestoken,
+            "Cache-Control": Constants.noStoreNoCache
         ]
 
         let userId = UserDefaults.standard.integer(forKey: "Id")
@@ -669,21 +690,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 switch response.result {
                 case .success(let value):
                     if let farmsArray = value as? [[String: Any]] {
-                        self.getFormArray = NSMutableArray()
-                        
-                        // Process farm data
-                        for farm in farmsArray {
-                            let farmDict = NSMutableDictionary()
-                            farmDict["CountryId"] = farm["CountryId"] as? Int
-                            farmDict["FarmId"] = farm["FarmId"] as? Int
-                            farmDict["FarmName"] = farm["FarmName"] as? String
-                            self.getFormArray.add(farmDict)
-                        }
-                        
-                        // Save to Core Data
-                        CoreDataHandlerTurkey().deleteAllDataTurkey("FarmsListTurkey")
-                        self.callSaveMethodgetListFarms(self.getFormArray)
-                        self.callVeterianService()
+                        self.saveFarmNameGetVetList(farmsArray)
                     } else {
                         // No farms found, proceed to next service call
                         self.callVeterianService()
@@ -763,7 +770,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1051,7 +1058,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         toastLabel.textColor = UIColor.white
         toastLabel.textAlignment = .center;
         
-        toastLabel.font  = UIFont(name: "HelveticaNeue-Light", size: 14.0)
+        toastLabel.font  = UIFont(name: lightFontName, size: 14.0)
         toastLabel.text = message
         toastLabel.numberOfLines = 3
         toastLabel.alpha = 1.0
@@ -1106,6 +1113,32 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     }
     
     // MARK: Zoetis Web services to Get DATA API'S CALLING
+    fileprivate func cocciVaccinListSaved(_ arr: [JSON]) {
+        for item in arr {
+            if let cocciDict = item.dictionary {
+                // Safely unwrap and parse each key
+                let cocciVaccineId = cocciDict["CocciVaccineId"]?.int ?? -1
+                let cocciVaccineName = cocciDict["CocciVaccineName"]?.string ?? "Unknown"
+                let languageId = cocciDict["LanguageId"]?.int ?? -1
+                
+                // Save to CoreData
+                CoreDataHandlerTurkey().saveCocoiiVacTurkey(
+                    cocciVaccineId,
+                    decscMolecule: cocciVaccineName,
+                    lngId: languageId
+                )
+            } else {
+                print("Invalid data format in CocciVaccine array: \(item)")
+            }
+        }
+        
+        // Save serialized data to UserDefaults (if needed)
+        UserDefaults.standard.set(
+            arr.map { $0.dictionaryObject },
+            forKey: "cocci"
+        )
+    }
+    
     func callGetCocciVaccine() {
         if WebClass.sharedInstance.connected() {
             CoreDataHandlerTurkey().deleteAllDataTurkey("CocoiVaccineTurkey")
@@ -1128,29 +1161,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        for item in arr {
-                            if let cocciDict = item.dictionary {
-                                // Safely unwrap and parse each key
-                                let cocciVaccineId = cocciDict["CocciVaccineId"]?.int ?? -1
-                                let cocciVaccineName = cocciDict["CocciVaccineName"]?.string ?? "Unknown"
-                                let languageId = cocciDict["LanguageId"]?.int ?? -1
-                                
-                                // Save to CoreData
-                                CoreDataHandlerTurkey().saveCocoiiVacTurkey(
-                                    cocciVaccineId,
-                                    decscMolecule: cocciVaccineName,
-                                    lngId: languageId
-                                )
-                            } else {
-                                print("Invalid data format in CocciVaccine array: \(item)")
-                            }
-                        }
-                        
-                        // Save serialized data to UserDefaults (if needed)
-                        UserDefaults.standard.set(
-                            arr.map { $0.dictionaryObject },
-                            forKey: "cocci"
-                        )
+                        self?.cocciVaccinListSaved(arr)
                     } else {
                         print("Cocci Vaccine list is empty.")
                         
@@ -1204,7 +1215,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     } else {
                         self?.getListFarms()
                         print(Constants.noDataReceivedStr)
-                        self?.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
+                        self?.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
                     }
                 }
                 
@@ -1259,7 +1270,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     } else {
                         // Handle the case where the array is empty or nil
                         print(Constants.noDataReceivedStr)
-                        self?.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
+                        self?.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
                     }
                 }
             })
@@ -1284,12 +1295,32 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     }
     
     
+    fileprivate func saveVetListArr(_ self: DashViewControllerTurkey, _ arr: [JSON]) {
+        self.arraVetType = NSMutableArray()
+        CoreDataHandler().deleteAllData("VeterationTurkey")
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print("Invalid vet list item structure in array.")
+                continue
+            }
+            
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["VeterinarianName"] as? String, forKey: "VeterinarianName")
+            dictData.setValue(tempDict["VeterinarianId"] as? Int, forKey: "VeterinarianId")
+            
+            arraVetType.add(dictData)
+        }
+        
+        self.callSaveMethodforeterian(self.arraVetType)
+        self.callhatcheryStrain()
+    }
+    
     func callVeterianService() {
         
         if WebClass.sharedInstance.connected() {
             ZoetisWebServices.shared.getVeterinarianResponceTurkey(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
-                    self?.showToastWithTimer(message: "Failed to get Bird Size list", duration: 3.0)
+                    self?.showToastWithTimer(message: "Failed to get veterian list", duration: 3.0)
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     return
                 }
@@ -1298,7 +1329,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1319,23 +1350,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        self.arraVetType = NSMutableArray()
-                        CoreDataHandler().deleteAllData("VeterationTurkey")
-                        for item in arr {
-                            guard let tempDict = item.dictionaryObject else {
-                                print("Invalid item structure in array.")
-                                continue
-                            }
-                            
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["VeterinarianName"] as? String, forKey: "VeterinarianName")
-                            dictData.setValue(tempDict["VeterinarianId"] as? Int, forKey: "VeterinarianId")
-                           
-                            arraVetType.add(dictData)
-                        }
-                        
-                        self.callSaveMethodforeterian(self.arraVetType)
-                        self.callhatcheryStrain()
+                        saveVetListArr(self, arr)
                     } else {
                         // Handle the case when the array is empty
                         print("Bird Size list is empty.")
@@ -1366,6 +1381,25 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         return nil
     }
     
+    fileprivate func saveBreedTypeInArr(_ arr: [JSON], _ arraBreedType: NSMutableArray) {
+        for item in arr {
+            if let tempDict = item.dictionaryObject {
+                let dictData = NSMutableDictionary()
+                dictData.setValue(tempDict["BirdBreedType"] as? String, forKey: "BirdBreedType")
+                dictData.setValue(tempDict["BirdBreedName"] as? String, forKey: "BirdBreedName")
+                dictData.setValue(tempDict["BirdBreedId"] as? Int, forKey: "BirdBreedId")
+                arraBreedType.add(dictData)
+            } else {
+                print("Invalid data format in array: \(item)")
+            }
+        }
+        
+        self.breedArr = CoreDataHandlerTurkey().fetchBreedTypeTurkey()
+        if self.breedArr.count == 0 {
+            self.callSaveMethodforBreedType(arraBreedType)
+        }
+    }
+    
     func callBreedService() {
         
         if WebClass.sharedInstance.connected() {
@@ -1386,34 +1420,15 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 
                 // Check if the response contains an array
                 if let arr = JSON(json).array, !arr.isEmpty {
-                    // Initialize the `complexSize` array
                     let arraBreedType = NSMutableArray()
                     
-                    // Parse the array and populate `complexSize`
-                    for item in arr {
-                        if let tempDict = item.dictionaryObject {
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["BirdBreedType"] as? String, forKey: "BirdBreedType")
-                            dictData.setValue(tempDict["BirdBreedName"] as? String, forKey: "BirdBreedName")
-                            dictData.setValue(tempDict["BirdBreedId"] as? Int, forKey: "BirdBreedId")
-                            arraBreedType.add(dictData)
-                        } else {
-                            print("Invalid data format in array: \(item)")
-                        }
-                    }
+                    self?.saveBreedTypeInArr(arr, arraBreedType)
                     
-                    // Save data securely using Core Data
-                    self?.breedArr = CoreDataHandlerTurkey().fetchBreedTypeTurkey()
-                    if self?.breedArr.count == 0 {
-                        self?.callSaveMethodforBreedType(arraBreedType)
-                    }
-                    
-                    // Proceed with the next service call
                     self?.FeedProgramMoleculeService()
                 } else {
                     // Handle the case where the array is empty or nil
                     print(Constants.noDataReceivedStr)
-                    self?.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
+                    self?.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
                 }
             }
             
@@ -1426,13 +1441,38 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         }
     }
     
+    fileprivate func saveBirdSizeInArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+        let arraBirdSize = NSMutableArray()
+        CoreDataHandler().deleteAllData("BirdSizePostingTurkey")
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print("Invalid Bird Size item structure in array.")
+                continue
+            }
+            
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["BirdSize"] as? String, forKey: "BirdSize")
+            dictData.setValue(tempDict["BirdSizeId"] as? Int, forKey: "BirdSizeId")
+            dictData.setValue(tempDict["ScaleType"] as? String, forKey: "ScaleType")
+            arraBirdSize.add(dictData)
+        }
+        
+        
+        self.birdSizeArr = CoreDataHandlerTurkey().fetchBirdSizeTurkey()
+        if(self.birdSizeArr.count == 0)
+        {
+            self.callSaveMethodforBirdSize(arraBirdSize)
+        }
+        self.callBreedService()
+    }
+    
     func callBirdTypeService() {
         
         if WebClass.sharedInstance.connected() {
             
             ZoetisWebServices.shared.getBirdSizeResponce(controller: self, parameters: [:], completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
-                    self?.showToastWithTimer(message: "Failed to get Bird Size list", duration: 3.0)
+                    self?.showToastWithTimer(message: "Failed to get Bird type list", duration: 3.0)
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     return
                 }
@@ -1441,7 +1481,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1452,38 +1492,10 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Bird Size list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        let arraBirdSize = NSMutableArray()
-                        CoreDataHandler().deleteAllData("BirdSizePostingTurkey")
-                        for item in arr {
-                            guard let tempDict = item.dictionaryObject else {
-                                print("Invalid item structure in array.")
-                                continue
-                            }
-                            
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["BirdSize"] as? String, forKey: "BirdSize")
-                            dictData.setValue(tempDict["BirdSizeId"] as? Int, forKey: "BirdSizeId")
-                            dictData.setValue(tempDict["ScaleType"] as? String, forKey: "ScaleType")
-                            arraBirdSize.add(dictData)
-                        }
-                        
-                        
-                        self.birdSizeArr = CoreDataHandlerTurkey().fetchBirdSizeTurkey()
-                        if(self.birdSizeArr.count == 0)
-                        {
-                            self.callSaveMethodforBirdSize(arraBirdSize)
-                        }
-                        self.callBreedService()
+                        saveBirdSizeInArr(arr, self)
                     } else {
                         // Handle the case when the array is empty
                         print("Bird Size list is empty.")
@@ -1497,6 +1509,31 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         }
     }
     
+    
+    fileprivate func saveSessionTypeInArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+        let arraSessionType = NSMutableArray ()
+        
+        CoreDataHandler().deleteAllData("SessiontypeTurkey")
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print("Invalid Session type item structure in array.")
+                continue
+            }
+            
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["SessionTypeName"] as? String, forKey: "SessionTypeName")
+            dictData.setValue(tempDict["SessionTypeId"] as? Int, forKey: "SessionTypeId")
+            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
+            arraSessionType.add(dictData)
+        }
+        
+        self.sessiontypeArr = CoreDataHandlerTurkey().fetchSessiontypeTurkey()
+        
+        if(self.cocoiiProgramArr.count == 0)
+        {
+            self.callSaveMethodforSessiontype(arraSessionType)
+        }
+    }
     
     /*********** SessionType data call Web Service *******************************************************/
     //MARK: ********* Zoetis API call to get Session's type list ****************************************************/
@@ -1515,7 +1552,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1526,38 +1563,11 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
+      
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        let arraSessionType = NSMutableArray ()
-                        
-                        CoreDataHandler().deleteAllData("SessiontypeTurkey")
-                        for item in arr {
-                            guard let tempDict = item.dictionaryObject else {
-                                print("Invalid item structure in array.")
-                                continue
-                            }
-                            
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["SessionTypeName"] as? String, forKey: "SessionTypeName")
-                            dictData.setValue(tempDict["SessionTypeId"] as? Int, forKey: "SessionTypeId")
-                            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
-                            arraSessionType.add(dictData)
-                        }
-                        
-                        self.sessiontypeArr = CoreDataHandlerTurkey().fetchSessiontypeTurkey()
-                        
-                        if(self.cocoiiProgramArr.count == 0)
-                        {
-                            self.callSaveMethodforSessiontype(arraSessionType)
-                        }
+                        saveSessionTypeInArr(arr, self)
                         
                         self.callBirdTypeService()
                         
@@ -1573,6 +1583,34 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             
         } else {
             self.failWithInternetConnection()
+        }
+    }
+    
+    fileprivate func saveCocciProgramName(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+        let cocoiiProgramArray = NSMutableArray()
+        CoreDataHandler().deleteAllData("CocciProgramPostingTurkey")
+        //
+        // Parse each item in the array
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print("Invalid cocci program item structure in array.")
+                continue
+            }
+            
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["CocciProgramName"] as? String, forKey: "CocciProgramName")
+            dictData.setValue(tempDict["CocciProgramId"] as? Int, forKey: "CocciProgramId")
+            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
+            
+            cocoiiProgramArray.add(dictData)
+        }
+        
+        // Fetch existing data from Core Data
+        self.cocoiiProgramArr = CoreDataHandlerTurkey().fetchCocoiiProgramTurkey()
+        
+        // Save data only if there is no existing data
+        if self.cocoiiProgramArr.count == 0 {
+            self.callSaveMethodforCocoiiProgram(cocoiiProgramArray)
         }
     }
     
@@ -1593,7 +1631,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1603,44 +1641,13 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Cocci Program list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
+             
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        let cocoiiProgramArray = NSMutableArray()
-                        CoreDataHandler().deleteAllData("CocciProgramPostingTurkey")
-                        //
-                        // Parse each item in the array
-                        for item in arr {
-                            guard let tempDict = item.dictionaryObject else {
-                                print("Invalid item structure in array.")
-                                continue
-                            }
-                            
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["CocciProgramName"] as? String, forKey: "CocciProgramName")
-                            dictData.setValue(tempDict["CocciProgramId"] as? Int, forKey: "CocciProgramId")
-                            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
-                            
-                            cocoiiProgramArray.add(dictData)
-                        }
+                        saveCocciProgramName(arr, self)
                         
-                        // Fetch existing data from Core Data
-                        self.cocoiiProgramArr = CoreDataHandlerTurkey().fetchCocoiiProgramTurkey()
-                        
-                        // Save data only if there is no existing data
-                        if self.cocoiiProgramArr.count == 0 {
-                            self.callSaveMethodforCocoiiProgram(cocoiiProgramArray)
-                        }
-                        
-                        // Proceed with the next service call
+                    
                         self.callSessionTypeService()
                     } else {
                         // Handle the case when the array is empty
@@ -1678,10 +1685,9 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     
                     // Parse the array from the JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        // Initialize the array to store sales representative data
+                        
                         self?.arraSalesRep = NSMutableArray()
                         
-                        // Iterate through the array and populate `arraSalesRep`
                         for item in arr {
                             if let tempDict = item.dictionaryObject {
                                 let dictDat = NSMutableDictionary()
@@ -1699,7 +1705,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                             self?.callSaveMethodforSalesRep(salesRepArray)
                         }
                         
-                        // Proceed to the next step
+                      
                         self?.callAddVaccination()
                     } else {
                         // Handle the case where the array is empty or nil
@@ -1719,6 +1725,34 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             }
         }
     }
+    fileprivate func saveCustomerNameArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+        var customerArray: [NSDictionary] = []
+        
+        // Parse each item in the array
+        for item in arr {
+            if let tempDict = item.dictionary {
+                let customerName = tempDict["CustomerName"]?.string ?? "Unknown"
+                let customerId = tempDict["CustomerId"]?.int ?? -1
+                
+                // Create a dictionary for the customer
+                let dictData: NSDictionary = [
+                    "CustomerName": customerName,
+                    "CustomerId": customerId
+                ]
+                
+                customerArray.append(dictData)
+            } else {
+                print("Invalid data format for item: \(item)")
+            }
+        }
+        
+        // Save parsed data and proceed with business logic
+        self.arraCustmer = NSMutableArray(array: customerArray)
+        CoreDataHandlerTurkey().deleteAllDataTurkey("CustmerTurkey")
+        self.callSaveMethodforCustomer(self.arraCustmer)
+        self.complexService()
+    }
+    
     /*********** 0 data call Web Service *******************************************************/
     //MARK: ********* Zoetis API call to get Customers list ****************************************************/
     func callCustmerWebService() {
@@ -1736,7 +1770,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1746,41 +1780,10 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
+
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        var customerArray: [NSDictionary] = []
-                        
-                        // Parse each item in the array
-                        for item in arr {
-                            if let tempDict = item.dictionary {
-                                let customerName = tempDict["CustomerName"]?.string ?? "Unknown"
-                                let customerId = tempDict["CustomerId"]?.int ?? -1
-                                
-                                // Create a dictionary for the customer
-                                let dictData: NSDictionary = [
-                                    "CustomerName": customerName,
-                                    "CustomerId": customerId
-                                ]
-                                
-                                customerArray.append(dictData)
-                            } else {
-                                print("Invalid data format for item: \(item)")
-                            }
-                        }
-                        
-                        // Save parsed data and proceed with business logic
-                        self.arraCustmer = NSMutableArray(array: customerArray)
-                        CoreDataHandlerTurkey().deleteAllDataTurkey("CustmerTurkey")
-                        self.callSaveMethodforCustomer(self.arraCustmer)
-                        self.complexService()
+                        saveCustomerNameArr(arr, self)
                     } else {
                         // Handle case when the route list is empty
                         print("Customer's list is empty.")
@@ -1799,6 +1802,35 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     
     //MARK: ********* Zoetis API call to get route list ****************************************************/
     
+    fileprivate func saveRouteNameInArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+        var routeArray: [NSDictionary] = []
+        
+        // Parse each item in the array
+        for item in arr {
+            if let tempDict = item.dictionaryObject {
+                let routeData: NSMutableDictionary = [
+                    "RouteName": tempDict["RouteName"] as? String ?? "",
+                    "RouteId": tempDict["RouteId"] as? Int ?? -1,
+                    "LanguageId": tempDict["LanguageId"] as? Int ?? -1
+                ]
+                routeArray.append(routeData)
+            } else {
+                print("Invalid route data format: \(item)")
+            }
+        }
+        
+        // Fetch existing routes from CoreData
+        self.RouteArray = CoreDataHandlerTurkey().fetchRouteTurkey()
+        
+        // Save new routes if CoreData is empty
+        if self.RouteArray.count == 0 {
+            self.callSaveMethod(routeArray as NSArray)
+        }
+        
+        // Proceed to the next service call
+        self.callCocoiiProgramService()
+    }
+    
     func callAddVaccination() {
         if WebClass.sharedInstance.connected() {
             
@@ -1814,7 +1846,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1834,32 +1866,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        var routeArray: [NSDictionary] = []
-                        
-                        // Parse each item in the array
-                        for item in arr {
-                            if let tempDict = item.dictionaryObject {
-                                let routeData: NSMutableDictionary = [
-                                    "RouteName": tempDict["RouteName"] as? String ?? "",
-                                    "RouteId": tempDict["RouteId"] as? Int ?? -1,
-                                    "LanguageId": tempDict["LanguageId"] as? Int ?? -1
-                                ]
-                                routeArray.append(routeData)
-                            } else {
-                                print("Invalid route data format: \(item)")
-                            }
-                        }
-                        
-                        // Fetch existing routes from CoreData
-                        self.RouteArray = CoreDataHandlerTurkey().fetchRouteTurkey()
-                        
-                        // Save new routes if CoreData is empty
-                        if self.RouteArray.count == 0 {
-                            self.callSaveMethod(routeArray as NSArray)
-                        }
-                        
-                        // Proceed to the next service call
-                        self.callCocoiiProgramService()
+                        saveRouteNameInArr(arr, self)
                     } else {
                         // Handle case when the route list is empty
                         print("Route list is empty.")
@@ -1913,6 +1920,29 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         return allPostingSessionArr
     }
     //MARK: ********* Zoetis API call to get Hatchery Strain list ****************************************************/
+    fileprivate func saveHatcheryStrainInArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+        // Clear existing data in Core Data
+        CoreDataHandler().deleteAllData("HatcheryStrain")
+        
+        // Process each item in the array
+        for item in arr {
+            if let strainDict = item.dictionary {
+                // Safely unwrap and parse the keys
+                let strainId = strainDict["StrainId"]?.int ?? -1
+                let strainName = strainDict["StrainName"]?.string ?? "Unknown"
+                let langID = strainDict["LanguageId"]?.int ?? -1
+                
+                // Save the parsed data to Core Data
+                CoreDataHandler().SaveStrainDataDatabase(strainName, StrainId: strainId, lngId: langID)
+            } else {
+                print("Invalid data format for HatcheryStrain: \(item)")
+            }
+        }
+        
+        // Call the next service after processing
+        self.callGetFieldStrain()
+    }
+    
     func callhatcheryStrain() {
         
         if WebClass.sharedInstance.connected() {
@@ -1929,7 +1959,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -1940,39 +1970,15 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
+            
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        // Clear existing data in Core Data
-                        CoreDataHandler().deleteAllData("HatcheryStrain")
-                        
-                        // Process each item in the array
-                        for item in arr {
-                            if let strainDict = item.dictionary {
-                                // Safely unwrap and parse the keys
-                                let strainId = strainDict["StrainId"]?.int ?? -1
-                                let strainName = strainDict["StrainName"]?.string ?? "Unknown"
-                                let langID = strainDict["LanguageId"]?.int ?? -1
-                                
-                                // Save the parsed data to Core Data
-                                CoreDataHandler().SaveStrainDataDatabase(strainName, StrainId: strainId, lngId: langID)
-                            } else {
-                                print("Invalid data format for HatcheryStrain: \(item)")
-                            }
-                        }
-                        
-                        // Call the next service after processing
-                        self.callGetFieldStrain()
+                        saveHatcheryStrainInArr(arr, self)
                     } else {
                         // Handle the case where the array is empty
                         print("Hatchery strain list is empty.")
-                        self.showToastWithTimer(message: "No data available from the server.", duration: 3.0)
+                        self.showToastWithTimer(message: noDataAvalbl, duration: 3.0)
                         
                         // Call the next service
                         self.callGetFieldStrain()
@@ -1985,6 +1991,27 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         }
     }
     //MARK: ********* Zoetis API call to get Field Strain list ****************************************************/
+    fileprivate func saveFieldStraininArr(_ arr: [JSON]) {
+        // Clear existing data in Core Data
+        CoreDataHandler().deleteAllData("GetFieldStrain")
+        
+        // Process each item in the array
+        for item in arr {
+            if let strainDict = item.dictionary {
+                // Safely unwrap and parse the keys
+                let strainId = strainDict["StrainId"]?.int ?? -1
+                let strainName = strainDict["StrainName"]?.string ?? "Unknown"
+                let langID = strainDict["LanguageId"]?.int ?? -1
+                
+                // Save the parsed data to Core Data
+                CoreDataHandler().SaveStrainDataDatabaseField(strainName, StrainId: strainId, lngId: langID)
+                
+            } else {
+                print("Invalid data format for Field Strain: \(item)")
+            }
+        }
+    }
+    
     func callGetFieldStrain() {
         
         if WebClass.sharedInstance.connected() {
@@ -2001,7 +2028,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2011,41 +2038,18 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
+           
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        // Clear existing data in Core Data
-                        CoreDataHandler().deleteAllData("GetFieldStrain")
-                        
-                        // Process each item in the array
-                        for item in arr {
-                            if let strainDict = item.dictionary {
-                                // Safely unwrap and parse the keys
-                                let strainId = strainDict["StrainId"]?.int ?? -1
-                                let strainName = strainDict["StrainName"]?.string ?? "Unknown"
-                                let langID = strainDict["LanguageId"]?.int ?? -1
-                                
-                                // Save the parsed data to Core Data
-                                CoreDataHandler().SaveStrainDataDatabaseField(strainName, StrainId: strainId, lngId: langID)
-                                
-                            } else {
-                                print("Invalid data format for Field Strain: \(item)")
-                            }
-                        }
+                        saveFieldStraininArr(arr)
                         
                         // Call the next service after processing
                         self.callGetDosage()
                     } else {
                         // Handle the case where the array is empty
                         print("Field Strain list is empty.")
-                        self.showToastWithTimer(message: "No data available from the server.", duration: 3.0)
+                        self.showToastWithTimer(message: noDataAvalbl, duration: 3.0)
                         
                         // Call the next service
                         self.callGetDosage()
@@ -2059,6 +2063,28 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         }
     }
     //MARK: ********* Zoetis API call to get Dossage list ****************************************************/
+    fileprivate func saveDossageListInArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+        // Clear existing data in Core Data
+        CoreDataHandler().deleteAllData("GetDosage")
+        
+        // Process each item in the array
+        for item in arr {
+            if let strainDict = item.dictionary {
+                // Safely unwrap and parse the keys
+                let doseId = strainDict["DoseId"]?.int ?? -1
+                let dosename = strainDict["Dose"]?.string ?? "Unknown"
+                
+                // Save the parsed data to Core Data
+                CoreDataHandler().SaveDosageDataDatabaseField(dosename, doseId: doseId)
+            } else {
+                print("Invalid data format for Get Dosage: \(item)")
+            }
+        }
+        
+        // Call the next service after processing
+        self.getGenerationType()
+    }
+    
     func callGetDosage() {
         
         if WebClass.sharedInstance.connected() {
@@ -2075,7 +2101,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2086,38 +2112,13 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        // Clear existing data in Core Data
-                        CoreDataHandler().deleteAllData("GetDosage")
-                        
-                        // Process each item in the array
-                        for item in arr {
-                            if let strainDict = item.dictionary {
-                                // Safely unwrap and parse the keys
-                                let doseId = strainDict["DoseId"]?.int ?? -1
-                                let dosename = strainDict["Dose"]?.string ?? "Unknown"
-                                
-                                // Save the parsed data to Core Data
-                                CoreDataHandler().SaveDosageDataDatabaseField(dosename, doseId: doseId)
-                            } else {
-                                print("Invalid data format for Get Dosage: \(item)")
-                            }
-                        }
-                        
-                        // Call the next service after processing
-                        self.getGenerationType()
+                        saveDossageListInArr(arr, self)
                     } else {
                         // Handle the case where the array is empty
                         print("Get Dosage list is empty.")
-                        self.showToastWithTimer(message: "No data available from the server.", duration: 3.0)
+                        self.showToastWithTimer(message: noDataAvalbl, duration: 3.0)
                         
                         // Call the next service
                         self.getGenerationType()
@@ -2130,6 +2131,32 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         }
     }
     //MARK: ********* Zoetis API call to get Generation Type list ****************************************************/
+    fileprivate func saveGenerationTypeArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+        // Clear existing data in Core Data
+        CoreDataHandler().deleteAllData("GenerationType")
+        
+        // Process each item in the array
+        for item in arr {
+            if let tempDict = item.dictionary {
+                // Safely parse the "Name" and "Id" fields
+                let generationName = tempDict["Name"]?.string ?? "Unknown"
+                let generationId = tempDict["Id"]?.int ?? -1
+                
+                // Create a dictionary and add it to the genType array
+                let dictData: [String: Any] = [
+                    "generationName": generationName,
+                    "generationId": generationId
+                ]
+                
+                self.genType.add(dictData)
+            } else {
+                print("Invalid data format in array item: \(item)")
+            }
+        }
+        
+        self.callGenerationType(self.genType)
+    }
+    
     func getGenerationType() {
         if WebClass.sharedInstance.connected() {
             ZoetisWebServices.shared.getTurkeyGenerationResponce(controller: self, parameters: [:], completion: { [weak self] (json, error) in
@@ -2144,7 +2171,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2156,38 +2183,11 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Generation Type list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
+           
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        // Clear existing data in Core Data
-                        CoreDataHandler().deleteAllData("GenerationType")
-                        
-                        // Process each item in the array
-                        for item in arr {
-                            if let tempDict = item.dictionary {
-                                // Safely parse the "Name" and "Id" fields
-                                let generationName = tempDict["Name"]?.string ?? "Unknown"
-                                let generationId = tempDict["Id"]?.int ?? -1
-                                
-                                // Create a dictionary and add it to the genType array
-                                let dictData: [String: Any] = [
-                                    "generationName": generationName,
-                                    "generationId": generationId
-                                ]
-                                
-                                self.genType.add(dictData)
-                            } else {
-                                print("Invalid data format in array item: \(item)")
-                            }
-                        }
-                        
-                        self.callGenerationType(self.genType)
+                        saveGenerationTypeArr(arr, self)
                     } else {
                         // Handle the case where the array is empty
                         self.genType = CoreDataHandler().fetchGenerationType() as! NSMutableArray
@@ -2215,6 +2215,24 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     }
     
     //MARK: ********* Zoetis API call to get Dossage By Molecule ID ****************************************************/
+    fileprivate func saveDossageInArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+        // Clear existing data in Core Data
+        CoreDataHandler().deleteAllData("GetDosageTurkeyWithMoleculeID")
+        
+        // Process each item in the array
+        for item in arr {
+            if let strainDict = item.dictionary {
+                let doseId = strainDict["DoseId"]?.int ?? -1
+                let dosename = strainDict["Dose"]?.string ?? "Unknown"
+                let moleculeId = strainDict["MoleculeId"]?.int ?? -1
+                CoreDataHandler().SaveTurkeyDosageDataWithMoleculeIDDatabaseField(dosename, doseId: doseId, molecukeId: moleculeId)
+            } else {
+                print("Invalid data format for Get Dosage: \(item)")
+            }
+        }
+        Helper.dismissGlobalHUD(self.view)
+    }
+    
     func callGetDosageTurkeyWithMoleculeId() {
         
         if WebClass.sharedInstance.connected() {
@@ -2230,7 +2248,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
@@ -2241,30 +2259,10 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Generation Type list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
+             
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        // Clear existing data in Core Data
-                        CoreDataHandler().deleteAllData("GetDosageTurkeyWithMoleculeID")
-                        
-                        // Process each item in the array
-                        for item in arr {
-                            if let strainDict = item.dictionary {
-                                let doseId = strainDict["DoseId"]?.int ?? -1
-                                let dosename = strainDict["Dose"]?.string ?? "Unknown"
-                                let moleculeId = strainDict["MoleculeId"]?.int ?? -1
-                                CoreDataHandler().SaveTurkeyDosageDataWithMoleculeIDDatabaseField(dosename, doseId: doseId, molecukeId: moleculeId)
-                            } else {
-                                print("Invalid data format for Get Dosage: \(item)")
-                            }
-                        }
-                        Helper.dismissGlobalHUD(self.view)
+                        saveDossageInArr(arr, self)
                     }
                     
                     else {
@@ -2381,13 +2379,13 @@ extension DashViewControllerTurkey :userlistProtocol,userLogOut {
     func didFinishApiSyncdata(){
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
     }
     
     func failWithInternetConnectionSyncdata(){
         Helper.dismissGlobalHUD(self.view)
         self.printSyncLblCount()
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.offline, comment: ""))
     }
     
 }

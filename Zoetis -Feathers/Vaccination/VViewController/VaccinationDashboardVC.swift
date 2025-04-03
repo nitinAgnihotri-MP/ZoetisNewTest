@@ -92,7 +92,7 @@ class VaccinationDashboardVC: BaseViewController{
                 self.getScheduledCertifications()
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
         }
         hasViewLoaded = true
         hidePopup()
@@ -423,7 +423,7 @@ class VaccinationDashboardVC: BaseViewController{
             self.present(alertController, animated: true, completion: nil)
             
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
         }
     }
     

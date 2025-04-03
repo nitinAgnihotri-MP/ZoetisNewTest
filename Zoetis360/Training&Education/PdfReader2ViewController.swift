@@ -53,8 +53,8 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
     func callWebApiforTutorial(_ completion: @escaping (_ status: Bool) -> Void)  {
 
         if WebClass.sharedInstance.connected() {
-            accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headers: HTTPHeaders = ["Authorization": accestoken]
+            accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headers: HTTPHeaders = [Constants.authorization: accestoken]
             let Url = "PostingSession/GetTutorial"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             

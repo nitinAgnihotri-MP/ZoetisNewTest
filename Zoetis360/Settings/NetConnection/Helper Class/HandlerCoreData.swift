@@ -197,7 +197,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return dataArray
         
@@ -220,7 +220,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return dataArray
     }
@@ -230,7 +230,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "HatcheryVac")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND isSync == %@", postnigId , NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.postIdStatusPredicator, postnigId , NSNumber(booleanLiteral: isSync))
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -243,7 +243,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return dataArray
@@ -280,7 +280,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return postingArrayVetArray
     }
@@ -3279,7 +3279,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return FieldVaccindataArray
         
@@ -3307,7 +3307,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return FieldVaccindataArray
         
@@ -3321,7 +3321,7 @@ class CoreDataHandler : NSObject  {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "FieldVaccination")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND isSync == %@", postingId, NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.postIdStatusPredicator, postingId, NSNumber(booleanLiteral: isSync))
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -3336,7 +3336,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return FieldVaccindataArray
     }
@@ -3371,7 +3371,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -3405,7 +3405,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -3470,7 +3470,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Skeleta")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         
         do
             
@@ -3497,7 +3497,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     // MARK: 🟢 *************** Fetch Settings data for Skleta *********************************************
@@ -3523,7 +3523,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return dataSkeletaArray
@@ -3536,7 +3536,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Skeleta")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -3552,7 +3552,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return dataSkeletaArray
     }
@@ -3614,7 +3614,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Coccidiosis")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         
         do {
             
@@ -3639,7 +3639,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     // MARK: 🟠 Update Quick Link for All observation Category
@@ -3714,7 +3714,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return necropsyStep1Array
@@ -3739,7 +3739,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch  {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return dataCociiaArray
@@ -3752,7 +3752,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "Coccidiosis")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -3765,7 +3765,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return dataCociiaArray
@@ -3837,7 +3837,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITract")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         
         do
             
@@ -3864,7 +3864,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     // MARK: 🟠 ************ Fetch data Of GiTract* ***************************************/
@@ -3891,7 +3891,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return dataGiTractArray
     }
@@ -3919,7 +3919,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return dataGiTractArray
@@ -3933,7 +3933,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITract")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -3948,7 +3948,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return dataGiTractArray
@@ -4022,7 +4022,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Respiratory")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         do
             
         {
@@ -4046,7 +4046,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     // MARK: 🟠************ Fetch all Respiratory details* ***************************************/
@@ -4071,7 +4071,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return dataRespiratoryArray
     }
@@ -4082,7 +4082,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Respiratory")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -4097,7 +4097,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return dataRespiratoryArray
     }
@@ -4166,7 +4166,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Immune")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         do
             
         {
@@ -4192,7 +4192,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -4219,7 +4219,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return dataImmuneArray
     }
@@ -4230,7 +4230,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "Immune")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -4246,7 +4246,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return dataImmuneArray
@@ -4315,7 +4315,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return routeArray
@@ -4328,7 +4328,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "Route")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -4344,7 +4344,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return routeArray
         
@@ -4411,7 +4411,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return custArray
         
@@ -4439,7 +4439,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return custArray
         
@@ -4504,7 +4504,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return SalesRepDataArray
         
@@ -4575,7 +4575,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return VeterianTypeArray
         
@@ -4601,7 +4601,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return VeterianTypeArray
         
@@ -4673,7 +4673,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return CocoiiProgramArray
     }
@@ -4686,7 +4686,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocciProgramPosting")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -4703,7 +4703,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return CocoiiProgramArray
         
@@ -4777,7 +4777,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return BirdSizeArray
@@ -4846,7 +4846,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return SessionTypeArray
@@ -4860,7 +4860,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "Sessiontype")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -4876,7 +4876,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return SessionTypeArray
@@ -4946,7 +4946,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return BreedTypeArray
@@ -5026,7 +5026,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return postingArray
@@ -5051,7 +5051,7 @@ class CoreDataHandler : NSObject  {
                 
             }
         } catch {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return postingArray
@@ -5079,7 +5079,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return complexArray
@@ -5186,7 +5186,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return generationArray
@@ -5216,7 +5216,7 @@ class CoreDataHandler : NSObject  {
             }
         }
         catch {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return productionArray
@@ -5290,7 +5290,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return complexArray
@@ -5369,7 +5369,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return loginArray
@@ -5397,7 +5397,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return loginArray
@@ -5427,7 +5427,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         CustmerRep.append(person)
@@ -5456,7 +5456,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return custRep
     }
@@ -5484,7 +5484,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return custRep
@@ -5510,14 +5510,14 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
     // MARK: - 🔴 Delete Necropsy Step 1 Data with Posting ID
     func deleteDataWithPostingIdStep1data (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -5531,7 +5531,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5539,7 +5539,7 @@ class CoreDataHandler : NSObject  {
     func deleteDataWithPostingIdStep2dataCaptureNecView (_ postingId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -5553,14 +5553,14 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     // MARK: - 🔴 Delete Birds Notes Step 2 Data with Posting ID
     func deleteDataWithPostingIdStep2NotesBird (_ postingId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -5574,7 +5574,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5582,7 +5582,7 @@ class CoreDataHandler : NSObject  {
     func deleteDataWithPostingIdStep2CameraIamge (_ postingId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -5596,7 +5596,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     // MARK: - 🔴 Delete Hatchery Vaccine Data with Posting ID
@@ -5617,7 +5617,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -5639,7 +5639,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5663,7 +5663,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5685,7 +5685,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5706,7 +5706,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5728,7 +5728,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5750,7 +5750,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5773,7 +5773,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5795,7 +5795,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     // MARK: - 🔴 Delete MyCotoxin Binder Feed Data with Posting ID
@@ -5816,14 +5816,14 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
     // MARK: - 🔴 Delete Captured Feed Data with Necropsy ID
     func deleteDataWithPostingIdCaptureStepData (_ necId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, necId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchUsers.predicate                = fetchPredicate
         
@@ -5838,7 +5838,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -5875,7 +5875,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -5893,7 +5893,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -5923,7 +5923,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         return auto!
         
@@ -5985,7 +5985,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         postingSession.append(contact1)
@@ -6057,7 +6057,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -6101,7 +6101,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -6189,7 +6189,7 @@ class CoreDataHandler : NSObject  {
         do {
             try managedContext.save()
         } catch {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         postingSession.append(contact1)
@@ -6276,7 +6276,7 @@ class CoreDataHandler : NSObject  {
         do {
             try managedContext.save()
         } catch {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         postingSession.append(contact1)
@@ -6328,7 +6328,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
     }
@@ -6340,7 +6340,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         do
         { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if fetchedResult!.count > 0
@@ -6390,7 +6390,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -6402,7 +6402,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId,formName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necId,formName)
         do
         { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if fetchedResult!.count > 0
@@ -6424,7 +6424,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -6454,7 +6454,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -6484,7 +6484,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -6540,7 +6540,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -6636,7 +6636,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -6679,7 +6679,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSession")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -6736,7 +6736,7 @@ class CoreDataHandler : NSObject  {
             }}
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         
@@ -6769,7 +6769,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
     }
     
@@ -6794,7 +6794,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return postingArray
@@ -6824,7 +6824,7 @@ class CoreDataHandler : NSObject  {
         }
         catch
         {
-            print("Test Body")
+            appDelegateObj.testFuntion()
         }
         
         return postingArray
@@ -6840,7 +6840,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSession")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -6870,7 +6870,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSession")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -7003,7 +7003,7 @@ class CoreDataHandler : NSObject  {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
             
             do
             {
@@ -7232,7 +7232,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -7311,7 +7311,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", isSync,postinID)
+        fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, isSync,postinID)
         do
             
         {
@@ -7453,7 +7453,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
         
         do
         {
@@ -7487,7 +7487,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
         do
             
         {
@@ -7578,7 +7578,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
         
         do
         {
@@ -7611,7 +7611,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
         
         do
         {
@@ -7699,7 +7699,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
         
         do
             
@@ -7758,7 +7758,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
         
         do
         {
@@ -7793,7 +7793,7 @@ class CoreDataHandler : NSObject  {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
             
             do
             {
@@ -7996,7 +7996,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -8087,7 +8087,7 @@ class CoreDataHandler : NSObject  {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
             
             do
             {
@@ -8287,7 +8287,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -8371,7 +8371,7 @@ class CoreDataHandler : NSObject  {
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeed")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
             
             do
             {
@@ -8565,7 +8565,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         
         do
         {
@@ -8726,7 +8726,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "FeedProgram")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         
         do
         {
@@ -9068,7 +9068,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necropsyId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necropsyId)
         
         do
         {
@@ -9178,7 +9178,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -9391,7 +9391,7 @@ class CoreDataHandler : NSObject  {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -9420,7 +9420,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -9487,7 +9487,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -9527,7 +9527,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -9564,7 +9564,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId , formName , feedProgramName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necId , formName , feedProgramName)
         
         do
         {
@@ -9597,7 +9597,7 @@ class CoreDataHandler : NSObject  {
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId , formName )
+        fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necId , formName )
         
         do
         {
@@ -9740,7 +9740,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -9821,7 +9821,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -9919,7 +9919,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@", birdnumber,catName,farmname,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdnumber,catName,farmname,necId)
         fetchRequest.returnsObjectsAsFaults = false
         
         do
@@ -10069,7 +10069,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@", birdnumber,catName,farmname,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdnumber,catName,farmname,necId)
         fetchRequest.returnsObjectsAsFaults = false
         do
         {
@@ -10328,7 +10328,7 @@ class CoreDataHandler : NSObject  {
     // MARK: - 🔴 Delete Step 2 data for Captured Necropsy
     func deleteDataWithStep2data (_ necId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, necId)
         let fetchUsers            = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
         fetchUsers.predicate   = fetchPredicate
         do
@@ -10385,7 +10385,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -10425,7 +10425,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -10496,7 +10496,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND formName == %@ AND obsID == %@ AND necropsyId == %@", birdNo,formName,obsId , necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateObsIdBirdsFarmNecID, birdNo,formName,obsId , necId)
         
         do
         {
@@ -10561,7 +10561,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate!.managedObjectContext
         let imageData = camraImage.jpegData(compressionQuality: 0.5)
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@", birdNo,catName,formName , necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdNo,catName,formName , necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -10683,7 +10683,7 @@ class CoreDataHandler : NSObject  {
     func deleteImageForSingle (_ necId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, necId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -10757,7 +10757,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -10824,7 +10824,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "BirdPhotoCapture")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@",necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate,necId)
         fetchRequest.returnsObjectsAsFaults = false
         
         do
@@ -10855,7 +10855,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
         fetchRequest.returnsObjectsAsFaults = false
         do
         {
@@ -11074,7 +11074,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocoiVaccine")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -11129,7 +11129,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MoleCuleFeed")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -11156,7 +11156,7 @@ class CoreDataHandler : NSObject  {
     func deleteDataBirdNotesWithId (_ necId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, necId)
         let fetchUsers   = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
         fetchUsers.predicate   = fetchPredicate
         do
@@ -11179,7 +11179,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -11216,7 +11216,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
-        fetchRequest.predicate = NSPredicate(format: "noofBirds == %@ AND formName == %@ AND necropsyId == %@", birdNo,formName,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -11249,7 +11249,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
-        fetchRequest.predicate = NSPredicate(format: "noofBirds == %@ AND formName == %@ AND necropsyId == %@", birdNo,formName,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
         fetchRequest.returnsObjectsAsFaults = false
         
         do
@@ -11339,7 +11339,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "NotesBird")
-        fetchRequest.predicate = NSPredicate(format: "noofBirds == %@ AND formName == %@ AND necropsyId == %@", birdNo,formName,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
         fetchRequest.returnsObjectsAsFaults = false
         
         do
@@ -11500,7 +11500,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND formName == %@ AND obsID == %@ AND necropsyId == %@", birdNo,formName,obsId , necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateObsIdBirdsFarmNecID, birdNo,formName,obsId , necId)
         
         do
         {
@@ -11531,7 +11531,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND formName == %@ AND obsID == %@ AND necropsyId == %@", birdNo,formName,obsId , necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateObsIdBirdsFarmNecID, birdNo,formName,obsId , necId)
         
         do
         {
@@ -11562,7 +11562,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND formName == %@ AND obsID == %@ AND necropsyId == %@", birdNo,formName,obsId , necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateObsIdBirdsFarmNecID, birdNo,formName,obsId , necId)
         
         do
         {
@@ -11623,7 +11623,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewData")
         fetchRequest.returnsObjectsAsFaults = false
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND formName == %@",postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.predicateNecFarmName,postingId,farmName)
         fetchRequest.predicate = fetchPredicate
         
         do
@@ -11945,7 +11945,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "PostingSession")
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND isSync == %@", postingID , NSNumber(booleanLiteral: isSync as! Bool))
+        fetchRequest.predicate = NSPredicate(format: Constants.postIdStatusPredicator, postingID , NSNumber(booleanLiteral: isSync as! Bool))
         fetchRequest.returnsObjectsAsFaults = false
         do
         {
@@ -11995,7 +11995,7 @@ class CoreDataHandler : NSObject  {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necropsyId, farmName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necropsyId, farmName)
         
         do
         {
@@ -12134,7 +12134,7 @@ class CoreDataHandler : NSObject  {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do
             {
@@ -12164,7 +12164,7 @@ class CoreDataHandler : NSObject  {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do
             {
@@ -12194,7 +12194,7 @@ class CoreDataHandler : NSObject  {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do
             {
@@ -12221,7 +12221,7 @@ class CoreDataHandler : NSObject  {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do  {
                 
@@ -12248,7 +12248,7 @@ class CoreDataHandler : NSObject  {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do
             {
@@ -12300,7 +12300,7 @@ class CoreDataHandler : NSObject  {
     func deleteDataWithPostingIdStep1dataWithfarmName (_ postingId: NSNumber,farmName:String, _ completion: (_ status: Bool) -> Void)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.necFarmNamePredicate, postingId,farmName)
         let fetchUsers = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchUsers.predicate = fetchPredicate
         do        {
@@ -12321,7 +12321,7 @@ class CoreDataHandler : NSObject  {
     //MARK: - 🔴 Delete Captured Necropsy View Data for specific Posting ID & Farm details
     func deleteDataWithPostingIdStep2dataCaptureNecViewWithfarmName (_ postingId: NSNumber,farmName:String, _ completion: (_ status: Bool) -> Void)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND formName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.predicateNecFarmName, postingId,farmName)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
         fetchUsers.predicate                = fetchPredicate
         
@@ -12342,7 +12342,7 @@ class CoreDataHandler : NSObject  {
     //MARK: - 🔴 Delete Birds Notes for specific Posting ID
     func deleteDataWithPostingIdStep2NotesBirdWithFarmName (_ postingId: NSNumber,farmName:String, _ completion: (_ status: Bool) -> Void) {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND formName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.predicateNecFarmName, postingId,farmName)
         let fetchUsers = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
         fetchUsers.predicate = fetchPredicate
         do {
@@ -12362,7 +12362,7 @@ class CoreDataHandler : NSObject  {
     // MARK: - 🔴 Delete Necropsy capyured Image for specific Posting ID
     func deleteDataWithPostingIdStep2CameraIamgeWithFarmName (_ postingId:NSNumber,farmName:String, _ completion: (_ status: Bool) -> Void) {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.necFarmNamePredicate, postingId,farmName)
         let fetchUsers = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
         fetchUsers.predicate = fetchPredicate
         do {

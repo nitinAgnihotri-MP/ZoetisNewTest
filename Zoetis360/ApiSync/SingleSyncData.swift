@@ -413,9 +413,9 @@ class SingleSyncData: NSObject {
             if WebClass.sharedInstance.connected() {
                 
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-                //accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+                //accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -698,9 +698,9 @@ class SingleSyncData: NSObject {
             if WebClass.sharedInstance.connected() {
                 
                 let Url = "/PostingSession//SaveMultipleVaccinationsSyncData"
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-              //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
@@ -863,9 +863,9 @@ class SingleSyncData: NSObject {
             
             if WebClass.sharedInstance.connected() {
                 let Url = "PostingSession/SaveMultiplePostingsSyncData"
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
@@ -1028,9 +1028,9 @@ class SingleSyncData: NSObject {
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
             if WebClass.sharedInstance.connected() {
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-              //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 let Url = "PostingSession/SaveMultipleNecropsySyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -1245,9 +1245,9 @@ class SingleSyncData: NSObject {
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
             if WebClass.sharedInstance.connected() {
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-              //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 
                 let Url = "PostingSession/SaveBirdImageSyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
@@ -1437,9 +1437,9 @@ class SingleSyncData: NSObject {
         if WebClass.sharedInstance.connected() {
             
             let Url = "Setting/SaveUserSetting"
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-           // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict = ["Authorization":accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict = [Constants.authorization:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             var request = URLRequest(url: URL(string: urlString)! )
             request.httpMethod = "POST"
@@ -1518,9 +1518,9 @@ class SingleSyncData: NSObject {
                         
                         let keychainHelper = AccessTokenHelper()
                      
-                        keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: "aceesTokentype")
+                        keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
                                                       
-                       // UserDefaults.standard.set(aceesTokentype,forKey: "aceesTokentype")
+                       // UserDefaults.standard.set(aceesTokentype,forKey: Constants.accessToken)
                         UserDefaults.standard.synchronize()
                         self.feedprogram(postingId: postingId)
                     }

@@ -221,6 +221,31 @@ struct Constants {
     static let drinkingWater = "Drinking Water"
     static let inOvoStr = "In Ovo"
     static let eveDrop = "Eye Drop"
+    static let offlineMessage = "You are currently offline. Please go online to sync data."
+    static let dataSyncCompleted = "Data sync has been completed."
+    static let mandatoryFieldsMessage = "Fields marked as (*) are mandatory. Please fill all the fields."
+    static let unknowCode = "Unknown code"
+    static let noStoreNoCache = "no-store, no-cache, must-revalidate, private"
+    static let accessToken = "aceesTokentype"
+    static let authorization = "Authorization"
+    static let noDataRecieved = "No data received from the server."
+    static let failedSerilazedJSON = "Failed to serialize JSON data"
+    static let predicateRefLang = "refId == %@ AND lngId == %@"
+    static let predicateNecFarmName = "necropsyId == %@ AND formName == %@"
+    static let predicateBirdsFarmNecID = "noofBirds == %@ AND formName == %@ AND necropsyId == %@"
+    
+    static let predicateObsIdBirdsFarmNecID = "birdNo == %@ AND formName == %@ AND obsID == %@ AND necropsyId == %@"
+    static let predicateCatNameBirdsFarmNecID  = "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@"
+    
+    static let postingIdFeedPredicate = "postingId == %@ AND feedId = %@"
+    static let statusPostingIdPredicate = "isSync == %@ AND postingId == %@"
+    static let feedIdPredicate = "feedId == %@"
+    static let predicateStatus = "isSync == %@"
+    static let necFarmNamePredicate  = "necropsyId == %@ AND farmName == %@"
+    static let necIdPredicate = "necropsyId == %@"
+    static let langIdPredicate = "lngId == %@"
+    static let  refIdPredicater = "refId == %@"
+    static let postIdStatusPredicator  = "postingId == %@ AND isSync == %@"
 }
 
 enum ZoetisArt {
@@ -315,11 +340,11 @@ func delay(_ seconds: Double, completion: @escaping () -> ()) {
 
 struct AccessTokenHelper {
     static func saveData(_ encodedToken:String) {
-        KeyChainHelper.saveData(key: "aceesTokentype", value: encodedToken)
+        KeyChainHelper.saveData(key: Constants.accessToken, value: encodedToken)
     }
     
     static func getData() -> String? {
-        return KeyChainHelper.getData(key: "aceesTokentype")
+        return KeyChainHelper.getData(key: Constants.accessToken)
     }
     
     

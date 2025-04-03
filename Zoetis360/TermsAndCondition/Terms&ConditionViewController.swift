@@ -179,21 +179,16 @@ class Terms_ConditionViewController: UIViewController,WKUIDelegate,WKNavigationD
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? "Unknown code"
+                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
 //                        self!.loginMethod()
                     }
-                }
-                else
-                {
+                } else {
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                 }
-                
-                
             })
         }
     }
-    
 }

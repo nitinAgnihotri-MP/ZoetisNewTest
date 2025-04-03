@@ -334,9 +334,9 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
     let selectedTextDefault = "- Sélectionner -"
     let placeholderText = " Digitar"
     let feedPrgramvalidationMsg = "Please enter feed program."
-    let offlineDataMsg = "You are currently offline. Please go online to sync data."
+    let offlineDataMsg = Constants.offline
     let moleculeFeedMsg = "Please select the molecule feed."
-    let syncCompletedMs = "Data sync has been completed."
+    let syncCompletedMs = Constants.dataSyncCompleted
     let feedTypeOne = "Feed type 1"
     let feedTypeTwo = "Feed type 2"
     let feedTypeThree = "Feed type 3"

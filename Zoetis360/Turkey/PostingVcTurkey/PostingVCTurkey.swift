@@ -178,7 +178,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     
     let messageForExsistingComplex = "Session for this date & complex already exists. Please select another date or complex."
     let selectDateText = "- Select Date -"
-    let mendatoryFieldsMsg = "Fields marked as (*) are mandatory. Please fill all the fields."
+    let mendatoryFieldsMsg = Constants.mandatoryFieldsMessage
     @objc func methodOfReceivedNotification(notification: Notification){
         //Take Action on Notification
         UserDefaults.standard.set(0, forKey: "postingId")
@@ -292,6 +292,119 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     
     
+    fileprivate func combineSetMultipleFeedProgramName() {
+        let ftitle = NSMutableString()
+        for i in 0..<feedProgramArray.count{
+            
+            var label = UILabel()
+            let feepRGMR = (feedProgramArray.object(at: i) as AnyObject).value(forKey: "feddProgramNam") as! String
+            
+            if i == 0 {
+                label  = UILabel(frame: CGRect(x: 50, y: 519, width: 111, height: 21))
+                ftitle.append( feepRGMR + " " )
+                
+            } else {
+                
+                label  = UILabel(frame: CGRect(x: 50, y: 519, width: 111*(CGFloat(i)+1)+10, height: 21))
+                ftitle.append(", " + feepRGMR + " " )
+            }
+            
+            label.textAlignment = NSTextAlignment.center
+            label.backgroundColor = UIColor.red
+            feedProgramLbl.text = ftitle as String
+        }
+    }
+    
+    fileprivate func setVaccinationLblTxt() {
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            
+            postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
+            lblComplex.text =  UserDefaults.standard.value(forKey: "complexUnlinked") as? String
+            lblDate.text =  UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String
+        }
+        else {
+            postingId = UserDefaults.standard.integer(forKey: "postingId")
+        }
+        
+        if(CoreDataHandlerTurkey().fetchAddvacinationDataTurkey(postingId as NSNumber).count == 0)
+        {
+            lblAddVacci.text = "Add vaccination"
+        }
+        else {
+            addVaccinationOutlet.backgroundColor = UIColor.gray
+            lblAddVacci.text = "Edit vaccination"
+        }
+    }
+    
+    fileprivate func chnageFeedProgramBtnOpacity() {
+        feedProgramLbl.isHidden = false
+        feedProgramOutlet.isHidden = false
+        dropImageView.isHidden = false
+        feedProgrmLbl2.isHidden = false
+        feed3PrgrmLbl.isHidden = false
+        feed4prgrmlBL.isHidden = false
+        feed5PrgrmLbl.isHidden = false
+        
+        if UserDefaults.standard.integer(forKey: "isBackWithoutFedd") == 0 {
+            
+            feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
+            
+            if feedProgramArray.count > 0 {
+                addFeedProgramOutle.backgroundColor = UIColor.gray
+                feedProgramOutlet.isHidden = false
+                feedProgramOutlet.layer.borderWidth = 1
+                feedProgramOutlet.layer.cornerRadius = 3.5
+                feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
+                dropImageView.isHidden = false
+                feedProgramLabel.isHidden = false
+                
+            }  else {
+                addFeedProgramOutle.backgroundColor = UIColor.init(red: 1/255, green: 193/255, blue: 202/255, alpha: 1.0)
+                feedProgramOutlet.isHidden = true
+                dropImageView.isHidden = true
+                feedProgramLabel.isHidden = true
+            }
+        } else {
+            addFeedProgramOutle.backgroundColor = UIColor.gray
+            feedProgramOutlet.isHidden = false
+            feedProgramOutlet.layer.borderWidth = 1
+            feedProgramOutlet.layer.cornerRadius = 3.5
+            feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
+            dropImageView.isHidden = false
+            feedProgramLabel.isHidden = false
+        }
+    }
+    
+    fileprivate func chnageVaccinationBtnOpacity() {
+        feedProgramLbl.isHidden = false
+        feedProgramOutlet.isHidden = false
+        dropImageView.isHidden = false
+        feedProgrmLbl2.isHidden = false
+        
+        feed3PrgrmLbl.isHidden = false
+        feed4prgrmlBL.isHidden = false
+        feed5PrgrmLbl.isHidden = false
+        
+        feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
+        
+        if feedProgramArray.count > 0 {
+            addFeedProgramOutle.backgroundColor = UIColor.gray
+            feedProgramOutlet.isHidden = false
+            feedProgramOutlet.layer.borderWidth = 1
+            feedProgramOutlet.layer.cornerRadius = 3.5
+            feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
+            dropImageView.isHidden = false
+            feedProgramLabel.isHidden = false
+            
+        } else {
+            addFeedProgramOutle.backgroundColor = UIColor.init(red: 1/255, green: 193/255, blue: 202/255, alpha: 1.0)
+            feedProgramOutlet.isHidden = true
+            dropImageView.isHidden = true
+            feedProgramLabel.isHidden = true
+            
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         
         notesTextView.textContainer.lineFragmentPadding = 12
@@ -324,26 +437,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         }
         if feedProgramArray.count > 1 {
             
-            let ftitle = NSMutableString()
-            for i in 0..<feedProgramArray.count{
-                
-                var label = UILabel()
-                let feepRGMR = (feedProgramArray.object(at: i) as AnyObject).value(forKey: "feddProgramNam") as! String
-                
-                if i == 0 {
-                    label  = UILabel(frame: CGRect(x: 50, y: 519, width: 111, height: 21))
-                    ftitle.append( feepRGMR + " " )
-                    
-                } else {
-                    
-                    label  = UILabel(frame: CGRect(x: 50, y: 519, width: 111*(CGFloat(i)+1)+10, height: 21))
-                    ftitle.append(", " + feepRGMR + " " )
-                }
-                
-                label.textAlignment = NSTextAlignment.center
-                label.backgroundColor = UIColor.red
-                feedProgramLbl.text = ftitle as String
-            }
+            combineSetMultipleFeedProgramName()
         }
         
         CustRepTextField.delegate = self
@@ -376,115 +470,22 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         
         if appDelegate.isDoneClick == true {
             
-            if UserDefaults.standard.bool(forKey: "Unlinked") == true {
-                
-                postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-                lblComplex.text =  UserDefaults.standard.value(forKey: "complexUnlinked") as? String
-                lblDate.text =  UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String
-                
-                if appDelegate.sendFeedVariable == "Feed"{
-                    
-                } else if appDelegate.sendFeedVariable == "vaccination" {
-                    
-                } else {
-                }
-            } else {
-                postingId = UserDefaults.standard.integer(forKey: "postingId")
-            }
-            
-            if(CoreDataHandlerTurkey().fetchAddvacinationDataTurkey(postingId as NSNumber).count == 0){
-                
-                lblAddVacci.text = "Add vaccination"
-                
-            } else {
-                
-                addVaccinationOutlet.backgroundColor = UIColor.gray
-              
-                lblAddVacci.text = "Edit vaccination"
-                
-            }
+            setVaccinationLblTxt()
         }
         
         
         if appDelegate.sendFeedVariable == "Feed" {
-            feedProgramLbl.isHidden = false
-            feedProgramOutlet.isHidden = false
-            dropImageView.isHidden = false
-            feedProgrmLbl2.isHidden = false
-            feed3PrgrmLbl.isHidden = false
-            feed4prgrmlBL.isHidden = false
-            feed5PrgrmLbl.isHidden = false
-            
-            if UserDefaults.standard.integer(forKey: "isBackWithoutFedd") == 0 {
-                
-                feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
-                
-                if feedProgramArray.count > 0 {
-                    addFeedProgramOutle.backgroundColor = UIColor.gray
-                    feedProgramOutlet.isHidden = false
-                    feedProgramOutlet.layer.borderWidth = 1
-                    feedProgramOutlet.layer.cornerRadius = 3.5
-                    feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
-                    dropImageView.isHidden = false
-                    feedProgramLabel.isHidden = false
-                    
-                }  else {
-                    addFeedProgramOutle.backgroundColor = UIColor.init(red: 1/255, green: 193/255, blue: 202/255, alpha: 1.0)
-                    
-                    
-                    feedProgramOutlet.isHidden = true
-                    dropImageView.isHidden = true
-                    feedProgramLabel.isHidden = true
-                }
-            } else {
-                addFeedProgramOutle.backgroundColor = UIColor.gray
-                feedProgramOutlet.isHidden = false
-                feedProgramOutlet.layer.borderWidth = 1
-                feedProgramOutlet.layer.cornerRadius = 3.5
-                feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
-                dropImageView.isHidden = false
-                feedProgramLabel.isHidden = false
-            }
+            chnageFeedProgramBtnOpacity()
         }
         else if appDelegate.sendFeedVariable == "vaccination"  {
             
-            feedProgramLbl.isHidden = false
-            feedProgramOutlet.isHidden = false
-            dropImageView.isHidden = false
-            feedProgrmLbl2.isHidden = false
-            
-            feed3PrgrmLbl.isHidden = false
-            feed4prgrmlBL.isHidden = false
-            feed5PrgrmLbl.isHidden = false
-            
-            feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
-            
-            if feedProgramArray.count > 0 {
-                addFeedProgramOutle.backgroundColor = UIColor.gray
-                feedProgramOutlet.isHidden = false
-                feedProgramOutlet.layer.borderWidth = 1
-                feedProgramOutlet.layer.cornerRadius = 3.5
-                feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
-                dropImageView.isHidden = false
-                feedProgramLabel.isHidden = false
-                
-            } else {
-                addFeedProgramOutle.backgroundColor = UIColor.init(red: 1/255, green: 193/255, blue: 202/255, alpha: 1.0)
-                feedProgramOutlet.isHidden = true
-                dropImageView.isHidden = true
-                feedProgramLabel.isHidden = true
-                
-            }
+            chnageVaccinationBtnOpacity()
         }
         
         feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
         if UserDefaults.standard.bool(forKey: "Unlinked") == true {
             postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-            if appDelegate.sendFeedVariable == "Feed"{
-            } else if appDelegate.sendFeedVariable == "vaccination"{
-                
-            } else {
-            }
+          
         } else {
             postingId = UserDefaults.standard.integer(forKey: "postingId")
         }
@@ -663,6 +664,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel) {
             UIAlertAction in
+            print("Cancel Pressed")
         }
         let okAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default) {
             UIAlertAction in
@@ -897,6 +899,35 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     
     
+    fileprivate func setPostingId() {
+        let neciIdStep = UserDefaults.standard.integer(forKey: "necId")
+        if neciIdStep == 0 {
+            
+            let postingIdwithNec = UserDefaults.standard.integer(forKey: "necIdIsZero")
+            
+            if postingIdwithNec>0 {
+                
+                postingId = postingIdwithNec+1
+            } else {
+                postingId = 1
+            }
+        } else {
+            
+            if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+                postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
+            } else {
+                let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionWithNumberTurkey()
+                if neciIdStep == 0{
+                    postingId = postingArr.count  + 1
+                } else {
+                    
+                    let necArr = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdWithPostingIDZeroTurkey()
+                    postingId = necArr.count + postingArr.count + 1
+                }
+            }
+        }
+    }
+    
     func GoToFeedprogramPage() {
         
         let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
@@ -905,32 +936,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             let nec =  UserDefaults.standard.bool(forKey: "nec")
             
             if nec == true {
-                let neciIdStep = UserDefaults.standard.integer(forKey: "necId")
-                if neciIdStep == 0 {
-                    
-                    let postingIdwithNec = UserDefaults.standard.integer(forKey: "necIdIsZero")
-                    
-                    if postingIdwithNec>0 {
-                        
-                        postingId = postingIdwithNec+1
-                    } else {
-                        postingId = 1
-                    }
-                } else {
-                    
-                    if UserDefaults.standard.bool(forKey: "Unlinked") == true {
-                        postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-                    } else {
-                        let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionWithNumberTurkey()
-                        if neciIdStep == 0{
-                            postingId = postingArr.count  + 1
-                        } else {
-                            
-                            let necArr = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdWithPostingIDZeroTurkey()
-                            postingId = necArr.count + postingArr.count + 1
-                        }
-                    }
-                }
+                setPostingId()
             }
             UserDefaults.standard.set(postingId, forKey: "necIdIsZero")
             UserDefaults.standard.set(postingId, forKey: "postingId")
@@ -1222,7 +1228,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 self.ssologoutMethod()
                 CoreDataHandlerTurkey().deleteAllDataTurkey("CustmerTurkey")
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
             }
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "viewC") as? ViewController
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
@@ -1525,6 +1531,37 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     }
     
     
+    fileprivate func savePostedSessionData() {
+        let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
+        if isPostingId == false {
+            let nec =  UserDefaults.standard.bool(forKey: "nec")
+            if nec == true {
+                
+                if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+                    postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
+                } else {
+                    
+                    CoreDataHandlerTurkey().autoIncrementidtableTurkey()
+                    let autoD  = CoreDataHandlerTurkey().fetchFromAutoIncrementTurkey()
+                    postingId = autoD
+                }
+            }
+            UserDefaults.standard.set(postingId, forKey: "necIdIsZero")
+            UserDefaults.standard.set(postingId, forKey: "postingId")
+            UserDefaults.standard.set(true, forKey: "ispostingIdIncrease")
+            UserDefaults.standard.synchronize()
+            savePostingData()
+        }  else {
+            UserDefaults.standard.set(postingId, forKey: "postingId")
+            UserDefaults.standard.synchronize()
+        }
+        
+        if isClickOnAnyField == true && isPostingId == true {
+            savePostingData()
+            isClickOnAnyField = false
+        }
+    }
+    
     @IBAction func didSelectOnVaccinationProgram(_ sender: AnyObject) {
         
         UserDefaults.standard.set(false, forKey: "isUpadteFeedFromUnlinked")
@@ -1570,34 +1607,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
             
         } else {
-            let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
-            if isPostingId == false {
-                let nec =  UserDefaults.standard.bool(forKey: "nec")
-                if nec == true {
-                    
-                    if UserDefaults.standard.bool(forKey: "Unlinked") == true {
-                        postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-                    } else {
-                        
-                        CoreDataHandlerTurkey().autoIncrementidtableTurkey()
-                        let autoD  = CoreDataHandlerTurkey().fetchFromAutoIncrementTurkey()
-                        postingId = autoD
-                    }
-                }
-                UserDefaults.standard.set(postingId, forKey: "necIdIsZero")
-                UserDefaults.standard.set(postingId, forKey: "postingId")
-                UserDefaults.standard.set(true, forKey: "ispostingIdIncrease")
-                UserDefaults.standard.synchronize()
-                savePostingData()
-            }  else {
-                UserDefaults.standard.set(postingId, forKey: "postingId")
-                UserDefaults.standard.synchronize()
-            }
-            
-            if isClickOnAnyField == true && isPostingId == true {
-                savePostingData()
-                isClickOnAnyField = false
-            }
+            savePostedSessionData()
             
             let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "AddVaccinationTurkey") as? AddVaccinationTurkey
             self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
@@ -1776,6 +1786,21 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         }
     }
     
+    fileprivate func setBorderToBtns() {
+        if lblCustmer.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
+            btnCustmer.layer.borderColor = UIColor.black.cgColor
+        }
+        if lblComplex.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
+            btnComplex.layer.borderColor = UIColor.black.cgColor
+        }
+        if lblVeteration.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
+            btnVetration.layer.borderColor = UIColor.black.cgColor
+        }
+        if lblDate.text != NSLocalizedString(selectDateText, comment: "") {
+            btnDate.layer.borderColor = UIColor.black.cgColor
+        }
+    }
+    
     @IBAction func didSelectOnAddFeedProgram(_ sender: AnyObject) {
         
         UserDefaults.standard.set(false, forKey: "isUpadteFeedFromUnlinked")
@@ -1795,18 +1820,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             btnVetration.layer.borderColor = UIColor.red.cgColor
             btnComplex.layer.borderColor = UIColor.red.cgColor
             
-            if lblCustmer.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-                btnCustmer.layer.borderColor = UIColor.black.cgColor
-            }
-            if lblComplex.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-                btnComplex.layer.borderColor = UIColor.black.cgColor
-            }
-            if lblVeteration.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-                btnVetration.layer.borderColor = UIColor.black.cgColor
-            }
-            if lblDate.text != NSLocalizedString(selectDateText, comment: "") {
-                btnDate.layer.borderColor = UIColor.black.cgColor
-            }
+            setBorderToBtns()
             
          
         } else {
@@ -2018,12 +2032,12 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     func didFinishApi(){
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
     }
     func failWithInternetConnection() {
         
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.offline, comment: ""))
     }
     
     // MARK: - TEXTVIEW DELEGATES

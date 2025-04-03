@@ -524,8 +524,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         let aceesTokentype: String = tokenType + " " + acessToken
                         let roleId = dict.value(forKey: "HasAccess")! as AnyObject
                         let role = roleId.integerValue
-                      //  UserDefaults.standard.set(aceesTokentype,forKey: "aceesTokentype")
-                        AccessTokenHelper().saveToKeychain(valued: aceesTokentype, keyed: "aceesTokentype")
+                      //  UserDefaults.standard.set(aceesTokentype,forKey: Constants.accessToken)
+                        AccessTokenHelper().saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
                        // AccessTokenHelper.saveData(aceesTokentype)
                         UserDefaults.standard.set(role!, forKey: "Role")
                         UserDefaults.standard.synchronize()
@@ -925,7 +925,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         UserDefaults.standard.removeObject(forKey: "switchBird")
         UserDefaults.standard.removeObject(forKey: "turkeyReport")
         UserDefaults.standard.removeObject(forKey: "countryId")
-        UserDefaults.standard.removeObject(forKey: "aceesTokentype")
+        UserDefaults.standard.removeObject(forKey: Constants.accessToken)
         UserDefaults.standard.removeObject(forKey: "Role")
         UserDefaults.standard.removeObject(forKey: "login")
         UserDefaults.standard.removeObject(forKey: "FirstName")
@@ -949,9 +949,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         let turkeyReport =  UserDefaults.standard.value(forKey:"turkeyReport") as? Bool ?? false
         let countryId =  UserDefaults.standard.value(forKey:"countryId") as? Int ?? 0
         
-        let aceesTokentype = keychainHelper.getFromKeychain(keyed: "aceesTokentype")
+        let aceesTokentype = keychainHelper.getFromKeychain(keyed: Constants.accessToken)
       
-      //  let aceesTokentype = UserDefaults.standard.value(forKey:"aceesTokentype") as? String ?? ""
+      //  let aceesTokentype = UserDefaults.standard.value(forKey:Constants.accessToken) as? String ?? ""
         
         let Role =  UserDefaults.standard.value(forKey:"Role") as? Int ?? 0
         let login =  UserDefaults.standard.value(forKey:"login") as? Bool ?? false
@@ -1026,8 +1026,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         UserDefaults.standard.set(countryIdPrev, forKey: "countryId")
           
        
-        keychainHelper.saveToKeychain(valued: "\(String(describing: aceesTokentypePrev))", keyed: "aceesTokentype")
-      //  UserDefaults.standard.set(aceesTokentypePrev, forKey: "aceesTokentype")
+        keychainHelper.saveToKeychain(valued: "\(String(describing: aceesTokentypePrev))", keyed: Constants.accessToken)
+      //  UserDefaults.standard.set(aceesTokentypePrev, forKey: Constants.accessToken)
     
         UserDefaults.standard.set(RolePrev, forKey: "Role")
         UserDefaults.standard.set(loginPrev, forKey: "login")
@@ -2080,9 +2080,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
             let url = "PostingSession/T_GetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-                                                        //(UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict: HTTPHeaders = ["Authorization": accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+                                                        //(UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict: HTTPHeaders = [Constants.authorization: accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
                 let statusCode =  response.response?.statusCode
@@ -2258,9 +2258,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             var id = Int()
             
             id = UserDefaults.standard.value(forKey: "Id") as! Int
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-           // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let dev = "iOS"
             let url = "PostingSession/T_GetFeedListByUser?UserId=\(id)&DeviceType=\(dev)"
             let urlString: String = WebClass.sharedInstance.webUrl + url
@@ -2476,8 +2476,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             id =  UserDefaults.standard.integer(forKey: "Id")
             let dev = "iOS"
             let url = "PostingSession/T_GetBirdNotesListByUser?UserId=\(id)&DeviceType=\(dev)"
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-            let headerDict: HTTPHeaders = ["Authorization": accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+            let headerDict: HTTPHeaders = [Constants.authorization: accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url
             
             let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedNotes.latestUrl + "\(id)&DeviceType=\(Constants.deviceType)"

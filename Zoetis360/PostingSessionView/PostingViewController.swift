@@ -188,9 +188,9 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     let gigya =  Gigya.sharedInstance(GigyaAccount.self)
     let emptyDateLabel = "- Select Date -"
     let frenchEmptyDateLabel = " - Sélectionner une date -"
-    let offlineMsg = "You are currently offline. Please go online to sync data."
+    let offlineMsg = Constants.offline
     let sameDateComplexValidationMsg = "Session for this date & complex already exist. Please select another date or complex."
-    let mendatoryFieldsMsg = "Fields marked as (*) are mandatory. Please fill all the fields."
+    let mendatoryFieldsMsg = Constants.mandatoryFieldsMessage
     let ajouterStr = "Ajouter une vaccination"
     // MARK: ******************************************************
     
@@ -2291,7 +2291,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     {
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
     }
     func failWithInternetConnection()
     {

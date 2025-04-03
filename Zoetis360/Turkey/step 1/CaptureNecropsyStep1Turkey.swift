@@ -148,7 +148,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
     var feedIdUpdate = NSNumber()
     
     var editfeed = String()
-    let mendatoryFieldMsg = "Fields marked as (*) are mandatory. Please fill all the fields."
+    let mendatoryFieldMsg = Constants.mandatoryFieldsMessage
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -858,6 +858,52 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
     let digitAfterDecimal = 3
     
     
+    fileprivate func farmWeightValidation(_ string: String, _ newString: NSString, _ maxLength: Int, _ textField: UITextField) -> Bool {
+        let allowedCharacters = CharacterSet.decimalDigits.union(CharacterSet(charactersIn: ".")) // Allows numbers and dot only
+        let filteredString = string.trimmingCharacters(in: allowedCharacters.inverted) // Remove unwanted characters
+        
+        if filteredString == string { // Check if input contains only allowed characters
+            return newString.length <= maxLength
+        } else if string == "." {
+            let dotCount = textField.text?.filter { $0 == "." }.count ?? 0
+            if dotCount == 0 {
+                return newString.length <= maxLength
+            } else {
+                return false // Prevent multiple dots
+            }
+        }
+        return false
+    }
+    
+    fileprivate func autoSearchFiledCheck(_ newString: String) {
+        let bPredicate: NSPredicate = NSPredicate(format: "farmName contains[cd] %@", newString)
+        let countryId =  UserDefaults.standard.integer(forKey:"UnlinkComplex")
+        
+        fetchcomplexArray = CoreDataHandlerTurkey().fetchFarmsDataDatabaseUsingCompexIdTurkey(complexId: countryId as NSNumber).filtered(using: bPredicate) as NSArray
+        
+        autocompleteUrls1 = fetchcomplexArray.mutableCopy() as! NSMutableArray
+        autocompleteUrls.removeAllObjects()
+        autocompleteUrls2.removeAllObjects()
+        
+        for i in 0..<autocompleteUrls1.count {
+            
+            let f = autocompleteUrls1.object(at:i) as! FarmsListTurkey
+            let  farmName = f.farmName
+            autocompleteUrls2.add(farmName!)
+        }
+        autocompleteUrls = self.removeDuplicates(array: autocompleteUrls2)
+        autoSerchTable.frame = CGRect(x:180,y: 240,width: 200,height: 200)
+        buttonDroper.alpha = 1
+        autoSerchTable.alpha = 1
+        
+        if autocompleteUrls.count == 0 {
+            buttonDroper.alpha = 0
+            autoSerchTable.alpha = 0
+        } else {
+            autoSerchTable.reloadData()
+        }
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
         
         let  char = string.cString(using: String.Encoding.utf8)!
@@ -870,32 +916,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         if (textField.tag == 101){
             
-            let bPredicate: NSPredicate = NSPredicate(format: "farmName contains[cd] %@", newString)
-            let countryId =  UserDefaults.standard.integer(forKey:"UnlinkComplex")
-            
-            fetchcomplexArray = CoreDataHandlerTurkey().fetchFarmsDataDatabaseUsingCompexIdTurkey(complexId: countryId as NSNumber).filtered(using: bPredicate) as NSArray
-            
-            autocompleteUrls1 = fetchcomplexArray.mutableCopy() as! NSMutableArray
-            autocompleteUrls.removeAllObjects()
-            autocompleteUrls2.removeAllObjects()
-            
-            for i in 0..<autocompleteUrls1.count {
-                
-                let f = autocompleteUrls1.object(at:i) as! FarmsListTurkey
-                let  farmName = f.farmName
-                autocompleteUrls2.add(farmName!)
-            }
-            autocompleteUrls = self.removeDuplicates(array: autocompleteUrls2)
-            autoSerchTable.frame = CGRect(x:180,y: 240,width: 200,height: 200)
-            buttonDroper.alpha = 1
-            autoSerchTable.alpha = 1
-            
-            if autocompleteUrls.count == 0 {
-                buttonDroper.alpha = 0
-                autoSerchTable.alpha = 0
-            } else {
-                autoSerchTable.reloadData()
-            }
+            autoSearchFiledCheck(newString)
         } else {
             let aSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
             switch textField.tag {
@@ -944,20 +965,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 var result = true
                 if textField == farmWeightTextField {
                     
-                    let allowedCharacters = CharacterSet.decimalDigits.union(CharacterSet(charactersIn: ".")) // Allows numbers and dot only
-                    let filteredString = string.trimmingCharacters(in: allowedCharacters.inverted) // Remove unwanted characters
-
-                    if filteredString == string { // Check if input contains only allowed characters
-                        return newString.length <= maxLength
-                    } else if string == "." {
-                        let dotCount = textField.text?.filter { $0 == "." }.count ?? 0
-                        if dotCount == 0 {
-                            return newString.length <= maxLength
-                        } else {
-                            return false // Prevent multiple dots
-                        }
-                    }
-                    return false
+                    return farmWeightValidation(string, newString, maxLength, textField)
 
                 }
                 return true
@@ -1233,6 +1241,102 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
         }
     }
     
+    fileprivate func setFarmDetailInCell(_ indexPath: IndexPath, _ Cell: CapNecropsyStep1TblCell) {
+        let person = captureNecropsy[indexPath.row]
+        
+        var farmName = person.value(forKey: "farmName") as? String
+        let age = person.value(forKey: "age") as! String
+        farmName = farmName! + " " + "[" + age + "]"
+        var farmName2 = String()
+        let range = farmName?.range(of: ".")
+        if range != nil{
+            var abc = String(farmName![range!.upperBound...]) as NSString
+            farmName2 = String(indexPath.row+1) + "." + " " + String(describing:abc)
+        }
+        
+        Cell.farmNameLbl.text = farmName2 as? String
+        Cell.feedProgramLbl.text = person.value(forKey: "feedProgram") as? String
+        
+        let flockId = person.value(forKey: "flockId") as? String
+        var truncated1 = String()
+        let count1 = flockId?.count
+        
+        if count1 == 1 && flockId?.first == "0"{
+            truncated1 = ""
+            
+        } else {
+            truncated1 = flockId!
+            
+        }
+        Cell.contentView.backgroundColor = UIColor.clear
+        Cell.flockIdLbl?.text = truncated1
+        Cell.houseNoLbl.text = person.value(forKey: "houseNo") as? String
+        let noofBirds = Int((person.value(forKey: "noOfBirds") as? String)!)
+        Cell.breedLbl.text = person.value(forKey: "breed") as? String
+        
+        Cell.generationLbl.text = person.value(forKey: "generName") as? String
+        Cell.deleteButton.tag = indexPath.row
+        Cell.deleteButton.addTarget(self, action: #selector(CaptureNecropsyStep1Turkey.ClickDeleteBtton(_:)), for: .touchUpInside)
+        Cell.editBtn.tag = indexPath.row
+        Cell.editBtn.addTarget(self, action: #selector(CaptureNecropsyStep1Turkey.ClickEditBtton(_:)), for: .touchUpInside)
+        let abfLbl = person.value(forKey: "abf") as? String
+        
+        if abfLbl == "Conventional" || abfLbl == "C" {
+            
+            Cell.abfLbl.text = "C"
+            
+        } else if abfLbl == "Antibiotic free" || abfLbl == "A" {
+            
+            Cell.abfLbl.text = "A"
+            
+        } else if abfLbl == appDelegateObj.selectStr {
+            
+            Cell.abfLbl.text = ""
+        }
+        
+        Cell.sexLbl.text = person.value(forKey: "sex") as? String
+        Cell.sickLbl.text = person.value(forKey: "sick") as? String
+        
+        let farmWeight = person.value(forKey: "farmWeight") as? String
+        
+        if farmWeight != ""{
+            var truncated = String()
+            let lastVarble = farmWeight?.last!
+            
+            let count = farmWeight?.count
+            
+            if count == 1 && farmWeight?.first == "."{
+                
+                truncated = ""
+                
+            } else if lastVarble == "." {
+                truncated = (farmWeight?.substring(to: (farmWeight?.index(before: (farmWeight?.endIndex)!))!))!
+            }
+            else {
+                
+                truncated = farmWeight!
+                
+            }
+            Cell.farmWeightLbl.text = truncated
+        }
+        else{
+            Cell.farmWeightLbl.text = ""
+        }
+        
+        if (noofBirds == 11){
+            let val = 10
+            Cell.noOfBirdsLbl.text = String(val)
+        } else {
+            Cell.noOfBirdsLbl.text = person.value(forKey: "noOfBirds") as? String
+        }
+        let checkVal  = person.value(forKey: "sick") as! Int
+        if checkVal == 0 {
+            Cell.sickLbl?.text = NSLocalizedString(Constants.noStr, comment: "")
+        } else {
+            Cell.sickLbl?.text = NSLocalizedString("Yes", comment: "")
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == droperTableView {
             let cell = UITableViewCell ()
@@ -1281,99 +1385,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
         } else {
             
             let Cell:CapNecropsyStep1TblCell = self.tblView.dequeueReusableCell(withIdentifier: "cell") as! CapNecropsyStep1TblCell
-            let person = captureNecropsy[indexPath.row]
-            
-            var farmName = person.value(forKey: "farmName") as? String
-            let age = person.value(forKey: "age") as! String
-            farmName = farmName! + " " + "[" + age + "]"
-            var farmName2 = String()
-            let range = farmName?.range(of: ".")
-            if range != nil{
-                var abc = String(farmName![range!.upperBound...]) as NSString
-                farmName2 = String(indexPath.row+1) + "." + " " + String(describing:abc)
-            }
-            
-            Cell.farmNameLbl.text = farmName2 as? String
-            Cell.feedProgramLbl.text = person.value(forKey: "feedProgram") as? String
-            
-            let flockId = person.value(forKey: "flockId") as? String
-            var truncated1 = String()
-            let count1 = flockId?.count
-            
-            if count1 == 1 && flockId?.first == "0"{
-                truncated1 = ""
-                
-            } else {
-                truncated1 = flockId!
-                
-            }
-            Cell.contentView.backgroundColor = UIColor.clear
-            Cell.flockIdLbl?.text = truncated1
-            Cell.houseNoLbl.text = person.value(forKey: "houseNo") as? String
-            let noofBirds = Int((person.value(forKey: "noOfBirds") as? String)!)
-            Cell.breedLbl.text = person.value(forKey: "breed") as? String
-            
-            Cell.generationLbl.text = person.value(forKey: "generName") as? String
-            Cell.deleteButton.tag = indexPath.row
-            Cell.deleteButton.addTarget(self, action: #selector(CaptureNecropsyStep1Turkey.ClickDeleteBtton(_:)), for: .touchUpInside)
-            Cell.editBtn.tag = indexPath.row
-            Cell.editBtn.addTarget(self, action: #selector(CaptureNecropsyStep1Turkey.ClickEditBtton(_:)), for: .touchUpInside)
-            let abfLbl = person.value(forKey: "abf") as? String
-            
-            if abfLbl == "Conventional" || abfLbl == "C" {
-                
-                Cell.abfLbl.text = "C"
-                
-            } else if abfLbl == "Antibiotic free" || abfLbl == "A" {
-                
-                Cell.abfLbl.text = "A"
-                
-            } else if abfLbl == appDelegateObj.selectStr {
-                
-                Cell.abfLbl.text = ""
-            }
-            
-            Cell.sexLbl.text = person.value(forKey: "sex") as? String
-            Cell.sickLbl.text = person.value(forKey: "sick") as? String
-            
-            let farmWeight = person.value(forKey: "farmWeight") as? String
-            
-            if farmWeight != ""{
-                var truncated = String()
-                let lastVarble = farmWeight?.last!
-                
-                let count = farmWeight?.count
-                
-                if count == 1 && farmWeight?.first == "."{
-                    
-                    truncated = ""
-                    
-                } else if lastVarble == "." {
-                    truncated = (farmWeight?.substring(to: (farmWeight?.index(before: (farmWeight?.endIndex)!))!))!
-                }
-                else {
-                    
-                    truncated = farmWeight!
-                    
-                }
-                Cell.farmWeightLbl.text = truncated
-            }
-            else{
-                Cell.farmWeightLbl.text = ""
-            }
-            
-            if (noofBirds == 11){
-                let val = 10
-                Cell.noOfBirdsLbl.text = String(val)
-            } else {
-                Cell.noOfBirdsLbl.text = person.value(forKey: "noOfBirds") as? String
-            }
-            let checkVal  = person.value(forKey: "sick") as! Int
-            if checkVal == 0 {
-                Cell.sickLbl?.text = NSLocalizedString(Constants.noStr, comment: "")
-            } else {
-                Cell.sickLbl?.text = NSLocalizedString("Yes", comment: "")
-            }
+            setFarmDetailInCell(indexPath, Cell)
             return Cell
         }
     }

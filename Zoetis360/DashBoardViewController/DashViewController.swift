@@ -83,8 +83,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     var langArray: [String] = []
     let helveticaLight = "HelveticaNeue-Light"
     let cacheControl = "Cache-Control"
-    let authorization = "Authorization"
-    let unknownCodeStr = "Unknown code"
+    let authorization = Constants.authorization
+    let unknownCodeStr = Constants.unknowCode
     let invalidItemStructureStr = "Invalid item structure in array."
     // MARK: - OUTLETS
     
@@ -110,7 +110,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     @IBOutlet weak var barChartViewView: BarChartView!
     @IBOutlet weak var syncCount: UILabel!
     let gigya =  Gigya.sharedInstance(GigyaAccount.self)
-    let offLineMsg = "You are currently offline. Please go online to sync data."
+    let offLineMsg = Constants.offline
     private let sessionManager: Session = {
         let configuration = URLSessionConfiguration.default
         configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
@@ -532,11 +532,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         if WebClass.sharedInstance.connected() {
             Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
             let keychainHelper = AccessTokenHelper()
-            accestoken = keychainHelper.getFromKeychain(keyed: "aceesTokentype") ?? ""
-           // accestoken = UserDefaults.standard.string(forKey: "aceesTokentype") ?? ""
+            accestoken = keychainHelper.getFromKeychain(keyed: Constants.accessToken) ?? ""
+           // accestoken = UserDefaults.standard.string(forKey: Constants.accessToken) ?? ""
             let headers: HTTPHeaders = [
                 authorization: accestoken,
-                cacheControl: "no-store, no-cache, must-revalidate, private"
+                cacheControl: Constants.noStoreNoCache
             ]
             let Id = UserDefaults.standard.integer(forKey: "Id")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
@@ -1300,7 +1300,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     } else {
                         // Handle the case where the array is empty or nil
                         print(Constants.noDataReceivedStr)
-                        self.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
+                        self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
                     }
                 }
                 
@@ -1461,10 +1461,10 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     func FeedProgramMoleculeService() {
         
         if WebClass.sharedInstance.connected() {
-            accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
+            accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             let headerDict: HTTPHeaders = [
                 authorization: accestoken,
-                cacheControl: "no-store, no-cache, must-revalidate, private"
+                cacheControl: "Constants.noStoreNoCache
             ]
             
             let Url = WebClass.sharedInstance.webUrl + "PostingSession/GetFeedProgramCatagoryAndMoleculeDetails"
@@ -1632,7 +1632,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                        } else {
                            // Handle empty response
                            print(Constants.noDataReceivedStr)
-                           self.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
+                           self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
                            self.getListFarms()
                        }
                 }
@@ -1689,15 +1689,14 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                         } else {
                             // Handle the case where the array is empty or nil
                             print(Constants.noDataReceivedStr)
-                            self.showToastWithTimer(message: "No data received from the server.", duration: 3.0)
+                            self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
                             self.callSalesRepWebService()
                         }
                     }
                 })
- 
-        } else{
+        } else {
             self.complexArr = CoreDataHandler().fetchCompexType()
-            if(self.complexArr.count == 0){
+            if(self.complexArr.count == 0) {
                 self.callcomplexService(self.complexSize)
             }
             self.failWithInternetConnection()
@@ -2201,7 +2200,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     func getListFarms() {
         
         if WebClass.sharedInstance.connected() {
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
             let Id = UserDefaults.standard.integer(forKey: "Id")
             let parameters = ["userId" :Id]
             let Url = WebClass.sharedInstance.webUrl + "Farm/GetFarmListByUserId"
@@ -2209,7 +2208,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             
             let headers: HTTPHeaders = [
                 authorization: accestoken,
-                cacheControl: "no-store, no-cache, must-revalidate, private"
+                cacheControl: Constants.noStoreNoCache
             ]
             sessionManager.request(urlString!, method: .post, parameters:parameters, headers: headers).responseJSON { response in
                 
@@ -2468,7 +2467,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         }
         else {
             Helper.dismissGlobalHUD(self.view)
-            let alertView = UIAlertController(title:NSLocalizedString(Constants.alertStr, comment: "") , message:NSLocalizedString("Data Sync has been completed.", comment: ""), preferredStyle: .alert)
+            let alertView = UIAlertController(title:NSLocalizedString(Constants.alertStr, comment: "") , message:NSLocalizedString(Constants.dataSyncCompleted, comment: ""), preferredStyle: .alert)
             alertView.addAction(UIAlertAction(title:NSLocalizedString("OK", comment: "") , style: .default, handler: { (alertAction) -> Void in
                 self.iSfarmSync()
                 
@@ -2486,7 +2485,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             let headers: HTTPHeaders = [Constants.contentType: "application/x-www-form-urlencoded",
                                         "Accept": "application/json",
-                                        cacheControl: "no-store, no-cache, must-revalidate, private"]
+                                        cacheControl: Constants.noStoreNoCache]
             
             let parameters:[String:String] = ["grant_type": "password","UserName" : CryptoHelper.encrypt(input: userName) as! String, "Password" : CryptoHelper.encrypt(input: pass) as! String,"LoginType": "Web","DeviceId":udid as! String]
             
@@ -2511,8 +2510,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                         
                         
                         let keychainHelper = AccessTokenHelper()
-                        keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: "aceesTokentype")
-                      //  UserDefaults.standard.set(aceesTokentype,forKey: "aceesTokentype")
+                        keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
+                      //  UserDefaults.standard.set(aceesTokentype,forKey: Constants.accessToken)
                         UserDefaults.standard.synchronize()
                         Helper.dismissGlobalHUD(self.view)
                         self.callWebService()
@@ -2579,7 +2578,7 @@ extension DashViewController{
     }
     func didFinishApiSyncdata(){
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data Sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
         self.printSyncLblCount()
     }
     func failWithInternetConnectionSyncdata(){

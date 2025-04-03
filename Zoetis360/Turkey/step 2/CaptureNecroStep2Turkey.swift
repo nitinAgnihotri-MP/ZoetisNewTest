@@ -203,6 +203,23 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         Helper.dismissGlobalHUD(self.view)
     }
     
+    fileprivate func saveGITrectImmuneData() {
+        self.saveGiTractCat({ (status) in
+            
+            if status == true
+            {
+                self.saveImmuneCat({ (status) in
+                    
+                    if status == true
+                    {
+                        reloadAllCollectionViews()
+                        
+                    }
+                })
+            }
+        })
+    }
+    
     @objc func callFirstMethodToLoadView() {
         self.callLoad { (status) in
             
@@ -217,20 +234,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                                 self.saveResCat({ (status) in
                                     if status == true
                                     {
-                                        self.saveGiTractCat({ (status) in
-                                            
-                                            if status == true
-                                            {
-                                                self.saveImmuneCat({ (status) in
-                                                    
-                                                    if status == true
-                                                    {
-                                                        reloadAllCollectionViews()
-                                                        
-                                                    }
-                                                })
-                                            }
-                                        })
+                                        saveGITrectImmuneData()
                                     }
                                 })
                             }
@@ -370,6 +374,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                         if FetchObsArr.count > 0 {
                             
                         } else {
+                   
                             if skleta.measure! == "Y,N" {
                                 
                                 let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -1122,7 +1127,88 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
     }
     
+    func setObsImageDescForSkleta(desc: Int) -> NSMutableArray {
+        let obsDescArr = NSMutableArray()
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
+        
+        // Common Yes/No cases
+        let yesNoCases: Set<Int> = [2, 3, 4, 8, 9, 11, 12, 13, 598, 602, 597, 603]
+        // Common N/A cases with 2 items
+        let naTwoCases: Set<Int> = [300, 10, 16, 14]
+        // Common N/A cases with 4 items
+        let naFourCases: Set<Int> = [601, 605]
+        
+        if yesNoCases.contains(desc) {
+            if lngId == 1 {
+                obsDescArr.add("No.")
+                obsDescArr.add(Constants.yesStr)
+            } else if lngId == 5 {
+                obsDescArr.add(Constants.sinLesionStr)
+                obsDescArr.add(Constants.sinLesionStr)
+            }
+        } else if naTwoCases.contains(desc) {
+            obsDescArr.add("N/A.")
+            obsDescArr.add("N/A.")
+        } else if naFourCases.contains(desc) {
+            obsDescArr.add("N/A.")
+            obsDescArr.add("N/A.")
+            obsDescArr.add("N/A.")
+            obsDescArr.add("N/A.")
+        } else {
+            switch desc {
+            case 1, 596:
+                if lngId == 1 {
+                    obsDescArr.add(Constants.noLesion)
+                    obsDescArr.add("(<50%) footpad.")
+                    obsDescArr.add("(>50%) footpad or a footpad that is <50% but has toe involvement.")
+                } else if lngId == 5 {
+                    obsDescArr.add(Constants.sinLesionStr)
+                    obsDescArr.add(Constants.sinLesionStr)
+                    obsDescArr.add(Constants.sinLesionStr)
+                }
+
+            case 5, 599:
+                if lngId == 1 {
+                    obsDescArr.add(Constants.noLesion)
+                    obsDescArr.add(Constants.growth50)
+                    obsDescArr.add(Constants.growth50GreaterStr)
+                } else if lngId == 5 {
+                    obsDescArr.add(Constants.sinLesionStr)
+                    obsDescArr.add(Constants.sinLesionStr)
+                    obsDescArr.add(Constants.sinLesionStr)
+                }
+
+            case 6, 600:
+                if lngId == 1 {
+                    obsDescArr.add("No.")
+                    obsDescArr.add("Yes (widening of growth plate).")
+                } else if lngId == 5 {
+                    obsDescArr.add(Constants.sinLesionStr)
+                    obsDescArr.add(Constants.sinLesionStr)
+                }
+
+            case 7:
+                if lngId == 1 {
+                    obsDescArr.add(Constants.normalStr)
+                    obsDescArr.add("Weak snap.")
+                    obsDescArr.add("Folding bone rather than snap.")
+                } else if lngId == 5 {
+                    obsDescArr.add(Constants.sinLesionStr)
+                    obsDescArr.add(Constants.sinLesionStr)
+                    obsDescArr.add(Constants.sinLesionStr)
+                }
+
+            default:
+                obsDescArr.add("N/A.")
+                obsDescArr.add("N/A.")
+            }
+        }
+        
+        return obsDescArr
+    }
+
     
+    /*
     func setObsImageDescForSkleta(desc : Int) -> NSMutableArray{
         let obsDescArr = NSMutableArray()
         switch desc {
@@ -1353,7 +1439,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         return obsDescArr
         
     }
-    
+    */
     
     fileprivate func extractedFunc(_ obsDescArr: NSMutableArray) -> NSMutableArray {
         if lngId == 1 {
@@ -1933,16 +2019,17 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         if btnTag == 0
         {
             dataSkeltaArray.removeAllObjects()
+            let necId = getNecId()
             
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+//            var  necId = Int()
+//            
+//            if postingIdFromExistingNavigate == "Exting"{
+//                
+//                necId =  postingIdFromExisting
+//            }
+//            else{
+//                necId = UserDefaults.standard.integer(forKey: "necId") as Int
+//            }
             dataSkeltaArray =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
             
@@ -1952,17 +2039,8 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         if btnTag == 1
         {
             dataArrayCocoi.removeAllObjects()
-            
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
+            let necId = getNecId()
+
             dataArrayCocoi = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -1972,16 +2050,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         if btnTag == 2
         {
             dataArrayGiTract.removeAllObjects()
-            
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            let necId = getNecId()
             
             dataArrayGiTract =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -1991,17 +2060,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         if btnTag == 3
         {
             dataArrayRes.removeAllObjects()
-            
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
+            let necId = getNecId()
             
             dataArrayRes =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -2011,17 +2070,8 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         if btnTag == 4
         {
             dataArrayImmu.removeAllObjects()
-            
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
+            let necId = getNecId()
+
             dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
             
@@ -2029,6 +2079,17 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         }
         
     }
+    
+    
+    func getNecId() -> Int {
+        if postingIdFromExistingNavigate == "Exting" {
+            return postingIdFromExisting
+        } else {
+            return UserDefaults.standard.integer(forKey: "necId")
+        }
+    }
+    
+ 
     
     @objc func buttonActionpopup(_ sender: UIButton!) {
         buttonPopup.alpha = 0
@@ -2150,14 +2211,16 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             let cocoi : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             
             let image = UIImage(named:"image001")
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            
+            var necId = getNecId()
+//            var  necId = Int()
+//            if postingIdFromExistingNavigate == "Exting"{
+//                
+//                necId =  postingIdFromExisting
+//            }
+//            else{
+//                necId = UserDefaults.standard.integer(forKey: "necId") as Int
+//            }
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(cocoi.birdNo!, farmname: cocoi.formName!, catName: cocoi.catName!,Obsid: cocoi.obsID!,necId:necId as NSNumber)
             
@@ -2223,14 +2286,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let image = UIImage(named:"image001")
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var necId = getNecId()
             
             let FetchObsArr =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!,Obsid: gitract.obsID!,necId:necId as NSNumber)
             
@@ -2289,14 +2345,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let resp : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             let image = UIImage(named:"image001")
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var necId = getNecId()
             
             let FetchObsArr =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(resp.birdNo!, farmname: resp.formName!, catName: resp.catName!,Obsid: resp.obsID!,necId: necId as NSNumber)
             
@@ -2358,14 +2407,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             let image = UIImage(named:"image001")
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var necId = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
             
@@ -2414,13 +2456,13 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             
             
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+//            if postingIdFromExistingNavigate == "Exting"{
+//                
+//                necId =  postingIdFromExisting
+//            }
+//            else{
+//                necId = UserDefaults.standard.integer(forKey: "necId") as Int
+//            }
             
             dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -2458,31 +2500,27 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             let image = UIImage(named:"image001")
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
+//            if postingIdFromExistingNavigate == "Exting"{
+//                
+//                necId =  postingIdFromExisting
+//            }
+//            else{
+//                necId = UserDefaults.standard.integer(forKey: "necId") as Int
+//            }
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!,Obsid: skleta.obsID!,necId: necId as NSNumber)
             
             let skleta1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
             if FetchObsArr.count > 0 {
-                if skleta1.obsPoint == 0
+                if skleta1.obsPoint != 0
                 {
-                }
-                else
-                {
+               
                     for  i in 0..<array.count
                     {
-                        if Int(array[i]) == 1
+                        if Int(array[i]) != 1
                         {
-                        }
-                        else
-                        {
+                        
                             if skleta1.obsPoint == 1
                             {
                                 if Int(array[i]) == 0
@@ -2506,13 +2544,13 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             dataSkeltaArray.removeAllObjects()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+//            if postingIdFromExistingNavigate == "Exting"{
+//                
+//                necId =  postingIdFromExisting
+//            }
+//            else{
+//                necId = UserDefaults.standard.integer(forKey: "necId") as Int
+//            }
             
             dataSkeltaArray =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(skleta.birdNo! , farmname: skleta.formName!, catName: "skeltaMuscular",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -2522,32 +2560,18 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let cocoi : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             let image = UIImage(named:"image001")
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId  = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(cocoi.birdNo!, farmname: cocoi.formName!, catName: cocoi.catName!,Obsid: cocoi.obsID!,necId: necId as NSNumber)
             
             let cocoi1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
             if FetchObsArr.count > 0 {
                 
-                if cocoi1.obsPoint == 0
-                {
-                }
-                else
+                if cocoi1.obsPoint != 0
                 {
                     for  i in 0..<array.count
                     {
-                        
-                        if Int(array[i]) == 1
-                        {
-                        }
-                        else
+                        if Int(array[i]) != 1
                         {
                             if cocoi.obsPoint == 1
                             {
@@ -2565,24 +2589,20 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                                 break
                                 
                             }
-                            
                         }
-                        
                     }
-                    
                 }
-                
             }
             
             dataArrayCocoi.removeAllObjects()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+//            if postingIdFromExistingNavigate == "Exting"{
+//                
+//                necId =  postingIdFromExisting
+//            }
+//            else{
+//                necId = UserDefaults.standard.integer(forKey: "necId") as Int
+//            }
             
             dataArrayCocoi =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(cocoi.birdNo! , farmname: cocoi.formName!, catName: "Coccidiosis",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -2592,38 +2612,21 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         if btnTag == 2 {
             
             let gitract : CaptureNecropsyViewDataTurkey = dataArrayGiTract.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
-            
             let image = UIImage(named:"image001")
-            
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
+       
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!,Obsid: gitract.obsID!,necId: necId as NSNumber)
             
             let gitract1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
             if FetchObsArr.count > 0 {
                 
-                if gitract1.obsPoint == 0
-                {
-                }
-                else
+                if gitract1.obsPoint != 0
                 {
                     for  i in 0..<array.count
                     {
-                        
-                        if Int(array[i]) == 1
+                        if Int(array[i]) != 1
                         {
-                            
-                        }
-                        else
-                        {
-                            
                             if gitract1.obsPoint == 1
                             {
                                 if Int(array[i]) == 0
@@ -2646,13 +2649,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             dataArrayGiTract.removeAllObjects()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+        
             dataArrayGiTract =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(gitract.birdNo! , farmname: gitract.formName!, catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
         }
@@ -2664,35 +2661,19 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let image = UIImage(named:"image001")
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(resp.birdNo!, farmname: resp.formName!, catName: resp.catName!,Obsid: resp.obsID!,necId:necId as NSNumber)
             
             let resp1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
             if FetchObsArr.count > 0 {
                 
-                if resp1.obsPoint == 0
-                {
-                    
-                }
-                else
+                if resp1.obsPoint != 0
                 {
                     for  i in 0..<array.count
                     {
-                        if Int(array[i]) == 1
+                        if Int(array[i]) != 1
                         {
-                            
-                        }
-                        else
-                        {
-                            
                             if resp1.obsPoint == 1
                             {
                                 if Int(array[i]) == 0
@@ -2715,45 +2696,26 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             
             dataArrayRes.removeAllObjects()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+       
             dataArrayRes =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(resp.birdNo! , farmname: resp.formName!, catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
         }
         if btnTag == 4 {
             let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             let image = UIImage(named:"image001")
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
+            
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
             
             let immune1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
             if FetchObsArr.count > 0 {
                 
-                if immune1.obsPoint == 0
-                {
-                }
-                else
+                if immune1.obsPoint != 0
                 {
                     for  i in 0..<array.count
                     {
-                        if Int(array[i]) == 1
+                        if Int(array[i]) != 1
                         {
-                        }
-                        else
-                        {
-                            
                             if immune1.obsPoint == 1
                             {
                                 if Int(array[i]) == 0
@@ -2776,14 +2738,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             
             dataArrayImmu.removeAllObjects()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
             
             dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -2923,14 +2877,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let image = UIImage(named:"image001")
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!,Obsid: skleta.obsID!,necId:necId as NSNumber)
             
@@ -2962,13 +2909,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let cocoi : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             let image = UIImage(named:"image001")
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(cocoi.birdNo!, farmname: cocoi.formName!, catName: cocoi.catName!,Obsid: cocoi.obsID!,necId: necId as NSNumber)
             
@@ -2986,13 +2927,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             
             dataArrayCocoi.removeAllObjects()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
             
             dataArrayCocoi =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(cocoi.birdNo! , farmname: cocoi.formName!, catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -3005,14 +2939,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let image = UIImage(named:"image001")
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!,Obsid: gitract.obsID!,necId:necId as NSNumber)
             
@@ -3031,13 +2958,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             
             dataArrayGiTract.removeAllObjects()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+      
             dataArrayGiTract =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(gitract.birdNo! , farmname: gitract.formName!, catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
         }
@@ -3047,14 +2968,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             let resp : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             let image = UIImage(named:"image001")
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(resp.birdNo!, farmname: resp.formName!, catName: resp.catName!,Obsid: resp.obsID!,necId:necId as NSNumber)
@@ -3077,14 +2991,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             dataArrayRes.removeAllObjects()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
             dataArrayRes =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(resp.birdNo! , farmname: resp.formName!, catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
         }
@@ -3093,13 +2999,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             let image = UIImage(named:"image001")
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId:necId as NSNumber)
             
@@ -3119,13 +3019,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             
             dataArrayImmu.removeAllObjects()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
             
             dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
@@ -3434,11 +3327,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let formIndexVal =  (object.value(forKey: "farmName")! as AnyObject).substring(with: NSRange(location: 0, length: 1)) as String
             let formIndex = Int(formIndexVal)! as Int
-            
             let noOfBirds : Int = Int(object.value(forKey: "noOfBirds") as! String)!
-            
-            
-            
             
             let noOfBirdsArr  = NSMutableArray()
             
@@ -3457,53 +3346,29 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                         if numOfLoop >  10
                         {
                             isBirdCount = true
-                            
-                            
                             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"You can not add more than 10 birds")
-                            
                             self.view.alpha = 1
                             self.view.isUserInteractionEnabled = true
-                            
                             self.increaseBirdBtn.isUserInteractionEnabled = true
                             self.decBirdNumberBtn.isUserInteractionEnabled = true
                             self.addFormBtn.isUserInteractionEnabled = true
-                            
                             Helper.dismissGlobalHUD(self.view)
-                            
                         }
-                        
                     }
-                    
-                    
-                    
-                    
                 }
                 
                 else
                 {
                     noOfBirdsArr.add(i+1)
-                    
                 }
-                
-                
-                
-                
             }
-            
             
             self.items.add(noOfBirdsArr)
             noOfBirdsArr1.add(noOfBirdsArr)
             
-            
-            
-            
-            
         }
         
-        
         self.addBirdInNotes()
-        
-        
         
         if isBirdCount == false{
             
@@ -3530,8 +3395,38 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                                                     self.neccollectionView.reloadData()
                                                     
                                                     self.birdsCollectionView.reloadData()
-                                                    var frameBird = CGFloat((self.noOfBirdsArr1[self.farmRow] as AnyObject).count) as CGFloat * 60
+                                           
+                                                  //  var frameBird = CGFloat((self.noOfBirdsArr1[self.farmRow] as AnyObject).count) as CGFloat * 60
+                                                     var frameBird: CGFloat = 0
+                                                    if let birdCount = (self.noOfBirdsArr1[self.farmRow] as AnyObject).count {
+                                                       
+                                                        switch birdCount {
+                                                        case 2:
+                                                            frameBird = 80
+                                                        case 3:
+                                                            frameBird = 161
+                                                        case 4:
+                                                            frameBird = 237
+                                                        case 5:
+                                                            frameBird = 313
+                                                        case 6:
+                                                            frameBird = 392
+                                                        case 7:
+                                                            frameBird = 468
+                                                        case 8:
+                                                            frameBird = 548
+                                                        case 9, 10:
+                                                            frameBird = 550
+                                                        default:
+                                                            frameBird = CGFloat(birdCount) * 60
+                                                        }
+                                                    } else {
+                                                        print("Error: Unable to get bird count.")
+                                                    }
+
                                                     
+                                                    
+                                                    /*
                                                     if (self.noOfBirdsArr1[self.farmRow] as AnyObject).count == 2
                                                     {
                                                         frameBird = 80
@@ -3582,6 +3477,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                                                         frameBird = 550
                                                         
                                                     }
+                                                    */
                                                     UserDefaults.standard.set((self.noOfBirdsArr1[self.farmRow] as AnyObject).count, forKey: "bird")
                                                     
                                                     
@@ -3606,8 +3502,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                                                         
                                                     }
                                                     Helper.dismissGlobalHUD(self.view)
-                                                    
-                                                    //totalNoOfBirdInForm - 1
                                                 }
                                             })
                                         }
@@ -3667,27 +3561,13 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 if skleta.measure! == "Y,N" {
                     
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber , obsPoint: 0 ,index: self.items.count, obsId: skleta.observationId!.intValue,measure: skleta.measure!,quickLink: skleta.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId! ,actualText: skleta.measure ?? "")
                 }
                 else if ( skleta.measure! == "Actual"){
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber as NSNumber,  obsPoint: 0 ,index: self.items.count, obsId: skleta.observationId!.intValue,measure: skleta.measure!,quickLink: skleta.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId! ,actualText: skleta.measure ?? "")
                 }
                 else
@@ -3695,14 +3575,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: skleta.observationId!.intValue,measure: skleta.measure!,quickLink: skleta.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId! ,actualText: skleta.measure ?? "")
                 }
             }
@@ -3710,15 +3583,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
         self.dataSkeltaArray.removeAllObjects()
         
-        var  necId = Int()
-        
-        if postingIdFromExistingNavigate == "Exting"{
-            
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        var  necId = getNecId()
         
         self.dataSkeltaArray =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
@@ -3743,27 +3608,13 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 
                 if cocoiDis.measure! == "Y,N" {
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,obsPoint: 0 , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId! ,actualText: cocoiDis.measure ?? "")
                 }
                 else if ( cocoiDis.measure! == "Actual"){
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId! ,actualText: cocoiDis.measure ?? "")
                 }
@@ -3772,14 +3623,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId! ,actualText: cocoiDis.measure ?? "" )
                 }
@@ -3790,15 +3634,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
         self.dataArrayCocoi.removeAllObjects()
         
-        var  necId = Int()
-        
-        if postingIdFromExistingNavigate == "Exting"{
-            
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        var  necId = getNecId()
         self.dataArrayCocoi =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
         completion (true)
@@ -3823,27 +3659,13 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 
                 if gitract2.measure! == "Y,N" {
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,obsPoint: 0 , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract2.refId! ,actualText: gitract2.measure ?? "")
                 }
                 
                 else if ( gitract2.measure! == "Actual"){
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true ,lngId:lngId as NSNumber,refId:gitract2.refId! ,actualText: gitract2.measure ?? "")
                 }
@@ -3851,14 +3673,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 {
                     let trimmed = gitract2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract2.refId! ,actualText: gitract2.measure ?? "")
                     
@@ -3870,15 +3685,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
         self.dataArrayGiTract.removeAllObjects()
         
-        var  necId = Int()
-        
-        if postingIdFromExistingNavigate == "Exting"{
-            
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        var  necId = getNecId()
         
         self.dataArrayGiTract =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
@@ -3897,26 +3704,12 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             if ((resp1.object(at: j) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                 let resp2 : RespiratoryTurkey = resp1.object(at: j) as! RespiratoryTurkey
                 if resp2.measure! == "Y,N" {
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Resp", obsName: resp2.observationField!, formName:formName, obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,  obsPoint: 0 , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp2.refId! ,actualText: resp2.measure ?? "")
                 }
                 else if ( resp2.measure! == "Actual"){
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Resp", obsName: resp2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId:necId as NSNumber,isSync:true ,lngId:lngId as NSNumber,refId:resp2.refId! ,actualText: resp2.measure ?? "")
                 }
                 else
@@ -3924,14 +3717,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let trimmed = resp2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Resp", obsName: resp2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp2.refId! ,actualText: resp2.measure ?? "")
                 }
@@ -3940,15 +3726,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
         self.dataArrayRes.removeAllObjects()
         
-        var  necId = Int()
-        
-        if postingIdFromExistingNavigate == "Exting"{
-            
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        var  necId = getNecId()
         
         self.dataArrayRes =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
@@ -3970,25 +3748,12 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 let immune2 : ImmuneTurkey = immu1.object(at: j) as! ImmuneTurkey
                 if immune2.measure! == "Y,N" {
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune2.observationField!, formName:formName, obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId! ,actualText: immune2.measure ?? "")
                 }
                 else if ( immune2.measure! == "Actual"){
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count! as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId! ,actualText: immune2.measure ?? "")
                     
@@ -4008,14 +3773,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 
                 else if immune2.measure! == "F,M" {
                     
-                    var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var necId = getNecId()
                     
                     CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkeySex(catName: "Immune", obsName: immune2.observationField!, formName:formName, obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId! ,actualText: "0")
                     
@@ -4028,14 +3786,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     if immune2.observationField == "Bursa Size"
                     {
                         
-                        var necId = Int()
-                        if postingIdFromExistingNavigate == "Exting"{
-                            necId = postingIdFromExisting
-                        }
-                        else{
-                            
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
+                        var necId = getNecId()
                         
                         CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[3])! , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId! ,actualText: immune2.measure ?? "")
                         
@@ -4043,14 +3794,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     else
                     {
                         
-                        var necId = Int()
-                        if postingIdFromExistingNavigate == "Exting"{
-                            necId = postingIdFromExisting
-                        }
-                        else{
-                            
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
+                        var necId = getNecId()
                         
                         CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId! ,actualText: immune2.measure ?? "")
                         
@@ -4062,15 +3806,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
         self.dataArrayImmu.removeAllObjects()
         
-        var  necId = Int()
-        
-        if postingIdFromExistingNavigate == "Exting"{
-            
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        var  necId = getNecId()
         
         
         self.dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
@@ -4099,13 +3835,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             var farmName = String()
             
             farmName = UserDefaults.standard.value(forKey: "farm") as! String
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            } else {
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithFormTurkey("skeltaMuscular", formName: farmName, necId: necId as NSNumber)
             
@@ -4126,14 +3856,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             if dataSkeltaArray.count > 0 {
                 
-                var  necId = Int()
-                
-                if postingIdFromExistingNavigate == "Exting"{
-                    
-                    necId =  postingIdFromExisting
-                }  else {
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var  necId = getNecId()
                 
                 let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: 0) as! CaptureNecropsyViewDataTurkey
                 CoreDataHandlerTurkey().deleteCaptureNecropsyViewDataWithFarmnameandBirdsizeTurkey(skleta.obsID!, formName: farmName , catName: skleta.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -4145,14 +3868,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             if dataArrayCocoi.count > 0 {
                 
-                var necId = Int()
-                
-                if postingIdFromExistingNavigate == "Exting"{
-                    
-                    necId =  postingIdFromExisting
-                } else {
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var necId = getNecId()
                 
                 let skleta1 : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: 0) as! CaptureNecropsyViewDataTurkey
                 CoreDataHandlerTurkey().deleteCaptureNecropsyViewDataWithFarmnameandBirdsizeTurkey(skleta1.obsID!, formName: farmName , catName: skleta1.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -4163,14 +3879,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             if dataArrayGiTract.count > 0 {
                 
-                var  necId = Int()
-                
-                if postingIdFromExistingNavigate == "Exting"{
-                    
-                    necId = postingIdFromExisting
-                } else {
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var  necId = getNecId()
                 
                 let skleta2 : CaptureNecropsyViewDataTurkey = dataArrayGiTract.object(at: 0) as! CaptureNecropsyViewDataTurkey
                 CoreDataHandlerTurkey().deleteCaptureNecropsyViewDataWithFarmnameandBirdsizeTurkey(skleta2.obsID!, formName: farmName , catName: skleta2.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -4182,12 +3891,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             if dataArrayRes.count > 0 {
                 
-                var necId = Int()
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                } else {
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var necId = getNecId()
                 
                 let skleta3 : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: 0) as! CaptureNecropsyViewDataTurkey
                 CoreDataHandlerTurkey().deleteCaptureNecropsyViewDataWithFarmnameandBirdsizeTurkey(skleta3.obsID!, formName: farmName , catName: skleta3.catName!, birdNo:noOfBird as NSNumber, necId : necId as NSNumber)
@@ -4198,13 +3902,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             if dataArrayImmu.count > 0 {
                 
-                var necId = Int()
-                
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                } else {
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var necId = getNecId()
                 
                 let skleta4 : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: 0) as! CaptureNecropsyViewDataTurkey
                 CoreDataHandlerTurkey().deleteCaptureNecropsyViewDataWithFarmnameandBirdsizeTurkey(skleta4.obsID!, formName: farmName , catName: skleta4.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -4228,15 +3926,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             for i in 0..<farmArray.count {
                 let formName = farmArray.object(at: i)
                 
-                var necId = Int()
-                
-                if postingIdFromExistingNavigate == "Exting"{
-                    
-                    necId =  postingIdFromExisting
-                }
-                else {
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var necId = getNecId()
                 
                 let isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithFormTurkey("skeltaMuscular", formName: formName as! String,necId: necId as NSNumber)
                 
@@ -4463,15 +4153,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let catName = skleta.catName
                     let noOfBird  = indexPath.row + 1
                     
-                    var  necId = Int()
-                    
-                    if postingIdFromExistingNavigate == "Exting"{
-                        
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                     
@@ -4480,13 +4162,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let catName = "skeltaMuscular"
                     let noOfBird  = indexPath.row + 1
                     
-                    var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        
-                        necId =  postingIdFromExisting
-                    } else {
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                 }
@@ -4520,15 +4196,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let catName = cocoii.catName
                     let noOfBird  = indexPath.row + 1
                     
-                    var  necId = Int()
-                    
-                    if postingIdFromExistingNavigate == "Exting"{
-                        
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                 }
@@ -4537,13 +4205,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let formName = UserDefaults.standard.value(forKey: "farm") as! String
                     let catName = "Coccidiosis"
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                 }
                 
@@ -4575,13 +4237,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let formName = gitract.formName
                     let catName = gitract.catName
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                     
                 }
@@ -4590,13 +4246,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let formName = UserDefaults.standard.value(forKey: "farm") as! String
                     let catName = "GITract"
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                 }
@@ -4630,13 +4280,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let formName = res.formName
                     let catName = res.catName
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                     
@@ -4646,13 +4290,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let formName = UserDefaults.standard.value(forKey: "farm") as! String
                     let catName = "Resp"
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                 }
                 
@@ -4684,13 +4322,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let formName = immu.formName
                     let catName = immu.catName
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                 }
@@ -4699,13 +4331,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let formName = UserDefaults.standard.value(forKey: "farm") as! String
                     let catName = "Immune"
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     
                     isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
                 }
@@ -4857,7 +4483,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         }
         
         else if collectionView == neccollectionView{
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CaptureNecroStep2TurkeyCell
             
             cell.textFieldActual.delegate = self
             cell.switchNecropsyBtn.isUserInteractionEnabled = true
@@ -4877,17 +4502,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 let measure = skleta.measure
                 cell.mesureValue = measure!
                 cell.myLabel.text = skleta.obsName
-                var  necId = Int()
+                var  necId = getNecId()
                 
                 cell.turkeySexView.alpha = 0
                 cell.turkeySexView.isHidden = true
-                
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+               
                 
                 
                 let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!, Obsid: skleta.obsID!, obsName: skleta.obsName!,necId: necId as NSNumber)
@@ -4964,14 +4583,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 cell.mesureValue = measure!
                 cell.turkeySexView.alpha = 0
                 cell.turkeySexView.isHidden = true
-                var necId = Int()
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
-                
+                var necId = getNecId()
                 
                 let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(cocoii.birdNo!, farmname: cocoii.formName!, catName: cocoii.catName!, Obsid: cocoii.obsID!, obsName: cocoii.obsName!,necId: necId as NSNumber)
                 if photoArr.count > 0
@@ -4984,7 +4596,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 else
                 {
                     cell.badgeButton.alpha = 0
-                    
                 }
                 if measure == "Y,N" {
                     
@@ -5054,13 +4665,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 cell.turkeySexView.isHidden = true
                 let measure = gitract.measure
                 cell.mesureValue = measure!
-                var necId = Int()
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var necId = getNecId()
                 
                 
                 let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!, Obsid: gitract.obsID!, obsName: gitract.obsName!,necId: necId as NSNumber)
@@ -5148,13 +4753,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 cell.turkeySexView.isHidden = true
                 let measure = res.measure
                 cell.mesureValue = measure!
-                var necId = Int()
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var necId = getNecId()
                 
                 
                 let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(res.birdNo!, farmname: res.formName!, catName: res.catName!, Obsid: res.obsID!, obsName: res.obsName!,necId: necId as NSNumber)
@@ -5236,19 +4835,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 let immu : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
                 cell.myLabel.text = immu.obsName
                 
-                
-                
-                         let measure = immu.measure
+                let measure = immu.measure
                 cell.mesureValue = measure!
                 cell.turkeySexView.alpha = 0
                 cell.turkeySexView.isHidden = true
-                var necId = Int()
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var necId = getNecId()
                 
                 let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(immu.birdNo!, farmname: immu.formName!, catName: immu.catName!, Obsid: immu.obsID!, obsName: immu.obsName!,necId: necId as NSNumber)
                 if photoArr.count > 0
@@ -5347,8 +4938,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     cell.incrementLabel.alpha = 0
                     cell.textFieldActual.alpha = 0
                     
-                    
-                    
                 }
                 
                 else{
@@ -5358,19 +4947,15 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     if immu.refId == 58
                     {
                         let n  = String(describing: immu.refId!)
-                        
                         let imageName = "Immune" + "_" + n + "_01"
                         
-                        // let imageName = "Immune" + "_" + immu.obsName! + "_01"
                         var image = UIImage(named:imageName)
                         if image == nil
                         {
                             image = UIImage(named:"image001")
                         }
                         
-                        
                         cell.observationImage.image =  image
-                        
                         cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
                         cell.switchNecropsyBtn.alpha = 0
                         cell.plusButton.alpha = 1
@@ -5388,9 +4973,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                             image = UIImage(named:"image001")
                         }
                         
-                        
                         cell.observationImage.image =  image
-                        
                         cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
                         cell.switchNecropsyBtn.alpha = 0
                         cell.plusButton.alpha = 1
@@ -5416,8 +4999,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             cell.switchNecropsyBtn .addTarget(self, action: #selector(CaptureNecroStep2Turkey.switchClick(_:)) , for:.valueChanged)
             
-            
-            
             cell.turkeybirdSexCompletion = {[unowned self] ( error) in
                 
                 if  turkeyBirdSex.count > 0 {
@@ -5442,14 +5023,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                             
                             let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
                             
-                            var  necId = Int()
-                            if postingIdFromExistingNavigate == "Exting"{
-                                
-                                necId =  postingIdFromExisting
-                            }
-                            else{
-                                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                            }
+                            var  necId = getNecId()
                             
                             
                             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
@@ -5457,22 +5031,12 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                             let resp1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
                             if FetchObsArr.count > 0 {
                                 
-                                
                                 CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseTurkeySexValue("Immune", obsName: resp1.obsName!, formName: immune.formName!, obsVisibility: true, birdNo: resp1.birdNo! , obsPoint: 1, index: indexPath.row, obsId: resp1.obsID as! NSInteger, necId: necId as NSNumber, isSync: true, actualText: selectedSexValue)
-                                
                             }
-                            
-                            
                             
                             dataArrayImmu.removeAllObjects()
-                            
-                            
-                            if postingIdFromExistingNavigate == "Exting"{
                                 
-                                necId =  postingIdFromExisting
-                            }  else {
-                                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                            }
+                            necId =  getNecId()
                             
                             dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
                             
@@ -5503,30 +5067,21 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     
                 }
             }
-            
-            //            cell.turkySexBtn.tag = indexPath.row
-            //
-            //            cell.turkySexBtn.addTarget(self, action: #selector(turkeySexBtnClick(_:)), for: .touchUpInside)
+
             
             cell.helpButtonOutlet.tag = indexPath.row
-            
             cell.textFieldActual.delegate = self
             cell.switchNecropsyBtn.tag = indexPath.row
-            
             cell.tag = indexPath.row
-            
             cell.badgeButton.tag = indexPath.row
             cell.cameraButtonOutlet.tag = indexPath.row
             cell.plusButton.tag = indexPath.row
             cell.minusButton.tag =  indexPath.row
             
             return cell
-            
         }
         
         return cell
-        
-        
     }
     
     
@@ -5687,6 +5242,17 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     }
     
     
+    fileprivate func fetchFarmForImmuneCatgry(_ bird: NSNumber, _ necId: Int) {
+        dataArrayImmu.removeAllObjects()
+        dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(bird , farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Immune",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
+        neccollectionView.reloadData()
+        
+        if dataArrayImmu.count > 0
+        {
+            neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
+        }
+    }
+    
     func callLodaBirdData(_ bird : NSNumber)  {
         
         if self.farmRow == 0
@@ -5695,69 +5261,47 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         }
         
         let  bird = UserDefaults.standard.value(forKey: "bird") as! NSNumber
-        var  necId = Int()
-        
-        if postingIdFromExistingNavigate == "Exting"{
-            
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        var  necId = getNecId()
         
         if btnTag == 0 {
             
             dataSkeltaArray.removeAllObjects()
-            
             dataSkeltaArray =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(bird , farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            
             neccollectionView.reloadData()
             
             if dataSkeltaArray.count > 0
             {
                 neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
-                
             }
-            
         }
         
         if btnTag == 1 {
             
-            
             dataArrayCocoi.removeAllObjects()
-            
             dataArrayCocoi =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(bird , farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Coccidiosis",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
             
             if dataArrayCocoi.count > 0
             {
                 neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
-                
             }
-            
         }
         
         if btnTag == 2 {
             
-            
             dataArrayGiTract.removeAllObjects()
-            
             dataArrayGiTract =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(bird , farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "GITract",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
             
             if dataArrayGiTract.count > 0
             {
                 neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
-                
             }
-            
         }
         
         if btnTag == 3 {
             
-            
             dataArrayRes.removeAllObjects()
-            
             dataArrayRes =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(bird , farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Resp",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
             
@@ -5766,20 +5310,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
                 
             }
-            
-            
         }
         
         if btnTag == 4 {
             
-            dataArrayImmu.removeAllObjects()
-            dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(bird , farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Immune",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
-            neccollectionView.reloadData()
-            
-            if dataArrayImmu.count > 0
-            {
-                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
-            }
+            fetchFarmForImmuneCatgry(bird, necId)
         }
         
         Helper.dismissGlobalHUD(self.view)
@@ -5821,7 +5356,114 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         return true
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let noOfBird = UserDefaults.standard.integer(forKey: "bird")
+        let cell: StartNecropsyTableViewCell = tableView.cellForRow(at: indexPath) as! StartNecropsyTableViewCell
+        tableViewSelectedRow = indexPath.row
+        isBirdClick = false
+
+        // Handle first-time launch
+        if farmRow == 0 {
+            isFirstTimeLaunch = true
+        }
+
+        // Reset background color for previous selection
+        if btnTag == 0 {
+            let removeIndexPath: IndexPath = IndexPath(row: 0, section: 0)
+            if let removeCell = tableView.cellForRow(at: removeIndexPath) as? StartNecropsyTableViewCell {
+                removeCell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+            }
+        }
+
+        // Use a switch statement for row handling
+        switch indexPath.row {
+        case 0:
+            btnTag = 0
+            cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+            dataSkeltaArray.removeAllObjects()
+            let necId = getNecId()
+            dataSkeltaArray = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(
+                noOfBird as NSNumber,
+                farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+                catName: "skeltaMuscular",
+                necId: necId as NSNumber
+            ).mutableCopy() as! NSMutableArray
+            neccollectionView.reloadData()
+            if dataSkeltaArray.count > 0 {
+                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+            }
+
+        case 1:
+            btnTag = 1
+            dataArrayCocoi.removeAllObjects()
+            let necId = getNecId()
+            dataArrayCocoi = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(
+                noOfBird as NSNumber,
+                farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+                catName: "Coccidiosis",
+                necId: necId as NSNumber
+            ).mutableCopy() as! NSMutableArray
+            neccollectionView.reloadData()
+            if dataArrayCocoi.count > 0 {
+                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+            }
+
+        case 2:
+            btnTag = 2
+            dataArrayGiTract.removeAllObjects()
+            let necId = getNecId()
+            dataArrayGiTract = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(
+                noOfBird as NSNumber,
+                farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+                catName: "GITract",
+                necId: necId as NSNumber
+            ).mutableCopy() as! NSMutableArray
+            neccollectionView.reloadData()
+            if dataArrayGiTract.count > 0 {
+                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+            }
+
+        case 3:
+            btnTag = 3
+            dataArrayRes.removeAllObjects()
+            let necId = getNecId()
+            dataArrayRes = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(
+                noOfBird as NSNumber,
+                farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+                catName: "Resp",
+                necId: necId as NSNumber
+            ).mutableCopy() as! NSMutableArray
+            neccollectionView.reloadData()
+            if dataArrayRes.count > 0 {
+                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+            }
+
+        case 4:
+            btnTag = 4
+            dataArrayImmu.removeAllObjects()
+            let necId = getNecId()
+            dataArrayImmu = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(
+                noOfBird as NSNumber,
+                farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+                catName: "Immune",
+                necId: necId as NSNumber
+            ).mutableCopy() as! NSMutableArray
+            neccollectionView.reloadData()
+            if dataArrayImmu.count > 0 {
+                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+            }
+
+        default:
+            break
+        }
+
+        // Save the selected index and update the cell background color
+        UserDefaults.standard.set(btnTag, forKey: "clickindex")
+        cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+    }
+
     
+  /*
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let noOfBird =  UserDefaults.standard.value(forKey: "bird") as! Int
@@ -5842,15 +5484,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
             dataSkeltaArray.removeAllObjects()
             
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             
             dataSkeltaArray =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
@@ -5875,15 +5509,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             btnTag = 1
             dataArrayCocoi.removeAllObjects()
             
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             dataArrayCocoi =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Coccidiosis",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5907,15 +5533,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             btnTag = 2
             dataArrayGiTract.removeAllObjects()
             
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             dataArrayGiTract =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "GITract",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5939,16 +5557,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             btnTag = 3
             dataArrayRes.removeAllObjects()
             
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
+            var  necId = getNecId()
             
             dataArrayRes =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Resp",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5972,16 +5581,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             btnTag = 4
             dataArrayImmu.removeAllObjects()
             
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
+            var  necId = getNecId()
             
             dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5996,6 +5596,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
         
     }
+    */
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let cell:StartNecropsyTableViewCell = tableView.cellForRow(at: indexPath) as! StartNecropsyTableViewCell
@@ -6060,14 +5661,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 
                 let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
                 
-                var  necId = Int()
-                if postingIdFromExistingNavigate == "Exting"{
-                    
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                var  necId = getNecId()
                 
                 let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId:necId as NSNumber)
                 
@@ -6103,14 +5697,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!,Obsid: skleta.obsID!,necId: necId as NSNumber)
@@ -6122,15 +5709,9 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             
             dataSkeltaArray.removeAllObjects()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
+       
+            necId = getNecId()
+           
             dataSkeltaArray =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(skleta.birdNo! , farmname: skleta.formName!, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
         }
@@ -6138,14 +5719,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         if btnTag == 1 {
             let cocoi : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(cocoi.birdNo!, farmname: cocoi.formName!, catName: cocoi.catName!,Obsid: cocoi.obsID!,necId: necId as NSNumber)
             
@@ -6156,15 +5730,9 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             
             dataArrayCocoi.removeAllObjects()
-            
-            if postingIdFromExistingNavigate == "Exting"{
                 
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
+            necId =  getNecId()
+          
             dataArrayCocoi =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(cocoi.birdNo! , farmname: cocoi.formName!, catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
         }
@@ -6173,14 +5741,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let gitract : CaptureNecropsyViewDataTurkey = dataArrayGiTract.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!,Obsid: gitract.obsID!,necId: necId as NSNumber)
             
@@ -6193,13 +5754,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             dataArrayGiTract.removeAllObjects()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId =  getNecId()
             
             dataArrayGiTract =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(gitract.birdNo! , farmname: gitract.formName!, catName: "GITract",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -6210,14 +5765,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let resp : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(resp.birdNo!, farmname: resp.formName!, catName: resp.catName!,Obsid: resp.obsID!,necId: necId as NSNumber)
             
@@ -6228,13 +5776,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             }
             
             dataArrayRes.removeAllObjects()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId =  getNecId()
             
             dataArrayRes =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(resp.birdNo! , farmname: resp.formName!, catName: "Resp",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -6244,24 +5786,10 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId =  getNecId()
             
             dataArrayImmu.removeAllObjects()
             
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }  else {
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
             
             dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -6376,13 +5904,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         self.farmRow = self.farmArray.count - 1
         
         tableView.selectRow(at: rowToSelect, animated: true, scrollPosition: UITableView.ScrollPosition.none)
-        var necId = Int()
-        if postingIdFromExistingNavigate == "Exting"{
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        var necId = getNecId()
         
         dataSkeltaArray.removeAllObjects()
         
@@ -6585,14 +6107,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             let formName = skleta.formName
             let catName  = skleta.catName
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            var  necId = getNecId()
             
             let isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName!, formName: formName!, birdNo: noOfBird as NSNumber, necId: necId as NSNumber)
             let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
@@ -6602,14 +6117,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             {
                 for i in  0..<catArr.count
                 {
-                    var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    var  necId = getNecId()
                     
                     CoreDataHandlerTurkey().updateNoofBirdWithNotesTurkey(catArr.object(at: i) as! String,  formName: note.formName!, birdNo: note.noofBirds!,notes:note.notes!,necId: necId as NSNumber,isSync :true)
                     
@@ -6622,28 +6130,14 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
                     for i in  0..<catArr.count
                     {
-                        var  necId = Int()
-                        if postingIdFromExistingNavigate == "Exting"{
-                            
-                            necId =  postingIdFromExisting
-                        }
-                        else{
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
+                        var  necId = getNecId()
                         
                         CoreDataHandlerTurkey().updateNoofBirdWithNotesTurkey(catArr.object(at: i) as! String,  formName: note.formName!, birdNo: note.noofBirds!,notes:notesText,necId: necId as NSNumber,isSync :true)
                     }
                 }
                 else {
                     for i in  0..<catArr.count {
-                        var  necId = Int()
-                        if postingIdFromExistingNavigate == "Exting"{
-                            
-                            necId =  postingIdFromExisting
-                        }
-                        else{
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
+                        var  necId = getNecId()
                         
                         CoreDataHandlerTurkey().saveNoofBirdWithNotesTurkey(catArr.object(at: i) as! String , notes: notesText, formName: formName! , birdNo: noOfBird as NSNumber, index: 0 , necId: necId as NSNumber, isSync :true)
                     }
@@ -6734,7 +6228,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 self.callSyncApi()
             }
             else {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.offline, comment: ""))
             }
         } else {
             
@@ -7081,14 +6575,14 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
     func didFinishApi(){
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
     }
     
     func failWithInternetConnection() {
         
         self.printSyncLblCount()
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.offline, comment: ""))
     }
     
     func printSyncLblCount() {

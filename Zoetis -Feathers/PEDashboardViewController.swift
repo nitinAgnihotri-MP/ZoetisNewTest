@@ -1168,7 +1168,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 self.logoutAction()
             }
         } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
         }
         
     }
@@ -1318,7 +1318,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 self.accessPEArrayObjects()
                 
             } else {
-                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
+                Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
             }
         }else{
             if self.deletedAssessmentIdArray.count > 0{
@@ -1501,7 +1501,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                             for i in self.totalImageToSync{
                                 CoreDataHandlerPE().setImageStatusTrue(idArray: i)
                             }
-                            self.showToastWithTimer(message: "Data Sync has been completed.", duration: 2.0)
+                            self.showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
                             NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                             self.dismissGlobalHUD(self.view)
                         }

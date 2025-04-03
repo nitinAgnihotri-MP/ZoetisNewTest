@@ -117,8 +117,8 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     
     var buttonback = UIButton()
     var customPopV :OtherDetailsTurkey!
-    let mendatoryFieldmsg = "Fields marked as (*) are mandatory. Please fill all the fields."
-    let offlineDataMsg = "You are currently offline. Please go online to sync data."
+    let mendatoryFieldmsg = Constants.mandatoryFieldsMessage
+    let offlineDataMsg = Constants.offline
     // MARK: - VIEW LIFE CYCLE
     override func viewDidLoad() {
         print("<<<<",self)
@@ -704,7 +704,6 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         {
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldmsg, comment: ""))
             houseNoTxtFldTurkey.layer.borderColor = UIColor.red.cgColor
-            // feedButton.layer.borderColor = UIColor.black.cgColor
             return
             
         }
@@ -775,10 +774,10 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             let Id = UserDefaults.standard.integer(forKey: "Id")
             let Url = "PostingSession/SyncToDevice"
             let parameters  = ["UserId" :Id,"SessionId": sessionId] as [String : Any]
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-           // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             
             guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
@@ -939,9 +938,9 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         if WebClass.sharedInstance.connected() {
             Helper.dismissGlobalHUD(self.view)
             Helper.showGlobalProgressHUDWithTitle(self.view, title: "Fetching data from server...")
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-           // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let Url = "PostingSession/GetPostingSessionListBySessionId?DeviceSessionId=\(fullData)"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
@@ -1011,9 +1010,9 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             let url = "PostingSession/GetVaccinationListBySessionId?DeviceSessionId=\(fullData)"
             let urlString: String = WebClass.sharedInstance.webUrl + url
             
-           // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
                 let statusCode =  response.response?.statusCode
@@ -1087,9 +1086,9 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     func getPostingDataFromServerforFeed (){
         
         if WebClass.sharedInstance.connected() {
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-           // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             
             let url = "PostingSession/GetFeedListBySessionId?DeviceSessionId=\(fullData)"
             let urlString: String = WebClass.sharedInstance.webUrl + url
@@ -1209,9 +1208,9 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     
     func getCNecStep1Data(){
         if WebClass.sharedInstance.connected() {
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-           // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             
             let url = "PostingSession/GetFarmListBySessionId?DeviceSessionId=\(fullData)"
             let urlString: String = WebClass.sharedInstance.webUrl + url
@@ -1308,9 +1307,9 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             let  lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
             let url = "PostingSession/T_GetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
-           // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
                 let statusCode =  response.response?.statusCode
@@ -1437,9 +1436,9 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     func getNotesFromServer(){
         if WebClass.sharedInstance.connected() {
             let url = "PostingSession/GetBirdNotesListBySessionId?DeviceSessionId=\(fullData)"
-          //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+          //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url
             
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
@@ -1506,9 +1505,9 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     
     func getPostingDataFromServerforImage(){
         if WebClass.sharedInstance.connected() {
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-           // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let url = "PostingSession/GetBirdImagesListBySessionId?DeviceSessionId=\(fullData)"
             let urlString: String = WebClass.sharedInstance.webUrl + url
             
@@ -1595,7 +1594,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     }
     func didFinishApiSyncdata(){
         Helper.dismissGlobalHUD(self.view)
-        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data sync has been completed.", comment: ""))
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.dataSyncCompleted, comment: ""))
     }
     func failWithInternetConnectionSyncdata(){
         
@@ -1604,7 +1603,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         
     }
     func alerViewSucees() {
-        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data sync has been completed.", comment: ""), preferredStyle: UIAlertController.Style.alert) //Replace
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString(Constants.dataSyncCompleted, comment: ""), preferredStyle: UIAlertController.Style.alert) //Replace
         let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
             (result : UIAlertAction) -> Void in
             self.navigationController?.popViewController(animated: true)

@@ -42,7 +42,7 @@ class infoLink: UIView {
             self.alpha = 1
             
         }, completion: { finished in
-           
+            appDelegateObj.testFuntion()
         })
         return self
     }

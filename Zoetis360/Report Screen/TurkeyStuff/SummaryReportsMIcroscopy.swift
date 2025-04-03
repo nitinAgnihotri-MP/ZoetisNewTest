@@ -442,7 +442,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         activityViewController.setValue(self.subjectString, forKey: "subject")
         activityViewController.popoverPresentationController?.sourceView = self.btnShare
         self.navigationController?.present(activityViewController, animated: true, completion: {
-            
+            appDelegateObj.testFuntion()
         })
     }
     func didFinishWithParsing(finishedArray : NSArray){

@@ -374,9 +374,9 @@ class SingleSyncDataTurkey: NSObject {
             if WebClass.sharedInstance.connected() {
                 
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-              //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -582,9 +582,9 @@ class SingleSyncDataTurkey: NSObject {
             
             if WebClass.sharedInstance.connected() {
                 let Url = "/PostingSession/SaveMultipleVaccinationsSyncData"
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
@@ -626,6 +626,20 @@ class SingleSyncDataTurkey: NSObject {
         }
     }
     // MARK: - ********************* Save Posting data On Server ***************************/
+    
+    fileprivate func failuerOfPostedSessionAPI(_ encodingError: AFError, _ response: AFDataResponse<Any>, _ statusCode: Int?) {
+        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+            
+            if let s = statusCode {
+                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
+            }
+            else {
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+            }
+        }
+    }
     
     func savePostingDataOnServer(postingId :NSNumber){
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
@@ -723,9 +737,9 @@ class SingleSyncDataTurkey: NSObject {
             
             if WebClass.sharedInstance.connected() {
                 let Url = "PostingSession/T_SaveMultiplePostingsSyncData"
-               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-                let headerDict = ["Authorization":accestoken]
+               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+                let headerDict = [Constants.authorization:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"
@@ -749,23 +763,27 @@ class SingleSyncDataTurkey: NSObject {
                         
                     case .failure(let encodingError):
                         
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                            }
-                            else {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
-                        }
+                        self.failuerOfPostedSessionAPI(encodingError, response, statusCode)
                     }
                 }
             }
         }
     }
     // MARK: - ********************* Save Farms  data On Server **************/
+    fileprivate func ApiFailuerHandleForPostedData(_ encodingError: AFError, _ response: AFDataResponse<Any>, _ statusCode: Int?) {
+        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+            
+            if let s = statusCode {
+                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
+                
+            } else  {
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+            }
+        }
+    }
+    
     /************************************/
     
     func saveNecropsyDataOnServer(postingId: NSNumber){
@@ -983,14 +1001,14 @@ class SingleSyncDataTurkey: NSObject {
         
         do {
             
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
-            debugPrint(jsonString)
+//            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+//            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
+//            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
+//            debugPrint(jsonString)
             if WebClass.sharedInstance.connected() {
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 let Url = "PostingSession/T_SaveMultipleNecropsySyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -1016,23 +1034,89 @@ class SingleSyncDataTurkey: NSObject {
                         
                     case .failure(let encodingError):
                         
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                                
-                            } else  {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
-                        }
+                        self.ApiFailuerHandleForPostedData(encodingError, response, statusCode)
                     }
                 }
             }
         }
     }
     // MARK: -********************* Save Image  On Server ***************************/
+    fileprivate func statusUpdateForPostedSession(postingId : NSNumber) {
+        CoreDataHandlerTurkey().updateisSyncOnMyBindersViaPostingIdTurkey(postingId, isSync: false, { (success) in
+            
+            if success == true{
+                
+                CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(postingId , isSync: false, { (success) in
+                    
+                    if success == true{
+                        
+                        CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(postingId , isSync: false, { (success) in
+                            
+                            if success == true{
+                                
+                                CoreDataHandlerTurkey().updateisSyncOnAllCocciControlviaPostingidTurkey(postingId , isSync: false, { (success) in
+                                    
+                                    if success == true{
+                                        
+                                        CoreDataHandlerTurkey().updateisSyncOnHetcharyVacDataWithPostingIdTurkey(postingId , isSync: false, { (success) in
+                                            
+                                            if success == true{
+                                                
+                                                CoreDataHandlerTurkey().updateisSyncOnPostingSessionTurkey(postingId , isSync: false, { (success) in
+                                                    
+                                                    if success == true{
+                                                        
+                                                        CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(postingId , isSync: false, { (success) in
+                                                            
+                                                            if success == true{
+                                                                CoreDataHandlerTurkey().updateisSyncOnNotesBirdDatabaseTurkey(postingId , isSync: false, { (success) in
+                                                                    
+                                                                    if success == true{
+                                                                        CoreDataHandlerTurkey().updateisSyncNecropsystep1neccIdTurkey(postingId , isSync: false, { (success) in
+                                                                            if success == true{
+                                                                                CoreDataHandlerTurkey().updateisSyncOnCaptureSkeletaInDatabaseTurkey(postingId , isSync: false, { (success) in
+                                                                                    if success == true{
+                                                                                        
+                                                                                        CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(postingId , isSync: false, { (success) in
+                                                                                            if success == true{
+                                                                                                self.delegeteSyncApiData.didFinishApiSyncdata()
+                                                                                            }
+                                                                                        })
+                                                                                    }
+                                                                                })
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                })
+                                                            }
+                                                        })
+                                                    }
+                                                })
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+    
+    fileprivate func postImagesApiFailer(_ encodingError: AFError, _ response: AFDataResponse<Any>, _ statusCode: Int?) {
+        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+            
+            if let s = statusCode {
+                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
+            }  else  {
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+            }
+        }
+    }
+    
     /**************************************************************************/
     
     func  saveObservationImageOnServer (postingId:NSNumber){
@@ -1218,9 +1302,9 @@ class SingleSyncDataTurkey: NSObject {
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
             if WebClass.sharedInstance.connected() {
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-               // accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-                let headerDict = ["Authorization":accestoken]
+                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+                let headerDict = [Constants.authorization:accestoken]
                 let Url = "PostingSession/SaveBirdImageSyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -1249,88 +1333,23 @@ class SingleSyncDataTurkey: NSObject {
                             
                             if success == true{
                                 
-                                CoreDataHandlerTurkey().updateisSyncOnMyBindersViaPostingIdTurkey(postingId, isSync: false, { (success) in
-                                    
-                                    if success == true{
-                                        
-                                        CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(postingId , isSync: false, { (success) in
-                                            
-                                            if success == true{
-                                                
-                                                CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(postingId , isSync: false, { (success) in
-                                                    
-                                                    if success == true{
-                                                        
-                                                        CoreDataHandlerTurkey().updateisSyncOnAllCocciControlviaPostingidTurkey(postingId , isSync: false, { (success) in
-                                                            
-                                                            if success == true{
-                                                                
-                                                                CoreDataHandlerTurkey().updateisSyncOnHetcharyVacDataWithPostingIdTurkey(postingId , isSync: false, { (success) in
-                                                                    
-                                                                    if success == true{
-                                                                        
-                                                                        CoreDataHandlerTurkey().updateisSyncOnPostingSessionTurkey(postingId , isSync: false, { (success) in
-                                                                            
-                                                                            if success == true{
-                                                                                
-                                                                                CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(postingId , isSync: false, { (success) in
-                                                                                    
-                                                                                    if success == true{
-                                                                                        CoreDataHandlerTurkey().updateisSyncOnNotesBirdDatabaseTurkey(postingId , isSync: false, { (success) in
-                                                                                            
-                                                                                            if success == true{
-                                                                                                CoreDataHandlerTurkey().updateisSyncNecropsystep1neccIdTurkey(postingId , isSync: false, { (success) in
-                                                                                                    if success == true{
-                                                                                                        CoreDataHandlerTurkey().updateisSyncOnCaptureSkeletaInDatabaseTurkey(postingId , isSync: false, { (success) in
-                                                                                                            if success == true{
-                                                                                                                
-                                                                                                                CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(postingId , isSync: false, { (success) in
-                                                                                                                    if success == true{
-                                                                                                                        self.delegeteSyncApiData.didFinishApiSyncdata()
-                                                                                                                    }
-                                                                                                                })
-                                                                                                            }
-                                                                                                        })
-                                                                                                    }
-                                                                                                })
-                                                                                            }
-                                                                                        })
-                                                                                    }
-                                                                                })
-                                                                            }
-                                                                        })
-                                                                    }
-                                                                })
-                                                            }
-                                                        })
-                                                    }
-                                                })
-                                            }
-                                        })
-                                    }
-                                })
+                                self.statusUpdateForPostedSession(postingId: postingId)
+                                
                             }
                         })
                         
                     case .failure(let encodingError):
                         
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                            }  else  {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
-                        }
+                        self.postImagesApiFailer(encodingError, response, statusCode)
                     }
                 }
             }
         }
     }
-    // MARK: -********************* Save User Setting   On Server ***************************/
+   
+    // MARK: -********************* Save User Setting   On Server not Used ***************************/
     /**************************************************************************/
+    /*
     func saveDatOnServerAllSeting() {
         
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
@@ -1421,9 +1440,9 @@ class SingleSyncDataTurkey: NSObject {
         if WebClass.sharedInstance.connected() {
             
             let Url = "Setting/SaveUserSetting"
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: "aceesTokentype")!
-          //  accestoken = (UserDefaults.standard.value(forKey: "aceesTokentype") as? String)!
-            let headerDict = ["Authorization":accestoken]
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+          //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict = [Constants.authorization:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             var request = URLRequest(url: URL(string: urlString)! )
             request.httpMethod = "POST"
@@ -1462,7 +1481,7 @@ class SingleSyncDataTurkey: NSObject {
             }
         }
     }
-    
+    */
     // MARK: -*************** Login Method call Again  ***************************************************/
     
     func loginMethod(postingId:NSNumber){
@@ -1494,8 +1513,8 @@ class SingleSyncDataTurkey: NSObject {
                         let aceesTokentype: String = tokenType + " " + acessToken
                         _ = dict.value(forKey: "HasAccess")! as AnyObject
                         let keychainHelper = AccessTokenHelper()
-                        keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: "aceesTokentype")
-//                        UserDefaults.standard.set(aceesTokentype,forKey: "aceesTokentype")
+                        keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
+//                        UserDefaults.standard.set(aceesTokentype,forKey: Constants.accessToken)
 //                        UserDefaults.standard.synchronize()
                         self.feedprogram(postingId: postingId)
                     }

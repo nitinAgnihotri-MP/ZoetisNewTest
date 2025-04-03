@@ -132,6 +132,14 @@ extension PVEViewSNASession: UITableViewDelegate, UITableViewDataSource{
         
     }
     
+    fileprivate func cameraSetting(_ cameraState: String?, _ cell: StartNewAssignmentCell) {
+        if cameraState == "true" {
+            cell.switchBtn.isOn = true
+        } else {
+            cell.switchBtn.isOn = false
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         switch indexPath.section {
@@ -147,7 +155,7 @@ extension PVEViewSNASession: UITableViewDelegate, UITableViewDataSource{
             
             
             let valuee = CoreDataHandlerPVE().fetchCurrentSessionInDB()
-            if valuee.count > 0{
+            if valuee.count > 0 {
                 
                 cell.evaluationDateTxtfield.text = getDraftValueForKey(key: "evaluationDate") as? String
                 cell.accManagerTxtfield.text = getDraftValueForKey(key: "accountManager") as? String
@@ -171,13 +179,7 @@ extension PVEViewSNASession: UITableViewDelegate, UITableViewDataSource{
                 }
                 
                 let cameraState = getDraftValueForKey(key: "cameraEnabled") as? String
-                if cameraState == "true"{
-                    cell.switchBtn.isOn = true
-                    
-                }else{
-                    cell.switchBtn.isOn = false
-                    
-                }
+                cameraSetting(cameraState, cell)
                 
                 var selectedBirdTypeId = Int()
                 selectedBirdTypeId = getDraftValueForKey(key: "selectedBirdTypeId") as! Int

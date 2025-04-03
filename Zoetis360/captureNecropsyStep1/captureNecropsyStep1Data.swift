@@ -152,7 +152,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     var strFeddCheck  = String()
     var buttonbgNew2 = UIButton()
     let feedProgramText = "Feed Program *"
-    let mendatoryFieldsMessage = "Fields marked as (*) are mandatory. Please fill all the fields."
+    let mendatoryFieldsMessage = Constants.mandatoryFieldsMessage
     // MARK: - VIEW LIFE CYCLE
     override func viewDidLoad() {
         print("<<<<",self)

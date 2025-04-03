@@ -297,6 +297,29 @@ public class AddEmployeesDAO{
         }
     }
     
+    fileprivate func manageCertBrdgeObj(_ catIdArr: [String?], _ userId: String, _ certificationId: String, _ empId: String, _ vaccineMixingTypeId: String) {
+        for catId in catIdArr{
+            let certBrdgeObj = getEmpCatBridgeObject()
+            certBrdgeObj.userId = userId
+            certBrdgeObj.certificationId = certificationId
+            certBrdgeObj.empId = empId
+            certBrdgeObj.quesCategoryId = catId
+            certBrdgeObj.quesTypeId = vaccineMixingTypeId
+        }
+    }
+    
+    fileprivate func manageBrdge(_ catIdArr: [String?], _ userId: String, _ certificationId: String, _ empId: String, _ operatorTypeId: String) {
+        for catId in catIdArr {
+            let certBrdgeObj = getEmpCatBridgeObject()
+            certBrdgeObj.userId = userId
+            certBrdgeObj.certificationId = certificationId
+            certBrdgeObj.empId = empId
+            certBrdgeObj.quesCategoryId = catId
+            certBrdgeObj.quesTypeId = operatorTypeId
+            
+        }
+    }
+    
     func linkEmpToQuestionnaire(empId:String, userId:String, certificationId:String){
         do{
             let safetyTypeId = VaccinationConstants.LookupMaster.SAFETY_AWARENESS_QUESTION_TYPE_ID
@@ -317,26 +340,16 @@ public class AddEmployeesDAO{
                 }
             }
             
-            
             let vaccineMixingTypeId = VaccinationConstants.LookupMaster.VACCINE_MIXING_TYPE_ID
             let masterListQuestTypesVAccineMixing = QuestionnaireDAO.sharedInstance.fetchQuestionnaireMOData(userId: userId, typeId: vaccineMixingTypeId)
             if masterListQuestTypesVAccineMixing.count > 0{
                 let questCategories = masterListQuestTypesVAccineMixing[0].questionCategories?.allObjects as? Array<VaccinationQuestionCategories>
                 if let quesCatArr = questCategories{
-                    let catIdArr = quesCatArr.map{ $0.categoryId}
-                    for catId in catIdArr{
-                        let certBrdgeObj = getEmpCatBridgeObject()
-                        certBrdgeObj.userId = userId
-                        certBrdgeObj.certificationId = certificationId
-                        certBrdgeObj.empId = empId
-                        certBrdgeObj.quesCategoryId = catId
-                        certBrdgeObj.quesTypeId = vaccineMixingTypeId
-                    }
+                    let catIdArr = quesCatArr.map{ $0.categoryId }
+                    manageCertBrdgeObj(catIdArr, userId, certificationId, empId, vaccineMixingTypeId)
                     try managedContext.save()
                 }
             }
-
-            
             
             let operatorTypeId = VaccinationConstants.LookupMaster.OPERATOR_CERTIFICATION_QUESTION_TYPE_ID
             let masterListQuestTypes = QuestionnaireDAO.sharedInstance.fetchQuestionnaireMOData(userId: userId, typeId: operatorTypeId)
@@ -344,15 +357,7 @@ public class AddEmployeesDAO{
                 let questCategories = masterListQuestTypes[0].questionCategories?.allObjects as? Array<VaccinationQuestionCategories>
                 if let quesCatArr = questCategories{
                     let catIdArr = quesCatArr.map{ $0.categoryId}
-                    for catId in catIdArr{
-                        let certBrdgeObj = getEmpCatBridgeObject()
-                        certBrdgeObj.userId = userId
-                        certBrdgeObj.certificationId = certificationId
-                        certBrdgeObj.empId = empId
-                        certBrdgeObj.quesCategoryId = catId
-                        certBrdgeObj.quesTypeId = operatorTypeId
-                        
-                    }
+                    manageBrdge(catIdArr, userId, certificationId, empId, operatorTypeId)
                     try managedContext.save()
                 }
                 
