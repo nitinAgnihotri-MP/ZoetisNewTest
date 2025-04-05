@@ -1041,6 +1041,101 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         return true
     }
     
+    fileprivate func handleTxtField101Validation(_ newString: String) {
+        let bPredicate: NSPredicate = NSPredicate(format: "farmName contains[cd] %@", newString)
+        let complexId = UserDefaults.standard.integer(forKey: "UnlinkComplex")
+        fetchcomplexArray = CoreDataHandlerTurkey().fetchFarmsDataDatabaseUsingCompexIdTurkey(complexId: complexId as NSNumber).filtered(using: bPredicate) as NSArray
+        autocompleteUrls1 = fetchcomplexArray.mutableCopy() as! NSMutableArray
+        autocompleteUrls.removeAllObjects()
+        autocompleteUrls2.removeAllObjects()
+        
+        for i in 0..<autocompleteUrls1.count {
+            
+            let f = autocompleteUrls1.object(at: i) as! FarmsListTurkey
+            let  farmName = f.farmName
+            autocompleteUrls2.add(farmName!)
+            
+        }
+        autocompleteUrls =   self.removeDuplicates(autocompleteUrls2)
+        autoSerchTable.frame = CGRect(x: 150, y: -12, width: 200, height: 100)
+        buttonDroper.alpha = 1
+        autoSerchTable.alpha = 1
+        
+        if autocompleteUrls.count == 0 {
+            buttonDroper.alpha = 0
+            autoSerchTable.alpha = 0
+        } else {
+            autoSerchTable.reloadData()
+        }
+    }
+    
+    fileprivate func handleTag18(_ string: String, _ aSet: CharacterSet, _ textField: UITextField, _ range: NSRange) -> Bool {
+        let compSepByCharInSet = string.components(separatedBy: aSet)
+        let numberFiltered = compSepByCharInSet.joined(separator: "")
+        
+        let maxLength = 6
+        let currentString: NSString = textField.text! as NSString
+        let newString: NSString =
+        currentString.replacingCharacters(in: range, with: string) as NSString
+        
+        return string == numberFiltered && newString.length <= maxLength
+    }
+    
+    fileprivate func handleTag11(_ string: String, _ aSet: CharacterSet, _ textField: UITextField, _ range: NSRange) -> Bool {
+        let compSepByCharInSet = string.components(separatedBy: aSet)
+        let numberFiltered = compSepByCharInSet.joined(separator: "")
+        
+        let maxLength = 6
+        let currentString: NSString = textField.text! as NSString
+        let newString: NSString =
+        currentString.replacingCharacters(in: range, with: string) as NSString
+        return string == numberFiltered && newString.length <= maxLength
+    }
+    
+    fileprivate func handleValidations(_ string: String, _ textField: UITextField, _ newString: inout NSString) -> Bool {
+        if string == "." {
+            let countdots = textField.text!.components(separatedBy:".").count - 1
+            if countdots == 0 {
+                
+                if (newString.length) > 6 {
+                    newString = newString.substring(to: newString.length - 1) as NSString
+                    return false
+                } else {
+                    return true
+                }
+                
+            } else {
+                if countdots > 0 && string == "." {
+                    return false
+                } else {
+                    return true
+                }
+            }
+        } else {
+            return false
+        }
+    }
+    
+    fileprivate func handleValidation12(_ textField: UITextField, _ range: NSRange, _ string: String) -> Bool {
+        let maxLength = 6
+        let currentString: NSString = textField.text! as NSString
+        var newString: NSString =
+        currentString.replacingCharacters(in: range, with: string) as NSString
+        var result = true
+        if textField == farmWeightTextField {
+            
+            let inverseSet = NSCharacterSet(charactersIn:"0123456789").inverted
+            let components = string.components(separatedBy: inverseSet)
+            let filtered = components.joined(separator: "")
+            if filtered == string {
+                return newString.length <= maxLength
+            } else {
+                return handleValidations(string, textField, &newString)
+            }
+        }
+        return true
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
         
         let  char = string.cString(using: String.Encoding.utf8)!
@@ -1052,96 +1147,22 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         }
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         
-        if (textField.tag == 101){
+        if (textField.tag == 101) {
             
-            let bPredicate: NSPredicate = NSPredicate(format: "farmName contains[cd] %@", newString)
-            let complexId = UserDefaults.standard.integer(forKey: "UnlinkComplex")
-            fetchcomplexArray = CoreDataHandlerTurkey().fetchFarmsDataDatabaseUsingCompexIdTurkey(complexId: complexId as NSNumber).filtered(using: bPredicate) as NSArray
-            autocompleteUrls1 = fetchcomplexArray.mutableCopy() as! NSMutableArray
-            autocompleteUrls.removeAllObjects()
-            autocompleteUrls2.removeAllObjects()
-            
-            for i in 0..<autocompleteUrls1.count {
-                
-                let f = autocompleteUrls1.object(at: i) as! FarmsListTurkey
-                let  farmName = f.farmName
-                autocompleteUrls2.add(farmName!)
-                
-            }
-            autocompleteUrls =   self.removeDuplicates(autocompleteUrls2)
-            autoSerchTable.frame = CGRect(x: 150, y: -12, width: 200, height: 100)
-            buttonDroper.alpha = 1
-            autoSerchTable.alpha = 1
-            
-            if autocompleteUrls.count == 0 {
-                buttonDroper.alpha = 0
-                autoSerchTable.alpha = 0
-            } else {
-                autoSerchTable.reloadData()
-            }
+            handleTxtField101Validation(newString)
         } else {
             let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
             switch textField.tag {
             case 18 :
                
-                let compSepByCharInSet = string.components(separatedBy: aSet)
-                let numberFiltered = compSepByCharInSet.joined(separator: "")
-                
-                let maxLength = 6
-                let currentString: NSString = textField.text! as NSString
-                let newString: NSString =
-                currentString.replacingCharacters(in: range, with: string) as NSString
-                
-                return string == numberFiltered && newString.length <= maxLength
+                return handleTag18(string, aSet, textField, range)
                 
             case 11 :
               
-                let compSepByCharInSet = string.components(separatedBy: aSet)
-                let numberFiltered = compSepByCharInSet.joined(separator: "")
-                
-                let maxLength = 6
-                let currentString: NSString = textField.text! as NSString
-                let newString: NSString =
-                currentString.replacingCharacters(in: range, with: string) as NSString
-                return string == numberFiltered && newString.length <= maxLength
+                return handleTag11(string, aSet, textField, range)
                 
             case 12 :
-                let maxLength = 6
-                let currentString: NSString = textField.text! as NSString
-                var newString: NSString =
-                currentString.replacingCharacters(in: range, with: string) as NSString
-                var result = true
-                if textField == farmWeightTextField {
-                    
-                    let inverseSet = NSCharacterSet(charactersIn:"0123456789").inverted
-                    let components = string.components(separatedBy: inverseSet)
-                    let filtered = components.joined(separator: "")
-                    if filtered == string {
-                        return newString.length <= maxLength
-                    } else {
-                        if string == "." {
-                            let countdots = textField.text!.components(separatedBy:".").count - 1
-                            if countdots == 0 {
-                                
-                                if (newString.length) > 6 {
-                                    newString = newString.substring(to: newString.length - 1) as NSString
-                                    return false
-                                }
-                                
-                            } 
-                            else {
-                                if countdots > 0 && string == "." {
-                                    return false
-                                } else {
-                                    return true
-                                }
-                            }
-                        } else {
-                            return false
-                        }
-                    }
-                }
-                return true
+                return handleValidation12(textField, range, string)
                 
             default : break
             }

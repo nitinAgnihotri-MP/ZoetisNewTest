@@ -420,13 +420,7 @@ class SingleSyncDataTurkey: NSObject {
         }
     }
     // MARK: - ******************* Save Add Vacination data On Server ***************************/
-    /**************************************************************************/
-    func addVaccination(postingId:NSNumber)  {
-        
-        let postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(postingId).mutableCopy() as! NSMutableArray
-        let cNecArr =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkey(postingId)
-        let necArrWithoutPosting = NSMutableArray()
-        
+    fileprivate func handlecNecArray(_ cNecArr: NSArray, _ necArrWithoutPosting: NSMutableArray) {
         for j in 0..<cNecArr.count
         {
             let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyDataTurkey
@@ -441,14 +435,9 @@ class SingleSyncDataTurkey: NSObject {
             }
             
         }
-        self.postingIdArr.removeAllObjects()
-        var sessionId = NSNumber()
-        var timeStamp = String()
-        var actualTime = String()
-        let tempArrTime = NSMutableArray()
-        let actualTemp  = NSMutableArray()
-        var vaccinationName = String ()
-        
+    }
+    
+    fileprivate func handlePostingArrWithAllData(_ postingArrWithAllData: NSMutableArray, _ sessionId: inout NSNumber, _ timeStamp: inout String, _ actualTemp: NSMutableArray, _ tempArrTime: NSMutableArray) {
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
             sessionId = pSession.postingId!
@@ -461,98 +450,103 @@ class SingleSyncDataTurkey: NSObject {
             tempArrTime.add(timeStamp)
             self.postingIdArr.add(sessionId)
         }
-        
-        let sessionArr = NSMutableArray()
-        let sessionDictWithVac = NSMutableDictionary()
-        
+    }
+    
+    fileprivate func handleAddVacinationAll(_ addVacinationAll: NSArray, _ vaccinationName: inout String, _ vaccinationDetail: NSMutableDictionary) {
+        for i in 0..<addVacinationAll.count {
+            let pSession = addVacinationAll.object(at: i) as! FieldVaccinationTurkey
+            if i == 0{
+                vaccinationName = pSession.vaciNationProgram!
+            }
+            
+            let routeName = pSession.route
+            var routeId = NSNumber()
+            if routeName == Constants.drinkingWater {
+                routeId = 2
+            } else if routeName == Constants.wingWeb {
+                routeId = 1
+            } else if routeName == Constants.spray {
+                routeId = 3
+            } else if routeName == Constants.inOvoStr {
+                routeId = 4
+            } else if routeName == "Subcutaneous" {
+                routeId = 5
+            } else if routeName == "Intramuscular" {
+                routeId = 6
+            } else  if  routeName == Constants.eveDrop{
+                routeId = 7
+            }
+            else{
+                routeId = 0
+            }
+            var strain = String()
+            strain = pSession.strain!
+            let strainKey = "hatcheryStrain\(i + 1)"
+            let routeKey = "hatcheryRoute\(i+1)Id"
+            
+            vaccinationDetail .setObject(strain, forKey: strainKey as NSCopying)
+            vaccinationDetail .setObject(routeId, forKey: routeKey as NSCopying)
+        }
+    }
+    
+    fileprivate func handleFieldVacinationAllArr(_ FieldVacinationAll: NSArray, _ vaccinationDetail: NSMutableDictionary) {
+        for i in 0..<FieldVacinationAll.count {
+            let pSession = FieldVacinationAll.object(at: i) as! HatcheryVacTurkey
+            var strain = String()
+            let routeName = pSession.route
+            
+            var fieldStrain1 = String()
+            var routeId = NSNumber()
+            if routeName == Constants.drinkingWater {
+                routeId = 2
+            }
+            else if routeName == Constants.wingWeb {
+                routeId = 1
+            }
+            else if routeName == Constants.spray {
+                routeId = 3
+            }
+            else if routeName == Constants.inOvoStr {
+                routeId = 4
+            }
+            else if routeName == "Subcutaneous" {
+                routeId = 5
+            }
+            else if routeName == "Intramuscular" {
+                routeId = 6
+            }
+            else  if  routeName == Constants.eveDrop{
+                routeId = 7
+            }
+            else{
+                routeId = 0
+            }
+            let age = pSession.age
+            fieldStrain1 = pSession.route!
+            strain = pSession.strain!
+            let fieldStrainKey = "fieldStrain\(i + 1)"
+            let fieldrouteKey = "fieldRoute\(i+1)Id"
+            let fieldAgeKey = "fieldAge\(i + 1)"
+            
+            vaccinationDetail .setObject(strain, forKey: fieldStrainKey as NSCopying)
+            vaccinationDetail .setObject(routeId, forKey: fieldrouteKey as NSCopying)
+            vaccinationDetail .setObject(age!, forKey: fieldAgeKey as NSCopying)
+        }
+    }
+    
+    fileprivate func handlePostingIdArr(_ vaccinationName: inout String, _ postingArrWithAllData: NSMutableArray, _ sessionArr: NSMutableArray) {
         for i in 0..<self.postingIdArr.count {
             
             let pId = self.postingIdArr.object(at: i) as! NSNumber
             let addVacinationAll = CoreDataHandlerTurkey().fetchFieldAddvacinationDataTurkey(pId)
             
             let vaccinationDetail = NSMutableDictionary()
-            for i in 0..<addVacinationAll.count {
-                let pSession = addVacinationAll.object(at: i) as! FieldVaccinationTurkey
-                if i == 0{
-                    vaccinationName = pSession.vaciNationProgram!
-                }
-                
-                let routeName = pSession.route
-                var routeId = NSNumber()
-                if routeName == Constants.drinkingWater {
-                    routeId = 2
-                } else if routeName == Constants.wingWeb {
-                    routeId = 1
-                } else if routeName == "Spray" {
-                    routeId = 3
-                } else if routeName == Constants.inOvoStr {
-                    routeId = 4
-                } else if routeName == "Subcutaneous" {
-                    routeId = 5
-                } else if routeName == "Intramuscular" {
-                    routeId = 6
-                } else  if  routeName == Constants.eveDrop{
-                    routeId = 7
-                }
-                else{
-                    routeId = 0
-                }
-                var strain = String()
-                strain = pSession.strain!
-                let strainKey = "hatcheryStrain\(i + 1)"
-                let routeKey = "hatcheryRoute\(i+1)Id"
-                
-                vaccinationDetail .setObject(strain, forKey: strainKey as NSCopying)
-                vaccinationDetail .setObject(routeId, forKey: routeKey as NSCopying)
-            }
+            handleAddVacinationAll(addVacinationAll, &vaccinationName, vaccinationDetail)
             
             let FieldVacinationAll = CoreDataHandlerTurkey().fetchAddvacinationDataTurkey(pId)
-            for i in 0..<FieldVacinationAll.count
-            {
-                let pSession = FieldVacinationAll.object(at: i) as! HatcheryVacTurkey
-                var strain = String()
-                let routeName = pSession.route
-                
-                var fieldStrain1 = String()
-                var routeId = NSNumber()
-                if routeName == Constants.drinkingWater {
-                    routeId = 2
-                }
-                else if routeName == Constants.wingWeb {
-                    routeId = 1
-                }
-                else if routeName == "Spray" {
-                    routeId = 3
-                }
-                else if routeName == Constants.inOvoStr {
-                    routeId = 4
-                }
-                else if routeName == "Subcutaneous" {
-                    routeId = 5
-                }
-                else if routeName == "Intramuscular" {
-                    routeId = 6
-                }
-                else  if  routeName == Constants.eveDrop{
-                    routeId = 7
-                }
-                else{
-                    routeId = 0
-                }
-                let age = pSession.age
-                fieldStrain1 = pSession.route!
-                strain = pSession.strain!
-                let fieldStrainKey = "fieldStrain\(i + 1)"
-                let fieldrouteKey = "fieldRoute\(i+1)Id"
-                let fieldAgeKey = "fieldAge\(i + 1)"
-                
-                vaccinationDetail .setObject(strain, forKey: fieldStrainKey as NSCopying)
-                vaccinationDetail .setObject(routeId, forKey: fieldrouteKey as NSCopying)
-                vaccinationDetail .setObject(age!, forKey: fieldAgeKey as NSCopying)
-            }
+            handleFieldVacinationAllArr(FieldVacinationAll, vaccinationDetail)
             
-            if FieldVacinationAll.count > 0 || addVacinationAll.count > 0
-            {
+            if FieldVacinationAll.count > 0 || addVacinationAll.count > 0 {
                 let vaccinationArray = NSMutableArray()
                 vaccinationArray .add(vaccinationDetail)
                 let mainDict = NSMutableDictionary()
@@ -571,6 +565,58 @@ class SingleSyncDataTurkey: NSObject {
                 sessionArr.add(mainDict)
             }
         }
+    }
+    
+    fileprivate func handleSaveMultipleVaccAPIResponse(postingId:NSNumber,_ statusCode: Int?, _ response: AFDataResponse<Any>) {
+        if statusCode == 401  {
+            self.loginMethod(postingId: postingId)
+        }
+        else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
+            self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
+        }
+        
+        switch response.result {
+            
+        case .success(let responseObject):
+            self.savePostingDataOnServer(postingId: postingId)
+            
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                if let s = statusCode {
+                    self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
+                } else {
+                    self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+                }
+            }
+        }
+    }
+    
+    /**************************************************************************/
+    func addVaccination(postingId:NSNumber)  {
+        
+        let postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(postingId).mutableCopy() as! NSMutableArray
+        let cNecArr =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkey(postingId)
+        let necArrWithoutPosting = NSMutableArray()
+        
+        handlecNecArray(cNecArr, necArrWithoutPosting)
+        self.postingIdArr.removeAllObjects()
+        var sessionId = NSNumber()
+        var timeStamp = String()
+        var actualTime = String()
+        let tempArrTime = NSMutableArray()
+        let actualTemp  = NSMutableArray()
+        var vaccinationName = String ()
+        
+        handlePostingArrWithAllData(postingArrWithAllData, &sessionId, &timeStamp, actualTemp, tempArrTime)
+        
+        let sessionArr = NSMutableArray()
+        let sessionDictWithVac = NSMutableDictionary()
+        
+        handlePostingIdArr(&vaccinationName, postingArrWithAllData, sessionArr)
         sessionDictWithVac.setValue(sessionArr, forKey: "Vaccinations")
         
         do {
@@ -595,32 +641,7 @@ class SingleSyncDataTurkey: NSObject {
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
                     
-                    if statusCode == 401  {
-                        self.loginMethod(postingId: postingId)
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
-                    }
-                    
-                    switch response.result {
-                        
-                    case .success(let responseObject):
-                        self.savePostingDataOnServer(postingId: postingId)
-                        
-                    case .failure(let encodingError):
-                        
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                            } else {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
-                        }
-                    }
+                    self.handleSaveMultipleVaccAPIResponse(postingId: postingId, statusCode, response)
                 }
             }
         }
@@ -784,6 +805,158 @@ class SingleSyncDataTurkey: NSObject {
         }
     }
     
+    fileprivate func handleBirdArray(_ noOfBird: Int?, _ farmName: String?, _ cNData: CaptureNecropsyDataTurkey, _ birdArry: NSMutableArray) {
+        for j in 0..<noOfBird!
+        {
+            let obsNameWithValue =   CoreDataHandlerTurkey().fetchObsWithBirdandFarmNameTurkey(farmName!, birdNo: (j + 1) as NSNumber, necId: cNData.necropsyId!)
+            let notesWithFarm = CoreDataHandlerTurkey().fetchNotesWithBirdNumandFarmNameTurkey((j + 1) as NSNumber, formName: farmName!, necId: cNData.necropsyId!)
+            if notesWithFarm.count > 0
+            {
+                let n = notesWithFarm.object(at: 0) as! NotesBirdTurkey
+                let notes = n.notes
+                obsNameWithValue.setValue(j + 1, forKey: "BirdId")
+                obsNameWithValue.setValue(notes, forKey: "birdNotes")
+            } else {
+                obsNameWithValue.setValue(j + 1, forKey: "BirdId")
+                obsNameWithValue.setValue("", forKey: "birdNotes")
+            }
+            birdArry.add(obsNameWithValue)
+        }
+    }
+    
+    fileprivate func handlecNecArrayAndAllArr(_ cNec: NSArray, _ complexId: inout Int, _ allArray: NSMutableArray) {
+        for x in 0..<cNec.count
+        {
+            let birdArry = NSMutableArray()
+            let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
+            let farmName = cNData.farmName
+            let noOfBird = Int(cNData.noOfBirds!)
+            let houseNo = cNData.houseNo
+            let feedProgram = cNData.feedProgram
+            if let value = cNData.feedId {
+                var feedId = value
+            }
+            let age = cNData.age
+            let flock = cNData.flockId
+            let sick = cNData.sick
+            let imgId = cNData.imageId
+            complexId = cNData.complexId as! Int
+            let timestamp = cNData.timeStamp
+            let customerId = cNData.custmerId
+            let customerName = cNData.complexName
+            let complexdate = cNData.complexDate
+            var abf = cNData.abf
+            let farmWeight = cNData.farmWeight
+            let breedString = cNData.breed
+            let sex = cNData.sex
+            let farmId = cNData.farmId
+            let genName = cNData.generName
+            let genId = cNData.generID
+            let formWithcatNameWithBirdAndAllObs = NSMutableDictionary()
+            
+            handleBirdArray(noOfBird, farmName, cNData, birdArry)
+            
+            formWithcatNameWithBirdAndAllObs.setValue(birdArry, forKey: "BirdDetails")
+            formWithcatNameWithBirdAndAllObs.setValue(farmName, forKey: "farmName")
+            formWithcatNameWithBirdAndAllObs.setValue(houseNo, forKey: "houseNo")
+            formWithcatNameWithBirdAndAllObs.setValue(noOfBird!, forKey: "birds")
+            formWithcatNameWithBirdAndAllObs.setValue(farmId, forKey: "SortId")
+            formWithcatNameWithBirdAndAllObs.setValue(imgId, forKey: "ImgId")
+            formWithcatNameWithBirdAndAllObs.setValue(feedProgram, forKey: "feedProgram")
+            formWithcatNameWithBirdAndAllObs.setValue(feedId, forKey: "DeviceFeedId")
+            formWithcatNameWithBirdAndAllObs.setValue(age, forKey: "age")
+            formWithcatNameWithBirdAndAllObs.setValue(customerId, forKey: "customerId")
+            formWithcatNameWithBirdAndAllObs.setValue(customerName, forKey: "customerName")
+            formWithcatNameWithBirdAndAllObs.setValue(sick, forKey: "sick")
+            formWithcatNameWithBirdAndAllObs.setValue(flock, forKey: "flockId")
+            formWithcatNameWithBirdAndAllObs.setValue(complexdate, forKey: "ComplexDate")
+            formWithcatNameWithBirdAndAllObs.setValue(abf, forKey: "ABF")
+            formWithcatNameWithBirdAndAllObs.setValue(farmWeight, forKey: "Farm_Weight")
+            formWithcatNameWithBirdAndAllObs.setValue(breedString, forKey: "Breed")
+            formWithcatNameWithBirdAndAllObs.setValue(sex, forKey: "Sex")
+            
+            formWithcatNameWithBirdAndAllObs.setValue(genName, forKey: "GenerationName")
+            formWithcatNameWithBirdAndAllObs.setValue(genId, forKey: "GenerationId")
+            allArray.add(formWithcatNameWithBirdAndAllObs)
+        }
+    }
+    
+    fileprivate func handleNoOfBirdsValidation(_ noOfBird: Int?, _ farmName: String?, _ cNData: CaptureNecropsyDataTurkey, _ birdArry: NSMutableArray) {
+        for j in 0..<noOfBird! {
+            
+            let obsNameWithValue =   CoreDataHandlerTurkey().fetchObsWithBirdandFarmNameTurkey(farmName!, birdNo: (j + 1) as NSNumber, necId: cNData.necropsyId!)
+            let notesWithFarm = CoreDataHandlerTurkey().fetchNotesWithBirdNumandFarmNameTurkey((j + 1) as NSNumber, formName: farmName!, necId: cNData.necropsyId!)
+            
+            if notesWithFarm.count > 0 {
+                let n = notesWithFarm.object(at: 0) as! NotesBirdTurkey
+                let notes = n.notes
+                obsNameWithValue.setValue(j + 1, forKey: "BirdId")
+                obsNameWithValue.setValue(notes, forKey: "birdNotes")
+            }  else  {
+                obsNameWithValue.setValue(j + 1, forKey: "BirdId")
+                obsNameWithValue.setValue("", forKey: "birdNotes")
+            }
+            birdArry.add(obsNameWithValue)
+        }
+    }
+    
+    fileprivate func handlecNecArrayValidation(_ cNec: NSArray, _ complexId: inout Int, _ allArray: NSMutableArray) {
+        for x in 0..<cNec.count {
+            
+            let birdArry = NSMutableArray()
+            let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
+            let farmName = cNData.farmName
+            let noOfBird = Int(cNData.noOfBirds!)
+            let houseNo = cNData.houseNo
+            let feedProgram = cNData.feedProgram
+            if let value =  (cNData.feedId  as? Int){
+                feedId = value
+            }
+            let age = cNData.age
+            complexId = cNData.complexId as! Int
+            let timestamp = cNData.timeStamp
+            let flock = cNData.flockId
+            let imgId = cNData.imageId
+            let farmId = cNData.farmId
+            let sick = cNData.sick
+            let customerId = cNData.custmerId
+            let customerName = cNData.complexName
+            let complexDate = cNData.complexDate
+            let formWithcatNameWithBirdAndAllObs = NSMutableDictionary()
+            var abf = cNData.abf
+            let farmWeight = cNData.farmWeight
+            let breedString = cNData.breed
+            let sex = cNData.sex
+            let genName = cNData.generName
+            let genId = cNData.generID
+            
+            handleNoOfBirdsValidation(noOfBird, farmName, cNData, birdArry)
+            
+            formWithcatNameWithBirdAndAllObs.setValue(abf, forKey: "ABF")
+            formWithcatNameWithBirdAndAllObs.setValue(farmWeight, forKey: "Farm_Weight")
+            formWithcatNameWithBirdAndAllObs.setValue(breedString, forKey: "Breed")
+            formWithcatNameWithBirdAndAllObs.setValue(sex, forKey: "Sex")
+            formWithcatNameWithBirdAndAllObs.setValue(farmId, forKey: "SortId")
+            formWithcatNameWithBirdAndAllObs.setValue(imgId, forKey: "ImgId")
+            formWithcatNameWithBirdAndAllObs.setValue(birdArry, forKey: "BirdDetails")
+            formWithcatNameWithBirdAndAllObs.setValue(farmName, forKey: "farmName")
+            formWithcatNameWithBirdAndAllObs.setValue(houseNo, forKey: "houseNo")
+            formWithcatNameWithBirdAndAllObs.setValue(noOfBird!, forKey: "birds")
+            formWithcatNameWithBirdAndAllObs.setValue(feedProgram, forKey: "feedProgram")
+            formWithcatNameWithBirdAndAllObs.setValue(feedId, forKey: "DeviceFeedId")
+            formWithcatNameWithBirdAndAllObs.setValue(age, forKey: "age")
+            formWithcatNameWithBirdAndAllObs.setValue(customerId, forKey: "customerId")
+            formWithcatNameWithBirdAndAllObs.setValue(customerName, forKey: "customerName")
+            formWithcatNameWithBirdAndAllObs.setValue(sick, forKey: "sick")
+            formWithcatNameWithBirdAndAllObs.setValue(flock, forKey: "flockId")
+            formWithcatNameWithBirdAndAllObs.setValue(complexDate, forKey: "ComplexDate")
+            formWithcatNameWithBirdAndAllObs.setValue(genName, forKey: "GenerationName")
+            formWithcatNameWithBirdAndAllObs.setValue(genId, forKey: "GenerationId")
+            allArray.add(formWithcatNameWithBirdAndAllObs)
+            
+        }
+    }
+    
     /************************************/
     
     func saveNecropsyDataOnServer(postingId: NSNumber){
@@ -795,8 +968,7 @@ class SingleSyncDataTurkey: NSObject {
         for j in 0..<cNecArr.count {
             let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyDataTurkey
             a.add(captureNecropsyData)
-            for w in 0..<a.count - 1
-            {
+            for w in 0..<a.count - 1 {
                 let c = a.object(at: w)  as! CaptureNecropsyDataTurkey
                 if c.necropsyId == captureNecropsyData.necropsyId {
                     a.remove(c)
@@ -806,8 +978,7 @@ class SingleSyncDataTurkey: NSObject {
         
         let sessionWithAllforms = NSMutableDictionary()
         let sessionArr = NSMutableArray()
-        for i in 0..<a.count
-        {
+        for i in 0..<a.count {
             let allArray = NSMutableArray()
             let captureNecropsyData = a.object(at: i)  as! CaptureNecropsyDataTurkey
             let nId = captureNecropsyData.necropsyId!
@@ -815,75 +986,7 @@ class SingleSyncDataTurkey: NSObject {
             
             let cNec =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkey(postingId)
             let formWithcatNameWithBirdAndAllObs1 = NSMutableDictionary()
-            for x in 0..<cNec.count
-            {
-                let birdArry = NSMutableArray()
-                let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
-                let farmName = cNData.farmName
-                let noOfBird = Int(cNData.noOfBirds!)
-                let houseNo = cNData.houseNo
-                let feedProgram = cNData.feedProgram
-                if let value = cNData.feedId {
-                    var feedId = value
-                }
-                let age = cNData.age
-                let flock = cNData.flockId
-                let sick = cNData.sick
-                let imgId = cNData.imageId
-                complexId = cNData.complexId as! Int
-                let timestamp = cNData.timeStamp
-                let customerId = cNData.custmerId
-                let customerName = cNData.complexName
-                let complexdate = cNData.complexDate
-                var abf = cNData.abf
-                let farmWeight = cNData.farmWeight
-                let breedString = cNData.breed
-                let sex = cNData.sex
-                let farmId = cNData.farmId
-                let genName = cNData.generName
-                let genId = cNData.generID
-                let formWithcatNameWithBirdAndAllObs = NSMutableDictionary()
-                
-                for j in 0..<noOfBird!
-                {
-                    let obsNameWithValue =   CoreDataHandlerTurkey().fetchObsWithBirdandFarmNameTurkey(farmName!, birdNo: (j + 1) as NSNumber, necId: cNData.necropsyId!)
-                    let notesWithFarm = CoreDataHandlerTurkey().fetchNotesWithBirdNumandFarmNameTurkey((j + 1) as NSNumber, formName: farmName!, necId: cNData.necropsyId!)
-                    if notesWithFarm.count > 0
-                    {
-                        let n = notesWithFarm.object(at: 0) as! NotesBirdTurkey
-                        let notes = n.notes
-                        obsNameWithValue.setValue(j + 1, forKey: "BirdId")
-                        obsNameWithValue.setValue(notes, forKey: "birdNotes")
-                    } else {
-                        obsNameWithValue.setValue(j + 1, forKey: "BirdId")
-                        obsNameWithValue.setValue("", forKey: "birdNotes")
-                    }
-                    birdArry.add(obsNameWithValue)
-                }
-                
-                formWithcatNameWithBirdAndAllObs.setValue(birdArry, forKey: "BirdDetails")
-                formWithcatNameWithBirdAndAllObs.setValue(farmName, forKey: "farmName")
-                formWithcatNameWithBirdAndAllObs.setValue(houseNo, forKey: "houseNo")
-                formWithcatNameWithBirdAndAllObs.setValue(noOfBird!, forKey: "birds")
-                formWithcatNameWithBirdAndAllObs.setValue(farmId, forKey: "SortId")
-                formWithcatNameWithBirdAndAllObs.setValue(imgId, forKey: "ImgId")
-                formWithcatNameWithBirdAndAllObs.setValue(feedProgram, forKey: "feedProgram")
-                formWithcatNameWithBirdAndAllObs.setValue(feedId, forKey: "DeviceFeedId")
-                formWithcatNameWithBirdAndAllObs.setValue(age, forKey: "age")
-                formWithcatNameWithBirdAndAllObs.setValue(customerId, forKey: "customerId")
-                formWithcatNameWithBirdAndAllObs.setValue(customerName, forKey: "customerName")
-                formWithcatNameWithBirdAndAllObs.setValue(sick, forKey: "sick")
-                formWithcatNameWithBirdAndAllObs.setValue(flock, forKey: "flockId")
-                formWithcatNameWithBirdAndAllObs.setValue(complexdate, forKey: "ComplexDate")
-                formWithcatNameWithBirdAndAllObs.setValue(abf, forKey: "ABF")
-                formWithcatNameWithBirdAndAllObs.setValue(farmWeight, forKey: "Farm_Weight")
-                formWithcatNameWithBirdAndAllObs.setValue(breedString, forKey: "Breed")
-                formWithcatNameWithBirdAndAllObs.setValue(sex, forKey: "Sex")
-                
-                formWithcatNameWithBirdAndAllObs.setValue(genName, forKey: "GenerationName")
-                formWithcatNameWithBirdAndAllObs.setValue(genId, forKey: "GenerationId")
-                allArray.add(formWithcatNameWithBirdAndAllObs)
-            }
+            handlecNecArrayAndAllArr(cNec, &complexId, allArray)
             var fullData = String()
             
             fullData = captureNecropsyData.timeStamp!
@@ -914,75 +1017,7 @@ class SingleSyncDataTurkey: NSObject {
             
             let formWithcatNameWithBirdAndAllObs1 = NSMutableDictionary()
             
-            for x in 0..<cNec.count {
-                
-                let birdArry = NSMutableArray()
-                let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
-                let farmName = cNData.farmName
-                let noOfBird = Int(cNData.noOfBirds!)
-                let houseNo = cNData.houseNo
-                let feedProgram = cNData.feedProgram
-                if let value =  (cNData.feedId  as? Int){
-                    feedId = value
-                }
-                let age = cNData.age
-                complexId = cNData.complexId as! Int
-                let timestamp = cNData.timeStamp
-                let flock = cNData.flockId
-                let imgId = cNData.imageId
-                let farmId = cNData.farmId
-                let sick = cNData.sick
-                let customerId = cNData.custmerId
-                let customerName = cNData.complexName
-                let complexDate = cNData.complexDate
-                let formWithcatNameWithBirdAndAllObs = NSMutableDictionary()
-                var abf = cNData.abf
-                let farmWeight = cNData.farmWeight
-                let breedString = cNData.breed
-                let sex = cNData.sex
-                let genName = cNData.generName
-                let genId = cNData.generID
-                
-                for j in 0..<noOfBird! {
-                    
-                    let obsNameWithValue =   CoreDataHandlerTurkey().fetchObsWithBirdandFarmNameTurkey(farmName!, birdNo: (j + 1) as NSNumber, necId: cNData.necropsyId!)
-                    let notesWithFarm = CoreDataHandlerTurkey().fetchNotesWithBirdNumandFarmNameTurkey((j + 1) as NSNumber, formName: farmName!, necId: cNData.necropsyId!)
-                    
-                    if notesWithFarm.count > 0 {
-                        let n = notesWithFarm.object(at: 0) as! NotesBirdTurkey
-                        let notes = n.notes
-                        obsNameWithValue.setValue(j + 1, forKey: "BirdId")
-                        obsNameWithValue.setValue(notes, forKey: "birdNotes")
-                    }  else  {
-                        obsNameWithValue.setValue(j + 1, forKey: "BirdId")
-                        obsNameWithValue.setValue("", forKey: "birdNotes")
-                    }
-                    birdArry.add(obsNameWithValue)
-                }
-                
-                formWithcatNameWithBirdAndAllObs.setValue(abf, forKey: "ABF")
-                formWithcatNameWithBirdAndAllObs.setValue(farmWeight, forKey: "Farm_Weight")
-                formWithcatNameWithBirdAndAllObs.setValue(breedString, forKey: "Breed")
-                formWithcatNameWithBirdAndAllObs.setValue(sex, forKey: "Sex")
-                formWithcatNameWithBirdAndAllObs.setValue(farmId, forKey: "SortId")
-                formWithcatNameWithBirdAndAllObs.setValue(imgId, forKey: "ImgId")
-                formWithcatNameWithBirdAndAllObs.setValue(birdArry, forKey: "BirdDetails")
-                formWithcatNameWithBirdAndAllObs.setValue(farmName, forKey: "farmName")
-                formWithcatNameWithBirdAndAllObs.setValue(houseNo, forKey: "houseNo")
-                formWithcatNameWithBirdAndAllObs.setValue(noOfBird!, forKey: "birds")
-                formWithcatNameWithBirdAndAllObs.setValue(feedProgram, forKey: "feedProgram")
-                formWithcatNameWithBirdAndAllObs.setValue(feedId, forKey: "DeviceFeedId")
-                formWithcatNameWithBirdAndAllObs.setValue(age, forKey: "age")
-                formWithcatNameWithBirdAndAllObs.setValue(customerId, forKey: "customerId")
-                formWithcatNameWithBirdAndAllObs.setValue(customerName, forKey: "customerName")
-                formWithcatNameWithBirdAndAllObs.setValue(sick, forKey: "sick")
-                formWithcatNameWithBirdAndAllObs.setValue(flock, forKey: "flockId")
-                formWithcatNameWithBirdAndAllObs.setValue(complexDate, forKey: "ComplexDate")
-                formWithcatNameWithBirdAndAllObs.setValue(genName, forKey: "GenerationName")
-                formWithcatNameWithBirdAndAllObs.setValue(genId, forKey: "GenerationId")
-                allArray.add(formWithcatNameWithBirdAndAllObs)
-                
-            }
+            handlecNecArrayValidation(cNec, &complexId, allArray)
             
             var fullData = String()
             fullData = captureNecropsyData.timeStamp!
@@ -1527,35 +1562,44 @@ class SingleSyncDataTurkey: NSObject {
         }
     }
     // MARK: - Update Data on Data Base
+    fileprivate func handleSyncOnPostingSessionTurkey(pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncOnPostingSessionTurkey(pId , isSync: false, { (success) in
+            if success == true {
+                self.updadateNacDataOnCoreData(nId: pId, { (success) in
+                    if success == true {
+                        completion(success)
+                        self.delegeteSyncApiData.didFinishApiSyncdata()
+                    }
+                })
+            }
+        })
+    }
+    
+    fileprivate func handleUpdateIsSyncCocciSaveDB(pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncOnAllCocciControlviaPostingidTurkey(pId , isSync: false, { (success) in
+            if success == true {
+                CoreDataHandlerTurkey().updateisSyncOnHetcharyVacDataWithPostingIdTurkey(pId , isSync: false, { (success) in
+                    if success == true {
+                        handleSyncOnPostingSessionTurkey(pId: pId) { status in
+                            completion(status)
+                        }
+                    }
+                })
+            }
+        })
+    }
+    
     func updadateDataOnCoreData(pId: NSNumber, _ completion: @escaping (_ status: Bool) -> Void){
         CoreDataHandlerTurkey().updateisSyncOnMyBindersViaPostingIdTurkey(pId, isSync: false, { (success) in
-            if success == true{
+            if success == true {
                 CoreDataHandlerTurkey().updateisSyncOnAlternativeFeedPostingidTurkey(pId , isSync: false, { (success) in
-                    if success == true{
+                    if success == true {
                         
                         CoreDataHandlerTurkey().updateisSyncOnAntiboticViaPostingIdTurkey(pId , isSync: false, { (success) in
-                            if success == true{
-                                
-                                CoreDataHandlerTurkey().updateisSyncOnAllCocciControlviaPostingidTurkey(pId , isSync: false, { (success) in
-                                    if success == true{
-                                        
-                                        CoreDataHandlerTurkey().updateisSyncOnHetcharyVacDataWithPostingIdTurkey(pId , isSync: false, { (success) in
-                                            if success == true
-                                            {
-                                                CoreDataHandlerTurkey().updateisSyncOnPostingSessionTurkey(pId , isSync: false, { (success) in
-                                                    if success == true{
-                                                        self.updadateNacDataOnCoreData(nId: pId, { (success) in
-                                                            if success == true{
-                                                                completion(success)
-                                                                self.delegeteSyncApiData.didFinishApiSyncdata()
-                                                            }
-                                                        })
-                                                    }
-                                                })
-                                            }
-                                        })
-                                    }
-                                })
+                            if success == true {
+                                handleUpdateIsSyncCocciSaveDB(pId: pId) { status in
+                                    completion(status)
+                                }
                             }
                         })
                     }
@@ -1564,26 +1608,32 @@ class SingleSyncDataTurkey: NSObject {
         })
     }
     // MARK: - Update Necropsy Data on Core DB
+    fileprivate func updateIsSyncInDB(_ nId: NSNumber,_ success: Bool, _ completion: (_ status: Bool) -> Void) {
+        if success == true{
+            
+            CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(nId , isSync: false, { (success) in
+                if success == true{
+                    CoreDataHandlerTurkey().updateisSyncOnNotesBirdDatabaseTurkey(nId , isSync: false, { (success) in
+                        if success == true{
+                            completion(success)
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
     func updadateNacDataOnCoreData(nId: NSNumber, _ completion: (_ status: Bool) -> Void){
         
         CoreDataHandlerTurkey().updateisSyncOnCaptureSkeletaInDatabaseTurkey(nId , isSync: false, { (success) in
-            if success == true{
+            if success == true {
                 
                 CoreDataHandlerTurkey().updateisSyncNecropsystep1neccIdTurkey(nId , isSync: false, { (success) in
-                    if success == true{
+                    if success == true {
                         
                         CoreDataHandlerTurkey().updateisSyncOnCaptureInDatabaseTurkey(nId , isSync: false, { (success) in
-                            if success == true{
-                                
-                                CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(nId , isSync: false, { (success) in
-                                    if success == true{
-                                        CoreDataHandlerTurkey().updateisSyncOnNotesBirdDatabaseTurkey(nId , isSync: false, { (success) in
-                                            if success == true{
-                                                completion(success)
-                                            }
-                                        })
-                                    }
-                                })
+                            updateIsSyncInDB(nId,success) { (status) in
+                                completion(status)
                             }
                         })
                     }

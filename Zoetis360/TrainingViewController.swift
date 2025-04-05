@@ -121,6 +121,22 @@ class TrainingViewController: UIViewController, WKUIDelegate{
     // MARK: 🟢 - METHODS AND FUNCTIONS
 
     
+    fileprivate func handlePathsDict(_ paths: NSDictionary,_ completion: @escaping (_ status: Bool) -> Void) {
+        for (i, value) in paths {
+            let fileName = self.documentDirectory.appendingPathComponent("my\(i).pdf")
+            if self.checkPdfExitOnLocal(fileName: "my\(i).pdf"){
+                let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+                let url = URL(fileURLWithPath: path)
+                let filePath = url.appendingPathComponent("my\(i).pdf").absoluteURL
+                self.pathArr.add(filePath)
+            } else {
+                self.downloadFile(serverUrl: URL(string: value as! String)!, fileName: fileName) { status in
+                    completion(status)
+                }
+            }
+        }
+    }
+    
     func callWebApiforTutorial(_ completion: @escaping (_ status: Bool) -> Void)  {
         
         if WebClass.sharedInstance.connected() {
@@ -140,20 +156,10 @@ class TrainingViewController: UIViewController, WKUIDelegate{
                     let dict : NSDictionary = value as! NSDictionary
                     if let paths = dict["PDFPath"] as? NSDictionary {
                         self.count = paths.count
-                        for (i, value) in paths {
-                            let fileName = self.documentDirectory.appendingPathComponent("my\(i).pdf")
-                            if self.checkPdfExitOnLocal(fileName: "my\(i).pdf"){
-                                let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-                                let url = URL(fileURLWithPath: path)
-                                let filePath = url.appendingPathComponent("my\(i).pdf").absoluteURL
-                                self.pathArr.add(filePath)
-                            }else{
-                                self.downloadFile(serverUrl: URL(string: value as! String)!, fileName: fileName) { status in
-                                    completion(status)
-                                }
-                            }
+                        self.handlePathsDict(paths) { status in
+                            completion(status)
                         }
-                        if self.pathArr.count == self.count{
+                        if self.pathArr.count == self.count {
                             completion(true)
                         }
                     }
@@ -163,8 +169,8 @@ class TrainingViewController: UIViewController, WKUIDelegate{
                     break
                 }
             }
-        }else{
-            for i in 1..<3{
+        } else {
+            for i in 1..<3 {
                 let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
                 let url = URL(fileURLWithPath: path)
                 let filePath = url.appendingPathComponent("myURL\(i).pdf").absoluteURL

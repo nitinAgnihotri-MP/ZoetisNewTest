@@ -258,6 +258,10 @@ struct Constants {
     static let membranaDaAsa = "Membrana Da Asa"
     static let pleaseEnterMandatoryFields = "Please enter details in all the fields marked as mandatory."
     static let predicates =  "%@(%@)"
+    static let Subcutânea =  "Subcutânea"
+    static let aguaDeBebida =  "Água De Bebida"
+    static let spray =  "Spray"
+    static let visibilityHidden = "visibility:hidden"
 }
 
 enum ZoetisArt {

@@ -415,91 +415,10 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
     }
     // MARK: - Common Function
     
-    func callCommonFunction(_ catName : NSString)  {
-        
-        var arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
-        
-        let modalObj = GI_Tract_Modal()
-        
-        modalObj.delegate = self
-        
-        if arrayOfIds.count > 2 {
+    fileprivate func handleForLoopUpto2(_ arrayOfIds: inout [Int], _ modalObj: GI_Tract_Modal, _ catName: NSString) {
+        for i in 0..<3 {//(arrayOfIds.count-2...arrayOfIds.count).reversed(){
             
-            for i in 0..<3 {//(arrayOfIds.count-2...arrayOfIds.count).reversed(){
-                
-                let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-                    return
-                }
-                
-                let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-            }
-        }
-        
-        else if arrayOfIds.count > 1 {
-            
-            for i in 0..<2 {
-                
-                let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-                    return
-                }
-                
-                let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName,postingId: necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-            }
-        }
-        else{
-            
-            let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds.last as! NSNumber)
+            let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as! NSNumber)
             
             if lastSessionDataArray.count == 0 {
                 
@@ -507,7 +426,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
                 return
             }
             
-            let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds.last as! NSNumber).mutableCopy() as! NSMutableArray
+            let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
             
             sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
             
@@ -519,9 +438,45 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
                 
                 let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
                 
+                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
                 let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
                 
+                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+                
+                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+                
+                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+            }
+            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+        }
+    }
+    
+    fileprivate func handleForloopUpto1(_ arrayOfIds: inout [Int], _ modalObj: GI_Tract_Modal, _ catName: NSString) {
+        for i in 0..<2 {
+            
+            let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as! NSNumber)
+            
+            if lastSessionDataArray.count == 0 {
+                
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
+                return
+            }
+            
+            let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
+            
+            sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
+            
+            let allFarmDataArray = NSMutableArray()
+            
+            var totalBirdsPerFarm : Float = 0
+            
+            for j in 0..<lastSessionDataArray.count {
+                
+                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+                
                 let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+                
+                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
                 
                 totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
                 
@@ -530,6 +485,60 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
                 allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
             }
             modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+        }
+    }
+    
+    fileprivate func handleArrayOfIds(_ arrayOfIds: [Int], _ modalObj: GI_Tract_Modal, _ catName: NSString) {
+        let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds.last as! NSNumber)
+        
+        if lastSessionDataArray.count == 0 {
+            
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
+            return
+        }
+        
+        let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds.last as! NSNumber).mutableCopy() as! NSMutableArray
+        
+        sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
+        
+        let allFarmDataArray = NSMutableArray()
+        
+        var totalBirdsPerFarm : Float = 0
+        
+        for j in 0..<lastSessionDataArray.count {
+            
+            let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+            
+            let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+            
+            let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+            
+            totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName,postingId: necID) as NSArray
+            
+            allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+        modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+    }
+    
+    func callCommonFunction(_ catName : NSString) {
+        
+        var arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
+        
+        let modalObj = GI_Tract_Modal()
+        
+        modalObj.delegate = self
+        
+        if arrayOfIds.count > 2 {
+            
+            handleForLoopUpto2(&arrayOfIds, modalObj, catName)
+        } else if arrayOfIds.count > 1 {
+            
+            handleForloopUpto1(&arrayOfIds, modalObj, catName)
+        } else {
+            
+            handleArrayOfIds(arrayOfIds, modalObj, catName)
         }
     }
     

@@ -2160,6 +2160,22 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         self.callGenerationType(self.genType)
     }
     
+    fileprivate func handleJsonAndSaveData(_ json: JSON) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            // Parse the array from JSON response
+            if let arr = JSON(json).array, !arr.isEmpty {
+                saveGenerationTypeArr(arr, self)
+            } else {
+                // Handle the case where the array is empty
+                self.genType = CoreDataHandler().fetchGenerationType() as! NSMutableArray
+                if(self.genType.count == 0){
+                    self.callGenerationType(self.genType)
+                }
+            }
+        }
+    }
+    
     func getGenerationType() {
         if WebClass.sharedInstance.connected() {
             ZoetisWebServices.shared.getTurkeyGenerationResponce(controller: self, parameters: [:], completion: { [weak self] (json, error) in
@@ -2178,26 +2194,9 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     
                     self?.callLoginMethod(errorCode)
                 }
-                
-                
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-           
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        saveGenerationTypeArr(arr, self)
-                    } else {
-                        // Handle the case where the array is empty
-                        self.genType = CoreDataHandler().fetchGenerationType() as! NSMutableArray
-                        if(self.genType.count == 0){
-                            self.callGenerationType(self.genType)
-                        }
-                    }
-                }
+                self?.handleJsonAndSaveData(json)
             })
-        } else{
+        } else {
             self.failWithInternetConnection()
         }
     }

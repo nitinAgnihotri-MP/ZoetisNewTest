@@ -243,6 +243,134 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
     }
     
     
+    fileprivate func forLoopToThree(_ arrayOfIds: inout [Int], _ modalObj: NecropcyReportCalculations, _ catName: NSString) {
+        for i in 0..<3 {
+            
+            
+            let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
+            
+            if lastSessionDataArray.count == 0 {
+                
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
+                return
+            }
+            
+            let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
+            
+            sessionDate = (objectArray.firstObject as AnyObject).value(forKey: "sessiondate") as! NSString
+            
+            let allFarmDataArray = NSMutableArray()
+            
+            var totalBirdsPerFarm : Float = 0
+            var age = Int()
+            for j in 0..<lastSessionDataArray.count {
+                
+                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+                
+                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+                
+                age = (((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as AnyObject).intValue)! + age
+                
+                self.meanAge = NSString(format: "%d",age)
+                
+                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+                
+                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+                
+                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
+                
+                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+            }
+            self.meanAge = NSString(format: "%.0f",round(Float(age)/Float(lastSessionDataArray.count)))
+            self.totalBirds = NSString(format: "%.0f",totalBirdsPerFarm)
+            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+            
+        }
+    }
+    
+    fileprivate func handleForLoopTo1(_ arrayOfIds: inout [Int], _ modalObj: NecropcyReportCalculations, _ catName: NSString) {
+        for i in 0..<2{
+            
+            let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
+            
+            if lastSessionDataArray.count == 0 {
+                
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
+                
+                return
+            }
+            
+            let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
+            
+            sessionDate = (objectArray.lastObject as AnyObject).value(forKey: "sessiondate") as! NSString
+            
+            let allFarmDataArray = NSMutableArray()
+            
+            var totalBirdsPerFarm : Float = 0
+            
+            var age = Int()
+            
+            for j in 0..<lastSessionDataArray.count {
+                
+                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+                
+                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+                
+                age = (((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as AnyObject).intValue)! + age
+                
+                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+                
+                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+                
+                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId : necID) as NSArray
+                
+                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+            }
+            self.totalBirds = NSString(format: "%.0f",totalBirdsPerFarm)
+            self.meanAge = NSString(format: "%.0f",round(Float(age)/Float(lastSessionDataArray.count)))
+            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+        }
+    }
+    
+    fileprivate func handleElseConditionArrayOfId(_ lastSessionDataArray: NSArray, _ arrayOfIds: [Int], _ modalObj: NecropcyReportCalculations, _ catName: NSString) {
+        if lastSessionDataArray.count == 0 {
+            
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
+            
+            return
+        }
+        
+        let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
+        
+        sessionDate = (objectArray.lastObject as AnyObject).value(forKey: "sessiondate") as! NSString
+        
+        let allFarmDataArray = NSMutableArray()
+        
+        var totalBirdsPerFarm : Float = 0
+        
+        var age = Int()
+        
+        for j in 0..<lastSessionDataArray.count {
+            
+            let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+            
+            let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+            
+            let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+            
+            age = (((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as AnyObject).intValue)! + age
+            
+            totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
+            
+            allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+        self.meanAge = NSString(format: "%.0f",round(Float(age)/Float(lastSessionDataArray.count)))
+        self.totalBirds = NSString(format: "%.0f",totalBirdsPerFarm)
+        modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+    }
+    
     func callCommonFunctionHistorical(_ catName : NSString)  {
         
         var arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
@@ -257,134 +385,15 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         
         if arrayOfIds.count > 2 {
             
-            for i in 0..<3 {
-                
-                
-                let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-                    return
-                }
-                
-                let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.firstObject as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                var age = Int()
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    age = (((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as AnyObject).intValue)! + age
-                    
-                    self.meanAge = NSString(format: "%d",age)
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                self.meanAge = NSString(format: "%.0f",round(Float(age)/Float(lastSessionDataArray.count)))
-                self.totalBirds = NSString(format: "%.0f",totalBirdsPerFarm)
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-                
-            }
-        }
-        
-        else if arrayOfIds.count > 1 {
+            forLoopToThree(&arrayOfIds, modalObj, catName)
+        } else if arrayOfIds.count > 1 {
             
-            for i in 0..<2{
-                
-                let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-                    
-                    return
-                }
-                
-                let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.lastObject as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                var age = Int()
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    age = (((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as AnyObject).intValue)! + age
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId : necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                self.totalBirds = NSString(format: "%.0f",totalBirdsPerFarm)
-                self.meanAge = NSString(format: "%.0f",round(Float(age)/Float(lastSessionDataArray.count)))
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-            }
-        }
-        else{
+            handleForLoopTo1(&arrayOfIds, modalObj, catName)
+        } else {
             
             let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds.first as! NSNumber)
             
-            if lastSessionDataArray.count == 0 {
-                
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricalData, comment: ""))
-                
-                return
-            }
-            
-            let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
-            
-            sessionDate = (objectArray.lastObject as AnyObject).value(forKey: "sessiondate") as! NSString
-            
-            let allFarmDataArray = NSMutableArray()
-            
-            var totalBirdsPerFarm : Float = 0
-            
-            var age = Int()
-            
-            for j in 0..<lastSessionDataArray.count {
-                
-                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                
-                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                
-                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                
-                age = (((lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "age") as AnyObject).intValue)! + age
-                
-                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
-                
-                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            self.meanAge = NSString(format: "%.0f",round(Float(age)/Float(lastSessionDataArray.count)))
-            self.totalBirds = NSString(format: "%.0f",totalBirdsPerFarm)
-            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+            handleElseConditionArrayOfId(lastSessionDataArray, arrayOfIds, modalObj, catName)
         }
         
         
@@ -414,14 +423,13 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         
         reportComposerDaignostic = ReportComposerDaignostic()
         
-        if self.subjectString as String == NSLocalizedString("Necropsy Historical Report", comment: ""){
+        if self.subjectString as String == NSLocalizedString("Necropsy Historical Report", comment: "") {
             if let invoiceHTML = reportComposerDaignostic.renderReports(complexName: complexName, customerName: customerName, vetanatrionName: vetanatrionName, salesRepName: salesRepName, customerRepName: customerRepName, typeDate: typeDate as String,items : arrayOfItemDict) {
                 
                 wkwebView.loadHTMLString(invoiceHTML, baseURL: Bundle.main.bundleURL)
                 HTMLContent = invoiceHTML
             }
-        }
-        else{
+        } else {
             if let invoiceHTML = reportComposer.renderReports(complexName, customerName: customerName, vetanatrionName: vetanatrionName, salesRepName: salesRepName, customerRepName: customerRepName, typeDate: typeDate as String,items : arrayOfItemDict) {
                 
                 wkwebView.loadHTMLString(invoiceHTML, baseURL: Bundle.main.bundleURL)

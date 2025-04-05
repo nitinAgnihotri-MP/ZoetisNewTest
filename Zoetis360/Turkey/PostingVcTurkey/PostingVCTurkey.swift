@@ -448,15 +448,45 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    fileprivate func refactorViewWillAppear1() {
+        if (newColor > 0) {
+            
+            feedProgramOutlet.layer.borderWidth = 1
+            feedProgramOutlet.layer.cornerRadius = 3.5
+            feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
+        }
         
-        notesTextView.textContainer.lineFragmentPadding = 12
+        if appDelegate.isDoneClick == true {
+            
+            setVaccinationLblTxt()
+        }
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
-        isClickOnAnyField = false
-        userNameLabel.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
-        viewUpdate()
         
+        if appDelegate.sendFeedVariable == "Feed" {
+            chnageFeedProgramBtnOpacity()
+        } else if appDelegate.sendFeedVariable == "vaccination"  {
+            
+            chnageVaccinationBtnOpacity()
+        }
+        
+        feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
+            
+        } else {
+            postingId = UserDefaults.standard.integer(forKey: "postingId")
+        }
+        
+        if feedProgramArray.count > 0{
+            nextButtonOutlet.backgroundColor = UIColor(red: 11/255, green:88/255, blue:160/255, alpha:1)
+            nextButtonOutlet.isUserInteractionEnabled = true
+        } else {
+            nextButtonOutlet.backgroundColor = UIColor.gray
+            nextButtonOutlet.isUserInteractionEnabled = false
+        }
+    }
+    
+    fileprivate func refactorViewWillAppear2() {
         if UserDefaults.standard.bool(forKey: "Unlinked") == true {
             postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
             if appDelegate.sendFeedVariable == "Feed"{
@@ -471,7 +501,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         
         feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
         
-        if  feedProgramArray.count == 1 {
+        if feedProgramArray.count == 1 {
             
             feedProgramLbl.text = (feedProgramArray.object(at: 0) as AnyObject).value(forKey: "feddProgramNam") as? String
         }
@@ -484,6 +514,18 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         if  let data = CoreDataHandlerTurkey().fectCustomerRepWithCustomernameTurkey( 1) as? NSArray{
             fetchcustRep = data
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        notesTextView.textContainer.lineFragmentPadding = 12
+        
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        isClickOnAnyField = false
+        userNameLabel.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
+        viewUpdate()
+        
+        refactorViewWillAppear2()
         
         buttonDroper.frame = CGRect(x: 0, y: 0, width: 1024, height: 768) // X, Y, width, height
         buttonDroper.addTarget(self, action: #selector(PostingVCTurkey.buttonPressedDroper), for: .touchUpInside)
@@ -501,42 +543,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         autoSerchTable.alpha = 0
         feedProgramOutlet.isHidden = true
         
-        if (newColor > 0){
-            
-            feedProgramOutlet.layer.borderWidth = 1
-            feedProgramOutlet.layer.cornerRadius = 3.5
-            feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
-        }
-        
-        if appDelegate.isDoneClick == true {
-            
-            setVaccinationLblTxt()
-        }
-        
-        
-        if appDelegate.sendFeedVariable == "Feed" {
-            chnageFeedProgramBtnOpacity()
-        }
-        else if appDelegate.sendFeedVariable == "vaccination"  {
-            
-            chnageVaccinationBtnOpacity()
-        }
-        
-        feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
-        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
-            postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-          
-        } else {
-            postingId = UserDefaults.standard.integer(forKey: "postingId")
-        }
-        
-        if feedProgramArray.count > 0{
-            nextButtonOutlet.backgroundColor = UIColor(red: 11/255, green:88/255, blue:160/255, alpha:1)
-            nextButtonOutlet.isUserInteractionEnabled = true
-        } else {
-            nextButtonOutlet.backgroundColor = UIColor.gray
-            nextButtonOutlet.isUserInteractionEnabled = false
-        }
+        refactorViewWillAppear1()
         
         /**********Ffeth data of posting session from Db **********/
         self.postingArray = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(postingId as NSNumber)
@@ -567,7 +574,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             
         } else {
             
-            for  i in 0..<postingArray.count {
+            for i in 0..<postingArray.count {
                 
                 lblVeteration.text = (postingArray.value(forKey: "vetanatrionName") as AnyObject).object(at: i) as? String
                 lblDate.text = (postingArray.value(forKey: "sessiondate") as AnyObject).object(at: i) as? String

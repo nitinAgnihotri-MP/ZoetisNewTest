@@ -322,7 +322,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -350,7 +350,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -378,7 +378,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -406,7 +406,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -434,7 +434,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -462,7 +462,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -489,7 +489,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -517,7 +517,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -545,7 +545,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -573,7 +573,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -601,7 +601,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -658,7 +658,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -700,7 +700,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -742,7 +742,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -783,7 +783,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -824,7 +824,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -864,7 +864,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -905,7 +905,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -946,7 +946,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -987,7 +987,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1028,7 +1028,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1071,7 +1071,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1126,7 +1126,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1153,7 +1153,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1180,7 +1180,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1206,7 +1206,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1232,7 +1232,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1258,7 +1258,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1284,7 +1284,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1310,7 +1310,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1337,7 +1337,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1363,7 +1363,7 @@ class CoreDataHandlerTurkey: NSObject {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1427,7 +1427,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1466,7 +1466,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1505,7 +1505,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1543,7 +1543,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1581,7 +1581,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1619,7 +1619,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1657,7 +1657,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1697,7 +1697,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1736,7 +1736,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1779,7 +1779,7 @@ class CoreDataHandlerTurkey: NSObject {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -7084,131 +7084,127 @@ class CoreDataHandlerTurkey: NSObject {
     }
     
     
+    fileprivate func handleIfFetchedResultLessThan4(_ fetchedResult: [NSManagedObject]?, _ index: Int, _ managedContext: NSManagedObjectContext, _ loginSessionId: NSNumber, _ postingId: NSNumber, _ molecule: String, _ dosage: String, _ fromDays: String, _ toDays: String, _ feedId: NSNumber, _ feedProgram: String, _ isSync: Bool, _ feedType: String, _ cocoVacId: NSNumber, _ lngId: NSNumber, _ lbldate: String, _ formName: String) {
+        if ((fetchedResult?.count)! <= index)
+        {
+            
+            
+            let entity  = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
+            let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
+            person.setValue(loginSessionId, forKey:"loginSessionId")
+            person.setValue( postingId , forKey:"postingId")
+            person.setValue( molecule , forKey:"molecule")
+            person.setValue(dosage, forKey:"dosage")
+            person.setValue(fromDays, forKey:"fromDays")
+            person.setValue(toDays , forKey:"toDays")
+            person.setValue(feedId , forKey:"feedId")
+            person.setValue(feedProgram , forKey:"feedProgram")
+            person.setValue(isSync , forKey:"isSync")
+            person.setValue(feedType, forKey:"feedType")
+            person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
+            person.setValue(lngId, forKey:"lngId")
+            person.setValue(lbldate, forKey:"feedDate")
+            do
+            {
+                try managedContext.save()
+            }
+            catch
+            {
+            }
+            
+            cocciMyCoxtinBinders.append(person)
+        }
+        else{
+            let objTable: MyCotoxinBindersFeedTurkey = (fetchedResult![index] as? MyCotoxinBindersFeedTurkey)!
+            
+            objTable.setValue(loginSessionId, forKey:"loginSessionId")
+            objTable.setValue( postingId , forKey:"postingId")
+            objTable.setValue( molecule , forKey:"molecule")
+            objTable.setValue(dosage, forKey:"dosage")
+            objTable.setValue(fromDays, forKey:"fromDays")
+            objTable.setValue(toDays , forKey:"toDays")
+            objTable.setValue(feedId , forKey:"feedId")
+            objTable.setValue(feedProgram , forKey:"feedProgram")
+            objTable.setValue(formName , forKey:"formName")
+            objTable.setValue(isSync, forKey:"isSync")
+            objTable.setValue(feedType, forKey:"feedType")
+            objTable.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
+            objTable.setValue(lngId, forKey:"lngId")
+            objTable.setValue(lbldate, forKey:"feedDate")
+            do
+            {
+                try managedContext.save()
+            }
+            catch{
+            }
+            
+        }
+    }
+    
+    fileprivate func handleCoxinVal(_ feedId: NSNumber, _ index: Int, _ loginSessionId: NSNumber, _ postingId: NSNumber, _ molecule: String, _ dosage: String, _ fromDays: String, _ toDays: String, _ feedProgram: String, _ isSync: Bool, _ feedType: String, _ cocoVacId: NSNumber, _ lngId: NSNumber, _ lbldate: String, _ formName: String) {
+        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        
+        let managedContext = appDelegate.managedObjectContext
+        
+        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
+        
+        fetchRequest.returnsObjectsAsFaults = false
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
+        
+        do
+        {
+            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            
+            if fetchedResult!.count > 0 {
+                
+                handleIfFetchedResultLessThan4(fetchedResult, index, managedContext, loginSessionId, postingId, molecule, dosage, fromDays, toDays, feedId, feedProgram, isSync, feedType, cocoVacId, lngId, lbldate, formName)
+            } else {
+                let entity  = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
+                let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
+                person.setValue(loginSessionId, forKey:"loginSessionId")
+                person.setValue( postingId , forKey:"postingId")
+                person.setValue( molecule , forKey:"molecule")
+                person.setValue(dosage, forKey:"dosage")
+                person.setValue(fromDays, forKey:"fromDays")
+                person.setValue(toDays , forKey:"toDays")
+                person.setValue(feedId , forKey:"feedId")
+                person.setValue(feedProgram , forKey:"feedProgram")
+                person.setValue(isSync , forKey:"isSync")
+                person.setValue(feedType, forKey:"feedType")
+                person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
+                person.setValue(lngId, forKey:"lngId")
+                person.setValue(lbldate, forKey:"feedDate")
+                do
+                {
+                    try managedContext.save()
+                }
+                catch
+                {
+                }
+                
+                cocciMyCoxtinBinders.append(person)
+                
+            }
+        } catch {
+            
+        }
+    }
+    
     /////////////
     
     
-    func saveMyCoxtinDatabaseTurkey(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId :NSNumber,feedProgram : String , formName : String ,isSync : Bool,feedType:String,cocoVacId:NSNumber,lngId:NSNumber,lbldate:String)
-    {
+    func saveMyCoxtinDatabaseTurkey(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId :NSNumber,feedProgram : String , formName : String ,isSync : Bool,feedType:String,cocoVacId:NSNumber,lngId:NSNumber,lbldate:String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
         let managedContext = appDelegate!.managedObjectContext
         MyCoxtinBindersArray = dbArray
         
-        if  MyCoxtinBindersArray.count > 0 {
+        if MyCoxtinBindersArray.count > 0 {
             
-            let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+            handleCoxinVal(feedId, index, loginSessionId, postingId, molecule, dosage, fromDays, toDays, feedProgram, isSync, feedType, cocoVacId, lngId, lbldate, formName)
+        } else {
             
-            let managedContext = appDelegate.managedObjectContext
-            
-            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
-            
-            fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
-            
-            do
-            {
-                let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                
-                if fetchedResult!.count > 0
-                {
-                    
-                    if ((fetchedResult?.count)! <= index)
-                    {
-                        
-                        
-                        let entity  = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
-                        let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                        person.setValue(loginSessionId, forKey:"loginSessionId")
-                        person.setValue( postingId , forKey:"postingId")
-                        person.setValue( molecule , forKey:"molecule")
-                        person.setValue(dosage, forKey:"dosage")
-                        person.setValue(fromDays, forKey:"fromDays")
-                        person.setValue(toDays , forKey:"toDays")
-                        person.setValue(feedId , forKey:"feedId")
-                        person.setValue(feedProgram , forKey:"feedProgram")
-                        person.setValue(isSync , forKey:"isSync")
-                        person.setValue(feedType, forKey:"feedType")
-                        person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        person.setValue(lngId, forKey:"lngId")
-                        person.setValue(lbldate, forKey:"feedDate")
-                        do
-                        {
-                            try managedContext.save()
-                        }
-                        catch
-                        {
-                        }
-                        
-                        cocciMyCoxtinBinders.append(person)
-                    }
-                    else{
-                        let objTable: MyCotoxinBindersFeedTurkey = (fetchedResult![index] as? MyCotoxinBindersFeedTurkey)!
-                        
-                        objTable.setValue(loginSessionId, forKey:"loginSessionId")
-                        objTable.setValue( postingId , forKey:"postingId")
-                        objTable.setValue( molecule , forKey:"molecule")
-                        objTable.setValue(dosage, forKey:"dosage")
-                        objTable.setValue(fromDays, forKey:"fromDays")
-                        objTable.setValue(toDays , forKey:"toDays")
-                        objTable.setValue(feedId , forKey:"feedId")
-                        objTable.setValue(feedProgram , forKey:"feedProgram")
-                        objTable.setValue(formName , forKey:"formName")
-                        objTable.setValue(isSync, forKey:"isSync")
-                        objTable.setValue(feedType, forKey:"feedType")
-                        objTable.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                        objTable.setValue(lngId, forKey:"lngId")
-                        objTable.setValue(lbldate, forKey:"feedDate")
-                        do
-                        {
-                            try managedContext.save()
-                        }
-                        catch{
-                        }
-                        
-                    }
-                }
-                else{
-                    let entity  = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
-                    let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    person.setValue(loginSessionId, forKey:"loginSessionId")
-                    person.setValue( postingId , forKey:"postingId")
-                    person.setValue( molecule , forKey:"molecule")
-                    person.setValue(dosage, forKey:"dosage")
-                    person.setValue(fromDays, forKey:"fromDays")
-                    person.setValue(toDays , forKey:"toDays")
-                    person.setValue(feedId , forKey:"feedId")
-                    person.setValue(feedProgram , forKey:"feedProgram")
-                    person.setValue(isSync , forKey:"isSync")
-                    person.setValue(feedType, forKey:"feedType")
-                    person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
-                    person.setValue(lngId, forKey:"lngId")
-                    person.setValue(lbldate, forKey:"feedDate")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
-                    
-                    cocciMyCoxtinBinders.append(person)
-                    
-                }
-                
-                
-                
-            }
-            catch
-            {
-                
-            }
-            
-            
-        }
-        
-        else{
-            
-            let entity  = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
+            let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeedTurkey", in: managedContext)
             let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
             person.setValue(loginSessionId, forKey:"loginSessionId")
             person.setValue( postingId , forKey:"postingId")

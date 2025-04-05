@@ -246,6 +246,25 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         return 0
     }
     
+    fileprivate func handleLngIdCellDateObj(_ lngIdFr: Int, _ cell: NecropsyTableViewCell, _ dateObj: Date?, _ dateString: String, _ dateFormatter: DateFormatter, _ comlexDate: String) {
+        if lngIdFr == 3 || lngIdFr == 4 {
+            cell.sessionDateLbl.text = dateObj == nil ? dateString : dateFormatter.string(from: dateObj!)
+        } else {
+            let dateString = comlexDate
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            let dateObj = dateFormatter.date(from: dateString)
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            
+            if dateObj == nil {
+                cell.sessionDateLbl.text = dateString
+                
+            } else {
+                cell.sessionDateLbl.text = dateFormatter.string(from: dateObj!)
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if tableView == necropsyTableView {
@@ -259,8 +278,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             }
             
             let arr = (NecropsiesPostingSess.object(at: indexPath.row)) as! NSMutableArray
-            if arr.count>0
-            {
+            if arr.count > 0 {
                 let arr1 = arr[0]
                 let complexName = (arr1 as AnyObject).value(forKey: "complexName") as! String
                 let comlexDate = (arr1 as AnyObject).value(forKey: "complexDate") as! String
@@ -272,24 +290,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 let dateObj = dateFormatter.date(from: dateString)
                 dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
                 
-                if lngIdFr == 3 || lngIdFr == 4 {
-                    cell.sessionDateLbl.text = dateObj == nil ? dateString : dateFormatter.string(from: dateObj!)
-                }
-
-                else{
-                    let dateString = comlexDate
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-                    let dateObj = dateFormatter.date(from: dateString)
-                    dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-                    
-                    if dateObj == nil {
-                        cell.sessionDateLbl.text = dateString
-                        
-                    } else {
-                        cell.sessionDateLbl.text = dateFormatter.string(from: dateObj!)
-                    }
-                }
+                handleLngIdCellDateObj(lngIdFr, cell, dateObj, dateString, dateFormatter, comlexDate)
                 
                 cell.complexLbl.text = complexName
                 

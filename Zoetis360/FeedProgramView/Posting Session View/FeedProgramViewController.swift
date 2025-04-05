@@ -2498,28 +2498,27 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             }})
     }
     
+    fileprivate func handleSaveAlternativeDB(_ status: Bool,feedexist:Int) {
+        if status == true {
+            self.saveMyCoxtinDatabase(feedId:feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
+                if status == true {
+                    if self.postingIdFromExistingNavigate == "Exting"{
+                        CoreDataHandler().updateisSyncTrueOnPostingSession(self.postingId)
+                    }
+                }
+            })
+        }
+    }
+    
     fileprivate func handleSaveCoccoiControlDatabase(_ status: Bool,feedexist:Int) {
         if status == true {
-            
             self.saveAntibioticDatabase(feedId: feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
-                
                 if status == true {
-                    
                     self.saveAlternativeDatabase(feedId: feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
-                        
-                        if status == true {
-                            
-                            self.saveMyCoxtinDatabase(feedId:feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                
-                                if status == true {
-                                    
-                                    if self.postingIdFromExistingNavigate == "Exting"{
-                                        CoreDataHandler().updateisSyncTrueOnPostingSession(self.postingId)
-                                    }
-                                    
-                                }})
-                        }})
-                }})
+                        handleSaveAlternativeDB(status,feedexist: feedexist)
+                    })
+                }
+            })
         }
     }
     

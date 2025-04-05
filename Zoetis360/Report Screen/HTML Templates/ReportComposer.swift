@@ -61,7 +61,7 @@ class ReportComposer: NSObject {
                 
                 HTMLContent = HTMLContent!.replacingOccurrences(of:"#LOGO_IMAGE#", with: logoImageURL!)
                 
-                HTMLContent = HTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? "visibility:hidden" : "")
+                HTMLContent = HTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.visibilityHidden : "")
                 //HTMLContent = HTMLContent!.stringByReplacingOccurrencesOfString( "logo.png\"", withString: "logo.png\"")
                 
                 var allItems = ""
@@ -178,7 +178,7 @@ class ReportComposer: NSObject {
                         
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FarmName#", with: items[i]["isCocciHistory"]?.boolValue == true ? items[i]["sessionDate"]! as! String : items[i]["farmName"]! as! String)
                         
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? "visibility:hidden" : "")
+                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.visibilityHidden : "")
                         
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#birds#", with: items[i]["birds"]! as! String)
                         birdsTotal = birdsTotal+items[i]["birds"]!.integerValue
@@ -431,7 +431,7 @@ class ReportComposer: NSObject {
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MM_TOTAL#", with: NSString(format: "%.1f",MM_Total/Float(items.count)) as String)
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TG_TOTAL#", with: NSString(format: "%.1f",TG_Total/Float(items.count)) as String)
                         
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? "visibility:hidden" : "")
+                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.visibilityHidden : "")
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#AGMean_Total#", with: NSString(format: "%.1f",(AGMean_Total/AGMean_Total_Birds).isNaN ? 0 : AGMean_Total/AGMean_Total_Birds) as String)
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MGMean_Total#", with: NSString(format: "%.1f",(MGMean_Total/MGMean_Total_Birds).isNaN ? 0 : MGMean_Total/MGMean_Total_Birds) as String)
                         itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MMMean_Total#", with: NSString(format: "%.1f",(MMMean_Total/MMMean_Total_Birds).isNaN ? 0 : MMMean_Total/MMMean_Total_Birds) as String)

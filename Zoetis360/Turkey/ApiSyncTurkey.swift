@@ -558,7 +558,7 @@ class ApiSyncTurkey: NSObject {
                     else if routeName == Constants.wingWeb {
                         routeId = 1
                     }
-                    else if routeName == "Spray" {
+                    else if routeName == Constants.spray {
                         routeId = 3
                     }
                     else if routeName == Constants.inOvoStr {
@@ -600,7 +600,7 @@ class ApiSyncTurkey: NSObject {
                     else if routeName == Constants.wingWeb {
                         routeId = 1
                     }
-                    else if routeName == "Spray" {
+                    else if routeName == Constants.spray {
                         routeId = 3
                     }
                     else if routeName == Constants.inOvoStr {

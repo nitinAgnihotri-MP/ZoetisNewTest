@@ -3276,34 +3276,38 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
     }
     
+    fileprivate func handleAddImmuneResponse(_ status: Bool) {
+        if status == true {
+            self.neccollectionView.reloadData()
+            self.birdsCollectionView.reloadData()
+            var frameBird = CGFloat((self.noOfBirdsArr1[self.farmRow] as AnyObject).count) as CGFloat * 60
+            
+            self.handleFarmmBirdFarmVisit(&frameBird)
+            UserDefaults.standard.set((self.noOfBirdsArr1[self.farmRow] as AnyObject).count, forKey: "bird")
+            
+            self.traingleImageView.frame = CGRect(x: 276 + frameBird, y: 229, width: 24, height: 24)
+            self.increaseBirdBtn.isUserInteractionEnabled = true
+            self.decBirdNumberBtn.isUserInteractionEnabled = true
+            self.addFormBtn.isUserInteractionEnabled = true
+            
+            let totalNoOfBirdInForm  = (self.noOfBirdsArr1[self.farmRow] as AnyObject).count as Int
+            if self.postingIdFromExistingNavigate == "Exting" {
+                let birdCount = totalNoOfBirdInForm - 1
+                let indxPth = NSIndexPath(item: birdCount, section: 0);
+                self.birdsCollectionView!.selectItem(at: indxPth as IndexPath, animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+            } else {
+                self.birdsCollectionView!.selectItem(at: IndexPath(item: totalNoOfBirdInForm - 1, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+            }
+            Helper.dismissGlobalHUD(self.view)
+        }
+    }
+    
     fileprivate func handleAddGITrakt(_ status: Bool) {
         if status == true {
             self.addrespResponseData(self.noOfBirdsArr1, completion: { (status) in
                 if status == true {
                     self.addImmuneResponseData(self.noOfBirdsArr1, completion: { (status) in
-                        if status == true {
-                            self.neccollectionView.reloadData()
-                            self.birdsCollectionView.reloadData()
-                            var frameBird = CGFloat((self.noOfBirdsArr1[self.farmRow] as AnyObject).count) as CGFloat * 60
-                            
-                            self.handleFarmmBirdFarmVisit(&frameBird)
-                            UserDefaults.standard.set((self.noOfBirdsArr1[self.farmRow] as AnyObject).count, forKey: "bird")
-                            
-                            self.traingleImageView.frame = CGRect(x: 276 + frameBird, y: 229, width: 24, height: 24)
-                            self.increaseBirdBtn.isUserInteractionEnabled = true
-                            self.decBirdNumberBtn.isUserInteractionEnabled = true
-                            self.addFormBtn.isUserInteractionEnabled = true
-                            
-                            let totalNoOfBirdInForm  = (self.noOfBirdsArr1[self.farmRow] as AnyObject).count as Int
-                            if self.postingIdFromExistingNavigate == "Exting" {
-                                let birdCount = totalNoOfBirdInForm - 1
-                                let indxPth = NSIndexPath(item: birdCount, section: 0);
-                                self.birdsCollectionView!.selectItem(at: indxPth as IndexPath, animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-                            } else {
-                                self.birdsCollectionView!.selectItem(at: IndexPath(item: totalNoOfBirdInForm - 1, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-                            }
-                            Helper.dismissGlobalHUD(self.view)
-                        }
+                        handleAddImmuneResponse(status)
                     })
                 }
             })
@@ -4223,23 +4227,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     // MARK: 🟠 Load Bird Data from DB
-    func callLodaBirdData(_ bird : NSNumber)  {
-        
-        if self.farmRow == 0
-        {
-            self.isFirstTimeLaunch =  true
-        }
-        
-        let  bird = UserDefaults.standard.value(forKey: "bird") as! NSNumber
-        var  necId = Int()
-        
-        if postingIdFromExistingNavigate == "Exting"{
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
-        
+    fileprivate func manageBtnTagValidations(_ bird: NSNumber, _ necId: Int) {
         if btnTag == 0 {
             
             dataSkeltaArray.removeAllObjects()
@@ -4268,6 +4256,26 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
             }
         }
+    }
+    
+    func callLodaBirdData(_ bird : NSNumber)  {
+        
+        if self.farmRow == 0
+        {
+            self.isFirstTimeLaunch =  true
+        }
+        
+        let  bird = UserDefaults.standard.value(forKey: "bird") as! NSNumber
+        var  necId = Int()
+        
+        if postingIdFromExistingNavigate == "Exting"{
+            necId =  postingIdFromExisting
+        }
+        else{
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
+        }
+        
+        manageBtnTagValidations(bird, necId)
         if btnTag == 3 {
             dataArrayRes.removeAllObjects()
             dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(bird , farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Resp",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
@@ -4364,6 +4372,26 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     //MARK: CollectionView
+    fileprivate func handleFirstTimeLaunchValidation() -> Int {
+        if isFirstTimeLaunch == true {
+            if postingIdFromExistingNavigate == "Exting"{
+                return (items[self.farmRow] as AnyObject).count
+            } else {
+                return (items[0] as AnyObject).count
+            }
+        } else {
+            if farmRow == 0 {
+                return (items[0] as AnyObject).count
+            } else {
+                if  Constants.isForUnlinkedChicken == true {
+                    return (items[farmArray.count - 1] as AnyObject).count
+                } else {
+                    return (items[selectedBirdIndex] as AnyObject).count
+                }
+            }
+        }
+    }
+    
     /***************************** Collection View DataSource & Delegate Methods *******************************/
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -4375,38 +4403,10 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             if items.count > 0 {
                 
-                if isFirstTimeLaunch == true
-                {
-                    if postingIdFromExistingNavigate == "Exting"{
-                        return (items[self.farmRow] as AnyObject).count
-                    }
-                    else
-                    {
-                        return (items[0] as AnyObject).count
-                    }
-                }
-                else
-                {
-                    if farmRow == 0
-                    {
-                        return (items[0] as AnyObject).count
-                    }
-                    else
-                    {
-                        if  Constants.isForUnlinkedChicken == true
-                        {
-                            return (items[farmArray.count - 1] as AnyObject).count
-                        }
-                        else
-                        {
-                            return (items[selectedBirdIndex] as AnyObject).count
-                        }
-                    }
-                }
+                return handleFirstTimeLaunchValidation()
             }
             return 0
-        }
-        else if collectionView == neccollectionView {
+        } else if collectionView == neccollectionView {
             switch btnTag {
             case 0:
                 return dataSkeltaArray.count
@@ -4419,8 +4419,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             default:
                 return dataArrayImmu.count
             }
-        }
-        else if collectionView == formCollectionView{
+        } else if collectionView == formCollectionView{
             return self.farmArray.count
         }
         return 0
@@ -5901,6 +5900,75 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         buttonback.removeFromSuperview()
     }
     // MARK: 🟠 Refresh Page after feed added.
+    fileprivate func handleValidations(_ postingId: inout Int) {
+        if postingIdFromExistingNavigate == "Exting" {
+            postingId = postingIdFromExisting
+            self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1NecId(postingId as NSNumber) as! [NSManagedObject]
+            CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
+        } else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
+            self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(necId as NSNumber) as! [NSManagedObject]
+        } else {
+            postingId = UserDefaults.standard.integer(forKey: "necId") as Int
+            self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(postingId as NSNumber) as! [NSManagedObject]
+        }
+    }
+    
+    fileprivate func handleCaptureNecropsyArray() {
+        for object in captureNecropsy {
+            let noOfBirds : Int = Int(object.value(forKey: "noOfBirds") as! String)!
+            let noOfBirdsArr  = NSMutableArray()
+            
+            var numOfLoop = Int()
+            numOfLoop = 0
+            for i in 0..<noOfBirds {
+                numOfLoop  = i + 1
+                if numOfLoop > 10 {
+                } else {
+                    noOfBirdsArr.add(i+1)
+                }
+            }
+            items.add(noOfBirdsArr)
+            farmArray.add(object.value(forKey: "farmName")!)
+            ageArray.add(object.value(forKey: "age")!)
+            houseArray.add(object.value(forKey: "houseNo")!)
+        }
+    }
+    
+    fileprivate func handleValidations() {
+        if self.farmArray.count > 0
+        {
+            formCollectionView.dataSource = self
+            formCollectionView.delegate = self
+            self.formCollectionView!.reloadData()
+            formCollectionView.selectItem(at: IndexPath(item: self.farmArray.count - 1, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+        }
+        
+        if items.count > 0
+        {
+            birdsCollectionView.dataSource = self
+            birdsCollectionView.delegate = self
+            self.birdsCollectionView!.reloadData()
+            birdsCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+        }
+    }
+    
+    fileprivate func handleValidationsAndUpdateNecId(_ necId: inout Int) {
+        if tableViewSelectedRow == 0 {
+            print(appDelegateObj.testFuntion())
+        } else {
+            let rowToSelect1:IndexPath = IndexPath(row: tableViewSelectedRow, section: 0)
+            self.tableView(self.tableView, didDeselectRowAt: rowToSelect1)
+        }
+        
+        if postingIdFromExistingNavigate == "Exting"{
+            necId =  postingIdFromExisting
+        } else {
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
+        }
+    }
+    
     func refreshPageafterAddFeed(_ formName: String)
     {
         isFirstTimeLaunch = false
@@ -5918,67 +5986,17 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         btnTag = 0
         
         var postingId = Int()
-        if postingIdFromExistingNavigate == "Exting"{
-            postingId = postingIdFromExisting
-            self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1NecId(postingId as NSNumber) as! [NSManagedObject]
-            CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
-        }
-        else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
-            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
-            self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(necId as NSNumber) as! [NSManagedObject]
-        }
-        else{
-            postingId = UserDefaults.standard.integer(forKey: "necId") as Int
-            self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(postingId as NSNumber) as! [NSManagedObject]
-           
-        }
+        handleValidations(&postingId)
         
-        for object in captureNecropsy {
-            let noOfBirds : Int = Int(object.value(forKey: "noOfBirds") as! String)!
-            let noOfBirdsArr  = NSMutableArray()
-            
-            var numOfLoop = Int()
-            numOfLoop = 0
-            for i in 0..<noOfBirds
-            {
-                numOfLoop  = i + 1
-                if numOfLoop > 10
-                {
-                }
-                else
-                {
-                    noOfBirdsArr.add(i+1)
-                }
-            }
-            items.add(noOfBirdsArr)
-            farmArray.add(object.value(forKey: "farmName")!)
-            ageArray.add(object.value(forKey: "age")!)
-            houseArray.add(object.value(forKey: "houseNo")!)
-        }
+        handleCaptureNecropsyArray()
         
         let rowToSelect:IndexPath = IndexPath(row: 0, section: 0)
-        if tableViewSelectedRow == 0
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        else
-        {
-            let rowToSelect1:IndexPath = IndexPath(row: tableViewSelectedRow, section: 0)
-            self.tableView(self.tableView, didDeselectRowAt: rowToSelect1)
-        }
-        
         self.farmRow = self.farmArray.count - 1
         tableView.selectRow(at: rowToSelect, animated: true, scrollPosition: UITableView.ScrollPosition.none)
         self.tableView(self.tableView, didSelectRowAt: rowToSelect)
-        
         var necId = Int()
-        if postingIdFromExistingNavigate == "Exting"{
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        handleValidationsAndUpdateNecId(&necId)
+        
         dataSkeltaArray.removeAllObjects()
         dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatname(formName, catName: "skeltaMuscular",birdNo: 1,necId: necId as NSNumber).mutableCopy() as! NSMutableArray
         dataArrayCocoi.removeAllObjects()
@@ -5991,21 +6009,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         dataArrayImmu =  CoreDataHandler().fecthFrmWithCatname(formName, catName: "Immune",birdNo: 1,necId: necId as NSNumber).mutableCopy() as! NSMutableArray
         self.addBirdInNotes()
         
-        if self.farmArray.count > 0
-        {
-            formCollectionView.dataSource = self
-            formCollectionView.delegate = self
-            self.formCollectionView!.reloadData()
-            formCollectionView.selectItem(at: IndexPath(item: self.farmArray.count - 1, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-        }
-        
-        if items.count > 0
-        {
-            birdsCollectionView.dataSource = self
-            birdsCollectionView.delegate = self
-            self.birdsCollectionView!.reloadData()
-            birdsCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-        }
+        handleValidations()
         traingleImageView.frame = CGRect(x: 274, y: 229, width: 24, height: 24)
         birdsCollectionView.reloadData()
         birdsCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)

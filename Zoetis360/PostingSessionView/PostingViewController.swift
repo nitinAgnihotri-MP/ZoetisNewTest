@@ -1617,24 +1617,48 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     }
     
     // MARK: 🟠 Necropsy BAck Button
+    fileprivate func createStr(_ farms: NSArray) {
+        let str : String
+        if lngId == 5 {
+            str =  "la (s) granja (s) no están conectadas. Navegue al programa de alimentación y conecte las granjas con el programa de alimentación."
+        }
+        else if lngId == 3 {
+            str = "Ferme(s) non connectées. Aller dans Programme Alimentaire et connecter la ferme à un Programme Alimentaire."
+        } else {
+            str =  "farm(s) are not connected. Please navigate to Feed Program and connect the farms with the Feed Program."
+        }
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
+    }
+    
+    fileprivate func handleValue(_ value: NSArray) {
+        if value.count > 0 {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
+        }
+    }
+    
+    fileprivate func handleLblVetAndShowPopup() {
+        let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel)
+        let okAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            self.navigationController?.popViewController(animated: true)
+            return
+        }
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     @IBAction func bckButtonNec(_ sender: AnyObject) {
         let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
         feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
-        if feedProgramArray.count == 0{
+        if feedProgramArray.count == 0 {
             
-            if lblVeteration.text != ""{
-                let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString("Data will not be saved until you enter feed program. Click Yes to complete the session.", comment: ""), preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: UIAlertAction.Style.cancel)
-                let okAction = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: UIAlertAction.Style.default) {
-                    UIAlertAction in
-                    self.navigationController?.popViewController(animated: true)
-                    return
-                }
-                alertController.addAction(okAction)
-                alertController.addAction(cancelAction)
-                self.present(alertController, animated: true, completion: nil)
-            }
-            else{
+            if lblVeteration.text != "" {
+                handleLblVetAndShowPopup()
+            } else {
                 
                 if (lblCustmer.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || birdSize.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblDate.text == NSLocalizedString(emptyDateLabel, comment: "") ) || isPostingId == false{
                     
@@ -1648,22 +1672,11 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             if feedProgramArray.count == 0 && isPostingId == false {
                 self.navigationController?.popViewController(animated: true)
                 return
-            }
-            else{
-                if feedProgramArray.count == 0{
+            } else {
+                if feedProgramArray.count == 0 {
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    let str : String
-                    if lngId == 5 {
-                        str =  "la (s) granja (s) no están conectadas. Navegue al programa de alimentación y conecte las granjas con el programa de alimentación."
-                    }
-                    else  if lngId == 3 {
-                        str = "Ferme(s) non connectées. Aller dans Programme Alimentaire et connecter la ferme à un Programme Alimentaire."
-                    }
-                    else{
-                        str =  "farm(s) are not connected. Please navigate to Feed Program and connect the farms with the Feed Program."
-                    }
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("\(farms.count) \(str)", comment: ""))
+                    createStr(farms)
                     return
                 }
             }
@@ -1672,17 +1685,9 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         if (lblCustmer.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblComplex.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || birdSize.text == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblDate.text == NSLocalizedString(emptyDateLabel, comment: "") ) || isPostingId == false{
             
             self.navigationController?.popViewController(animated: true)
-        }
-        else
-        {
+        } else {
             let value  = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
-            if value.count>0{
-                self.navigationController?.popViewController(animated: true)
-            }
-            else
-            {
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter feed program.", comment: ""))
-            }
+            handleValue(value)
         }
     }
     

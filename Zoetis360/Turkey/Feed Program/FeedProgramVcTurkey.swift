@@ -2291,6 +2291,32 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             }})
     }
     
+    fileprivate func handleSaveAlternateDB(_ status: Bool) {
+        if status == true {
+            
+            self.saveMyCoxtinDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
+                
+                print("My coxtin Data saved")
+            })
+        }
+    }
+    
+    fileprivate func handleSaveCoccoiControleDB(_ status: Bool) {
+        if status == true {
+            
+            self.saveAntibioticDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId),  completion: { (status) -> Void in
+                
+                if status == true {
+                    
+                    self.saveAlternativeDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
+                        
+                        handleSaveAlternateDB(status)
+                    })
+                }
+            })
+        }
+    }
+    
     fileprivate func saveInprogressSessionData() {
         self.saveFeedProgrameInDatabase(feedId: feedPostingId,postingId: Int(postingId as NSNumber) ,completion: { (status) -> Void in
             
@@ -2298,24 +2324,10 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 
                 self.saveCoccoiControlDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
                     
-                    if status == true {
-                        
-                        self.saveAntibioticDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId),  completion: { (status) -> Void in
-                            
-                            if status == true {
-                                
-                                self.saveAlternativeDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                    
-                                    if status == true {
-                                        
-                                        self.saveMyCoxtinDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                           
-                                            print("My coxtin Data saved")
-                                        })
-                                    }})
-                            }})
-                    }})
-            }})
+                    handleSaveCoccoiControleDB(status)
+                })
+            }
+        })
     }
     
     fileprivate func saveAlternativeAndMycoxtinData() {
@@ -3010,6 +3022,42 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         }
     }
     
+    fileprivate func handleAddFarmArrayWithUncheckForm(_ indexPath: IndexPath, _ cell: secTableViewCell) {
+        if addFarmArrayWithUnCheckForm.count>0 {
+            
+            let c = addFarmArrayWithUnCheckForm.object(at: indexPath.row) as! CaptureNecropsyDataTurkey
+            
+            if c.isChecked == 1
+            {
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
+        } else {
+            cell.accessoryType = .none
+        }
+    }
+    
+    fileprivate func handleBtnTag100(_ indexPath: IndexPath, _ cell: UITableViewCell) {
+        if indexPath.row > fetchDosage.count {
+            
+        }
+        else
+        {
+            let cocoiControll = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
+            cell.textLabel!.text = cocoiControll
+        }
+    }
+    
+    fileprivate func handleIfMetricBtngTag5(_ cell: UITableViewCell, _ indexPath: IndexPath) {
+        if feedImpandMetric == "Metric" {
+            
+            cell.textLabel!.text = arrTagetMetric[indexPath.row] as? String
+        } else {
+            cell.textLabel!.text = arrTargetImp[indexPath.row] as? String
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if  tableView == farmTableView {
@@ -3017,34 +3065,14 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             let cell:secTableViewCell = self.farmTableView
                 .dequeueReusableCell(withIdentifier: "cell") as! secTableViewCell
             
-            
             cell.farmsShowLbl?.text = addFarmArray.object(at: indexPath.row) as? String
-            
-            if addFarmArrayWithUnCheckForm.count>0 {
-                
-                let c = addFarmArrayWithUnCheckForm.object(at: indexPath.row) as! CaptureNecropsyDataTurkey
-                
-                if c.isChecked == 1
-                {
-                    cell.accessoryType = .checkmark
-                } else {
-                    cell.accessoryType = .none
-                }
-                
-                
-            }
-            else{
-                cell.accessoryType = .none
-            }
-            
+            handleAddFarmArrayWithUncheckForm(indexPath, cell)
             
             return cell
             
         } else {
             
             let cell = UITableViewCell ()
-            
-            
             
             if btnTag == 0 {
                 let cocoiControll = (cocciControlArrayfromServer.value(forKey:"desc") as AnyObject).object(at:indexPath.row) as! String
@@ -3074,37 +3102,88 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 
             }
             
-            else if btnTag == 5{
+            else if btnTag == 5 {
                 
-                if feedImpandMetric == "Metric"{
-                    
-                    cell.textLabel!.text = arrTagetMetric[indexPath.row] as? String
-                    
-                }
-                else {
-                    
-                    cell.textLabel!.text = arrTargetImp[indexPath.row] as? String
-                }
+                handleIfMetricBtngTag5(cell, indexPath)
                 
-            }
-            else if btnTag > 100 {
-                
-                if indexPath.row > fetchDosage.count {
-                    
-                }
-                else
-                {
-                    let cocoiControll = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
-                    cell.textLabel!.text = cocoiControll
-                }
-                
-                
+            } else if btnTag > 100 {
+                handleBtnTag100(indexPath, cell)
             }
             return cell
         }
+    }
+    
+    fileprivate func handleCheckMarkCondition(_ formName: String, _ newCell: secTableViewCell) {
+        if UserDefaults.standard.bool(forKey:"Unlinked") == true{
+            let necId1 =  UserDefaults.standard.integer(forKey:"necUnLinked")
+            postingId = necId1 as NSNumber
+            
+        }
         
+        if navigatePostingsession == "PostingFeedProgram"{
+            
+            CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(postingId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: false,feedId : feedPostingId as NSNumber)
+            CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdFeddprogramBlankTurkey(postingId as NSNumber,formName: formName,feedId : feedPostingId as NSNumber)
+        } else {
+            CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(postingId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: false,feedId : feedId as NSNumber)
+        }
         
-        
+        newCell.accessoryType = .none
+        isClickOnAnyField = true
+    }
+    
+    fileprivate func handlePostingFeedbackProgramCondition(_ formName: String) {
+        if UserDefaults.standard.bool(forKey:"Unlinked") == true{
+            let necId =  UserDefaults.standard.integer(forKey:"necUnLinked")
+            
+            CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(necId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: true,feedId : feedPostingId as NSNumber)
+        }  else  {
+            CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(postingId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: true,feedId : feedPostingId as NSNumber)
+        }
+    }
+    
+    fileprivate func handleUnlinkSessionCondition(_ formName: String) {
+        if UserDefaults.standard.bool(forKey:"Unlinked") == true{
+            let necId =  UserDefaults.standard.integer(forKey:"necUnLinked")
+            CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(necId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: true,feedId : feedId as NSNumber)
+            
+        } else {
+            CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(postingId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: true,feedId : feedId as NSNumber)
+        }
+    }
+    
+    fileprivate func handlePostingFeedProgramValidation(_ formName: String, _ newCell: secTableViewCell) {
+        if navigatePostingsession == "PostingFeedProgram" {
+            handlePostingFeedbackProgramCondition(formName)
+        } else {
+            handleUnlinkSessionCondition(formName)
+        }
+        newCell.accessoryType = .checkmark
+        isClickOnAnyField = true
+    }
+    
+    fileprivate func handleBtnTagValidations(_ indexPath: IndexPath) {
+        if btnTag == 4 {
+            
+            coccidiosisVaccineDrinkin.text = (cocodiceVacine.value(forKey:"cocoiiVacname") as AnyObject).object(at:indexPath.row) as? String
+            CocoiVacId = ((cocodiceVacine.value(forKey:"cocvaccId") as AnyObject).object(at:indexPath.row) as? NSNumber)!
+            buttonCocotarget()
+            isClickOnAnyField = true
+            
+            
+        } else if btnTag == 5 {
+            
+            buttonCocotarget()
+            isClickOnAnyField = true
+        }
+    }
+    
+    fileprivate func handleNewCellCheckMarkValidation(_ newCell: secTableViewCell, _ formName: String) {
+        if (newCell.accessoryType == .checkmark) {
+            handleCheckMarkCondition(formName, newCell)
+        } else {
+            handlePostingFeedProgramValidation(formName, newCell)
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -3118,68 +3197,12 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             let formName = addFarmArray.object(at:indexPath.row) as! String
             
-            if (newCell.accessoryType == .checkmark) {
-                
-                if UserDefaults.standard.bool(forKey:"Unlinked") == true{
-                    let necId1 =  UserDefaults.standard.integer(forKey:"necUnLinked")
-                    postingId = necId1 as NSNumber
-                    
-                }
-                
-                if navigatePostingsession == "PostingFeedProgram"{
-                    
-                    CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(postingId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: false,feedId : feedPostingId as NSNumber)
-                    CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdFeddprogramBlankTurkey(postingId as NSNumber,formName: formName,feedId : feedPostingId as NSNumber)
-                } else {
-                    CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(postingId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: false,feedId : feedId as NSNumber)
-                }
-                
-                newCell.accessoryType = .none
-                isClickOnAnyField = true
-                
-            } else {
-                
-                if navigatePostingsession == "PostingFeedProgram"{
-                    
-                    if UserDefaults.standard.bool(forKey:"Unlinked") == true{
-                        let necId =  UserDefaults.standard.integer(forKey:"necUnLinked")
-                        
-                        CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(necId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: true,feedId : feedPostingId as NSNumber)
-                    }  else  {
-                        CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(postingId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: true,feedId : feedPostingId as NSNumber)
-                    }
-                    
-                } else  {
-                    
-                    if UserDefaults.standard.bool(forKey:"Unlinked") == true{
-                        let necId =  UserDefaults.standard.integer(forKey:"necUnLinked")
-                        CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(necId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: true,feedId : feedId as NSNumber)
-                        
-                    } else {
-                        CoreDataHandlerTurkey().updateFeedProgramNameoNNecropsystep1neccIdTurkey(postingId as NSNumber, feedProgramName: feedProgramTextField.text!,formName: formName ,isCheckForm: true,feedId : feedId as NSNumber)
-                    }
-                }
-                newCell.accessoryType = .checkmark
-                isClickOnAnyField = true
-            }
+            handleNewCellCheckMarkValidation(newCell, formName)
         } else {
             
             let cell:UITableViewCell = tableView.cellForRow(at: indexPath as IndexPath)!
            
-            if btnTag == 4 {
-                
-                coccidiosisVaccineDrinkin.text = (cocodiceVacine.value(forKey:"cocoiiVacname") as AnyObject).object(at:indexPath.row) as? String
-                CocoiVacId = ((cocodiceVacine.value(forKey:"cocvaccId") as AnyObject).object(at:indexPath.row) as? NSNumber)!
-                buttonCocotarget()
-                isClickOnAnyField = true
-                
-                
-            }
-            else if btnTag == 5 {
-              
-                buttonCocotarget()
-                isClickOnAnyField = true
-            }
+            handleBtnTagValidations(indexPath)
             
             let doseName = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
 

@@ -120,6 +120,112 @@ class ReportsCalculation: NSObject,GI_TtactDelegate {
         }
         modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
     }
+    fileprivate static func handleForLoopUpto2(_ arrayOfIds: inout [Int], _ viewCnt: UIViewController, _ modalObj: GI_Tract_Modal, _ catName: NSString) {
+        for i in 0..<3{
+            
+            let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
+            
+            if lastSessionDataArray.count == 0 {
+                
+                Helper.showAlertMessage(viewCnt,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.noHistoricalData, comment: ""))
+                return
+            }
+            
+            let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
+            
+            sessionDateSingle = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
+            
+            let allFarmDataArray = NSMutableArray()
+            
+            var totalBirdsPerFarm : Float = 0
+            
+            for j in 0..<lastSessionDataArray.count {
+                
+                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+                
+                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+                
+                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+                
+                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+                
+                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
+                
+                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+            }
+            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+        }
+    }
+    
+    fileprivate static func handleForLoopUto1(_ arrayOfIds: inout [Int], _ viewCnt: UIViewController, _ modalObj: GI_Tract_Modal, _ catName: NSString) {
+        for i in 0..<2{
+            
+            let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
+            
+            if lastSessionDataArray.count == 0 {
+                
+                Helper.showAlertMessage(viewCnt,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.noHistoricalData, comment: ""))
+                return
+            }
+            
+            let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
+            
+            sessionDateSingle = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
+            
+            let allFarmDataArray = NSMutableArray()
+            
+            var totalBirdsPerFarm : Float = 0
+            
+            for j in 0..<lastSessionDataArray.count {
+                
+                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+                
+                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+                
+                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+                
+                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+                
+                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
+                
+                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+            }
+            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+        }
+    }
+    
+    fileprivate static func handleElseCondtionArrayOfIds(_ lastSessionDataArray: NSArray, _ viewCnt: UIViewController, _ arrayOfIds: [Int], _ modalObj: GI_Tract_Modal, _ catName: NSString) {
+        if lastSessionDataArray.count == 0 {
+            
+            Helper.showAlertMessage(viewCnt,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.noHistoricalData, comment: ""))
+            return
+        }
+        
+        let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
+        
+        sessionDateSingle = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
+        
+        let allFarmDataArray = NSMutableArray()
+        
+        var totalBirdsPerFarm : Float = 0
+        
+        for j in 0..<lastSessionDataArray.count {
+            
+            let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+            
+            let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+            
+            let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+            
+            totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
+            
+            allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+        modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+    }
+    
     class func commonCalculationFunction(_ catName : NSString, viewCnt: UIViewController)  {
         
         var arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
@@ -132,112 +238,18 @@ class ReportsCalculation: NSObject,GI_TtactDelegate {
         
         if arrayOfIds.count > 2 {
             
-              for i in 0..<3{
-                
-                let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(viewCnt,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.noHistoricalData, comment: ""))
-                    return
-                }
-                
-                let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDateSingle = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName, postingId: necID)
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-            }
+            handleForLoopUpto2(&arrayOfIds, viewCnt, modalObj, catName)
         }
             
         else if arrayOfIds.count > 1 {
             
-             for i in 0..<2{
-                
-                let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(viewCnt,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.noHistoricalData, comment: ""))
-                    return
-                }
-                
-                let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDateSingle = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-            }
+            handleForLoopUto1(&arrayOfIds, viewCnt, modalObj, catName)
         }
         else{
             
             let lastSessionDataArray : NSArray = CoreDataHandlerTurkey().fetchLastSessionDetailsTurkey(arrayOfIds.first as! NSNumber)
             
-            if lastSessionDataArray.count == 0 {
-                
-                Helper.showAlertMessage(viewCnt,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.noHistoricalData, comment: ""))
-                return
-            }
-            
-            let objectArray =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
-
-             sessionDateSingle = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-            
-            let allFarmDataArray = NSMutableArray()
-            
-            var totalBirdsPerFarm : Float = 0
-            
-            for j in 0..<lastSessionDataArray.count {
-                
-                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                
-                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                
-                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                
-                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandlerTurkey().fetch_GI_Tract_AllDataTurkey(farmName,postingId: necID) as NSArray
-                
-                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+            handleElseCondtionArrayOfIds(lastSessionDataArray, viewCnt, arrayOfIds, modalObj, catName)
         }
     }
 }

@@ -531,7 +531,7 @@ class SingleSyncData: NSObject {
                     else if routeName == Constants.drinkingWater {
                         routeId = 2
                     }
-                    else if routeName == "Spray" {
+                    else if routeName == Constants.spray {
                         routeId = 3
                     }
                     else if routeName == Constants.inOvoStr {
@@ -552,7 +552,7 @@ class SingleSyncData: NSObject {
                 }
                 else if newLngId == 4
                 {
-                    if routeName == "Spray" {
+                    if routeName == Constants.spray {
                         routeId = 21
                     }
                     else if routeName == Constants.inOvoStr {
@@ -561,7 +561,7 @@ class SingleSyncData: NSObject {
                     else if routeName == "Intramuscular" {
                         routeId = 24
                     }
-                    else if routeName == "Água De Bebida" {
+                    else if routeName == Constants.aguaDeBebida {
                         routeId = 20
                     }
                     else if routeName == "Membrana Da Asa" {
@@ -570,7 +570,7 @@ class SingleSyncData: NSObject {
                     else if routeName == "Ocular" {
                         routeId = 25
                     }
-                    else if routeName == "Subcutânea" {
+                    else if routeName == Constants.Subcutânea {
                         routeId = 23
                     }
                     else{
@@ -605,7 +605,7 @@ class SingleSyncData: NSObject {
                     else if routeName == Constants.drinkingWater {
                         routeId = 2
                     }
-                    else if routeName == "Spray" {
+                    else if routeName == Constants.spray {
                         routeId = 3
                     }
                     else if routeName == Constants.inOvoStr {
@@ -626,7 +626,7 @@ class SingleSyncData: NSObject {
                 }
                 else if newLngId == 4
                 {
-                    if routeName == "Spray" {
+                    if routeName == Constants.spray {
                         routeId = 21
                     }
                     else if routeName == Constants.inOvoStr {
@@ -635,7 +635,7 @@ class SingleSyncData: NSObject {
                     else if routeName == "Intramuscular" {
                         routeId = 24
                     }
-                    else if routeName == "Água De Bebida" {
+                    else if routeName == Constants.aguaDeBebida {
                         routeId = 20
                     }
                     else if routeName == "Membrana Da Asa" {
@@ -644,7 +644,7 @@ class SingleSyncData: NSObject {
                     else if routeName == "Ocular" {
                         routeId = 25
                     }
-                    else if routeName == "Subcutânea" {
+                    else if routeName == Constants.Subcutânea {
                         routeId = 23
                     }
                     else{

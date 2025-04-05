@@ -303,7 +303,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -317,7 +317,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -327,9 +327,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -339,13 +339,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
 //                case 22:
 //                    person.setValue(Constants.inovo, forKey:"route")
 //                case 24:
 //                    person.setValue("Intramuscular", forKey:"route")
 //                case 21:
-//                    person.setValue("Spray", forKey:"route")
+//                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -364,7 +364,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -378,7 +378,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -388,9 +388,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -400,13 +400,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -426,7 +426,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -440,7 +440,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -450,9 +450,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -462,13 +462,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -487,7 +487,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -501,7 +501,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -511,9 +511,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -523,13 +523,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -549,7 +549,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -563,7 +563,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -573,9 +573,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -585,13 +585,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -611,7 +611,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -625,7 +625,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -635,9 +635,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -647,13 +647,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -673,7 +673,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -687,7 +687,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -697,9 +697,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -709,13 +709,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -735,7 +735,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -749,7 +749,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -759,9 +759,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -771,13 +771,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -798,7 +798,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -812,7 +812,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -822,9 +822,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -834,13 +834,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -860,7 +860,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -874,7 +874,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -884,9 +884,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -896,13 +896,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -923,7 +923,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -937,7 +937,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -947,9 +947,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -959,13 +959,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1015,7 +1015,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1029,7 +1029,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1039,9 +1039,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1051,13 +1051,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1089,7 +1089,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1103,7 +1103,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1113,9 +1113,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1125,13 +1125,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1164,7 +1164,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1178,7 +1178,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1188,9 +1188,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1200,13 +1200,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1238,7 +1238,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1252,7 +1252,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1262,9 +1262,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1274,13 +1274,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1312,7 +1312,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1326,7 +1326,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1336,9 +1336,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1348,13 +1348,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1385,7 +1385,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1399,7 +1399,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1409,9 +1409,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1421,13 +1421,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1459,7 +1459,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1473,7 +1473,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1483,9 +1483,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1495,13 +1495,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1533,7 +1533,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1547,7 +1547,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1557,9 +1557,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1569,13 +1569,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1608,7 +1608,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1622,7 +1622,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1632,9 +1632,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1644,13 +1644,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1683,7 +1683,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1697,7 +1697,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1707,9 +1707,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1719,13 +1719,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1757,7 +1757,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -1771,7 +1771,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -1781,9 +1781,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -1793,13 +1793,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1845,7 +1845,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1859,7 +1859,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -1869,9 +1869,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -1881,13 +1881,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1905,7 +1905,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1919,7 +1919,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -1929,9 +1929,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -1941,13 +1941,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1965,7 +1965,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -1979,7 +1979,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -1989,9 +1989,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -2001,13 +2001,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2025,7 +2025,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -2039,7 +2039,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -2049,9 +2049,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -2061,13 +2061,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2085,7 +2085,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -2099,7 +2099,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -2109,9 +2109,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -2121,13 +2121,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2145,7 +2145,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -2159,7 +2159,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -2169,9 +2169,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -2181,13 +2181,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2205,7 +2205,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -2219,7 +2219,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -2229,9 +2229,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -2241,13 +2241,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2267,7 +2267,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -2281,7 +2281,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -2291,9 +2291,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -2303,13 +2303,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2330,7 +2330,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -2344,7 +2344,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -2354,9 +2354,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -2366,13 +2366,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2393,7 +2393,7 @@ class CoreDataHandler : NSObject  {
                 case 2:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 3:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 4:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 5:
@@ -2407,7 +2407,7 @@ class CoreDataHandler : NSObject  {
                 case 13:
                     person.setValue(Constants.drinkingWater, forKey:"route")
                 case 14:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 15:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 16:
@@ -2417,9 +2417,9 @@ class CoreDataHandler : NSObject  {
                 case 18:
                     person.setValue(Constants.eyeDrop, forKey:"route")
                 case 20:
-                    person.setValue("Água De Bebida", forKey:"route")
+                    person.setValue(Constants.aguaDeBebida, forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
@@ -2429,13 +2429,13 @@ class CoreDataHandler : NSObject  {
                 case 25:
                     person.setValue("Ocular", forKey:"route")
                 case 23:
-                    person.setValue("Subcutânea", forKey:"route")
+                    person.setValue(Constants.Subcutânea, forKey:"route")
                 case 22:
                     person.setValue(Constants.inovo, forKey:"route")
                 case 24:
                     person.setValue("Intramuscular", forKey:"route")
                 case 21:
-                    person.setValue("Spray", forKey:"route")
+                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2485,7 +2485,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -2499,7 +2499,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -2509,9 +2509,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -2521,13 +2521,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2558,7 +2558,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -2572,7 +2572,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -2582,9 +2582,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -2594,13 +2594,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2630,7 +2630,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -2644,7 +2644,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -2654,9 +2654,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -2666,13 +2666,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2702,7 +2702,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -2716,7 +2716,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -2726,9 +2726,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -2738,13 +2738,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2773,7 +2773,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -2787,7 +2787,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -2797,9 +2797,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -2809,13 +2809,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2845,7 +2845,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -2859,7 +2859,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -2869,9 +2869,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -2881,13 +2881,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2917,7 +2917,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -2931,7 +2931,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -2941,9 +2941,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -2953,13 +2953,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2994,7 +2994,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -3008,7 +3008,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -3018,9 +3018,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -3030,13 +3030,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -3067,7 +3067,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -3081,7 +3081,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -3091,9 +3091,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -3103,13 +3103,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -3140,7 +3140,7 @@ class CoreDataHandler : NSObject  {
                     case 2:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 3:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 4:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 5:
@@ -3154,7 +3154,7 @@ class CoreDataHandler : NSObject  {
                     case 13:
                         person.setValue(Constants.drinkingWater, forKey:"route")
                     case 14:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 15:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 16:
@@ -3164,9 +3164,9 @@ class CoreDataHandler : NSObject  {
                     case 18:
                         person.setValue(Constants.eyeDrop, forKey:"route")
                     case 20:
-                        person.setValue("Água De Bebida", forKey:"route")
+                        person.setValue(Constants.aguaDeBebida, forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
@@ -3176,13 +3176,13 @@ class CoreDataHandler : NSObject  {
                     case 25:
                         person.setValue("Ocular", forKey:"route")
                     case 23:
-                        person.setValue("Subcutânea", forKey:"route")
+                        person.setValue(Constants.Subcutânea, forKey:"route")
                     case 22:
                         person.setValue(Constants.inovo, forKey:"route")
                     case 24:
                         person.setValue("Intramuscular", forKey:"route")
                     case 21:
-                        person.setValue("Spray", forKey:"route")
+                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
