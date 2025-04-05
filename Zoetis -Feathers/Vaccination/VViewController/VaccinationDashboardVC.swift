@@ -628,42 +628,47 @@ class VaccinationDashboardVC: BaseViewController{
         sectonHeaderVw.isHidden = false
     }
     
-    private func getScheduledCertifications(){
+    fileprivate func handleSavedStatus(_ status: String?) {
+        let mainQueue = OperationQueue.main
+        mainQueue.addOperation {
+            if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
+                self.upcomingCertificationsArr =  VaccinationDashboardDAO.sharedInstance.getScheduledCertifications(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "")
+                UserContext.sharedInstance.markSynced(apiCallName: .getScheduledCertifications)
+                self.certificationsTblVw.reloadData()
+                if self.popupTblVw != nil{
+                    self.popupTblVw.reloadData()
+                }
+                self.hasDataLoaded = true
+                self.showPopup()
+            } else if status == appDelegateObj.noDataFoundStr {
+                self.hasDataLoaded = true
+                self.showPopup()
+                self.dismissGlobalHUD(self.view ?? UIView())
+            }
+            let hasLoadedVaccinations = UserDefaults.standard.bool(forKey: "hasVaccinationDataLoaded")
+            if !hasLoadedVaccinations {
+                
+            } else {
+                self.dismissGlobalHUD(self.view ?? UIView())
+            }
+        }
+    }
+    
+    private func getScheduledCertifications() {
         DataService.sharedInstance.getScheduledCertifications(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self,completion: { [weak self] (status, error) in
             guard let _ = self, error == nil else {
                 self?.hasDataLoaded = true
                 self?.showPopup()
                 let hasLoadedVaccinations = UserDefaults.standard.bool(forKey: "hasVaccinationDataLoaded")
-                if !hasLoadedVaccinations{
+                if !hasLoadedVaccinations {
                     
-                }else{
+                } else {
                     self?.dismissGlobalHUD(self?.view ?? UIView());
                 }
-                return; }
-            
-            let mainQueue = OperationQueue.main
-            mainQueue.addOperation{
-                if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
-                    self?.upcomingCertificationsArr =  VaccinationDashboardDAO.sharedInstance.getScheduledCertifications(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "")
-                    UserContext.sharedInstance.markSynced(apiCallName: .getScheduledCertifications)
-                    self?.certificationsTblVw.reloadData()
-                    if self?.popupTblVw != nil{
-                        self?.popupTblVw.reloadData()
-                    }
-                    self?.hasDataLoaded = true
-                    self?.showPopup()
-                } else if status == appDelegateObj.noDataFoundStr{
-                    self?.hasDataLoaded = true
-                    self?.showPopup()
-                    self?.dismissGlobalHUD(self?.view ?? UIView())
-                }
-                let hasLoadedVaccinations = UserDefaults.standard.bool(forKey: "hasVaccinationDataLoaded")
-                if !hasLoadedVaccinations{
-                    
-                }else{
-                    self?.dismissGlobalHUD(self?.view ?? UIView());
-                }
+                return
             }
+            
+            self?.handleSavedStatus(status)
         })
     }
     
@@ -881,34 +886,42 @@ extension VaccinationDashboardVC: UITableViewDelegate, UITableViewDataSource{
         return 44
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if tableView == certificationsTblVw{
-            if upcomingCertificationsArr.count > 0 && indexPath.row < upcomingCertificationsArr.count{
-                let certificationId = upcomingCertificationsArr[indexPath.row].certificationId
-                Constants.modeType = "operator"
-                var certificationStatusObj = VaccinationDashboardDAO.sharedInstance.getScheduledCertificationStatusVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: certificationId ?? "", certCategoryId: "2", certObj: upcomingCertificationsArr[indexPath.row])
-                if certificationStatusObj.lastModuleName ==  VaccinationModuleNames.QuestionnaireVC.rawValue{
-                    navigatetToQuestionnaireScreen(index: indexPath.row, subModule:certificationStatusObj.lastSubmoduleName ?? "" )
-                } else{
-                    navigateToAddEmloyees(index: indexPath.row)
-                }
-                
+    fileprivate func handleUpcomingCertifications(_ indexPath: IndexPath) {
+        if upcomingCertificationsArr.count > 0 && indexPath.row < upcomingCertificationsArr.count {
+            let certificationId = upcomingCertificationsArr[indexPath.row].certificationId
+            var certObj = upcomingCertificationsArr[indexPath.row]
+            certObj.certificationCategoryName = "Operator"
+            certObj.certificationCategoryId = "2"
+            var certificationStatusObj = VaccinationDashboardDAO.sharedInstance.getScheduledCertificationStatusVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: certificationId ?? "", certCategoryId: "2", certObj: upcomingCertificationsArr[indexPath.row])
+            if certificationStatusObj.lastModuleName ==  VaccinationModuleNames.QuestionnaireVC.rawValue{
+                navigatetToQuestionnaireScreen(index: indexPath.row, subModule:certificationStatusObj.lastSubmoduleName ?? "" )
+            } else {
+                navigateToAddEmloyees(index: indexPath.row, safetyCertification:  false)
+            }
+        }
+    }
+    
+    fileprivate func handleUpcomingCertificationsArr(_ indexPath: IndexPath) {
+        if upcomingCertificationsArr.count > 0 && indexPath.row < upcomingCertificationsArr.count {
+            let certificationId = upcomingCertificationsArr[indexPath.row].certificationId
+            Constants.modeType = "operator"
+            var certificationStatusObj = VaccinationDashboardDAO.sharedInstance.getScheduledCertificationStatusVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: certificationId ?? "", certCategoryId: "2", certObj: upcomingCertificationsArr[indexPath.row])
+            if certificationStatusObj.lastModuleName ==  VaccinationModuleNames.QuestionnaireVC.rawValue{
+                navigatetToQuestionnaireScreen(index: indexPath.row, subModule:certificationStatusObj.lastSubmoduleName ?? "" )
+            } else{
+                navigateToAddEmloyees(index: indexPath.row)
             }
             
-        } else if tableView == popupTblVw{
-            if upcomingCertificationsArr.count > 0 && indexPath.row < upcomingCertificationsArr.count{
-                let certificationId = upcomingCertificationsArr[indexPath.row].certificationId
-                var certObj = upcomingCertificationsArr[indexPath.row]
-                certObj.certificationCategoryName = "Operator"
-                certObj.certificationCategoryId = "2"
-                var certificationStatusObj = VaccinationDashboardDAO.sharedInstance.getScheduledCertificationStatusVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: certificationId ?? "", certCategoryId: "2", certObj: upcomingCertificationsArr[indexPath.row])
-                if certificationStatusObj.lastModuleName ==  VaccinationModuleNames.QuestionnaireVC.rawValue{
-                    navigatetToQuestionnaireScreen(index: indexPath.row, subModule:certificationStatusObj.lastSubmoduleName ?? "" )
-                } else{
-                    navigateToAddEmloyees(index: indexPath.row, safetyCertification:  false)
-                }
-            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if tableView == certificationsTblVw {
+            handleUpcomingCertificationsArr(indexPath)
+            
+        } else if tableView == popupTblVw {
+            handleUpcomingCertifications(indexPath)
         }
     }
     

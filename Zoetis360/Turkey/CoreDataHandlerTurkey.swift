@@ -324,13 +324,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -352,13 +352,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -380,13 +380,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -408,13 +408,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -436,13 +436,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -464,13 +464,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -491,13 +491,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -519,13 +519,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -547,13 +547,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -575,13 +575,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -603,13 +603,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -660,13 +660,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -702,13 +702,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -744,13 +744,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -785,13 +785,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -826,13 +826,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -866,13 +866,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -907,13 +907,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -948,13 +948,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -989,13 +989,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1030,13 +1030,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1073,13 +1073,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1128,13 +1128,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1155,13 +1155,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1182,13 +1182,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1208,13 +1208,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1234,13 +1234,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1260,13 +1260,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1286,13 +1286,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1312,13 +1312,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1339,13 +1339,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1365,13 +1365,13 @@ class CoreDataHandlerTurkey: NSObject {
                 case 3:
                     person.setValue("Spray", forKey:"route")
                 case 4:
-                    person.setValue("In Ovo", forKey:"route")
+                    person.setValue(Constants.inovo, forKey:"route")
                 case 5:
                     person.setValue("Subcutaneous", forKey:"route")
                 case 6:
                     person.setValue("Intramuscular", forKey:"route")
                 case 7:
-                    person.setValue("Eye Drop", forKey:"route")
+                    person.setValue(Constants.eyeDrop, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1429,13 +1429,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1468,13 +1468,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1507,13 +1507,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1545,13 +1545,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1583,13 +1583,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1621,13 +1621,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1659,13 +1659,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1699,13 +1699,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1738,13 +1738,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1781,13 +1781,13 @@ class CoreDataHandlerTurkey: NSObject {
                     case 3:
                         person.setValue("Spray", forKey:"route")
                     case 4:
-                        person.setValue("In Ovo", forKey:"route")
+                        person.setValue(Constants.inovo, forKey:"route")
                     case 5:
                         person.setValue("Subcutaneous", forKey:"route")
                     case 6:
                         person.setValue("Intramuscular", forKey:"route")
                     case 7:
-                        person.setValue("Eye Drop", forKey:"route")
+                        person.setValue(Constants.eyeDrop, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2083,7 +2083,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "SkeletaTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         
         do
             
@@ -2155,7 +2155,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "SkeletaTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -2248,7 +2248,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         
         do
             
@@ -2325,7 +2325,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -2417,7 +2417,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITractTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         
         do
             
@@ -2486,7 +2486,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITractTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -2577,7 +2577,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "RespiratoryTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         
         do
             
@@ -2640,7 +2640,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "RespiratoryTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -2732,7 +2732,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "ImmuneTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "refId == %@", refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
         
         do
             
@@ -2813,7 +2813,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "ImmuneTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -2977,7 +2977,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "RouteTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -3080,7 +3080,7 @@ class CoreDataHandlerTurkey: NSObject {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CustmerTurkey")
-        fetchRequest.predicate = NSPredicate(format: "complexId == %@", complexId)
+        fetchRequest.predicate = NSPredicate(format: Constants.complexIdPredicate, complexId)
         fetchRequest.returnsObjectsAsFaults = false
         
         do
@@ -3288,7 +3288,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "VeterationTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "complexId == %@", complexId)
+        fetchRequest.predicate = NSPredicate(format: Constants.complexIdPredicate, complexId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -3402,7 +3402,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocciProgramPostingTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -3580,7 +3580,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "SessiontypeTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -3637,7 +3637,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MoleculeFeeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         
         do
         {
@@ -3852,7 +3852,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "complexId == %@", complexID)
+        fetchRequest.predicate = NSPredicate(format: Constants.complexIdPredicate, complexID)
         
         do
         {
@@ -4194,7 +4194,7 @@ class CoreDataHandlerTurkey: NSObject {
     // MARK: Delete Farms Details in Turkey
     func deleteDataWithPostingIdStep1dataTurkey (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -4216,7 +4216,7 @@ class CoreDataHandlerTurkey: NSObject {
     // MARK: Delete All data of Necropsy with posting ID in TURKEY
     func deleteDataWithPostingIdStep2dataCaptureNecViewTurkey (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -4240,7 +4240,7 @@ class CoreDataHandlerTurkey: NSObject {
     // MARK: Delete Notes With Posting ID in TURKEY
     func deleteDataWithPostingIdStep2NotesBirdTurkey (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchUsers.predicate                = fetchPredicate
         do
@@ -4263,7 +4263,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataWithPostingIdStep2CameraIamgeTurkey (_ postingId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", postingId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, postingId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -4508,7 +4508,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataWithPostingIdCaptureStepDataTurkey (_ necId: NSNumber)
     {
  
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, necId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -4993,7 +4993,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         do
         { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if fetchedResult!.count > 0
@@ -5053,7 +5053,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId,formName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necId,formName)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -5342,7 +5342,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -5521,7 +5521,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
         
         do
         {
@@ -5711,7 +5711,7 @@ class CoreDataHandlerTurkey: NSObject {
             let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
             do
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -5916,7 +5916,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -5996,7 +5996,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", isSync,postinID)
+        fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, isSync,postinID)
         do
             
         {
@@ -6131,7 +6131,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6162,7 +6162,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6256,7 +6256,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
         
         do
         {
@@ -6290,7 +6290,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
         
         do {
             
@@ -6383,7 +6383,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId = %@", postingId,feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
         
         do
         {
@@ -6443,7 +6443,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == %@", NSNumber(booleanLiteral: isSync),postingID)
+        fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
         
         do
         {
@@ -6479,7 +6479,7 @@ class CoreDataHandlerTurkey: NSObject {
             let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
             
             do
             {
@@ -6669,7 +6669,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6753,7 +6753,7 @@ class CoreDataHandlerTurkey: NSObject {
             let managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
             do
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6896,7 +6896,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocoiVaccineTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "lngId == %@", lngId)
+        fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -6984,7 +6984,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -7056,7 +7056,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        // fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        // fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -7103,7 +7103,7 @@ class CoreDataHandlerTurkey: NSObject {
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
             
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+            fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
             
             do
             {
@@ -7314,7 +7314,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         
         
         do
@@ -7502,7 +7502,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "FeedProgramTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "feedId == %@", feedId)
+        fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
         
         do
         {
@@ -7900,7 +7900,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        //fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+       
         fetchRequest.predicate = NSPredicate(format: "isSync == %@ AND postingId == 0", NSNumber(booleanLiteral: isSync))
         
         do
@@ -7938,7 +7938,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necropsyId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necropsyId)
         
         do
         {
@@ -8053,7 +8053,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -8312,7 +8312,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -8342,7 +8342,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -8432,7 +8432,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -8472,7 +8472,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -8521,7 +8521,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId , formName , feedProgramName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necId , formName , feedProgramName)
         
         do
         {
@@ -8565,7 +8565,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necId , formName )
+        fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necId , formName )
         
         do
         {
@@ -8800,7 +8800,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -8893,7 +8893,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -9017,7 +9017,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
         
         
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@", birdnumber,catName,farmname,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdnumber,catName,farmname,necId)
         
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -9233,7 +9233,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@", birdnumber,catName,farmname,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdnumber,catName,farmname,necId)
         
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -9646,7 +9646,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataWithStep2dataTurkey (_ necId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, necId)
         let fetchUsers            = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchUsers.predicate   = fetchPredicate
         
@@ -9772,7 +9772,7 @@ class CoreDataHandlerTurkey: NSObject {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -9810,7 +9810,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -9966,7 +9966,7 @@ class CoreDataHandlerTurkey: NSObject {
         let imageData = camraImage.jpegData(compressionQuality: 0.5)
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@", birdNo,catName,formName , necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdNo,catName,formName , necId)
         
         do
         {
@@ -10136,7 +10136,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteImageForSingleTurkey(_ necId: NSNumber) {
         
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, necId)
         let fetchUsers   = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
         fetchUsers.predicate  = fetchPredicate
         do
@@ -10199,7 +10199,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate!.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
         do
         {
@@ -10270,7 +10270,7 @@ class CoreDataHandlerTurkey: NSObject {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
-        fetchRequest.predicate = NSPredicate(format: "isSync == %@", NSNumber(booleanLiteral: isSync))
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
         fetchRequest.returnsObjectsAsFaults = false
         do
         {
@@ -10417,7 +10417,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataBirdNotesWithIdTurkey (_ necId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@", necId)
+        let fetchPredicate = NSPredicate(format: Constants.necIdPredicate, necId)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -10444,7 +10444,7 @@ class CoreDataHandlerTurkey: NSObject {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@", necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -10480,7 +10480,7 @@ class CoreDataHandlerTurkey: NSObject {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
-        fetchRequest.predicate = NSPredicate(format: "noofBirds == %@ AND formName == %@ AND necropsyId == %@", birdNo,formName,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -10513,7 +10513,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
-        fetchRequest.predicate = NSPredicate(format: "noofBirds == %@ AND formName == %@ AND necropsyId == %@", birdNo,formName,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
         
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -10612,7 +10612,7 @@ class CoreDataHandlerTurkey: NSObject {
         let managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "NotesBirdTurkey")
-        fetchRequest.predicate = NSPredicate(format: "noofBirds == %@ AND formName == %@ AND necropsyId == %@", birdNo,formName,necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
         
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -10801,7 +10801,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND formName == %@ AND obsID == %@ AND necropsyId == %@", birdNo,formName,obsId , necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateObsIdBirdsFarmNecID, birdNo,formName,obsId , necId)
         
         do
         {
@@ -10843,7 +10843,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND formName == %@ AND obsID == %@ AND necropsyId == %@", birdNo,formName,obsId , necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateObsIdBirdsFarmNecID, birdNo,formName,obsId , necId)
         
         do
         {
@@ -10878,7 +10878,7 @@ class CoreDataHandlerTurkey: NSObject {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
-        fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND formName == %@ AND obsID == %@ AND necropsyId == %@", birdNo,formName,obsId , necId)
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateObsIdBirdsFarmNecID, birdNo,formName,obsId , necId)
         
         do
         {
@@ -10952,7 +10952,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         fetchRequest.returnsObjectsAsFaults = false
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND formName == %@",postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.predicateNecFarmName,postingId,farmName)
         
         fetchRequest.predicate = fetchPredicate
         
@@ -11145,7 +11145,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necropsyId, farmName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necropsyId, farmName)
         
         do
         {
@@ -11184,7 +11184,7 @@ class CoreDataHandlerTurkey: NSObject {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", necropsyId ,farmName)
+        fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necropsyId ,farmName)
         
         do
         {
@@ -11327,7 +11327,7 @@ class CoreDataHandlerTurkey: NSObject {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do
             {
@@ -11358,7 +11358,7 @@ class CoreDataHandlerTurkey: NSObject {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do
             {
@@ -11389,7 +11389,7 @@ class CoreDataHandlerTurkey: NSObject {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do
             {
@@ -11417,7 +11417,7 @@ class CoreDataHandlerTurkey: NSObject {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do
             {
@@ -11445,7 +11445,7 @@ class CoreDataHandlerTurkey: NSObject {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do
             {
@@ -11476,7 +11476,7 @@ class CoreDataHandlerTurkey: NSObject {
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
         for item in refID {
-            fetchRequest.predicate = NSPredicate(format: "refId == %@ AND lngId == %@", item as! NSNumber,languageID)
+            fetchRequest.predicate = NSPredicate(format: Constants.predicateRefLang, item as! NSNumber,languageID)
             fetchRequest.returnsObjectsAsFaults = false
             do {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -11529,7 +11529,7 @@ class CoreDataHandlerTurkey: NSObject {
     }
     func deleteDataWithPostingIdStep1dataWithfarmNameTurkey (_ postingId: NSNumber,farmName:String)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.necFarmNamePredicate, postingId,farmName)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -11552,7 +11552,7 @@ class CoreDataHandlerTurkey: NSObject {
     }
     func deleteDataWithPostingIdStep2dataCaptureNecViewWithfarmNameTurkey (_ postingId: NSNumber,farmName:String)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND formName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.predicateNecFarmName, postingId,farmName)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -11575,7 +11575,7 @@ class CoreDataHandlerTurkey: NSObject {
     }
     func deleteDataWithPostingIdStep2NotesBirdWithFarmNameTurkey (_ postingId: NSNumber,farmName:String)
     {
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND formName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.predicateNecFarmName, postingId,farmName)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchUsers.predicate                = fetchPredicate
         
@@ -11599,7 +11599,7 @@ class CoreDataHandlerTurkey: NSObject {
     func deleteDataWithPostingIdStep2CameraIamgeWithFarmNameTurkey (_ postingId: NSNumber,farmName:String)
     {
         
-        let fetchPredicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@", postingId,farmName)
+        let fetchPredicate = NSPredicate(format: Constants.necFarmNamePredicate, postingId,farmName)
         let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
         fetchUsers.predicate                = fetchPredicate
         

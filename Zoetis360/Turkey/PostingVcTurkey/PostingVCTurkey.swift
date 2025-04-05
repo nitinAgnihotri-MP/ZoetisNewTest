@@ -405,6 +405,49 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         }
     }
     
+    fileprivate func btnsInteractionValidations(_ lngId: Int) {
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
+            lblComplex.text =  UserDefaults.standard.value(forKey: "complexUnlinked") as? String
+            lblDate.text =  UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String
+            
+            if (UserDefaults.standard.value(forKey: "timeStamp") as? String) != nil{
+                lblTimeStamp = lblTimestampUnlinked
+            } else {
+                let postingArr = CoreDataHandlerTurkey().FetchNecropsystep1neccIdTurkey(postingId as NSNumber)
+                lblTimeStamp = (postingArr.object(at: 0) as AnyObject).value(forKey: "timeStamp") as! String
+            }
+            complexIdDb = unComplexId as NSNumber
+            custmetIdDb = unCustId as NSNumber
+            btnComplex.isUserInteractionEnabled = false
+            btnDate.isUserInteractionEnabled = false
+            sliderBtnOutlet.alpha = 0
+            btnComplex.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.1)
+            btnDate.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.1)
+            doneButtonP.alpha = 1
+            backButtonFronNec.alpha = 1
+            nextButtonOutlet.alpha = 0
+        } else {
+            btnComplex.isUserInteractionEnabled = true
+            btnDate.isUserInteractionEnabled = true
+            doneButtonP.alpha = 0
+            nextButtonOutlet.alpha = 1
+            sliderBtnOutlet.alpha = 1
+            backButtonFronNec.alpha = 0
+        }
+        if lngId == 1{
+            
+            if(CoreDataHandlerTurkey().fetchAddvacinationDataTurkey(postingId as NSNumber).count == 0){
+                lblAddVacci.text = "Add Vaccination"
+                addVacIcon.frame = CGRect(x: 140, y: 722, width: 20, height: 20)
+                feedImagrIcon.frame = CGRect(x: 430, y: 723, width: 20, height: 20)
+            } else {
+                lblAddVacci.text = "Edit Vaccination"
+            }
+            lblFeed.text = "Feed Program"
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         
         notesTextView.textContainer.lineFragmentPadding = 12
@@ -421,8 +464,6 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 if value.count>0{
                     doneButtonP.isUserInteractionEnabled = true
                 }
-            } else if appDelegate.sendFeedVariable == "vaccination"{
-                
             }
         } else {
             postingId = UserDefaults.standard.integer(forKey: "postingId")
@@ -563,46 +604,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             }
         }
         
-        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
-            postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-            lblComplex.text =  UserDefaults.standard.value(forKey: "complexUnlinked") as? String
-            lblDate.text =  UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String
-            
-            if (UserDefaults.standard.value(forKey: "timeStamp") as? String) != nil{
-                lblTimeStamp = lblTimestampUnlinked
-            } else {
-                let postingArr = CoreDataHandlerTurkey().FetchNecropsystep1neccIdTurkey(postingId as NSNumber)
-                lblTimeStamp = (postingArr.object(at: 0) as AnyObject).value(forKey: "timeStamp") as! String
-            }
-            complexIdDb = unComplexId as NSNumber
-            custmetIdDb = unCustId as NSNumber
-            btnComplex.isUserInteractionEnabled = false
-            btnDate.isUserInteractionEnabled = false
-            sliderBtnOutlet.alpha = 0
-            btnComplex.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.1)
-            btnDate.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.1)
-            doneButtonP.alpha = 1
-            backButtonFronNec.alpha = 1
-            nextButtonOutlet.alpha = 0
-        } else {
-            btnComplex.isUserInteractionEnabled = true
-            btnDate.isUserInteractionEnabled = true
-            doneButtonP.alpha = 0
-            nextButtonOutlet.alpha = 1
-            sliderBtnOutlet.alpha = 1
-            backButtonFronNec.alpha = 0
-        }
-        if lngId == 1{
-            
-            if(CoreDataHandlerTurkey().fetchAddvacinationDataTurkey(postingId as NSNumber).count == 0){
-                lblAddVacci.text = "Add Vaccination"
-                addVacIcon.frame = CGRect(x: 140, y: 722, width: 20, height: 20)
-                feedImagrIcon.frame = CGRect(x: 430, y: 723, width: 20, height: 20)
-            } else {
-                lblAddVacci.text = "Edit Vaccination"
-            }
-            lblFeed.text = "Feed Program"
-        }
+        btnsInteractionValidations(lngId)
     }
     /****************** Crteating Custom tableView ********************************/
     // MARK: - METHODS AND FUNCTIONS

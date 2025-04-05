@@ -652,6 +652,31 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     }
     
     
+    fileprivate func setFeedBtnBorder() {
+        nameText.layer.borderColor = UIColor.red.cgColor
+        let abc = feedButton.currentTitle!
+        if abc == ""{
+            feedButton.layer.borderColor = UIColor.red.cgColor
+        }else {
+            feedButton.layer.borderColor = UIColor.black.cgColor
+        }
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldmsg)
+    }
+    
+    fileprivate func setFarmBtnBorder(_ trimmedString: String) {
+        if strFeddUpdate == "" {
+            feedButton.layer.borderColor = UIColor.red.cgColor
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a feed program.", comment: ""))
+        }
+        if trimmedString == "" {
+            nameText.layer.borderColor = UIColor.red.cgColor
+            
+        } else {
+            nameText.layer.borderColor = UIColor.black.cgColor
+            
+        }
+    }
+    
     @objc func updatePressed(){
         Constants.isFromPsotingTurkey = true
         UserDefaults.standard.setValue(true, forKey: "postingTurkey")
@@ -666,38 +691,16 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         
         if trimmedString == "" && strFeddUpdate == "" {
             
-            nameText.layer.borderColor = UIColor.red.cgColor
-            let abc = feedButton.currentTitle!
-            
-            if abc == "" {
-                feedButton.layer.borderColor = UIColor.red.cgColor
-            } else{
-                feedButton.layer.borderColor = UIColor.black.cgColor
-            }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldmsg)
+            setFeedBtnBorder()
             
         }else if trimmedString == ""  {
             
-            nameText.layer.borderColor = UIColor.red.cgColor
-            let abc = feedButton.currentTitle!
-            if abc == ""{
-                feedButton.layer.borderColor = UIColor.red.cgColor
-            }else {
-                feedButton.layer.borderColor = UIColor.black.cgColor
-            }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldmsg)
+            setFeedBtnBorder()
             
         } else if trimmedString == "" && strFeedCheck == ""{
-            let abc = feedButton.currentTitle!
-            
-            if abc == "" {
-                feedButton.layer.borderColor = UIColor.red.cgColor
-            }else{
-                feedButton.layer.borderColor = UIColor.black.cgColor
-            }
-            nameText.layer.borderColor = UIColor.red.cgColor
+            setFeedBtnBorder()
             farmWeightText.layer.borderColor = UIColor.black.cgColor
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldmsg)
+            
         }
         
         if houseNoTxtFldTurkey.text == ""
@@ -715,17 +718,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Please enter farm name.")
             
         }else if strFarmNameFeedId == "" && strFeddUpdate == ""{
-            if strFeddUpdate == "" {
-                feedButton.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please select a feed program.", comment: ""))
-            }
-            if trimmedString == "" {
-                nameText.layer.borderColor = UIColor.red.cgColor
-                
-            } else {
-                nameText.layer.borderColor = UIColor.black.cgColor
-                
-            }
+            setFarmBtnBorder(trimmedString)
         }
         else if strFeedCheck == "" &&  strFeddUpdate == ""{
             farmWeightText.layer.borderColor = UIColor.black.cgColor
@@ -931,6 +924,16 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
     }
     
+    fileprivate func postedDataSavedInDBFromWeb(_ value: Any) {
+        if value != nil {
+            UserDefaults.standard.set("Yes", forKey: "Success")
+            if value is NSArray{
+                self.savePostingDatatoDataBase(value)
+            }
+            
+        }
+    }
+    
     func pullFromWeb() {
         fullData =  deviceTokenId
         timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.update), userInfo: nil, repeats: false)
@@ -959,16 +962,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                     switch response.result {
                     case let .success(value):
                         
-                        if value != nil {
-                            UserDefaults.standard.set("Yes", forKey: "Success")
-                            if value is NSArray{
-                                self.savePostingDatatoDataBase(value)
-                            }
-                            else{
-                                let postingData = CoreDataHandlerTurkey().fetchAllPostingExistingSessionTurkey()
-                                
-                            }
-                        }
+                        self.postedDataSavedInDBFromWeb(value)
                     case .failure(let encodingError):
                         
                         print (encodingError)
@@ -1003,6 +997,15 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
     }
     
+    fileprivate func vaccinationDataSaved(_ value: Any) {
+        if value != nil {
+            if value is NSArray{
+                self.saveVaccinationData(value)
+            }
+            
+        }
+    }
+    
     func getPostingDataFromServerforVaccination(){
         
         if WebClass.sharedInstance.connected() {
@@ -1025,12 +1028,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                     switch response.result {
                     case let .success(value):
                         
-                        if value != nil {
-                            if value is NSArray{
-                                self.saveVaccinationData(value)
-                            }
-                           
-                        }
+                        self.vaccinationDataSaved(value)
                     case .failure(let encodingError):
                         print(encodingError)
                     }
@@ -1433,6 +1431,19 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
     }
     
+    fileprivate func saveTurkeyNotesAndGetImages(_ value: Any) {
+        if value != nil {
+            if value is NSArray{
+                
+                self.saveNotesData(value)
+            }
+            else{
+                self.getPostingDataFromServerforImage()
+                
+            }
+        }
+    }
+    
     func getNotesFromServer(){
         if WebClass.sharedInstance.connected() {
             let url = "PostingSession/GetBirdNotesListBySessionId?DeviceSessionId=\(fullData)"
@@ -1451,23 +1462,15 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 switch response.result {
                 case let .success(value):
                     
-                    if value != nil {
-                        if value is NSArray{
-                            
-                            self.saveNotesData(value)
-                        }
-                        else{
-                            self.getPostingDataFromServerforImage()
-                            
-                        }
-                    }
+                    self.saveTurkeyNotesAndGetImages(value)
                 case .failure(let encodingError):
                     Helper.dismissGlobalHUD(self.view)
                     print (encodingError)
                 }
             }
         } else{
-            
+            self.noInternetConnection()
+            Helper.dismissGlobalHUD(self.view)
         }
     }
     
@@ -1503,6 +1506,17 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
     }
     
+    fileprivate func setImagesDataInDB(_ value: Any, _ statusCode: Int?) {
+        if value != nil {
+            if value is NSArray{
+                self.saveImagesDatainDataBase(value, statusCode)
+            }
+            else{
+                Helper.dismissGlobalHUD(self.view)
+            }
+        }
+    }
+    
     func getPostingDataFromServerforImage(){
         if WebClass.sharedInstance.connected() {
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
@@ -1527,14 +1541,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 }
                 switch response.result{
                 case let .success(value):
-                    if value != nil {
-                        if value is NSArray{
-                            self.saveImagesDatainDataBase(value, statusCode)
-                        }
-                        else{
-                            Helper.dismissGlobalHUD(self.view)
-                        }
-                    }
+                    self.setImagesDataInDB(value, statusCode)
                 case .failure(let encodingError):
                     Helper.dismissGlobalHUD(self.view)
                     print (encodingError)

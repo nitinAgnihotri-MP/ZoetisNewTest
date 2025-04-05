@@ -553,53 +553,58 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
         
     }
     
+    fileprivate func handleEmpIndex(_ base64: String) {
+        if empIndex > -1 &&  certificateData.count > empIndex {
+            if certificateData.count > empIndex {
+                isRunningBack = true
+                certificateData[empIndex].isSigned = true
+                certificateData[empIndex].signatureImg = base64
+            }
+        }
+        if empIndex > -1 && empIndex == certificateData.count {
+            curentCertification?.hatcheryManagerSign = base64
+            certificateData[0].fsrSign = base64
+            UserDefaults.standard.setValue(base64, forKey: "FsrSign")
+            UserDefaults.standard.setValue(true, forKey: "isSignedFSR")
+        }
+    }
+    
+    fileprivate func handleSignImageValidation(_ view: SignatureView) {
+        signImage = view.captureSignatureFromView()!
+        var base64 = ""
+        if let sign = signImage{
+            base64 = CodeHelper.sharedInstance.convertToBase64(image: sign ) ?? ""
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex, "sign": base64])
+        if empIndex > -1 && empIndex == employeesAddedArr.count + 1 {
+            
+            curentCertification?.fsrSignature = base64
+        }
+        if empIndex > -1 && empIndex == employeesAddedArr.count{
+            curentCertification?.hatcheryManagerSign = base64
+        }
+        
+        if rowIndex == 1 && employeesAddedArr.count > 0 && empIndex > -1 && employeesAddedArr.count > empIndex{
+            var emp = employeesAddedArr[empIndex]
+            emp.signBase64 = base64
+            employeesAddedArr[empIndex] = emp
+        }
+    }
+    
     func SignatureViewDidFinishDrawing(view: SignatureView) {
         
         if fromScreen == "PEFinishPopUpScreen" {
             signImage = view.captureSignatureFromView()!
             var base64 = ""
-            if let sign = signImage{
-                base64 = CodeHelper.sharedInstance.convertToBase64(image: sign ) ?? ""
-            }
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex, "sign": base64
-                                                                                                                              ])
-            if empIndex > -1 &&  certificateData.count > empIndex {
-                if certificateData.count > empIndex {
-                    isRunningBack = true
-                    certificateData[empIndex].isSigned = true
-                    certificateData[empIndex].signatureImg = base64
-                }
-            }
-            if empIndex > -1 && empIndex == certificateData.count {
-                curentCertification?.hatcheryManagerSign = base64
-                certificateData[0].fsrSign = base64
-                UserDefaults.standard.setValue(base64, forKey: "FsrSign")
-                UserDefaults.standard.setValue(true, forKey: "isSignedFSR")
-            }
-            blockSignature?(certificateData)
-        }
-        else {
-            
-            signImage = view.captureSignatureFromView()!
-            var base64 = ""
-            if let sign = signImage{
+            if let sign = signImage {
                 base64 = CodeHelper.sharedInstance.convertToBase64(image: sign ) ?? ""
             }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex, "sign": base64])
-            if empIndex > -1 && empIndex == employeesAddedArr.count + 1 {
-                
-                curentCertification?.fsrSignature = base64
-            }
-            if empIndex > -1 && empIndex == employeesAddedArr.count{
-                curentCertification?.hatcheryManagerSign = base64
-            }
+            handleEmpIndex(base64)
+            blockSignature?(certificateData)
+        } else {
             
-            if rowIndex == 1 && employeesAddedArr.count > 0 && empIndex > -1 && employeesAddedArr.count > empIndex{
-                var emp = employeesAddedArr[empIndex]
-                emp.signBase64 = base64
-                employeesAddedArr[empIndex] = emp
-            }
+            handleSignImageValidation(view)
         }
     }
-    
 }

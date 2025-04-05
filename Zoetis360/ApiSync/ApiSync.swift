@@ -795,17 +795,35 @@ class ApiSync: NSObject {
     
     // MARK: 🟢 ******************* Save Posting data On Server ***************************/
     
-    func savePostingDataOnServer(){
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
-        postingArrWithAllData = CoreDataHandler().fetchAllPostingSessionWithisSyncisTrue(true).mutableCopy() as! NSMutableArray
-        
-        self.postingIdArr.removeAllObjects()
-        let postingServerArray = NSMutableArray()
-        let  postingDictOnServer = NSMutableDictionary()
-        
-        for i in 0..<postingArrWithAllData.count
-        {
-            if isSyncPostingArrWithData == false{
+    fileprivate func handleSessionTyoeId(_ sessiontype: String?, _ sessionTypeId: inout Int) {
+        if sessiontype == "Farm Visit" {
+            sessionTypeId = 2
+        } else if  sessiontype == "Visite De Ferme" {
+            sessionTypeId = 3
+        } else if  sessiontype ==  "Visite De Publication" {
+            sessionTypeId = 4
+        } else if sessiontype == "Posting Visit" {
+            sessionTypeId = 1
+        } else if  sessiontype ==  "Visita Em Andamento" {
+            sessionTypeId = 5
+        } else if  sessiontype ==  "Visita Na Unidade" {
+            sessionTypeId = 6
+        } else {
+            sessionTypeId = 0
+        }
+    }
+    
+    fileprivate func handleVetUserId(_ vetUserId: NSNumber?, _ birdTypeId: inout Int) {
+        if vetUserId == 0 {
+            birdTypeId = 0
+        } else {
+            birdTypeId = 1
+        }
+    }
+    
+    fileprivate func handlePostingArrWithAllData(_ lngId: Int, _ postingServerArray: NSMutableArray) {
+        for i in 0..<postingArrWithAllData.count {
+            if isSyncPostingArrWithData == false {
                 isSyncPostingArrWithData = true
                 let postingDataDict = NSMutableDictionary()
                 let pSession = postingArrWithAllData.object(at: i) as! PostingSession
@@ -813,42 +831,13 @@ class ApiSync: NSObject {
                 var sessionTypeId  = Int ()
                 let sessiontype = pSession.sessionTypeName
                 
-                if sessiontype == "Farm Visit"  {
-                    sessionTypeId = 2
-                }
-                else if  sessiontype == "Visite De Ferme"
-                {
-                    sessionTypeId = 3
-                }
-                else if  sessiontype ==  "Visite De Publication"
-                {
-                    sessionTypeId = 4
-                }
-                else if sessiontype == "Posting Visit"  {
-                    sessionTypeId = 1
-                }
-                else if  sessiontype ==  "Visita Em Andamento"
-                {
-                    sessionTypeId = 5
-                }
-                else if  sessiontype ==  "Visita Na Unidade"
-                {
-                    sessionTypeId = 6
-                }
-                else {
-                    sessionTypeId = 0
-                }
+                handleSessionTyoeId(sessiontype, &sessionTypeId)
                 let customerId = pSession.customerId
                 let complexId = pSession.complexId
                 let customerRep = pSession.customerRepName
                 let vetUserId = pSession.veterinarianId
                 let birdTypeId :Int
-                if vetUserId == 0{
-                    birdTypeId = 0
-                }
-                else{
-                    birdTypeId = 1
-                }
+                handleVetUserId(vetUserId, &birdTypeId)
                 let salesUserId = pSession.salesRepId
                 let cocciProgramId = pSession.cocciProgramId
                 let breedName = pSession.birdBreedName
@@ -913,15 +902,13 @@ class ApiSync: NSObject {
                 postingServerArray.add(postingDataDict)
             }
         }
-        let cNecArr = CoreDataHandler().FetchNecropsystep1WithisSync(true)
-        let necArrWithoutPosting = NSMutableArray()
-        
-        for j in 0..<cNecArr.count
-        {
+    }
+    
+    fileprivate func handleCNecArr(_ cNecArr: NSArray, _ necArrWithoutPosting: NSMutableArray) {
+        for j in 0..<cNecArr.count {
             let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyData
             necArrWithoutPosting.add(captureNecropsyData)
-            for w in 0..<necArrWithoutPosting.count - 1
-            {
+            for w in 0..<necArrWithoutPosting.count - 1 {
                 let c = necArrWithoutPosting.object(at: w)  as! CaptureNecropsyData
                 if c.necropsyId == captureNecropsyData.necropsyId
                 {
@@ -929,8 +916,10 @@ class ApiSync: NSObject {
                 }
             }
         }
-        for j in 0..<necArrWithoutPosting.count
-        {
+    }
+    
+    fileprivate func handleNecArrWithoutPosting(_ necArrWithoutPosting: NSMutableArray, _ lngId: Int, _ postingServerArray: NSMutableArray) {
+        for j in 0..<necArrWithoutPosting.count {
             let postingDataDict = NSMutableDictionary()
             let pSession = necArrWithoutPosting.object(at: j) as! CaptureNecropsyData
             let sessionDate = pSession.complexDate
@@ -998,6 +987,44 @@ class ApiSync: NSObject {
             postingDataDict.setValue(fullData, forKey: "sessionGUID")
             postingServerArray.add(postingDataDict)
         }
+    }
+    
+    fileprivate func handleFailureResponse(_ encodingError: AFError, _ response: AFDataResponse<Any>, _ statusCode: Int?) {
+        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+            self.delegeteSyncApi.failWithErrorInternal()
+            
+        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+            
+            if let s = statusCode {
+                self.delegeteSyncApi.failWithError(statusCode: s)
+            } else {
+                self.delegeteSyncApi.failWithErrorInternal()
+            }
+        }
+    }
+    
+    fileprivate func handleErrorStatusCodes(_ statusCode: Int?) {
+        if statusCode == 401 {
+            self.loginMethod()
+        } else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408 {
+            self.delegeteSyncApi.failWithError(statusCode: statusCode!)
+        }
+    }
+    
+    func savePostingDataOnServer() {
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        postingArrWithAllData = CoreDataHandler().fetchAllPostingSessionWithisSyncisTrue(true).mutableCopy() as! NSMutableArray
+        
+        self.postingIdArr.removeAllObjects()
+        let postingServerArray = NSMutableArray()
+        let  postingDictOnServer = NSMutableDictionary()
+        handlePostingArrWithAllData(lngId, postingServerArray)
+        
+        let cNecArr = CoreDataHandler().FetchNecropsystep1WithisSync(true)
+        let necArrWithoutPosting = NSMutableArray()
+        handleCNecArr(cNecArr, necArrWithoutPosting)
+        
+        handleNecArrWithoutPosting(necArrWithoutPosting, lngId, postingServerArray)
         postingDictOnServer.setValue(postingServerArray, forKey: "PostingSessions")
         
         do {
@@ -1018,17 +1045,11 @@ class ApiSync: NSObject {
                 request.httpBody = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
-                    let statusCode =  response.response?.statusCode
+                    let statusCode = response.response?.statusCode
                     
-                    if statusCode == 401  {
-                        self.loginMethod()
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApi.failWithError(statusCode: statusCode!)
-                    }
+                    self.handleErrorStatusCodes(statusCode)
                     
                     switch response.result {
-                        
                     case .success(let responseObject):
                         
                         self.isSyncPostingArrWithData = false
@@ -1037,19 +1058,7 @@ class ApiSync: NSObject {
                         
                     case .failure(let encodingError):
                         
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            self.delegeteSyncApi.failWithErrorInternal()
-                            
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            
-                            if let s = statusCode {
-                                self.delegeteSyncApi.failWithError(statusCode: s)
-                            }
-                            else
-                            {
-                                self.delegeteSyncApi.failWithErrorInternal()
-                            }
-                        }
+                        self.handleFailureResponse(encodingError, response, statusCode)
                     }
                 }
             }
@@ -1642,6 +1651,115 @@ class ApiSync: NSObject {
         }
     }
     // MARK: 🟢******************* Save User Setting On Server ***************************/
+    fileprivate func handleSkeletenArr(_ skeletenArr: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<skeletenArr.count {
+            let obsId = (skeletenArr.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (skeletenArr.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handlecocoii(_ cocoii: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<cocoii.count {
+            let obsId = (cocoii.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (cocoii.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handlegitract(_ gitract: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<gitract.count {
+            let obsId = (gitract.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (gitract.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quickLink, forKey: "visibilityCheck")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handleResp(_ resp: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<resp.count {
+            let obsId = (resp.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (resp.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (resp.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (resp.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handleimmu(_ immu: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<immu.count {
+            let obsId = (immu.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (immu.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (immu.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (immu.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handleSaveUserSettingResponse(_ response: AFDataResponse<Any>, _ statusCode: Int?) {
+        switch response.result {
+            
+        case .success(let responseObject):
+            debugPrint(responseObject)
+            
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                self.delegeteSyncApi.failWithErrorInternal()
+            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                
+                if let s = statusCode {
+                } else {
+                    self.delegeteSyncApi.failWithErrorInternal()
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleSaveUserSettingErrorStatusCode(_ statusCode: Int?) {
+        if statusCode == 401 {
+            self.loginMethod()
+        } else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408 {
+            self.delegeteSyncApi.failWithError(statusCode: statusCode!)
+        }
+    }
+    
     /**************************************************************************/
     func saveDatOnServerAllSeting() {
         
@@ -1657,72 +1775,11 @@ class ApiSync: NSObject {
         let immu =  CoreDataHandler().fetchAllImmune().mutableCopy() as! NSMutableArray
         let skeletenArr =  CoreDataHandler().fetchAllSeettingdata().mutableCopy() as! NSMutableArray
         
-        for i in 0..<skeletenArr.count{
-            let obsId = (skeletenArr.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (skeletenArr.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        for i in 0..<cocoii.count{
-            let obsId = (cocoii.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (cocoii.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        for i in 0..<gitract.count{
-            let obsId = (gitract.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (gitract.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quickLink, forKey: "visibilityCheck")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        for i in 0..<resp.count{
-            let obsId = (resp.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (resp.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (resp.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (resp.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        for i in 0..<immu.count{
-            let obsId = (immu.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (immu.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (immu.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (immu.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
+        handleSkeletenArr(skeletenArr, lngId, arr1)
+        handlecocoii(cocoii, lngId, arr1)
+        handlegitract(gitract, lngId, arr1)
+        handleResp(resp, lngId, arr1)
+        handleimmu(immu, lngId, arr1)
         
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
         guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
@@ -1745,32 +1802,9 @@ class ApiSync: NSObject {
             sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                 let statusCode =  response.response?.statusCode
                 
-                if statusCode == 401  {
-                    self.loginMethod()
-                }
-                else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                    self.delegeteSyncApi.failWithError(statusCode: statusCode!)
-                }
+                self.handleSaveUserSettingErrorStatusCode(statusCode)
                 
-                switch response.result {
-                    
-                case .success(let responseObject):
-                    debugPrint(responseObject)
-                    
-                case .failure(let encodingError):
-                    
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        self.delegeteSyncApi.failWithErrorInternal()
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        
-                        if let s = statusCode {
-                        }
-                        else
-                        {
-                            self.delegeteSyncApi.failWithErrorInternal()
-                        }
-                    }
-                }
+                self.handleSaveUserSettingResponse(response, statusCode)
             }
         }
     }

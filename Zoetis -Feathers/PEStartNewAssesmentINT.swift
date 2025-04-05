@@ -1456,19 +1456,10 @@ class PEStartNewAssessmentINT: BaseViewController {
         }
     }
     
-    func changeMandatorySuperviewToRed(){
-        let date = self.peNewAssessment.evaluationDate ?? ""
-        let customer = self.peNewAssessment.customerName ?? ""
-        let site = self.peNewAssessment.siteName ?? ""
-        let evaluationName = self.peNewAssessment.evaluationName ?? ""
-        let evaluator = self.peNewAssessment.evaluatorName ?? ""
-        let reasonForVisit = self.peNewAssessment.visitName ?? ""
-        let selectedTSR = self.selectedTSR.text ?? ""
-        let clorineName = self.peNewAssessment.clorineName ?? ""
-        
-        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != ""{
+    fileprivate func handleBreedOfBird() {
+        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != "" {
             setMendatoryRedBorderToOtherBreedBtn()
-        }else{
+        } else {
             let superviewCurrent =  btnBreed.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1479,10 +1470,12 @@ class PEStartNewAssessmentINT: BaseViewController {
                 }
             }
         }
-        
-        if  self.txtManufacturer.text != nil &&  self.txtManufacturer.text != ""{
+    }
+    
+    fileprivate func handleTxtManufacturer() {
+        if self.txtManufacturer.text != nil &&  self.txtManufacturer.text != "" {
             setMendatoryRedBorderTomanufactrerOtherBtn()
-        }else{
+        } else {
             let superviewCurrent =  manufacturerButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1493,10 +1486,12 @@ class PEStartNewAssessmentINT: BaseViewController {
                 }
             }
         }
-        
-        if peNewAssessment.incubation != nil && peNewAssessment.incubation != ""{
+    }
+    
+    fileprivate func handleIncubation() {
+        if peNewAssessment.incubation != nil && peNewAssessment.incubation != "" {
             
-        }else{
+        } else {
             let superviewCurrent =  btnIncubation.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1507,10 +1502,12 @@ class PEStartNewAssessmentINT: BaseViewController {
                 }
             }
         }
-        
-        if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != ""{
+    }
+    
+    fileprivate func handleTxtNumberOfEggs() {
+        if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != "" {
             setMendatoryRedBorderToNumberOfEggsBtn()
-        }else{
+        } else {
             let superviewCurrent =  numberOfEggsButton.superview
             if superviewCurrent != nil {
                 for view in superviewCurrent!.subviews {
@@ -1521,8 +1518,24 @@ class PEStartNewAssessmentINT: BaseViewController {
                 }
             }
         }
+    }
+    
+    func changeMandatorySuperviewToRed() {
+        let date = self.peNewAssessment.evaluationDate ?? ""
+        let customer = self.peNewAssessment.customerName ?? ""
+        let site = self.peNewAssessment.siteName ?? ""
+        let evaluationName = self.peNewAssessment.evaluationName ?? ""
+        let evaluator = self.peNewAssessment.evaluatorName ?? ""
+        let reasonForVisit = self.peNewAssessment.visitName ?? ""
+        let selectedTSR = self.selectedTSR.text ?? ""
+        let clorineName = self.peNewAssessment.clorineName ?? ""
         
-        if (date.count > 0 ){} else  {
+        handleBreedOfBird()
+        handleTxtManufacturer()
+        handleIncubation()
+        handleTxtNumberOfEggs()
+        
+        if (date.count > 0 ){} else {
             setMendatoryRedBorderToEvaluationDate()
         }
         if (customer.count > 0 ){} else  {
@@ -1544,7 +1557,7 @@ class PEStartNewAssessmentINT: BaseViewController {
             setMendatoryRedBorderToVisitBtn()
         }
         
-        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
         
     }
     

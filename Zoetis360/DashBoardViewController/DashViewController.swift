@@ -528,6 +528,58 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         NotificationCenter.default.post(name: NSNotification.Name("LeftMenuBtnNoti"), object: nil, userInfo: nil)
     }
     // MARK: 🟢  Call Web Services to get Observation's List
+    fileprivate func handleSuccessResponseGetNecropsy(_ JSON: Any) {
+        if (JSON is NSArray) {
+            self.dataArray.removeAllObjects()
+            self.appDelegate.globalDataArr.removeAllObjects()
+            let arr : NSArray = JSON as! NSArray
+            for  i in 0..<arr.count {
+                let tempDict = arr.object(at: i) as AnyObject
+                let ObJServiceHolder = ServiceDataHolder()
+                ObJServiceHolder.CategoryDescp = (tempDict as! NSDictionary).value(forKey:"CategoryDescription") as!  NSString
+                ObJServiceHolder.CataID = (tempDict as! NSDictionary).value(forKey:"CategoryId") as! NSInteger
+                ObJServiceHolder.ObservaionDetailsArr = ((tempDict as! NSDictionary).value(forKey: "ObservaionDetails") as! NSArray).mutableCopy() as! NSMutableArray
+                self.dataArray.add(ObJServiceHolder)
+            }
+            
+            self.appDelegate.globalDataArr = self.dataArray
+            self.skelta(0)
+            self.cocoii(1)
+            self.gitract(2)
+            self.res(3)
+            self.immu(4)
+            
+            self.callCustmerWebService()
+        } else {
+            self.callCustmerWebService()
+        }
+    }
+    
+    fileprivate func handleGetNecropsyAPIResponse(_ statusCode: Int, _ response: AFDataResponse<Any>) {
+        if statusCode == 401 {
+            self.loginMethod()
+        } else if (400...404).contains(statusCode) || (500...504).contains(statusCode) {
+            let alertController = UIAlertController(title: "", message:NSLocalizedString("Unable to get data from server. \n(\(String(describing: statusCode)))", comment: ""), preferredStyle: UIAlertController.Style.alert)
+            let okAction = UIAlertAction(title: NSLocalizedString("Retry", comment: ""), style: UIAlertAction.Style.default) {
+                (result : UIAlertAction) -> Void in
+                Helper.dismissGlobalHUD(self.view)
+                self.callWebService()
+            }
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        } else {
+            switch response.result {
+            case let .success(JSON):
+                self.handleSuccessResponseGetNecropsy(JSON)
+                break
+            case let .failure(error):
+                debugPrint(error.localizedDescription)
+                //completion(nil, error as NSError)
+                break
+            }
+        }
+    }
+    
     func callWebService() {
         if WebClass.sharedInstance.connected() {
             Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
@@ -550,54 +602,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     Helper.dismissGlobalHUD(self.view)
                     return
                 }
-
-                if statusCode == 401 {
-                    self.loginMethod()
-                } else if (400...404).contains(statusCode) || (500...504).contains(statusCode) {
-                    let alertController = UIAlertController(title: "", message:NSLocalizedString("Unable to get data from server. \n(\(String(describing: statusCode)))", comment: "") , preferredStyle: UIAlertController.Style.alert)
-                    let okAction = UIAlertAction(title: NSLocalizedString("Retry", comment: ""), style: UIAlertAction.Style.default) {
-                        (result : UIAlertAction) -> Void in
-                        Helper.dismissGlobalHUD(self.view)
-                        self.callWebService()
-                    }
-                    alertController.addAction(okAction)
-                    self.present(alertController, animated: true, completion: nil)
-                } else {/// HTTP Status code - 200
-                    switch response.result {
-                    case let .success(JSON):
-                        if (JSON is NSArray)
-                        {
-                            self.dataArray.removeAllObjects()
-                            self.appDelegate.globalDataArr.removeAllObjects()
-                            let arr : NSArray = JSON as! NSArray
-                            for  i in 0..<arr.count {
-                                let tempDict = arr.object(at: i) as AnyObject
-                                let ObJServiceHolder = ServiceDataHolder()
-                                ObJServiceHolder.CategoryDescp = (tempDict as! NSDictionary).value(forKey:"CategoryDescription") as!  NSString
-                                ObJServiceHolder.CataID = (tempDict as! NSDictionary).value(forKey:"CategoryId") as! NSInteger
-                                ObJServiceHolder.ObservaionDetailsArr = ((tempDict as! NSDictionary).value(forKey: "ObservaionDetails") as! NSArray).mutableCopy() as! NSMutableArray
-                                self.dataArray.add(ObJServiceHolder)
-                            }
-                            
-                            self.appDelegate.globalDataArr = self.dataArray
-                            self.skelta(0)
-                            self.cocoii(1)
-                            self.gitract(2)
-                            self.res(3)
-                            self.immu(4)
-                            
-                            self.callCustmerWebService()
-                        }
-                        else{
-                            self.callCustmerWebService()
-                        }
-                        break
-                    case let .failure(error):
-                        debugPrint(error.localizedDescription)
-                        //completion(nil, error as NSError)
-                        break
-                    }
-                }
+                self.handleGetNecropsyAPIResponse(statusCode, response)
             }
         }
         
@@ -774,55 +779,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                   
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                       // var routeArray: [NSDictionary] = []
-                        let arraRoute = NSMutableArray ()
-                        // Parse each item in the array
-                        for item in arr {
-                            if let tempDict = item.dictionaryObject {
-                                 let routeData = NSMutableDictionary()
-                                 routeData.setValue(tempDict["RouteName"] as? String ?? "", forKey: "RouteName")
-                                 routeData.setValue(tempDict["RouteId"] as? Int ?? -1, forKey: "RouteId")
-                                 routeData.setValue(tempDict["LanguageId"] as? Int ?? -1, forKey: "LanguageId")
-                                 
-                                 arraRoute.add(routeData) // ✅ Use add() on NSMutableArray
-                             } else {
-                                 print("Invalid route data format: \(item)")
-                             }
-                         }
-                        
-                        // Fetch existing routes from CoreData
-                        self.RouteArray = CoreDataHandler().fetchRoute()
-                        
-                        // Save new routes if CoreData is empty
-                        if self.RouteArray.count == 0 {
-                            self.callSaveMethod(arraRoute)
-                        }
-                        
-                        // Proceed to the next service call
-                        self.callCocoiiProgramService()
-                    } else {
-                        // Handle case when the route list is empty
-                        print("Route list is empty.")
-                        self.callCocoiiProgramService()
-                    }
+                    self?.processRouteArray(jsonResponse)
                 }
        })
  
@@ -830,6 +791,41 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             self.failWithInternetConnection()
         }
     }
+    
+    
+    private func processRouteArray(_ json: JSON) {
+        guard let arr = json.array, !arr.isEmpty else {
+            print("Route list is empty.")
+            self.callCocoiiProgramService()
+            return
+        }
+
+        let arraRoute = NSMutableArray()
+
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print("Invalid route data format: \(item)")
+                continue
+            }
+
+            let routeData = NSMutableDictionary()
+            routeData.setValue(tempDict["RouteName"] as? String ?? "", forKey: "RouteName")
+            routeData.setValue(tempDict["RouteId"] as? Int ?? -1, forKey: "RouteId")
+            routeData.setValue(tempDict["LanguageId"] as? Int ?? -1, forKey: "LanguageId")
+
+            arraRoute.add(routeData)
+        }
+
+        self.RouteArray = CoreDataHandler().fetchRoute()
+
+        if self.RouteArray.count == 0 {
+            self.callSaveMethod(arraRoute)
+        }
+
+        self.callCocoiiProgramService()
+    }
+
+    
     
     // MARK: 🟠 Save Route Name & ID
     func callSaveMethod( _ routeArr : NSArray) {
@@ -861,52 +857,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        var customerArray: [NSDictionary] = []
-                        
-                        // Parse each item in the array
-                        for item in arr {
-                            if let tempDict = item.dictionary {
-                                let customerName = tempDict["CustomerName"]?.string ?? "Unknown"
-                                let customerId = tempDict["CustomerId"]?.int ?? -1
-                                
-                                // Create a dictionary for the customer
-                                let dictData: NSDictionary = [
-                                    "CustomerName": customerName,
-                                    "CustomerId": customerId
-                                ]
-                                
-                                customerArray.append(dictData)
-                            } else {
-                                print("Invalid data format for item: \(item)")
-                            }
-                        }
-                        
-                        CoreDataHandler().deleteAllData("Custmer")
-                        self.callSaveMethodforCustomer(customerArray as NSArray)
-                        self.complexService()
-                    } else {
-                        // Handle case when the route list is empty
-                        print("Customer's list is empty.")
-                        self.complexService()
-                    }
+                    self?.processCustomerArray(jsonResponse)
                 }
             })
         } else{
@@ -917,6 +872,39 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             }
         }
     }
+    
+    private func processCustomerArray(_ json: JSON) {
+        guard let arr = json.array, !arr.isEmpty else {
+            print("Customer's list is empty.")
+            self.complexService()
+            return
+        }
+
+        var customerArray: [NSDictionary] = []
+
+        for item in arr {
+            guard let tempDict = item.dictionary else {
+                print("Invalid data format for item: \(item)")
+                continue
+            }
+
+            let customerName = tempDict["CustomerName"]?.string ?? "Unknown"
+            let customerId = tempDict["CustomerId"]?.int ?? -1
+
+            let dictData: NSDictionary = [
+                "CustomerName": customerName,
+                "CustomerId": customerId
+            ]
+
+            customerArray.append(dictData)
+        }
+
+        CoreDataHandler().deleteAllData("Custmer")
+        self.callSaveMethodforCustomer(customerArray as NSArray)
+        self.complexService()
+    }
+
+    
     
     // MARK: 🟠 Save Customer's name
     func callSaveMethodforCustomer( _ custmorArr : NSArray) {
@@ -942,39 +930,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     }
                     
                     DispatchQueue.main.async {
-                        guard let self = self else { return }
-                        // Check for an error message in the JSON response
-                        if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                            print("Error from API: \(errorMessage)")
-                            self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                            return
-                        }
-                        
-                        // Parse the array from the JSON response
-                        if let arr = JSON(json).array, !arr.isEmpty {
-                            // Initialize the array to store sales representative data
-                            self.arraSalesRep = NSMutableArray()
-                            
-                            // Iterate through the array and populate `arraSalesRep`
-                            for item in arr {
-                                if let tempDict = item.dictionaryObject {
-                                    let dictDat = NSMutableDictionary()
-                                    dictDat.setValue(tempDict["SalesRepresentativeName"] as? String, forKey: "SalesRepresentativeName")
-                                    dictDat.setValue(tempDict["SalesRepresentativeId"] as? Int, forKey: "SalesRepresentativeId")
-                                    self.arraSalesRep.add(dictDat)
-                                } else {
-                                    print("Invalid data format in Sales Representative array: \(item)")
-                                }
-                            }
-                            
-                            CoreDataHandler().deleteAllData("Salesrep")
-                            self.callSaveMethodforSalesRep(self.arraSalesRep)
-                            self.callAddVaccination()
-                        } else {
-                            // Handle the case where the array is empty or nil
-                            print("No data received for Sales Representatives.")
-                            self.callAddVaccination()
-                        }
+                        self?.handleSalesRepresentative(json)
                     }
                     
                 })
@@ -986,6 +942,42 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 self.callSaveMethodforSalesRep(self.arraSalesRep)
             }
             self.failWithInternetConnection()
+        }
+    }
+    
+    func handleSalesRepresentative(_ json: JSON)
+    {
+        // Check for an error message in the JSON response
+        if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+        
+        // Parse the array from the JSON response
+        if let arr = JSON(json).array, !arr.isEmpty {
+            // Initialize the array to store sales representative data
+            self.arraSalesRep = NSMutableArray()
+            
+            // Iterate through the array and populate `arraSalesRep`
+            for item in arr {
+                if let tempDict = item.dictionaryObject {
+                    let dictDat = NSMutableDictionary()
+                    dictDat.setValue(tempDict["SalesRepresentativeName"] as? String, forKey: "SalesRepresentativeName")
+                    dictDat.setValue(tempDict["SalesRepresentativeId"] as? Int, forKey: "SalesRepresentativeId")
+                    self.arraSalesRep.add(dictDat)
+                } else {
+                    print("Invalid data format in Sales Representative array: \(item)")
+                }
+            }
+            
+            CoreDataHandler().deleteAllData("Salesrep")
+            self.callSaveMethodforSalesRep(self.arraSalesRep)
+            self.callAddVaccination()
+        } else {
+            // Handle the case where the array is empty or nil
+            print("No data received for Sales Representatives.")
+            self.callAddVaccination()
         }
     }
     
@@ -1018,54 +1010,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Cocci Program list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        let cocoiiProgramArray = NSMutableArray()
-                        CoreDataHandler().deleteAllData("CocciProgramPosting")
-                        //
-                        // Parse each item in the array
-                        for item in arr {
-                            guard let tempDict = item.dictionaryObject else {
-                                print(self.invalidItemStructureStr)
-                                continue
-                            }
-                            
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["CocciProgramName"] as? String, forKey: "CocciProgramName")
-                            dictData.setValue(tempDict["CocciProgramId"] as? Int, forKey: "CocciProgramId")
-                            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
-                            cocoiiProgramArray.add(dictData)
-                        }
-                        
-                        // Fetch existing data from Core Data
-                        self.cocoiiProgramArr = CoreDataHandler().fetchCocoiiProgram()
-                        
-                        if(self.cocoiiProgramArr.count == 0){
-                            self.callSaveMethodforCocoiiProgram(cocoiiProgramArray)
-                        }
-                        self.callSessionTypeService()
-                    } else {
-                        // Handle the case when the array is empty
-                        print("Cocci Program list is empty.")
-                        self.callSessionTypeService()
-                    }
+                    self?.processCocoiiProgram(json)
                 }
                 
                 
@@ -1076,6 +1025,46 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         }
         
     }
+    
+    private func processCocoiiProgram(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Cocci Program list: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print("Cocci Program list is empty.")
+            self.callSessionTypeService()
+            return
+        }
+
+        let cocoiiProgramArray = NSMutableArray()
+        CoreDataHandler().deleteAllData("CocciProgramPosting")
+
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print(self.invalidItemStructureStr)
+                continue
+            }
+
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["CocciProgramName"] as? String, forKey: "CocciProgramName")
+            dictData.setValue(tempDict["CocciProgramId"] as? Int, forKey: "CocciProgramId")
+            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
+            cocoiiProgramArray.add(dictData)
+        }
+
+        self.cocoiiProgramArr = CoreDataHandler().fetchCocoiiProgram()
+        if self.cocoiiProgramArr.count == 0 {
+            self.callSaveMethodforCocoiiProgram(cocoiiProgramArray)
+        }
+
+        self.callSessionTypeService()
+    }
+
+    
     // MARK: 🟠 Save Coccidiosis Program
     func callSaveMethodforCocoiiProgram( _ cocoiArr : NSArray) {
         
@@ -1105,52 +1094,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        let arraSessionType = NSMutableArray ()
-                        
-                        CoreDataHandler().deleteAllData("Sessiontype")
-                        for item in arr {
-                            guard let tempDict = item.dictionaryObject else {
-                                print(self.invalidItemStructureStr)
-                                continue
-                            }
-                            
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["SessionTypeName"] as? String, forKey: "SessionTypeName")
-                            dictData.setValue(tempDict["SessionTypeId"] as? Int, forKey: "SessionTypeId")
-                            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
-                            arraSessionType.add(dictData)
-                        }
-                        
-                        self.sessiontypeArr = CoreDataHandler().fetchSessiontype()
-                        if(self.cocoiiProgramArr.count == 0){
-                            self.callSaveMethodforSessiontype(arraSessionType)
-                        }
-                        self.callBirdTypeService()
-                        
-                    }
-                    else
-                    {
-                        self.callBirdTypeService()
-                    }
+                    self?.processSessionTypeResponse(json)
                     
                 }
                 
@@ -1160,6 +1108,46 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             self.failWithInternetConnection()
         }
     }
+    
+    private func processSessionTypeResponse(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Session Type list: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print("Session Type list is empty.")
+            self.callBirdTypeService()
+            return
+        }
+
+        let sessionTypeArray = NSMutableArray()
+        CoreDataHandler().deleteAllData("Sessiontype")
+
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print(self.invalidItemStructureStr)
+                continue
+            }
+
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["SessionTypeName"] as? String, forKey: "SessionTypeName")
+            dictData.setValue(tempDict["SessionTypeId"] as? Int, forKey: "SessionTypeId")
+            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
+            sessionTypeArray.add(dictData)
+        }
+
+        self.sessiontypeArr = CoreDataHandler().fetchSessiontype()
+        if self.sessiontypeArr.count == 0 {
+            self.callSaveMethodforSessiontype(sessionTypeArray)
+        }
+
+        self.callBirdTypeService()
+    }
+
+    
     // MARK: 🟠 Save Session type
     func callSaveMethodforSessiontype( _ seessionTypeArr : NSArray) {
         
@@ -1190,50 +1178,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Bird Size list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        let arraBirdSize = NSMutableArray()
-                        CoreDataHandler().deleteAllData("BirdSizePosting")
-                        for item in arr {
-                            guard let tempDict = item.dictionaryObject else {
-                                print(self.invalidItemStructureStr)
-                                continue
-                            }
-                            
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["BirdSize"] as? String, forKey: "BirdSize")
-                            dictData.setValue(tempDict["BirdSizeId"] as? Int, forKey: "BirdSizeId")
-                            dictData.setValue(tempDict["ScaleType"] as? String, forKey: "ScaleType")
-                            arraBirdSize.add(dictData)
-                        }
-                        
-                        self.birdSizeArr = CoreDataHandler().fetchBirdSize()
-                        if(self.birdSizeArr.count == 0){
-                            self.callSaveMethodforBirdSize(arraBirdSize)
-                        }
-                        self.callBreedService()
-                    } else {
-                        // Handle the case when the array is empty
-                        print("Bird Size list is empty.")
-                        self.callBreedService()
-                    }
+                    self?.processBirdSizeResponse(json)
                 }
                 
             })
@@ -1242,6 +1191,68 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             print(appDelegateObj.testFuntion())
         }
     }
+    
+    
+    private func processBirdSizeResponse(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Bird Size list: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print("Bird Size list is empty.")
+            self.callBreedService()
+            return
+        }
+
+        let birdSizeArray = buildBirdSizeArray(from: arr)
+
+        self.birdSizeArr = CoreDataHandler().fetchBirdSize()
+        if self.birdSizeArr.count == 0 {
+            self.callSaveMethodforBirdSize(birdSizeArray)
+        }
+
+        self.callBreedService()
+    }
+
+    private func buildBirdSizeArray(from array: [JSON]) -> NSMutableArray {
+        let result = NSMutableArray()
+        CoreDataHandler().deleteAllData("BirdSizePosting")
+
+        for item in array {
+            guard let tempDict = item.dictionaryObject else {
+                print(self.invalidItemStructureStr)
+                continue
+            }
+
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["BirdSize"] as? String, forKey: "BirdSize")
+            dictData.setValue(tempDict["BirdSizeId"] as? Int, forKey: "BirdSizeId")
+            dictData.setValue(tempDict["ScaleType"] as? String, forKey: "ScaleType")
+            result.add(dictData)
+        }
+
+        return result
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // MARK: 🟠 Save Bird Size
     func callSaveMethodforBirdSize( _ birdSizeTypeArr : NSArray) {
         
@@ -1266,42 +1277,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 }
                 
                 DispatchQueue.main.async {
-                    guard let self = self else { return }
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Check if the response contains an array
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        // Initialize the `complexSize` array
-                        let arraBreedType = NSMutableArray()
-                        
-                        // Parse the array and populate `complexSize`
-                        for item in arr {
-                            if let tempDict = item.dictionaryObject {
-                                let dictData = NSMutableDictionary()
-                                dictData.setValue(tempDict["BirdBreedType"] as? String, forKey: "BirdBreedType")
-                                dictData.setValue(tempDict["BirdBreedName"] as? String, forKey: "BirdBreedName")
-                                dictData.setValue(tempDict["BirdBreedId"] as? Int, forKey: "BirdBreedId")
-                                dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
-                                arraBreedType.add(dictData)
-                            } else {
-                                print("Invalid data format in array: \(item)")
-                            }
-                        }
-                        self.breedArr = CoreDataHandler().fetchBreedType()
-                        
-                        if(self.breedArr.count == 0){
-                            self.callSaveMethodforBreedType(arraBreedType)
-                        }
-                        self.FeedProgramMoleculeService()
-                    } else {
-                        // Handle the case where the array is empty or nil
-                        print(Constants.noDataReceivedStr)
-                        self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
-                    }
+                    self?.processBreedResponse(json)
                 }
                 
             })
@@ -1310,6 +1286,51 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             print(appDelegateObj.testFuntion())
         }
     }
+    
+    private func processBreedResponse(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print(Constants.noDataReceivedStr)
+            self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
+            return
+        }
+
+        let breedArray = buildBreedArray(from: arr)
+
+        self.breedArr = CoreDataHandler().fetchBreedType()
+        if self.breedArr.count == 0 {
+            self.callSaveMethodforBreedType(breedArray)
+        }
+
+        self.FeedProgramMoleculeService()
+    }
+
+    private func buildBreedArray(from array: [JSON]) -> NSMutableArray {
+        let result = NSMutableArray()
+
+        for item in array {
+            guard let tempDict = item.dictionaryObject else {
+                print("Invalid data format in array: \(item)")
+                continue
+            }
+
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["BirdBreedType"] as? String, forKey: "BirdBreedType")
+            dictData.setValue(tempDict["BirdBreedName"] as? String, forKey: "BirdBreedName")
+            dictData.setValue(tempDict["BirdBreedId"] as? Int, forKey: "BirdBreedId")
+            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "LanguageId")
+            result.add(dictData)
+        }
+
+        return result
+    }
+
     // MARK: 🟠 Save Breed type
     func callSaveMethodforBreedType( _ breedTypeArr : NSArray) {
         
@@ -1410,10 +1431,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
@@ -1457,6 +1475,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             self.failWithInternetConnection()
         }
     }
+    
+
     /*
     func FeedProgramMoleculeService() {
         
@@ -1520,55 +1540,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                              let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                              let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                              
-                             print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                             if errorCode == "401" || errorCode == "404"{
-                                 self!.loginMethod()
-                             }
+                             self?.callLoginMethod(errorCode)
                          }
                          
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Cocci Vaccine list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-
-                    // Parse the array from JSON response
-                    guard let arr = JSON(json).array, !arr.isEmpty else {
-                        self.callTargetWeightProcessing()
-                        return
-                    }
-
-                    // Delete existing data
-                    CoreDataHandler().deleteAllData("CocoiVaccine")
-
-                    // Process data safely
-                    let cocciProgramArray = NSMutableArray()
-                    
-                    for item in arr {
-                        guard let tempDict = item.dictionary else {
-                            print("Invalid data format in array: \(item)")
-                            continue
-                        }
-                        
-                        if let CocciVaccineId = tempDict["CocciVaccineId"]?.int,
-                           let CocciVaccineName = tempDict["CocciVaccineName"]?.string,
-                           let LanguageId = tempDict["LanguageId"]?.int {
-                            CoreDataHandler().saveCocoiiVac(CocciVaccineId, decscMolecule: CocciVaccineName, lngId: LanguageId)
-                        } else {
-                            print("Missing required fields in JSON item: \(tempDict)")
-                        }
-                    }
-                    
-                    // Store data in UserDefaults
-                    UserDefaults.standard.set(self.cocciVaccine, forKey: "cocci")
-                    
-                    // Proceed with next API call
-                    self.callTargetWeightProcessing()
+                    self?.processCocciVaccineResponse(json)
                 }
 
          })
@@ -1577,6 +1553,42 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             self.failWithInternetConnection()
         }
     }
+    
+    private func processCocciVaccineResponse(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Cocci Vaccine list: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            self.callTargetWeightProcessing()
+            return
+        }
+
+        CoreDataHandler().deleteAllData("CocoiVaccine")
+
+        for item in arr {
+            guard let dict = item.dictionary else {
+                print("Invalid data format in array: \(item)")
+                continue
+            }
+
+            if let id = dict["CocciVaccineId"]?.int,
+               let name = dict["CocciVaccineName"]?.string,
+               let langId = dict["LanguageId"]?.int {
+                CoreDataHandler().saveCocoiiVac(id, decscMolecule: name, lngId: langId)
+            } else {
+                print("Missing required fields in JSON item: \(dict)")
+            }
+        }
+
+        UserDefaults.standard.set(self.cocciVaccine, forKey: "cocci")
+        self.callTargetWeightProcessing()
+    }
+
+    
     
     // MARK: 🟢 Get Target Weight Processing List
     func callTargetWeightProcessing() {
@@ -1596,45 +1608,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Target Weight Processing List API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async {
-                    guard let self = self else { return }
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    if let dataArray = JSON(json).array, !dataArray.isEmpty {
-                        self.targetWeight = NSMutableArray()
-
-                           for item in dataArray {
-                               guard let dictionary = item.dictionaryObject else {
-                                   print("Invalid data format in array: \(item)")
-                                   continue
-                               }
-                               self.targetWeight.add(dictionary)
-                           }
-
-                           // Store in UserDefaults
-                        UserDefaults.standard.set(self.targetWeight, forKey: "target")
-
-                           // Assign to instance variable
-                        self.targetWeight = self.targetWeight
-
-                           // Proceed to next API call
-                           self.getListFarms()
-                       } else {
-                           // Handle empty response
-                           print(Constants.noDataReceivedStr)
-                           self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
-                           self.getListFarms()
-                       }
+                    self?.processTargetWeightResponse(json)
                 }
 
                 
@@ -1644,6 +1622,43 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             self.failWithInternetConnection()
         }
     }
+    
+    private func processTargetWeightResponse(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let dataArray = JSON(json).array, !dataArray.isEmpty else {
+            print(Constants.noDataReceivedStr)
+            self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
+            self.getListFarms()
+            return
+        }
+
+        let targetWeightArray = NSMutableArray()
+
+        for item in dataArray {
+            guard let dictionary = item.dictionaryObject else {
+                print("Invalid data format in array: \(item)")
+                continue
+            }
+            targetWeightArray.add(dictionary)
+        }
+
+        // Store in UserDefaults
+        UserDefaults.standard.set(targetWeightArray, forKey: "target")
+
+        // Assign to instance variable
+        self.targetWeight = targetWeightArray
+
+        // Proceed to next API call
+        self.getListFarms()
+    }
+
+    
     
     // MARK: 🟢 Get Complex's List  ✅  Zoetis Call
     func complexService() {
@@ -1657,42 +1672,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     }
                     
                     DispatchQueue.main.async {
-                        guard let self = self else { return }
-                        if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                            print("Error from API: \(errorMessage)")
-                            self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                            return
-                        }
-                        
-                        // Check if the response contains an array
-                        if let arr = JSON(json).array, !arr.isEmpty {
-                            // Delete old data and save new data
-                            CoreDataHandler().deleteAllData("ComplexPosting")
-                            self.complexSize = NSMutableArray()
-                            
-                            // Parse the array and populate `complexSize`
-                            for item in arr {
-                                if let tempDict = item.dictionaryObject {
-                                    let dictData = NSMutableDictionary()
-                                    dictData.setValue(tempDict["CustomerId"] as? Int, forKey: "CustomerId")
-                                    dictData.setValue(tempDict["ComplexName"] as? String, forKey: "ComplexName")
-                                    dictData.setValue(tempDict["ComplexId"] as? Int, forKey: "ComplexId")
-                                    self.complexSize.add(dictData)
-                                } else {
-                                    print("Invalid data format in array: \(item)")
-                                }
-                            }
-                           
-                            self.callcomplexService(self.complexSize)
-                            self.callSalesRepWebService()
-                            
-                        } else {
-                            // Handle the case where the array is empty or nil
-                            print(Constants.noDataReceivedStr)
-                            self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
-                            self.callSalesRepWebService()
-                        }
-                    }
+                        self?.processComplexArray(json)                    }
                 })
         } else {
             self.complexArr = CoreDataHandler().fetchCompexType()
@@ -1702,6 +1682,38 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             self.failWithInternetConnection()
         }
     }
+    
+    
+    private func processComplexArray(_ json: Any) {
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print(Constants.noDataReceivedStr)
+            self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
+            self.callSalesRepWebService()
+            return
+        }
+
+        CoreDataHandler().deleteAllData("ComplexPosting")
+        self.complexSize = NSMutableArray()
+
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print("Invalid data format in array: \(item)")
+                continue
+            }
+
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["CustomerId"] as? Int, forKey: "CustomerId")
+            dictData.setValue(tempDict["ComplexName"] as? String, forKey: "ComplexName")
+            dictData.setValue(tempDict["ComplexId"] as? Int, forKey: "ComplexId")
+
+            self.complexSize.add(dictData)
+        }
+
+        self.callcomplexService(self.complexSize)
+        self.callSalesRepWebService()
+    }
+
+    
     
     // MARK: 🟠 Save Complex Name
     func callcomplexService( _ complexArrrr : NSArray) {
@@ -1732,47 +1744,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Veterinarian List list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        self.arraVetType = NSMutableArray()
-                        CoreDataHandler().deleteAllData("Veteration")
-                        for item in arr {
-                            guard let tempDict = item.dictionaryObject else {
-                                print(self.invalidItemStructureStr)
-                                continue
-                            }
-                            
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["VeterinarianName"] as? String, forKey: "VeterinarianName")
-                            dictData.setValue(tempDict["VeterinarianId"] as? Int, forKey: "VeterinarianId")
-                            
-                            arraVetType.add(dictData)
-                        }
-                        
-                        self.callSaveMethodforeterian(self.arraVetType)
-                        self.callhatcheryStrain()
-                    } else {
-                        // Handle the case when the array is empty
-                        print("Veterinarian Listt is empty.")
-                        self.callhatcheryStrain()
-                    }
+                    self?.processVeterinarianArray(json)
                 }
                 
             })
@@ -1787,6 +1763,42 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             
         }
     }
+    
+    private func processVeterinarianArray(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Veterinarian List: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print("Veterinarian List is empty.")
+            self.callhatcheryStrain()
+            return
+        }
+
+        self.arraVetType = NSMutableArray()
+        CoreDataHandler().deleteAllData("Veteration")
+
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print(self.invalidItemStructureStr)
+                continue
+            }
+
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["VeterinarianName"] as? String, forKey: "VeterinarianName")
+            dictData.setValue(tempDict["VeterinarianId"] as? Int, forKey: "VeterinarianId")
+
+            arraVetType.add(dictData)
+        }
+
+        self.callSaveMethodforeterian(self.arraVetType)
+        self.callhatcheryStrain()
+    }
+
+    
     // MARK: 🟢 Get Hatchery Strain List from server
     func callhatcheryStrain() {
         
@@ -1806,52 +1818,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        // Clear existing data in Core Data
-                        CoreDataHandler().deleteAllData("HatcheryStrain")
-                        
-                        // Process each item in the array
-                        for item in arr {
-                            if let strainDict = item.dictionary {
-                                // Safely unwrap and parse the keys
-                                let strainId = strainDict["StrainId"]?.int ?? -1
-                                let strainName = strainDict["StrainName"]?.string ?? "Unknown"
-                                let langID = strainDict["LanguageId"]?.int ?? -1
-                                
-                                // Save the parsed data to Core Data
-                                CoreDataHandler().SaveStrainDataDatabase(strainName, StrainId: strainId, lngId: langID)
-                            } else {
-                                print("Invalid data format for HatcheryStrain: \(item)")
-                            }
-                        }
-                        
-                        // Call the next service after processing
-                        self.callGetFieldStrain()
-                    } else {
-                        // Handle the case where the array is empty
-                        print("Hatchery strain list is empty.")
-                        self.showToastWithTimer(message: "No hatchery strain data found on the server.", duration: 3.0)
-                        
-                        // Call the next service
-                        self.callGetFieldStrain()
-                    }
+                    self?.processHatcheryStrainArray(json)
                 }
             })
 
@@ -1859,6 +1830,42 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             self.failWithInternetConnection()
         }
     }
+    
+    
+    private func processHatcheryStrainArray(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Hatchery Strain list: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print("Hatchery strain list is empty.")
+            self.showToastWithTimer(message: "No hatchery strain data found on the server.", duration: 3.0)
+            self.callGetFieldStrain()
+            return
+        }
+
+        CoreDataHandler().deleteAllData("HatcheryStrain")
+
+        for item in arr {
+            if let strainDict = item.dictionary {
+                let strainId = strainDict["StrainId"]?.int ?? -1
+                let strainName = strainDict["StrainName"]?.string ?? "Unknown"
+                let langID = strainDict["LanguageId"]?.int ?? -1
+
+                CoreDataHandler().SaveStrainDataDatabase(strainName, StrainId: strainId, lngId: langID)
+            } else {
+                print("Invalid data format for HatcheryStrain: \(item)")
+            }
+        }
+
+        self.callGetFieldStrain()
+    }
+
+    
+    
     // MARK: 🟢 Get Field Strain List from server
     func callGetFieldStrain() {
         
@@ -1878,53 +1885,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        // Clear existing data in Core Data
-                        CoreDataHandler().deleteAllData("GetFieldStrain")
-                        
-                        // Process each item in the array
-                        for item in arr {
-                            if let strainDict = item.dictionary {
-                                // Safely unwrap and parse the keys
-                                let strainId = strainDict["StrainId"]?.int ?? -1
-                                let strainName = strainDict["StrainName"]?.string ?? "Unknown"
-                                let langID = strainDict["LanguageId"]?.int ?? -1
-                                
-                                // Save the parsed data to Core Data
-                                CoreDataHandler().SaveStrainDataDatabaseField(strainName, StrainId: strainId, lngId: langID)
-                                
-                            } else {
-                                print("Invalid data format for Field Strain: \(item)")
-                            }
-                        }
-                        
-                        // Call the next service after processing
-                        self.callGetDosage()
-                    } else {
-                        // Handle the case where the array is empty
-                        print("Field Strain list is empty.")
-                        self.showToastWithTimer(message: "No field strain data found on the server.", duration: 3.0)
-                        
-                        // Call the next service
-                        self.callGetDosage()
-                    }
+                    self?.processFieldStrainArray(json)
                 }
                 
             })
@@ -1933,6 +1898,39 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             
         }
     }
+    
+    private func processFieldStrainArray(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Field Strain list: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print("Field Strain list is empty.")
+            self.showToastWithTimer(message: "No field strain data found on the server.", duration: 3.0)
+            self.callGetDosage()
+            return
+        }
+
+        CoreDataHandler().deleteAllData("GetFieldStrain")
+
+        for item in arr {
+            if let strainDict = item.dictionary {
+                let strainId = strainDict["StrainId"]?.int ?? -1
+                let strainName = strainDict["StrainName"]?.string ?? "Unknown"
+                let langID = strainDict["LanguageId"]?.int ?? -1
+                CoreDataHandler().SaveStrainDataDatabaseField(strainName, StrainId: strainId, lngId: langID)
+            } else {
+                print("Invalid data format for Field Strain: \(item)")
+            }
+        }
+
+        self.callGetDosage()
+    }
+
+    
     // MARK: 🟢 Get Dossage List from server
     func callGetDosage() {
         
@@ -1952,51 +1950,12 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        // Clear existing data in Core Data
-                        CoreDataHandler().deleteAllData("GetDosage")
-                        
-                        // Process each item in the array
-                        for item in arr {
-                            if let strainDict = item.dictionary {
-                                // Safely unwrap and parse the keys
-                                let doseId = strainDict["DoseId"]?.int ?? -1
-                                let dosename = strainDict["Dose"]?.string ?? "Unknown"
-                                
-                                // Save the parsed data to Core Data
-                                CoreDataHandler().SaveDosageDataDatabaseField(dosename, doseId: doseId)
-                            } else {
-                                print("Invalid data format for Get Dosage: \(item)")
-                            }
-                        }
-                        
-                        // Call the next service after processing
-                        self.getProductionType()
-                    } else {
-                        // Handle the case where the array is empty
-                        print("Get Dosage list is empty.")
-                        self.showToastWithTimer(message: "No data available from the server.", duration: 3.0)
-                        
-                        // Call the next service
-                        self.getProductionType()
-                    }
+                   
+                    self?.DosageArrayProcessed(json)
                 }
             })
 
@@ -2004,6 +1963,39 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             print(appDelegateObj.testFuntion())
         }
     }
+    
+    private func DosageArrayProcessed(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Route list: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print("Get Dosage list is empty.")
+            self.showToastWithTimer(message: "No data available from the server.", duration: 3.0)
+            self.getProductionType()
+            return
+        }
+
+        CoreDataHandler().deleteAllData("GetDosage")
+
+        for item in arr {
+            if let strainDict = item.dictionary {
+                let doseId = strainDict["DoseId"]?.int ?? -1
+                let doseName = strainDict["Dose"]?.string ?? "Unknown"
+                CoreDataHandler().SaveDosageDataDatabaseField(doseName, doseId: doseId)
+            } else {
+                print("Invalid data format for Get Dosage: \(item)")
+            }
+        }
+
+        self.getProductionType()
+    }
+
+    
+    
     // MARK: 🟢 Get Dossage List with Molecule ID from server
     func callGetDosageWithMoleculeId() {
         
@@ -2022,44 +2014,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API  Dossage List with Molecule ID list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        // Clear existing data in Core Data
-                        CoreDataHandler().deleteAllData("GetDosageWithMoleculeID")
-                        
-                        // Process each item in the array
-                        for item in arr {
-                            if let strainDict = item.dictionary {
-                                let doseId = strainDict["DoseId"]?.int ?? -1
-                                let dosename = strainDict["Dose"]?.string ?? "Unknown"
-                                let moleculeId = strainDict["MoleculeId"]?.int ?? -1
-                                CoreDataHandler().SaveDosageDataWithMoleculeIDDatabaseField(dosename, doseId: doseId, molecukeId: moleculeId)
-                            } else {
-                                print("Invalid data format for Dossage List with Molecule ID: \(item)")
-                            }
-                        }
-                        self.getProductionType()
-                    }
-                    
-                    else {
-                        self.getProductionType()
-                    }
+                    self?.processDosageArray(json)
                 }
             })
            
@@ -2067,7 +2026,43 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             print(appDelegateObj.testFuntion())
         }
     }
+    
+    private func processDosageArray(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Dosage List with Molecule ID: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            self.getProductionType()
+            return
+        }
+
+        CoreDataHandler().deleteAllData("GetDosageWithMoleculeID")
+
+        for item in arr {
+            if let strainDict = item.dictionary {
+                let doseId = strainDict["DoseId"]?.int ?? -1
+                let doseName = strainDict["Dose"]?.string ?? "Unknown"
+                let moleculeId = strainDict["MoleculeId"]?.int ?? -1
+                CoreDataHandler().SaveDosageDataWithMoleculeIDDatabaseField(doseName, doseId: doseId, molecukeId: moleculeId)
+            } else {
+                print("Invalid data format for Dosage List with Molecule ID: \(item)")
+            }
+        }
+
+        self.getProductionType()
+    }
+    
     // MARK: 🟢  ZoetisWebServices Get production type List from server
+    fileprivate func callLoginMethod(_ errorCode: String?) {
+        if errorCode == "401" || errorCode == "404"{
+            self.loginMethod()
+        }
+    }
+    
     func getProductionType() {
         if WebClass.sharedInstance.connected() {
       
@@ -2085,50 +2080,11 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                      
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                   
+                    self?.callLoginMethod(errorCode)
                 }
                 
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Production Type list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        CoreDataHandler().deleteAllData("ProductionType")
-                        self.prodType = NSMutableArray ()
-                        
-                        for item in arr {
-                            guard let tempDict = item.dictionaryObject else {
-                                print(self.invalidItemStructureStr)
-                                continue
-                            }
-                            let dictData = NSMutableDictionary()
-                            dictData.setValue(tempDict["Name"] as? String, forKey: "productionName")
-                            dictData.setValue(tempDict["Id"] as? Int, forKey: "productionId")
-                            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "langID")
-                            
-                            prodType.add(dictData)
-                        }
-                        
-                        self.callProductionType(self.prodType)
-                        // Dismiss HUD
-                        Helper.dismissGlobalHUD(self.view)
-                    }
-                    else
-                    {
-                        Helper.dismissGlobalHUD(self.view)
-                    }
-                }
+                self?.handleProductionTypeResponse(json)
             })
      
         } else{
@@ -2140,6 +2096,61 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             self.failWithInternetConnection()
         }
     }
+    
+    private func processProductionTypeData(_ json: Any) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API Production Type list: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            Helper.dismissGlobalHUD(self.view)
+            return
+        }
+        
+        CoreDataHandler().deleteAllData("ProductionType")
+        self.prodType = NSMutableArray()
+        
+        for item in arr {
+            guard let tempDict = item.dictionaryObject else {
+                print(self.invalidItemStructureStr)
+                continue
+            }
+            let dictData = NSMutableDictionary()
+            dictData.setValue(tempDict["Name"] as? String, forKey: "productionName")
+            dictData.setValue(tempDict["Id"] as? Int, forKey: "productionId")
+            dictData.setValue(tempDict["LanguageId"] as? Int, forKey: "langID")
+            self.prodType.add(dictData)
+        }
+        
+        self.callProductionType(self.prodType)
+        Helper.dismissGlobalHUD(self.view)
+    }
+
+    
+    private func handleProductionTypeResponse(_ json: Any) {
+        let jsonResponse = JSON(json)
+        
+        if let errorResult = jsonResponse["errorResult"].dictionary {
+            let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
+            let errorCode = errorResult["errorCode"]?.string ?? self.unknownCodeStr
+            print("Error from ProductionType API: \(errorMsg) (Code: \(errorCode))")
+            self.callLoginMethod(errorCode)
+            return
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.processProductionTypeData(json)
+        }
+    }
+
+    
+    
+    
+    
     
     // MARK: 🟠 Save Production type data
     func callProductionType( _ productionTypArrrr : NSArray) {
@@ -2197,6 +2208,21 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     
     // MARK: 🟢 ******************************* Get FarmList From Server ************************************* //
     
+    fileprivate func handleFarmListName(_ value: Any) {
+        if let arr = value as? [[String: Any]] {
+            let formArray = arr.map { tempDict in
+                [
+                    "CountryId": tempDict["CountryId"] as? Int ?? 0,
+                    "FarmId": tempDict["FarmId"] as? Int ?? 0,
+                    "FarmName": tempDict["FarmName"] as? String ?? ""
+                ]
+            }
+            
+            CoreDataHandler().deleteAllData("FarmsList")
+            self.callSaveMethodgetListFarms(formArray as NSArray)
+        }
+    }
+    
     func getListFarms() {
         
         if WebClass.sharedInstance.connected() {
@@ -2231,18 +2257,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     switch response.result {
                     case let .success(value):
                         
-                        if let arr = value as? [[String: Any]] {
-                            let formArray = arr.map { tempDict in
-                                [
-                                    "CountryId": tempDict["CountryId"] as? Int ?? 0,
-                                    "FarmId": tempDict["FarmId"] as? Int ?? 0,
-                                    "FarmName": tempDict["FarmName"] as? String ?? ""
-                                ]
-                            }
-                            
-                            CoreDataHandler().deleteAllData("FarmsList")
-                            self.callSaveMethodgetListFarms(formArray as NSArray)
-                        }
+                        self.handleFarmListName(value)
 
                         self.callVeterianService()
 

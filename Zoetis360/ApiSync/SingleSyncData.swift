@@ -1345,6 +1345,115 @@ class SingleSyncData: NSObject {
         }
     }
     // MARK: - /********************* Save User Setting   On Server ***************************/
+    fileprivate func handleskeletenArr(_ skeletenArr: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<skeletenArr.count {
+            let obsId = (skeletenArr.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (skeletenArr.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handlecocoii(_ cocoii: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<cocoii.count {
+            let obsId = (cocoii.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (cocoii.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handlegitract(_ gitract: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<gitract.count {
+            let obsId = (gitract.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (gitract.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quickLink, forKey: "visibilityCheck")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handleresp(_ resp: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<resp.count {
+            let obsId = (resp.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (resp.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (resp.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (resp.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handleimmu(_ immu: NSMutableArray, _ lngId: Int, _ arr1: NSMutableArray) {
+        for i in 0..<immu.count {
+            let obsId = (immu.object(at: i) as AnyObject).value(forKey: "observationId")
+            let visbility = (immu.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
+            let quickLink = (immu.object(at: i) as AnyObject).value(forKey: "quicklinks")
+            let quicklinkIndex = (immu.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
+            let Internaldict = NSMutableDictionary()
+            Internaldict.setValue(obsId, forKey: "ObservationId")
+            Internaldict.setValue(quickLink, forKey: "QuickLink")
+            Internaldict.setValue(visbility, forKey: "Visibility")
+            Internaldict.setValue(lngId, forKey: "LanguageId")
+            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
+            arr1.add(Internaldict)
+        }
+    }
+    
+    fileprivate func handleSaveAllSettings(_ response: AFDataResponse<Any>, _ statusCode: Int?) {
+        switch response.result {
+            
+        case .success(let responseObject):
+            print(responseObject)
+            
+            
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                // other failures
+                if let s = statusCode {
+                } else {
+                    self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleErrorCodes(_ statusCode: Int?) {
+        if statusCode == 401 {
+        } else if statusCode == 500 || statusCode == 503 || statusCode == 403 || statusCode == 501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408 {
+            self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
+        }
+    }
+    
     func saveDatOnServerAllSeting() {
         
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
@@ -1359,74 +1468,11 @@ class SingleSyncData: NSObject {
         let immu =  CoreDataHandler().fetchAllImmune().mutableCopy() as! NSMutableArray
         let skeletenArr =  CoreDataHandler().fetchAllSeettingdata().mutableCopy() as! NSMutableArray
         
-        for i in 0..<skeletenArr.count{
-            let obsId = (skeletenArr.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (skeletenArr.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        
-        for i in 0..<cocoii.count{
-            let obsId = (cocoii.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (cocoii.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        
-        for i in 0..<gitract.count{
-            let obsId = (gitract.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (gitract.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quickLink, forKey: "visibilityCheck")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        for i in 0..<resp.count{
-            let obsId = (resp.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (resp.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (resp.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (resp.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        for i in 0..<immu.count{
-            let obsId = (immu.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (immu.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (immu.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (immu.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
+        handleskeletenArr(skeletenArr, lngId, arr1)
+        handlecocoii(cocoii, lngId, arr1)
+        handlegitract(gitract, lngId, arr1)
+        handleresp(resp, lngId, arr1)
+        handleimmu(immu, lngId, arr1)
         
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
         
@@ -1450,41 +1496,15 @@ class SingleSyncData: NSObject {
             sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                 let statusCode =  response.response?.statusCode
                 
-                if statusCode == 401  {
-                }
-                else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                    self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
-                }
-                
-                switch response.result {
-                    
-                case .success(let responseObject):
-                    print(responseObject)
-                    
-                    
-                case .failure(let encodingError):
-                    
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        // other failures
-                        if let s = statusCode {
-                        }
-                        else
-                        {
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        }
-                    }
-                }
+                self.handleErrorCodes(statusCode)
+                self.handleSaveAllSettings(response, statusCode)
             }
         }
     }
     
-    
-    
     // MARK: -   /*************** Login Method call Again  ***************************************************/
     
-    func loginMethod(postingId:NSNumber){
+    func loginMethod(postingId:NSNumber) {
         
         if WebClass.sharedInstance.connected() {
             
@@ -1502,14 +1522,11 @@ class SingleSyncData: NSObject {
                 case let .success(value):
                     let statusCode = response.response?.statusCode
                     let dict : NSDictionary = value as! NSDictionary
-                    if statusCode == 400{
+                    if statusCode == 400 {
                         _ = dict["error_description"]
-                    }
-                    
-                    else if statusCode == 401{
+                    } else if statusCode == 401 {
                         _ = dict["error_description"]
-                    }
-                    else{
+                    } else {
                         let acessToken = (dict.value(forKey: "access_token") as? String)!
                         let tokenType = (dict.value(forKey: "token_type") as? String)!
                         let aceesTokentype: String = tokenType + " " + acessToken
@@ -1533,35 +1550,43 @@ class SingleSyncData: NSObject {
         }
     }
     // MARK: - Update Core Data
-    func updadateDataOnCoreData(pId: NSNumber, _ completion: (_ status: Bool) -> Void){
+    fileprivate func handleUpdateisSyncOnHetchary(_ success: Bool,pId: NSNumber, _ completion: (_ status: Bool) -> Void) {
+        if success == true {
+            CoreDataHandler().updateisSyncOnPostingSession(pId , isSync: false, { (success) in
+                if success == true {
+                    self.updadateNacDataOnCoreData(nId: pId, { (success) in
+                        if success == true {
+                            completion(success)
+                            self.delegeteSyncApiData.didFinishApiSyncdata()
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
+    fileprivate func handleUpdateSyncOnAntibiotic(_ success: Bool,pId: NSNumber, _ completion: (_ status: Bool) -> Void) {
+        if success == true {
+            CoreDataHandler().updateisSyncOnAllCocciControlviaPostingid(pId , isSync: false, { (success) in
+                if success == true {
+                    CoreDataHandler().updateisSyncOnHetcharyVacDataWithPostingId(pId , isSync: false, { (success) in
+                        handleUpdateisSyncOnHetchary(success,pId: pId) { (status) in
+                            completion(status)
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
+    func updadateDataOnCoreData(pId: NSNumber, _ completion: (_ status: Bool) -> Void) {
         CoreDataHandler().updateisSyncOnMyBindersViaPostingId(pId, isSync: false, { (success) in
             if success == true{
                 CoreDataHandler().updateisSyncOnAlternativeFeedPostingid(pId , isSync: false, { (success) in
-                    if success == true{
-                        
+                    if success == true {
                         CoreDataHandler().updateisSyncOnAntiboticViaPostingId(pId , isSync: false, { (success) in
-                            if success == true{
-                                
-                                CoreDataHandler().updateisSyncOnAllCocciControlviaPostingid(pId , isSync: false, { (success) in
-                                    if success == true{
-                                        
-                                        CoreDataHandler().updateisSyncOnHetcharyVacDataWithPostingId(pId , isSync: false, { (success) in
-                                            if success == true{
-                                                
-                                                CoreDataHandler().updateisSyncOnPostingSession(pId , isSync: false, { (success) in
-                                                    if success == true{
-                                                        self.updadateNacDataOnCoreData(nId: pId, { (success) in
-                                                            if success == true{
-                                                                completion(success)
-                                                                self.delegeteSyncApiData.didFinishApiSyncdata()
-                                                            }
-                                                        })
-                                                    }
-                                                })
-                                            }
-                                        })
-                                    }
-                                })
+                            handleUpdateSyncOnAntibiotic(success,pId: pId) { (status) in
+                                completion(status)
                             }
                         })
                     }
@@ -1571,28 +1596,38 @@ class SingleSyncData: NSObject {
     }
     
     // MARK: - Update Necropsy Data on Core DB
-    func updadateNacDataOnCoreData(nId: NSNumber, _ completion: (_ status: Bool) -> Void){
+    fileprivate func handleUpdateSyncOnBirdPhoto(_ success: Bool,nId: NSNumber, _ completion: (_ status: Bool) -> Void) {
+        if success == true {
+            CoreDataHandler().updateisSyncOnNotesBirdDatabase(nId , isSync: false, { (success) in
+                if success == true {
+                    completion(success)
+                }
+            })
+        }
+    }
+    
+    fileprivate func handleUpdateisSyncNecropsystep1neccId(_ success: Bool,nId: NSNumber, _ completion: (_ status: Bool) -> Void) {
+        if success == true {
+            
+            CoreDataHandler().updateisSyncOnCaptureInDatabase(nId , isSync: false, { (success) in
+                if success == true {
+                    CoreDataHandler().updateisSyncOnBirdPhotoCaptureDatabase(nId , isSync: false, { (success) in
+                        self.handleUpdateSyncOnBirdPhoto(success, nId: nId) { (status) in
+                            completion(status)
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
+    func updadateNacDataOnCoreData(nId: NSNumber, _ completion: (_ status: Bool) -> Void) {
         
         CoreDataHandler().updateisSyncOnCaptureSkeletaInDatabase(nId , isSync: false, { (success) in
-            if success == true{
-                
+            if success == true {
                 CoreDataHandler().updateisSyncNecropsystep1neccId(nId , isSync: false, { (success) in
-                    if success == true{
-                        
-                        CoreDataHandler().updateisSyncOnCaptureInDatabase(nId , isSync: false, { (success) in
-                            if success == true{
-                                
-                                CoreDataHandler().updateisSyncOnBirdPhotoCaptureDatabase(nId , isSync: false, { (success) in
-                                    if success == true{
-                                        CoreDataHandler().updateisSyncOnNotesBirdDatabase(nId , isSync: false, { (success) in
-                                            if success == true{
-                                                completion(success)
-                                            }
-                                        })
-                                    }
-                                })
-                            }
-                        })
+                    self.handleUpdateisSyncNecropsystep1neccId(success, nId: nId) { status in
+                        completion(status)
                     }
                 })
             }

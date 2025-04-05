@@ -469,35 +469,51 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
         
     }
     // MARK: 🟠 Bird Sec Button Click
-    @objc func birdSexClick(_ sender:UIButton){
+    fileprivate func handleSelectedVal(_ selectedVal: String) {
+        if selectedVal == "Female" {
+            selectedSexValue = "2"
+        } else if selectedVal == "N/A" {
+            selectedSexValue = "0"
+        } else {
+            selectedSexValue = "1"
+        }
+    }
+    
+    fileprivate func handleArrAndDictionary(_ arr: NSArray, _ noofBirdArrOnObs: NSMutableArray, _ d: NSDictionary, _ noOfBird: Int, _ formNameValue: String,_ cell:obsFieldCollectionViewCell) {
+        for i in 0..<arr.count {
+            noofBirdArrOnObs.add(i+1)
+        }
+        let captureNec :  CaptureNecropsyViewData = (d.object(forKey: noofBirdArrOnObs.object(at: cell.incrementBtnOutlet.tag - 1)) as? CaptureNecropsyViewData)!
+        let fethchArr = CoreDataHandler().fecthFrmWithBirdAndObservation(noOfBird as NSNumber, farmname: formNameValue, obsId: captureNec.obsID!, necId: necId as NSNumber)
+        let c = fethchArr.object(at: 0) as! CaptureNecropsyViewData
+        
+        CoreDataHandler().updateBirdSexDataInCaptureSkeletaInDatabase(formNameValue, birdNo: noOfBird as NSNumber, obsId: c.obsID!, BirdSex: selectedSexValue, necId : necId as NSNumber)
+        
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
+        } else {
+            CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
+        }
+    }
+    
+    @objc func birdSexClick(_ sender:UIButton) {
         
         guard let cell = getCellFromSender(sender) else {
             return
         }
         
-        if  BirdSex.count > 0 {
+        if BirdSex.count > 0 {
             self.dropDownVIewNew(arrayData: BirdSex as? [String] ?? [String](), kWidth: cell.birdSexView.frame.width, kAnchor: cell.birdSexView, yheight: cell.birdSexView.bounds.height) { [unowned self] selectedVal, index  in
                 cell.sexLabel.text = selectedVal
                 selectedSexValue = selectedVal
                 
-                if selectedVal == "Female"
-                {
-                    selectedSexValue = "2"                    
-                }
-                else if selectedVal == "N/A"
-                {
-                    selectedSexValue = "0"
-                }
-                else
-                {
-                    selectedSexValue = "1"
-                }
+                handleSelectedVal(selectedVal)
                 
                 let pointInTable: CGPoint = sender.convert(sender.bounds.origin, to: self.bgTableView)
                 let cellIndexPath = self.bgTableView.indexPathForRow(at: pointInTable)
                 let noOfBird =  cell.incrementBtnOutlet.tag as Int
                 let formNameValue  = self.formName as String
-                if cellIndexPath?.row == nil{
+                if cellIndexPath?.row == nil {
                     return
                 }
                 
@@ -507,22 +523,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
                 let arr = d.allKeys as NSArray
                 let noofBirdArrOnObs = NSMutableArray()
                 
-                for i in 0..<arr.count
-                {
-                    noofBirdArrOnObs.add(i+1)
-                }
-                let captureNec :  CaptureNecropsyViewData = (d.object(forKey: noofBirdArrOnObs.object(at: cell.incrementBtnOutlet.tag - 1)) as? CaptureNecropsyViewData)!
-                let fethchArr = CoreDataHandler().fecthFrmWithBirdAndObservation(noOfBird as NSNumber, farmname: formNameValue, obsId: captureNec.obsID!, necId: necId as NSNumber)
-                let c = fethchArr.object(at: 0) as! CaptureNecropsyViewData
-                
-                CoreDataHandler().updateBirdSexDataInCaptureSkeletaInDatabase(formNameValue, birdNo: noOfBird as NSNumber, obsId: c.obsID!, BirdSex: selectedSexValue, necId : necId as NSNumber)
-                
-                if UserDefaults.standard.bool(forKey: "Unlinked") == true{
-                    
-                    CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
-                } else {
-                    CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
-                }
+                handleArrAndDictionary(arr, noofBirdArrOnObs, d, noOfBird, formNameValue,cell)
             }
             self.dropHiddenAndShow()
         }

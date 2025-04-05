@@ -699,79 +699,7 @@ class PEViewStartNewAssessment: BaseViewController {
         print(appDelegateObj.testFuntion())
     }
     
-    // MARK: - Mandatory Field Validation
-    func changeMandatorySuperviewToRed(){
-        let date = self.peNewAssessment.evaluationDate ?? ""
-        let customer = self.peNewAssessment.customerName ?? ""
-        let site = self.peNewAssessment.siteName ?? ""
-        let evaluationName = self.peNewAssessment.evaluationName ?? ""
-        let evaluator = self.peNewAssessment.evaluatorName ?? ""
-        let reasonForVisit = self.peNewAssessment.visitName ?? ""
-        if (date.count > 0 ?? 0){print(appDelegateObj.testFuntion())} else  {
-            let superviewCurrent =  evaluationDateButton.superview
-            if superviewCurrent != nil{
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }}
-        }
-        if (customer.count > 0 ?? 0 ){print(appDelegateObj.testFuntion())} else  {
-            let superviewCurrent =  customerButton.superview
-            if superviewCurrent != nil{
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
-        }
-        if (site.count > 0 ?? 0){print(appDelegateObj.testFuntion())} else  {
-            let superviewCurrent =  siteButton.superview
-            if superviewCurrent != nil{
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }}
-        }
-        if (evaluationName.count ?? 0 > 0){print(appDelegateObj.testFuntion())} else  {
-            let superviewCurrent =  evaluationTypeButton.superview
-            if superviewCurrent != nil{
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }}
-        }
-        if (evaluator.count ?? 0  > 0){print(appDelegateObj.testFuntion())} else  {
-            let superviewCurrent =  evaluatorButton.superview
-            if superviewCurrent != nil{
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }}
-        }
-        if (reasonForVisit.count ?? 0 > 0){print(appDelegateObj.testFuntion())} else  {
-            let superviewCurrent =  visitButton.superview
-            if superviewCurrent != nil{
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }}
-        }
-        
-        showAlert(title: Constants.alertStr, message: "Please fill the mandatory fields.", owner: self)
-    }
-    
+  
     // MARK: - Evaluation Date Button Action
     @IBAction func evaluationDateClicked(_ sender: Any) {
         let superviewCurrent =  evaluationDateButton.superview
@@ -2220,6 +2148,69 @@ extension PEViewStartNewAssessment{
         })
     }
     // MARK: - Sync Button Action
+    fileprivate func createVaxineMixtureData() {
+        var idArr : [Int] = []
+        for objn in  peNewAssessment.vMixer {
+            let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
+            if idArr.contains(data!.id ?? 0){
+            }else{
+                idArr.append(data!.id ?? 0)
+                if data != nil{
+                    certificateData.append(data!)
+                    
+                }
+            }
+        }
+    }
+    
+    fileprivate func createDayOfAgeSubcData() {
+        var idArr : [Int] = []
+        for objn in  peNewAssessment.doaS {
+            let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
+            if data != nil {
+                if idArr.contains(data!.id ?? 0){
+                }else{
+                    idArr.append(data!.id ?? 0)
+                    if data != nil{
+                        dayOfAgeSData.append(data!)
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func createDayOfAgeData() {
+        var idArr : [Int] = []
+        for objn in  peNewAssessment.doa {
+            let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
+            if data != nil {
+                if idArr.contains(data!.id ?? 0){
+                }else{
+                    idArr.append(data!.id ?? 0)
+                    if data != nil{
+                        dayOfAgeData.append(data!)
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func createInovojectData() {
+        var idArr : [Int] = []
+        for objn in  peNewAssessment.inovoject {
+            let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
+            if data != nil {
+                if idArr.contains(data!.id ?? 0){
+                }else{
+                    idArr.append(data!.id ?? 0)
+                    if data != nil{
+                        inovojectData.append(data!)
+                    }
+                }
+            }
+        }
+    }
+    
     func syncBtnTapped(showHud: Bool){
         if ConnectionManager.shared.hasConnectivity() {
             var tempArr : [JSONDictionary]  = []
@@ -2233,70 +2224,23 @@ extension PEViewStartNewAssessment{
             
             certificateData.removeAll()
             if peNewAssessment.vMixer.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.vMixer {
-                    let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
-                    if idArr.contains(data!.id ?? 0){
-                    }else{
-                        idArr.append(data!.id ?? 0)
-                        if data != nil{
-                            certificateData.append(data!)
-                            
-                        }
-                    }
-                }
+                createVaxineMixtureData()
             }
             tempArr.removeAll()
             let json = createSyncRequest(dict: peNewAssessment, certificationData: certificateData)
             tempArr.append(json)
             dayOfAgeSData.removeAll()
             if peNewAssessment.doaS.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.doaS {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                dayOfAgeSData.append(data!)
-                            }
-                        }
-                    }
-                }
+                createDayOfAgeSubcData()
             }
             
             dayOfAgeData.removeAll()
             if peNewAssessment.doa.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.doa {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                dayOfAgeData.append(data!)
-                            }
-                        }
-                    }
-                }
+                createDayOfAgeData()
             }
             inovojectData.removeAll()
             if peNewAssessment.inovoject.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.inovoject {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                inovojectData.append(data!)
-                            }
-                        }
-                    }
-                }
+                createInovojectData()
             }
             
             if inovojectData.count > 0 {

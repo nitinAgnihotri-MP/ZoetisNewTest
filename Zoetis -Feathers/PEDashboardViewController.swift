@@ -1478,6 +1478,27 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     
+    fileprivate func updateAssesmentStatus(_ self: PEDashboardViewController) {
+        if self.saveTypeString.contains(11) {
+            if self.saveTypeString.contains(00) {
+                CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
+    fileprivate func handleError(_ error: NSError?) {
+        if error != nil {
+            let syncArr = self.getAssessmentInOfflineFromDb()
+            if syncArr > 0 {
+                self.syncBtnTapped(showHud: false)
+            } else {
+                self.showtoast(message: appDelegateObj.dataSynedSuccess)
+                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+            }
+            CoreDataHandlerPE().updateOfflineStatus(assessment: self.objAssessment)
+        } else {
+            CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
+        }
+        
+        checkSyncArr()
+    }
+    
     func callRequest4(paramForImages:JSONDictionary) {
         self.convertDictToJson(dict: paramForImages, apiName: "Test")
         callRequest4Int = callRequest4Int + 1
@@ -1485,30 +1506,11 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages, completion: { [weak self] (json, error) in
             self?.callRequest4Int = self!   .callRequest4Int - 1
             
-            if error != nil {
-                
-                let syncArr = self?.getAssessmentInOfflineFromDb()
-                if syncArr ?? 0 > 0{
-                    self?.syncBtnTapped(showHud: false)
-                } else {
-                    self?.showtoast(message: appDelegateObj.dataSynedSuccess)
-                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                }
-                
-            }
+            self?.handleError(error)
             guard let `self` = self, error == nil else { return }
             self.dismissGlobalHUD(self.view)
             if json["StatusCode"]  == 200 {
-                if self.saveTypeString.contains(11) {
-                    if self.saveTypeString.contains(00) {
-                        CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
-                    }
-                    CoreDataHandlerPE().updateOfflineStatus(assessment: self.objAssessment)
-                } else {
-                    CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
-                }
-                
-                checkSyncArr()
+                updateAssesmentStatus(self)
             } else {
                 self.dismissGlobalHUD(self.view)
             }

@@ -69,6 +69,61 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
         VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
     }
     
+    fileprivate func handleShippingInfo(_ shippingInfoDB: inout ShippingAddressDTO?) {
+        if curentCertification?.selectedFsmId == nil || curentCertification?.selectedFsmId == "" {
+            shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: Int(self.curentCertification?.fsrId ?? "") ?? 0 )
+        } else {
+            shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: Int(self.curentCertification?.selectedFsmId ?? "") ?? 0 )
+        }
+        
+        if shippingInfoDB != nil {
+            shippingInfo = shippingInfoDB!
+            
+            if curentCertification?.selectedFsmId == nil {
+                fsmName.text =  curentCertification?.fsrName
+            } else {
+                fsmName.text =  curentCertification?.selectedFsmName
+            }
+            
+            self.addressline1TxtFld.text = shippingInfo?.address1
+            self.addressline2TxtFld.text = shippingInfo?.address2
+            self.cityTextField.text = shippingInfo?.city
+            self.zipCodeTxtFld.text = shippingInfo?.pincode
+            var countryId = String(shippingInfo?.countryID ?? 0)
+            self.countryId = shippingInfo?.countryID ?? 0
+            self.stateId = shippingInfo?.stateID ?? 0
+            var countryName = VaccinationCustomersDAO.sharedInstance.fetchCountryNameFromCountryId(countryId: countryId)
+            var stateId = String(shippingInfo?.stateID ?? 0)
+            var stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
+            if stateName == "" {
+                self.getVaccinationStateList(countryId: countryId)
+                stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
+                self.selectedState.text = stateName
+            }
+            self.selectedState.text = stateName
+            self.selectedCountry.text = countryName
+            self.addressline1TxtFld.text = shippingInfo?.address1
+            self.curentCertification?.FSSId = shippingInfo?.fssID
+            VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
+        }
+    }
+    
+    fileprivate func handleCertificationValidation() {
+        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil) {
+            if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1" {
+                if let certobj = VaccinationDashboardDAO.sharedInstance.getStartedCertObjByCategory(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationCategoryId: VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID){
+                    self.curentCertification = certobj
+                }
+            }
+        }
+        
+        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil) {
+            if !(self.curentCertification  != nil){
+                self.curentCertification = VaccinationCertificationVM()
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -85,48 +140,9 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
                 
                 setupSavedShippingInfo(shippingInfoDB)
             }
-        }
-        else{
+        } else {
             var shippingInfoDB: ShippingAddressDTO?
-            if curentCertification?.selectedFsmId == nil || curentCertification?.selectedFsmId == "" {
-                shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: Int(self.curentCertification?.fsrId ?? "") ?? 0 )
-            }
-            else {
-                shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: Int(self.curentCertification?.selectedFsmId ?? "") ?? 0 )
-            }
-            
-            if shippingInfoDB != nil {
-                shippingInfo = shippingInfoDB!
-                
-                if curentCertification?.selectedFsmId == nil {
-                    fsmName.text =  curentCertification?.fsrName
-                }
-                else
-                {
-                    fsmName.text =  curentCertification?.selectedFsmName
-                }
-                
-                self.addressline1TxtFld.text = shippingInfo?.address1
-                self.addressline2TxtFld.text = shippingInfo?.address2
-                self.cityTextField.text = shippingInfo?.city
-                self.zipCodeTxtFld.text = shippingInfo?.pincode
-                var countryId = String(shippingInfo?.countryID ?? 0)
-                self.countryId = shippingInfo?.countryID ?? 0
-                self.stateId = shippingInfo?.stateID ?? 0
-                var countryName = VaccinationCustomersDAO.sharedInstance.fetchCountryNameFromCountryId(countryId: countryId)
-                var stateId = String(shippingInfo?.stateID ?? 0)
-                var stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
-                if stateName == "" {
-                    self.getVaccinationStateList(countryId: countryId)
-                    stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
-                    self.selectedState.text = stateName
-                }
-                self.selectedState.text = stateName
-                self.selectedCountry.text = countryName
-                self.addressline1TxtFld.text = shippingInfo?.address1
-                self.curentCertification?.FSSId = shippingInfo?.fssID
-                VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
-            }
+            handleShippingInfo(&shippingInfoDB)
         }
         setBorderView(countryBtn)
         setBorderView(stateBtn)
@@ -137,27 +153,14 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
         
         addAddressBtn.setGradient(topGradientColor: UIColor.getEmployeeStartBtnUpperGradient(), bottomGradientColor: UIColor.getDashboardTableHeaderLowerGradColor())
         
-        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil){
-            if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                
-                if let certobj = VaccinationDashboardDAO.sharedInstance.getStartedCertObjByCategory(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationCategoryId: VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID){
-                    self.curentCertification = certobj
-                }
-            }
-        }
-        
-        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil){
-            if !(self.curentCertification  != nil){
-                self.curentCertification = VaccinationCertificationVM()
-            }
-        }
+        handleCertificationValidation()
         
         headerView.roundCorners(corners: [.topLeft, .topRight], radius: 18.5)
         headerView.setGradient(topGradientColor: UIColor.getDashboardTableHeaderUpperGradColor(), bottomGradientColor: UIColor.getDashboardTableHeaderLowerGradColor())
         mainContentView.setGradient(topGradientColor: UIColor.white , bottomGradientColor: UIColor.getAddEmployeeGradient())
   
         
-        if self.curentCertification?.certificationCategoryId == "1"{
+        if self.curentCertification?.certificationCategoryId == "1" {
             isSafetyCertification = true
         }
         

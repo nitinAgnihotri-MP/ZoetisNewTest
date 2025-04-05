@@ -711,6 +711,17 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         super.didReceiveMemoryWarning()
     }
     
+    fileprivate func setScaleArr(_ allBireType: NSArray) {
+        for dict in allBireType {
+            if (dict as AnyObject).value(forKey: "scaleType") as! String == "Imperial"{
+                birdArray.append(dict as! BirdSizePosting)
+            }
+            else{
+                metricArray.append(dict as! BirdSizePosting)
+            }
+        }
+    }
+    
     func viewUpdate () {
         
         butttnTag  = 1
@@ -728,14 +739,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         }
         let allBireType = CoreDataHandler().fetchBirdSize()
         if(birdArray.count == 0){
-            for dict in allBireType {
-                if (dict as AnyObject).value(forKey: "scaleType") as! String == "Imperial"{
-                    birdArray.append(dict as! BirdSizePosting)
-                }
-                else{
-                    metricArray.append(dict as! BirdSizePosting)
-                }
-            }
+            setScaleArr(allBireType)
         }
         droperTableView.reloadData()
         feedProgramLbl.isHidden = true

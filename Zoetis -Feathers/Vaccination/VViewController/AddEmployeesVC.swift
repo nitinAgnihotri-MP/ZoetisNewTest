@@ -718,21 +718,25 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         }
     }
     
-    @objc func updateEmployeeRoles(_ notification: NSNotification){
-        if let index = notification.userInfo?["index"]  as? Int{
-            if let selectedVal = notification.userInfo?["selectedValue"]  as? String{
-                if self.employeesAddedArr.count > index{
+    fileprivate func handleSelectedRolesStr(_ emp: VaccinationEmployeeVM, _ selectedVal: String) {
+        if emp.selectedRolesStr != selectedVal {
+            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+            if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
+                VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certificationCategoryId:"1", certObj: self.curentCertification!)
+            } else if self.curentCertification?.certificationCategoryId == nil || self.curentCertification?.certificationCategoryId == "" || self.curentCertification?.certificationCategoryId == "2"{
+                VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
+            }
+        }
+    }
+    
+    @objc func updateEmployeeRoles(_ notification: NSNotification) {
+        if let index = notification.userInfo?["index"]  as? Int {
+            if let selectedVal = notification.userInfo?["selectedValue"]  as? String {
+                if self.employeesAddedArr.count > index {
                     var emp =  self.employeesAddedArr[index]
-                    if emp.selectedRolesStr != selectedVal{
-                        self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                        if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                            VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certificationCategoryId:"1", certObj: self.curentCertification!)
-                        } else if self.curentCertification?.certificationCategoryId == nil || self.curentCertification?.certificationCategoryId == "" || self.curentCertification?.certificationCategoryId == "2"{
-                            VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
-                        }
-                    }
+                    handleSelectedRolesStr(emp, selectedVal)
                     emp.selectedRolesStr = selectedVal
-                    if let selectedObjStr = notification.userInfo?["selectedObjStr"]  as? String{
+                    if let selectedObjStr = notification.userInfo?["selectedObjStr"]  as? String {
                         emp.rolesArrStr = selectedObjStr
                     }
                     AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: emp)
@@ -932,14 +936,14 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
                 }
             }else{
                 self.employeesTblVw.reloadData()
-                displayAlertMessage(userMessage: "Please enter details in all the fields marked as mandatory.")
+                displayAlertMessage(userMessage: Constants.pleaseEnterMandatoryFields)
             }
         }else{
             DispatchQueue.main.async{
                 self.showMandatoryFieldsColor()
             }
             self.employeesTblVw.reloadData()
-            displayAlertMessage(userMessage: "Please enter details in all the fields marked as mandatory.")
+            displayAlertMessage(userMessage: Constants.pleaseEnterMandatoryFields)
         }
         
     }

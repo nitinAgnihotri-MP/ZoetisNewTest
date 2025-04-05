@@ -993,6 +993,22 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
         self.dismissGlobalHUD(self.view ?? UIView())
     }
     
+    fileprivate func handleBackNavigation() {
+        if isFromBack {
+            
+            let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
+            if sanitationQuesArr.count == 0 && extendedPESwitch{
+                self.showOnlyExtendedMicrobial()
+                
+            } else{
+                self.fromBackNextBtnAction()
+            }
+            
+        } else {
+            self.okButtonTapped()
+        }
+    }
+    
     @IBAction func nextBtnAction(_ sender: Any) {
         
         self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { [self] status in
@@ -1039,16 +1055,16 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
             return
         }
         
-        if self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
+        if self.txtManufacturer.text != nil && self.txtManufacturer.text != "" {
             if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
                 if manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "" {
                     
-                }else{
+                } else {
                     changeMandatorySuperviewToRed()
                     return
                 }
             }
-        }else{
+        } else {
             changeMandatorySuperviewToRed()
             return
         }
@@ -1074,19 +1090,7 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
             return
         }
         
-        if isFromBack {
-            
-            let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
-            if sanitationQuesArr.count == 0 && extendedPESwitch{
-                self.showOnlyExtendedMicrobial()
-                
-            } else{
-                self.fromBackNextBtnAction()
-            }
-            
-        } else {
-            self.okButtonTapped()
-        }
+        handleBackNavigation()
     }
     
     func saveAssessmentInProgressDataInDB()  {
@@ -1419,7 +1423,7 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
         }
         
         handleElseIfCondition(customer, site, evaluationName, evaluator, reasonForVisit)
-        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
     }
     
     @IBAction func evaluationDateClicked(_ sender: Any) {

@@ -368,6 +368,42 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     }
     
     // MARK:  /*********** Login With SSO Account **************/
+    fileprivate func setOffLineLoggedInUserData(_ Email: String) {
+        let name = Email as String
+        self.loginArray = CoreDataHandler().fetchLoginTypeWithUserEmail(email:name)
+        if  loginArray.count == 0{
+            Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"You are offline. Please go online for first time login.")
+        }
+        else {
+            
+            for i in 0..<loginArray.count {
+                userName = (loginArray.object(at: i) as AnyObject).value(forKey: "username") as! String
+            }
+            
+            let name = Email as String
+            if userName.lowercased() == name {
+                
+                UserDefaults.standard.set(true, forKey: "login")
+                self.lastScreenFlag = UserDefaults.standard.value(forKey: "LastScreenRef") as? Int
+                
+                if lastScreenFlag == 1 {
+                    UserDefaults.standard.set(1, forKey: "birdTypeId")
+                }
+                else if lastScreenFlag == 2 {
+                    UserDefaults.standard.set(2, forKey: "birdTypeId")
+                }
+                else if lastScreenFlag == 3 {
+                    UserDefaults.standard.set(3, forKey: "birdTypeId")
+                }
+                
+                self.callDashBordView()
+            }
+            else if userName.lowercased() != name{
+                Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Please enter valid mail .")
+            }
+        }
+    }
+    
     func loginMethod(Email : String ,GUID : String ,GUIDSignature : String ,SignatureTimestamp : String ) {
         
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
@@ -524,9 +560,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         let aceesTokentype: String = tokenType + " " + acessToken
                         let roleId = dict.value(forKey: "HasAccess")! as AnyObject
                         let role = roleId.integerValue
-                      //  UserDefaults.standard.set(aceesTokentype,forKey: Constants.accessToken)
                         AccessTokenHelper().saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
-                       // AccessTokenHelper.saveData(aceesTokentype)
                         UserDefaults.standard.set(role!, forKey: "Role")
                         UserDefaults.standard.synchronize()
                         
@@ -662,39 +696,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
         // ************* Off Line Checking Login Credential  Second time *************/
         else  {
-            let name = Email as String
-            self.loginArray = CoreDataHandler().fetchLoginTypeWithUserEmail(email:name)
-            if  loginArray.count == 0{
-                Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"You are offline. Please go online for first time login.")
-            }
-            else {
-                
-                for i in 0..<loginArray.count {
-                    userName = (loginArray.object(at: i) as AnyObject).value(forKey: "username") as! String
-                }
-                
-                let name = Email as String
-                if userName.lowercased() == name {
-                    
-                    UserDefaults.standard.set(true, forKey: "login")
-                    self.lastScreenFlag = UserDefaults.standard.value(forKey: "LastScreenRef") as? Int
-                    
-                    if lastScreenFlag == 1 {
-                        UserDefaults.standard.set(1, forKey: "birdTypeId")
-                    }
-                    else if lastScreenFlag == 2 {
-                        UserDefaults.standard.set(2, forKey: "birdTypeId")
-                    }
-                    else if lastScreenFlag == 3 {
-                        UserDefaults.standard.set(3, forKey: "birdTypeId")
-                    }
-                    
-                    self.callDashBordView()
-                }
-                else if userName.lowercased() != name{
-                    Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Please enter valid mail .")
-                }
-            }
+            setOffLineLoggedInUserData(Email)
         }
     }
     
@@ -1594,6 +1596,31 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     
     
     // MARK: ****************************** ZoetisWebServices to Get Notes data from Server & Save  ******************************/
+    fileprivate func saveNotesInDB(_ item: JSON) {
+        if let dict = item.dictionary {
+            let noteArr = dict["Note"]?.array ?? []
+            
+            if !noteArr.isEmpty { // Check if Note array is not empty
+                for noteItem in noteArr {
+                    let sessionId = noteItem["sessionId"].int ?? 0
+                    let farmName = noteItem["farmName"].string ?? ""
+                    let birdNo = noteItem["birdNumber"].int ?? 0
+                    let birdNotes = noteItem["Notes"].string ?? ""
+                    
+                    CoreDataHandler().saveNoofBirdWithNotes(
+                        "",
+                        notes: birdNotes,
+                        formName: farmName,
+                        birdNo: birdNo as NSNumber,
+                        index: 0,
+                        necId: sessionId as NSNumber,
+                        isSync: false
+                    )
+                }
+            }
+        }
+    }
+    
     func getNotesFromServer(){
         self.deleteAllData("NotesBird")
         if WebClass.sharedInstance.connected() {
@@ -1613,28 +1640,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 DispatchQueue.main.async {
                     if let arr = JSON(json).array, !arr.isEmpty {
                         for item in arr {
-                            if let dict = item.dictionary {
-                                let noteArr = dict["Note"]?.array ?? []
-                                
-                                if !noteArr.isEmpty { // Check if Note array is not empty
-                                    for noteItem in noteArr {
-                                        let sessionId = noteItem["sessionId"].int ?? 0
-                                        let farmName = noteItem["farmName"].string ?? ""
-                                        let birdNo = noteItem["birdNumber"].int ?? 0
-                                        let birdNotes = noteItem["Notes"].string ?? ""
-                                        
-                                        CoreDataHandler().saveNoofBirdWithNotes(
-                                            "",
-                                            notes: birdNotes,
-                                            formName: farmName,
-                                            birdNo: birdNo as NSNumber,
-                                            index: 0,
-                                            necId: sessionId as NSNumber,
-                                            isSync: false
-                                        )
-                                    }
-                                }
-                            }
+                            self.saveNotesInDB(item)
                         }
                         self.getPostingDataFromServerforImage()
                     } else {
@@ -1885,6 +1891,34 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     // MARK:  *************************  TURKEY Modules  Methods *************************
     
     // MARK:  Get Posting Data From Server For Turkey
+    fileprivate func handlePostedTurkeySession(json:JSON) {
+        if let arr = JSON(json).array, !arr.isEmpty {
+            // Use a single CoreDataHandler instance
+            let coreDataHandler = CoreDataHandlerTurkey()
+            
+            // Loop through and process each item in the array
+            for posDict in arr {
+                if let dict = posDict.dictionaryObject {
+                    coreDataHandler.getPostingDataTurkey(dict as NSDictionary)
+                }
+            }
+            
+            // Fetch posting data only once after processing
+            let postingData = coreDataHandler.fetchAllPostingExistingSessionTurkey()
+            
+            // Check if postingData exists
+            if postingData.count>0 {
+                self.getPostingDataFromServerforVaccinationTurkey()
+            } else {
+                // Handle case where postingData is empty if necessary
+                // Maybe log a message or show an alert
+            }
+        } else {
+            // Handle case where arr is empty or nil
+            self.getPostingDataFromServerforVaccinationTurkey()
+        }
+    }
+    
     func getPostingDataFromServerTurkey() {
         if WebClass.sharedInstance.connected() {
             Helper.dismissGlobalHUD(self.view)
@@ -1908,31 +1942,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 }
                 
                 DispatchQueue.main.async {
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        // Use a single CoreDataHandler instance
-                        let coreDataHandler = CoreDataHandlerTurkey()
-                        
-                        // Loop through and process each item in the array
-                        for posDict in arr {
-                            if let dict = posDict.dictionaryObject {
-                                coreDataHandler.getPostingDataTurkey(dict as NSDictionary)
-                            }
-                        }
-                        
-                        // Fetch posting data only once after processing
-                        let postingData = coreDataHandler.fetchAllPostingExistingSessionTurkey()
-                        
-                        // Check if postingData exists
-                        if postingData.count>0 {
-                            self.getPostingDataFromServerforVaccinationTurkey()
-                        } else {
-                            // Handle case where postingData is empty if necessary
-                            // Maybe log a message or show an alert
-                        }
-                    } else {
-                        // Handle case where arr is empty or nil
-                        self.getPostingDataFromServerforVaccinationTurkey()
-                    }
+                    self.handlePostedTurkeySession(json: json)
                 }
 
             })
@@ -2469,6 +2479,19 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
     }
     
+    fileprivate func getImagesAndSaveNotesOfTurkeySessions(json: JSON) {
+        if let arr = JSON(json).array, !arr.isEmpty {
+            for vacData in arr {
+                self.saveTurkeyNotes(vacData)
+            }
+            // Fetch posting data after processing
+            self.getPostingDataFromServerforImageTurkey()
+        } else {
+            // Handle the case where array is empty or nil
+            self.getPostingDataFromServerforImageTurkey()
+        }
+    }
+    
     func getNotesFromServerTurkey() {
         self.deleteAllData("NotesBirdTurkey")
         if WebClass.sharedInstance.connected() {
@@ -2498,16 +2521,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 }
                 
                 DispatchQueue.main.async { [self] in
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        for vacData in arr {
-                            self.saveTurkeyNotes(vacData)
-                        }
-                        // Fetch posting data after processing
-                        self.getPostingDataFromServerforImageTurkey()
-                    } else {
-                        // Handle the case where array is empty or nil
-                        self.getPostingDataFromServerforImageTurkey()
-                    }
+                    self.getImagesAndSaveNotesOfTurkeySessions(json: json)
                 }
 
             })

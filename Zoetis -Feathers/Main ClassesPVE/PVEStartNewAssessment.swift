@@ -773,7 +773,7 @@ extension PVEStartNewAssessment {
                 
                 otherFields(cell)
                 
-                showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
+                showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
                 
                 
                 isAllValidationOk = false

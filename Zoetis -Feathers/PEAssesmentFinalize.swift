@@ -4424,6 +4424,60 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     
+    fileprivate func getAndsaveRefrigeratorDataInDB() {
+        lblextenderMicro.isHidden = true
+        extendedMicroSwitch.isHidden = true
+        extendedMicroSwitch.isUserInteractionEnabled = false
+        for i in catArrayForTableIs{
+            
+            let refri =   i as! PE_AssessmentInProgress
+            let array = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
+            
+            
+            if array.count < 13
+            {
+                CoreDataHandlerPE().saveRefrigatorInDB(refri.assID as! NSNumber,  labelText:  "", rollOut: "Y", unit:  "Celsius" , value: 0.0,catID: refri.catID as! NSNumber,isCheck: false,isNA: false,schAssmentId: Int(refri.serverAssessmentId ?? "0") ?? 0)
+            }
+            
+            
+        }
+        if(catArrayForTableIs.count > 0){
+            let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
+            refrigtorProbeArray = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
+        }
+    }
+    
+    fileprivate func handleSelectedCategory() {
+        if(selectedCategory?.catName == extendedMicStr) {
+            selectedCategory?.sequenceNoo = 12
+            lblextenderMicro.isHidden = false
+            extendedMicroSwitch.isHidden = false
+            extendedMicroSwitch.isUserInteractionEnabled = true
+        } else {
+            lblextenderMicro.isHidden = true
+            extendedMicroSwitch.isHidden = true
+            extendedMicroSwitch.isUserInteractionEnabled = false
+            catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
+            if(checkCategoryisNA()) {
+                self.btnNA.isSelected = true
+                updateScore(isAllNA: true )
+            } else {
+                self.btnNA.isSelected = false
+                updateScore(isAllNA: false)
+            }
+        }
+    }
+    
+    fileprivate func handleRegionIdValidationDidSelect() {
+        if regionID != 3 {
+            if(selectedCategory?.catName == refridFreezerNitro) {
+                showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
+            } else {
+                showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         finishingAssessment = false
@@ -4435,11 +4489,11 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
         }
         self.tableviewIndexPath = IndexPath(row: 0, section: 0)
         
-        if checkNoteForEveryQuestion(){
+        if checkNoteForEveryQuestion() {
             selectedCategory?.catISSelected = 0
             self.updateCategoryInDb(assessment:selectedCategory!)
             
-            if catArrayForCollectionIs.count > indexPath.row{
+            if catArrayForCollectionIs.count > indexPath.row {
                 _ = catArrayForCollectionIs[indexPath.row]
                 collectionviewIndexPath = indexPath
                 selectedCategory = catArrayForCollectionIs[indexPath.row]
@@ -4450,88 +4504,30 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 totalScoreLabel.text = String(totalMark)
                 resultScoreLabel.text = String(0)
                 catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                if(selectedCategory?.catName == refridFreezerNitro){
-                    lblextenderMicro.isHidden = true
-                    extendedMicroSwitch.isHidden = true
-                    extendedMicroSwitch.isUserInteractionEnabled = false
-                    for i in catArrayForTableIs{
-                        
-                        let refri =   i as! PE_AssessmentInProgress
-                        let array = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-                        
-                        
-                        if array.count < 13
-                        {
-                            CoreDataHandlerPE().saveRefrigatorInDB(refri.assID as! NSNumber,  labelText:  "", rollOut: "Y", unit:  "Celsius" , value: 0.0,catID: refri.catID as! NSNumber,isCheck: false,isNA: false,schAssmentId: Int(refri.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        
-                        
-                    }
-                    if(catArrayForTableIs.count > 0){
-                        let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
-                        refrigtorProbeArray = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-                    }
-                    
-                    
-                    
-                }
-                if(selectedCategory?.catName == extendedMicStr){
-                    selectedCategory?.sequenceNoo = 12
-                    lblextenderMicro.isHidden = false
-                    extendedMicroSwitch.isHidden = false
-                    extendedMicroSwitch.isUserInteractionEnabled = true
+                if(selectedCategory?.catName == refridFreezerNitro) {
+                    getAndsaveRefrigeratorDataInDB()
                 }
                 
-                else{
-                    lblextenderMicro.isHidden = true
-                    extendedMicroSwitch.isHidden = true
-                    extendedMicroSwitch.isUserInteractionEnabled = false
-                    catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                    if(checkCategoryisNA()){
-                        self.btnNA.isSelected = true
-                        updateScore(isAllNA: true )
-                    }
-                    else{
-                        self.btnNA.isSelected = false
-                        updateScore(isAllNA: false)
-                    }
-                    
-                    
-                }
+                handleSelectedCategory()
                 tableview.reloadData()
-                
-                
-                if regionID != 3
-                {
-                    if(selectedCategory?.catName == refridFreezerNitro){
-                        showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
-                    }
-                    else{
-                        //                        showHideNA(sequenceNo:selectedCategory?.sequenceNo ?? 0,catName: selectedCategory?.catName ?? "")
-                        showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
-                    }
-                }
-                
-                
+                handleRegionIdValidationDidSelect()
                 refreshTableView()
             }
         }
-        
     }
+    
     // MARK: - Show Hide NA option in Question
-    func showHideNA(sequenceNoo:Int,catName:String){
+    func showHideNA(sequenceNoo:Int,catName:String) {
         
-        if( sequenceNoo == 11 && catName == refridFreezerNitro ){
+        if (sequenceNoo == 11 && catName == refridFreezerNitro) {
             lbl_NA.isHidden = true
             btnNA.isHidden = true
             scoreParentView.isHidden = true
-        }
-        else if(sequenceNoo == 1 || sequenceNoo == 2){
+        } else if(sequenceNoo == 1 || sequenceNoo == 2) {
             lbl_NA.isHidden = true
             btnNA.isHidden = true
             scoreParentView.isHidden = false
-        }
-        else{
+        } else {
             lbl_NA.isHidden = false
             btnNA.isHidden = false
             scoreParentView.isHidden = false

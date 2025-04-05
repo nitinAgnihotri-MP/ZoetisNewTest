@@ -145,6 +145,93 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         print(appDelegateObj.testFuntion())
     }
     
+    fileprivate func setInovjectData(_ cat: PENewAssessment) {
+        if cat.inovoject.count > 0 {
+            var idArr : [Int] = []
+            for obj in  cat.inovoject {
+                let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
+                if idArr.contains(data!.id ?? 0){
+                }else{
+                    idArr.append(data!.id ?? 0)
+                    inovojectData.append(data!)
+                }
+            }
+        }
+    }
+    
+    fileprivate func setDayOfAgeSubData(_ cat: PENewAssessment) {
+        if cat.doaS.count > 0 {
+            var idArr : [Int] = []
+            for obj in  cat.doaS {
+                let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
+                if data != nil {
+                    if idArr.contains(data!.id ?? 0){
+                    }else{
+                        idArr.append(data!.id ?? 0)
+                        dayOfAgeSData.append(data!)
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func dayOfAgeData(_ cat: PENewAssessment) {
+        if cat.doa.count > 0 {
+            var idArr : [Int] = []
+            for obj in  cat.doa {
+                let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
+                if data != nil {
+                    if idArr.contains(data!.id ?? 0){
+                    }else{
+                        idArr.append(data!.id ?? 0)
+                        dayOfAgeData.append(data!)
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func setRefrigeratorData(_ carColIdArray: inout [Int], _ cat: PENewAssessment) {
+        if !carColIdArray.contains(cat.sequenceNo ?? 0){
+            carColIdArray.append(cat.sequenceNo ?? 0)
+            if(cat.catName == "Refrigerator"){
+                cat.catName = refrigStr // "Sanitation and Embrex Evaluation"
+                
+            }
+            catArrayForCollectionIs.append(cat)
+            
+        }
+    }
+    
+    fileprivate func setLastCategoryName() {
+        if showExtendedPE {
+            let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
+            
+            if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
+                catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
+            }
+            
+            let catObjectPE = PENewAssessment()
+            catObjectPE.catName = appDelegateObj.extendedMicrobialStr // "Sanitation and Embrex Evaluation"
+            catObjectPE.sequenceNo = 12
+            catObjectPE.sequenceNoo = 12
+            catArrayForCollectionIs.append(catObjectPE)
+            
+            let plateInfoCell = UINib(nibName: "PlateInfoCell", bundle: nil)
+            tableview.register(UINib(nibName: "PlateInfoCell", bundle: nil), forCellReuseIdentifier: "PlateInfoCell")
+            
+            let nibPlateInfoHeader = UINib(nibName: "PlateInfoHeader", bundle: nil)
+            tableview.register(nibPlateInfoHeader, forHeaderFooterViewReuseIdentifier: "PlateInfoHeader")
+            
+            
+        }
+        else{
+            if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
+                catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         self.navigationController?.navigationBar.isHidden = true
@@ -174,61 +261,19 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         var row = 0
         
         for cat in peNewAssessmentArray1 {
-            if !carColIdArray.contains(cat.sequenceNo ?? 0){
-                carColIdArray.append(cat.sequenceNo ?? 0)
-                if(cat.catName == "Refrigerator"){
-                    cat.catName = refrigStr // "Sanitation and Embrex Evaluation"
-                    
-                }
-                catArrayForCollectionIs.append(cat)
-                
-            }
+            setRefrigeratorData(&carColIdArray, cat)
         }
         
         for cat in catArrayForCollectionIs{
-            if cat.doa.count > 0 {
-                var idArr : [Int] = []
-                for obj in  cat.doa {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            dayOfAgeData.append(data!)
-                        }
-                    }
-                }
-            }
+            dayOfAgeData(cat)
         }
         
         for cat in catArrayForCollectionIs{
-            if cat.doaS.count > 0 {
-                var idArr : [Int] = []
-                for obj in  cat.doaS {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            dayOfAgeSData.append(data!)
-                        }
-                    }
-                }
-            }
+            setDayOfAgeSubData(cat)
         }
         
         for cat in catArrayForCollectionIs{
-            if cat.inovoject.count > 0 {
-                var idArr : [Int] = []
-                for obj in  cat.inovoject {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if idArr.contains(data!.id ?? 0){
-                    }else{
-                        idArr.append(data!.id ?? 0)
-                        inovojectData.append(data!)
-                    }
-                }
-            }
+            setInovjectData(cat)
         }
         
         
@@ -319,22 +364,8 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         assessmentDateText.text =  catArrayForCollectionIs.first?.evaluationDate
         chechForLastCategory()
         setupUI()
-        
-        //        let dateFormatter2 = DateFormatter()
-        //        if regionID == 3
-        //        {
-        //        }
-        //
-        //        dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
-        //        dateFormatter2.calendar = Calendar(identifier: .gregorian)
-        //        dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
-        //        sig_Date.text = dateFormatter2.string(from: selectedCategory?.sig_Date) as String
-        
-        
-        
-        
+
         sig_Date.text = selectedCategory?.sig_Date
-        
         
         fsrSign = selectedCategory?.FSTSignatureImage ?? ""
         sig_Name.text = selectedCategory?.sig_Name
@@ -356,32 +387,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         if regionID == 3
         {
             
-            if showExtendedPE {
-                let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-                
-                if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
-                    catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
-                }
-                
-                let catObjectPE = PENewAssessment()
-                catObjectPE.catName = appDelegateObj.extendedMicrobialStr // "Sanitation and Embrex Evaluation"
-                catObjectPE.sequenceNo = 12
-                catObjectPE.sequenceNoo = 12
-                catArrayForCollectionIs.append(catObjectPE)
-                
-                let plateInfoCell = UINib(nibName: "PlateInfoCell", bundle: nil)
-                tableview.register(UINib(nibName: "PlateInfoCell", bundle: nil), forCellReuseIdentifier: "PlateInfoCell")
-                
-                let nibPlateInfoHeader = UINib(nibName: "PlateInfoHeader", bundle: nil)
-                tableview.register(nibPlateInfoHeader, forHeaderFooterViewReuseIdentifier: "PlateInfoHeader")
-                
-                
-            }
-            else{
-                if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
-                    catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
-                }
-            }
+            setLastCategoryName()
         }
         collectionView.reloadData()
         tableview.reloadData()
@@ -3721,6 +3727,69 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Sync Functionality
+    fileprivate func syncDataForDayOfAgeSub() {
+        var idArr : [Int] = []
+        for objn in  peNewAssessment.doaS {
+            let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
+            if data != nil {
+                if idArr.contains(data!.id ?? 0){
+                }else{
+                    idArr.append(data!.id ?? 0)
+                    if data != nil{
+                        dayOfAgeSData.append(data!)
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func syncDataForInovoject() {
+        var idArr : [Int] = []
+        for objn in  peNewAssessment.inovoject {
+            let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
+            if data != nil {
+                if idArr.contains(data!.id ?? 0){
+                }else{
+                    idArr.append(data!.id ?? 0)
+                    if data != nil{
+                        inovojectData.append(data!)
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func syncDataForVaxineMixture() {
+        var idArr : [Int] = []
+        for objn in  peNewAssessment.vMixer {
+            let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
+            if idArr.contains(data!.id ?? 0){
+            }else{
+                idArr.append(data!.id ?? 0)
+                if data != nil{
+                    certificateData.append(data!)
+                }
+            }
+        }
+    }
+    
+    fileprivate func dayOfAgeSyncData() {
+        var idArr : [Int] = []
+        for objn in  peNewAssessment.doa {
+            let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
+            if data != nil {
+                if idArr.contains(data!.id ?? 0){
+                    //   // // print("already there",idArr)
+                }else{
+                    idArr.append(data!.id ?? 0)
+                    if data != nil{
+                        dayOfAgeData.append(data!)
+                    }
+                }
+            }
+        }
+    }
+    
     func syncBtnTapped(showHud: Bool){
         if self.submitExtend == true && self.categoarylabelText != appDelegateObj.extendedMicrobialStr {
             let alert = UIAlertController(title: "Alert!", message: "Please finish Extended Microbial first or turn off the switch in order to sync the other data",
@@ -3776,67 +3845,20 @@ extension PEViewAssesmentFinalize{
             
             dayOfAgeSData.removeAll()
             if peNewAssessment.doaS.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.doaS {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                dayOfAgeSData.append(data!)
-                            }
-                        }
-                    }
-                }
+                syncDataForDayOfAgeSub()
             }
             
             dayOfAgeData.removeAll()
             if peNewAssessment.doa.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.doa {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            //   // // print("already there",idArr)
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                dayOfAgeData.append(data!)
-                            }
-                        }
-                    }
-                }
+                dayOfAgeSyncData()
             }
             inovojectData.removeAll()
             if peNewAssessment.inovoject.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.inovoject {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                inovojectData.append(data!)
-                            }
-                        }
-                    }
-                }
+                syncDataForInovoject()
             }
             certificateData.removeAll()
             if peNewAssessment.vMixer.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.vMixer {
-                    let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
-                    if idArr.contains(data!.id ?? 0){
-                    }else{
-                        idArr.append(data!.id ?? 0)
-                        if data != nil{
-                            certificateData.append(data!)
-                        }
-                    }
-                }
+                syncDataForVaxineMixture()
             }
             tempArr.removeAll()
             let json = createSyncRequest(dict: peNewAssessment, certificationData: certificateData)

@@ -346,7 +346,76 @@ class PEViewStartNewAssesmentINT: BaseViewController {
     }
     
     // MARK:  Assign Constraint
-    func assignConstraint(otherEgg:Int = 0){
+    fileprivate func handleCase0(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
+            }
+        case 2:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
+            }
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 60))
+            }
+        }
+    }
+    
+    fileprivate func handleCase1(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            } else {
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
+            }
+        case 2:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
+            } else {
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
+            }
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            } else {
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 50))
+            }
+        }
+    }
+    
+    fileprivate func handleCase2(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94 {
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
+            } else {
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
+            }
+        case 2:
+            if heightNumberOfEggsView.constant == 94 {
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
+            } else {
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
+            }
+        default:
+            if heightNumberOfEggsView.constant == 94 {
+                notesTop.constant = CGFloat(((leftConst * 55 ) ))
+            } else {
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            }
+        }
+    }
+    
+    func assignConstraint(otherEgg:Int = 0) {
         let leftConst = leftConstraint()
         var rightConst = rightConstraint() //+ otherEgg
         if rightConst == 3 {
@@ -355,80 +424,14 @@ class PEViewStartNewAssesmentINT: BaseViewController {
         
         switch leftConst {
         case 0:
-            
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
-                }
-            case 2:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
-                }
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 60))
-                }
-            }
-            
+            handleCase0(rightConst, leftConst)
         case 1:
-            
-            switch rightConst {
-                
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
-                }
-            case 2:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
-                }
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 50))
-                }
-            }
+            handleCase1(rightConst, leftConst)
         case 2:
-            
-            switch rightConst {
-                
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
-                }
-            case 2:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
-                }
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) ))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }
-            }
-            
+            handleCase2(rightConst, leftConst)
         default:
-            break;
+            break
         }
-        
-        
     }
     
     // MARK: Setup Left Constraint.
@@ -732,13 +735,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
     }
     
     // MARK: - Merndatory Field Validation Check
-    func changeMandatorySuperviewToRed(){
-        let date = self.peNewAssessment.evaluationDate ?? ""
-        let customer = self.peNewAssessment.customerName ?? ""
-        let site = self.peNewAssessment.siteName ?? ""
-        let evaluationName = self.peNewAssessment.evaluationName ?? ""
-        let evaluator = self.peNewAssessment.evaluatorName ?? ""
-        let reasonForVisit = self.peNewAssessment.visitName ?? ""
+    fileprivate func handleDateCountValidation(_ date: String) {
         if (date.count > 0 ?? 0){print(appDelegateObj.testFuntion())} else  {
             let superviewCurrent =  evaluationDateButton.superview
             if superviewCurrent != nil{
@@ -749,7 +746,10 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                     }
                 }}
         }
-        if (customer.count > 0 ?? 0 ){print(appDelegateObj.testFuntion())} else  {
+    }
+    
+    fileprivate func handleCustomerValidation(_ customer: String) {
+        if (customer.count > 0 ){print(appDelegateObj.testFuntion())} else  {
             let superviewCurrent =  customerButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -760,7 +760,10 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                 }
             }
         }
-        if (site.count > 0 ?? 0){print(appDelegateObj.testFuntion())} else  {
+    }
+    
+    fileprivate func handleSiteValidation(_ site: String) {
+        if (site.count > 0){print(appDelegateObj.testFuntion())} else {
             let superviewCurrent =  siteButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -770,7 +773,10 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                     }
                 }}
         }
-        if (evaluationName.count ?? 0 > 0){print(appDelegateObj.testFuntion())} else  {
+    }
+    
+    fileprivate func handleEvaluationValidation(_ evaluationName: String) {
+        if (evaluationName.count > 0){print(appDelegateObj.testFuntion())} else {
             let superviewCurrent =  evaluationTypeButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -780,7 +786,10 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                     }
                 }}
         }
-        if (evaluator.count ?? 0  > 0){print(appDelegateObj.testFuntion())} else  {
+    }
+    
+    fileprivate func handleEvaluatorValidation(_ evaluator: String) {
+        if (evaluator.count  > 0){print(appDelegateObj.testFuntion())} else {
             let superviewCurrent =  evaluatorButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -790,7 +799,10 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                     }
                 }}
         }
-        if (reasonForVisit.count ?? 0 > 0){print(appDelegateObj.testFuntion())} else  {
+    }
+    
+    fileprivate func handleReasonForVisit(_ reasonForVisit: String) {
+        if (reasonForVisit.count > 0){print(appDelegateObj.testFuntion())} else {
             let superviewCurrent =  visitButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -798,8 +810,24 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                         view.layer.borderColor = UIColor.red.cgColor
                         view.layer.borderWidth = 2.0
                     }
-                }}
+                }
+            }
         }
+    }
+    
+    func changeMandatorySuperviewToRed(){
+        let date = self.peNewAssessment.evaluationDate ?? ""
+        let customer = self.peNewAssessment.customerName ?? ""
+        let site = self.peNewAssessment.siteName ?? ""
+        let evaluationName = self.peNewAssessment.evaluationName ?? ""
+        let evaluator = self.peNewAssessment.evaluatorName ?? ""
+        let reasonForVisit = self.peNewAssessment.visitName ?? ""
+        handleDateCountValidation(date)
+        handleCustomerValidation(customer)
+        handleSiteValidation(site)
+        handleEvaluationValidation(evaluationName)
+        handleEvaluatorValidation(evaluator)
+        handleReasonForVisit(reasonForVisit)
         
         showAlert(title: Constants.alertStr, message: "Please fill the mandatory fields.", owner: self)
         
@@ -1295,9 +1323,137 @@ extension PEViewStartNewAssesmentINT{
     }
     
     // MARK: - Create Sync Request for Assessment Detail.
-    func createSyncRequest(dict: PENewAssessment) -> JSONDictionary{
+    fileprivate func handleManAndEggs(_ man: inout String, _ dict: PENewAssessment, _ manOther: inout String, _ egggOther: inout String, _ eggg: inout String) {
+        if man != "" {
+            if let character = dict.manufacturer?.character(at:0) {
+                if character == "S"{
+                    let str =  man.replacingOccurrences(of: "S", with: "")
+                    manOther = str
+                    man = "Other"
+                }
+            }
+        }
+        let xx = String(dict.noOfEggs ?? 000)
+        if xx != "0" {
+            let last3 = String(xx.suffix(3))
+            if last3 ==  "000" {
+                let str =  xx.replacingOccurrences(of: "000", with: "")
+                egggOther = str
+                eggg = "Other"
+            } else {
+                eggg = xx
+            }
+        }
+    }
+    
+    fileprivate func handleParamsAndPopulate(_ dateSig: String, _ regionId: Int, _ evaluationDate: String?, _ evalDateStr: inout String) {
+        if dateSig != "" {
+            print(appDelegateObj.testFuntion())
+        } else {
+            let convertDateFormatter = DateFormatter()
+            convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+            convertDateFormatter.timeZone = Calendar.current.timeZone
+            convertDateFormatter.locale = Calendar.current.locale
+        }
         
+        if regionId == 3 {
+            
+            let inputFormatter = DateFormatter()
+            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            
+            // Convert the string to a Date object
+            if let date = inputFormatter.date(from: evaluationDate ?? "") {
+                
+                // Create another DateFormatter for the desired output format
+                let outputFormatter = DateFormatter()
+                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                
+                // Convert the Date object back to a string
+                let formattedDateString = outputFormatter.string(from: date)
+                evalDateStr = formattedDateString
+            }
+        } else {
+            let inputFormatter = DateFormatter()
+            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            
+            if let date = inputFormatter.date(from: evaluationDate ?? "") {
+                
+                let outputFormatter = DateFormatter()
+                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                
+                let formattedDateString = outputFormatter.string(from: date)
+                evalDateStr = formattedDateString
+            }
+        }
+    }
+    
+    fileprivate func handleSigNumValidation(_ sigNumber: Int, _ base64Str: inout String, _ dict: PENewAssessment, _ sigNumber2: Int, _ base64Str2: inout String) {
+        if sigNumber == 0 {
+            print(appDelegateObj.testFuntion())
+        } else {
+            base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig) ?? 0)
+        }
+        if sigNumber2 == 0 {
+            print(appDelegateObj.testFuntion())
+        } else {
+            base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
+        }
+    }
+    
+    fileprivate func handleManBreedValidation(_ man: String, _ manufacutrerNameArray: NSArray, _ ManufacturerId: inout Int, _ manufacutrerIDArray: NSArray, _ breeedd: String, _ BirdBreedNameArray: NSArray, _ breeddId: inout Int, _ BirdBreedIDArray: NSArray, _ eggg: String, _ EggsNameArray: NSArray, _ EggID: inout Int, _ EggsIDArray: NSArray) {
+        if man != "" {
+            let indexOfd = manufacutrerNameArray.index(of: man)
+            ManufacturerId = manufacutrerIDArray[indexOfd] as? Int ?? 0
+        }
         
+        if breeedd != "" {
+            let indexOfe = BirdBreedNameArray.index(of: breeedd)
+            breeddId = BirdBreedIDArray[indexOfe] as? Int ?? 0
+        }
+        if eggg != "" {
+            let indexOfp = EggsNameArray.index(of: eggg)
+            EggID = EggsIDArray[indexOfp] as? Int ?? 0
+        }
+    }
+    
+    fileprivate func handleBreedValidation(_ breeedd: inout String, _ breeeddOther: inout String) {
+        if breeedd != "" {
+            if let character = breeedd.character(at:0) {
+                if character == "S".character(at: 0){
+                    let str =  breeedd.replacingOccurrences(of: "S", with: "")
+                    breeeddOther = str
+                    breeedd = "Other"
+                    
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleSelectedTSR(_ dict: PENewAssessment, _ visitNameArray: NSArray, _ TSRId: inout Int?, _ visitIDArray: NSArray, _ Camera: inout Bool) {
+        if dict.selectedTSR?.count ?? 0 > 0 {
+            if visitNameArray.contains(dict.selectedTSR ?? ""){
+                let indexOfe =  visitNameArray.index(of: dict.selectedTSR ?? "")
+                TSRId = visitIDArray[indexOfe] as? Int ?? 0
+            }
+        }
+        
+        if dict.camera == 1 {
+            Camera = true
+        }
+    }
+    
+    fileprivate func handleEmpIdText(_ sig_EmployeeIDtext: String?, _ rollNameArray: NSArray, _ rollID: inout Int, _ rollIDArray: NSArray, _ sig_EmployeeIDtext2: String?, _ rollID2: inout Int) {
+        if sig_EmployeeIDtext?.count ?? 0 > 1 {
+            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext ?? "")
+            rollID = rollIDArray[indexOfe] as? Int ?? 0
+        }
+        if sig_EmployeeIDtext2?.count ?? 0 > 1 {
+            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext2 ?? "")
+            rollID2 = rollIDArray[indexOfe] as? Int ?? 0
+        }
+    }
+    
+    func createSyncRequest(dict: PENewAssessment) -> JSONDictionary {
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dict.dataToSubmitID ?? ""
         
@@ -1359,97 +1515,48 @@ extension PEViewStartNewAssesmentINT{
         let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
         let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray ()
         let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray ()
-        if dict.selectedTSR?.count ?? 0 > 0 {
-            if visitNameArray.contains(dict.selectedTSR ?? ""){
-                let indexOfe =  visitNameArray.index(of: dict.selectedTSR ?? "")
-                TSRId = visitIDArray[indexOfe] as? Int ?? 0
-            }
-        }
-        
         let HatchAnti = false
         var Camera = false
-        if  dict.camera == 1 {
-            Camera = true
-        }
+        
+        handleSelectedTSR(dict, visitNameArray, &TSRId, visitIDArray, &Camera)
         
         var man = dict.manufacturer  ?? ""
-        var manOther =  ""
-        if  man != "" {
-            if let character = dict.manufacturer?.character(at:0) {
-                if character == "S"{
-                    let str =  man.replacingOccurrences(of: "S", with: "")
-                    manOther = str
-                    man = "Other"
-                }
-            }
-        }
         var eggg = ""
         var egggOther =  ""
-        let xx = String(dict.noOfEggs ?? 000)
-        if xx != "0" {
-            let last3 = String(xx.suffix(3))
-            if last3 ==  "000" {
-                let str =  xx.replacingOccurrences(of: "000", with: "")
-                egggOther = str
-                eggg = "Other"
-            } else {
-                eggg = xx
-            }
-        }
+        var manOther =  ""
+        
+        handleManAndEggs(&man, dict, &manOther, &egggOther, &eggg)
         
         var breeedd = dict.breedOfBird  ?? ""
         var breeeddOther =  ""
-        if breeedd != "" {
-            if let character = breeedd.character(at:0) {
-                if character == "S".character(at: 0){
-                    let str =  breeedd.replacingOccurrences(of: "S", with: "")
-                    breeeddOther = str
-                    breeedd = "Other"
-                    
-                }
-            }
-        }
-        breeeddOther = dict.breedOfBirdOther ?? ""
+        handleBreedValidation(&breeedd, &breeeddOther)
         
+        breeeddOther = dict.breedOfBirdOther ?? ""
         var ManufacturerId = 0
         var EggID = 0
         var breeddId = 0
-        
-        
         var manufacutrerNameArray = NSArray()
         var manufacutrerIDArray = NSArray()
         var manufacutrerDetailsArray = NSArray()
-        manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
-        manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
-        manufacutrerIDArray = manufacutrerDetailsArray.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
-        if man != "" {
-            let indexOfd = manufacutrerNameArray.index(of: man)
-            ManufacturerId = manufacutrerIDArray[indexOfd] as? Int ?? 0
-        }
-        
         var BirdBreedIDArray = NSArray()
         var BirdBreedNameArray = NSArray()
         var BirdBreedDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
-        BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
-        BirdBreedIDArray = BirdBreedDetailsArray.value(forKey: "birdId") as? NSArray ?? NSArray()
-        if breeedd != "" {
-            let indexOfe = BirdBreedNameArray.index(of: breeedd)
-            breeddId = BirdBreedIDArray[indexOfe] as? Int ?? 0
-        }
         var EggsIDArray = NSArray()
         var EggsNameArray = NSArray()
+        manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
+        manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
+        manufacutrerIDArray = manufacutrerDetailsArray.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
+        BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
+        BirdBreedIDArray = BirdBreedDetailsArray.value(forKey: "birdId") as? NSArray ?? NSArray()
         let EggsDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
         EggsNameArray = EggsDetailsArray.value(forKey: "eggCount") as? NSArray ?? NSArray()
         EggsIDArray = EggsDetailsArray.value(forKey: "eggId") as? NSArray ?? NSArray()
-        if eggg != "" {
-            let indexOfp = EggsNameArray.index(of: eggg)
-            EggID = EggsIDArray[indexOfp] as? Int ?? 0
-        }
+        
+        handleManBreedValidation(man, manufacutrerNameArray, &ManufacturerId, manufacutrerIDArray, breeedd, BirdBreedNameArray, &breeddId, BirdBreedIDArray, eggg, EggsNameArray, &EggID, EggsIDArray)
         
         let FlockAgeId = dict.isFlopSelected
         let Status_Type = ""
-        let UserId = dict
-            .userID
+        let UserId = dict.userID
         let RepresentativeName = ""
         let Notes = dict.notes
         let dateFormatter = DateFormatter()
@@ -1473,16 +1580,7 @@ extension PEViewStartNewAssesmentINT{
         let statusType = dict.statusType ?? 0
         var base64Str = ""
         var base64Str2 = ""
-        if sigNumber == 0 {
-            print(appDelegateObj.testFuntion())
-        } else {
-            base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig) ?? 0)
-        }
-        if sigNumber2 == 0 {
-            print(appDelegateObj.testFuntion())
-        } else {
-            base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
-        }
+        handleSigNumValidation(sigNumber, &base64Str, dict, sigNumber2, &base64Str2)
         
         var DisplayId = dict.evaluationDate
         DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
@@ -1504,69 +1602,19 @@ extension PEViewStartNewAssesmentINT{
         let rollDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
         rollNameArray = rollDetailsArray.value(forKey: "roleName") as? NSArray ?? NSArray()
         rollIDArray = rollDetailsArray.value(forKey: "roleId") as? NSArray ?? NSArray()
-        if sig_EmployeeIDtext?.count ?? 0 > 1 {
-            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext ?? "")
-            rollID = rollIDArray[indexOfe] as? Int ?? 0
-        }
-        
         var rollID2 = 0
-        if sig_EmployeeIDtext2?.count ?? 0 > 1 {
-            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext2 ?? "")
-            rollID2 = rollIDArray[indexOfe] as? Int ?? 0
-        }
+        
+        handleEmpIdText(sig_EmployeeIDtext, rollNameArray, &rollID, rollIDArray, sig_EmployeeIDtext2, &rollID2)
         
         var json : JSONDictionary = JSONDictionary()
-        if dateSig != ""{
-            print(appDelegateObj.testFuntion())
-        }else{
-            let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
-            convertDateFormatter.timeZone = Calendar.current.timeZone
-            convertDateFormatter.locale = Calendar.current.locale
-        }
-        let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
-        
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
         var evalDateStr = ""  //dateFormatterObj.string(from: evalDateObj ?? Date())
-        if regionId == 3 {
-            
-            let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
-
-            // Convert the string to a Date object
-            if let date = inputFormatter.date(from: evaluationDate ?? "") {
-                
-                // Create another DateFormatter for the desired output format
-                let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
-                
-                // Convert the Date object back to a string
-                let formattedDateString = outputFormatter.string(from: date)
-                evalDateStr = formattedDateString
-            } else {
-                print(appDelegateObj.invalidDateStr)
-            }
-        }
-        else
-        {
-            let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-
-            if let date = inputFormatter.date(from: evaluationDate ?? "") {
-            
-                let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
-                
-                let formattedDateString = outputFormatter.string(from: date)
-                evalDateStr = formattedDateString
-            } else {
-                print(appDelegateObj.invalidDateStr)
-            }
-        }
-
+        let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
         
-        let re_note =    UserDefaults.standard.value(forKey: "re_note")
+        handleParamsAndPopulate(dateSig, regionId, evaluationDate, &evalDateStr)
+        
+        let re_note = UserDefaults.standard.value(forKey: "re_note")
         json = [
             "AppAssessmentId":String(AssessmentId),
             "DisplayId":DisplayId?.prefix(22),

@@ -11,7 +11,7 @@ import Reachability
 
 //UIImage
 class  CodeHelper{
-    var reachability = try! Reachability()
+    var reachability = try? Reachability()
     
     private init(){print("Initializer")}
     static let sharedInstance = CodeHelper()

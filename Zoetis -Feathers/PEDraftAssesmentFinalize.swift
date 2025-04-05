@@ -5235,7 +5235,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    fileprivate func handledTypeCompletion(_ headerView: PEHeaderDayOfAge) {
+    fileprivate func handledTypeCompletion2(_ headerView: PEHeaderDayOfAge) {
         headerView.dTypeCompletion = {[unowned self] ( error) in
             var bagSizeArray = NSArray()
             var bagSizeDetailsArray = NSArray()
@@ -5318,7 +5318,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
             handleAddCompletion2(headerView)
             handleMinusCompletion2(headerView)
-            handledTypeCompletion(headerView)
+            handledTypeCompletion2(headerView)
             handlecSizeCompletion(headerView, section)
             
             return headerView
@@ -5610,6 +5610,28 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
         }
     }
     
+    fileprivate func handleRegionAndCountryId() {
+        if regionID != 3 {
+            if(selectedCategory?.catName == refrigrateStr) {
+                showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
+            } else {
+                showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
+            }
+        }
+    }
+    
+    fileprivate func fetchDraftedRefrigeratorData() {
+        lblextenderMicro.isHidden = true
+        extendedMicroSwitch.isHidden = true
+        extendedMicroSwitch.isUserInteractionEnabled = false
+        catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
+        iterateCatArray()
+        if(catArrayForTableIs.count > 0) {
+            let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
+            refrigtorProbeArray = CoreDataHandlerPE().getDraftREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         peNewAssessment = CoreDataHandlerPE().getSavedDraftOnGoingAssessmentPEObject()
         
@@ -5636,28 +5658,14 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                 totalScoreLabel.text = String(totalMark)
                 resultScoreLabel.text = String(0)
                 if(selectedCategory?.catName == refrigrateStr) {
-                    lblextenderMicro.isHidden = true
-                    extendedMicroSwitch.isHidden = true
-                    extendedMicroSwitch.isUserInteractionEnabled = false
-                    catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((selectedCategory?.sequenceNo ?? 0) as NSNumber,peNewAssessment: self.peNewAssessment)
-                    iterateCatArray()
-                    if(catArrayForTableIs.count > 0) {
-                        let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
-                        refrigtorProbeArray = CoreDataHandlerPE().getDraftREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-                    }
+                    fetchDraftedRefrigeratorData()
                 }
                 catArrValidation()
                 
                 tableview.reloadData()
                 
                 let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-                if regionID != 3 {
-                    if(selectedCategory?.catName == refrigrateStr) {
-                        showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
-                    } else {
-                        showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
-                    }
-                }
+                handleRegionAndCountryId()
                 refreshTableView()
             }
         }

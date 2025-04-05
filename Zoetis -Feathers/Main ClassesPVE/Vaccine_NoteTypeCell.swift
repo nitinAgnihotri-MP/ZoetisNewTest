@@ -59,6 +59,55 @@ extension Vaccine_NoteTypeCell: UITextFieldDelegate {
         self.endEditing(true)
     }
     
+    fileprivate func handleIndex4(_ idArr: [Int]?, _ newString: String) {
+        if let dataArr = idArr {
+            for index in 0..<dataArr.count {
+                if SwitchState {
+                    
+                    CoreDataHandlerPVE().updateLiveVaccineSavedInDraft(SwitchState , id: idArr![index], type: "draft", syncId: timeStampStr , forAttribute: "liveVaccineSwitch" , comment: "" , forComment : "liveComment")
+                } else {
+                    CoreDataHandlerPVE().updateLiveVaccineSavedInDraft(SwitchState, id: idArr![index], type: "draft", syncId: timeStampStr, forAttribute: "liveVaccineSwitch" , comment: newString , forComment : "liveComment")
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleDataArrElse(_ idArr: [Int]?, _ newString: String) {
+        if let dataArr = idArr {
+            for index in 0..<dataArr.count {
+                if SwitchState {
+                    CoreDataHandlerPVE().updateLiveVaccineSavedInDraft(SwitchState,  id: idArr![index], type: "draft", syncId: timeStampStr, forAttribute: "inactiveVaccineSwitch" , comment: "",  forComment : "inactiveComment")
+                } else {
+                    CoreDataHandlerPVE().updateLiveVaccineSavedInDraft(SwitchState,  id: idArr![index], type: "draft", syncId: timeStampStr, forAttribute: "inactiveVaccineSwitch" , comment: newString,  forComment : "inactiveComment")
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleCurrentIndexNotDraft(_ idArr: [Int]?, _ newString: String) {
+        if let dataArr = idArr {
+            for index in 0..<dataArr.count {
+                if SwitchState {
+                    CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], SwitchState, forAttribute: "liveVaccineSwitch" , comment: "" , forComment : "liveComment")
+                } else {
+                    CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], SwitchState, forAttribute: "liveVaccineSwitch", comment: newString,  forComment : "liveComment")
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleElseNotDraftSectionNot4(_ idArr: [Int]?, _ newString: String) {
+        if let dataArr = idArr {
+            for index in 0..<dataArr.count {
+                if SwitchState {
+                    CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], SwitchState, forAttribute: "inactiveVaccineSwitch" ,comment: "",  forComment : "inactiveComment")
+                } else {
+                    CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], SwitchState, forAttribute: "inactiveVaccineSwitch" , comment: newString,  forComment : "inactiveComment")
+                }
+            }
+        }
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let idArr = (QuesIdArr).value(forKey: "id") as? [Int]
@@ -66,74 +115,24 @@ extension Vaccine_NoteTypeCell: UITextFieldDelegate {
         let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
         print(newString)
         
-        if newString.count > 60{
+        if newString.count > 60 {
             return false
         }
         
-        if type == "draft"
-        {
-            if currentIndPath.section == 4
-            {
-                if let dataArr = idArr {
-                    for index in 0..<dataArr.count
-                    {
-                        if SwitchState {
-                            
-                            CoreDataHandlerPVE().updateLiveVaccineSavedInDraft(SwitchState , id: idArr![index], type: "draft", syncId: timeStampStr , forAttribute: "liveVaccineSwitch" , comment: "" , forComment : "liveComment")
-                        }
-                        else{
-                            CoreDataHandlerPVE().updateLiveVaccineSavedInDraft(SwitchState, id: idArr![index], type: "draft", syncId: timeStampStr, forAttribute: "liveVaccineSwitch" , comment: newString , forComment : "liveComment")
-                        }
-                    }
-                }
-                
+        if type == "draft" {
+            if currentIndPath.section == 4 {
+                handleIndex4(idArr, newString)
+            } else {
+                handleDataArrElse(idArr, newString)
             }
-            else{
-                if let dataArr = idArr {
-                    for index in 0..<dataArr.count
-                    {
-                        if SwitchState {
-                            CoreDataHandlerPVE().updateLiveVaccineSavedInDraft(SwitchState,  id: idArr![index], type: "draft", syncId: timeStampStr, forAttribute: "inactiveVaccineSwitch" , comment: "",  forComment : "inactiveComment")
-                        }
-                        else{
-                            CoreDataHandlerPVE().updateLiveVaccineSavedInDraft(SwitchState,  id: idArr![index], type: "draft", syncId: timeStampStr, forAttribute: "inactiveVaccineSwitch" , comment: newString,  forComment : "inactiveComment")
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
+        } else {
             
-            if currentIndPath.section == 4
-            {
-                if let dataArr = idArr {
-                    for index in 0..<dataArr.count
-                    {
-                        if SwitchState {
-                            CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], SwitchState, forAttribute: "liveVaccineSwitch" , comment: "" , forComment : "liveComment")
-                        }
-                        else{
-                            CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], SwitchState, forAttribute: "liveVaccineSwitch", comment: newString,  forComment : "liveComment")
-                        }
-                    }
-                }
-            }
-            else{
-                if let dataArr = idArr {
-                    for index in 0..<dataArr.count
-                    {
-                        if SwitchState {
-                            CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], SwitchState, forAttribute: "inactiveVaccineSwitch" ,comment: "",  forComment : "inactiveComment")
-                        }
-                        else{
-                            CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], SwitchState, forAttribute: "inactiveVaccineSwitch" , comment: newString,  forComment : "inactiveComment")
-                        }
-                    }
-                }
+            if currentIndPath.section == 4 {
+                handleCurrentIndexNotDraft(idArr, newString)
+            } else {
+                handleElseNotDraftSectionNot4(idArr, newString)
             }
         }
         return true
     }
-    
 }

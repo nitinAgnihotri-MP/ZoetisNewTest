@@ -953,6 +953,33 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
     }
     
+    fileprivate func breedOtherValidation() {
+        if (peNewAssessment.breedOfBird?.lowercased().contains("other") ?? false) {
+            guard let otherText = peNewAssessment.breedOfBirdOther, !otherText.isEmpty else {
+                changeMandatorySuperviewToRed()
+                return
+            }
+        }
+    }
+    
+    fileprivate func manufacturerOtherValidation() {
+        if (self.txtManufacturer.text?.lowercased().contains("other") ?? false) {
+            guard let otherText = manfacturerOtherTxt.text, !otherText.isEmpty else {
+                changeMandatorySuperviewToRed()
+                return
+            }
+        }
+    }
+    
+    fileprivate func eggsOtherValidation() {
+        if (txtNumberOfEggs.text?.lowercased().contains("other") ?? false) {
+            guard let otherText = eggsOtherTxt.text, !otherText.isEmpty else {
+                changeMandatorySuperviewToRed()
+                return
+            }
+        }
+    }
+    
     @IBAction func nextBtnAction(_ sender: Any) {
         
         self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { [self] status in
@@ -985,24 +1012,14 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
         
         if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != "" {
-            if (peNewAssessment.breedOfBird?.lowercased().contains("other") ?? false) {
-                guard let otherText = peNewAssessment.breedOfBirdOther, !otherText.isEmpty else {
-                    changeMandatorySuperviewToRed()
-                    return
-                }
-            }
+            breedOtherValidation()
         } else {
             changeMandatorySuperviewToRed()
             return
         }
         
         if self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
-            if (self.txtManufacturer.text?.lowercased().contains("other") ?? false) {
-                guard let otherText = manfacturerOtherTxt.text, !otherText.isEmpty else {
-                    changeMandatorySuperviewToRed()
-                    return
-                }
-            }
+            manufacturerOtherValidation()
         } else {
             changeMandatorySuperviewToRed()
             return
@@ -1016,12 +1033,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
         
         if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != "" {
-            if (txtNumberOfEggs.text?.lowercased().contains("other") ?? false) {
-                guard let otherText = eggsOtherTxt.text, !otherText.isEmpty else {
-                    changeMandatorySuperviewToRed()
-                    return
-                }
-            }
+            eggsOtherValidation()
         } else {
             changeMandatorySuperviewToRed()
             return
@@ -1354,7 +1366,7 @@ class PEDraftStartNewAssessment: BaseViewController {
             setBorderForVisitType()
         }
         
-        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
         
     }
     

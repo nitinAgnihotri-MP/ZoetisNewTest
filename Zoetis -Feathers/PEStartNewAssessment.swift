@@ -679,6 +679,48 @@ class PEStartNewAssessment: BaseViewController {
     
     /* Get offline stored session(Eggs and Incubation) */
     // MARK: - Get offline stored session(Eggs and Incubation)
+    fileprivate func handleTxtManufacturer(_ submitedAssess: PENewAssessment) {
+        if txtManufacturer.text  == "" {
+            txtManufacturer.text = submitedAssess.manufacturer ?? ""
+            if  txtManufacturer.text != "" {
+                if let character = submitedAssess.manufacturer?.character(at:0) {
+                    if character == constantToSave.character(at: 0){
+                        showManufacturerOthers()
+                        let str =  submitedAssess.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
+                        manfacturerOtherTxt.text = str
+                        txtManufacturer.text = "Other"
+                    }
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleTxtNumberOfEggs(_ submitedAssess: PENewAssessment) {
+        if txtNumberOfEggs.text == "" {
+            if submitedAssess.noOfEggs ?? 0 > 0 {
+                txtNumberOfEggs.text = String(submitedAssess.noOfEggs ?? 0)
+            }
+            let xx = String(submitedAssess.noOfEggs ?? 000)
+            if xx != "0" {
+                let last3 = String(xx.suffix(3))
+                if last3 ==  "000" {
+                    showEggsOthers()
+                    let str =  xx.replacingOccurrences(of: "000", with: "")
+                    eggsOtherTxt.text = str
+                    txtNumberOfEggs.text = "Other"
+                }
+            }
+        }
+    }
+    
+    fileprivate func textNumberValidation() {
+        if txtNumberOfEggs.text  == "Other" {
+            showEggsOthers()
+        } else {
+            hideEggsOthers()
+        }
+    }
+    
     private func getSubmittedAssessmentorEggsAndIncubation() {
         var submitedAssess : PENewAssessment = PENewAssessment()
         let offlineSubmitedArray  = CoreDataHandlerPE().getSessionForViewAssessmentArrayPEObject(ofCurrentAssessment:true)
@@ -686,56 +728,26 @@ class PEStartNewAssessment: BaseViewController {
             for obj in offlineSubmitedArray {
                 submitedAssess = obj
             }
-            if  txtManufacturer.text  == "" {
-                txtManufacturer.text = submitedAssess.manufacturer ?? ""
-                if  txtManufacturer.text != "" {
-                    if let character = submitedAssess.manufacturer?.character(at:0) {
-                        if character == constantToSave.character(at: 0){
-                            showManufacturerOthers()
-                            let str =  submitedAssess.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
-                            manfacturerOtherTxt.text = str
-                            txtManufacturer.text = "Other"
-                        }
-                    }
-                }
-            }
+            handleTxtManufacturer(submitedAssess)
             if txtManufacturer.text  == "Other"{
                 showManufacturerOthers()
-            }else{
+            } else {
                 hideManufacturerOthers()
             }
-            if  txtNumberOfEggs.text == "" {
-                if submitedAssess.noOfEggs ?? 0 > 0 {
-                    txtNumberOfEggs.text = String(submitedAssess.noOfEggs ?? 0)
-                }
-                let xx = String(submitedAssess.noOfEggs ?? 000)
-                if xx != "0" {
-                    let last3 = String(xx.suffix(3))
-                    if last3 ==  "000" {
-                        showEggsOthers()
-                        let str =  xx.replacingOccurrences(of: "000", with: "")
-                        eggsOtherTxt.text = str
-                        txtNumberOfEggs.text = "Other"
-                    }
-                }
-            }
-            if txtNumberOfEggs.text  == "Other"{
-                showEggsOthers()
-            }else{
-                hideEggsOthers()
-            }
-            if  txtIncubation.text == "" {
+            handleTxtNumberOfEggs(submitedAssess)
+            textNumberValidation()
+            if txtIncubation.text == "" {
                 txtIncubation.text =  submitedAssess.incubation
             }
             self.peNewAssessment.incubation = txtIncubation.text
-            if txtNumberOfEggs.text  == "Other"{
+            if txtNumberOfEggs.text  == "Other" {
                 self.peNewAssessment.noOfEggs = Int64((eggsOtherTxt.text ?? "") + "000")
-            }else{
+            } else {
                 self.peNewAssessment.noOfEggs = Int64(txtNumberOfEggs.text ?? "")
             }
-            if txtManufacturer.text  == "Other"{
+            if txtManufacturer.text  == "Other" {
                 self.peNewAssessment.manufacturer = "S" + (manfacturerOtherTxt.text ?? "")
-            }else{
+            } else {
                 self.peNewAssessment.manufacturer = txtManufacturer.text
             }
         }
@@ -1484,7 +1496,7 @@ class PEStartNewAssessment: BaseViewController {
             }
         }
         
-        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
         
     }
     

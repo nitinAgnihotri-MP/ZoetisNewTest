@@ -1379,6 +1379,47 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         }
     }
     // MARK: 🟢 Fetch Posted Session details from Server for vaccination
+    fileprivate func handleVaccinationPostingResponse(_ arr: [JSON], _ self: PostingSessionDetailController) {
+        for item in arr {
+            if let vac = item.dictionaryObject?["Vaccination"] as? NSArray, vac.count > 0,
+               let posDict = vac.firstObject as? NSDictionary {
+                
+                CoreDataHandler().getHatcheryDataFromServerSingleFromDeviceId(posDict, postingId: self.postingId)
+                CoreDataHandler().getFieldDataFromServerSingledata(posDict, postingId: self.postingId)
+            }
+        }
+    }
+    
+    fileprivate func handleVaccinationListAPIResponse(_ json:JSON) {
+        if let arr = JSON(json).array, !arr.isEmpty {
+            
+            UserDefaults.standard.set("Yes", forKey: "Success")
+            
+            CoreDataHandler().deleteDataWithPostingIdHatchery(self.postingId)
+            CoreDataHandler().deleteDataWithPostingIdFieldVacinationWithSingle(self.postingId)
+            
+            self.handleVaccinationPostingResponse(arr, self)
+            
+            self.getPostingDataFromServerforFeed()
+        } else {
+            self.getPostingDataFromServerforFeed()
+        }
+    }
+    
+    fileprivate func handleGetVaccineDeviceID(_ jsonResponse: JSON) {
+        // Check for the "errorResult" key and handle errors
+        if let errorResult = jsonResponse["errorResult"].dictionary {
+            let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
+            let statusCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
+            
+            print("Error from PostingSession/GetVaccinationListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
+            
+            if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
+                UserDefaults.standard.set(Constants.noStr, forKey: "Success")
+            }
+        }
+    }
+    
     func getPostingDataFromServerforVaccination(){
         
         if WebClass.sharedInstance.connected() {
@@ -1391,17 +1432,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 }
                 
                 let jsonResponse = JSON(json)
-                // Check for the "errorResult" key and handle errors
-                if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let statusCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
-                    
-                    print("Error from PostingSession/GetVaccinationListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
-                    
-                    if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-                        UserDefaults.standard.set(Constants.noStr, forKey: "Success")
-                    }
-                }
+                self?.handleGetVaccineDeviceID(jsonResponse)
                 
                 
                 DispatchQueue.main.async { [weak self] in
@@ -1414,30 +1445,11 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                         return
                     }
                     
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                  
-                        UserDefaults.standard.set("Yes", forKey: "Success")
-                        
-                        CoreDataHandler().deleteDataWithPostingIdHatchery(self.postingId)
-                        CoreDataHandler().deleteDataWithPostingIdFieldVacinationWithSingle(self.postingId)
-
-                        for item in arr {
-                            if let vac = item.dictionaryObject?["Vaccination"] as? NSArray, vac.count > 0,
-                               let posDict = vac.firstObject as? NSDictionary {
-                                
-                                CoreDataHandler().getHatcheryDataFromServerSingleFromDeviceId(posDict, postingId: self.postingId)
-                                CoreDataHandler().getFieldDataFromServerSingledata(posDict, postingId: self.postingId)
-                            }
-                        }
-
-                        self.getPostingDataFromServerforFeed()
-                    } else {
-                        self.getPostingDataFromServerforFeed()
-                    }
+                    handleVaccinationListAPIResponse(json)
                 }
             })
 
-        } else{
+        } else {
             self.failWithInternetConnection()
         }
     }

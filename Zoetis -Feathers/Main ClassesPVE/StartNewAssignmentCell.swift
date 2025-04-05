@@ -188,7 +188,7 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         self.sharedManager.setBorderBlue(btn: ageOfBirdsBtn)
     }
     
-    fileprivate func extractedFunc1(_ newString: String) {
+    fileprivate func handleHouseNoTxtfield(_ newString: String) {
         if timeStampStr.count > 0 {
             CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString ?? "", forAttribute: "houseNumber")
         }else{
@@ -196,7 +196,7 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         }
     }
     
-    fileprivate func extractedFunc2(_ newString: String) {
+    fileprivate func handleNoOfBirdsTxtfield(_ newString: String) {
         if timeStampStr.count > 0 {
             CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: Int(newString) ?? 0, forAttribute: "noOfBirds")
         }else{
@@ -205,7 +205,7 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         self.sharedManager.setBorderBlue(btn: noOfBirdsBtn)
     }
     
-    fileprivate func extractedFunc3(_ newString: String) {
+    fileprivate func handleBreedOfBirdsOtherTxtfield(_ newString: String) {
         if timeStampStr.count > 0 {
             CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString ?? "", forAttribute: "breedOfBirdsOther")
         }else{
@@ -214,7 +214,7 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         self.sharedManager.setBorderBlue(btn: breedOfBirdsOtherBtn)
     }
     
-    fileprivate func extractedFunc4(_ newString: String) {
+    fileprivate func handleBreedOfBirdsFemaleOtherTxtfield(_ newString: String) {
         if timeStampStr.count > 0 {
             CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString ?? "", forAttribute: "breedOfBirdsFemaleOther")
         }else{
@@ -229,6 +229,31 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         }
     }
     
+    fileprivate func handleAgeOfBirdsTextField(_ sum: Int, _ newString: inout String) -> Bool {
+        if sum == 0 && newString.count > 0 {
+            newString = "0"
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    fileprivate func handleFarmNameTxtfield(_ newString: String) -> Bool {
+        if newString.count > 40{
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    fileprivate func handleAgeOfBirdsAndNoOfBirds(_ newString: String) -> Bool {
+        if newString.count > 5 {
+            return false
+        } else {
+            return true
+        }
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield,
@@ -239,23 +264,14 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         var newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
         
         if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield {
-            if newString.count > 5 {
-                return false
-            }
+            return handleAgeOfBirdsAndNoOfBirds(newString)
             let sum = newString.compactMap{$0.wholeNumberValue}.reduce(0, +)
-            if sum == 0 && newString.count > 0 {
-                newString = "0"
-                return false
-            }
+            return handleAgeOfBirdsTextField(sum, &newString)
         }
         
         validateAgeOfBirdsTxtfield(textField, newString)
         if textField == farmNameTxtfield {
-            if newString.count > 40{
-                return false
-            } else {
-                return true
-            }
+            return handleFarmNameTxtfield(newString)
             
             CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "farm")
             self.sharedManager.setBorderBlue(btn: farmNameBtn)
@@ -263,21 +279,21 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
             if newString.count > 40 {
                 return false
             }
-            extractedFunc1(newString)
+            handleHouseNoTxtfield(newString)
             self.sharedManager.setBorderBlue(btn: houseNoBtn)
             
         } else if textField == noOfBirdsTxtfield {
-            extractedFunc2(newString)
+            handleNoOfBirdsTxtfield(newString)
         } else if textField == breedOfBirdsOtherTxtfield{
             if newString.count > 40 {
                 return false
             }
-            extractedFunc3(newString)
+            handleBreedOfBirdsOtherTxtfield(newString)
         } else if textField == breedOfBirdsFemaleOtherTxtfield {
             if newString.count > 40 {
                 return false
             }
-            extractedFunc4(newString)
+            handleBreedOfBirdsFemaleOtherTxtfield(newString)
         }
         
         return true

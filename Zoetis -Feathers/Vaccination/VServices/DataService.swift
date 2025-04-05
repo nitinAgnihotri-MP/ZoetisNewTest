@@ -378,61 +378,66 @@ class DataService{
         
     }
     
-    func fillOperatorInfo(certificationId:String, userId:String, customerId:String, siteId:String)->[OperatorInfoDTO]?{
+    fileprivate func hsndleUserIdMoObj(_ userId: String, _ operatorObj: OperatorInfoDTO, _ moObj: VaccinationEmployeeVM) {
+        if userId != "" {
+            operatorObj.CreatedBy = Int64.init(userId)
+        }
+        if moObj.selectedLangId != "" {
+            operatorObj.LanguageId = Int64(moObj.selectedLangId)
+        }
+        if let selectedTshirtId = moObj.selectedTshirtId{
+            operatorObj.TshirtSizeId = Int64(selectedTshirtId)
+        }
+    }
+    
+    fileprivate func handleSelectedValueObjStr(_ selectedValueObjStr: String?, _ selectedRoleArr: inout [DropwnMasterDataVM], _ operatorObj: OperatorInfoDTO, _ moObj: VaccinationEmployeeVM, _ operatorArr: inout [OperatorInfoDTO]) {
+        if selectedValueObjStr != "" && selectedValueObjStr != nil {
+            
+            let data = selectedValueObjStr?.data(using: .utf8)
+            let decoder = JSONDecoder()
+            do {
+                if data != nil {
+                    selectedRoleArr =  try decoder.decode([DropwnMasterDataVM].self, from: data!)
+                    var roleDTOArr = [RolesTransferDTO]()
+                    for role in selectedRoleArr{
+                        roleDTOArr.append(fillRolesObj(role))
+                    }
+                    operatorObj.Roles = roleDTOArr
+                }
+            } catch {}
+            let dateFormatterObj = DateFormatter()
+            dateFormatterObj.timeZone = Calendar.current.timeZone
+            dateFormatterObj.locale = Calendar.current.locale
+            dateFormatterObj.dateFormat = Constants.yyyyMMddHHmmss
+            operatorObj.FromDate = moObj.startDate
+            operatorArr.append(operatorObj)
+        }
+    }
+    
+    func fillOperatorInfo(certificationId:String, userId:String, customerId:String, siteId:String)->[OperatorInfoDTO]? {
         var operatorArr = [OperatorInfoDTO]()
         let moObjArr:[VaccinationEmployeeVM] = AddEmployeesDAO.sharedInstance.getAllCertEmployees(userId: userId, certificationId: certificationId)
-        if moObjArr.count > 0{
-            for moObj in moObjArr{
+        if moObjArr.count > 0 {
+            for moObj in moObjArr {
                 let operatorObj = OperatorInfoDTO()
-                if moObj.employeeId != nil && moObj.employeeId != ""{
+                if moObj.employeeId != nil && moObj.employeeId != "" {
                     operatorObj.Id = Int64.init(moObj.employeeId!)
                     operatorObj.OperatorUniqueId = moObj.employeeId
                 }
                 operatorObj.FirstName = moObj.firstName
                 operatorObj.MiddleName = moObj.middleName
                 operatorObj.LastName = moObj.lastName
-                if userId != ""{
-                    operatorObj.CreatedBy = Int64.init(userId)
-                }
                 operatorObj.CustomerId = Int64(customerId)
                 operatorObj.SiteId = Int64(siteId)
                 operatorObj.OperatorSignature = moObj.signBase64
-                if moObj.selectedLangId != ""{
-                    operatorObj.LanguageId = Int64(moObj.selectedLangId)
-                }
-                if let selectedTshirtId = moObj.selectedTshirtId{
-                    operatorObj.TshirtSizeId = Int64(selectedTshirtId)
-                }
+                
+                hsndleUserIdMoObj(userId, operatorObj, moObj)
                 let selectedValueObjStr = moObj.rolesArrStr
                 var selectedRoleArr = [DropwnMasterDataVM]()
-                if selectedValueObjStr != "" && selectedValueObjStr != nil{
-                    
-                    let data = selectedValueObjStr?.data(using: .utf8)
-                    let decoder = JSONDecoder()
-                    do{
-                        if data != nil{
-                            selectedRoleArr =  try decoder.decode([DropwnMasterDataVM].self, from: data!)
-                            var roleDTOArr = [RolesTransferDTO]()
-                            for role in selectedRoleArr{
-                                roleDTOArr.append(fillRolesObj(role))
-                            }
-                            operatorObj.Roles = roleDTOArr
-                        }
-                    } catch {
-                        
-                    }
-                    
-                    
-                    let dateFormatterObj = DateFormatter()
-                    dateFormatterObj.timeZone = Calendar.current.timeZone
-                    dateFormatterObj.locale = Calendar.current.locale
-                    dateFormatterObj.dateFormat = Constants.yyyyMMddHHmmss
-                    operatorObj.FromDate = moObj.startDate
-                    operatorArr.append(operatorObj)
-                }
+                handleSelectedValueObjStr(selectedValueObjStr, &selectedRoleArr, operatorObj, moObj, &operatorArr)
             }
         }
-        if operatorArr.count > 0{
+        if operatorArr.count > 0 {
             return operatorArr
         }
         return nil
@@ -691,42 +696,67 @@ class DataService{
     
     
     //GetSubmittedCertificationsDTO
-    func getSubmittedCertifications(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
+    fileprivate func handleSubmittedCertResponse(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != ""{
+            let jsonData = try? Data(responseStr.utf8 )
+            if let data = jsonData{
+                _ = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+                do {
+                    let model = try JSONDecoder().decode([GetSubmittedCertificationsDTO].self, from: data)
+                    debugPrint(model)
+                } catch {
+                    //print(error.localizedDescription)
+                    debugPrint(String(describing: error))
+                }
+                let vaccinationCertificationObj = try? jsonDecoder.decode([GetSubmittedCertificationsDTO].self, from: data)
+                if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
+                    VaccinationCustomersDAO.sharedInstance.deleteAllData("VaccinationStartedCertifications")
+                    VaccinationCustomersDAO.sharedInstance.deleteAllData("VaccinationShippingAddress")
+                    SubmittedCertificationsService.sharedInstance.insertData(userId: loginuserId, vaccinationCertificationObj!)
+                    completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+                }
+                completion(appDelegateObj.noDataFoundStr, nil)
+            }
+        }
+    }
+    
+    func getSubmittedCertifications(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void) {
         let url = ZoetisWebServices.EndPoint.getSubmittedCertifications.latestUrl + loginuserId
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
             guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
             if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
+                if let response = responseJSONDict["Data"] {
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            _ = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-                            do {
-                                let model = try JSONDecoder().decode([GetSubmittedCertificationsDTO].self, from: data)
-                                debugPrint(model)
-                            } catch {
-                                //print(error.localizedDescription)
-                                debugPrint(String(describing: error))
-                            }
-                            let vaccinationCertificationObj = try? jsonDecoder.decode([GetSubmittedCertificationsDTO].self, from: data)
-                            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                VaccinationCustomersDAO.sharedInstance.deleteAllData("VaccinationStartedCertifications")
-                                VaccinationCustomersDAO.sharedInstance.deleteAllData("VaccinationShippingAddress")
-                                SubmittedCertificationsService.sharedInstance.insertData(userId: loginuserId, vaccinationCertificationObj!)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }
-                            completion(appDelegateObj.noDataFoundStr, nil)
-                        }
+                    self?.handleSubmittedCertResponse(loginuserId,responseStr, jsonDecoder) { (json2,error2) in
+                        completion(json2, error2)
                     }
                 }
             }
         })
     }
     
+    fileprivate func hsndleShippingDetailResponse(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder,_ SelectedFsmId:String, completion: @escaping (String?, NSError?) -> Void) {
+        if responseStr != "" {
+            let jsonData = try? Data(responseStr.utf8)
+            if let data = jsonData{
+                let shippingInfoObj = try? jsonDecoder.decode([ShippingAddressDTO].self, from: data)
+                if  shippingInfoObj != nil && shippingInfoObj?.count ?? 0 > 0 {
+                    if shippingInfoObj?[0].fssID == 0 {
+                        VaccinationCustomersDAO.sharedInstance.deleteShippingInfoByFssId(shippingInfoObj?[0].fssID ?? 0)
+                    } else {
+                        VaccinationCustomersDAO.sharedInstance.deleteShippingInfoByFssId(Int(SelectedFsmId) ?? 0)
+                    }
+                    
+                    UserDefaults.standard.setValue(shippingInfoObj?[0].countryID, forKey: "countryId")
+                    VaccinationCustomersDAO.sharedInstance.saveShippingInfoInDB(newAssessment: shippingInfoObj)
+                    completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
+                }
+            }
+        }
+    }
     
-    func getShippingDetails(loginuserId:String, SelectedFsmId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
+    func getShippingDetails(loginuserId:String, SelectedFsmId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void) {
         
         let url = ZoetisWebServices.EndPoint.getShippingAddressDetails.latestUrl + SelectedFsmId        
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
@@ -738,25 +768,8 @@ class DataService{
                     }
                     let jsonDecoder = JSONDecoder()
                     let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let shippingInfoObj = try? jsonDecoder.decode([ShippingAddressDTO].self, from: data)
-                            if  shippingInfoObj != nil && shippingInfoObj?.count ?? 0 > 0{
-                                
-                                if shippingInfoObj?[0].fssID == 0{
-                                    VaccinationCustomersDAO.sharedInstance.deleteShippingInfoByFssId(shippingInfoObj?[0].fssID ?? 0)
-                                }
-                                else
-                                {
-                                    VaccinationCustomersDAO.sharedInstance.deleteShippingInfoByFssId(Int(SelectedFsmId) ?? 0)
-                                }
-                                
-                                UserDefaults.standard.setValue(shippingInfoObj?[0].countryID, forKey: "countryId")
-                                VaccinationCustomersDAO.sharedInstance.saveShippingInfoInDB(newAssessment: shippingInfoObj)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }
-                        }
+                    self?.hsndleShippingDetailResponse(loginuserId,responseStr, jsonDecoder,SelectedFsmId) {(json2,error2) in
+                        completion(json2,error2)
                     }
                 }
             }

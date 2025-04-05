@@ -769,47 +769,34 @@ extension PVEDraftSNAssessment {
         }
         
         textfieldValidation(evaluationForId, cell)
-        showAlert(title: Constants.alertStr, message: "Please enter details in all the fields marked as mandatory.", owner: self)
+        showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
         isAllValidationOk = false
     }
     
-    private func checkValidationnn() -> Bool{
+    private func checkValidationnn() -> Bool {
         var isAllValidationOk = Bool()
         isAllValidationOk = true
         
-        if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
-        {
-            
+        if let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell {
             let dataSavedInDB = CoreDataHandlerPVE().fetchDraftForSyncId(type: "draft", syncId: currentTimeStamp)
-            
             var evaluationForId = Int()
             if dataSavedInDB.count > 0 {
                 let arr = dataSavedInDB.value(forKey: "evaluationForId") as! NSArray
                 evaluationForId = arr[0] as! Int
-            }else{
-                
+            } else {
                 evaluationForId = 0
             }
-            
             if cell.evaluationDateTxtfield.text?.count == 0 || cell.evaluatorTxtfield.text?.count == 0 || cell.siteIdTxtfield.text?.count == 0 || /*cell.housingTxtfield.text?.count == 0 ||*/ cell.customerTxtfield.text?.count == 0 || cell.evaluationForTxtfield.text?.count == 0 || cell.accManagerTxtfield.text?.count == 0 || /*cell.ageOfBirdsTxtfield.text?.count == 0 ||*/ cell.breedOfBirdsTxtfield.text?.count == 0{
                 
                 pveValidation(cell, evaluationForId, &isAllValidationOk)
             }
-            
         }
-        
         return isAllValidationOk
     }
-    
-    
-    
+
     func checkValidation()  {
-        
         if checkValidationnn() == true  {
-            
-            
-            if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
-            {
+            if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell {
                 //
                 let isDateExistInDB = checkDateInDB(dateStr: cell.evaluationDateTxtfield.text ?? "")
                 
@@ -823,15 +810,12 @@ extension PVEDraftSNAssessment {
                     vc.currentTimeStamp = currentTimeStamp
                     navigationController?.pushViewController(vc, animated: true)
        
-                }else{
+                } else {
                     showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
                     // cell.evaluationDateTxtfield.text = ""
                     setBorderRedForMandatoryFiels(forBtn: cell.evaluationDateBtn)
                 }
             }
-            
         }
-        
     }
-    
 }

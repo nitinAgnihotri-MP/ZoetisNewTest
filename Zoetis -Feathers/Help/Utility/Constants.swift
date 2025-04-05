@@ -247,6 +247,17 @@ struct Constants {
     static let refIdPredicater = "refId == %@"
     static let postIdStatusPredicator  = "postingId == %@ AND isSync == %@"
     static let cacheControl  = "Cache-Control"
+    static let complexIdPredicate = "complexId == %@"
+    static let inovo = "In Ovo"
+    static let eyeDrop = "Eye Drop"
+    static let complexTotal = "Complex Total"
+    static let displayNone = "#display:none#"
+    static let noneDisplay = "display:none"
+    static let leftMargin = "margin-left:-40px"
+    static let noHistoricalData = "No historical data."
+    static let membranaDaAsa = "Membrana Da Asa"
+    static let pleaseEnterMandatoryFields = "Please enter details in all the fields marked as mandatory."
+    static let predicates =  "%@(%@)"
 }
 
 enum ZoetisArt {

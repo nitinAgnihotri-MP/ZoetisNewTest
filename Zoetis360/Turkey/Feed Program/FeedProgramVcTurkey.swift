@@ -562,161 +562,176 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     
     
+    fileprivate func myCoxtinDosageDataSetUp(_ i: Int) {
+        if MyCoxtinBindersArray.count == 1{
+            myCoxtinStarterDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myCoxtinStarterDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
+        }
+        
+        if MyCoxtinBindersArray.count == 1{
+            myCoxtinGrowerDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myCoxtinGrowerDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            myCoxtinFinisherDosge.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myCoxtinFinisherDosge.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            myCoxtinWDDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myCoxtinWDDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            myCoxtin5DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
+        }
+        else{
+            myCoxtin5DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
+        }
+        
+        if MyCoxtinBindersArray.count == 1{
+            myCoxtin6DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myCoxtin6DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func MyCoxtinMoleculeDataSetUp(_ i: Int) {
+        if MyCoxtinBindersArray.count == 1{
+            moleculeFeedType1MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType1MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            moleculeFeedType2MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType2MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            moleculeFeedType3MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType3MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            moleculeFeedType4MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType4MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
+        }
+        
+        if MyCoxtinBindersArray.count == 1{
+            moleculeFeedType5MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType5MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            moleculeFeedType6MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType6MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func myCoxtinFromDaysDataSetup(_ i: Int) {
+        if MyCoxtinBindersArray.count == 1{
+            myFromFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myFromFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            myFromSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myFromSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            myFromThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myFromThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            myFromFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myFromFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            from5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
+        }
+        else{
+            from5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
+        }
+        
+        if MyCoxtinBindersArray.count == 1{
+            from6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
+        }
+        else{
+            from6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func myCoxtinToDataSetUp(_ i: Int) {
+        if MyCoxtinBindersArray.count == 1{
+            myToFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myToFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
+        }
+        
+        if MyCoxtinBindersArray.count == 1{
+            myToSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myToSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
+        }
+        
+        if MyCoxtinBindersArray.count == 1{
+            myToThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myToThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            myToFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            myToFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
+        }
+        if MyCoxtinBindersArray.count == 1{
+            to5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            to5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
+        }
+        
+        if MyCoxtinBindersArray.count == 1{
+            to6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            to6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
+        }
+    }
+    
     fileprivate func setMyCoxtinData() {
         for i in 0..<MyCoxtinBindersArray.count{
             
-            if MyCoxtinBindersArray.count == 1{
-                moleculeFeedType1MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType1MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                moleculeFeedType2MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType2MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                moleculeFeedType3MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType3MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                moleculeFeedType4MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType4MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
-            }
-            
-            if MyCoxtinBindersArray.count == 1{
-                moleculeFeedType5MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType5MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                moleculeFeedType6MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType6MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                myCoxtinStarterDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myCoxtinStarterDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
-            }
-            
-            if MyCoxtinBindersArray.count == 1{
-                myCoxtinGrowerDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myCoxtinGrowerDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                myCoxtinFinisherDosge.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myCoxtinFinisherDosge.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                myCoxtinWDDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myCoxtinWDDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                myCoxtin5DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
-            }
-            else{
-                myCoxtin5DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
-            }
-            
-            if MyCoxtinBindersArray.count == 1{
-                myCoxtin6DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myCoxtin6DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
-            }
-            
-            if MyCoxtinBindersArray.count == 1{
-                myFromFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myFromFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                myFromSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myFromSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                myFromThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myFromThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                myFromFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myFromFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                from5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
-            }
-            else{
-                from5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
-            }
-            
-            if MyCoxtinBindersArray.count == 1{
-                from6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
-            }
-            else{
-                from6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                myToFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myToFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
-            }
-            
-            if MyCoxtinBindersArray.count == 1{
-                myToSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myToSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
-            }
-            
-            if MyCoxtinBindersArray.count == 1{
-                myToThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myToThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                myToFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                myToFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
-            }
-            if MyCoxtinBindersArray.count == 1{
-                to5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                to5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
-            }
-            
-            if MyCoxtinBindersArray.count == 1{
-                to6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                to6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
-            }
+            MyCoxtinMoleculeDataSetUp(i)
+            myCoxtinDosageDataSetUp(i)
+            myCoxtinFromDaysDataSetup(i)
+            myCoxtinToDataSetUp(i)
             
             
             if MyCoxtinBindersArray.count == 1{
@@ -729,163 +744,176 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         }
     }
     
+    fileprivate func alternativeMoleculeFeedDataSetUp(_ i: Int) {
+        if AlternativeArray.count == 1{
+            moleculeFeedType1Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType1Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
+        }
+        if AlternativeArray.count == 1{
+            moleculeFeedType2Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType2Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
+        }
+        
+        if AlternativeArray.count == 1{
+            moleculeFeedType3Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType3Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
+        }
+        if AlternativeArray.count == 1{
+            moleculeFeedType4Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType4Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
+        }
+        if AlternativeArray.count == 1{
+            moleculeFeedType5Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType5Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
+        }
+        
+        if AlternativeArray.count == 1{
+            moleculeFeedType6Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            moleculeFeedType6Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func alternativeDosageDataSetUp(_ i: Int) {
+        if AlternativeArray.count == 1{
+            alternativeDosageFirstText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeDosageFirstText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
+        }
+        if AlternativeArray.count == 1{
+            alternativeDosageSecoondText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeDosageSecoondText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
+        }
+        if AlternativeArray.count == 1{
+            alternativeDosageThirdText.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeDosageThirdText.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
+        }
+        if AlternativeArray.count == 1{
+            alternativeDosageFourText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeDosageFourText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
+        }
+        
+        if AlternativeArray.count == 1{
+            altrNativeDosage5Text.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            altrNativeDosage5Text.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
+        }
+        if AlternativeArray.count == 1{
+            altrNativeDosage6Text.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            altrNativeDosage6Text.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func alternativeFromDaysDataSetup(_ i: Int) {
+        if AlternativeArray.count == 1{
+            alternativeFromFirstTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeFromFirstTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
+        }
+        if AlternativeArray.count == 1{
+            alternativeFromSecondTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeFromSecondTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
+        }
+        
+        if AlternativeArray.count == 1{
+            alternativeFromthirdTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeFromthirdTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
+        }
+        if AlternativeArray.count == 1{
+            alternativeFromFourTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeFromFourTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
+        }
+        if AlternativeArray.count == 1{
+            from5TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            from5TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
+        }
+        
+        if AlternativeArray.count == 1{
+            from6TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            from6TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func alternativeToDaysDataSetup(_ i: Int) {
+        if AlternativeArray.count == 1{
+            alternativeToFirstTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeToFirstTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
+        }
+        if AlternativeArray.count == 1{
+            alternativeToSecondTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeToSecondTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
+        }
+        if AlternativeArray.count == 1{
+            alternativeTothirdTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeTothirdTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
+        }
+        if AlternativeArray.count == 1{
+            alternativeToFourTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            alternativeToFourTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
+        }
+        
+        if AlternativeArray.count == 1{
+            to5TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            to5TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
+        }
+        
+        if AlternativeArray.count == 1{
+            to6TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            to6TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
+        }
+    }
+    
     fileprivate func setAlternativeFeedData() {
         for i in 0..<AlternativeArray.count{
             
-            if AlternativeArray.count == 1{
-                moleculeFeedType1Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType1Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
-            }
-            if AlternativeArray.count == 1{
-                moleculeFeedType2Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType2Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
-            }
-            
-            if AlternativeArray.count == 1{
-                moleculeFeedType3Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType3Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
-            }
-            if AlternativeArray.count == 1{
-                moleculeFeedType4Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType4Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
-            }
-            if AlternativeArray.count == 1{
-                moleculeFeedType5Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType5Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
-            }
-            
-            if AlternativeArray.count == 1{
-                moleculeFeedType6Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                moleculeFeedType6Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
-            }
-            if AlternativeArray.count == 1{
-                alternativeDosageFirstText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeDosageFirstText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
-            }
-            if AlternativeArray.count == 1{
-                alternativeDosageSecoondText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeDosageSecoondText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
-            }
-            if AlternativeArray.count == 1{
-                alternativeDosageThirdText.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeDosageThirdText.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
-            }
-            if AlternativeArray.count == 1{
-                alternativeDosageFourText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeDosageFourText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
-            }
-            
-            if AlternativeArray.count == 1{
-                altrNativeDosage5Text.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                altrNativeDosage5Text.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
-            }
-            if AlternativeArray.count == 1{
-                altrNativeDosage6Text.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                altrNativeDosage6Text.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
-            }
-            
-            
-            if AlternativeArray.count == 1{
-                alternativeFromFirstTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeFromFirstTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
-            }
-            if AlternativeArray.count == 1{
-                alternativeFromSecondTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeFromSecondTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
-            }
-            
-            if AlternativeArray.count == 1{
-                alternativeFromthirdTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeFromthirdTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
-            }
-            if AlternativeArray.count == 1{
-                alternativeFromFourTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeFromFourTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
-            }
-            if AlternativeArray.count == 1{
-                from5TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                from5TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
-            }
-            
-            if AlternativeArray.count == 1{
-                from6TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                from6TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
-            }
-            
-            if AlternativeArray.count == 1{
-                alternativeToFirstTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeToFirstTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
-            }
-            if AlternativeArray.count == 1{
-                alternativeToSecondTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeToSecondTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
-            }
-            if AlternativeArray.count == 1{
-                alternativeTothirdTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeTothirdTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
-            }
-            if AlternativeArray.count == 1{
-                alternativeToFourTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                alternativeToFourTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
-            }
-            
-            if AlternativeArray.count == 1{
-                to5TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                to5TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
-            }
-            
-            if AlternativeArray.count == 1{
-                to6TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                to6TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
-            }
+            alternativeMoleculeFeedDataSetUp(i)
+            alternativeDosageDataSetUp(i)
+            alternativeFromDaysDataSetup(i)
+            alternativeToDaysDataSetup(i)
             
             
             if AlternativeArray.count == 1{
@@ -897,162 +925,178 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         }
     }
     
+    fileprivate func antibioticMoleculeDataSetup(_ i: Int) {
+        if AntiboticArray.count == 1{
+            antiMoleculeFeedType1.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiMoleculeFeedType1.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiMoleculeFeedType2.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiMoleculeFeedType2.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiMoleculeFeedType3.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiMoleculeFeedType3.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
+        }
+        
+        if AntiboticArray.count == 1{
+            antiMoleculeFeedType4.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiMoleculeFeedType4.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiMoleculeFeedType5.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiMoleculeFeedType5.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiMoleculeFeedType6.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiMoleculeFeedType6.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func antibioticDossageDataSetup(_ i: Int) {
+        if AntiboticArray.count == 1{
+            antiDosageFirstTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiDosageFirstTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
+        }
+        
+        if AntiboticArray.count == 1{
+            antiDosageSecondTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiDosageSecondTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiDosageThirdTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiDosageThirdTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiDosageFourTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiDosageFourTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiDosageFivthTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiDosageFivthTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
+        }
+        
+        if AntiboticArray.count == 1{
+            antiDosageSixTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiDosageSixTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func antibioticFromDaysDataSetup(_ i: Int) {
+        if AntiboticArray.count == 1{
+            antiFromDurationFirstTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiFromDurationFirstTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiFromDurationSecondTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiFromDurationSecondTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiFromDurationThirdTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiFromDurationThirdTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiFromDurationFourTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject
+            ).object(at:i) as? String
+        }
+        else{
+            antiFromDurationFourTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject
+            ).object(at:3) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiFromFivthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiFromFivthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiFromSixthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiFromSixthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func antibioticToDaysDataSetup(_ i: Int) {
+        if AntiboticArray.count == 1{
+            antiToDurationFirstTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiToDurationFirstTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiToDurationSecondTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
+        }
+        else{
+            antiToDurationSecondTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiToDurationThirdTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiToDurationThirdTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiToDurationFourTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiToDurationFourTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
+        }
+        if AntiboticArray.count == 1{
+            antiToDurationfivthTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiToDurationfivthTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
+        }
+        
+        if AntiboticArray.count == 1{
+            antiToDurationSixTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            antiToDurationSixTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
+        }
+    }
+    
     fileprivate func setAntibioticFeedData() {
         for i in 0..<AntiboticArray.count{
             
-            if AntiboticArray.count == 1{
-                antiMoleculeFeedType1.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiMoleculeFeedType1.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiMoleculeFeedType2.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiMoleculeFeedType2.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiMoleculeFeedType3.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiMoleculeFeedType3.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
-            }
+            antibioticMoleculeDataSetup(i)
             
-            if AntiboticArray.count == 1{
-                antiMoleculeFeedType4.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiMoleculeFeedType4.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiMoleculeFeedType5.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiMoleculeFeedType5.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiMoleculeFeedType6.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiMoleculeFeedType6.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
-            }
+            antibioticDossageDataSetup(i)
             
+            antibioticFromDaysDataSetup(i)
             
-            if AntiboticArray.count == 1{
-                antiDosageFirstTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiDosageFirstTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
-            }
-            
-            if AntiboticArray.count == 1{
-                antiDosageSecondTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiDosageSecondTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiDosageThirdTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiDosageThirdTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiDosageFourTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiDosageFourTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiDosageFivthTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiDosageFivthTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
-            }
-            
-            if AntiboticArray.count == 1{
-                antiDosageSixTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiDosageSixTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiFromDurationFirstTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiFromDurationFirstTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiFromDurationSecondTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiFromDurationSecondTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiFromDurationThirdTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiFromDurationThirdTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiFromDurationFourTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject
-                ).object(at:i) as? String
-            }
-            else{
-                antiFromDurationFourTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject
-                ).object(at:3) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiFromFivthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiFromFivthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiFromSixthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiFromSixthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
-            }
-            
-            if AntiboticArray.count == 1{
-                antiToDurationFirstTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiToDurationFirstTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiToDurationSecondTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
-            }
-            else{
-                antiToDurationSecondTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiToDurationThirdTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiToDurationThirdTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiToDurationFourTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiToDurationFourTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
-            }
-            if AntiboticArray.count == 1{
-                antiToDurationfivthTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiToDurationfivthTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
-            }
-            
-            if AntiboticArray.count == 1{
-                antiToDurationSixTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                antiToDurationSixTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
-            }
+            antibioticToDaysDataSetup(i)
             
             if AntiboticArray.count == 1{
                 feedProgramTextField.text = (AntiboticArray.value(forKey:"feedProgram") as AnyObject).object(at:i) as? String
@@ -1060,6 +1104,135 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             else{
                 feedProgramTextField.text = (AntiboticArray.value(forKey:"feedProgram") as AnyObject).object(at:0) as? String
             }
+        }
+    }
+    
+    fileprivate func cocciDossageDataSetup(_ i: Int) {
+        if cocciControlArray.count == 1{
+            starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+            firstMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
+        }
+        else{
+            starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
+            firstMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:0) as? Int ?? 0
+        }
+        if cocciControlArray.count == 1{
+            growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+            secoundMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
+        }
+        else{
+            growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
+            secoundMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:1) as? Int ?? 0
+        }
+        if cocciControlArray.count == 1{
+            finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+            thirdMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
+        }
+        else{
+            finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
+            thirdMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:2) as? Int ?? 0
+        }
+        if cocciControlArray.count == 1{
+            wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+            fourthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
+        }
+        else{
+            wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
+            fourthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:3) as? Int ?? 0
+        }
+        if cocciControlArray.count == 1{
+            feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+            fifthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
+        }
+        else{
+            feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
+            fifthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:4) as? Int ?? 0
+        }
+        if cocciControlArray.count == 1{
+            feed6TextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
+            sixthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
+        }
+        else{
+            feed6TextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
+            sixthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:5) as? Int ?? 0
+        }
+    }
+    
+    fileprivate func cocciFromDaysDataSetup(_ i: Int) {
+        if cocciControlArray.count == 1{
+            FromstarterDurationTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            FromstarterDurationTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
+        }
+        if cocciControlArray.count == 1{
+            FromGrowerTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            FromGrowerTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
+        }
+        if cocciControlArray.count == 1{
+            fromFinisherTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            fromFinisherTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
+        }
+        if cocciControlArray.count == 1{
+            fromWDtextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            fromWDtextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
+        }
+        if cocciControlArray.count == 1{
+            from5TextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            from5TextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
+        }
+        if cocciControlArray.count == 1{
+            from6teXTfield.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            from6teXTfield.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
+        }
+    }
+    
+    fileprivate func cocciToDaysDataSetup(_ i: Int) {
+        if cocciControlArray.count == 1{
+            toStarterTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            toStarterTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
+        }
+        if cocciControlArray.count == 1{
+            toGrowerTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            toGrowerTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
+        }
+        if cocciControlArray.count == 1{
+            toFinisherTextField.text = (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            toFinisherTextField.text = (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
+        }
+        if cocciControlArray.count == 1{
+            toWdTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            toWdTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
+        }
+        if cocciControlArray.count == 1{
+            toFeed5TextFeidl.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            toFeed5TextFeidl.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
+        }
+        if cocciControlArray.count == 1{
+            toFeed6TextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
+        }
+        else{
+            toFeed6TextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
         }
     }
     
@@ -1166,126 +1339,9 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
             }
             
-            if cocciControlArray.count == 1{
-                starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                firstMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-            }
-            else{
-                starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
-                firstMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:0) as? Int ?? 0
-            }
-            if cocciControlArray.count == 1{
-                growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                secoundMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-            }
-            else{
-                growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
-                secoundMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:1) as? Int ?? 0
-            }
-            if cocciControlArray.count == 1{
-                finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                thirdMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-            }
-            else{
-                finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
-                thirdMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:2) as? Int ?? 0
-            }
-            if cocciControlArray.count == 1{
-                wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                fourthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-            }
-            else{
-                wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
-                fourthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:3) as? Int ?? 0
-            }
-            if cocciControlArray.count == 1{
-                feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                fifthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-            }
-            else{
-                feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
-                fifthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:4) as? Int ?? 0
-            }
-            if cocciControlArray.count == 1{
-                feed6TextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-                sixthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-            }
-            else{
-                feed6TextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
-                sixthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:5) as? Int ?? 0
-            }
-            if cocciControlArray.count == 1{
-                FromstarterDurationTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                FromstarterDurationTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
-            }
-            if cocciControlArray.count == 1{
-                FromGrowerTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                FromGrowerTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
-            }
-            if cocciControlArray.count == 1{
-                fromFinisherTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                fromFinisherTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
-            }
-            if cocciControlArray.count == 1{
-                fromWDtextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                fromWDtextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
-            }
-            if cocciControlArray.count == 1{
-                from5TextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                from5TextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
-            }
-            if cocciControlArray.count == 1{
-                from6teXTfield.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                from6teXTfield.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
-            }
-            if cocciControlArray.count == 1{
-                toStarterTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                toStarterTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
-            }
-            if cocciControlArray.count == 1{
-                toGrowerTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                toGrowerTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
-            }
-            if cocciControlArray.count == 1{
-                toFinisherTextField.text = (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                toFinisherTextField.text = (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
-            }
-            if cocciControlArray.count == 1{
-                toWdTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                toWdTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
-            }
-            if cocciControlArray.count == 1{
-                toFeed5TextFeidl.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                toFeed5TextFeidl.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
-            }
-            if cocciControlArray.count == 1{
-                toFeed6TextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-            }
-            else{
-                toFeed6TextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
-            }
+            cocciDossageDataSetup(i)
+            cocciFromDaysDataSetup(i)
+            cocciToDaysDataSetup(i)
             if cocciControlArray.count == 1{
                 coccidiosisVaccineDrinkin.text =  (cocciControlArray.value(forKey:"coccidiosisVaccine") as AnyObject).object(at:i) as? String
             }
@@ -2262,6 +2318,22 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             }})
     }
     
+    fileprivate func saveAlternativeAndMycoxtinData() {
+        self.saveAlternativeDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
+            
+            if status == true {
+                self.saveMyCoxtinDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
+                    
+                    if status == true {
+                        
+                        UserDefaults.standard.set(false, forKey: "isNewPostingId")
+                        UserDefaults.standard.synchronize()
+                        
+                    }})
+            }
+        })
+    }
+    
     fileprivate func saveUnlinkedSessionData() {
         if UserDefaults.standard.bool(forKey:"Unlinked") == true {
             postingId = UserDefaults.standard.integer(forKey:"necUnLinked") as NSNumber
@@ -2282,19 +2354,9 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                         self.saveAntibioticDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
                             
                             if status == true {
-                                self.saveAlternativeDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                    
-                                    if status == true {
-                                        self.saveMyCoxtinDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                            
-                                            if status == true {
-                                                
-                                                UserDefaults.standard.set(false, forKey: "isNewPostingId")
-                                                UserDefaults.standard.synchronize()
-                                                
-                                            }})
-                                    }})
-                            }})
+                                saveAlternativeAndMycoxtinData()
+                            }
+                        })
                     }})
             }})
     }
@@ -2325,6 +2387,32 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         }
     }
     
+    fileprivate func updateFeedId(_ feeid: Int, _ feed: inout Int) {
+        if (feeid == 0 ){
+            UserDefaults.standard.set("feed0", forKey: "feed0")
+            UserDefaults.standard.synchronize()
+            feed = 0
+        }
+        else{
+            if (strYesPop == NSLocalizedString("Yes", comment: "")){
+                
+                feed = feeid
+            }
+            else{
+                if (navigatePostingsession == "PostingFeedProgram"){
+                    feed = feeid
+                }
+                else
+                {
+                    feed = feeid-1
+                }
+            }
+            UserDefaults.standard.set(" ", forKey: "feed0")
+            UserDefaults.standard.synchronize()
+            
+        }
+    }
+    
     func callSaveMethod (btnTagSave : Int) {
         var feed = Int ()
         var trimmedString = feedProgramTextField.text!.trimmingCharacters(in: .whitespaces)
@@ -2335,29 +2423,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             if (btnTagSave == 2){
                 let feeid  = UserDefaults.standard.integer(forKey:("feedId"))
                 
-                if (feeid == 0 ){
-                    UserDefaults.standard.set("feed0", forKey: "feed0")
-                    UserDefaults.standard.synchronize()
-                    feed = 0
-                }
-                else{
-                    if (strYesPop == NSLocalizedString("Yes", comment: "")){
-                        
-                        feed = feeid
-                    }
-                    else{
-                        if (navigatePostingsession == "PostingFeedProgram"){
-                            feed = feeid
-                        }
-                        else
-                        {
-                            feed = feeid-1
-                        }
-                    }
-                    UserDefaults.standard.set(" ", forKey: "feed0")
-                    UserDefaults.standard.synchronize()
-                    
-                }
+                updateFeedId(feeid, &feed)
                 UserDefaults.standard.set(feed, forKey: "feedId")
                 UserDefaults.standard.set("back", forKey: "back")
                 UserDefaults.standard.synchronize()
@@ -3114,6 +3180,64 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 buttonCocotarget()
                 isClickOnAnyField = true
             }
+            
+            let doseName = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
+
+            switch btnTag {
+            case 101:
+                starterDosageTextField.text = doseName
+            case 102:
+                growerDosageCoccidiosisTEXT.text = doseName
+            case 103:
+                finisherDosageTxtField.text = doseName
+            case 104:
+                wdDosageTextField.text = doseName
+            case 105:
+                feed5textField.text = doseName
+            case 106:
+                feed6TextField.text = doseName
+            case 111:
+                alternativeDosageFirstText.text = doseName
+            case 112:
+                alternativeDosageSecoondText.text = doseName
+            case 113:
+                alternativeDosageThirdText.text = doseName
+            case 114:
+                alternativeDosageFourText.text = doseName
+            case 115:
+                altrNativeDosage5Text.text = doseName
+            case 116:
+                altrNativeDosage6Text.text = doseName
+            case 121:
+                myCoxtinStarterDosage.text = doseName
+            case 122:
+                myCoxtinGrowerDosage.text = doseName
+            case 123:
+                myCoxtinFinisherDosge.text = doseName
+            case 124:
+                myCoxtinWDDosage.text = doseName
+            case 125:
+                myCoxtin5DosageTextField.text = doseName
+            case 126:
+                myCoxtin6DosageTextField.text = doseName
+            case 131:
+                antiDosageFirstTextField.text = doseName
+            case 132:
+                antiDosageSecondTextField.text = doseName
+            case 133:
+                antiDosageThirdTextField.text = doseName
+            case 134:
+                antiDosageFourTextField.text = doseName
+            case 135:
+                antiDosageFivthTextField.text = doseName
+            case 136:
+                antiDosageSixTextField.text = doseName
+            default:
+                break
+            }
+
+            isClickOnAnyField = true
+            /*
             else if btnTag == 101 {
                 
                 starterDosageTextField.text = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
@@ -3252,7 +3376,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 isClickOnAnyField = true
                 
             }
-            
+            */
             if btnTag == 0 {
                 // Not sure this will work will check when we get the issue
                 switch Allbuttonbg {

@@ -75,8 +75,6 @@ class QuestionnaireVC: BaseViewController {
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
-        
-        
         removeAllBtn()
         registerCells()
         setupUI()
@@ -253,53 +251,63 @@ class QuestionnaireVC: BaseViewController {
     
     // MARK: - OBJC SELECTORS
     
-    @objc func  UpdateEmployeeSelection(_ notification: NSNotification){
-        if let index = notification.userInfo?["index"]  as? Int{
-            if let tabSelection = notification.userInfo?["tabSelection"]  as? Int{
-                if let emp = notification.userInfo?["emp"]  as? VaccinationEmployeeVM{
-                    if let isSelected = notification.userInfo?["isSelected"]  as? Bool{
-                        self.markSyncReady()
-                        var tId = VaccinationConstants.LookupMaster.OPERATOR_CERTIFICATION_QUESTION_TYPE_ID
-                        if tabSelection == 1{
-                            tId = VaccinationConstants.LookupMaster.SAFETY_AWARENESS_QUESTION_TYPE_ID
-                        }
-                        if tabSelection == 2{
-                            tId = VaccinationConstants.LookupMaster.VACCINE_MIXING_TYPE_ID
-                        }
-                        
-                        let typeIdIndex = questionnaireVMObj?.questionTypeObj?.firstIndex(where: {
-                            $0.typeId == tId
-                        })
-                        if typeIdIndex != nil{
-                            var employees = questionnaireVMObj?.questionTypeObj?[typeIdIndex!].questionCategories?[index].employees
-                            
-                            if isSelected{
-                                employees?.append(emp)
-                                questionnaireVMObj?.questionTypeObj?[typeIdIndex!].questionCategories?[index].employees = employees
-                                if ((subModule == VaccinationSubModuleNames.SafetyAwareness.rawValue && tabSelection == 1) || (subModule == VaccinationSubModuleNames.OperationCertification.rawValue && tabSelection == 0) || (subModule == VaccinationSubModuleNames.VaccineMixing.rawValue && tabSelection == 2)){
-                                    currentQuestionTypeObj?.questionCategories?[index].employees = employees
-                                    
-                                }
-                                AddEmployeesDAO.sharedInstance.addEmpToCategory(empId: emp.employeeId ?? "", userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", catId: currentQuestionTypeObj?.questionCategories?[index].categoryId ??  "", typeId: currentQuestionTypeObj?.questionCategories?[index].typeId ??  "")
-                                
-                            }else{
-                                let empIndex = employees!.firstIndex(where: {
-                                    $0.employeeId == emp.employeeId
-                                })
-                                if empIndex != nil{
-                                    employees?.remove(at: empIndex!)
-                                    questionnaireVMObj?.questionTypeObj?[typeIdIndex!].questionCategories![index].employees = employees
-                                    
-                                    if ((subModule == VaccinationSubModuleNames.SafetyAwareness.rawValue && tabSelection == 1) || (subModule == VaccinationSubModuleNames.OperationCertification.rawValue && tabSelection == 0) || (subModule == VaccinationSubModuleNames.VaccineMixing.rawValue && tabSelection == 2)){
-                                        currentQuestionTypeObj?.questionCategories?[index].employees = employees
-                                        
-                                        AddEmployeesDAO.sharedInstance.deleteEmpByCategory(empId: emp.employeeId ?? "", userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", catId: currentQuestionTypeObj?.questionCategories?[index].categoryId ??  "", typeId: currentQuestionTypeObj?.questionCategories?[index].typeId ??  "")
-                                    }
-                                }
-                            }
-                        }
-                    }
+    fileprivate func handleSubmoduleTabSelection(_ tabSelection: Int, _ index: Int, _ employees: [VaccinationEmployeeVM]?, _ emp: VaccinationEmployeeVM) {
+        if ((subModule == VaccinationSubModuleNames.SafetyAwareness.rawValue && tabSelection == 1) || (subModule == VaccinationSubModuleNames.OperationCertification.rawValue && tabSelection == 0) || (subModule == VaccinationSubModuleNames.VaccineMixing.rawValue && tabSelection == 2)) {
+            currentQuestionTypeObj?.questionCategories?[index].employees = employees
+            
+            AddEmployeesDAO.sharedInstance.deleteEmpByCategory(empId: emp.employeeId ?? "", userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", catId: currentQuestionTypeObj?.questionCategories?[index].categoryId ??  "", typeId: currentQuestionTypeObj?.questionCategories?[index].typeId ??  "")
+        }
+    }
+    
+    fileprivate func handleSelectedEmployee(_ isSelected: Bool, _ employees: inout [VaccinationEmployeeVM]?, _ emp: VaccinationEmployeeVM, _ typeIdIndex: Array<VaccinationQuestionTypeVM>.Index?, _ index: Int, _ tabSelection: Int) {
+        if isSelected {
+            employees?.append(emp)
+            questionnaireVMObj?.questionTypeObj?[typeIdIndex!].questionCategories?[index].employees = employees
+            if ((subModule == VaccinationSubModuleNames.SafetyAwareness.rawValue && tabSelection == 1) || (subModule == VaccinationSubModuleNames.OperationCertification.rawValue && tabSelection == 0) || (subModule == VaccinationSubModuleNames.VaccineMixing.rawValue && tabSelection == 2)) {
+                currentQuestionTypeObj?.questionCategories?[index].employees = employees
+                
+            }
+            AddEmployeesDAO.sharedInstance.addEmpToCategory(empId: emp.employeeId ?? "", userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", catId: currentQuestionTypeObj?.questionCategories?[index].categoryId ??  "", typeId: currentQuestionTypeObj?.questionCategories?[index].typeId ??  "")
+            
+        } else {
+            let empIndex = employees!.firstIndex(where: {
+                $0.employeeId == emp.employeeId
+            })
+            if empIndex != nil {
+                employees?.remove(at: empIndex!)
+                questionnaireVMObj?.questionTypeObj?[typeIdIndex!].questionCategories![index].employees = employees
+                handleSubmoduleTabSelection(tabSelection, index, employees, emp)
+            }
+        }
+    }
+    
+    fileprivate func handleNotificationTabSelection(_ notification: NSNotification, _ tabSelection: Int, _ index: Int) {
+        if let emp = notification.userInfo?["emp"]  as? VaccinationEmployeeVM {
+            if let isSelected = notification.userInfo?["isSelected"]  as? Bool {
+                self.markSyncReady()
+                var tId = VaccinationConstants.LookupMaster.OPERATOR_CERTIFICATION_QUESTION_TYPE_ID
+                if tabSelection == 1 {
+                    tId = VaccinationConstants.LookupMaster.SAFETY_AWARENESS_QUESTION_TYPE_ID
                 }
+                if tabSelection == 2 {
+                    tId = VaccinationConstants.LookupMaster.VACCINE_MIXING_TYPE_ID
+                }
+                
+                let typeIdIndex = questionnaireVMObj?.questionTypeObj?.firstIndex(where: {
+                    $0.typeId == tId
+                })
+                if typeIdIndex != nil {
+                    var employees = questionnaireVMObj?.questionTypeObj?[typeIdIndex!].questionCategories?[index].employees
+                    handleSelectedEmployee(isSelected, &employees, emp, typeIdIndex, index, tabSelection)
+                }
+            }
+        }
+    }
+    
+    @objc func UpdateEmployeeSelection(_ notification: NSNotification) {
+        if let index = notification.userInfo?["index"]  as? Int {
+            if let tabSelection = notification.userInfo?["tabSelection"]  as? Int {
+                handleNotificationTabSelection(notification, tabSelection, index)
             }
         }
     }
@@ -385,17 +393,20 @@ class QuestionnaireVC: BaseViewController {
         }
     }
     
-    @objc func updateQuestionnaireData(_ notification: NSNotification){
-        if let sectionIndex = notification.userInfo?["sectionIndex"]  as? Int{
-            if sectionIndex > -1{
-                if let rowIndex = notification.userInfo?["rowIndex"]  as? Int{
-                    if let questionObj = notification.userInfo?["questionObj"]  as? VaccinationQuestionVM{
-                        self.markSyncReady()
-                        if  questionnaireVMObj != nil && questionnaireVMObj?.questionTypeObj != nil && (questionnaireVMObj?.questionTypeObj!.count)! > 0{
-                            updateCurrentindex(sectionIndex: sectionIndex, rowIndex:rowIndex , questionObj: questionObj)
-                            
-                        }
-                    }
+    fileprivate func handleQuestionObj(_ notification: NSNotification, _ sectionIndex: Int, _ rowIndex: Int) {
+        if let questionObj = notification.userInfo?["questionObj"]  as? VaccinationQuestionVM {
+            self.markSyncReady()
+            if questionnaireVMObj != nil && questionnaireVMObj?.questionTypeObj != nil && (questionnaireVMObj?.questionTypeObj!.count)! > 0 {
+                updateCurrentindex(sectionIndex: sectionIndex, rowIndex:rowIndex , questionObj: questionObj)
+            }
+        }
+    }
+    
+    @objc func updateQuestionnaireData(_ notification: NSNotification) {
+        if let sectionIndex = notification.userInfo?["sectionIndex"]  as? Int {
+            if sectionIndex > -1 {
+                if let rowIndex = notification.userInfo?["rowIndex"]  as? Int {
+                    handleQuestionObj(notification, sectionIndex, rowIndex)
                 }
             }
         }
@@ -490,88 +501,91 @@ class QuestionnaireVC: BaseViewController {
         navigateToDashboard(status: VaccinationCertificationStatus.draft)
     }
     
-    @IBAction func submitBtnAction(_ sender: UIButton) {
-        
-        if curentCertification?.certificationCategoryId != "1" {
-            if curentCertification?.certificationStatus == VaccinationCertificationStatus.draft.rawValue || curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue  {
-                var newTrainingId = 0
-                if trainingId == 0
-                {
-                    newTrainingId =  Int(curentCertification?.certificationId ?? "") ?? 0
-                }
-                else
-                {
-                    newTrainingId = trainingId
-                }
+    fileprivate func handleSelectedFsmId(_ shippingInfoDB: inout ShippingAddressDTO?) {
+        if curentCertification?.selectedFsmId == nil || curentCertification?.selectedFsmId == "" {
+            shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: Int(self.curentCertification?.fsrId ?? "") ?? 0 )
+        } else {
+            shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: Int(self.curentCertification?.selectedFsmId ?? "") ?? 0 )
+        }
+    }
+    
+    fileprivate func handleCertificationId() {
+        if !(curentCertification?.certificationCategoryId == certificationTypeId) {
+            if subModule == VaccinationSubModuleNames.SafetyAwareness.rawValue{
+                acknowledgementAction()
                 
-                let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfoByTrainingId(trainingId: newTrainingId)
-                if shippingInfoDB != nil {
-                    
-                    if shippingInfoDB?.address1 == "" || shippingInfoDB?.address2 == "" || shippingInfoDB?.pincode == "" || shippingInfoDB?.city == "" || shippingInfoDB?.countryID == 0 || shippingInfoDB?.stateID == 0
-                    {
-                        
-                        displayAlertMessageForAddress(userMessage: "Please enter all the address details to submit the certification")
-                        return
-                    }
-                }
-            }
-            else{
-                var shippingInfoDB: ShippingAddressDTO?
-                if curentCertification?.selectedFsmId == nil || curentCertification?.selectedFsmId == "" {
-                    shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: Int(self.curentCertification?.fsrId ?? "") ?? 0 )
-                }
-                else {
-                    shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: Int(self.curentCertification?.selectedFsmId ?? "") ?? 0 )
-                }
-                
-                if shippingInfoDB != nil {
-                    
-                    if shippingInfoDB?.address1 == "" || shippingInfoDB?.address2 == "" || shippingInfoDB?.pincode == "" || shippingInfoDB?.city == ""
-                    {
-                        
-                        displayAlertMessageForAddress(userMessage: "Please enter all the address details to submit the certification")
-                        return
-                    }
-                    
-                }
+            } else if subModule == VaccinationSubModuleNames.Acknowledgement.rawValue {
+                navigateToDashboard(status: VaccinationCertificationStatus.submitted)
             }
         }
-        
-        
-        if  subModule == "" || subModule == VaccinationSubModuleNames.OperationCertification.rawValue || subModule == VaccinationSubModuleNames.SafetyCertification.rawValue{
+    }
+    
+    fileprivate func handleOperatorCertImgVw() {
+        if operatorCertImgVw != nil && safetyAwarenessImgVw != nil{
+            navigateToDashboard(status: VaccinationCertificationStatus.submitted)
+            //Navigate to the Dashboard with the status as Submitted
+        }
+        if curentCertification?.certificationCategoryId == certificationTypeId {
+            if subModule == VaccinationSubModuleNames.Acknowledgement.rawValue {
+                navigateToDashboard(status: VaccinationCertificationStatus.submitted)
+            }
+            
+        }
+    }
+    
+    fileprivate func handleTrainingId(_ newTrainingId: inout Int) {
+        if trainingId == 0 {
+            newTrainingId =  Int(curentCertification?.certificationId ?? "") ?? 0
+        } else {
+            newTrainingId = trainingId
+        }
+    }
+    
+    fileprivate func handleSubmoduleAndOtherValidation() {
+        if subModule == "" || subModule == VaccinationSubModuleNames.OperationCertification.rawValue || subModule == VaccinationSubModuleNames.SafetyCertification.rawValue {
             //Navigate back to the Employees Screen
-            if curentCertification?.certificationCategoryId == VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID{
+            if curentCertification?.certificationCategoryId == VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID {
                 acknowledgementAction()
-                //               operatorAction()
-            } else{
-                if operatorCertImgVw != nil && safetyAwarenessImgVw != nil{
+            } else {
+                if operatorCertImgVw != nil && safetyAwarenessImgVw != nil {
                     safetyAwarenessAction()
                 }
             }
-            
-            //
-            
-        } else if subModule == VaccinationSubModuleNames.Acknowledgement.rawValue{
-            if operatorCertImgVw != nil && safetyAwarenessImgVw != nil{
-                navigateToDashboard(status: VaccinationCertificationStatus.submitted)
-                //Navigate to the Dashboard with the status as Submitted
-            }
-            if curentCertification?.certificationCategoryId == certificationTypeId{
-                if subModule == VaccinationSubModuleNames.Acknowledgement.rawValue{
-                    navigateToDashboard(status: VaccinationCertificationStatus.submitted)
-                }
+        } else if subModule == VaccinationSubModuleNames.Acknowledgement.rawValue {
+            handleOperatorCertImgVw()
+        } else {
+            handleCertificationId()
+        }
+    }
+    
+    @IBAction func submitBtnAction(_ sender: UIButton) {
+        
+        if curentCertification?.certificationCategoryId != "1" {
+            if curentCertification?.certificationStatus == VaccinationCertificationStatus.draft.rawValue || curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {
+                var newTrainingId = 0
+                handleTrainingId(&newTrainingId)
                 
-            }
-        } else{
-            if !(curentCertification?.certificationCategoryId == certificationTypeId){
-                if subModule == VaccinationSubModuleNames.SafetyAwareness.rawValue{
-                    acknowledgementAction()
-                    
-                }else if subModule == VaccinationSubModuleNames.Acknowledgement.rawValue{
-                    navigateToDashboard(status: VaccinationCertificationStatus.submitted)
+                let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfoByTrainingId(trainingId: newTrainingId)
+                if shippingInfoDB != nil {
+                    if shippingInfoDB?.address1 == "" || shippingInfoDB?.address2 == "" || shippingInfoDB?.pincode == "" || shippingInfoDB?.city == "" || shippingInfoDB?.countryID == 0 || shippingInfoDB?.stateID == 0 {
+                        displayAlertMessageForAddress(userMessage: "Please enter all the address details to submit the certification")
+                        return
+                    }
+                }
+            } else {
+                var shippingInfoDB: ShippingAddressDTO?
+                handleSelectedFsmId(&shippingInfoDB)
+                
+                if shippingInfoDB != nil {
+                    if shippingInfoDB?.address1 == "" || shippingInfoDB?.address2 == "" || shippingInfoDB?.pincode == "" || shippingInfoDB?.city == "" {
+                        displayAlertMessageForAddress(userMessage: "Please enter all the address details to submit the certification")
+                        return
+                    }
                 }
             }
         }
+        
+        handleSubmoduleAndOtherValidation()
     }
     
     @IBAction func showPopover(_ sender: UIButton){
@@ -654,37 +668,36 @@ class QuestionnaireVC: BaseViewController {
     }
     
     
-    func `updateCurrentindex`(sectionIndex:Int, rowIndex:Int, questionObj:VaccinationQuestionVM){
-        let objIndex = questionnaireVMObj?.questionTypeObj!.firstIndex(where: {
-            $0.typeId == questionObj.typeId!
-        })
-        if let index = objIndex{
-            
-            if let question = questionnaireVMObj?.questionTypeObj![index].questionCategories![sectionIndex].questionArr![rowIndex]{
-                if question.questionId != nil && question.questionId == questionObj.questionId{
-                    questionnaireVMObj?.questionTypeObj![index].questionCategories![sectionIndex].questionArr![rowIndex] = questionObj
-                    if currentQuestionTypeObj != nil{
-                        if currentQuestionTypeObj?.questionCategories != nil && currentQuestionTypeObj?.questionCategories!.count ?? 0 > sectionIndex && (currentQuestionTypeObj?.questionCategories![sectionIndex].questionArr?.count)! > rowIndex{
-                            currentQuestionTypeObj?.questionCategories![sectionIndex].questionArr![rowIndex] = questionObj
-                        }
-                        
-                    }
-                    
-                }
-                
+    fileprivate func handleCurrentQuestionTypeObj(_ sectionIndex: Int, _ rowIndex: Int, _ questionObj: VaccinationQuestionVM) {
+        if currentQuestionTypeObj != nil {
+            if currentQuestionTypeObj?.questionCategories != nil && currentQuestionTypeObj?.questionCategories!.count ?? 0 > sectionIndex && (currentQuestionTypeObj?.questionCategories![sectionIndex].questionArr?.count)! > rowIndex{
+                currentQuestionTypeObj?.questionCategories![sectionIndex].questionArr![rowIndex] = questionObj
             }
         }
     }
     
-    func linkEmployees(){
-        
-        
+    func `updateCurrentindex`(sectionIndex:Int, rowIndex:Int, questionObj:VaccinationQuestionVM) {
+        let objIndex = questionnaireVMObj?.questionTypeObj!.firstIndex(where: {
+            $0.typeId == questionObj.typeId!
+        })
+        if let index = objIndex {
+            
+            if let question = questionnaireVMObj?.questionTypeObj![index].questionCategories![sectionIndex].questionArr![rowIndex]{
+                if question.questionId != nil && question.questionId == questionObj.questionId{
+                    questionnaireVMObj?.questionTypeObj![index].questionCategories![sectionIndex].questionArr![rowIndex] = questionObj
+                    handleCurrentQuestionTypeObj(sectionIndex, rowIndex, questionObj)
+                }
+            }
+        }
+    }
+    
+    func linkEmployees() {
         if curentCertification?.certificationCategoryId == "2" {
             employeesAddedArr = AddEmployeesDAO.sharedInstance.getAllCertEmployees(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "")
         }
     }
     
-    func selectCurrentCertificationdata(_ id:String)-> Bool{
+    func selectCurrentCertificationdata(_ id:String)-> Bool {
         var didSet = false
         if currentQuestionTypeObj?.typeId != id{
             let filteredArr = questionnaireVMObj?.questionTypeObj?.filter({
@@ -980,28 +993,35 @@ class QuestionnaireVC: BaseViewController {
         }
     }
     
-    private func navigateToDashboard(status: VaccinationCertificationStatus){
-        if status == .draft{
+    fileprivate func handleEmployeeAdedArray(_ isFilled: inout Bool) {
+        for emp in employeesAddedArr {
+            if emp.signBase64 != nil && emp.signBase64 != "" {
+                isFilled = isFilled && true
+            } else {
+                isFilled = isFilled && false
+            }
+        }
+    }
+    
+    fileprivate func handleIsFilled(_ isFilled: Bool, _ status: VaccinationCertificationStatus) {
+        if isFilled {
+            submitDataPopup(msg: "Are you sure you want to submit the certification?", status: status, header:"Submit Certification")
+        } else {
+            displayAlertMessage(userMessage: "Please enter all the signatures to submit the certification")
+        }
+    }
+    
+    private func navigateToDashboard(status: VaccinationCertificationStatus) {
+        if status == .draft {
             submitDataPopup(msg: "Are you sure you want to save certification in Draft?", status: status, header:"Save Draft")
         } else if status == .submitted{//curentCertification?.hatcheryManagerSign != nil && curentCertification?.hatcheryManagerSign != "" &&
-            if   curentCertification?.fsrSignature != nil && curentCertification?.fsrSignature != ""{
+            if curentCertification?.fsrSignature != nil && curentCertification?.fsrSignature != "" {
                 var isFilled = true
-                for emp in employeesAddedArr{
-                    if emp.signBase64 != nil && emp.signBase64 != "" {
-                        isFilled = isFilled && true
-                    }else{
-                        isFilled = isFilled && false
-                    }
-                }
-                if isFilled{
-                    submitDataPopup(msg: "Are you sure you want to submit the certification?", status: status, header:"Submit Certification")
-                }else{
-                    displayAlertMessage(userMessage: "Please enter all the signatures to submit the certification")
-                }
-            }else{
+                handleEmployeeAdedArray(&isFilled)
+                handleIsFilled(isFilled, status)
+            } else {
                 displayAlertMessage(userMessage: "Please enter all the signatures to submit the certification")
             }
-            
         }
     }
 }

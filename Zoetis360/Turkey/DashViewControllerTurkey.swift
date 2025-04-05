@@ -635,6 +635,15 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         self.callVeterianService()
     }
     
+    fileprivate func handleFarmsList(_ value: Any) {
+        if let farmsArray = value as? [[String: Any]] {
+            self.saveFarmNameGetVetList(farmsArray)
+        } else {
+            // No farms found, proceed to next service call
+            self.callVeterianService()
+        }
+    }
+    
     func getListFarms() {
         guard WebClass.sharedInstance.connected() else {
             // Offline mode: Fetch data from Core Data
@@ -689,12 +698,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 // Handle success response
                 switch response.result {
                 case .success(let value):
-                    if let farmsArray = value as? [[String: Any]] {
-                        self.saveFarmNameGetVetList(farmsArray)
-                    } else {
-                        // No farms found, proceed to next service call
-                        self.callVeterianService()
-                    }
+                    self.handleFarmsList(value)
                 case .failure(let error):
                     debugPrint("Request failed: \(error.localizedDescription)")
                 }
@@ -765,51 +769,14 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     return
                 }
+               
+        
                 
                 let jsonResponse = JSON(json)
-                // Check for the "errorResult" key and handle errors
-                if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
-                    
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
-                }
+                self?.handleFeedProgramError(jsonResponse)
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Feed Program molecule: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        self.FeedProgramArray = NSMutableArray() // Ensure it is mutable
-                        
-                        for i in 0..<arr.count {
-                            let tempDict  = arr[i].dictionaryObject as NSDictionary? // Convert JSON to NSDictionary
-                            tempDict!.value(forKey: "FeedProgramCategoryDescription") as! String
-                            tempDict!.value(forKey: "FeedProgramCategoryId") as! Int
-                            self.FeedProgramArray.add(tempDict as Any)
-                          
-                        }
-                        
-                        // Store in UserDefaults
-                        UserDefaults.standard.set(self.FeedProgramArray, forKey: "Molucule")
-
-                        // Proceed with the next function call
-                        self.callGetCocciVaccine()
-                    } else {
-                        // Handle empty array case
-                        print("Feed Program molecule list is empty.")
-                        self.callGetCocciVaccine()
-                    }
+                    self?.handleFeedProgramResponse(json)
  
                 }
                 
@@ -819,7 +786,43 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             self.failWithInternetConnection()
         }
     }
+    
+    private func handleFeedProgramError(_ jsonResponse: JSON) {
+        if let errorResult = jsonResponse["errorResult"].dictionary {
+            let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
+            let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
 
+            print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
+            self.callLoginMethod(errorCode)
+        }
+    }
+    
+
+    private func handleFeedProgramResponse(_ json: Any) {
+        let jsonDict = JSON(json).dictionary
+        if let errorMessage = jsonDict?["Message"]?.string {
+            print("Error from API Feed Program molecule: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print("Feed Program molecule list is empty.")
+            self.callGetCocciVaccine()
+            return
+        }
+
+        self.FeedProgramArray = NSMutableArray()
+        for item in arr {
+            if let dict = item.dictionaryObject {
+                self.FeedProgramArray.add(dict)
+            }
+        }
+
+        UserDefaults.standard.set(self.FeedProgramArray, forKey: "Molucule")
+        self.callGetCocciVaccine()
+    }
+    
 
     
     func callFeedProgramMoleculeService( _ breedTypeArr : NSArray) {
@@ -1192,31 +1195,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     
                     return
                 }
-                
                 DispatchQueue.main.async {
-                    
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API: \(errorMessage)")
-                        self?.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        var serializedArray: [[String: Any]] = []
-                        for i in 0..<arr.count {
-                            if let dictionary = arr[i].dictionaryObject {
-                                serializedArray.append(dictionary)
-                                self?.targetWeight.add(dictionary as AnyObject)
-                            }
-                        }
-                        
-                        UserDefaults.standard.set(serializedArray, forKey: "target")
-                        self?.getListFarms()
-                    } else {
-                        self?.getListFarms()
-                        print(Constants.noDataReceivedStr)
-                        self?.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
-                    }
+                    self?.handleTargetWeightResponse(json)
                 }
                 
             })
@@ -1225,6 +1205,37 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             self.failWithErrorInternal()
         }
     }
+
+    private func handleTargetWeightResponse(_ json: Any) {
+        if let errorMessage = JSON(json)["Message"].string {
+            print("Error from API: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            self.getListFarms()
+            print(Constants.noDataReceivedStr)
+            self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
+            return
+        }
+
+        var serializedArray: [[String: Any]] = []
+        self.targetWeight.removeAllObjects()
+
+        for item in arr {
+            if let dictionary = item.dictionaryObject {
+                serializedArray.append(dictionary)
+                self.targetWeight.add(dictionary as AnyObject)
+            }
+        }
+
+        UserDefaults.standard.set(serializedArray, forKey: "target")
+        self.getListFarms()
+    }
+
+
+
     //MARK: ********* Zoetis API call to get Complex's list ******************************************
     func complexService() {
         if WebClass.sharedInstance.connected() {
@@ -1236,42 +1247,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 }
                 
                 DispatchQueue.main.async {
-                    
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API: \(errorMessage)")
-                        self?.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Check if the response contains an array
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        // Initialize the `complexSize` array
-                        self?.complexSize = NSMutableArray()
-                        
-                        // Parse the array and populate `complexSize`
-                        for item in arr {
-                            if let tempDict = item.dictionaryObject {
-                                let dictData = NSMutableDictionary()
-                                dictData.setValue(tempDict["CustomerId"] as? Int, forKey: "CustomerId")
-                                dictData.setValue(tempDict["ComplexName"] as? String, forKey: "ComplexName")
-                                dictData.setValue(tempDict["ComplexId"] as? Int, forKey: "ComplexId")
-                                self?.complexSize.add(dictData)
-                            } else {
-                                print("Invalid data format in array: \(item)")
-                            }
-                        }
-                        
-                        // Delete old data and save new data
-                        CoreDataHandlerTurkey().deleteAllDataTurkey("ComplexPostingTurkey")
-                        if let complexSize = self?.complexSize {
-                            self?.callcomplexService(complexSize)
-                        }
-                        self?.callSalesRepWebService()
-                    } else {
-                        // Handle the case where the array is empty or nil
-                        print(Constants.noDataReceivedStr)
-                        self?.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
-                    }
+                    // i think will create some problem not sure about his code
+                    self?.handleComplexResponse(json)
                 }
             })
         }
@@ -1283,6 +1260,40 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             }
         }
     }
+    
+    
+    private func handleComplexResponse(_ json: Any) {
+        if let errorMessage = JSON(json)["Message"].string {
+            print("Error from API: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print(Constants.noDataReceivedStr)
+            self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
+            return
+        }
+
+        self.complexSize = NSMutableArray()
+
+        for item in arr {
+            if let tempDict = item.dictionaryObject {
+                let dictData = NSMutableDictionary()
+                dictData.setValue(tempDict["CustomerId"] as? Int, forKey: "CustomerId")
+                dictData.setValue(tempDict["ComplexName"] as? String, forKey: "ComplexName")
+                dictData.setValue(tempDict["ComplexId"] as? Int, forKey: "ComplexId")
+                self.complexSize.add(dictData)
+            } else {
+                print("Invalid data format in array: \(item)")
+            }
+        }
+
+        CoreDataHandlerTurkey().deleteAllDataTurkey("ComplexPostingTurkey")
+        self.callcomplexService(self.complexSize)
+        self.callSalesRepWebService()
+    }
+    
     
     
     func callcomplexService( _ complexArrrr : NSArray) {
@@ -1331,31 +1342,11 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Bird Size list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        saveVetListArr(self, arr)
-                    } else {
-                        // Handle the case when the array is empty
-                        print("Bird Size list is empty.")
-                        self.callhatcheryStrain()
-                    }
+                    self?.processVeterianResponseData(json)
                 }
                 
             })
@@ -1365,6 +1356,23 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             self.failWithInternetConnection()
         }
 
+    }
+
+    private func processVeterianResponseData(_ json: Any) {
+        let jsonDict = JSON(json).dictionary
+
+        if let errorMessage = jsonDict?["Message"]?.string {
+            print("Error from API Bird Size list: \(errorMessage)")
+            self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        if let arr = JSON(json).array, !arr.isEmpty {
+            saveVetListArr(self, arr)
+        } else {
+            print("Bird Size list is empty.")
+            self.callhatcheryStrain()
+        }
     }
 
 
@@ -1483,29 +1491,29 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                    self?.processBirdTypeData(json)
                     
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        saveBirdSizeInArr(arr, self)
-                    } else {
-                        // Handle the case when the array is empty
-                        print("Bird Size list is empty.")
-                        self.callBreedService()
-                    }
                 }
                 
             })
         } else{
             self.failWithInternetConnection()
+        }
+    }
+    
+    
+    private func processBirdTypeData(_ json: Any) {
+        let jsonArr = JSON(json).array
+
+        if let arr = jsonArr, !arr.isEmpty {
+            saveBirdSizeInArr(arr, self)
+        } else {
+            print("Bird Size list is empty.")
+            self.callBreedService()
         }
     }
     
@@ -1561,22 +1569,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-      
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        saveSessionTypeInArr(arr, self)
-                        
-                        self.callBirdTypeService()
-                        
-                    }
-                    else
-                    {
-                        self.callBirdTypeService()
-                    }
-                    
+                    self?.handleSessionTypeResponse(json)
                 }
                 
             })
@@ -1584,6 +1577,12 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         } else {
             self.failWithInternetConnection()
         }
+    }
+    private func handleSessionTypeResponse(_ json: Any) {
+        if let arr = JSON(json).array, !arr.isEmpty {
+            saveSessionTypeInArr(arr, self)
+        }
+        self.callBirdTypeService()
     }
     
     fileprivate func saveCocciProgramName(_ arr: [JSON], _ self: DashViewControllerTurkey) {
@@ -1640,20 +1639,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-             
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        saveCocciProgramName(arr, self)
-                        
-                    
-                        self.callSessionTypeService()
-                    } else {
-                        // Handle the case when the array is empty
-                        print("Cocci Program list is empty.")
-                        self.callSessionTypeService()
-                    }
+                    self?.handleCocciProgramData(json: json)
                 }
                 
                 
@@ -1662,6 +1648,25 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             self.failWithInternetConnection()
         }
     }
+    
+    
+    private func handleCocciProgramData(json: Any) {
+        guard let arr = JSON(json).array else {
+            print("Invalid data format.")
+            callSessionTypeService()
+            return
+        }
+
+        if !arr.isEmpty {
+            saveCocciProgramName(arr, self)
+        } else {
+            print("Cocci Program list is empty.")
+        }
+
+        // Always call next API
+        callSessionTypeService()
+    }
+
     
     /*********** SalesRep data call Web Service *******************************************************/
     //MARK: ********* Zoetis API call to get Sales Representatives list ****************************************************/
@@ -1676,42 +1681,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 }
                 
                 DispatchQueue.main.async {
-                    // Check for an error message in the JSON response
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API: \(errorMessage)")
-                        self?.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from the JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        
-                        self?.arraSalesRep = NSMutableArray()
-                        
-                        for item in arr {
-                            if let tempDict = item.dictionaryObject {
-                                let dictDat = NSMutableDictionary()
-                                dictDat.setValue(tempDict["SalesRepresentativeName"] as? String, forKey: "SalesRepresentativeName")
-                                dictDat.setValue(tempDict["SalesRepresentativeId"] as? Int, forKey: "SalesRepresentativeId")
-                                self?.arraSalesRep.add(dictDat)
-                            } else {
-                                print("Invalid data format in Sales Representative array: \(item)")
-                            }
-                        }
-                        
-                        // Delete old Core Data entries and save new data
-                        CoreDataHandlerTurkey().deleteAllDataTurkey("SalesrepTurkey")
-                        if let salesRepArray = self?.arraSalesRep {
-                            self?.callSaveMethodforSalesRep(salesRepArray)
-                        }
-                        
-                      
-                        self?.callAddVaccination()
-                    } else {
-                        // Handle the case where the array is empty or nil
-                        print("No data received for Sales Representatives.")
-                        self?.callAddVaccination()
-                    }
+                    self?.parseSalesRepJSON(json: json)
                 }
                 
             })
@@ -1725,7 +1695,43 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             }
         }
     }
-    fileprivate func saveCustomerNameArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+    
+    private func parseSalesRepJSON(json: Any) {
+        if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
+            print("Error from API: \(errorMessage)")
+            showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        guard let arr = JSON(json).array, !arr.isEmpty else {
+            print("No data received for Sales Representatives.")
+            callAddVaccination()
+            return
+        }
+
+        processSalesRepArray(arr)
+    }
+
+    private func processSalesRepArray(_ arr: [JSON]) {
+        arraSalesRep = NSMutableArray()
+
+        for item in arr {
+            if let tempDict = item.dictionaryObject {
+                let dictDat = NSMutableDictionary()
+                dictDat.setValue(tempDict["SalesRepresentativeName"] as? String, forKey: "SalesRepresentativeName")
+                dictDat.setValue(tempDict["SalesRepresentativeId"] as? Int, forKey: "SalesRepresentativeId")
+                arraSalesRep.add(dictDat)
+            } else {
+                print("Invalid data format in Sales Representative array: \(item)")
+            }
+        }
+
+        CoreDataHandlerTurkey().deleteAllDataTurkey("SalesrepTurkey")
+        callSaveMethodforSalesRep(arraSalesRep)
+        callAddVaccination()
+    }
+    
+    fileprivate func saveCustomerNameArr(_ arr: [JSON]) {
         var customerArray: [NSDictionary] = []
         
         // Parse each item in the array
@@ -1753,6 +1759,12 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         self.complexService()
     }
     
+    fileprivate func callLoginMethod(_ errorCode: String) {
+        if errorCode == "401" || errorCode == "404"{
+            self.loginMethod()
+        }
+    }
+    
     /*********** 0 data call Web Service *******************************************************/
     //MARK: ********* Zoetis API call to get Customers list ****************************************************/
     func callCustmerWebService() {
@@ -1773,21 +1785,19 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                   
 
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        saveCustomerNameArr(arr, self)
+                        self?.saveCustomerNameArr(arr)
                     } else {
                         // Handle case when the route list is empty
                         print("Customer's list is empty.")
-                        self.complexService()
+                        self?.complexService()
                     }
                 }
             })
@@ -1802,7 +1812,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     
     //MARK: ********* Zoetis API call to get route list ****************************************************/
     
-    fileprivate func saveRouteNameInArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+    fileprivate func saveRouteNameInArr(_ arr: [JSON]) {
         var routeArray: [NSDictionary] = []
         
         // Parse each item in the array
@@ -1848,30 +1858,12 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary, let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Route list: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        saveRouteNameInArr(arr, self)
-                    } else {
-                        // Handle case when the route list is empty
-                        print("Route list is empty.")
-                        self.callCocoiiProgramService()
-                    }
+                  
+                    self?.handleVaccinationArray(json: json)
                 }
                 
                 
@@ -1882,6 +1874,24 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             self.failWithInternetConnection()
         }
     }
+    
+    private func handleVaccinationArray(json: Any) {
+        let jsonDict = JSON(json).dictionary
+
+        if let errorMessage = jsonDict?["Message"]?.string {
+            print("Error from API Route list: \(errorMessage)")
+            showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+
+        if let arr = JSON(json).array, !arr.isEmpty {
+            saveRouteNameInArr(arr)
+        } else {
+            print("Route list is empty.")
+            callCocoiiProgramService()
+        }
+    }
+    
     
     func allSessionArrChicken() ->NSMutableArray{
         
@@ -1968,21 +1978,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-            
-                    
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        saveHatcheryStrainInArr(arr, self)
-                    } else {
-                        // Handle the case where the array is empty
-                        print("Hatchery strain list is empty.")
-                        self.showToastWithTimer(message: noDataAvalbl, duration: 3.0)
-                        
-                        // Call the next service
-                        self.callGetFieldStrain()
-                    }
+                    self?.handleHatcheryStrainArray(json: json)
                 }
             })
             
@@ -1990,6 +1986,19 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             self.failWithInternetConnection()
         }
     }
+    
+    
+    private func handleHatcheryStrainArray(json: Any) {
+        if let arr = JSON(json).array, !arr.isEmpty {
+            saveHatcheryStrainInArr(arr, self)
+        } else {
+            print("Hatchery strain list is empty.")
+            showToastWithTimer(message: noDataAvalbl, duration: 3.0)
+            callGetFieldStrain()
+        }
+    }
+    
+    
     //MARK: ********* Zoetis API call to get Field Strain list ****************************************************/
     fileprivate func saveFieldStraininArr(_ arr: [JSON]) {
         // Clear existing data in Core Data
@@ -2030,29 +2039,26 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                   
            
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        saveFieldStraininArr(arr)
+                        self?.saveFieldStraininArr(arr)
                         
                         // Call the next service after processing
-                        self.callGetDosage()
+                        self?.callGetDosage()
                     } else {
                         // Handle the case where the array is empty
-                        print("Field Strain list is empty.")
-                        self.showToastWithTimer(message: noDataAvalbl, duration: 3.0)
+                      
+                        self?.showToastWithTimer(message: self?.noDataAvalbl ?? "", duration: 3.0)
                         
                         // Call the next service
-                        self.callGetDosage()
+                        self?.callGetDosage()
                     }
                 }
                 
@@ -2063,7 +2069,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         }
     }
     //MARK: ********* Zoetis API call to get Dossage list ****************************************************/
-    fileprivate func saveDossageListInArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+    fileprivate func saveDossageListInArr(_ arr: [JSON]) {
         // Clear existing data in Core Data
         CoreDataHandler().deleteAllData("GetDosage")
         
@@ -2103,25 +2109,22 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
+                   
                     
                     // Parse the array from JSON response
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        saveDossageListInArr(arr, self)
+                        self?.saveDossageListInArr(arr)
                     } else {
                         // Handle the case where the array is empty
                         print("Get Dosage list is empty.")
-                        self.showToastWithTimer(message: noDataAvalbl, duration: 3.0)
+                        self?.showToastWithTimer(message: self?.noDataAvalbl ?? "", duration: 3.0)
                         
                         // Call the next service
-                        self.getGenerationType()
+                        self?.getGenerationType()
                     }
                 }
             })
@@ -2173,10 +2176,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 
@@ -2215,7 +2215,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     }
     
     //MARK: ********* Zoetis API call to get Dossage By Molecule ID ****************************************************/
-    fileprivate func saveDossageInArr(_ arr: [JSON], _ self: DashViewControllerTurkey) {
+    fileprivate func saveDossageInArr(_ arr: [JSON]) {
         // Clear existing data in Core Data
         CoreDataHandler().deleteAllData("GetDosageTurkeyWithMoleculeID")
         
@@ -2250,24 +2250,12 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
-                    if errorCode == "401" || errorCode == "404"{
-                        self!.loginMethod()
-                    }
+                    self?.callLoginMethod(errorCode)
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
                     
-             
-                    // Parse the array from JSON response
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        saveDossageInArr(arr, self)
-                    }
-                    
-                    else {
-                        Helper.dismissGlobalHUD(self.view)
-                    }
+                    self?.handleDosageArray(json: json)
                 }
             })
             
@@ -2276,6 +2264,15 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             self.failWithInternetConnection()
         }
     }
+    
+    private func handleDosageArray(json: Any) {
+        if let arr = JSON(json).array, !arr.isEmpty {
+            self.saveDossageInArr(arr)
+        } else {
+            Helper.dismissGlobalHUD(self.view)
+        }
+    }
+    
 }
 
 // MARK: - EXTENSION

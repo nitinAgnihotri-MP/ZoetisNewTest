@@ -550,14 +550,46 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         }
     }
     // MARK: 🟢 - Save Imune Category
-    func saveImmuneCat(_ formName: String , numberofBirds:Int)
-    {
+    fileprivate func handleIfCondition(_ immune: Immune, _ formName: String, _ j: Int, _ necId: Int) {
+        if immune.measure! == "Y,N" {
+            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
+        } else if (immune.measure! == "Actual") {
+            
+            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "0.0")
+            
+            if immune.observationField == Constants.maleFemaleStr {
+                
+                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "N/A")
+                
+            }
+        } else if ( immune.measure! == "F,M") {  /// New Addition for Bird Sex
+            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            if immune.observationField == Constants.maleFemaleStr {
+                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating: immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "0")
+                
+            }
+        } else {
+            
+            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            let array = (trimmed.components(separatedBy: ",") as [String])
+            if immune.refId == 58 {
+                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: Int(array[3])! , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
+            } else {
+                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
+            }
+        }
+    }
+    
+    func saveImmuneCat(_ formName: String , numberofBirds:Int) {
         var  necId = Int()
         
-        if  necIdExIsting == "Exting"{
+        if necIdExIsting == "Exting" {
             necId = necIdExist
-        }
-        else{
+        } else {
             necId = UserDefaults.standard.integer(forKey: "necId") as Int
         }
         lngId = UserDefaults.standard.integer(forKey: "lngId")
@@ -565,56 +597,11 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         let immu =   CoreDataHandler().fetchAllImmuneUsingLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
         
         
-        for i in 0..<immu.count
-        {
-            for j in 0..<numberofBirds
-            {
+        for i in 0..<immu.count {
+            for j in 0..<numberofBirds {
                 if ((immu.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                     let immune : Immune = immu.object(at: i) as! Immune
-                    
-                    if immune.measure! == "Y,N" {
-                        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
-                    }
-                    else if ( immune.measure! == "Actual"){
-                        
-                        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "0.0")
-                        
-                        if immune.observationField == Constants.maleFemaleStr
-                        {
-                            
-                            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "N/A")
-                            
-                        }
-                    }
-                    
-                    
-                    else if ( immune.measure! == "F,M"){  /// New Addition for Bird Sex
-                        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        if immune.observationField == Constants.maleFemaleStr
-                        {
-                            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: 0 , index: j, obsId: Int(truncating: immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: "0")
-                            
-                        }
-                    }
-                    
-                    else
-                    {
-                        
-                        let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        let array = (trimmed.components(separatedBy: ",") as [String])
-                        if immune.refId == 58
-                        {
-                            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber, obsPoint: Int(array[3])! , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
-                        }
-                        else
-                        {
-                            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:immune.observationId ?? 0),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!,actualText: immune.measure ?? "")
-                        }
-                    }
+                    handleIfCondition(immune, formName, j, necId)
                 }
             }
         }

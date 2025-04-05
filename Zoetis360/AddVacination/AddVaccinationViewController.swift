@@ -204,14 +204,7 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
     @IBOutlet weak var vacciOthrsStrainOutlet: UIButton!
     
     // MARK: - **************** View Life Cycle ***********************************/
-    override func viewDidLoad() {
-        print("<<<<",self)
-        super.viewDidLoad()
-        
-        hatcStrain = CoreDataHandler().fetchStrainWithlanguage(entityName: "HatcheryStrain", lngID: lngId)
-        fieldStrain = CoreDataHandler().fetchStrainWithlanguage(entityName: "GetFieldStrain", lngID: lngId)
-        
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+    fileprivate func refactorViewDidLoad1(_ lngId: Int) {
         if lngId == 5{
             lblHatchery.text = "Criadero"
             lblFieldVacii.text = "Vacunación de campo"
@@ -227,6 +220,111 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
                 }
             }
         }
+    }
+    
+    fileprivate func refactorViewdidLoad2() {
+        /************ Fetching all data  From Database **************************/
+        
+        if postingIdFromExistingNavigate == "Exting" {
+            postingId = postingIdFromExisting
+        } else {
+            postingId = UserDefaults.standard.integer(forKey: "postingId") as NSNumber
+        }
+        dataArray = CoreDataHandler().fetchAddvacinationData(postingId)
+        
+        if dataArray.count > 0 {
+            for _ in 0..<dataArray.count {
+                ibdvTextFieldNew.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 0) as? String
+                ibdv2StrainFieldTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 1) as? String
+                ibvStrainFieldTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 2) as? String
+                ibv2StrainFieldTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 3) as? String
+                TrtFieldNew.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 4) as? String
+                trt2StrainFieldTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 5) as? String
+                ndvNew.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 6) as? String
+                ndvNew2.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 7) as? String
+                stStrainTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 8) as? String
+                eColiStrainTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 9) as? String
+                otherStrain.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 10) as? String
+                
+                ibdvAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 0) as? String
+                ibdv2AgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 1) as? String
+                ibvAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 2) as? String
+                ibv2AgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 3) as? String
+                trtAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 4) as? String
+                trt2AgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 5) as? String
+                ndvAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 6) as? String
+                ndv2AgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 7) as? String
+                stAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 8) as? String
+                ecoliAgeTEXTfield.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 9) as? String
+                otherAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 10) as? String
+                
+                routeLabel1.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 0) as? String
+                routeLabel2.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 1) as? String
+                routeLabel3.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 2) as? String
+                routeLabel4.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 3) as? String
+                routeLabel5.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 4) as? String
+                routeLabel6.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 5) as? String
+                routeLabel7.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 6) as? String
+                ndv2DisplayLabel.text = (dataArray.value(forKey: "route") as AnyObject).object(at: 7) as? String
+                stRouteFieldDisplayLbl.text = (dataArray.value(forKey: "route") as AnyObject).object(at: 8) as? String
+                eColiRouteFieldDisplayLbl.text = (dataArray.value(forKey: "route") as AnyObject).object(at: 9) as? String
+                otherDisplayLabel.text = (dataArray.value(forKey: "route") as AnyObject).object(at: 10) as? String
+                coccidiosisControl.text = (dataArray.value(forKey: "vaciNationProgram") as AnyObject).object(at: 0) as? String
+                
+            }
+        }
+    }
+    
+    fileprivate func refactorViewDidLoad3() {
+        /************ Fetching all data  From Database **************************/
+        
+        if postingIdFromExistingNavigate == "Exting" {
+            postingId = postingIdFromExisting
+        } else {
+            postingId = UserDefaults.standard.integer(forKey: "postingId")  as NSNumber
+        }
+        
+        fieldVaccinatioDataAray = CoreDataHandler().fetchFieldAddvacinationData(postingId)
+        
+        /**********************************************************************/
+        if fieldVaccinatioDataAray.count > 0 {
+            
+            for _ in 0..<fieldVaccinatioDataAray.count {
+                
+                marekStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 0) as? String
+                ibdvStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 1) as? String
+                ibvStrainTextField.text = (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 2) as? String
+                trtStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 3) as? String
+                ndvStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 4) as? String
+                poxStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 5) as? String
+                reoStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 6) as? String
+                stHatcheryaStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 7) as? String
+                eColiHatcheryStrainText.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 8) as? String
+                othersStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 9) as? String
+                
+                markLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 0) as? String
+                ibdvLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 1) as? String
+                ibvRouteTextField.text = (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 2) as? String
+                trtLabel.text = (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 3) as? String
+                ndvLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 4) as? String
+                poxLbL.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 5) as? String
+                reoLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 6) as? String
+                hatcheryStRouteLbl.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 7) as? String
+                HatcheryEcoliRouteLbl.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 8) as? String
+                othesLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 9) as? String
+            }
+        }
+    }
+    
+    override func viewDidLoad() {
+        print("<<<<",self)
+        super.viewDidLoad()
+        
+        hatcStrain = CoreDataHandler().fetchStrainWithlanguage(entityName: "HatcheryStrain", lngID: lngId)
+        fieldStrain = CoreDataHandler().fetchStrainWithlanguage(entityName: "GetFieldStrain", lngID: lngId)
+        
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        refactorViewDidLoad1(lngId)
         
         isClickOnAnyField = false
         
@@ -319,100 +417,8 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
         stStrainTextField.resignFirstResponder()
         
         fieldVaccinationView.isHidden = true
-        
-        /************ Fetching all data  From Database **************************/
-        
-        if postingIdFromExistingNavigate == "Exting"{
-            postingId = postingIdFromExisting
-        }
-        else{
-            postingId = UserDefaults.standard.integer(forKey: "postingId") as NSNumber
-        }
-        dataArray = CoreDataHandler().fetchAddvacinationData(postingId)
-        
-        if dataArray.count > 0 {
-            
-            for _ in 0..<dataArray.count{
-                
-                ibdvTextFieldNew.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 0) as? String
-                ibdv2StrainFieldTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 1) as? String
-                ibvStrainFieldTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 2) as? String
-                ibv2StrainFieldTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 3) as? String
-                TrtFieldNew.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 4) as? String
-                trt2StrainFieldTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 5) as? String
-                ndvNew.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 6) as? String
-                ndvNew2.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 7) as? String
-                stStrainTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 8) as? String
-                eColiStrainTextField.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 9) as? String
-                otherStrain.text =  (dataArray.value(forKey: "strain") as AnyObject).object(at: 10) as? String
-                
-                ibdvAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 0) as? String
-                ibdv2AgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 1) as? String
-                ibvAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 2) as? String
-                ibv2AgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 3) as? String
-                trtAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 4) as? String
-                trt2AgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 5) as? String
-                ndvAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 6) as? String
-                ndv2AgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 7) as? String
-                stAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 8) as? String
-                ecoliAgeTEXTfield.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 9) as? String
-                otherAgeTextField.text =  (dataArray.value(forKey: "age") as AnyObject).object(at: 10) as? String
-                
-                routeLabel1.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 0) as? String
-                routeLabel2.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 1) as? String
-                routeLabel3.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 2) as? String
-                routeLabel4.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 3) as? String
-                routeLabel5.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 4) as? String
-                routeLabel6.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 5) as? String
-                routeLabel7.text =  (dataArray.value(forKey: "route") as AnyObject).object(at: 6) as? String
-                ndv2DisplayLabel.text = (dataArray.value(forKey: "route") as AnyObject).object(at: 7) as? String
-                stRouteFieldDisplayLbl.text = (dataArray.value(forKey: "route") as AnyObject).object(at: 8) as? String
-                eColiRouteFieldDisplayLbl.text = (dataArray.value(forKey: "route") as AnyObject).object(at: 9) as? String
-                otherDisplayLabel.text = (dataArray.value(forKey: "route") as AnyObject).object(at: 10) as? String
-                coccidiosisControl.text = (dataArray.value(forKey: "vaciNationProgram") as AnyObject).object(at: 0) as? String
-                
-            }
-        }
-        
-        /************ Fetching all data  From Database **************************/
-        
-        if postingIdFromExistingNavigate == "Exting"{
-            postingId = postingIdFromExisting
-        }
-        else{
-            postingId = UserDefaults.standard.integer(forKey: "postingId")  as NSNumber
-        }
-        
-        fieldVaccinatioDataAray = CoreDataHandler().fetchFieldAddvacinationData(postingId)
-        
-        /**********************************************************************/
-        if fieldVaccinatioDataAray.count > 0 {
-            
-            for _ in 0..<fieldVaccinatioDataAray.count{
-                
-                marekStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 0) as? String
-                ibdvStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 1) as? String
-                ibvStrainTextField.text = (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 2) as? String
-                trtStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 3) as? String
-                ndvStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 4) as? String
-                poxStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 5) as? String
-                reoStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 6) as? String
-                stHatcheryaStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 7) as? String
-                eColiHatcheryStrainText.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 8) as? String
-                othersStrainTextField.text =  (fieldVaccinatioDataAray.value(forKey: "strain") as AnyObject).object(at: 9) as? String
-                
-                markLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 0) as? String
-                ibdvLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 1) as? String
-                ibvRouteTextField.text = (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 2) as? String
-                trtLabel.text = (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 3) as? String
-                ndvLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 4) as? String
-                poxLbL.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 5) as? String
-                reoLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 6) as? String
-                hatcheryStRouteLbl.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 7) as? String
-                HatcheryEcoliRouteLbl.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 8) as? String
-                othesLabel.text =  (fieldVaccinatioDataAray.value(forKey: "route") as AnyObject).object(at: 9) as? String
-            }
-        }
+        refactorViewdidLoad2()
+        refactorViewDidLoad3()
     }
     
     
@@ -547,62 +553,88 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
         Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter strain.", comment: ""))
     }
     // MARK: 🟠 - Enable disable all text field
-    func textFieldEnable(){
-    
+    fileprivate func handleIbdvTextFieldNew() {
         if (ibdvTextFieldNew.text == " " || ibdvTextFieldNew.text == ""){
             ibdvAgeTextField.isUserInteractionEnabled = false
             ibdvRouteOutlet.isUserInteractionEnabled = false
         } else {
             ibdvAgeTextField.isUserInteractionEnabled = true
         }
-        if (ibdv2StrainFieldTextField.text == " " || ibdv2StrainFieldTextField.text == ""){
+    }
+    
+    fileprivate func handleIdv2StrainFieldTxtField() {
+        if (ibdv2StrainFieldTextField.text == " " || ibdv2StrainFieldTextField.text == "") {
             ibdv2AgeTextField.isUserInteractionEnabled = false
             ibdv2RouteOutlet.isUserInteractionEnabled = false
         } else {
             ibdv2AgeTextField.isUserInteractionEnabled = true
         }
-        if (ibvStrainFieldTextField.text == " " || ibvStrainFieldTextField.text == ""){
+    }
+    
+    fileprivate func handleIbvStrainFieldTextField() {
+        if (ibvStrainFieldTextField.text == " " || ibvStrainFieldTextField.text == "") {
             ibvRouteFieldOutlet.isUserInteractionEnabled = false
             ibvAgeTextField.isUserInteractionEnabled = false
         } else {
             ibvAgeTextField.isUserInteractionEnabled = true
         }
-        if (ibv2StrainFieldTextField.text == " " || ibv2StrainFieldTextField.text == ""){
+    }
+    
+    fileprivate func handleIbv2StrainFieldTextField() {
+        if (ibv2StrainFieldTextField.text == " " || ibv2StrainFieldTextField.text == "") {
             ibv2RouteOutlet.isUserInteractionEnabled = false
             ibv2AgeTextField.isUserInteractionEnabled = false
-        } else{
+        } else {
             ibv2AgeTextField.isUserInteractionEnabled = true
         }
-        if (TrtFieldNew.text == " " || TrtFieldNew.text == ""){
+    }
+    
+    fileprivate func handleTrtFieldNew() {
+        if (TrtFieldNew.text == " " || TrtFieldNew.text == "") {
             trtRouteOutlet.isUserInteractionEnabled = false
             trtAgeTextField.isUserInteractionEnabled = false
         } else {
             trtAgeTextField.isUserInteractionEnabled = true
         }
-        if (trt2StrainFieldTextField.text == " " || trt2StrainFieldTextField.text == ""){
+    }
+    
+    fileprivate func handleTrt2StrainFieldTextField() {
+        if (trt2StrainFieldTextField.text == " " || trt2StrainFieldTextField.text == "") {
             trt2AgeTextField.isUserInteractionEnabled = false
             trt2RouteFieldOutlet.isUserInteractionEnabled = false
-        }else{
+        } else {
             trt2AgeTextField.isUserInteractionEnabled = true
         }
-        if (ndvNew.text == " " || ndvNew.text == ""){
+    }
+    
+    fileprivate func handleNdvNew() {
+        if (ndvNew.text == " " || ndvNew.text == "") {
             ndvRouteOutlet.isUserInteractionEnabled = false
             ndvAgeTextField.isUserInteractionEnabled = false
-        }else{
+        } else {
             ndvAgeTextField.isUserInteractionEnabled = true
         }
-        if (ndvNew2.text == " " || ndvNew2.text == ""){
+    }
+    
+    func textFieldEnable(){
+    
+        handleIbdvTextFieldNew()
+        handleIdv2StrainFieldTxtField()
+        handleIbvStrainFieldTextField()
+        handleIbv2StrainFieldTextField()
+        handleTrtFieldNew()
+        handleTrt2StrainFieldTextField()
+        handleNdvNew()
+        if (ndvNew2.text == " " || ndvNew2.text == "") {
             ndv2RouteBtnOutlet.isUserInteractionEnabled = false
             ndv2AgeTextField.isUserInteractionEnabled = false
-        }
-        else {
+        } else {
             ndv2AgeTextField.isUserInteractionEnabled = true
         }
-        if (otherStrain.text == " " || otherStrain.text == ""){
+        if (otherStrain.text == " " || otherStrain.text == "") {
             otherRouteOutlet.isUserInteractionEnabled = false
             otherAgeTextField.isUserInteractionEnabled = false
-        }
-        else{
+        } else {
             otherAgeTextField.isUserInteractionEnabled = true
         }
        
@@ -676,6 +708,73 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
         
     }
     // MARK: 🟠 - Save All data in local Database
+    fileprivate func handleCoreDataHelper() {
+        for i in 0..<10 {
+            
+            if i == 0 {
+                CoreDataHandler().saveFieldVacinationInDatabase(typeMarek.text!, strain: marekStrainTextField.text!, route: markLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  markLabel.tag)
+            } else if i == 1 {
+                CoreDataHandler().saveFieldVacinationInDatabase(typeIbdv.text!, strain: ibdvStrainTextField.text!, route: ibdvLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber  , routeID:  ibdvLabel.tag)
+            } else if i == 2 {
+                CoreDataHandler().saveFieldVacinationInDatabase(lblIbvTitle.text!, strain: ibvStrainTextField.text!, route: ibvRouteTextField.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber , routeID:  ibvRouteTextField.tag)
+            } else if i == 3 {
+                CoreDataHandler().saveFieldVacinationInDatabase(typeTrt.text!, strain: trtStrainTextField.text!, route: trtLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber , routeID:  trtLabel.tag)
+            } else if i == 4 {
+                CoreDataHandler().saveFieldVacinationInDatabase(typeNdv.text!, strain: ndvStrainTextField.text!, route: ndvLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  ndvLabel.tag)
+            } else if i == 5 {
+                CoreDataHandler().saveFieldVacinationInDatabase(typePox.text!, strain: poxStrainTextField.text!, route: poxLbL.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  poxLbL.tag)
+            } else if i == 6 {
+                CoreDataHandler().saveFieldVacinationInDatabase(typeReo.text!, strain: reoStrainTextField.text!, route: reoLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  reoLabel.tag)
+            } else if i == 7 {
+                CoreDataHandler().saveFieldVacinationInDatabase(stLabel.text!, strain: stHatcheryaStrainTextField.text!, route: hatcheryStRouteLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  hatcheryStRouteLbl.tag)
+            } else if i == 8 {
+                CoreDataHandler().saveFieldVacinationInDatabase(ecoliLbl.text!, strain: eColiHatcheryStrainText.text!, route: HatcheryEcoliRouteLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  HatcheryEcoliRouteLbl.tag)
+            } else if i == 9 {
+                CoreDataHandler().saveFieldVacinationInDatabase(typeOthers.text!, strain: othersStrainTextField.text!, route: othesLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  othesLabel.tag)
+            }
+        }
+    }
+    
+    fileprivate func handleCoreDataHelperForLoop() {
+        for i in 0..<11 {
+            
+            if i == 0 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(type0.text!, strain: ibdvTextFieldNew.text!, route: routeLabel1.text!, age:ibdvAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1 , isSync: true,lngId:lngId as NSNumber, routeID: routeLabel1.tag)
+            }
+            else if i == 1 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(type1.text!, strain: ibdv2StrainFieldTextField.text!, route: routeLabel2.text!, age: ibdv2AgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel2.tag)
+            }
+            else if i == 2 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(type2.text!, strain: ibvStrainFieldTextField.text!, route: routeLabel3.text!, age: ibvAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel3.tag)
+            }
+            else if i == 3 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(type3.text!, strain: ibv2StrainFieldTextField.text!, route: routeLabel4.text!, age: ibv2AgeTextField.text!, index: i,dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel4.tag)
+            }
+            else if i == 4 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(type4.text!, strain: TrtFieldNew.text!, route: routeLabel5.text!, age: trtAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel5.tag)
+            }
+            else if i == 5 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(type5.text!, strain: trt2StrainFieldTextField.text!, route: routeLabel6.text!, age: trt2AgeTextField.text!, index: i,dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel6.tag)
+            }
+            else if i == 6 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(type6.text!, strain: ndvNew.text!, route: routeLabel7.text!, age: ndvAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber, routeID: routeLabel7.tag)
+            }
+            else if i == 7 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(lblNdvnew2Title.text!, strain: ndvNew2.text!, route: ndv2DisplayLabel.text!, age: ndv2AgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: ndv2DisplayLabel.tag)
+            }
+            else if i == 8 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(stFieldVaccinationLbl.text!, strain: stStrainTextField.text!, route: stRouteFieldDisplayLbl.text!, age: stAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: stRouteFieldDisplayLbl.tag)
+            }
+            else if i == 9 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(ecoliFieldLbl.text!, strain: eColiStrainTextField.text!, route: eColiRouteFieldDisplayLbl.text!, age: ecoliAgeTEXTfield.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: eColiRouteFieldDisplayLbl.tag)
+            }
+            
+            else if i == 10 {
+                CoreDataHandler().saveHatcheryVacinationInDatabase(lblOthersTitle.text!, strain: otherStrain.text!, route: otherDisplayLabel.text!, age: otherAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: otherDisplayLabel.tag)
+            }
+        }
+    }
+    
     func allSaveData( _ btnTag : Int)  {
         var trimmedString = coccidiosisControl.text!.trimmingCharacters(in: .whitespaces)
         trimmedString = trimmedString.replacingOccurrences(of: ".", with: "", options:
@@ -686,86 +785,14 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.isDoneClick = true
                 self.navigationController?.popViewController(animated: true)
-            }
-            else{
+            } else {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Please enter the vaccination program.", comment: ""))
             }
-        }
-        else{
-            if isClickOnAnyField == true
-            {
+        } else {
+            if isClickOnAnyField == true {
                 isClickOnAnyField = false
-                
-                for i in 0..<10 {
-                    
-                    if i == 0 {
-                        CoreDataHandler().saveFieldVacinationInDatabase(typeMarek.text!, strain: marekStrainTextField.text!, route: markLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  markLabel.tag)
-                    }
-                    else if i == 1 {
-                        CoreDataHandler().saveFieldVacinationInDatabase(typeIbdv.text!, strain: ibdvStrainTextField.text!, route: ibdvLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber  , routeID:  ibdvLabel.tag)
-                    }
-                    else if i == 2 {
-                        CoreDataHandler().saveFieldVacinationInDatabase(lblIbvTitle.text!, strain: ibvStrainTextField.text!, route: ibvRouteTextField.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber , routeID:  ibvRouteTextField.tag)
-                    }
-                    else if i == 3{
-                        CoreDataHandler().saveFieldVacinationInDatabase(typeTrt.text!, strain: trtStrainTextField.text!, route: trtLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber , routeID:  trtLabel.tag)
-                    }
-                    else if i == 4 {
-                        CoreDataHandler().saveFieldVacinationInDatabase(typeNdv.text!, strain: ndvStrainTextField.text!, route: ndvLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  ndvLabel.tag)
-                    }
-                    else if i == 5 {
-                        CoreDataHandler().saveFieldVacinationInDatabase(typePox.text!, strain: poxStrainTextField.text!, route: poxLbL.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  poxLbL.tag)
-                    }
-                    else if i == 6 {
-                        CoreDataHandler().saveFieldVacinationInDatabase(typeReo.text!, strain: reoStrainTextField.text!, route: reoLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  reoLabel.tag)
-                    }
-                    else if i == 7{
-                        CoreDataHandler().saveFieldVacinationInDatabase(stLabel.text!, strain: stHatcheryaStrainTextField.text!, route: hatcheryStRouteLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  hatcheryStRouteLbl.tag)
-                    }
-                    else if i == 8{
-                        CoreDataHandler().saveFieldVacinationInDatabase(ecoliLbl.text!, strain: eColiHatcheryStrainText.text!, route: HatcheryEcoliRouteLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  HatcheryEcoliRouteLbl.tag)
-                        
-                    }else if i == 9{
-                        CoreDataHandler().saveFieldVacinationInDatabase(typeOthers.text!, strain: othersStrainTextField.text!, route: othesLabel.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:coccidiosisControl.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber, routeID:  othesLabel.tag)
-                    }
-                }
-                for i in 0..<11 {
-                    
-                    if i == 0 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(type0.text!, strain: ibdvTextFieldNew.text!, route: routeLabel1.text!, age:ibdvAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1 , isSync: true,lngId:lngId as NSNumber, routeID: routeLabel1.tag)
-                    }
-                    else if i == 1 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(type1.text!, strain: ibdv2StrainFieldTextField.text!, route: routeLabel2.text!, age: ibdv2AgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel2.tag)
-                    }
-                    else if i == 2 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(type2.text!, strain: ibvStrainFieldTextField.text!, route: routeLabel3.text!, age: ibvAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel3.tag)
-                    }
-                    else if i == 3 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(type3.text!, strain: ibv2StrainFieldTextField.text!, route: routeLabel4.text!, age: ibv2AgeTextField.text!, index: i,dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel4.tag)
-                    }
-                    else if i == 4 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(type4.text!, strain: TrtFieldNew.text!, route: routeLabel5.text!, age: trtAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel5.tag)
-                    }
-                    else if i == 5 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(type5.text!, strain: trt2StrainFieldTextField.text!, route: routeLabel6.text!, age: trt2AgeTextField.text!, index: i,dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: routeLabel6.tag)
-                    }
-                    else if i == 6 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(type6.text!, strain: ndvNew.text!, route: routeLabel7.text!, age: ndvAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber, routeID: routeLabel7.tag)
-                    }
-                    else if i == 7 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(lblNdvnew2Title.text!, strain: ndvNew2.text!, route: ndv2DisplayLabel.text!, age: ndv2AgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: ndv2DisplayLabel.tag)
-                    }
-                    else if i == 8 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(stFieldVaccinationLbl.text!, strain: stStrainTextField.text!, route: stRouteFieldDisplayLbl.text!, age: stAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: stRouteFieldDisplayLbl.tag)
-                    }
-                    else if i == 9 {
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(ecoliFieldLbl.text!, strain: eColiStrainTextField.text!, route: eColiRouteFieldDisplayLbl.text!, age: ecoliAgeTEXTfield.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: eColiRouteFieldDisplayLbl.tag)
-                    }
-                    
-                    else if i == 10{
-                        CoreDataHandler().saveHatcheryVacinationInDatabase(lblOthersTitle.text!, strain: otherStrain.text!, route: otherDisplayLabel.text!, age: otherAgeTextField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: coccidiosisControl.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber , routeID: otherDisplayLabel.tag)
-                    }
-                }
+                handleCoreDataHelper()
+                handleCoreDataHelperForLoop()
                 
                 CoreDataHandler().updateisSyncTrueOnPostingSession(postingId)
                 UserDefaults.standard.set(coccidiosisControl.text!, forKey: "vaci")
@@ -1126,6 +1153,57 @@ extension AddVaccinationViewController{
         }
     }
     // MARK: 🟠 - hatchery Route Drop Down
+    
+    func showHatcheryRouteDropdown(sender: UIButton) {
+        let vaccInfoDict = CoreDataHandler().fetchRouteLngId(lngId: lngId as NSNumber)
+        let routeNameArray = vaccInfoDict.value(forKeyPath: "routeName")
+        let routeIDArray = vaccInfoDict.value(forKeyPath: "routeId") as! [Int]
+        routeDrop.dataSource = routeNameArray as! [AnyObject]
+
+        routeDrop.anchorView = sender
+        routeDrop.bottomOffset = CGPoint(x: 0, y: sender.frame.size.height)
+        routeDrop.show()
+        
+        routeDrop.selectionAction = { [weak self] (index: Int, item: String) in
+            guard let self = self else { return }
+            let routeId = routeIDArray[index]
+
+            // Dictionary mapping tags to corresponding UILabels / UITextFields
+            let tagToLabel: [Int: AnyObject] = [
+                40: self.markLabel,
+                41: self.ibdvLabel,
+                42: self.ibvRouteTextField,
+                43: self.trtLabel,
+                44: self.ndvLabel,
+                45: self.poxLbL,
+                46: self.reoLabel,
+                47: self.hatcheryStRouteLbl,
+                48: self.HatcheryEcoliRouteLbl,
+                49: self.othesLabel,
+                51: self.routeLabel1,
+                52: self.routeLabel2,
+                53: self.routeLabel3,
+                54: self.routeLabel4,
+                55: self.routeLabel5,
+                56: self.routeLabel6,
+                57: self.routeLabel7,
+                58: self.ndv2DisplayLabel,
+                59: self.stRouteFieldDisplayLbl,
+                60: self.eColiRouteFieldDisplayLbl,
+                61: self.otherDisplayLabel
+            ]
+
+            if let label = tagToLabel[sender.tag] as? UILabel {
+                label.text = item
+                label.tag = routeId
+            } else if let textField = tagToLabel[sender.tag] as? UITextField {
+                textField.text = item
+                textField.tag = routeId
+            }
+        }
+    }
+
+    /*
     func showHatcheryRouteDropdown(sender: UIButton){
         let vaccInfoDict = CoreDataHandler().fetchRouteLngId(lngId:lngId as NSNumber)
         let routeNameArray = vaccInfoDict.value(forKeyPath: "routeName")
@@ -1203,4 +1281,5 @@ extension AddVaccinationViewController{
             }
         }
     }
+    */
 }
