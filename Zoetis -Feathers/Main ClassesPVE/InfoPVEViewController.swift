@@ -53,7 +53,7 @@ class InfoPVEViewController: BaseViewController {
     
     @IBAction func pdfBtnAction(_ sender: UIButton) {
         
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable {
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable {
             
             let pdfUrl = URL(string: Constants.Api.pveBaseUrl + "/PDF/Accidental_Self_Injection_Wallet_Card.pdf")
             

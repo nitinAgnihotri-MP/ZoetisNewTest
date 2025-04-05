@@ -415,7 +415,7 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
     
     @IBAction func downloadPdfBtnAction(_ sender: Any) {
         
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable {
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable {
             
             let baseURL = Constants.Api.pveBaseUrl
             let userInput = "/PDF/SummaryReport.pdf"
@@ -636,7 +636,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     func checkDataForSync(isNotification:Bool) {
         
         let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
             
             if syncArr.count > 0{
                 
@@ -738,7 +738,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     func singleDataSync(id: String) {
         Constants.liveComment = ""
         Constants.inactiveComment = ""
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
             
             let syncData = CoreDataHandlerPVE().fetchSingleDataForSync(id: id)
             if syncData.count > 0 {
@@ -787,7 +787,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         self.isLogoutTapped = false
         Constants.liveComment = ""
         Constants.inactiveComment = ""
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
             
             let syncArr = CoreDataHandlerPVE().fetchDataForSync()
             if syncArr.count > 0{

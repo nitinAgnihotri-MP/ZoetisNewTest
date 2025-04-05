@@ -55,7 +55,7 @@ class peWebViewController: BaseViewController {
     
     // MARK: Download Blank PDF File in iPad Device .
     @IBAction func downLoadBtnAction(_ sender: Any) {
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
             
             DispatchQueue.main.async {
                 

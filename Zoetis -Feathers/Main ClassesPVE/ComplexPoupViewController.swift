@@ -661,7 +661,7 @@ extension ComplexPoupViewController{
         
         CoreDataHandler().deleteAllData("PVE_PdfDetails")
         
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
             
             self.showGlobalProgressHUDWithTitle(self.view, title: "")
             
@@ -697,7 +697,7 @@ extension ComplexPoupViewController{
         
         CoreDataHandler().deleteAllData("PVE_PdfDetails")
         
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
             
             self.showGlobalProgressHUDWithTitle(self.view, title: "")
             

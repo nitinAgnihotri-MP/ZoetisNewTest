@@ -1414,6 +1414,43 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     
     // MARK: 🟢 Get feed Program & Molecule Service
     
+    fileprivate func handleAPIReponseFeedProgramCategory(_ json: JSON) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // Check if the JSON response contains an error message
+            if let jsonDict = JSON(json).dictionary,
+               let errorMessage = jsonDict["Message"]?.string {
+                print("Error from API Feed Program molecule: \(errorMessage)")
+                self.showToastWithTimer(message: errorMessage, duration: 3.0)
+                return
+            }
+            
+            if let arr = JSON(json).array, !arr.isEmpty {
+                self.FeedProgramArray = NSMutableArray() // Ensure it is mutable
+                
+                for i in 0..<arr.count {
+                    let tempDict  = arr[i].dictionaryObject as NSDictionary? // Convert JSON to NSDictionary
+                    tempDict!.value(forKey: "FeedProgramCategoryDescription") as! String
+                    tempDict!.value(forKey: "FeedProgramCategoryId") as! Int
+                    self.FeedProgramArray.add(tempDict as Any)
+                    
+                }
+                
+                // Store in UserDefaults
+                UserDefaults.standard.set(self.FeedProgramArray, forKey: "Molucule")
+                
+                // Proceed with the next function call
+                self.callGetCocciVaccine()
+            } else {
+                // Handle empty array case
+                print("Feed Program molecule list is empty.")
+                self.callGetCocciVaccine()
+            }
+            
+        }
+    }
+    
     func FeedProgramMoleculeService() {
         
         if WebClass.sharedInstance.connected() {
@@ -1434,40 +1471,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     self?.callLoginMethod(errorCode)
                 }
                 
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    // Check if the JSON response contains an error message
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error from API Feed Program molecule: \(errorMessage)")
-                        self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        self.FeedProgramArray = NSMutableArray() // Ensure it is mutable
-                        
-                        for i in 0..<arr.count {
-                            let tempDict  = arr[i].dictionaryObject as NSDictionary? // Convert JSON to NSDictionary
-                            tempDict!.value(forKey: "FeedProgramCategoryDescription") as! String
-                            tempDict!.value(forKey: "FeedProgramCategoryId") as! Int
-                            self.FeedProgramArray.add(tempDict as Any)
-                          
-                        }
-                        
-                        // Store in UserDefaults
-                        UserDefaults.standard.set(self.FeedProgramArray, forKey: "Molucule")
-
-                        // Proceed with the next function call
-                        self.callGetCocciVaccine()
-                    } else {
-                        // Handle empty array case
-                        print("Feed Program molecule list is empty.")
-                        self.callGetCocciVaccine()
-                    }
-                    
-                }
+                self?.handleAPIReponseFeedProgramCategory(json)
                 
             })
             

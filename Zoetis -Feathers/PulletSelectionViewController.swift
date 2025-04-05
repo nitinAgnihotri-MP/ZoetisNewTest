@@ -184,7 +184,7 @@ class PulletSelectionViewController: BaseViewController {
             injectSheeetURL = sanitizedURL
         }
         
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
         
         DispatchQueue.main.async {
             

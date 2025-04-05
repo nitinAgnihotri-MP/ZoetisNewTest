@@ -743,6 +743,54 @@ class SingleSyncData: NSObject {
         }
     }
     
+    fileprivate func handleAPIResponseSaveMultiplePosting(_ statusCode: Int?, _ response: AFDataResponse<Any>,postingId :NSNumber) {
+        if statusCode == 401 {
+            self.loginMethod(postingId: postingId)
+        }
+        else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
+            self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
+        }
+        
+        switch response.result {
+            
+        case .success(let responseObject):
+            self.saveNecropsyDataOnServer(postingId: postingId)
+            
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                
+                if let s = statusCode {
+                    self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
+                }
+                else
+                {
+                    self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleSessionTypeValidation(_ sessiontype: String?, _ sessionTypeId: inout Int) {
+        if sessiontype == "Farm Visit"  {
+            sessionTypeId = 2
+        } else if  sessiontype == "Visite De Ferme" {
+            sessionTypeId = 3
+        } else if  sessiontype == "Visite De Publication" {
+            sessionTypeId = 4
+        } else if  (sessiontype == "Visita Em Andamento") || (sessiontype == "Visita em andamento") {
+            sessionTypeId = 5
+        } else if  (sessiontype == "Visita Na Unidade") || (sessiontype ==  "Visita na unidade") {
+            sessionTypeId = 6
+        } else if sessiontype == "Posting Visit"  {
+            sessionTypeId = 1
+        } else {
+            sessionTypeId = 0
+        }
+    }
+    
     /********************* Save Posting data On Server ***************************/
     
     func savePostingDataOnServer(postingId :NSNumber){
@@ -761,27 +809,7 @@ class SingleSyncData: NSObject {
             var sessionTypeId  = Int ()
             let sessiontype = pSession.sessionTypeName
             
-            if sessiontype == "Farm Visit"  {
-                sessionTypeId = 2
-            }
-            else if  sessiontype == "Visite De Ferme" {
-                sessionTypeId = 3
-            }
-            else if  sessiontype ==  "Visite De Publication" {
-                sessionTypeId = 4
-            }
-            else if  (sessiontype ==  "Visita Em Andamento") || (sessiontype == "Visita em andamento") {
-                sessionTypeId = 5
-            }
-            else if  (sessiontype ==  "Visita Na Unidade") || (sessiontype ==  "Visita na unidade") {
-                sessionTypeId = 6
-            }
-            else if sessiontype == "Posting Visit"  {
-                sessionTypeId = 1
-            }
-            else {
-                sessionTypeId = 0
-            }
+            handleSessionTypeValidation(sessiontype, &sessionTypeId)
             var customerId = pSession.customerId
             if customerId != nil {
                 customerId = pSession.customerId
@@ -874,35 +902,9 @@ class SingleSyncData: NSObject {
                 request.httpBody = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: [])
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
-                    let statusCode =  response.response?.statusCode
+                    let statusCode = response.response?.statusCode
                     
-                    if statusCode == 401  {
-                        self.loginMethod(postingId: postingId)
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
-                    }
-                    
-                    switch response.result {
-                        
-                    case .success(let responseObject):
-                        self.saveNecropsyDataOnServer(postingId: postingId)
-                        
-                    case .failure(let encodingError):
-                        
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                            }
-                            else
-                            {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
-                        }
-                    }
+                    self.handleAPIResponseSaveMultiplePosting(statusCode, response, postingId: postingId)
                 }
                 
             }

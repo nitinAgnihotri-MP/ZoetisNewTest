@@ -1621,6 +1621,19 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
     }
     
+    fileprivate func handlejsonAndGetPostingDataFromServer(_ json: JSON, _ self: ViewController) {
+        DispatchQueue.main.async {
+            if let arr = JSON(json).array, !arr.isEmpty {
+                for item in arr {
+                    self.saveNotesInDB(item)
+                }
+                self.getPostingDataFromServerforImage()
+            } else {
+                self.getPostingDataFromServerforImage()
+            }
+        }
+    }
+    
     func getNotesFromServer(){
         self.deleteAllData("NotesBird")
         if WebClass.sharedInstance.connected() {
@@ -1637,16 +1650,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     return
                 }
                 
-                DispatchQueue.main.async {
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        for item in arr {
-                            self.saveNotesInDB(item)
-                        }
-                        self.getPostingDataFromServerforImage()
-                    } else {
-                        self.getPostingDataFromServerforImage()
-                    }
-                }
+                self.handlejsonAndGetPostingDataFromServer(json, self)
             })
         } else{
             self.alerViewInternet()

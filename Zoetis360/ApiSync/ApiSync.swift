@@ -836,7 +836,7 @@ class ApiSync: NSObject {
                 let complexId = pSession.complexId
                 let customerRep = pSession.customerRepName
                 let vetUserId = pSession.veterinarianId
-                let birdTypeId :Int
+                var birdTypeId = 0
                 handleVetUserId(vetUserId, &birdTypeId)
                 let salesUserId = pSession.salesRepId
                 let cocciProgramId = pSession.cocciProgramId

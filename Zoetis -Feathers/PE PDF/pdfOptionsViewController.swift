@@ -57,7 +57,7 @@ class pdfOptionsViewController: BaseViewController , UITableViewDelegate, UITabl
     
     // MARK: - Get Blank Assessment Files
     private func getBlankAssessmentFiles(){
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
             
             let jsonDict = ["ReportType" : "1"]
             
@@ -147,7 +147,7 @@ class pdfOptionsViewController: BaseViewController , UITableViewDelegate, UITabl
     // MARK: - get Blank Assessment File from server
     private func getDownloadBlankFile(fileName:String){
         
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
             
             UserContext.sharedInstance.userDetailsObj?.userId ?? ""
             let jsonDict = ["ReportType" : "1"]

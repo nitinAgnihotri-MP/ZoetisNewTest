@@ -160,7 +160,6 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         tableHeaderVw.setGradient(topGradientColor: UIColor.getDashboardTableHeaderLowerGradColor(), bottomGradientColor:UIColor.getDashboardTableHeaderUpperGradColor())
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         
         self.isSync = false
@@ -1478,42 +1477,87 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     
-    fileprivate func updateAssesmentStatus(_ self: PEDashboardViewController) {
-        if self.saveTypeString.contains(11) {
-            if self.saveTypeString.contains(00) {
-                CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
-    fileprivate func handleError(_ error: NSError?) {
-        if error != nil {
-            let syncArr = self.getAssessmentInOfflineFromDb()
-            if syncArr > 0 {
-                self.syncBtnTapped(showHud: false)
-            } else {
-                self.showtoast(message: appDelegateObj.dataSynedSuccess)
-                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+    fileprivate func handleRegionId3(_ self: PEDashboardViewController) {
+        if self.regionID == 3 {
+            if HaveToCallExtendedMicro == true {
+                var saveType = Int()
+                
+                if Constants.isDraftAssessment == true {
+                    saveType = 0
+                } else {
+                    saveType = 1
+                }
+                
+                self.syncExtendedMicrobial(saveType: saveType, statusType: 0)
             }
-            CoreDataHandlerPE().updateOfflineStatus(assessment: self.objAssessment)
-        } else {
-            CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
+            
         }
-        
-        checkSyncArr()
     }
     
-    func callRequest4(paramForImages:JSONDictionary) {
+    fileprivate func handleHasconnectivityValidation(_ self: PEDashboardViewController) {
+        if self.callRequest4Int == 0 {
+            
+            handleRegionId3(self)
+            
+            let syncArr = self.getAssessmentInOfflineFromDb()
+            if syncArr > 0{
+                self.isSync = false
+                self.dismissGlobalHUD(self.view)
+                self.syncBtnTapped(showHud: false)
+                Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+            } else {
+                self.dismissGlobalHUD(self.view)
+                Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+                for i in self.totalImageToSync{
+                    CoreDataHandlerPE().setImageStatusTrue(idArray: i)
+                }
+                self.showToastWithTimer(message: "Data Sync has been completed.", duration: 2.0)
+                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+                self.dismissGlobalHUD(self.view)
+            }
+        }
+    }
+    
+    fileprivate func handleStatusCode(_ json: JSON, _ self: PEDashboardViewController) {
+        if json["StatusCode"]  == 200 {
+            if self.saveTypeString.contains(11) {
+                if self.saveTypeString.contains(00) {
+                    CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
+                }
+                CoreDataHandlerPE().updateOfflineStatus(assessment: self.objAssessment)
+            } else {
+                CoreDataHandlerPE().updateDraftStatus(assessment: self.objAssessment)
+            }
+            
+            if ConnectionManager.shared.hasConnectivity() {
+                handleHasconnectivityValidation(self)
+            }
+        } else {
+            self.dismissGlobalHUD(self.view)
+        }
+    }
+    
+    func callRequest4(paramForImages:JSONDictionary){
         self.convertDictToJson(dict: paramForImages, apiName: "Test")
         callRequest4Int = callRequest4Int + 1
-        Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
+        Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
         ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages, completion: { [weak self] (json, error) in
             self?.callRequest4Int = self!   .callRequest4Int - 1
             
-            self?.handleError(error)
+            if error != nil {
+                
+                let syncArr = self?.getAssessmentInOfflineFromDb()
+                if syncArr ?? 0 > 0{
+                    self?.syncBtnTapped(showHud: false)
+                } else {
+                    self?.showtoast(message: "Data synced successfully.")
+                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+                }
+                
+            }
             guard let `self` = self, error == nil else { return }
             self.dismissGlobalHUD(self.view)
-            if json["StatusCode"]  == 200 {
-                updateAssesmentStatus(self)
-            } else {
-                self.dismissGlobalHUD(self.view)
-            }
+            handleStatusCode(json, self)
         })
     }
     
@@ -3765,7 +3809,7 @@ extension PEDashboardViewController{
     }
     // MARK: - Get Blank PDF Files
     private func getBlankAssessmentFiles(){
-        if CodeHelper.sharedInstance.reachability.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
             
             let jsonDict = ["ReportType" : "1"]
             if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),

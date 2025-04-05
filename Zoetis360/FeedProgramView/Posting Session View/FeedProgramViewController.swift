@@ -2472,6 +2472,28 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         btnTag = 0
         buttoCocodaciVac.removeFromSuperview()
     }
+    fileprivate func saveAlternateDB(_ status: Bool) {
+        if status == true {
+            
+            self.saveMyCoxtinDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
+                debugPrint(postingId)
+            })
+        }
+    }
+    
+    fileprivate func saveCocooiControleDB(_ status: Bool) {
+        if status == true {
+            
+            self.saveAntibioticDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId),  completion: { (status) -> Void in
+                if status == true {
+                    self.saveAlternativeDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
+                        saveAlternateDB(status)
+                    })
+                }
+            })
+        }
+    }
+    
     fileprivate func saveClickedFeedProgramData() {
         self.saveFeedProgrameInDatabase(feedId: feedPostingId,postingId: Int(postingId as NSNumber) ,completion: { (status) -> Void in
             
@@ -2479,23 +2501,10 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 
                 self.saveCoccoiControlDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
                     
-                    if status == true {
-                        
-                        self.saveAntibioticDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId),  completion: { (status) -> Void in
-                            
-                            if status == true {
-                                
-                                self.saveAlternativeDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                    
-                                    if status == true {
-                                        
-                                        self.saveMyCoxtinDatabase(feedId: self.feedPostingId,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                            debugPrint(postingId)
-                                        })
-                                    }})
-                            }})
-                    }})
-            }})
+                    saveCocooiControleDB(status)
+                })
+            }
+        })
     }
     
     fileprivate func handleSaveAlternativeDB(_ status: Bool,feedexist:Int) {

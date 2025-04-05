@@ -75,7 +75,7 @@ class MicrobialViewController: BaseViewController {
     }
     
     private func callApiOfMasterData(){
-        if CodeHelper.sharedInstance.reachability.connection == .unavailable {
+        if CodeHelper.sharedInstance.reachability?.connection == .unavailable {
     //            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "No Internet connection available.")
                 return
         }
