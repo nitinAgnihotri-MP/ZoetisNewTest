@@ -765,14 +765,18 @@ class GI_Tract_Modal: NSObject {
 //        }
 //        delegate?.didFinishWithParsing(finishedArray: preparedArray)
 //    }
+    fileprivate func handleObjRefIdAndObjsVisibilityValidation(_ aArray: NSArray, _ j: Int, _ conjunctivitis: inout Float) {
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 49) && conjunctivitis != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            conjunctivitis=(conjunctivitis)+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
     fileprivate func handleCatNameRefIdValidation(_ aArray: NSArray, _ conjunctivitis: inout Float, _ tracheitis: inout Float, _ air_Sac: inout Float) {
         for j in 0..<aArray.count {
             if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "Resp" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID  {
                 
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 49) && conjunctivitis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    conjunctivitis=(conjunctivitis)+(value.floatValue > 0 ? 1 : 0)
-                }
+                handleObjRefIdAndObjsVisibilityValidation(aArray, j, &conjunctivitis)
                 if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 50) && tracheitis != NOT_EXIST {
                     let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
                     tracheitis=(tracheitis)+(value.floatValue > 0 ? 1 : 0)

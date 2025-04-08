@@ -756,37 +756,48 @@ extension AllBirdsViewControllerTurkey {
         }
     }
     
+    fileprivate func handleCatNameValidationCaseSkletaTurkey(_ fetchdata: NSArray, _ obsName: String?, _ arrOfIndex: inout [QuickIndexObject]) {
+        let objTable  = fetchdata.object(at: 0) as! SkeletaTurkey //: Skeleta = (fetchdata as? Skeleta)!
+        
+        if let quickIndex = objTable.quicklinkIndex as? Int {
+            if quickIndex > 0 {
+                let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
+                arrOfIndex.append(quickIndexObject)
+            }
+        }
+    }
+    
+    fileprivate func handleCatNameValidationCaseCoccidiosisTurkey(_ fetchdata: NSArray, _ obsName: String?, _ arrOfIndex: inout [QuickIndexObject]) {
+        let objTable  = fetchdata.object(at: 0) as! CoccidiosisTurkey //: Skeleta = (fetchdata as? Skeleta)!
+        
+        if let quickIndex = objTable.quicklinkIndex as? Int {
+            if quickIndex > 0 {
+                let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
+                arrOfIndex.append(quickIndexObject)
+            }
+        }
+    }
+    
+    fileprivate func handleCatNameValidationCaseGITractTurkey(_ fetchdata: NSArray, _ obsName: String?, _ arrOfIndex: inout [QuickIndexObject]) {
+        let objTable  = fetchdata.object(at: 0) as! GITractTurkey //: Skeleta = (fetchdata as? Skeleta)!
+        
+        if let quickIndex = objTable.quicklinkIndex as? Int {
+            if quickIndex > 0 {
+                let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
+                arrOfIndex.append(quickIndexObject)
+            }
+        }
+    }
+    
     fileprivate func handleCatNameValidations(_ catName: String?, _ obsName: String?, _ arrOfIndex: inout [QuickIndexObject]) {
         let fetchdata =  CoreDataHandler().fetchAllSeetingByObs(entityName: catName!, obsName: obsName!)
         switch catName {
         case "SkeletaTurkey":
-            let objTable  = fetchdata.object(at: 0) as! SkeletaTurkey //: Skeleta = (fetchdata as? Skeleta)!
-            
-            if let quickIndex = objTable.quicklinkIndex as? Int {
-                if quickIndex > 0 {
-                    let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
-                    arrOfIndex.append(quickIndexObject)
-                }
-            }
-            
+            handleCatNameValidationCaseSkletaTurkey(fetchdata, obsName, &arrOfIndex)
         case "CoccidiosisTurkey":
-            let objTable  = fetchdata.object(at: 0) as! CoccidiosisTurkey //: Skeleta = (fetchdata as? Skeleta)!
-            
-            if let quickIndex = objTable.quicklinkIndex as? Int {
-                if quickIndex > 0 {
-                    let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
-                    arrOfIndex.append(quickIndexObject)
-                }
-            }
+            handleCatNameValidationCaseCoccidiosisTurkey(fetchdata, obsName, &arrOfIndex)
         case "GITractTurkey":
-            let objTable  = fetchdata.object(at: 0) as! GITractTurkey //: Skeleta = (fetchdata as? Skeleta)!
-            
-            if let quickIndex = objTable.quicklinkIndex as? Int {
-                if quickIndex > 0 {
-                    let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
-                    arrOfIndex.append(quickIndexObject)
-                }
-            }
+            handleCatNameValidationCaseGITractTurkey(fetchdata, obsName, &arrOfIndex)
         case "RespiratoryTurkey":
             let objTable  = fetchdata.object(at: 0) as! RespiratoryTurkey //: Skeleta = (fetchdata as? Skeleta)!
             

@@ -637,6 +637,24 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
     }
     
+    fileprivate func handleVisiblityCheckSaveImmuneCatValidation(_ immu: NSMutableArray, _ birdnumber: Any, _ i: Int, _ necId: Int) {
+        for j in 0..<immu.count {
+            if ((immu.object(at: j) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
+                let immune : Immune = immu.object(at: j) as! Immune
+                
+                let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(birdnumber as! NSNumber, farmname: farmArray[i] as! String, catName: "Immune",Obsid: immune.observationId!,necId:necId as NSNumber)
+                
+                if FetchObsArr.count > 0 {
+                } else {
+                    handleImmuneMeasureValidation(immune, i, birdnumber, j, necId)
+                }
+            } else {
+                let immune : Immune = immu.object(at: j) as! Immune
+                CoreDataHandler().deleteCaptureNecropsyViewDataWithObsID(immune.observationId!,necId: necId as NSNumber)
+            }
+        }
+    }
+    
     func saveImmuneCat(_ completion: (_ status: Bool) -> Void) {
         let farm = farmArray.object(at: nsIndexPathFromExist)
         UserDefaults.standard.set(farm, forKey: "farm")
@@ -658,21 +676,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         for i in 0..<farmArray.count {
             for x in 0..<(items[i] as AnyObject).count {
                 let birdnumber = (items.object(at: i) as AnyObject).object(at: x)
-                for  j in 0..<immu.count {
-                    if ((immu.object(at: j) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
-                        let immune : Immune = immu.object(at: j) as! Immune
-                        
-                        let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(birdnumber as! NSNumber, farmname: farmArray[i] as! String, catName: "Immune",Obsid: immune.observationId!,necId:necId as NSNumber)
-                        
-                        if FetchObsArr.count > 0 {
-                        } else {
-                            handleImmuneMeasureValidation(immune, i, birdnumber, j, necId)
-                        }
-                    } else {
-                        let immune : Immune = immu.object(at: j) as! Immune
-                        CoreDataHandler().deleteCaptureNecropsyViewDataWithObsID(immune.observationId!,necId: necId as NSNumber)
-                    }
-                }
+                handleVisiblityCheckSaveImmuneCatValidation(immu, birdnumber, i, necId)
             }
         }
         
