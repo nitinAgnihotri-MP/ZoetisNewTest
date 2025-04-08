@@ -145,13 +145,13 @@ struct Constants {
         
         //************************* Live Migration URL***************************//
         //         Live Migration
-//                        static let versionUrl = "https://api.mypoultryview360.com"
-//                        static let pveBaseUrl = "https://pveapi.mypoultryview360.com"
-//                        static let peBaseUrl = "https://peapi.mypoultryview360.com"
-//                        static let fhBaseUrl = "https://api.mypoultryview360.com"
-//                        static let tcBaseUrl = "https://peapi.mypoultryview360.com"
-//                        static let miBaseUrl = "https://microbialapi.mypoultryview360.com"
-//                        static let fcmUrl = "https://api.mypoultryview360.com/api/GlobalDashboard/SaveNotificationSyncData"
+//        static let versionUrl = "https://api.mypoultryview360.com"
+//        static let pveBaseUrl = "https://pveapi.mypoultryview360.com"
+//        static let peBaseUrl = "https://peapi.mypoultryview360.com"
+//        static let fhBaseUrl = "https://api.mypoultryview360.com"
+//        static let tcBaseUrl = "https://peapi.mypoultryview360.com"
+//        static let miBaseUrl = "https://microbialapi.mypoultryview360.com"
+//        static let fcmUrl = "https://api.mypoultryview360.com/api/GlobalDashboard/SaveNotificationSyncData"
         
         //************************* Dev Support URL***************************//
         //        Dev Support URLs
@@ -262,6 +262,8 @@ struct Constants {
     static let aguaDeBebida =  "Água De Bebida"
     static let spray =  "Spray"
     static let visibilityHidden = "visibility:hidden"
+    static let noMinimizeWhileSyncing = "*Note - Please don't minimize App while syncing."
+    static let dataSyncInProgress = "Data sync is in progress, please do not close the app."
 }
 
 enum ZoetisArt {

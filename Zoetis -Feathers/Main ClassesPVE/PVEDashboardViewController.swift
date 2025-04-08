@@ -792,7 +792,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
             let syncArr = CoreDataHandlerPVE().fetchDataForSync()
             if syncArr.count > 0{
                 dismissGlobalHUD(self.view)
-                self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + "*Note - Please don't minimize App while syncing.")
+                self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + Constants.noMinimizeWhileSyncing)
                 
                 extractedFunc1(syncArr)
             }
@@ -831,7 +831,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     fileprivate func extractedFunc2(_ tempImgArrDict: [[String : Any]], _ syncId: String) {
         for (indx, obj) in tempImgArrDict.enumerated(){
             
-            self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + "*Note - Please don't minimize App while syncing.")
+            self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + Constants.noMinimizeWhileSyncing)
             ZoetisWebServices.shared.postSaveAssessmentImagesDetailsForPVE(controller: self, parameters: obj, completion: { [weak self] (json, error) in
                 guard let `self` = self, error == nil else { return }
                 

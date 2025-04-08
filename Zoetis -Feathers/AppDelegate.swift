@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     let loadingStr = "Loading..."
     let MMddyyyStr = "MM/dd/yyyy"
     let ddMMyyyStr = "dd/MM/yyyy"
-    let dataSyncInProgressStr = "Data sync is in progress, please do not close the app."
+    let dataSyncInProgressStr = Constants.dataSyncInProgress
     let date2020_05_23 = "2020-05-23T06:36:50.915Z"
     let MMddYYYYHHmmss = "MM/dd/YYYY HH:mm:ss Z"
     let asiaTehran = "Asia/Tehran"

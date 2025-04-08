@@ -1418,7 +1418,6 @@ class CoreDataHandlerTurkey: NSObject {
                     let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccinationTurkey", in: managedContext)
                     
                     let person         = NSManagedObject(entity: entity!, insertInto: managedContext)
-                    
                     person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
                     person.setValue("Marek", forKey:"type")
                     switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
@@ -1443,13 +1442,7 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
                     
                     hatcheryVaccinationObject.append(person)
                     
@@ -1482,13 +1475,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     
                     hatcheryVaccinationObject.append(person)
                     
@@ -1521,13 +1509,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     
                     hatcheryVaccinationObject.append(person)
                 }
@@ -1559,13 +1542,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     
                     hatcheryVaccinationObject.append(person)
                 }
@@ -1597,13 +1575,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     
                     hatcheryVaccinationObject.append(person)
                 }
@@ -1635,13 +1608,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     
                     hatcheryVaccinationObject.append(person)
                 }
@@ -1673,13 +1641,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     
                     hatcheryVaccinationObject.append(person)
                 }
@@ -1713,13 +1676,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     
                     hatcheryVaccinationObject.append(person)
                     
@@ -1752,13 +1710,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     
                     hatcheryVaccinationObject.append(person)
                 }
@@ -1795,13 +1748,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                     person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                     person.setValue(false, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     
                     hatcheryVaccinationObject.append(person)
                     
@@ -5402,9 +5350,7 @@ class CoreDataHandlerTurkey: NSObject {
             
             if fetchedResult!.count > 0
             {
-                
-                
-                
+  
                 let objTable: PostingSessionTurkey = (fetchedResult![0] as? PostingSessionTurkey)!
                 
                 objTable.setValue(true, forKey:"isSync")
@@ -5737,13 +5683,8 @@ class CoreDataHandlerTurkey: NSObject {
                         person.setValue(lngId, forKey:"lngId")
                         person.setValue(lbldate, forKey:"feedDate")
                         person.setValue(dosemoleculeId, forKey:"dosemoleculeId")
-                        do
-                        {
-                            try managedContext.save()
-                        }
-                        catch
-                        {
-                        }
+                        try? managedContext.save()
+
                         cocciCoccidiosControl.append(person)
                     }
                     else
@@ -5767,12 +5708,8 @@ class CoreDataHandlerTurkey: NSObject {
                         objTable.setValue(lngId, forKey:"lngId")
                         objTable.setValue(lbldate, forKey:"feedDate")
                         objTable.setValue(dosemoleculeId, forKey:"dosemoleculeId")
-                        do
-                        {
-                            try managedContext.save()
-                        }
-                        catch{
-                        }
+                        try? managedContext.save()
+
                     }
                 }
                 else{
@@ -5796,13 +5733,8 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(lbldate, forKey:"feedDate")
                     person.setValue(dosemoleculeId, forKey:"dosemoleculeId")
                     
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
                     cocciCoccidiosControl.append(person)
                 }
             }
@@ -5832,14 +5764,8 @@ class CoreDataHandlerTurkey: NSObject {
             person.setValue(lngId, forKey:"lngId")
             person.setValue(lbldate, forKey:"feedDate")
             person.setValue(dosemoleculeId, forKey:"dosemoleculeId")
-            do
-            {
-                try managedContext.save()
-            }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
-            }
+            try? managedContext.save()
+
             cocciCoccidiosControl.append(person)
         }
     }
@@ -6503,14 +6429,15 @@ class CoreDataHandlerTurkey: NSObject {
                         person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
                         person.setValue(lngId, forKey:"lngId")
                         person.setValue(lbldate, forKey:"feedDate")
+                        try? managedContext.save()
                         
-                        do
-                        {
-                            try managedContext.save()
-                        }
-                        catch
-                        {
-                        }
+//                        do
+//                        {
+//                            try managedContext.save()
+//                        }
+//                        catch
+//                        {
+//                        }
                         
                         cocciAntibotic.append(person)
                     }
@@ -6532,12 +6459,13 @@ class CoreDataHandlerTurkey: NSObject {
                         objTable.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
                         objTable.setValue(lngId, forKey:"lngId")
                         objTable.setValue(lbldate, forKey:"feedDate")
-                        do
-                        {
-                            try managedContext.save()
-                        }
-                        catch{
-                        }
+                        try? managedContext.save()
+//                        do
+//                        {
+//                            try managedContext.save()
+//                        }
+//                        catch{
+//                        }
                    }
                 }
                 else{
@@ -6556,13 +6484,14 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
                     person.setValue(lngId, forKey:"lngId")
                     person.setValue(lbldate, forKey:"feedDate")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+//                    do
+//                    {
+//                        try managedContext.save()
+//                    }
+//                    catch
+//                    {
+//                    }
                     cocciAntibotic.append(person)
                 }
             }
@@ -6588,14 +6517,15 @@ class CoreDataHandlerTurkey: NSObject {
             person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
             person.setValue(lngId, forKey:"lngId")
             person.setValue(lbldate, forKey:"feedDate")
-            do
-            {
-                try managedContext.save()
-            }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
-            }
+            try? managedContext.save()
+//            do
+//            {
+//                try managedContext.save()
+//            }
+//            catch
+//            {
+//                print(appDelegateObj.testFuntion())
+//            }
             cocciAntibotic.append(person)
         }
     }
@@ -6776,13 +6706,15 @@ class CoreDataHandlerTurkey: NSObject {
                         person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
                         person.setValue(lngId, forKey:"lngId")
                         person.setValue(lbldate, forKey:"feedDate")
-                        do
-                        {
-                            try managedContext.save()
-                        }
-                        catch
-                        {
-                        }
+                        try? managedContext.save()
+
+//                        do
+//                        {
+//                            try managedContext.save()
+//                        }
+//                        catch
+//                        {
+//                        }
                         cocciAlternative.append(person)
                     }
                     else{
@@ -6802,12 +6734,14 @@ class CoreDataHandlerTurkey: NSObject {
                         objTable.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
                         objTable.setValue(lngId, forKey:"lngId")
                         objTable.setValue(lbldate, forKey:"feedDate")
-                        do
-                        {
-                            try managedContext.save()
-                        }
-                        catch{
-                        }
+                        try? managedContext.save()
+
+//                        do
+//                        {
+//                            try managedContext.save()
+//                        }
+//                        catch{
+//                        }
                     }
                 }
                 else{
@@ -6826,13 +6760,15 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
                     person.setValue(lngId, forKey:"lngId")
                     person.setValue(lbldate, forKey:"feedDate")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch
-                    {
-                    }
+                    try? managedContext.save()
+
+//                    do
+//                    {
+//                        try managedContext.save()
+//                    }
+//                    catch
+//                    {
+//                    }
                     cocciAlternative.append(person)
                 }
             }
@@ -6857,14 +6793,16 @@ class CoreDataHandlerTurkey: NSObject {
             person.setValue(cocoVacId, forKey:"coccidiosisVaccineId")
             person.setValue(lngId, forKey:"lngId")
             person.setValue(lbldate, forKey:"feedDate")
-            do
-            {
-                try managedContext.save()
-            }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
-            }
+            try? managedContext.save()
+
+//            do
+//            {
+//                try managedContext.save()
+//            }
+//            catch
+//            {
+//                print(appDelegateObj.testFuntion())
+//            }
             cocciAlternative.append(person)
         }
     }

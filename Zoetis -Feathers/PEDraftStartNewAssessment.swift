@@ -1018,6 +1018,12 @@ class PEDraftStartNewAssessment: BaseViewController {
             return
         }
         
+        self.checkManufactrIncubationNumberOfEggsValidation()        
+        
+    }
+    
+    func checkManufactrIncubationNumberOfEggsValidation ()
+    {
         if self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
             manufacturerOtherValidation()
         } else {
@@ -1038,9 +1044,7 @@ class PEDraftStartNewAssessment: BaseViewController {
             changeMandatorySuperviewToRed()
             return
         }
-        
         extractedFunc()
-        
     }
     
     

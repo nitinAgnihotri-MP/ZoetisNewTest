@@ -100,7 +100,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     let noIdFound = Constants.noIdFoundStr
     let yyymmdd = appDelegateObj.yyyyMMddStr
     let userIdStr = " userID == %d AND serverAssessmentId == %@"
-    let noteStr = "*Note - Please don't minimize App while syncing."
+    let noteStr = Constants.noMinimizeWhileSyncing
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -845,6 +845,65 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         
     }
     
+    fileprivate func manageDataAtIdArray(_ dataCatIDToSubmitNumberIdArray: inout [Int], _ fetchRequestNew: NSFetchRequest<any NSFetchRequestResult>, _ evaluationDateLatestAssessment: String, _ evaluationDateLatestSubmitId: String, _ managedContext: NSManagedObjectContext) {
+        for i in 0...dataCatIDToSubmitNumberIdArray.count-1 {
+            fetchRequestNew.predicate = NSPredicate(format: "evaluationDate == %@ AND catID == %d AND dataToSubmitID == %@", argumentArray: [ evaluationDateLatestAssessment,dataCatIDToSubmitNumberIdArray[i],evaluationDateLatestSubmitId])
+            fetchRequestNew.returnsObjectsAsFaults = false
+            
+            do {
+                let results = try managedContext.fetch(fetchRequestNew) as? [NSManagedObject]
+                if results?.count != 0 {
+                    if results?.count ?? 0 > 1 {
+                        resultCatSecondAssessment.append(results?[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
+                    }
+                }
+            } catch {
+            }
+        }
+    }
+    
+    fileprivate func handleDataSubmitArray(_ dataToSubmitNumberIdArray: [Int], _ catColIdArrayDraftNumbers: NSArray, _ evaluationDateLatestAssessment: String, _ managedContext: NSManagedObjectContext) {
+        if dataToSubmitNumberIdArray.count > 0 {
+            var dataCatIDToSubmitNumberIdArray : [Int] = []
+            for obj in catColIdArrayDraftNumbers {
+                if !dataCatIDToSubmitNumberIdArray.contains((obj as? Int) ?? 0) {
+                    dataCatIDToSubmitNumberIdArray.append((obj as? Int) ?? 0)
+                }
+            }
+            let fetchRequestNew  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+            fetchRequestNew.returnsObjectsAsFaults = false
+            if  resultCatSecondAssessment.count > 0 {
+                resultCatSecondAssessment.removeAll()
+            }
+            let evaluationDateLatestSubmitId = lastTwoAssessmentsSubmitId[1] as? String ?? ""
+            manageDataAtIdArray(&dataCatIDToSubmitNumberIdArray, fetchRequestNew, evaluationDateLatestAssessment, evaluationDateLatestSubmitId, managedContext)
+            
+            if resultCatSecondAssessment.count > 0 {
+                setChartForAssesmentSubmittedOffline(count: 2)
+            }
+        }
+    }
+    
+    fileprivate func handleManagedContext(_ managedContext: NSManagedObjectContext, _ fetchRequest: NSFetchRequest<any NSFetchRequestResult>, _ tempArr: inout NSArray, _ allAssesmentDraftArr: inout [PE_AssessmentInOffline], _ carColIdArrayDraftNumbers: inout NSArray, _ dataToSubmitNumberIdArray: inout [Int], _ catColIdArrayDraftNumbers: inout NSArray, _ submitIDArray: inout NSArray) {
+        do {
+            let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            if results?.count != 0 {
+                tempArr = results as NSArray? ?? []
+                allAssesmentDraftArr = results as? [PE_AssessmentInOffline] ?? []
+                carColIdArrayDraftNumbers  = tempArr.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
+                
+                for obj in carColIdArrayDraftNumbers {
+                    if (!dataToSubmitNumberIdArray.contains((obj as? Int) ?? 0) && dataToSubmitNumberIdArray.count < 2){
+                        dataToSubmitNumberIdArray.append((obj as? Int) ?? 0)
+                    }
+                }
+                catColIdArrayDraftNumbers  = tempArr.value(forKey: "catID") as? NSArray ?? []
+                submitIDArray  = tempArr.value(forKey: "dataToSubmitID") as? NSArray ?? []
+            }
+        } catch {
+        }
+    }
+    
     func getAssessmentSecondFromDb() {
         
         if lastTwoAssessmentsDate.count > 1 {
@@ -870,61 +929,14 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             
             var dataToSubmitNumberIdArray : [Int] = []
             
-            do {
-                let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                if results?.count != 0 {
-                    tempArr = results as NSArray? ?? []
-                    allAssesmentDraftArr = results as? [PE_AssessmentInOffline] ?? []
-                    carColIdArrayDraftNumbers  = tempArr.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
-                    
-                    for obj in carColIdArrayDraftNumbers {
-                        if (!dataToSubmitNumberIdArray.contains((obj as? Int) ?? 0) && dataToSubmitNumberIdArray.count < 2){
-                            dataToSubmitNumberIdArray.append((obj as? Int) ?? 0)
-                        }
-                    }
-                    catColIdArrayDraftNumbers  = tempArr.value(forKey: "catID") as? NSArray ?? []
-                    submitIDArray  = tempArr.value(forKey: "dataToSubmitID") as? NSArray ?? []
-                }
-            } catch {
-            }
+            handleManagedContext(managedContext, fetchRequest, &tempArr, &allAssesmentDraftArr, &carColIdArrayDraftNumbers, &dataToSubmitNumberIdArray, &catColIdArrayDraftNumbers, &submitIDArray)
             var dataSubmitIdArray : [String] = []
             for obj in submitIDArray {
                 if !dataSubmitIdArray.contains((obj as? String) ?? ""){
                     dataSubmitIdArray.append((obj as? String) ?? "")
                 }
             }
-            if dataToSubmitNumberIdArray.count > 0 {
-                var dataCatIDToSubmitNumberIdArray : [Int] = []
-                for obj in catColIdArrayDraftNumbers {
-                    if !dataCatIDToSubmitNumberIdArray.contains((obj as? Int) ?? 0) {
-                        dataCatIDToSubmitNumberIdArray.append((obj as? Int) ?? 0)
-                    }
-                }
-                let fetchRequestNew  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
-                fetchRequestNew.returnsObjectsAsFaults = false
-                if  resultCatSecondAssessment.count > 0 {
-                    resultCatSecondAssessment.removeAll()
-                }
-                let evaluationDateLatestSubmitId = lastTwoAssessmentsSubmitId[1] as? String ?? ""
-                for i in 0...dataCatIDToSubmitNumberIdArray.count-1 {
-                    fetchRequestNew.predicate = NSPredicate(format: "evaluationDate == %@ AND catID == %d AND dataToSubmitID == %@", argumentArray: [ evaluationDateLatestAssessment,dataCatIDToSubmitNumberIdArray[i],evaluationDateLatestSubmitId])
-                    fetchRequestNew.returnsObjectsAsFaults = false
-                    
-                    do {
-                        let results = try managedContext.fetch(fetchRequestNew) as? [NSManagedObject]
-                        if results?.count != 0 {
-                            if results?.count ?? 0 > 1 {
-                                resultCatSecondAssessment.append(results?[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                            }
-                        }
-                    } catch {
-                    }
-                }
-                
-                if resultCatSecondAssessment.count > 0 {
-                    setChartForAssesmentSubmittedOffline(count: 2)
-                }
-            }
+            handleDataSubmitArray(dataToSubmitNumberIdArray, catColIdArrayDraftNumbers, evaluationDateLatestAssessment, managedContext)
         }else {
             barChart2.clearValues()
             barChart2.clear()
@@ -1504,10 +1516,10 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 self.isSync = false
                 self.dismissGlobalHUD(self.view)
                 self.syncBtnTapped(showHud: false)
-                Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+                Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.dataSyncInProgress + "\n" + Constants.noMinimizeWhileSyncing)
             } else {
                 self.dismissGlobalHUD(self.view)
-                Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+                Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.dataSyncInProgress + "\n" + Constants.noMinimizeWhileSyncing)
                 for i in self.totalImageToSync{
                     CoreDataHandlerPE().setImageStatusTrue(idArray: i)
                 }
@@ -1540,7 +1552,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     func callRequest4(paramForImages:JSONDictionary){
         self.convertDictToJson(dict: paramForImages, apiName: "Test")
         callRequest4Int = callRequest4Int + 1
-        Helper.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
+        Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.dataSyncInProgress + "\n" + Constants.noMinimizeWhileSyncing)
         ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages, completion: { [weak self] (json, error) in
             self?.callRequest4Int = self!   .callRequest4Int - 1
             

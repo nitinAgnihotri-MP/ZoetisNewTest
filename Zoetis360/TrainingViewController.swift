@@ -137,6 +137,15 @@ class TrainingViewController: UIViewController, WKUIDelegate{
         }
     }
     
+    fileprivate func loadOffLineSavedFile() {
+        for i in 1..<3 {
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+            let url = URL(fileURLWithPath: path)
+            let filePath = url.appendingPathComponent("myURL\(i).pdf").absoluteURL
+            self.pathArr.add(filePath)
+        }
+    }
+    
     func callWebApiforTutorial(_ completion: @escaping (_ status: Bool) -> Void)  {
         
         if WebClass.sharedInstance.connected() {
@@ -170,12 +179,7 @@ class TrainingViewController: UIViewController, WKUIDelegate{
                 }
             }
         } else {
-            for i in 1..<3 {
-                let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-                let url = URL(fileURLWithPath: path)
-                let filePath = url.appendingPathComponent("myURL\(i).pdf").absoluteURL
-                self.pathArr.add(filePath)
-            }
+            self.loadOffLineSavedFile()
             if self.pathArr.count == 2{
                 completion(true)
             }

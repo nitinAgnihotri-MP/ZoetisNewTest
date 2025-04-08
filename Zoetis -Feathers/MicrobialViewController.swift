@@ -661,6 +661,42 @@ extension MicrobialViewController {
         })
     }
     
+    fileprivate func getReviewerName(_ selectedReviewer: [Micro_Reviewer], _ reviewersText: inout String) {
+        if selectedReviewer.count > 0{
+            if reviewersText == ""{
+                reviewersText = selectedReviewer.first?.reviewerName ?? ""
+            }else{
+                reviewersText = "\(reviewersText), \(selectedReviewer.first?.reviewerName ?? "")"
+            }
+        }
+    }
+    
+    fileprivate func saveAlreadySyncdeDataAndChanegStatus(_ arrMicrobialDetailsList: MicrobialDetailsList, _ objReq: RequisitionData) {
+        if !Microbial_EnviromentalSurveyFormSubmitted.isSameTimeStampAndUserIdAlreadyExisits(reqData: arrMicrobialDetailsList){
+            var isPlateIdGenerated = false
+            
+            let arrReviewers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
+            let reviewerIds = arrMicrobialDetailsList.reviewerIds ?? []
+            for reviewer in arrReviewers{
+                let isSelected = reviewerIds.contains(reviewer.reviewerId?.intValue ?? 0)
+                MicrobialSelectedUnselectedReviewer.saveReviewersInDB(arrMicrobialDetailsList.timeStamp ?? "", reviewerId: reviewer.reviewerId?.intValue ?? 0, reviewerName: reviewer.reviewerName ?? "", isSelected: isSelected, isSessionType: false)
+            }
+            
+            var reviewersText = ""
+            for selectsId in reviewerIds{
+                let selectedReviewer = arrReviewers.filter{ $0.reviewerId?.intValue ?? 0 == selectsId }
+                getReviewerName(selectedReviewer, &reviewersText)
+            }
+            
+            Microbial_EnviromentalSurveyFormSubmitted.saveDataWhichIsAlreadySynced(reqData: arrMicrobialDetailsList, reqText: objReq.SurveyType?.Text ?? "", reqId: objReq.SurveyType?.Id ?? 0, isPlateIdGenerated: isPlateIdGenerated, reviewerText: reviewersText)
+            
+        }else{
+            //update case status
+            
+            Microbial_EnviromentalSurveyFormSubmitted.updateCaseStatusOfReq(timeStamp: arrMicrobialDetailsList.timeStamp ?? "", caseStatus: arrMicrobialDetailsList.status ?? 0)
+        }
+    }
+    
     private func fetchGetAllSyncedDataForRequisition(){
         dismissGlobalHUD(self.view)
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
@@ -676,42 +712,14 @@ extension MicrobialViewController {
                     if let microbialDetailsList = objReq.microbialDetailsList{
                         
                         for arrMicrobialDetailsList in microbialDetailsList{
-                            if !Microbial_EnviromentalSurveyFormSubmitted.isSameTimeStampAndUserIdAlreadyExisits(reqData: arrMicrobialDetailsList){
-                                var isPlateIdGenerated = false
-                                
-                                let arrReviewers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
-                                let reviewerIds = arrMicrobialDetailsList.reviewerIds ?? []
-                                for reviewer in arrReviewers{
-                                    let isSelected = reviewerIds.contains(reviewer.reviewerId?.intValue ?? 0)
-                                    MicrobialSelectedUnselectedReviewer.saveReviewersInDB(arrMicrobialDetailsList.timeStamp ?? "", reviewerId: reviewer.reviewerId?.intValue ?? 0, reviewerName: reviewer.reviewerName ?? "", isSelected: isSelected, isSessionType: false)
-                                }
-                                
-                                var reviewersText = ""
-                                for selectsId in reviewerIds{
-                                    let selectedReviewer = arrReviewers.filter{ $0.reviewerId?.intValue ?? 0 == selectsId }
-                                    if selectedReviewer.count > 0{
-                                        if reviewersText == ""{
-                                            reviewersText = selectedReviewer.first?.reviewerName ?? ""
-                                        }else{
-                                            reviewersText = "\(reviewersText), \(selectedReviewer.first?.reviewerName ?? "")"
-                                        }
-                                    }
-                                }
-                                
-                                Microbial_EnviromentalSurveyFormSubmitted.saveDataWhichIsAlreadySynced(reqData: arrMicrobialDetailsList, reqText: objReq.SurveyType?.Text ?? "", reqId: objReq.SurveyType?.Id ?? 0, isPlateIdGenerated: isPlateIdGenerated, reviewerText: reviewersText)
-
-                            }else{
-                                //update case status
-                                
-                                Microbial_EnviromentalSurveyFormSubmitted.updateCaseStatusOfReq(timeStamp: arrMicrobialDetailsList.timeStamp ?? "", caseStatus: arrMicrobialDetailsList.status ?? 0)
-                            }
+                            saveAlreadySyncdeDataAndChanegStatus(arrMicrobialDetailsList, objReq)
                         }
                     }
                 }
             }
             self.checkAndSync()
             self.loadDataForGraphDraftAndSubmittedReq()
-            print(json)
+          //  print(json)
         })
     }
     

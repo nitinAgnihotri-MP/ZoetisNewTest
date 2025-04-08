@@ -232,6 +232,40 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         }
     }
     
+    fileprivate func setVaccineMixtureData(_ cat: PENewAssessment) {
+        if cat.vMixer.count > 0 {
+            var idArr : [Int] = []
+            for obj in  cat.vMixer {
+                let data = CoreDataHandlerPE().getCertificateData(doaId: obj)
+                if idArr.contains(data!.id ?? 0){
+                }else{
+                    idArr.append(data!.id ?? 0)
+                    certificateData.append(data!)
+                }
+            }
+        }
+    }
+    
+    fileprivate func extractedFunc() {
+        if isFromEditMicro{
+            bckButton.isHidden = true
+            
+        }
+        else {
+            bckButton.isHidden = false
+            
+        }
+        
+        if(regionID == 3){
+            lblNA.isHidden = true
+            btnNA.isHidden = true
+        }else{
+            lblNA.isHidden = false
+            btnNA.isHidden = false
+            showHideNA(sequenceNoo: self.selectedCategory?.sequenceNoo ?? 0, catName: self.selectedCategory?.catName ?? "")
+        }
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         self.navigationController?.navigationBar.isHidden = true
@@ -278,17 +312,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         
         
         for cat in catArrayForCollectionIs{
-            if cat.vMixer.count > 0 {
-                var idArr : [Int] = []
-                for obj in  cat.vMixer {
-                    let data = CoreDataHandlerPE().getCertificateData(doaId: obj)
-                    if idArr.contains(data!.id ?? 0){
-                    }else{
-                        idArr.append(data!.id ?? 0)
-                        certificateData.append(data!)
-                    }
-                }
-            }
+            setVaccineMixtureData(cat)
         }
         
         if certificateData.count > 0 {
@@ -396,23 +420,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         NotificationCenter.default.addObserver(self, selector: #selector(refreshScores(_:)), name: NSNotification.Name.init(rawValue: "RefreshExtendedPEScores") , object: nil)
         collectionViewSignature.reloadData()
         synWebBtn.isHidden = false
-        if isFromEditMicro{
-            bckButton.isHidden = true
-            
-        }
-        else {
-            bckButton.isHidden = false
-            
-        }
-        
-        if(regionID == 3){
-            lblNA.isHidden = true
-            btnNA.isHidden = true
-        }else{
-            lblNA.isHidden = false
-            btnNA.isHidden = false
-            showHideNA(sequenceNoo: self.selectedCategory?.sequenceNoo ?? 0, catName: self.selectedCategory?.catName ?? "")
-        }
+        extractedFunc()
         
     }
     

@@ -1289,6 +1289,24 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     
     // MARK: ZoetisWebServices to Call Get Api For Posting Session **************************************/
 
+    fileprivate func handleJsonArr(json:JSON) {
+        if let arr = JSON(json).array, !arr.isEmpty {
+            for item in arr {
+                CoreDataHandler().getPostingData((item.dictionaryObject as NSDictionary?)!)
+            }
+            
+            let postingData = CoreDataHandler().fetchAllPostingExistingSession()
+            
+            if postingData.count > 0 {
+                self.getPostingDataFromServerforVaccination()
+            } else {
+                self.getCNecStep1Data()
+            }
+        } else {
+            self.getPostingDataFromServerforVaccination()
+        }
+    }
+    
     func getPostingDataFromServer(){
         self.deleteAllData("PostingSession")
         if WebClass.sharedInstance.connected() {
@@ -1307,22 +1325,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 }
                 
                 DispatchQueue.main.async {
-                    
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        for item in arr {
-                            CoreDataHandler().getPostingData((item.dictionaryObject as NSDictionary?)!)
-                        }
-                        
-                        let postingData = CoreDataHandler().fetchAllPostingExistingSession()
-                        
-                        if postingData.count > 0 {
-                            self.getPostingDataFromServerforVaccination()
-                        } else {
-                            self.getCNecStep1Data()
-                        }
-                    } else {
-                        self.getPostingDataFromServerforVaccination()
-                    }
+                    self.handleJsonArr(json: json)
                 }
             })
             
@@ -1770,6 +1773,47 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     
     
     // MARK: ******************* ZoetisWebServices Get Posting Data from Server for Images
+    fileprivate func termAndConditionViewCheck() {
+        if self.termsCond == 0 {
+            UserDefaults.standard.set(true, forKey: "login")
+            let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController
+            self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
+            
+        } else {
+            UserDefaults.standard.set(true, forKey: "login")
+            self.callDashBordView()
+        }
+    }
+    
+    fileprivate func getTurkeyPostedSessionFromServer(birdTypeIdIs:Int) {
+        Helper.dismissGlobalHUD(self.view)
+        
+        if birdTypeIdIs == 3{
+            self.getPostingDataFromServerTurkey()
+        }
+        else{
+            
+            self.termAndConditionViewCheck()
+        }
+    }
+    
+    fileprivate func saveImagesFromServer(_ arr: [JSON]) {
+        for item in arr {
+            
+            guard let imagesArray = item["Images"].array, !imagesArray.isEmpty else {
+                continue
+            }
+            
+            for image in imagesArray {
+                if let imageDict = image.dictionaryObject as NSDictionary? {
+                    CoreDataHandler().getSaveImageFromServer(imageDict)
+                }
+            }
+        }
+        let birdTypeId = UserDefaults.standard.integer(forKey: "birdTypeId")
+        self.getTurkeyPostedSessionFromServer(birdTypeIdIs: birdTypeId)
+    }
+    
     func getPostingDataFromServerforImage(){
         let birdTypeId = UserDefaults.standard.integer(forKey: "birdTypeId")
         self.deleteAllData("BirdPhotoCapture")
@@ -1790,55 +1834,11 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 DispatchQueue.main.async {
                     
                     if let arr = JSON(json).array, !arr.isEmpty {
-                        for item in arr {
-                            
-                            guard let imagesArray = item["Images"].array, !imagesArray.isEmpty else {
-                                continue
-                            }
-                            
-                            for image in imagesArray {
-                                if let imageDict = image.dictionaryObject as NSDictionary? {
-                                    CoreDataHandler().getSaveImageFromServer(imageDict)
-                                }
-                            }
-                        }
-                        Helper.dismissGlobalHUD(self.view)
-                        
-                        if birdTypeId == 3{
-                            self.getPostingDataFromServerTurkey()
-                        }
-                        else{
-                            
-                            if self.termsCond == 0 {
-                                UserDefaults.standard.set(true, forKey: "login")
-                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController
-                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                                
-                            } else {
-                                UserDefaults.standard.set(true, forKey: "login")
-                                self.callDashBordView()
-                            }
-                        }
+                        self.saveImagesFromServer(arr)
                     }
                     else{
                         
-                        Helper.dismissGlobalHUD(self.view)
-                        if birdTypeId == 3{
-                            self.getPostingDataFromServerTurkey()
-                        }
-                        else{
-                            
-                            if self.termsCond == 0{
-                                UserDefaults.standard.set(true, forKey: "login")
-                                UserDefaults.standard.set(true, forKey: "login")
-                                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController
-                                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-                                
-                            } else {
-                                UserDefaults.standard.set(true, forKey: "login")
-                                self.callDashBordView()
-                            }
-                        }
+                        self.getTurkeyPostedSessionFromServer(birdTypeIdIs: birdTypeId)
                     }
                 }
             })
@@ -2273,6 +2273,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             
             id = UserDefaults.standard.value(forKey: "Id") as! Int
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+            print("AccessToken: ",accestoken)
            // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let dev = "iOS"

@@ -443,7 +443,7 @@ class SummaryReportsMIcroscopy: UIViewController,UITableViewDelegate,UITableView
         reportComposer.exportHTMLContentToPDF(HTMLContent)
         
         let template = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(self.subjectString as String).pdf")
-        let pdfData: Data = (try! Data.init(contentsOf: URL(fileURLWithPath: reportComposer.pdfFilename)))
+        let pdfData: Data = (try? Data.init(contentsOf: URL(fileURLWithPath: reportComposer.pdfFilename)))!
         try? pdfData.write(to: template!, options: [.atomic])
         
         let activityViewController = UIActivityViewController(activityItems:[template as Any,self.subjectString], applicationActivities: nil)

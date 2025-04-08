@@ -430,38 +430,42 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
         }
     }
     
+    fileprivate func clearSignatureViewData() {
+        var base64 = ""
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex, "hasSignCleared": true
+                                                                                                                          ])
+        if empIndex > -1 &&  certificateData.count > empIndex {
+            certificateData[empIndex].isSigned = false
+            certificateData[empIndex].signatureImg = base64
+        }
+        
+        if empIndex > -1 && empIndex == certificateData.count{
+            
+            if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool {
+                if isSignedFSR {
+                    hideShowImgVw(false)
+                    
+                    if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
+                        UserDefaults.standard.setValue(nil, forKey: "FsrSign")
+                        UserDefaults.standard.setValue(false, forKey: "isSignedFSR")
+                    }
+                }
+            }
+            var k = 0
+            for item in certificateData {
+                
+                certificateData[k].fsrSign = ""
+                k = k + 1
+            }
+        }
+        hideShowImgVw(true)
+        signView.clearCanvas()
+    }
+    
     @IBAction func clearBtnAction(_ sender: UIButton) {
         if fromScreen == "PEFinishPopUpScreen" {
             
-            var base64 = ""
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex, "hasSignCleared": true
-                                                                                                                              ])
-            if empIndex > -1 &&  certificateData.count > empIndex {
-                certificateData[empIndex].isSigned = false
-                certificateData[empIndex].signatureImg = base64
-            }
-            
-            if empIndex > -1 && empIndex == certificateData.count{
-                
-                if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool {
-                    if isSignedFSR {
-                        hideShowImgVw(false)
-                        
-                        if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
-                            UserDefaults.standard.setValue(nil, forKey: "FsrSign")
-                            UserDefaults.standard.setValue(false, forKey: "isSignedFSR")
-                        }
-                    }
-                }
-                var k = 0
-                for item in certificateData {
-                    
-                    certificateData[k].fsrSign = ""
-                    k = k + 1
-                }
-            }
-            hideShowImgVw(true)
-            signView.clearCanvas()
+            clearSignatureViewData()
             
         }
         else {

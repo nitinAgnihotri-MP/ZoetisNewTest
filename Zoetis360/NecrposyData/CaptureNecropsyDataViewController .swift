@@ -171,68 +171,68 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     // MARK: 🟠 - METHODS AND FUNCTIONS
-    @objc func callFirstMethodToLoadView()
-    {
+    fileprivate func saveImmuneCatValidation(_ status: Bool) {
+        if status == true
+        {
+            if self.dataSkeltaArray.count > 0
+            {
+                self.neccollectionView.dataSource = self
+                self.neccollectionView.delegate = self
+                self.neccollectionView.reloadData()
+            }
+            if self.farmArray.count > 0
+            {
+                self.formCollectionView.dataSource = self
+                self.formCollectionView.delegate = self
+                self.formCollectionView.reloadData()
+                
+                if self.postingIdFromExistingNavigate == "Exting"{
+                    self.formCollectionView.selectItem(at: IndexPath(item: self.nsIndexPathFromExist, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+                }
+                else{
+                    self.formCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+                }
+            }
+            
+            if self.items.count > 0
+            {
+                self.birdsCollectionView.dataSource = self
+                self.birdsCollectionView.delegate = self
+                self.birdsCollectionView.reloadData()
+                self.birdsCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
+            }
+            
+            self.tableView.reloadData()
+            let rowToSelect:IndexPath = IndexPath(row: 0, section: 0)
+            self.tableView.selectRow(at: rowToSelect, animated: true, scrollPosition: UITableView.ScrollPosition.none)
+            self.tableView(self.tableView, didSelectRowAt: rowToSelect)
+            self.loaderView.alpha = 0
+            Helper.dismissGlobalHUD(self.view)
+        }
+    }
+    
+    fileprivate func saveResCatValidation(_ status: Bool) {
+        if status == true {
+            self.saveGiTractCat({ (status) in
+                if status == true {
+                    self.saveImmuneCat({ (status) in
+                        saveImmuneCatValidation(status)
+                    })
+                }
+            })
+        }
+    }
+    
+    @objc func callFirstMethodToLoadView() {
         self.callLoad { (status) in
             
-            if status == true
-            {
+            if status == true {
                 self.saveSkeletonCat{ (status) in
-                    if status == true
-                    {
+                    if status == true {
                         self.saveCocoiCat({ (status) in
-                            if status == true
-                            {
+                            if status == true {
                                 self.saveResCat({ (status) in
-                                    if status == true
-                                    {
-                                        self.saveGiTractCat({ (status) in
-                                            
-                                            if status == true
-                                            {
-                                                self.saveImmuneCat({ (status) in
-                                                    
-                                                    if status == true
-                                                    {
-                                                        if self.dataSkeltaArray.count > 0
-                                                        {
-                                                            self.neccollectionView.dataSource = self
-                                                            self.neccollectionView.delegate = self
-                                                            self.neccollectionView.reloadData()
-                                                        }
-                                                        if self.farmArray.count > 0
-                                                        {
-                                                            self.formCollectionView.dataSource = self
-                                                            self.formCollectionView.delegate = self
-                                                            self.formCollectionView.reloadData()
-                                                            
-                                                            if self.postingIdFromExistingNavigate == "Exting"{
-                                                                self.formCollectionView.selectItem(at: IndexPath(item: self.nsIndexPathFromExist, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-                                                            }
-                                                            else{
-                                                                self.formCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-                                                            }
-                                                        }
-                                                        
-                                                        if self.items.count > 0
-                                                        {
-                                                            self.birdsCollectionView.dataSource = self
-                                                            self.birdsCollectionView.delegate = self
-                                                            self.birdsCollectionView.reloadData()
-                                                            self.birdsCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-                                                        }
-                                                        
-                                                        self.tableView.reloadData()
-                                                        let rowToSelect:IndexPath = IndexPath(row: 0, section: 0)
-                                                        self.tableView.selectRow(at: rowToSelect, animated: true, scrollPosition: UITableView.ScrollPosition.none)
-                                                        self.tableView(self.tableView, didSelectRowAt: rowToSelect)
-                                                        self.loaderView.alpha = 0
-                                                        Helper.dismissGlobalHUD(self.view)
-                                                    }
-                                                })
-                                            }
-                                        })
-                                    }
+                                    saveResCatValidation(status)
                                 })
                             }
                         })
@@ -242,8 +242,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
     }
     // MARK: 🟠 Call Load Method
-    func callLoad(_ completion: (_ status: Bool) -> Void)
-    {
+    func callLoad(_ completion: (_ status: Bool) -> Void) {
         tableViewSelectedRow = 0
         UserDefaults.standard.set(0, forKey: "clickindex")
         UserDefaults.standard.synchronize()
@@ -264,8 +263,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             self.farmRow = nsIndexPathFromExist
             postingId = postingIdFromExisting
             self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1NecId(postingId as NSNumber) as! [NSManagedObject]
-        }
-        else{
+        } else {
             self.farmRow = 0
             postingId = UserDefaults.standard.integer(forKey: "necId") as Int
             self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(postingId as NSNumber) as! [NSManagedObject]
@@ -277,15 +275,10 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             var numOfLoop = Int()
             numOfLoop = 0
             
-            for i in 0..<noOfBirds
-            {
-                
+            for i in 0..<noOfBirds {
                 numOfLoop = i + 1
-                if numOfLoop > 10
-                {
-                }
-                else
-                {
+                if numOfLoop > 10 {
+                } else {
                     noOfBirdsArr.add(i+1)
                 }
             }
@@ -326,12 +319,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 {
                     let numOfBird = Int((items.object(at: j) as AnyObject).object(at: x) as! NSNumber) as Int
                     var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     let isNotes =  CoreDataHandler().fetchNoofBirdWithNotes(catArr[i] as! String, formName: farmArray[j] as! String, birdNo: numOfBird as NSNumber , necId: necId as NSNumber)
                     
@@ -608,8 +596,48 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         completion (true)
     }
     // MARK: 🟢  Save Immune Category Data to Database
-    func saveImmuneCat(_ completion: (_ status: Bool) -> Void)
-    {
+    fileprivate func handleImmuneObservationField(_ immune: Immune, _ i: Int, _ birdnumber: Any, _ j: Int, _ trimmed: String, _ necId: Int) {
+        if immune.observationField == Constants.maleFemaleStr {
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0")
+            
+        } else {
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0.0")
+        }
+    }
+    
+    fileprivate func handleImmuneMeasureValidation(_ immune: Immune, _ i: Int, _ birdnumber: Any, _ j: Int, _ necId: Int) {
+        if immune.measure! == "Y,N" {
+            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: immune.measure ?? "")
+        } else if ( immune.measure! == "Actual") {
+            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            handleImmuneObservationField(immune, i, birdnumber, j, trimmed, necId)
+        }
+        
+        else if ( immune.measure! == "F,M") {  /// New Addition for Bird Sex
+            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            if immune.observationField == Constants.maleFemaleStr {
+                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0")
+                
+            }
+            
+        } else {
+            let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+            let array = (trimmed.components(separatedBy: ",") as [String])
+            
+            if immune.refId == 58 {
+                
+                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: Int(array[3])! , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0.0")
+                
+            } else {
+                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0.0")
+                
+            }
+        }
+    }
+    
+    func saveImmuneCat(_ completion: (_ status: Bool) -> Void) {
         let farm = farmArray.object(at: nsIndexPathFromExist)
         UserDefaults.standard.set(farm, forKey: "farm")
         UserDefaults.standard.synchronize()
@@ -622,77 +650,25 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         if postingIdFromExistingNavigate == "Exting"{
             
-            necId =  postingIdFromExisting
-        }
-        else{
+            necId = postingIdFromExisting
+        } else {
             necId = UserDefaults.standard.integer(forKey: "necId") as Int
         }
         
-        for i in 0..<farmArray.count
-        {
-            for x in 0..<(items[i] as AnyObject).count
-            {
+        for i in 0..<farmArray.count {
+            for x in 0..<(items[i] as AnyObject).count {
                 let birdnumber = (items.object(at: i) as AnyObject).object(at: x)
-                for  j in 0..<immu.count
-                {
+                for  j in 0..<immu.count {
                     if ((immu.object(at: j) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                         let immune : Immune = immu.object(at: j) as! Immune
                         
                         let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(birdnumber as! NSNumber, farmname: farmArray[i] as! String, catName: "Immune",Obsid: immune.observationId!,necId:necId as NSNumber)
                         
                         if FetchObsArr.count > 0 {
+                        } else {
+                            handleImmuneMeasureValidation(immune, i, birdnumber, j, necId)
                         }
-                        else
-                        {
-                            if immune.measure! == "Y,N" {
-                                let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                                
-                                CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: immune.measure ?? "")
-                            }
-                            else if ( immune.measure! == "Actual"){
-                                let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                                if immune.observationField == Constants.maleFemaleStr
-                                {
-                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0")
-                                    
-                                }
-                                else{
-                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0.0")
-                                }
-                            }
-                            
-                            else if ( immune.measure! == "F,M"){  /// New Addition for Bird Sex
-                                let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                                if immune.observationField == Constants.maleFemaleStr
-                                {
-                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0")
-                                    
-                                }
-                                
-                            }
-                            
-                            else
-                            {
-                                let trimmed = immune.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                                let array = (trimmed.components(separatedBy: ",") as [String])
-                                
-                                if immune.refId == 58
-                                {
-                                    
-                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: Int(array[3])! , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0.0")
-                                    
-                                }
-                                
-                                else
-                                {
-                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune.observationField!, formName:farmArray[i] as! String , obsVisibility: false, birdNo: birdnumber as! NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:immune.observationId!),measure: trimmed,quickLink: immune.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune.refId!, actualText: "0.0")
-                                    
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
+                    } else {
                         let immune : Immune = immu.object(at: j) as! Immune
                         CoreDataHandler().deleteCaptureNecropsyViewDataWithObsID(immune.observationId!,necId: necId as NSNumber)
                     }
@@ -1164,58 +1140,68 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     
     
     // MARK: 🟠 Setup Observation images Description for Coccidiosis
+    fileprivate func handleLngIdObsImageDescCase24(_ obsDescArr: NSMutableArray) {
+        switch lngId {
+        case 1:
+            obsDescArr.add(self.noGrossLesionStr)
+            obsDescArr.add("Few petechial hemorrhages.")
+            obsDescArr.add("Numerous patechiae.")
+            obsDescArr.add("Numerous petechiae and gut ballooning.")
+            obsDescArr.add("Bloody and ballooned.")
+        case 3:
+            obsDescArr.add(self.pasDeLesionStr)
+            obsDescArr.add("Quelques pétécchies.")
+            obsDescArr.add("Nombreuses pétécchies.")
+            obsDescArr.add("Nombreuses pétécchies et ballonement intestinal.")
+            obsDescArr.add("Ballonné et sanguin.")
+        case 4:
+            obsDescArr.add(self.semLesMacroStr)
+            obsDescArr.add("Petéquias externas podem aparecer e pequenas quantidades de muco alaranjado podem estar presentes.")
+            obsDescArr.add("Petéquias + conteúdo alterado podem aparecer em maior intensidade.")
+            obsDescArr.add("Petéquias + conteúdo laranja com alteração de mucosa, flocos de sangue/coágulos e inchaço.")
+            obsDescArr.add("Embalonamento, presença de sangue com intestino espessado.")
+        default:
+            break
+        }
+    }
+    
+    fileprivate func handleLngIdObsImagesCase23(_ obsDescArr: NSMutableArray) {
+        switch lngId {
+        case 1:
+            obsDescArr.add(self.noGrossLesionStr)
+            obsDescArr.add("<5 lesions/cm2.")
+            obsDescArr.add("5 lesions/cm2.")
+            obsDescArr.add("Lesions coalescent.")
+            obsDescArr.add("Lesions completely coalescent with petechial hemorrhage or red mucosa.")
+        case 3:
+            obsDescArr.add(self.pasDeLesionStr)
+            obsDescArr.add("<5 lésions/cm2.")
+            obsDescArr.add("5 lésions/cm2.")
+            obsDescArr.add("Lésions coalescentes.")
+            obsDescArr.add("lésions complètement coalescentes avec pétécchies ou muqueuse rouge.")
+        case 4:
+            obsDescArr.add(self.semLesMacroStr)
+            obsDescArr.add("<5 lesões/cm2.")
+            obsDescArr.add("5 lesões/cm2.")
+            obsDescArr.add("Lesões coalescentes.")
+            obsDescArr.add("Lesões completamente coalescentes com hemorragia petequial ou mucosa vermelha.")
+        default:
+            break
+        }
+    }
+    
     func setObsImageDescForCocodis(desc : Int) -> NSMutableArray
     {
         let obsDescArr = NSMutableArray()
         switch desc {
         case 23 :
             lngId = UserDefaults.standard.integer(forKey: "lngId")
-            if lngId == 1{
-                obsDescArr.add(self.noGrossLesionStr)
-                obsDescArr.add("<5 lesions/cm2.")
-                obsDescArr.add("5 lesions/cm2.")
-                obsDescArr.add("Lesions coalescent.")
-                obsDescArr.add("Lesions completely coalescent with petechial hemorrhage or red mucosa.")
-            }
-            else if lngId == 3{
-                obsDescArr.add(self.pasDeLesionStr)
-                obsDescArr.add("<5 lésions/cm2.")
-                obsDescArr.add("5 lésions/cm2.")
-                obsDescArr.add("Lésions coalescentes.")
-                obsDescArr.add("lésions complètement coalescentes avec pétécchies ou muqueuse rouge.")
-            }
-            else if lngId == 4{
-                obsDescArr.add(self.semLesMacroStr)
-                obsDescArr.add("<5 lesões/cm2.")
-                obsDescArr.add("5 lesões/cm2.")
-                obsDescArr.add("Lesões coalescentes.")
-                obsDescArr.add("Lesões completamente coalescentes com hemorragia petequial ou mucosa vermelha.")
-            }
+            handleLngIdObsImagesCase23(obsDescArr)
             
             break
             
         case 24 :
-            if lngId == 1{
-                obsDescArr.add(self.noGrossLesionStr)
-                obsDescArr.add("Few petechial hemorrhages.")
-                obsDescArr.add("Numerous patechiae.")
-                obsDescArr.add("Numerous petechiae and gut ballooning.")
-                obsDescArr.add("Bloody and ballooned.")
-            }
-            else if lngId == 3{
-                obsDescArr.add(self.pasDeLesionStr)
-                obsDescArr.add("Quelques pétécchies.")
-                obsDescArr.add("Nombreuses pétécchies.")
-                obsDescArr.add("Nombreuses pétécchies et ballonement intestinal.")
-                obsDescArr.add("Ballonné et sanguin.")
-            }
-            else if lngId == 4{
-                obsDescArr.add(self.semLesMacroStr)
-                obsDescArr.add("Petéquias externas podem aparecer e pequenas quantidades de muco alaranjado podem estar presentes.")
-                obsDescArr.add("Petéquias + conteúdo alterado podem aparecer em maior intensidade.")
-                obsDescArr.add("Petéquias + conteúdo laranja com alteração de mucosa, flocos de sangue/coágulos e inchaço.")
-                obsDescArr.add("Embalonamento, presença de sangue com intestino espessado.")
-            }
+            handleLngIdObsImageDescCase24(obsDescArr)
             
             break
             
@@ -1665,201 +1651,245 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     // MARK: 🟠 Setup Observation images Description for Resp.
-    func setObsImageDescForResp(desc : Int) -> NSMutableArray
-    {
+    fileprivate func handleLngIdObsDescForRespCase49(_ obsDescArr: NSMutableArray) {
+        switch lngId {
+        case 1:
+            obsDescArr.add("No.")
+            obsDescArr.add(Constants.yesStr)
+        case 3:
+            obsDescArr.add("Non.")
+            obsDescArr.add("Oui.")
+        case 4:
+            obsDescArr.add("Não.")
+            obsDescArr.add("Sim.")
+        default:
+            break
+        }
+    }
+    
+    fileprivate func handleLngObsDescForRespCase50(_ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add(Constants.normalStr)
+            obsDescArr.add("Slight mucus and/or slight hyperemia.")
+            obsDescArr.add("Copious mucus and/or moderate hyperemia.")
+            obsDescArr.add("Severe hyperemia and/or Hemorrhagic and/or Diphtheritic.")
+        }
+        else if lngId == 3{
+            obsDescArr.add(Constants.normalStr)
+            obsDescArr.add("Léger mucus et/ou légère hyperhémie.")
+            obsDescArr.add("Mucus abondant et/ou hyperhémie modérée.")
+            obsDescArr.add("Hyperhémie sévère et/ou Hémorragique et/ou Diphtérique.")
+        }
+        else if lngId == 4{
+            obsDescArr.add(Constants.normalStr)
+            obsDescArr.add("Leve muco e/ou leve hiperemia.")
+            obsDescArr.add("Muco abundante e/ou hiperemia moderada.")
+            obsDescArr.add("Traqueíte severa com muco hemorrágico.")
+        }
+    }
+    
+    fileprivate func handleLngObsDescForRespCase51(_ obsDescArr: NSMutableArray) {
+        if lngId == 1{
+            obsDescArr.add(Constants.normalStr)
+            obsDescArr.add("Suds.")
+            obsDescArr.add("Frothy suds or single focus of exudates.")
+            obsDescArr.add("Multifocal to diffuse exudate or exudate + pericarditis.")
+            obsDescArr.add("Pericarditis + perihepatitis.")
+        }
+        else if lngId == 3{
+            obsDescArr.add(Constants.normalStr)
+            obsDescArr.add("Mousse.")
+            obsDescArr.add("Mousseux ou foyer unique d'exsudat.")
+            obsDescArr.add("Exsudat multifocal à diffus ou exsudat + péricardite.")
+            obsDescArr.add("Péricardite + périhépatite.")
+        }
+        else if lngId == 4{
+            obsDescArr.add(Constants.normalStr)
+            obsDescArr.add("Presença de espuma..")
+            obsDescArr.add("Espuma espessa ou foco simples de exsudato.")
+            obsDescArr.add("Exsudato multifocal ou difuso + pericardite.")
+            obsDescArr.add("Pericardite + perihepatite.")
+        }
+    }
+    
+    fileprivate func handleLngObsDescForRespCase52(_ obsDescArr: NSMutableArray) {
+        if lngId == 1{
+            obsDescArr.add("No.")
+            obsDescArr.add(Constants.yesStr)
+        }
+        else if lngId == 3{
+            obsDescArr.add("Non.")
+            obsDescArr.add("Oui.")
+        }
+        else if lngId == 4{
+            obsDescArr.add("Não.")
+            obsDescArr.add("Sim.")
+        }
+    }
+    
+    fileprivate func handleLngObsDescForRespCase53(_ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add("No.")
+            obsDescArr.add(Constants.yesStr)
+        } else if lngId == 3{
+            obsDescArr.add("Non.")
+            obsDescArr.add("Oui.")
+        } else if lngId == 4{
+            obsDescArr.add("Não.")
+            obsDescArr.add("Sim.")
+        }
+    }
+    
+    fileprivate func handleLngObsDescForRespCase54(_ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add("No.")
+            obsDescArr.add(Constants.yesStr)
+        }
+        else if lngId == 3{
+            obsDescArr.add("Non.")
+            obsDescArr.add("Oui.")
+        }
+        else if lngId == 4{
+            obsDescArr.add("Não.")
+            obsDescArr.add("Sim.")
+        }
+    }
+    
+    fileprivate func handleLngObsDescForRespCaseDefault(_ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add("No.")
+            obsDescArr.add(Constants.yesStr)
+        } else if lngId == 3 {
+            obsDescArr.add("Non.")
+            obsDescArr.add("Oui.")
+        } else if lngId == 4 {
+            obsDescArr.add("Não.")
+            obsDescArr.add("Sim.")
+        }
+    }
+    
+    func setObsImageDescForResp(desc : Int) -> NSMutableArray {
         let obsDescArr = NSMutableArray()
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         
         switch desc {
         case 49:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
+            handleLngIdObsDescForRespCase49(obsDescArr)
             break
             
         case 50:
-            if lngId == 1{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Slight mucus and/or slight hyperemia.")
-                obsDescArr.add("Copious mucus and/or moderate hyperemia.")
-                obsDescArr.add("Severe hyperemia and/or Hemorrhagic and/or Diphtheritic.")
-            }
-            else if lngId == 3{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Léger mucus et/ou légère hyperhémie.")
-                obsDescArr.add("Mucus abondant et/ou hyperhémie modérée.")
-                obsDescArr.add("Hyperhémie sévère et/ou Hémorragique et/ou Diphtérique.")
-            }
-            else if lngId == 4{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Leve muco e/ou leve hiperemia.")
-                obsDescArr.add("Muco abundante e/ou hiperemia moderada.")
-                obsDescArr.add("Traqueíte severa com muco hemorrágico.")
-            }
+            handleLngObsDescForRespCase50(obsDescArr)
             break
             
         case 51:
-            if lngId == 1{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Suds.")
-                obsDescArr.add("Frothy suds or single focus of exudates.")
-                obsDescArr.add("Multifocal to diffuse exudate or exudate + pericarditis.")
-                obsDescArr.add("Pericarditis + perihepatitis.")
-            }
-            else if lngId == 3{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Mousse.")
-                obsDescArr.add("Mousseux ou foyer unique d'exsudat.")
-                obsDescArr.add("Exsudat multifocal à diffus ou exsudat + péricardite.")
-                obsDescArr.add("Péricardite + périhépatite.")
-            }
-            else if lngId == 4{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Presença de espuma..")
-                obsDescArr.add("Espuma espessa ou foco simples de exsudato.")
-                obsDescArr.add("Exsudato multifocal ou difuso + pericardite.")
-                obsDescArr.add("Pericardite + perihepatite.")
-            }
+            handleLngObsDescForRespCase51(obsDescArr)
             break
             
         case 52:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
+            handleLngObsDescForRespCase52(obsDescArr)
             break
             
         case 53:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
+            handleLngObsDescForRespCase53(obsDescArr)
             break
             
         case 54:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
+            handleLngObsDescForRespCase54(obsDescArr)
             break
         default:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
+            handleLngObsDescForRespCaseDefault(obsDescArr)
             break
         }
         return obsDescArr
     }
     
     // MARK: 🟠 Setup Observation Images Description for Immune
+    fileprivate func handleObsImageForImmuneCase58(_ lngId: Int, _ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add("Very small.")
+            obsDescArr.add("Default.")
+            obsDescArr.add("Large.")
+        } else if lngId == 3 {
+            obsDescArr.add("Très petit.")
+            obsDescArr.add("Par défaut.")
+            obsDescArr.add("Large.")
+        } else if lngId == 4 {
+            obsDescArr.add("Escala de 1 a 8. Bolsas são medidas e recebem um escore correspondente ao menor orifício pelo qual a amostra passa completamente.")
+        }
+    }
+    
+    fileprivate func handleObsImageForImmuneCase57(_ lngId: Int, _ obsDescArr: NSMutableArray) {
+        if lngId == 1 || lngId == 4 {
+            obsDescArr.add("NA")
+            obsDescArr.add("NA.")
+            obsDescArr.add("NA.")
+            obsDescArr.add("NA.")
+        } else if lngId == 3 {
+            obsDescArr.add(self.noDisposibleStr)
+            obsDescArr.add(self.noDisposibleStr)
+            obsDescArr.add(self.noDisposibleStr)
+            obsDescArr.add(self.noDisposibleStr)
+        }
+    }
+    
+    fileprivate func handleObsImageForImmuneCase59(_ lngId: Int, _ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add("Absent.")
+            obsDescArr.add("Presents.")
+        } else if lngId == 3 {
+            obsDescArr.add("Absent.")
+            obsDescArr.add("Présent.")
+        } else if lngId == 4 {
+            obsDescArr.add("Ausente.")
+            obsDescArr.add("Presente.")
+        }
+    }
+    
+    fileprivate func handleObsImageForImmuneCase55To81(_ lngId: Int, _ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add("No.")
+            obsDescArr.add(Constants.yesStr)
+        } else if lngId == 3 {
+            obsDescArr.add("Non.")
+            obsDescArr.add("Oui.")
+        } else if lngId == 4 {
+            obsDescArr.add("Não.")
+            obsDescArr.add("Sim.")
+        }
+    }
+    
+    fileprivate func handleObsImageForImmuneCase1952To1957(_ lngId: Int, _ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add(Constants.yesStr)
+            obsDescArr.add("NO.")
+        } else if lngId == 3 {
+            obsDescArr.add("Oui.")
+            obsDescArr.add("Non.")
+        } else if lngId == 4 {
+            obsDescArr.add("Sim.")
+            obsDescArr.add("Não.")
+        }
+    }
+    
     func setObsImageDescForImmune(desc: Int) -> NSMutableArray {
         let obsDescArr = NSMutableArray()
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
         
         switch desc {
         case 58:
-            if lngId == 1 {
-                obsDescArr.add("Very small.")
-                obsDescArr.add("Default.")
-                obsDescArr.add("Large.")
-            } else if lngId == 3 {
-                obsDescArr.add("Très petit.")
-                obsDescArr.add("Par défaut.")
-                obsDescArr.add("Large.")
-            } else if lngId == 4 {
-                obsDescArr.add("Escala de 1 a 8. Bolsas são medidas e recebem um escore correspondente ao menor orifício pelo qual a amostra passa completamente.")
-            }
+            handleObsImageForImmuneCase58(lngId, obsDescArr)
             
         case 57:
-            if lngId == 1 || lngId == 4 {
-                obsDescArr.add("NA")
-                obsDescArr.add("NA.")
-                obsDescArr.add("NA.")
-                obsDescArr.add("NA.")
-            } else if lngId == 3 {
-                obsDescArr.add(self.noDisposibleStr)
-                obsDescArr.add(self.noDisposibleStr)
-                obsDescArr.add(self.noDisposibleStr)
-                obsDescArr.add(self.noDisposibleStr)
-            }
+            handleObsImageForImmuneCase57(lngId, obsDescArr)
             
         case 59:
-            if lngId == 1 {
-                obsDescArr.add("Absent.")
-                obsDescArr.add("Presents.")
-            } else if lngId == 3 {
-                obsDescArr.add("Absent.")
-                obsDescArr.add("Présent.")
-            } else if lngId == 4 {
-                obsDescArr.add("Ausente.")
-                obsDescArr.add("Presente.")
-            }
+            handleObsImageForImmuneCase59(lngId, obsDescArr)
             
         case 60, 55, 65, 63, 81, 61, 64, 66:
-            if lngId == 1 {
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            } else if lngId == 3 {
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            } else if lngId == 4 {
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
+            handleObsImageForImmuneCase55To81(lngId, obsDescArr)
             
         case 1955, 1957, 1952, 1956:
-            if lngId == 1 {
-                obsDescArr.add(Constants.yesStr)
-                obsDescArr.add("NO.")
-            } else if lngId == 3 {
-                obsDescArr.add("Oui.")
-                obsDescArr.add("Non.")
-            } else if lngId == 4 {
-                obsDescArr.add("Sim.")
-                obsDescArr.add("Não.")
-            }
+            handleObsImageForImmuneCase1952To1957(lngId, obsDescArr)
             
         default:
             if lngId == 1 {
@@ -1876,6 +1906,15 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         return obsDescArr
     }
+    
+    func getNecIdChicken() -> Int {
+        if postingIdFromExistingNavigate == "Exting" {
+            return postingIdFromExisting
+        } else {
+            return UserDefaults.standard.integer(forKey: "necId")
+        }
+    }
+    
     
     // MARK: 🟠 Cancel Button Action
     func cancelBtnAction (_ btnTag: Int, data:CaptureNecropsyViewData){
@@ -1887,13 +1926,14 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             dataSkeltaArray.removeAllObjects()
             
             var  necId = Int()
+            necId = getNecIdChicken()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+//            if postingIdFromExistingNavigate == "Exting"{
+//                necId =  postingIdFromExisting
+//            }
+//            else{
+//                necId = UserDefaults.standard.integer(forKey: "necId") as Int
+//            }
             dataSkeltaArray =   CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -1905,12 +1945,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayCocoi = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -1924,12 +1959,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayGiTract =   CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -1941,12 +1971,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayRes =   CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -1959,13 +1984,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -2716,21 +2735,16 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
     }
     // MARK: 🟠 Switch Click Action
-    @objc func switchClick(_ sender:UISwitch){
-        
-        let rowIndex :Int = sender.tag
-        lastSelectedIndex = IndexPath(row: rowIndex, section: 0)
-        
+    fileprivate func handleSwitchClickBtnTag0(_ rowIndex: Int, _ sender: UISwitch) {
         if btnTag == 0 {
             
             let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
+            if postingIdFromExistingNavigate == "Exting" {
                 necId =  postingIdFromExisting
-            }
-            else{
+            } else {
                 necId = UserDefaults.standard.integer(forKey: "necId") as Int
             }
             
@@ -2761,7 +2775,9 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(skleta.birdNo! , farmname: skleta.formName!, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
-        
+    }
+    
+    fileprivate func handleSwitchClickBtnTag1(_ rowIndex: Int, _ sender: UISwitch) {
         if btnTag == 1 {
             
             let cocoi : CaptureNecropsyViewData = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewData
@@ -2803,10 +2819,10 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(cocoi.birdNo! , farmname: cocoi.formName!, catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
         }
-        
+    }
+    
+    fileprivate func handleSwitchClickBtnTag2(_ rowIndex: Int, _ sender: UISwitch) {
         if btnTag == 2 {
-            
-            
             let gitract : CaptureNecropsyViewData = dataArrayGiTract.object(at: rowIndex) as! CaptureNecropsyViewData
             
             let image = UIImage(named:"Image01")
@@ -2828,34 +2844,25 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 let imageName = "GITract" + "_" + gitract1.obsName! + "_n"
                 var image = UIImage(named:imageName)
-                if image == nil
-                {
+                if image == nil {
                     image = UIImage(named:"Image01")
                 }
                 
                 CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("GITract", obsName: gitract1.obsName!, formName:gitract.formName! , obsVisibility: sender.isOn, birdNo: gitract.birdNo!, camraImage: image!, obsPoint: incrementValue , index: rowIndex, obsId: Int(truncating: gitract1.obsID!),necId: necId as NSNumber,isSync :true)
-                
             }
             
             dataArrayGiTract.removeAllObjects()
             
-            
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
+            if postingIdFromExistingNavigate == "Exting" {
                 necId =  postingIdFromExisting
-            }
-            else{
+            } else {
                 necId = UserDefaults.standard.integer(forKey: "necId") as Int
             }
-            
-            
             dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(gitract.birdNo! , farmname: gitract.formName!, catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            
-            
         }
-        
-        
+    }
+    
+    fileprivate func handleSwitchClickBtnTag3(_ rowIndex: Int, _ sender: UISwitch) {
         if btnTag == 3 {
             
             
@@ -2902,24 +2909,18 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(resp.birdNo! , farmname: resp.formName!, catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
         }
-        
-        
+    }
+    
+    fileprivate func handleSwitchClickBtnTag4(_ rowIndex: Int, _ sender: UISwitch) {
         if btnTag == 4 {
-            
-            
             let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewData
-            
             let image = UIImage(named:"Image01")
+            var necId = Int()
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
             
-            var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                
+            if postingIdFromExistingNavigate == "Exting" {
                 necId =  postingIdFromExisting
             }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId:necId as NSNumber)
             
@@ -2928,10 +2929,8 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 let imageName = "Immune" + "_" + immune1.obsName! + "_n"
                 var image = UIImage(named:imageName)
-                if image == nil
-                {
+                if image == nil {
                     image = UIImage(named:"Image01")
-                    
                 }
                 
                 CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Immune", obsName: immune1.obsName!, formName:immune.formName! , obsVisibility: sender.isOn, birdNo: immune.birdNo!, camraImage: image!, obsPoint: incrementValue , index: rowIndex, obsId: Int(truncating: immune1.obsID!),necId: necId as NSNumber,isSync :true)
@@ -2940,38 +2939,53 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataArrayImmu.removeAllObjects()
             
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            if postingIdFromExistingNavigate == "Exting" {
                 necId =  postingIdFromExisting
             }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
             
-            dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+            dataArrayImmu = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
             
         }
+    }
+    
+    @objc func switchClick(_ sender:UISwitch) {
         
-        if postingIdFromExistingNavigate == "Exting"{
-            
+        let rowIndex :Int = sender.tag
+        lastSelectedIndex = IndexPath(row: rowIndex, section: 0)
+        
+        handleSwitchClickBtnTag0(rowIndex, sender)
+        handleSwitchClickBtnTag1(rowIndex, sender)
+        handleSwitchClickBtnTag2(rowIndex, sender)
+        handleSwitchClickBtnTag3(rowIndex, sender)
+        handleSwitchClickBtnTag4(rowIndex, sender)
+        
+        if postingIdFromExistingNavigate == "Exting" {
             CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
-        }
-        else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
-            
+        } else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
             let necId = UserDefaults.standard.integer(forKey: "necId") as Int
             CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
-            
-        }
-        else{
+        } else {
             let necId = UserDefaults.standard.integer(forKey: "necId") as Int
             CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
         }
         
     }
     // MARK: 🟠 Bird Sex Button click
-    @objc func birdSexClick(_ sender:UIButton){
+    fileprivate func handlePostingIdFromExistingNavigate() {
+        if postingIdFromExistingNavigate == "Exting" {
+            CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
+        } else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
+        } else {
+            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
+        }
+    }
+    
+    @objc func birdSexClick(_ sender:UIButton) {
         
         let rowIndex :Int = sender.tag
         lastSelectedIndex = IndexPath(row: rowIndex, section: 0)
@@ -2984,8 +2998,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             if postingIdFromExistingNavigate == "Exting"{
                 necId =  postingIdFromExisting
-            }
-            else{
+            } else {
                 necId = UserDefaults.standard.integer(forKey: "necId") as Int
             }
             
@@ -2996,8 +3009,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 let imageName = "Immune" + "_" + immune1.obsName! + "_n"
                 var image = UIImage(named:imageName)
-                if image == nil
-                {
+                if image == nil {
                     image = UIImage(named:"Image01")
                 }
                 
@@ -3006,26 +3018,15 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataArrayImmu.removeAllObjects()
             
-            if postingIdFromExistingNavigate == "Exting"{
+            if postingIdFromExistingNavigate == "Exting" {
                 necId =  postingIdFromExisting
-            }
-            else{
+            } else {
                 necId = UserDefaults.standard.integer(forKey: "necId") as Int
             }
             dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
         
-        if postingIdFromExistingNavigate == "Exting"{
-            CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
-        }
-        else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
-            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
-        }
-        else{
-            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
-        }
+        handlePostingIdFromExistingNavigate()
     }
     // MARK: 🟠 Click Image
     @objc func clickImage(_ sender: UIButton) {
@@ -3339,6 +3340,35 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
     }
     
+    fileprivate func handleIsBirdCountAndAddSkeletonResponseData(_ isBirdCount: Bool?) {
+        if isBirdCount == false {
+            
+            self.addSkeltonResponseData(noOfBirdsArr1) { (status) in
+                if status == true {
+                    self.addCocoiResponseData(self.noOfBirdsArr1, completion: { (status) in
+                        if status == true {
+                            self.addGitractResponseData(self.noOfBirdsArr1, completion: { (status) in
+                                self.handleAddGITrakt(status)
+                            })
+                        }
+                    })
+                }
+            }
+        }
+    }
+    
+    fileprivate func handlePostingIdFromExistingNavigateAddBirdResponseData() {
+        if postingIdFromExistingNavigate == "Exting" {
+            CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
+        } else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
+        } else {
+            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
+        }
+    }
+    
     func addBirdResponseData() {
         
         isFirstTimeLaunch = false
@@ -3352,8 +3382,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             CoreDataHandler().updateBirdNumberInNecropsystep1withNecId(postingId as NSNumber, index: self.farmRow,isSync :true)
             noOfBirdsArr1  = NSMutableArray()
             self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(postingId as NSNumber) as! [NSManagedObject]
-        }
-        else{
+        } else {
             postingId = UserDefaults.standard.integer(forKey: "necId") as Int
             self.items.removeAllObjects()
             CoreDataHandler().updateBirdNumberInNecropsystep1withNecId(postingId as NSNumber, index: self.farmRow,isSync :true)
@@ -3386,30 +3415,8 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         self.addBirdInNotes()
         
-        if isBirdCount == false {
-            
-            self.addSkeltonResponseData(noOfBirdsArr1) { (status) in
-                if status == true {
-                    self.addCocoiResponseData(self.noOfBirdsArr1, completion: { (status) in
-                        if status == true {
-                            self.addGitractResponseData(self.noOfBirdsArr1, completion: { (status) in
-                                self.handleAddGITrakt(status)
-                            })
-                        }
-                    })
-                }
-            }
-        }
-        
-        if postingIdFromExistingNavigate == "Exting" {
-            CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
-        } else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
-            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
-        } else {
-            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
-        }
+        handleIsBirdCountAndAddSkeletonResponseData(isBirdCount)
+        handlePostingIdFromExistingNavigateAddBirdResponseData()
     }
     // MARK: 🟠 Scroll Move
     func loadMoveScroll ()  {
@@ -3434,25 +3441,15 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 if skleta.measure! == "Y,N" {
                     
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                 
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber , obsPoint: 0 ,index: self.items.count, obsId: skleta.observationId!.intValue,measure: skleta.measure!,quickLink: skleta.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!, actualText: "")
                 }
                 else if ( skleta.measure! == "Actual"){
                     
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber as NSNumber,  obsPoint: 0 ,index: self.items.count, obsId: skleta.observationId!.intValue,measure: skleta.measure!,quickLink: skleta.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!, actualText: "")
                 }
@@ -3461,13 +3458,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: skleta.observationId!.intValue,measure: skleta.measure!,quickLink: skleta.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!, actualText: "")
                 }
@@ -3477,12 +3468,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         self.dataSkeltaArray.removeAllObjects()
         var  necId = Int()
         
-        if postingIdFromExistingNavigate == "Exting"{
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        necId = getNecIdChicken()
         
         self.dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
@@ -3507,26 +3493,14 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     
                     
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,obsPoint: 0 , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
                 }
                 else if ( cocoiDis.measure! == "Actual"){
                     
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
                 }
@@ -3537,13 +3511,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
                 }
@@ -3556,13 +3524,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         var  necId = Int()
         
-        if postingIdFromExistingNavigate == "Exting"{
-            
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        necId = getNecIdChicken()
         
         self.dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
@@ -3588,26 +3550,14 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 if gitract2.measure! == "Y,N" {
                     
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,obsPoint: 0 , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract2.refId!, actualText: "")
                 }
                 
                 else if ( gitract2.measure! == "Actual"){
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true ,lngId:lngId as NSNumber,refId:gitract2.refId!, actualText: "")
                 }
@@ -3616,13 +3566,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let trimmed = gitract2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract2.refId!, actualText: "")
                 }
@@ -3636,13 +3580,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         var  necId = Int()
         
-        if postingIdFromExistingNavigate == "Exting"{
-            
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        necId = getNecIdChicken()
         
         self.dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
@@ -3662,24 +3600,13 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 let resp2 : Respiratory = resp1.object(at: j) as! Respiratory
                 if resp2.measure! == "Y,N" {
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp2.observationField!, formName:formName, obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,  obsPoint: 0 , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp2.refId!, actualText: "")
                 }
                 else if ( resp2.measure! == "Actual"){
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
-                    
+                    necId = getNecIdChicken()
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId:necId as NSNumber,isSync:true ,lngId:lngId as NSNumber,refId:resp2.refId!, actualText: "")
                 }
                 else
@@ -3687,13 +3614,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let trimmed = resp2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
-                    
+                    necId = getNecIdChicken()
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp2.refId!, actualText: "")
                 }
             }
@@ -3701,13 +3622,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         self.dataArrayRes.removeAllObjects()
         var  necId = Int()
-        if postingIdFromExistingNavigate == "Exting"
-        {
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        necId = getNecIdChicken()
         
         self.dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         completion (true)
@@ -3729,25 +3644,13 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 if immune2.measure! == "Y,N" {
                     
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName, obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
                 }
                 else if ( immune2.measure! == "Actual"){
                     var necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId = postingIdFromExisting
-                    }
-                    else{
-                        
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count! as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
@@ -3758,13 +3661,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     if immune2.observationField == Constants.maleFemaleStr
                     {
                         var necId = Int()
-                        if postingIdFromExistingNavigate == "Exting"{
-                            necId = postingIdFromExisting
-                        }
-                        else{
-                            
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
+                        necId = getNecIdChicken()
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count! as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0")
                     }
@@ -3779,12 +3676,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     {
                         
                         var necId = Int()
-                        if postingIdFromExistingNavigate == "Exting"{
-                            necId = postingIdFromExisting
-                        }
-                        else{
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
+                        necId = getNecIdChicken()
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[3])! , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
                     }
@@ -3792,12 +3684,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     {
                         
                         var necId = Int()
-                        if postingIdFromExistingNavigate == "Exting"{
-                            necId = postingIdFromExisting
-                        }
-                        else{
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
+                        necId = getNecIdChicken()
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
                     }
@@ -3809,12 +3696,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         var  necId = Int()
         
-        if postingIdFromExistingNavigate == "Exting"{
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
+        necId = getNecIdChicken()
         self.dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         completion (true)
         
@@ -3875,12 +3757,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             farmName = UserDefaults.standard.value(forKey: "farm") as! String
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             let isNotes = CoreDataHandler().fetchNoofBirdWithForm("skeltaMuscular", formName: farmName, necId: necId as NSNumber)
             
@@ -3900,12 +3777,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             {
                 var  necId = Int()
                 
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                necId = getNecIdChicken()
                 
                 let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: 0) as! CaptureNecropsyViewData
                 CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta.obsID!, formName: farmName , catName: skleta.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -3918,12 +3790,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             {
                 var  necId = Int()
                 
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                necId = getNecIdChicken()
                 
                 let skleta1 : CaptureNecropsyViewData = dataArrayCocoi.object(at: 0) as! CaptureNecropsyViewData
                 CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta1.obsID!, formName: farmName , catName: skleta1.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -3936,12 +3803,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 var  necId = Int()
                 
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                necId = getNecIdChicken()
                 
                 let skleta2 : CaptureNecropsyViewData = dataArrayGiTract.object(at: 0) as! CaptureNecropsyViewData
                 CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta2.obsID!, formName: farmName , catName: skleta2.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -3954,12 +3816,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             if dataArrayRes.count > 0
             {
                 var  necId = Int()
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                necId = getNecIdChicken()
                 
                 let skleta3 : CaptureNecropsyViewData = dataArrayRes.object(at: 0) as! CaptureNecropsyViewData
                 CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta3.obsID!, formName: farmName , catName: skleta3.catName!, birdNo:noOfBird as NSNumber, necId : necId as NSNumber)
@@ -3971,12 +3828,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             {
                 
                 var  necId = Int()
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                necId = getNecIdChicken()
                 
                 let skleta4 : CaptureNecropsyViewData = dataArrayImmu.object(at: 0) as! CaptureNecropsyViewData
                 CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta4.obsID!, formName: farmName , catName: skleta4.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -3991,12 +3843,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 var  necId = Int()
                 
-                if postingIdFromExistingNavigate == "Exting"{
-                    necId =  postingIdFromExisting
-                }
-                else{
-                    necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                }
+                necId = getNecIdChicken()
                 
                 let isNotes = CoreDataHandler().fetchNoofBirdWithForm("skeltaMuscular", formName: formName as! String,necId: necId as NSNumber)
                 let noOfBird = isNotes.count as Int
@@ -5500,12 +5347,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             dataSkeltaArray.removeAllObjects()
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5528,12 +5370,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Coccidiosis",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5555,14 +5392,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             dataArrayGiTract.removeAllObjects()
             
             var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
+            necId = getNecIdChicken()
             dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "GITract",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
             
@@ -5582,13 +5412,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             btnTag = 3
             dataArrayRes.removeAllObjects()
             var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Resp",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5609,13 +5433,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             btnTag = 4
             dataArrayImmu.removeAllObjects()
             var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5699,12 +5517,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewData
             var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!,Obsid: skleta.obsID!,necId: necId as NSNumber)
             let skleta1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
@@ -5714,12 +5527,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             }
             
             dataSkeltaArray.removeAllObjects()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(skleta.birdNo! , farmname: skleta.formName!, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
@@ -5727,12 +5535,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let cocoi : CaptureNecropsyViewData = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewData
             var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(cocoi.birdNo!, farmname: cocoi.formName!, catName: cocoi.catName!,Obsid: cocoi.obsID!,necId: necId as NSNumber)
             
@@ -5744,12 +5547,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataArrayCocoi.removeAllObjects()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(cocoi.birdNo! , farmname: cocoi.formName!, catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
@@ -5757,12 +5555,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let gitract : CaptureNecropsyViewData = dataArrayGiTract.object(at: rowIndex) as! CaptureNecropsyViewData
             var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!,Obsid: gitract.obsID!,necId: necId as NSNumber)
             
@@ -5773,12 +5566,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             }
             
             dataArrayGiTract.removeAllObjects()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(gitract.birdNo! , farmname: gitract.formName!, catName: "GITract",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
         }
@@ -5786,12 +5574,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let resp : CaptureNecropsyViewData = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewData
             var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(resp.birdNo!, farmname: resp.formName!, catName: resp.catName!,Obsid: resp.obsID!,necId: necId as NSNumber)
             
@@ -5803,12 +5586,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataArrayRes.removeAllObjects()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(resp.birdNo! , farmname: resp.formName!, catName: "Resp",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
         }
@@ -5817,12 +5595,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewData
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId:necId as NSNumber)
             
@@ -5833,12 +5606,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataArrayImmu.removeAllObjects()
             
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
@@ -6180,12 +5948,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let formName = skleta.formName
             let catName  = skleta.catName
             var  necId = Int()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
+            necId = getNecIdChicken()
             
             let isNotes = CoreDataHandler().fetchNoofBirdWithNotes(catName!, formName: formName!, birdNo: noOfBird as NSNumber, necId: necId as NSNumber)
             let note : NotesBird = isNotes[0] as! NotesBird
@@ -6196,12 +5959,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 for i in  0..<catArr.count
                 {
                     var  necId = Int()
-                    if postingIdFromExistingNavigate == "Exting"{
-                        necId =  postingIdFromExisting
-                    }
-                    else{
-                        necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                    }
+                    necId = getNecIdChicken()
                     CoreDataHandler().updateNoofBirdWithNotes(catArr.object(at: i) as! String,  formName: note.formName!, birdNo: note.noofBirds!,notes:note.notes!,necId: necId as NSNumber,isSync :true)
                 }
                 return
@@ -6214,12 +5972,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     for i in  0..<catArr.count
                     {
                         var  necId = Int()
-                        if postingIdFromExistingNavigate == "Exting"{
-                            necId =  postingIdFromExisting
-                        }
-                        else{
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
+                        necId = getNecIdChicken()
                         CoreDataHandler().updateNoofBirdWithNotes(catArr.object(at: i) as! String,  formName: note.formName!, birdNo: note.noofBirds!,notes:notesText,necId: necId as NSNumber,isSync :true)
                     }
                 }
@@ -6228,12 +5981,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     for i in  0..<catArr.count
                     {
                         var  necId = Int()
-                        if postingIdFromExistingNavigate == "Exting"{
-                            necId =  postingIdFromExisting
-                        }
-                        else{
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
+                        necId = getNecIdChicken()
                         CoreDataHandler().saveNoofBirdWithNotes(catArr.object(at: i) as! String , notes: notesText, formName: formName! , birdNo: noOfBird as NSNumber, index: 0 , necId: necId as NSNumber, isSync :true)
                     }
                 }

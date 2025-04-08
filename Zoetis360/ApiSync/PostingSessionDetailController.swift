@@ -1055,6 +1055,25 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
     
     // MARK: 🟠 Delete Farm Button Action
+    fileprivate func deleteNotesImagesNecropsyWithFarmName(necId: NSNumber , farmsName: String) {
+        CoreDataHandler().deleteDataWithPostingIdStep2dataCaptureNecViewWithfarmName(necId as NSNumber, farmName: farmsName, { (success) in
+            if success == true {
+                
+                CoreDataHandler().deleteDataWithPostingIdStep2NotesBirdWithFarmName(necId as NSNumber, farmName: farmsName, { (success) in
+                    if success == true {
+                        
+                        CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necId as NSNumber, farmName: farmsName, { (success) in
+                            if success == true {
+                                
+                                self.fetcFarmData()
+                                self.appDelegate.saveContext()
+                                self.feedProtableView.reloadData()
+                            }
+                        })
+                    }})
+            }})
+    }
+    
     @objc func ClickDeleteBtton(_ sender: UIButton){
         let indexpath = NSIndexPath(row:sender.tag, section: 0)
         let cell =  self.feedProtableView.cellForRow(at: indexpath as IndexPath) as? PostingSessionDetailTableViewCell
@@ -1099,23 +1118,9 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 
                 CoreDataHandler().deleteDataWithPostingIdStep1dataWithfarmName(necId as NSNumber, farmName: farmArrayWithoutAge!, { (success) in
                     if success == true{
-                        CoreDataHandler().deleteDataWithPostingIdStep2dataCaptureNecViewWithfarmName(necId as NSNumber, farmName: farmArrayWithoutAge!, { (success) in
-                            if success == true {
-                                
-                                CoreDataHandler().deleteDataWithPostingIdStep2NotesBirdWithFarmName(necId as NSNumber, farmName: farmArrayWithoutAge!, { (success) in
-                                    if success == true {
-                                        
-                                        CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necId as NSNumber, farmName: farmArrayWithoutAge!, { (success) in
-                                            if success == true {
-                                                
-                                                self.fetcFarmData()
-                                                self.appDelegate.saveContext()
-                                                self.feedProtableView.reloadData()
-                                            }
-                                        })
-                                    }})
-                            }})
-                    }})
+                        self.deleteNotesImagesNecropsyWithFarmName(necId: necId as NSNumber, farmsName: farmArrayWithoutAge!)
+                    }
+                })
             }
             
             let action2 = UIAlertAction(title: NSLocalizedString(Constants.noStr, comment: ""), style: .cancel) { (action) in
@@ -1300,6 +1305,34 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
     
     // MARK: 🟢 Sync to device Button action
+    fileprivate func savingPostedSessionForSpecificID(_ self: PostingSessionDetailController , json:JSON) {
+        if let jsonDict = JSON(json).dictionary,
+           let errorMessage = jsonDict["Message"]?.string {
+            print("Error responce from  PostingSessionListBySessionId?DeviceSessionId API is \(errorMessage)")
+            //  self.showToastWithTimer(message: errorMessage, duration: 3.0)
+            return
+        }
+        
+        if let arr = JSON(json).array, !arr.isEmpty {
+            for item in arr {
+                if let posDict = item.dictionaryObject as NSDictionary? {
+                    CoreDataHandler().getPostingDatWithSpecificId(posDict, postinngId: self.postingId)
+                } else {
+                    print("Invalid dictionary format in array: \(item)")
+                }
+            }
+            
+            UserDefaults.standard.set("Yes", forKey: "Success")
+            
+            let postingData = CoreDataHandler().fetchAllPostingSession(self.postingId)
+            
+            // Call next function if data exists
+            if postingData.count>0 {
+                self.getPostingDataFromServerforVaccination()
+            }
+        }
+    }
+    
     func pullFromWeb() {
         fullData =  deviceTokenId
         timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.update), userInfo: nil, repeats: false)
@@ -1325,7 +1358,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             let apiUrl = ZoetisWebServices.EndPoint.getPostedSessionsByDeviceSessionID.latestUrl + "\(fullData)"
             
             ZoetisWebServices.shared.getPostedSessionByDeviceIDResponce(controller: self, url: apiUrl, completion: { [weak self] (json, error) in
-                guard let self = self else { return }
+             
                 
                 if let error = error {
                     print("Error fetching data: \(error.localizedDescription)")
@@ -1339,38 +1372,14 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                     print("Error responce from  PostingSessionListBySessionId?DeviceSessionId API is ------ : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "404"{
                         UserDefaults.standard.set(Constants.noStr, forKey: "Success")
-                        self.getPostingDataFromServerforVaccination()
+                        self?.getPostingDataFromServerforVaccination()
                     }
                 }
                 
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     
-                    if let jsonDict = JSON(json).dictionary,
-                       let errorMessage = jsonDict["Message"]?.string {
-                        print("Error responce from  PostingSessionListBySessionId?DeviceSessionId API is \(errorMessage)")
-                        //  self.showToastWithTimer(message: errorMessage, duration: 3.0)
-                        return
-                    }
-                    
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        for item in arr {
-                            if let posDict = item.dictionaryObject as NSDictionary? {
-                                CoreDataHandler().getPostingDatWithSpecificId(posDict, postinngId: self.postingId)
-                            } else {
-                                print("Invalid dictionary format in array: \(item)")
-                            }
-                        }
-                        
-                        UserDefaults.standard.set("Yes", forKey: "Success")
-                        
-                        let postingData = CoreDataHandler().fetchAllPostingSession(self.postingId)
-                        
-                        // Call next function if data exists
-                        if postingData.count>0 {
-                            self.getPostingDataFromServerforVaccination()
-                        }
-                    }
+                    savingPostedSessionForSpecificID(self , json: json)
                 }
             })
         }
@@ -1830,6 +1839,31 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         
     }
     // MARK: 🟢  Get Notes details from the server
+    fileprivate func saveNotesOfPostedSessionInDB(_ arr: [JSON], _ self: PostingSessionDetailController) {
+        for item in arr {
+            if let noteArr = item["Note"].array, !noteArr.isEmpty {  // ✅ Convert JSON to an array
+                for note in noteArr {
+                    if let sessionId = note["sessionId"].int,
+                       let farmName = note["farmName"].string,
+                       let birdNo = note["birdNumber"].int,
+                       let birdNotes = note["Notes"].string {
+                        
+                        CoreDataHandler().saveNoofBirdWithNotesSingledata(
+                            "",
+                            notes: birdNotes,
+                            formName: farmName,
+                            birdNo: NSNumber(value: birdNo),
+                            index: 0,
+                            necId: NSNumber(value: sessionId),
+                            isSync: false,
+                            necIdSingle: self.postingId
+                        )
+                    }
+                }
+            }
+        }
+    }
+    
     func getNotesFromServer(){
         if WebClass.sharedInstance.connected() {
             
@@ -1882,28 +1916,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                         CoreDataHandler().deleteDataBirdNotesWithId(self.postingId)
                         UserDefaults.standard.set("Yes", forKey: "Success")
                         
-                        for item in arr {
-                            if let noteArr = item["Note"].array, !noteArr.isEmpty {  // ✅ Convert JSON to an array
-                                for note in noteArr {
-                                    if let sessionId = note["sessionId"].int,
-                                       let farmName = note["farmName"].string,
-                                       let birdNo = note["birdNumber"].int,
-                                       let birdNotes = note["Notes"].string {
-                                        
-                                        CoreDataHandler().saveNoofBirdWithNotesSingledata(
-                                            "",
-                                            notes: birdNotes,
-                                            formName: farmName,
-                                            birdNo: NSNumber(value: birdNo),
-                                            index: 0,
-                                            necId: NSNumber(value: sessionId),
-                                            isSync: false,
-                                            necIdSingle: self.postingId
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        saveNotesOfPostedSessionInDB(arr, self)
                         
                         self.getPostingDataFromServerforImage()
                     } else {

@@ -1020,6 +1020,31 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         
     }
     // MARK: 🟠 Select Vaccination action
+    fileprivate func setBorderValiadtionForVetComplexCustomer() {
+        if lblCustmer.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
+            btnCustmer.layer.borderColor = UIColor.black.cgColor
+        }
+        if lblComplex.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
+            btnComplex.layer.borderColor = UIColor.black.cgColor
+        }
+        if lblVeteration.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
+            btnVetration.layer.borderColor = UIColor.black.cgColor
+        }
+        
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        if lngId == 3{
+            if  lblDate.text != frenchEmptyDateLabel{
+                btnDate.layer.borderColor = UIColor.black.cgColor
+            }
+        }
+        else{
+            if lblDate.text != NSLocalizedString(emptyDateLabel, comment: "") {
+                btnDate.layer.borderColor = UIColor.black.cgColor
+            }
+        }
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
+    }
+    
     @IBAction func didSelectOnVaccinationProgram(_ sender: AnyObject) {
         
         UserDefaults.standard.set(false, forKey: "isUpadteFeedFromUnlinked")
@@ -1038,28 +1063,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             btnVetration.layer.borderColor = UIColor.red.cgColor
             btnComplex.layer.borderColor = UIColor.red.cgColor
             
-            if lblCustmer.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-                btnCustmer.layer.borderColor = UIColor.black.cgColor
-            }
-            if lblComplex.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-                btnComplex.layer.borderColor = UIColor.black.cgColor
-            }
-            if lblVeteration.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-                btnVetration.layer.borderColor = UIColor.black.cgColor
-            }
-            
-            let lngId = UserDefaults.standard.integer(forKey: "lngId")
-             if lngId == 3{
-                if  lblDate.text != frenchEmptyDateLabel{
-                    btnDate.layer.borderColor = UIColor.black.cgColor
-                }
-            }
-            else{
-                if lblDate.text != NSLocalizedString(emptyDateLabel, comment: "") {
-                    btnDate.layer.borderColor = UIColor.black.cgColor
-                }
-            }
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
+            setBorderValiadtionForVetComplexCustomer()
             
         } else {
             
@@ -1139,6 +1143,86 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         return isComplexandDateExist
     }
     // MARK: 🟠  Feed Program Button action
+    fileprivate func checkValidationOnFeedProgramBtn() {
+        if lblDate.text == frenchEmptyDateLabel || lblDate.text == NSLocalizedString(emptyDateLabel, comment: "") {
+            self.btnDate.layer.borderColor = UIColor.red.cgColor
+        }
+        
+        Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
+        
+        btnCustmer.layer.borderColor = UIColor.red.cgColor
+        btnVetration.layer.borderColor = UIColor.red.cgColor
+        btnComplex.layer.borderColor = UIColor.red.cgColor
+        
+        if lblCustmer.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
+            btnCustmer.layer.borderColor = UIColor.black.cgColor
+        }
+        if lblComplex.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
+            btnComplex.layer.borderColor = UIColor.black.cgColor
+        }
+        if lblVeteration.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
+            btnVetration.layer.borderColor = UIColor.black.cgColor
+        }
+        
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        if lngId == 3 {
+            if lblDate.text != NSLocalizedString(frenchEmptyDateLabel, comment: "") {
+            }
+        }
+        else{
+            if lblDate.text != NSLocalizedString(emptyDateLabel, comment: "") {
+                btnDate.layer.borderColor = UIColor.black.cgColor
+            }
+        }
+    }
+    
+    fileprivate func handleSendFeedVariableValidation() {
+        if appDelegate.sendFeedVariable == "Feed" {
+            navStr = UserDefaults.standard.object(forKey: "back") as! String
+            if navStr == "back" {
+                let strVal = UserDefaults.standard.object(forKey: "feed0") as! String
+                
+                if feedId == 0 && strVal == "feed0" {
+                    feedId = 0
+                } else {
+                    feedId = feedId+1
+                }
+            } else {
+                if feedId == 0 {
+                    feedId = feedId+1
+                } else {
+                    feedId = feedId+1
+                }
+            }
+        } else {
+            if feedId == -1 {
+                feedId = 0
+                UserDefaults.standard.set(1, forKey: "isFeed")
+                UserDefaults.standard.synchronize()
+            } else {
+                feedId = feedId+1
+            }
+        }
+    }
+    
+    fileprivate func handlePostingIdValidationDidSelectOnAddFeedProgram() {
+        let nec =  UserDefaults.standard.bool(forKey: "nec")
+        if nec == true {
+            if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+                postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
+            } else {
+                CoreDataHandler().autoIncrementidtable()
+                let autoD  = CoreDataHandler().fetchFromAutoIncrement()
+                postingId = autoD
+            }
+        }
+        UserDefaults.standard.set(postingId, forKey: "necIdIsZero")
+        UserDefaults.standard.set(postingId, forKey: "postingId")
+        UserDefaults.standard.set(true, forKey: "ispostingIdIncrease")
+        UserDefaults.standard.synchronize()
+        savePostingData()
+    }
+    
     @IBAction func didSelectOnAddFeedProgram(_ sender: AnyObject) {
         
         UserDefaults.standard.set(false, forKey: "isUpadteFeedFromUnlinked")
@@ -1150,99 +1234,19 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             lblComplex.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text! == NSLocalizedString(appDelegateObj.selectStr, comment: "") || lblVeteration.text! == "" || lblDate.text! == NSLocalizedString(emptyDateLabel, comment: "") || lblCustmer.text! == "" ||
             lblComplex.text! == "" || birdSize.text! == ""  || lblVeteration.text! == "" || lblVeteration.text! == "" || lblDate.text! == "" || lblDate.text == frenchEmptyDateLabel) {
             
-            if lblDate.text == frenchEmptyDateLabel || lblDate.text == NSLocalizedString(emptyDateLabel, comment: "") {
-                self.btnDate.layer.borderColor = UIColor.red.cgColor
-            }
-            
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMsg, comment: ""))
-            
-            btnCustmer.layer.borderColor = UIColor.red.cgColor
-            btnVetration.layer.borderColor = UIColor.red.cgColor
-            btnComplex.layer.borderColor = UIColor.red.cgColor
-            
-            if lblCustmer.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-                btnCustmer.layer.borderColor = UIColor.black.cgColor
-            }
-            if lblComplex.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-                btnComplex.layer.borderColor = UIColor.black.cgColor
-            }
-            if lblVeteration.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-                btnVetration.layer.borderColor = UIColor.black.cgColor
-            }
-            
-            let lngId = UserDefaults.standard.integer(forKey: "lngId")
-            if lngId == 3 {
-                if lblDate.text != NSLocalizedString(frenchEmptyDateLabel, comment: "") {
-                }
-            }
-            else{
-                if lblDate.text != NSLocalizedString(emptyDateLabel, comment: "") {
-                    btnDate.layer.borderColor = UIColor.black.cgColor
-                }
-            }
-        }else {
+            checkValidationOnFeedProgramBtn()
+        } else {
             let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
-            if isPostingId == false
-            {
-                let nec =  UserDefaults.standard.bool(forKey: "nec")
-                if nec == true {
-                    
-                    if UserDefaults.standard.bool(forKey: "Unlinked") == true
-                    {
-                        postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-                    }
-                    else{
-                        CoreDataHandler().autoIncrementidtable()
-                        let autoD  = CoreDataHandler().fetchFromAutoIncrement()
-                        postingId = autoD
-                    }
-                }
-                UserDefaults.standard.set(postingId, forKey: "necIdIsZero")
-                UserDefaults.standard.set(postingId, forKey: "postingId")
-                UserDefaults.standard.set(true, forKey: "ispostingIdIncrease")
-                UserDefaults.standard.synchronize()
-                savePostingData()
-            }
-            else if isClickOnAnyField == true && isPostingId == true
-            {
+            if isPostingId == false {
+                handlePostingIdValidationDidSelectOnAddFeedProgram()
+            } else if isClickOnAnyField == true && isPostingId == true {
                 savePostingData()
                 isClickOnAnyField = false
             }
             
             feedId = UserDefaults.standard.integer(forKey: "feedId")
             
-            if appDelegate.sendFeedVariable == "Feed"{
-                navStr = UserDefaults.standard.object(forKey: "back") as! String
-                if navStr == "back"
-                {
-                    let strVal = UserDefaults.standard.object(forKey: "feed0") as! String
-                    
-                    if feedId == 0 && strVal == "feed0" {
-                        feedId = 0
-                    }
-                    else{
-                        feedId = feedId+1
-                    }
-                }
-                else{
-                    if feedId == 0 {
-                        feedId = feedId+1
-                    }
-                    else{
-                        feedId = feedId+1
-                    }
-                }
-            }
-            else{
-                if feedId == -1 {
-                    feedId = 0
-                    UserDefaults.standard.set(1, forKey: "isFeed")
-                    UserDefaults.standard.synchronize()
-                }
-                else{
-                    feedId = feedId+1
-                }
-            }
+            handleSendFeedVariableValidation()
             UserDefaults.standard.set(feedId, forKey: "feedId")
             UserDefaults.standard.synchronize()
             
@@ -1253,6 +1257,36 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     // MARK: 🟠  Save Posting Data in local Database
     func savePostingData () {
         
+        self.validationsCheck()
+        self.otherValidationsCheck()
+        
+        custRep.add( CustRepTextField.text!)
+        UserDefaults.standard.set(custRep, forKey: "cust")
+        CoreDataHandler().postCustomerReps(CustRepTextField.text!, userid: 1)
+        
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            self.postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
+        } else {
+            self.postingId = UserDefaults.standard.integer(forKey: "postingId")
+        }
+        lblTimeStamp = self.timeStamp()
+        
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
+        
+        CoreDataHandler().PostingSessionDb(antiboticFree.text!, birdBreesId:breedIdDb, birdbreedName: "", birdBreedType: "", birdSize:birdSize.text!, birdSizeId: birdSizeIdDb, cocciProgramId: cocciProgramIdDb, cociiProgramName: lblCocieeProgram.text!, complexId: complexIdDb, complexName: lblComplex.text!, convential:"", customerId: custmetIdDb, customerName:lblCustmer.text!, customerRepId: cusmerRepIdDb, customerRepName: CustRepTextField.text!, imperial: "", metric: "", notes: notesTextView.text, salesRepId: salesRepIdDb, salesRepName: lblSelesRep.text!, sessiondate:  strdate, sessionTypeId: sessionTypeIdDb, sessionTypeName: lblSessionType.text!, vetanatrionName: lblVeteration.text!, veterinarianId:veterinartionIdDb , loginSessionId: 1, postingId:  self.postingId as NSNumber,mail: maleLabel.text!,female: femaleLabel.text!,finilize:0,isSync : true,timeStamp:lblTimeStamp,lngId:lngId as NSNumber,productionTypName: productionNameStr , productionTypId: productionIdDb, avgAge: avgAgeTxtFld.text! , avgWeight: avgWeightTxtFld.text! , outTime: outTimeTxtFld.text! , FCR: fcrTxtFld.text! , Livability: txtFldLivability.text! , mortality: txtFldMortality.text! )
+        
+        UserDefaults.standard.synchronize()
+        
+        if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            CoreDataHandler().updateFinalizeDataWithNec(self.postingId as NSNumber, finalizeNec: 1)
+            UserDefaults.standard.set(self.postingId, forKey: "postingId")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    
+    
+    func validationsCheck()
+    {
         if (antiboticFree.text == nil){
             antiboticFree.text = ""
         }else if (birdSize.text == nil){
@@ -1283,62 +1317,38 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             avgAgeTxtFld.text = ""
         }else if (avgWeightTxtFld.text == nil){
             avgWeightTxtFld.text = ""
-        }else if (fcrTxtFld.text == nil){
-            fcrTxtFld.text = ""
-        }else if (txtFldLivability.text == nil){
-            txtFldLivability.text = ""
-        }else if (outTimeTxtFld.text == nil){
-            outTimeTxtFld.text = ""
-        }else if (txtFldMortality.text == nil){
-            txtFldMortality.text = ""
-        }else if (breedIdDb == 0){
-            breedIdDb = 0
-        }else if (birdSizeIdDb == 0){
-            birdSizeIdDb = 0
-        }else if (cocciProgramIdDb == 0){
-            cocciProgramIdDb = 0
-        }else if (complexIdDb == 0) {
-            complexIdDb = 0
-        }else if (cusmerRepIdDb == 0) {
-            cusmerRepIdDb = 0
-        }else if (salesRepIdDb == 0) {
-            salesRepIdDb = 0
-        }else if (sessionTypeIdDb == 0) {
-            sessionTypeIdDb = 0
-        }else if (veterinartionIdDb == 0) {
-            veterinartionIdDb = 0
-        }else if (productionIdDb == 0) {
-            productionIdDb = 0
         }
-        
-        custRep.add( CustRepTextField.text!)
-        UserDefaults.standard.set(custRep, forKey: "cust")
-        CoreDataHandler().postCustomerReps(CustRepTextField.text!, userid: 1)
-        
-        if UserDefaults.standard.bool(forKey: "Unlinked") == true
-        {
-            self.postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-        }
-        else{
-            self.postingId = UserDefaults.standard.integer(forKey: "postingId")
-        }
-        lblTimeStamp = self.timeStamp()
-        
-        lngId = UserDefaults.standard.integer(forKey: "lngId")
-        
-        CoreDataHandler().PostingSessionDb(antiboticFree.text!, birdBreesId:breedIdDb, birdbreedName: "", birdBreedType: "", birdSize:birdSize.text!, birdSizeId: birdSizeIdDb, cocciProgramId: cocciProgramIdDb, cociiProgramName: lblCocieeProgram.text!, complexId: complexIdDb, complexName: lblComplex.text!, convential:"", customerId: custmetIdDb, customerName:lblCustmer.text!, customerRepId: cusmerRepIdDb, customerRepName: CustRepTextField.text!, imperial: "", metric: "", notes: notesTextView.text, salesRepId: salesRepIdDb, salesRepName: lblSelesRep.text!, sessiondate:  strdate, sessionTypeId: sessionTypeIdDb, sessionTypeName: lblSessionType.text!, vetanatrionName: lblVeteration.text!, veterinarianId:veterinartionIdDb , loginSessionId: 1, postingId:  self.postingId as NSNumber,mail: maleLabel.text!,female: femaleLabel.text!,finilize:0,isSync : true,timeStamp:lblTimeStamp,lngId:lngId as NSNumber,productionTypName: productionNameStr , productionTypId: productionIdDb, avgAge: avgAgeTxtFld.text! , avgWeight: avgWeightTxtFld.text! , outTime: outTimeTxtFld.text! , FCR: fcrTxtFld.text! , Livability: txtFldLivability.text! , mortality: txtFldMortality.text! )
-        
-        UserDefaults.standard.synchronize()
-        
-        if UserDefaults.standard.bool(forKey: "Unlinked") == true
-        {
-            CoreDataHandler().updateFinalizeDataWithNec(self.postingId as NSNumber, finalizeNec: 1)
-            UserDefaults.standard.set(self.postingId, forKey: "postingId")
-            UserDefaults.standard.synchronize()
-        }
-        else{
-          //  UserDefaults.standard.set(lblTimeStamp, forKey: "deviceTokenStamp")
-        }
+    }
+    
+    func otherValidationsCheck()
+    {
+        if (fcrTxtFld.text == nil){
+           fcrTxtFld.text = ""
+       }else if (txtFldLivability.text == nil){
+           txtFldLivability.text = ""
+       }else if (outTimeTxtFld.text == nil){
+           outTimeTxtFld.text = ""
+       }else if (txtFldMortality.text == nil){
+           txtFldMortality.text = ""
+       }else if (breedIdDb == 0){
+           breedIdDb = 0
+       }else if (birdSizeIdDb == 0){
+           birdSizeIdDb = 0
+       }else if (cocciProgramIdDb == 0){
+           cocciProgramIdDb = 0
+       }else if (complexIdDb == 0) {
+           complexIdDb = 0
+       }else if (cusmerRepIdDb == 0) {
+           cusmerRepIdDb = 0
+       }else if (salesRepIdDb == 0) {
+           salesRepIdDb = 0
+       }else if (sessionTypeIdDb == 0) {
+           sessionTypeIdDb = 0
+       }else if (veterinartionIdDb == 0) {
+           veterinartionIdDb = 0
+       }else if (productionIdDb == 0) {
+           productionIdDb = 0
+       }
     }
     
     func timeStamp()-> String{
@@ -1915,6 +1925,21 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         }
     }
     
+    fileprivate func setBirdSizeOrMatricSize(_ cell: UITableViewCell, _ indexPath: IndexPath) {
+        if butttnTag == 0 {
+            cell.selectionStyle = UITableViewCell.SelectionStyle.none
+            if let value = metricArray[indexPath.row].birdSize{
+                cell.textLabel!.text = value
+            }
+        }
+        else{
+            cell.selectionStyle = UITableViewCell.SelectionStyle.none
+            if let value = birdArray[indexPath.row].birdSize{
+                cell.textLabel!.text = value
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if tableView == autoSerchTable {
@@ -1951,18 +1976,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 cell.textLabel!.text = cocoii.cocciProgramName
             }
             else if btnTag == 5 {
-                if butttnTag == 0 {
-                    cell.selectionStyle = UITableViewCell.SelectionStyle.none
-                    if let value = metricArray[indexPath.row].birdSize{
-                        cell.textLabel!.text = value
-                    }
-                }
-                else{
-                    cell.selectionStyle = UITableViewCell.SelectionStyle.none
-                    if let value = birdArray[indexPath.row].birdSize{
-                        cell.textLabel!.text = value
-                    }
-                }
+                setBirdSizeOrMatricSize(cell, indexPath)
             }
             else if btnTag == 6 {
                 cell.selectionStyle = UITableViewCell.SelectionStyle.none
@@ -2009,8 +2023,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         
         if tableView == autoSerchTable {
             
-        }
-        else{
+        } else {
             if btnTag == 0 {
                 let str = custmerArray[indexPath.row] as! Custmer
                 lblCustmer.text = str.custName
@@ -2020,26 +2033,22 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 UserDefaults.standard.set( str.custId!, forKey: "SelectedCustmer")
                 complexArr = CoreDataHandler().fetchCompexTypePrdicate(str.custId!)
                 isClickOnAnyField = true
-            }
-            else if btnTag == 1{
+            } else if btnTag == 1 {
                 let str = SalesRepArr[indexPath.row] as! Salesrep
                 lblSelesRep.text = str.salesRepName
                 salesRepIdDb = str.salesReptId!
                 isClickOnAnyField = true
-            }
-            else if btnTag == 2{
+            } else if btnTag == 2 {
                 let str = sessionTypeArr[indexPath.row] as! Sessiontype
                 lblSessionType.text = str.sesionType
                 sessionTypeIdDb = str.sesionId!
                 isClickOnAnyField = true
-            }
-            else if btnTag == 4{
+            } else if btnTag == 4 {
                 let str = CocoiiProgramArr[indexPath.row] as! CocciProgramPosting
                 lblCocieeProgram.text = str.cocciProgramName
                 cocciProgramIdDb = str.cocciProgramId!
                 isClickOnAnyField = true
-            }
-            else if btnTag == 5{
+            } else if btnTag == 5 {
                 
                 if butttnTag == 0 {
                     let objMedtricarray = metricArray[indexPath.row]
@@ -2047,48 +2056,41 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                     birdSizeIdDb = objMedtricarray.birdSizeId!
                     indexOfSelectedPerson = indexPath.row
                     isClickOnAnyField = true
-                }
-                else{
+                } else {
                     let objstr = birdArray[indexPath.row]
                     birdSize.text = objstr.birdSize
                     birdSizeIdDb = objstr.birdSizeId!
                     indexOfSelectedPerson = indexPath.row
                     isClickOnAnyField = true
                 }
-            }
-            else if btnTag == 6{
+            } else if btnTag == 6 {
                 let str = breedArray[indexPath.row]
                 maleLabel.text = str.breedName
                 breedIdDb = str.breedId!
                 isClickOnAnyField = true
-            }
-            else if btnTag == 7{
+            } else if btnTag == 7 {
                 let str = femaleArr[indexPath.row]
                 femaleLabel.text = str.breedName
                 breedIdDb = str.breedId!
                 isClickOnAnyField = true
-            }
-            else if btnTag == 8{
+            } else if btnTag == 8 {
                 let str = VetrationArr[indexPath.row] as! Veteration
                 lblVeteration.text = str.vtName
                 veterinartionIdDb = str.vetarId!
                 isClickOnAnyField = true
                 btnVetration.layer.borderColor = UIColor.black.cgColor
-            }
-            else if btnTag == 11{
+            } else if btnTag == 11 {
                 let str = ProductionTypeArr[indexPath.row] as! ProductionType
                 productionTypeLbl.text = str.productionName
                 productionNameStr = str.productionName ?? ""
                 productionIdDb = str.productionId!
                 isClickOnAnyField = true
                 productionTypeBtn.layer.borderColor = UIColor.black.cgColor
-            }
-            else if btnTag == 3{
+            } else if btnTag == 3 {
                 let str = complexArr[indexPath.row] as! ComplexPosting
                 lblComplex.text = str.complexName
                 
-                if checkComplexNameandDate(strdate, complexName: lblComplex.text!) == true
-                {
+                if checkComplexNameandDate(strdate, complexName: lblComplex.text!) == true {
                     let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString(sameDateComplexValidationMsg, comment: ""), preferredStyle: .alert)
                     let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
                         UIAlertAction in
@@ -2098,9 +2100,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                     alertController.addAction(okAction)
                     self.present(alertController, animated: true, completion: nil)
                     
-                }
-                else
-                {
+                } else {
                     UserDefaults.standard.set( lblComplex.text, forKey: "complex")
                     UserDefaults.standard.synchronize()
                     complexIdDb =  str.complexId!
@@ -2116,18 +2116,14 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                     isClickOnAnyField = true
                 }
                 
-            }
-            else if btnTag == 9{
+            } else if btnTag == 9 {
                 let str = feedProgramArray[indexPath.row] as! FeedProgram
                 feedProgramLbl.text = str.feddProgramNam
                 
-                if UserDefaults.standard.bool(forKey: "Unlinked") == true
-                {
+                if UserDefaults.standard.bool(forKey: "Unlinked") == true {
                     UserDefaults.standard.set(true, forKey: "isUpadteFeedFromUnlinked")
                     UserDefaults.standard.synchronize()
-                }
-                else
-                {
+                } else {
                     UserDefaults.standard.set(false, forKey: "isUpadteFeedFromUnlinked")
                     UserDefaults.standard.synchronize()
                 }
@@ -2137,8 +2133,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 mapViewControllerObj?.navigatePostingsession = "PostingFeedProgram"
                 mapViewControllerObj?.feedPostingId = feedProgramId as! Int
                 self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-            }
-            else{
+            } else {
                 let psData  = machineArray[indexPath.row] as! PostingSession
                 
                 lblVeteration.text = psData.vetanatrionName
@@ -2168,7 +2163,6 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             }
             buttonPressed1()
         }
-        
     }
     
     // MARK: 🟠   ******************** Textfield Delegates Method **************************************

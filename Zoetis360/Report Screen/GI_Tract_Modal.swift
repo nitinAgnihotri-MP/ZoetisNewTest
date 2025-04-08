@@ -109,7 +109,7 @@ class GI_Tract_Modal: NSObject {
         
         for  j in 0..<aArray.count
         {
-            if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "Coccidiosis" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID{
+            if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "Coccidiosis" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID {
                 
                 if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 23 {
                     let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
@@ -304,94 +304,204 @@ class GI_Tract_Modal: NSObject {
         
         delegate?.didFinishWithParsingTenellaGross!(preparedArray)
     }
-    func forCocciSummuary(_ aArray : NSArray , birdsCount : Float) {
-        
-        let preparedArray = NSMutableArray()
-        let preparedArrayForMean = NSMutableArray()
-        
-        var Eimeria_Acervulina_Gross : Float = 0
-        var Eimeria_Maxima_Gross : Float = 0
-        var Eimeria_Maxima_Micro : Float = 0
-        var Eimeria_Tenella_Gross : Float = 0
-        
-        var Eimeria_Acervulina_Gross_Mean : Float = 0
-        var Eimeria_Maxima_Gross_Mean : Float = 0
-        var Eimeria_Maxima_Micro_Mean : Float = 0
-        var Eimeria_Tenella_Gross_Mean : Float = 0
-        
-        var isUpdatedAC : Float = 0
-        var isUpdatedMG : Float = 0
-        var isUpdatedMM : Float = 0
-        var isUpdatedTG : Float = 0
-        
-        var observationSet : Float = 0
-        
-        for  j in 0..<aArray.count
-        {
-            if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "Coccidiosis" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID{
-                
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 23 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    observationSet += 1
-                    Eimeria_Acervulina_Gross_Mean=Eimeria_Acervulina_Gross_Mean+value.floatValue
-                    Eimeria_Acervulina_Gross=Eimeria_Acervulina_Gross+(value.floatValue > 0 ? 1 : 0)
-                    if value.floatValue > 0 {
-                        isUpdatedAC += 1
-                    }
-                }
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 24 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    observationSet += 1
-                    Eimeria_Maxima_Gross_Mean=Eimeria_Maxima_Gross_Mean+value.floatValue
-                    Eimeria_Maxima_Gross=Eimeria_Maxima_Gross+(value.floatValue > 0 ? 1 : 0)
-                    if value.floatValue > 0 {
-                        isUpdatedMG += 1
-                    }
-                }
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 25 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    observationSet += 1
-                    Eimeria_Maxima_Micro_Mean=Eimeria_Maxima_Micro_Mean+value.floatValue
-                    Eimeria_Maxima_Micro=Eimeria_Maxima_Micro+(value.floatValue > 0 ? 1 : 0)
-                    if value.floatValue > 0 {
-                        isUpdatedMM += 1
-                    }
-                }
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 26 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    observationSet += 1
-                    Eimeria_Tenella_Gross_Mean=Eimeria_Tenella_Gross_Mean+value.floatValue
-                    Eimeria_Tenella_Gross=Eimeria_Tenella_Gross+(value.floatValue > 0 ? 1 : 0)
-                    if value.floatValue > 0 {
-                        isUpdatedTG += 1
-                    }
-                }
-            }
+    
+    func forCocciSummuary(_ aArray: NSArray, birdsCount: Float) {
+        enum RefID: Int, CaseIterable {
+            case acervulinaGross = 23
+            case maximaGross = 24
+            case maximaMicro = 25
+            case tenellaGross = 26
         }
-        
-        Eimeria_Acervulina_Gross = (Eimeria_Acervulina_Gross/birdsCount)*100
-        preparedArray.add(Eimeria_Acervulina_Gross)
-        
-        Eimeria_Maxima_Gross = (Eimeria_Maxima_Gross/birdsCount)*100
-        preparedArray.add(Eimeria_Maxima_Gross)
-        
-        Eimeria_Maxima_Micro = (Eimeria_Maxima_Micro/birdsCount)*100
-        preparedArray.add(Eimeria_Maxima_Micro)
-        
-        Eimeria_Tenella_Gross = (Eimeria_Tenella_Gross/birdsCount)*100
-        preparedArray.add(Eimeria_Tenella_Gross)
-        
-        preparedArrayForMean.add((Eimeria_Acervulina_Gross_Mean/isUpdatedAC).isNaN ? 0 : Eimeria_Acervulina_Gross_Mean/isUpdatedAC)
-        preparedArrayForMean.add((Eimeria_Maxima_Gross_Mean/isUpdatedMG).isNaN ? 0 : Eimeria_Maxima_Gross_Mean/isUpdatedMG)
-        preparedArrayForMean.add((Eimeria_Maxima_Micro_Mean/isUpdatedMM).isNaN ? 0 : Eimeria_Maxima_Micro_Mean/isUpdatedMM)
-        preparedArrayForMean.add((Eimeria_Tenella_Gross_Mean/isUpdatedTG).isNaN ? 0 : Eimeria_Tenella_Gross_Mean/isUpdatedTG)
-        
-        AllValidSessions.sharedInstance.meanValues.add(preparedArrayForMean)
-        
-        UserDefaults.standard.set(AllValidSessions.sharedInstance.meanValues, forKey: "meanArray")
-        
-        delegate?.didFinishWithParsing(finishedArray: preparedArray)
-        
+
+        struct EimeriaStats {
+            var count: Float = 0
+            var sum: Float = 0
+            var updated: Float = 0
+        }
+
+        var statsMap = [RefID: EimeriaStats]()
+        RefID.allCases.forEach { statsMap[$0] = EimeriaStats() }
+
+        var observationSet: Float = 0
+
+        for case let item as NSDictionary in aArray {
+            guard
+                let catName = item["catName"] as? String,
+                catName == "Coccidiosis",
+                let lngId = item["lngId"] as? Int,
+                lngId == Regions.languageID,
+                let refIdRaw = item["refId"] as? Int,
+                let refId = RefID(rawValue: refIdRaw),
+                let obsPoint = item["obsPoint"] as? NSNumber
+            else {
+                continue
+            }
+
+            let value = obsPoint.floatValue
+            observationSet += 1
+
+            var stat = statsMap[refId] ?? EimeriaStats()
+            stat.sum += value
+            stat.count += (value > 0 ? 1 : 0)
+            if value > 0 { stat.updated += 1 }
+            statsMap[refId] = stat
+        }
+
+        let preparedArray: [Float] = RefID.allCases.map {
+            let stat = statsMap[$0] ?? EimeriaStats()
+            return birdsCount > 0 ? (stat.count / birdsCount) * 100 : 0
+        }
+
+        let preparedArrayForMean: [Float] = RefID.allCases.map {
+            let stat = statsMap[$0] ?? EimeriaStats()
+            return stat.updated > 0 ? stat.sum / stat.updated : 0
+        }
+
+        let meanValues = NSMutableArray(array: AllValidSessions.sharedInstance.meanValues)
+        meanValues.add(preparedArrayForMean)
+        AllValidSessions.sharedInstance.meanValues = meanValues
+
+        UserDefaults.standard.set(meanValues, forKey: "meanArray")
+
+        delegate?.didFinishWithParsing(finishedArray: NSMutableArray(array: preparedArray))
+    }
+
+    
+//    func forCocciSummuary(_ aArray : NSArray , birdsCount : Float) {
+//        
+//        let preparedArray = NSMutableArray()
+//        let preparedArrayForMean = NSMutableArray()
+//        
+//        var Eimeria_Acervulina_Gross : Float = 0
+//        var Eimeria_Maxima_Gross : Float = 0
+//        var Eimeria_Maxima_Micro : Float = 0
+//        var Eimeria_Tenella_Gross : Float = 0
+//        
+//        var Eimeria_Acervulina_Gross_Mean : Float = 0
+//        var Eimeria_Maxima_Gross_Mean : Float = 0
+//        var Eimeria_Maxima_Micro_Mean : Float = 0
+//        var Eimeria_Tenella_Gross_Mean : Float = 0
+//        
+//        var isUpdatedAC : Float = 0
+//        var isUpdatedMG : Float = 0
+//        var isUpdatedMM : Float = 0
+//        var isUpdatedTG : Float = 0
+//        
+//        var observationSet : Float = 0
+//        
+//        for j in 0..<aArray.count
+//        {
+//            if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "Coccidiosis" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID{
+//                
+//                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 23 {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+//                    observationSet += 1
+//                    Eimeria_Acervulina_Gross_Mean=Eimeria_Acervulina_Gross_Mean+value.floatValue
+//                    Eimeria_Acervulina_Gross=Eimeria_Acervulina_Gross+(value.floatValue > 0 ? 1 : 0)
+//                    if value.floatValue > 0 {
+//                        isUpdatedAC += 1
+//                    }
+//                }
+//                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 24 {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+//                    observationSet += 1
+//                    Eimeria_Maxima_Gross_Mean=Eimeria_Maxima_Gross_Mean+value.floatValue
+//                    Eimeria_Maxima_Gross=Eimeria_Maxima_Gross+(value.floatValue > 0 ? 1 : 0)
+//                    if value.floatValue > 0 {
+//                        isUpdatedMG += 1
+//                    }
+//                }
+//                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 25 {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+//                    observationSet += 1
+//                    Eimeria_Maxima_Micro_Mean=Eimeria_Maxima_Micro_Mean+value.floatValue
+//                    Eimeria_Maxima_Micro=Eimeria_Maxima_Micro+(value.floatValue > 0 ? 1 : 0)
+//                    if value.floatValue > 0 {
+//                        isUpdatedMM += 1
+//                    }
+//                }
+//                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 26 {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+//                    observationSet += 1
+//                    Eimeria_Tenella_Gross_Mean=Eimeria_Tenella_Gross_Mean+value.floatValue
+//                    Eimeria_Tenella_Gross=Eimeria_Tenella_Gross+(value.floatValue > 0 ? 1 : 0)
+//                    if value.floatValue > 0 {
+//                        isUpdatedTG += 1
+//                    }
+//                }
+//            }
+//        }
+//        
+//        Eimeria_Acervulina_Gross = (Eimeria_Acervulina_Gross/birdsCount)*100
+//        preparedArray.add(Eimeria_Acervulina_Gross)
+//        
+//        Eimeria_Maxima_Gross = (Eimeria_Maxima_Gross/birdsCount)*100
+//        preparedArray.add(Eimeria_Maxima_Gross)
+//        
+//        Eimeria_Maxima_Micro = (Eimeria_Maxima_Micro/birdsCount)*100
+//        preparedArray.add(Eimeria_Maxima_Micro)
+//        
+//        Eimeria_Tenella_Gross = (Eimeria_Tenella_Gross/birdsCount)*100
+//        preparedArray.add(Eimeria_Tenella_Gross)
+//        
+//        preparedArrayForMean.add((Eimeria_Acervulina_Gross_Mean/isUpdatedAC).isNaN ? 0 : Eimeria_Acervulina_Gross_Mean/isUpdatedAC)
+//        preparedArrayForMean.add((Eimeria_Maxima_Gross_Mean/isUpdatedMG).isNaN ? 0 : Eimeria_Maxima_Gross_Mean/isUpdatedMG)
+//        preparedArrayForMean.add((Eimeria_Maxima_Micro_Mean/isUpdatedMM).isNaN ? 0 : Eimeria_Maxima_Micro_Mean/isUpdatedMM)
+//        preparedArrayForMean.add((Eimeria_Tenella_Gross_Mean/isUpdatedTG).isNaN ? 0 : Eimeria_Tenella_Gross_Mean/isUpdatedTG)
+//        
+//        AllValidSessions.sharedInstance.meanValues.add(preparedArrayForMean)
+//        
+//        UserDefaults.standard.set(AllValidSessions.sharedInstance.meanValues, forKey: "meanArray")
+//        
+//        delegate?.didFinishWithParsing(finishedArray: preparedArray)
+//        
+//    }
+    
+    fileprivate func handleDataParamsAndValidations(_ aArray: NSArray, _ j: Int, _ Foot_Pad_Lesions: inout Float, _ Scratched_Birds: inout Float, _ Corneal_Ulcers: Float, _ Femoral_Head_Necrosis: inout Float, _ Tibial_Dyschondroplasia: inout Float, _ Rickets: inout Float, _ Bone_Strength: inout Float, _ Synovitis: inout Float, _ Infectious_Process: inout Float, _ Breast_Myopathy: inout Float, _ Muscular_Hemorrhages: inout Float) {
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1) && Foot_Pad_Lesions != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            Foot_Pad_Lesions=(Foot_Pad_Lesions)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2) && Scratched_Birds != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Scratched_Birds=(Scratched_Birds)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 3) && Corneal_Ulcers != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Scratched_Birds=(Scratched_Birds)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 4) && Femoral_Head_Necrosis != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Femoral_Head_Necrosis=(Femoral_Head_Necrosis)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 5) && Tibial_Dyschondroplasia != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            Tibial_Dyschondroplasia=(Tibial_Dyschondroplasia)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 6) && Rickets != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Rickets=(Rickets)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 7) && Bone_Strength != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            Bone_Strength=(Bone_Strength)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 8) && Synovitis != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Synovitis=(Synovitis)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 9) && Infectious_Process != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Infectious_Process=(Infectious_Process)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 12) && Breast_Myopathy != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Breast_Myopathy=(Breast_Myopathy)+(value.floatValue > 0 ? 1 : 0)
+        }
+        if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 14) && Muscular_Hemorrhages != NOT_EXIST {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Muscular_Hemorrhages=(Muscular_Hemorrhages)+(value.floatValue > 0 ? 1 : 0)
+        }
     }
     
     func forSkeleton(_ aArray : NSArray , birdsCount : Float) {
@@ -413,54 +523,10 @@ class GI_Tract_Modal: NSObject {
         var Breast_Myopathy : Float = Regions.getobservationsSkeletal(countryID: Regions.countryId).contains(12) ? 0 : NOT_EXIST
         
         var Muscular_Hemorrhages: Float = Regions.getobservationsSkeletal(countryID: Regions.countryId).contains(14) ? 0 : NOT_EXIST
-        for  j in 0..<aArray.count
-        {
+        for j in 0..<aArray.count {
             if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "skeltaMuscular" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID {
                 
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1) && Foot_Pad_Lesions != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    Foot_Pad_Lesions=(Foot_Pad_Lesions)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2) && Scratched_Birds != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Scratched_Birds=(Scratched_Birds)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 3) && Corneal_Ulcers != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Scratched_Birds=(Scratched_Birds)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 4) && Femoral_Head_Necrosis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Femoral_Head_Necrosis=(Femoral_Head_Necrosis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 5) && Tibial_Dyschondroplasia != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    Tibial_Dyschondroplasia=(Tibial_Dyschondroplasia)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 6) && Rickets != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Rickets=(Rickets)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 7) && Bone_Strength != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    Bone_Strength=(Bone_Strength)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 8) && Synovitis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Synovitis=(Synovitis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 9) && Infectious_Process != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Infectious_Process=(Infectious_Process)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 12) && Breast_Myopathy != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Breast_Myopathy=(Breast_Myopathy)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 14) && Muscular_Hemorrhages != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Muscular_Hemorrhages=(Muscular_Hemorrhages)+(value.floatValue > 0 ? 1 : 0)
-                }
+                handleDataParamsAndValidations(aArray, j, &Foot_Pad_Lesions, &Scratched_Birds, Corneal_Ulcers, &Femoral_Head_Necrosis, &Tibial_Dyschondroplasia, &Rickets, &Bone_Strength, &Synovitis, &Infectious_Process, &Breast_Myopathy, &Muscular_Hemorrhages)
             }
         }
         if Foot_Pad_Lesions != NOT_EXIST {
@@ -519,130 +585,188 @@ class GI_Tract_Modal: NSObject {
         }
         delegate?.didFinishWithParsing(finishedArray: preparedArray)
     }
-    func forSkeletonTr(_ aArray : NSArray , birdsCount : Float) {
-        
-        let preparedArray = NSMutableArray()
-        
-        var Foot_Pad_Lesions : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(596) ? 0 : NOT_EXIST
-        var Scratched_Birds : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(597) ? 0 : NOT_EXIST
-        var Corneal_Ulcers : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(598) ? 0 : NOT_EXIST
-        
-        var Tibial_Dyschondroplasia : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(599) ? 0 : NOT_EXIST
-        var Rickets : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(600) ? 0 : NOT_EXIST
-        var Bone_Strength : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(601) ? 0 : NOT_EXIST
-        
-        var Synovitis : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(602) ? 0 : NOT_EXIST
-        var Infectious_Process : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(603) ? 0 : NOT_EXIST
-        var Woody_Breast : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(604) ? 0 : NOT_EXIST
-        
-        var Tibial_Head_Necrosis: Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(605) ? 0 : NOT_EXIST
-        for  j in 0..<aArray.count
-        {
-            if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "skeltaMuscular" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID {
-                
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 596) && Foot_Pad_Lesions != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    Foot_Pad_Lesions=(Foot_Pad_Lesions)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 597) && Scratched_Birds != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Scratched_Birds=(Scratched_Birds)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 598) && Corneal_Ulcers != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Corneal_Ulcers=(Corneal_Ulcers)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 599) && Tibial_Dyschondroplasia != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    Tibial_Dyschondroplasia=(Tibial_Dyschondroplasia)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 600) && Rickets != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Rickets=(Rickets)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 601) && Bone_Strength != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    Bone_Strength=(Bone_Strength)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 602) && Synovitis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Synovitis=(Synovitis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 603) && Infectious_Process != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Infectious_Process=(Infectious_Process)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 604) && Woody_Breast != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Woody_Breast=(Woody_Breast)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 605) && Tibial_Head_Necrosis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Tibial_Head_Necrosis=(Tibial_Head_Necrosis)+(value.floatValue > 0 ? 1 : 0)
-                }
+    
+    
+    func forSkeletonTr(_ aArray: NSArray, birdsCount: Float) {
+        struct Observation {
+            let refId: Int
+            let usesObsPoint: Bool
+        }
+
+        let observations: [String: Observation] = [
+            "Foot_Pad_Lesions": Observation(refId: 596, usesObsPoint: true),
+            "Scratched_Birds": Observation(refId: 597, usesObsPoint: false),
+            "Corneal_Ulcers": Observation(refId: 598, usesObsPoint: false),
+            "Tibial_Dyschondroplasia": Observation(refId: 599, usesObsPoint: true),
+            "Rickets": Observation(refId: 600, usesObsPoint: false),
+            "Bone_Strength": Observation(refId: 601, usesObsPoint: true),
+            "Synovitis": Observation(refId: 602, usesObsPoint: false),
+            "Infectious_Process": Observation(refId: 603, usesObsPoint: false),
+            "Woody_Breast": Observation(refId: 604, usesObsPoint: false),
+            "Tibial_Head_Necrosis": Observation(refId: 605, usesObsPoint: false)
+        ]
+
+        let allowedRefIds = Set(Regions.getobservationsSkeletalTr(countryID: Regions.countryId))
+        var results: [String: Float] = [:]
+
+        // Initialize with 0 if observation is allowed, NOT_EXIST otherwise
+        for (key, observation) in observations {
+            results[key] = allowedRefIds.contains(observation.refId) ? 0 : NOT_EXIST
+        }
+
+        for case let dict as NSDictionary in aArray {
+            guard
+                let catName = dict["catName"] as? String,
+                catName == "skeltaMuscular",
+                let lngId = dict["lngId"] as? Int,
+                lngId == Regions.languageID,
+                let refId = dict["refId"] as? Int
+            else {
+                continue
+            }
+
+            guard let (key, observation) = observations.first(where: { $0.value.refId == refId }),
+                  let current = results[key],
+                  current != NOT_EXIST
+            else {
+                continue
+            }
+
+            let valueKey = observation.usesObsPoint ? "obsPoint" : "objsVisibilty"
+            guard let value = dict[valueKey] as? NSNumber else { continue }
+
+            if value.floatValue > 0 {
+                results[key]! += 1
             }
         }
-        if Foot_Pad_Lesions != NOT_EXIST {
-            Foot_Pad_Lesions = (Foot_Pad_Lesions/birdsCount)*100
-            preparedArray.add(Foot_Pad_Lesions)
+
+        let preparedArray = NSMutableArray()
+        for (key, value) in results {
+            if value != NOT_EXIST {
+                let percent = (value / birdsCount) * 100
+                preparedArray.add(percent)
+            }
         }
-        
-        if Scratched_Birds != NOT_EXIST {
-            Scratched_Birds = (Scratched_Birds/birdsCount)*100
-            preparedArray.add(Scratched_Birds)
-        }
-        
-        if Corneal_Ulcers != NOT_EXIST {
-            Corneal_Ulcers = (Corneal_Ulcers/birdsCount)*100
-            preparedArray.add(Corneal_Ulcers)
-        }
-        
-        if Tibial_Dyschondroplasia != NOT_EXIST {
-            Tibial_Dyschondroplasia = (Tibial_Dyschondroplasia/birdsCount)*100
-            preparedArray.add(Tibial_Dyschondroplasia)
-        }
-        
-        if Rickets != NOT_EXIST {
-            Rickets = (Rickets/birdsCount)*100
-            preparedArray.add(Rickets)
-        }
-        
-        if Bone_Strength != NOT_EXIST {
-            Bone_Strength = (Bone_Strength/birdsCount)*100
-            preparedArray.add(Bone_Strength)
-        }
-        
-        if Synovitis != NOT_EXIST {
-            Synovitis = (Synovitis/birdsCount)*100
-            preparedArray.add(Synovitis)
-        }
-        
-        if Infectious_Process != NOT_EXIST {
-            Infectious_Process = (Infectious_Process/birdsCount)*100
-            preparedArray.add(Infectious_Process)
-        }
-        
-        if Woody_Breast != NOT_EXIST {
-            Woody_Breast = (Woody_Breast/birdsCount)*100
-            preparedArray.add(Woody_Breast)
-        }
-        
-        if Tibial_Head_Necrosis != NOT_EXIST{
-            Tibial_Head_Necrosis = (Tibial_Head_Necrosis/birdsCount)*100
-            preparedArray.add(Tibial_Head_Necrosis)
-        }
+
         delegate?.didFinishWithParsing(finishedArray: preparedArray)
     }
-    func forResp(_ aArray : NSArray , birdsCount : Float) {
     
-        let preparedArray = NSMutableArray()
-        
-        var conjunctivitis : Float = Regions.getObservationsResp(countryID: Regions.countryId).contains(49) ? 0 : NOT_EXIST
-        var tracheitis : Float = Regions.getObservationsResp(countryID: Regions.countryId).contains(50) ? 0 : NOT_EXIST
-        var air_Sac : Float = Regions.getObservationsResp(countryID: Regions.countryId).contains(51) ? 0 : NOT_EXIST
-        
-        for  j in 0..<aArray.count
-        {
+//    func forSkeletonTr(_ aArray : NSArray , birdsCount : Float) {
+//        
+//        let preparedArray = NSMutableArray()
+//        
+//        var Foot_Pad_Lesions : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(596) ? 0 : NOT_EXIST
+//        var Scratched_Birds : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(597) ? 0 : NOT_EXIST
+//        var Corneal_Ulcers : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(598) ? 0 : NOT_EXIST
+//        
+//        var Tibial_Dyschondroplasia : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(599) ? 0 : NOT_EXIST
+//        var Rickets : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(600) ? 0 : NOT_EXIST
+//        var Bone_Strength : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(601) ? 0 : NOT_EXIST
+//        
+//        var Synovitis : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(602) ? 0 : NOT_EXIST
+//        var Infectious_Process : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(603) ? 0 : NOT_EXIST
+//        var Woody_Breast : Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(604) ? 0 : NOT_EXIST
+//        
+//        var Tibial_Head_Necrosis: Float = Regions.getobservationsSkeletalTr(countryID: Regions.countryId).contains(605) ? 0 : NOT_EXIST
+//        for  j in 0..<aArray.count
+//        {
+//            if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "skeltaMuscular" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID {
+//                
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 596) && Foot_Pad_Lesions != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+//                    Foot_Pad_Lesions=(Foot_Pad_Lesions)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 597) && Scratched_Birds != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+//                    Scratched_Birds=(Scratched_Birds)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 598) && Corneal_Ulcers != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+//                    Corneal_Ulcers=(Corneal_Ulcers)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 599) && Tibial_Dyschondroplasia != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+//                    Tibial_Dyschondroplasia=(Tibial_Dyschondroplasia)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 600) && Rickets != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+//                    Rickets=(Rickets)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 601) && Bone_Strength != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+//                    Bone_Strength=(Bone_Strength)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 602) && Synovitis != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+//                    Synovitis=(Synovitis)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 603) && Infectious_Process != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+//                    Infectious_Process=(Infectious_Process)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 604) && Woody_Breast != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+//                    Woody_Breast=(Woody_Breast)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 605) && Tibial_Head_Necrosis != NOT_EXIST {
+//                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+//                    Tibial_Head_Necrosis=(Tibial_Head_Necrosis)+(value.floatValue > 0 ? 1 : 0)
+//                }
+//            }
+//        }
+//        if Foot_Pad_Lesions != NOT_EXIST {
+//            Foot_Pad_Lesions = (Foot_Pad_Lesions/birdsCount)*100
+//            preparedArray.add(Foot_Pad_Lesions)
+//        }
+//        
+//        if Scratched_Birds != NOT_EXIST {
+//            Scratched_Birds = (Scratched_Birds/birdsCount)*100
+//            preparedArray.add(Scratched_Birds)
+//        }
+//        
+//        if Corneal_Ulcers != NOT_EXIST {
+//            Corneal_Ulcers = (Corneal_Ulcers/birdsCount)*100
+//            preparedArray.add(Corneal_Ulcers)
+//        }
+//        
+//        if Tibial_Dyschondroplasia != NOT_EXIST {
+//            Tibial_Dyschondroplasia = (Tibial_Dyschondroplasia/birdsCount)*100
+//            preparedArray.add(Tibial_Dyschondroplasia)
+//        }
+//        
+//        if Rickets != NOT_EXIST {
+//            Rickets = (Rickets/birdsCount)*100
+//            preparedArray.add(Rickets)
+//        }
+//        
+//        if Bone_Strength != NOT_EXIST {
+//            Bone_Strength = (Bone_Strength/birdsCount)*100
+//            preparedArray.add(Bone_Strength)
+//        }
+//        
+//        if Synovitis != NOT_EXIST {
+//            Synovitis = (Synovitis/birdsCount)*100
+//            preparedArray.add(Synovitis)
+//        }
+//        
+//        if Infectious_Process != NOT_EXIST {
+//            Infectious_Process = (Infectious_Process/birdsCount)*100
+//            preparedArray.add(Infectious_Process)
+//        }
+//        
+//        if Woody_Breast != NOT_EXIST {
+//            Woody_Breast = (Woody_Breast/birdsCount)*100
+//            preparedArray.add(Woody_Breast)
+//        }
+//        
+//        if Tibial_Head_Necrosis != NOT_EXIST{
+//            Tibial_Head_Necrosis = (Tibial_Head_Necrosis/birdsCount)*100
+//            preparedArray.add(Tibial_Head_Necrosis)
+//        }
+//        delegate?.didFinishWithParsing(finishedArray: preparedArray)
+//    }
+    fileprivate func handleCatNameRefIdValidation(_ aArray: NSArray, _ conjunctivitis: inout Float, _ tracheitis: inout Float, _ air_Sac: inout Float) {
+        for j in 0..<aArray.count {
             if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "Resp" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID  {
                 
                 if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 49) && conjunctivitis != NOT_EXIST {
@@ -659,6 +783,17 @@ class GI_Tract_Modal: NSObject {
                 }
             }
         }
+    }
+    
+    func forResp(_ aArray : NSArray , birdsCount : Float) {
+    
+        let preparedArray = NSMutableArray()
+        
+        var conjunctivitis : Float = Regions.getObservationsResp(countryID: Regions.countryId).contains(49) ? 0 : NOT_EXIST
+        var tracheitis : Float = Regions.getObservationsResp(countryID: Regions.countryId).contains(50) ? 0 : NOT_EXIST
+        var air_Sac : Float = Regions.getObservationsResp(countryID: Regions.countryId).contains(51) ? 0 : NOT_EXIST
+        
+        handleCatNameRefIdValidation(aArray, &conjunctivitis, &tracheitis, &air_Sac)
         
         if conjunctivitis != NOT_EXIST{
             conjunctivitis = (conjunctivitis/birdsCount)*100

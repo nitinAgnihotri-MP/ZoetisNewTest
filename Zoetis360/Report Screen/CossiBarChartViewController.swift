@@ -343,101 +343,9 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
     
     // MARK: - Common Function
     
-    func callCommonFunction(_ catName : NSString)  {
-        
-        var arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
-        
-       // arrayOfIds = arrayOfIds.sorted(by: {$0 > $1})
-        
-        let modalObj = GI_Tract_Modal()
-        
-        modalObj.delegate = self
-        
-        if arrayOfIds.count > 2 {
-            
-            for i in 0..<3{
-                
-                
-                let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricData, comment: ""))
-                    self.barChartView.clear()
-                    return
-                }
-                
-                let objectArray : NSMutableArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName,postingId: necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-                
-            }
-        }
-            
-        else if arrayOfIds.count > 1 {
-            
-             for i in 0..<2{
-                
-                let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as! NSNumber)
-                
-                if lastSessionDataArray.count == 0 {
-                    
-                    Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricData, comment: ""))
-                    self.barChartView.clear()
-                    return
-                }
-                
-                let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
-                
-                sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
-                
-                let allFarmDataArray = NSMutableArray()
-                
-                var totalBirdsPerFarm : Float = 0
-                
-                for j in 0..<lastSessionDataArray.count {
-                    
-                    let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
-                    
-                    let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
-                    
-                    let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
-                    
-                    totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
-                    
-                    let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName,postingId : necID) as NSArray
-                    
-                    allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-                }
-                
-                modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
-                
-            }
-        }
-        else{
-            
-            let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds.first as! NSNumber)
+    fileprivate func handleForLoop0To3CommonFunction(_ arrayOfIds: inout [Int], _ modalObj: GI_Tract_Modal, _ catName: NSString) {
+        for i in 0..<3 {
+            let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as NSNumber)
             
             if lastSessionDataArray.count == 0 {
                 
@@ -446,7 +354,7 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
                 return
             }
             
-            let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
+            let objectArray : NSMutableArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as NSNumber).mutableCopy() as! NSMutableArray
             
             sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
             
@@ -470,6 +378,105 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             }
             
             modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+            
+        }
+    }
+    
+    fileprivate func handleArrOfIdsLoop0To2CommonFunction(_ arrayOfIds: inout [Int], _ modalObj: GI_Tract_Modal, _ catName: NSString) {
+        for i in 0..<2{
+            
+            let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds[i] as! NSNumber)
+            
+            if lastSessionDataArray.count == 0 {
+                
+                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricData, comment: ""))
+                self.barChartView.clear()
+                return
+            }
+            
+            let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds[i] as! NSNumber).mutableCopy() as! NSMutableArray
+            
+            sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
+            
+            let allFarmDataArray = NSMutableArray()
+            
+            var totalBirdsPerFarm : Float = 0
+            
+            for j in 0..<lastSessionDataArray.count {
+                
+                let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+                
+                let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+                
+                let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+                
+                totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+                
+                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName,postingId : necID) as NSArray
+                
+                allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+            }
+            
+            modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+            
+        }
+    }
+    
+    fileprivate func handleLastSessionDataCommonFunction(_ lastSessionDataArray: NSArray, _ arrayOfIds: [Int], _ modalObj: GI_Tract_Modal, _ catName: NSString) {
+        if lastSessionDataArray.count == 0 {
+            
+            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(noHistoricData, comment: ""))
+            self.barChartView.clear()
+            return
+        }
+        
+        let objectArray =  CoreDataHandler().fetchAllPostingSession(arrayOfIds.first as! NSNumber).mutableCopy() as! NSMutableArray
+        
+        sessionDate = (objectArray.object(at: 0) as AnyObject).value(forKey: "sessiondate") as! NSString
+        
+        let allFarmDataArray = NSMutableArray()
+        
+        var totalBirdsPerFarm : Float = 0
+        
+        for j in 0..<lastSessionDataArray.count {
+            
+            let farmName : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "farmName") as! NSString
+            
+            let necID = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "necropsyId") as! NSNumber
+            
+            let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
+            
+            totalBirdsPerFarm = totalBirdsPerFarm+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName,postingId: necID) as NSArray
+            
+            allFarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+        
+        modalObj.setupData(allFarmDataArray,birdsCount: totalBirdsPerFarm , catName: catName)
+    }
+    
+    func callCommonFunction(_ catName : NSString)  {
+        
+        var arrayOfIds:[Int] = AllValidSessions.sharedInstance.allValidSession as! [Int]
+        
+       // arrayOfIds = arrayOfIds.sorted(by: {$0 > $1})
+        
+        let modalObj = GI_Tract_Modal()
+        
+        modalObj.delegate = self
+        
+        if arrayOfIds.count > 2 {
+            
+            handleForLoop0To3CommonFunction(&arrayOfIds, modalObj, catName)
+        } else if arrayOfIds.count > 1 {
+            
+            handleArrOfIdsLoop0To2CommonFunction(&arrayOfIds, modalObj, catName)
+        } else {
+            
+            let lastSessionDataArray : NSArray = CoreDataHandler().fetchLastSessionDetails(arrayOfIds.first as! NSNumber)
+            
+            handleLastSessionDataCommonFunction(lastSessionDataArray, arrayOfIds, modalObj, catName)
             
         }
     }
@@ -545,6 +552,61 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             barChartView.clear()
             self.btnShare.isHidden = true
             self.incedenceText.isHidden = true
+        }
+    }
+    
+    fileprivate func extractedFunc(_ age: Int32, _ totalBirdsWeek1: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week1FarmDataArray: NSMutableArray) {
+        if age > 0 && age < 8 {
+            
+            totalBirdsWeek1 = totalBirdsWeek1+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week1FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+    }
+    
+    fileprivate func handleAgeGreaterThan7LessThan15(_ age: Int32, _ totalBirdsWeek2: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week2FarmDataArray: NSMutableArray) {
+        if age > 7 && age < 15 {
+            
+            totalBirdsWeek2 = totalBirdsWeek2+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week2FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+    }
+    
+    fileprivate func handleFunctionGreaterThan14LessThan5(_ age: Int32, _ totalBirdsWeek3: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week3FarmDataArray: NSMutableArray) {
+        if age > 14 && age < 22 {
+            
+            totalBirdsWeek3 = totalBirdsWeek3+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week3FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+    }
+    
+    fileprivate func handleAgeGreaterThan22LessThan29(_ age: Int32, _ totalBirdsWeek4: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week4FarmDataArray: NSMutableArray) {
+        if age > 21 && age < 29 {
+            
+            totalBirdsWeek4 = totalBirdsWeek4+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week4FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
+        }
+    }
+    
+    fileprivate func handleAgeGreaterThan28LessThan36(_ age: Int32, _ totalBirdsWeek5: inout Float, _ numberOfBirds: NSString, _ farmName: NSString, _ necID: NSNumber, _ week5FarmDataArray: NSMutableArray) {
+        if age > 28 && age < 36 {
+            
+            totalBirdsWeek5 = totalBirdsWeek5+numberOfBirds.floatValue
+            
+            let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
+            
+            week5FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
         }
     }
     
@@ -674,46 +736,11 @@ class CossiBarChartViewController: UIViewController,GI_TtactDelegate,ChartViewDe
             
             let numberOfBirds : NSString = (lastSessionDataArray.object(at: j) as AnyObject).value(forKey: "noOfBirds") as! NSString
             
-            if age > 0 && age < 8 {
-                
-                totalBirdsWeek1 = totalBirdsWeek1+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week1FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 7 && age < 15 {
-                
-                totalBirdsWeek2 = totalBirdsWeek2+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week2FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 14 && age < 22 {
-                
-                totalBirdsWeek3 = totalBirdsWeek3+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week3FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 21 && age < 29 {
-                
-                totalBirdsWeek4 = totalBirdsWeek4+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week4FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
-            if age > 28 && age < 36 {
-                
-                totalBirdsWeek5 = totalBirdsWeek5+numberOfBirds.floatValue
-                
-                let lastFarmDataArray : NSArray = CoreDataHandler().fetch_GI_Tract_AllData(farmName, postingId: necID)
-                
-                week5FarmDataArray.addObjects(from: lastFarmDataArray as [AnyObject])
-            }
+            extractedFunc(age, &totalBirdsWeek1, numberOfBirds, farmName, necID, week1FarmDataArray)
+            handleAgeGreaterThan7LessThan15(age, &totalBirdsWeek2, numberOfBirds, farmName, necID, week2FarmDataArray)
+            handleFunctionGreaterThan14LessThan5(age, &totalBirdsWeek3, numberOfBirds, farmName, necID, week3FarmDataArray)
+            handleAgeGreaterThan22LessThan29(age, &totalBirdsWeek4, numberOfBirds, farmName, necID, week4FarmDataArray)
+            handleAgeGreaterThan28LessThan36(age, &totalBirdsWeek5, numberOfBirds, farmName, necID, week5FarmDataArray)
             if age > 35 && age < 43 {
                 
                 totalBirdsWeek6 = totalBirdsWeek6+numberOfBirds.floatValue

@@ -2244,6 +2244,34 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     }
     
     // MARK: - METHODS AND FUNCTIONS
+    fileprivate func saveAntiBioticMycoxtinUpdateSessionStatus(feedexist: Int) {
+        self.saveAntibioticDatabase(feedId: feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
+            
+            if status == true {
+                
+                ////print("Antibiotic")
+                
+                self.saveAlternativeDatabase(feedId: feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
+                    
+                    if status == true {
+                        
+                        ////print("Alternative")
+                        
+                        self.saveMyCoxtinDatabase(feedId: feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
+                            
+                            if status == true {
+                                
+                                
+                                if self.postingIdFromExistingNavigate == "Exting"{
+                                    CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(self.postingId)
+                                }
+                                
+                                
+                            }})
+                    }})
+            }})
+    }
+    
     fileprivate func saveExistingPostingSessionIData() {
         var feedexist = Int()
         if feedProgadd == "ExtingFeeed" {
@@ -2262,32 +2290,9 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                     if status == true {
                         
                         
-                        self.saveAntibioticDatabase(feedId: feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
-                            
-                            if status == true {
-                                
-                                ////print("Antibiotic")
-                                
-                                self.saveAlternativeDatabase(feedId: feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                    
-                                    if status == true {
-                                        
-                                        ////print("Alternative")
-                                        
-                                        self.saveMyCoxtinDatabase(feedId: feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                            
-                                            if status == true {
-                                                
-                                                
-                                                if self.postingIdFromExistingNavigate == "Exting"{
-                                                    CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(self.postingId)
-                                                }
-                                                
-                                                
-                                            }})
-                                    }})
-                            }})
-                    }})
+                        saveAntiBioticMycoxtinUpdateSessionStatus(feedexist: feedexist)
+                    }
+                })
             }})
     }
     
