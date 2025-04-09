@@ -2110,6 +2110,35 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
     }
     
+    fileprivate func handleObsPointValidationsPlusBtnClick(_ array: ([String]), _ skleta1: CaptureNecropsyViewDataTurkey, _ cell: CaptureNecroStep2TurkeyCell, _ skleta: CaptureNecropsyViewDataTurkey, _ image: UIImage?, _ rowIndex: Int, _ necId: Int) {
+        for i in 0..<array.count {
+            let lastElement = (Int(array.last!)! as Int)
+            if lastElement == Int(array[i])! {
+                
+            } else {
+                if Int(array[i])! as NSNumber == skleta1.obsPoint {
+                    cell.incrementLabel.text = String(array[i+1])
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[i+1])! , index: rowIndex, obsId: Int(skleta1.obsID!),necId: necId as NSNumber,isSync :true)
+                    break
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleObsPointValidationPlusBtnClicked(_ skleta1: CaptureNecropsyViewDataTurkey, _ array: ([String]), _ cell: CaptureNecroStep2TurkeyCell, _ skleta: CaptureNecropsyViewDataTurkey, _ image: UIImage?, _ rowIndex: Int, _ necId: Int) {
+        if skleta1.obsPoint == 0 {
+            if Int(array[0]) != 0 {
+                cell.incrementLabel.text = String(array[0])
+                CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(skleta1.obsID!),necId: necId as NSNumber,isSync :true)
+            } else {
+                cell.incrementLabel.text = String(array[1])
+                CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[1])! , index: rowIndex, obsId: Int(skleta1.obsID!),necId: necId as NSNumber,isSync :true)
+            }
+        } else {
+            handleObsPointValidationsPlusBtnClick(array, skleta1, cell, skleta, image, rowIndex, necId)
+        }
+    }
+    
     @objc func plusButtonClick (_ sender: UIButton){
         let rowIndex :Int = sender.tag
         isFirstTimeLaunch = false
@@ -2124,11 +2153,10 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             let image = UIImage(named:"image001")
             var  necId = Int()
             
-            if postingIdFromExistingNavigate == "Exting"{
+            if postingIdFromExistingNavigate == "Exting" {
                 
-                necId =  postingIdFromExisting
-            }
-            else{
+                necId = postingIdFromExisting
+            } else {
                 necId = UserDefaults.standard.integer(forKey: "necId") as Int
             }
             
@@ -2137,50 +2165,11 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             let skleta1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
             if FetchObsArr.count > 0 {
                 
-                if skleta1.obsPoint == 0
-                {
-                    if Int(array[0]) != 0
-                    {
-                        cell.incrementLabel.text = String(array[0])
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(skleta1.obsID!),necId: necId as NSNumber,isSync :true)
-                    }
-                    else
-                    {
-                        cell.incrementLabel.text = String(array[1])
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[1])! , index: rowIndex, obsId: Int(skleta1.obsID!),necId: necId as NSNumber,isSync :true)
-                    }
-                }
-                else
-                {
-                    for  i in 0..<array.count
-                    {
-                        let lastElement = (Int(array.last!)! as Int)
-                        if lastElement == Int(array[i])!
-                        {
-                            
-                        }
-                        else
-                        {
-                            if Int(array[i])! as NSNumber == skleta1.obsPoint
-                            {
-                                cell.incrementLabel.text = String(array[i+1])
-                                CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[i+1])! , index: rowIndex, obsId: Int(skleta1.obsID!),necId: necId as NSNumber,isSync :true)
-                                break
-                            }
-                        }
-                    }
-                }
+                handleObsPointValidationPlusBtnClicked(skleta1, array, cell, skleta, image, rowIndex, necId)
             }
             
             dataSkeltaArray.removeAllObjects()
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            dataSkeltaArray =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(skleta.birdNo! , farmname: skleta.formName!, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+            dataSkeltaArray = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(skleta.birdNo! , farmname: skleta.formName!, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
         }
         

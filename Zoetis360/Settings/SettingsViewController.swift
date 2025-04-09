@@ -289,127 +289,123 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
     
     // MARK: 🟠 **************** tableView DataSource & Delegate Methods ***********************************/
     
+    fileprivate func handleBtnTag4CellForRow(_ indexPath: IndexPath, _ cell: CustomeTableViewCell) {
+        let cocoii : Immune = dataImmuneArray.object(at: indexPath.row) as! Immune
+        cell.lblName.text = cocoii.observationField
+        cell.switchView.isOn = cocoii.visibilityCheck as! Bool
+        
+        if cell.switchView.isOn == true {
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        } else {
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        
+        cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
+        
+        if cell.checkBoxOutlet.isSelected == true {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
+    fileprivate func handleBtnTag3CellforRow(_ indexPath: IndexPath, _ cell: CustomeTableViewCell) {
+        let cocoii : Respiratory = dataRespiratoryArray.object(at: indexPath.row) as! Respiratory
+        cell.lblName.text = cocoii.observationField
+        cell.switchView.isOn = cocoii.visibilityCheck as! Bool
+        
+        if cell.switchView.isOn == true {
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        } else {
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        
+        cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
+        
+        if cell.checkBoxOutlet.isSelected == true {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
+    fileprivate func handleBtnTag2(_ indexPath: IndexPath, _ cell: CustomeTableViewCell) {
+        let skeletaObject : GITract = dataGiTractArray.object(at: indexPath.row) as! GITract
+        cell.lblName.text = skeletaObject.observationField
+        cell.switchView.isOn = skeletaObject.visibilityCheck as! Bool
+        
+        if cell.switchView.isOn == true {
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        } else {
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        cell.checkBoxOutlet.isSelected = skeletaObject.quicklinks as! Bool
+        
+        if cell.checkBoxOutlet.isSelected == true {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
+    fileprivate func handleBtnTag1(_ indexPath: IndexPath, _ cell: CustomeTableViewCell) {
+        let cocoii : Coccidiosis = dataCocoiiArray.object(at: indexPath.row) as! Coccidiosis
+        cell.lblName.text = cocoii.observationField
+        cell.switchView.isOn = cocoii.visibilityCheck as! Bool
+        
+        if cell.switchView.isOn == true {
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        } else {
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        
+        cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
+        
+        if cell.checkBoxOutlet.isSelected == true {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
+    fileprivate func handleBtnTag0ellForRow(_ indexPath: IndexPath, _ cell: CustomeTableViewCell) {
+        let skeletaObject : Skeleta = dataSkeletaArray.object(at: indexPath.row) as! Skeleta
+        cell.lblName.text = skeletaObject.observationField
+        cell.switchView.isOn = skeletaObject.visibilityCheck as! Bool
+        
+        if cell.switchView.isOn == true {
+            cell.checkBoxOutlet.isUserInteractionEnabled = true
+        } else {
+            cell.checkBoxOutlet.isUserInteractionEnabled = false
+        }
+        
+        cell.checkBoxOutlet.isSelected = skeletaObject.quicklinks as! Bool
+        
+        if cell.checkBoxOutlet.isSelected == true {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
+        } else {
+            cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! CustomeTableViewCell
         if indexPath.row % 2 == 0 {
-            
             cell.bgView.backgroundColor = UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0)
-        }else {
-            
+        } else {
             cell.bgView.backgroundColor = UIColor(red: 238/255.0, green: 238/255.0, blue: 238/255.0, alpha: 1.0)
-            
         }
         
         if btnTag == 0 {
-            let skeletaObject : Skeleta = dataSkeletaArray.object(at: indexPath.row) as! Skeleta
-            cell.lblName.text = skeletaObject.observationField
-            cell.switchView.isOn = skeletaObject.visibilityCheck as! Bool
-            
-            if cell.switchView.isOn == true {
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            }
-            else {
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            
-            cell.checkBoxOutlet.isSelected = skeletaObject.quicklinks as! Bool
-            
-            if cell.checkBoxOutlet.isSelected == true {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            }
-            else {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-            
-        }
-        else if btnTag == 1{
-            
-            let cocoii : Coccidiosis = dataCocoiiArray.object(at: indexPath.row) as! Coccidiosis
-            cell.lblName.text = cocoii.observationField
-            cell.switchView.isOn = cocoii.visibilityCheck as! Bool
-            
-            if cell.switchView.isOn == true {
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            }
-            else {
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            
-            cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
-            
-            if cell.checkBoxOutlet.isSelected == true {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            }
-            else {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-            
-        }
-        else if btnTag == 2 {
-            let skeletaObject : GITract = dataGiTractArray.object(at: indexPath.row) as! GITract
-            cell.lblName.text = skeletaObject.observationField
-            cell.switchView.isOn = skeletaObject.visibilityCheck as! Bool
-            
-            if cell.switchView.isOn == true {
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            }
-            else {
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            cell.checkBoxOutlet.isSelected = skeletaObject.quicklinks as! Bool
-            
-            if cell.checkBoxOutlet.isSelected == true {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            }
-            else {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-        }
-        else if btnTag == 3{
-            
-            let cocoii : Respiratory = dataRespiratoryArray.object(at: indexPath.row) as! Respiratory
-            cell.lblName.text = cocoii.observationField
-            cell.switchView.isOn = cocoii.visibilityCheck as! Bool
-            
-            if cell.switchView.isOn == true {
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            }
-            else {
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            
-            cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
-            
-            if cell.checkBoxOutlet.isSelected == true {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            }
-            else {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-            
-        }
-        else if btnTag ==  4{
-            
-            let cocoii : Immune = dataImmuneArray.object(at: indexPath.row) as! Immune
-            cell.lblName.text = cocoii.observationField
-            cell.switchView.isOn = cocoii.visibilityCheck as! Bool
-            
-            if cell.switchView.isOn == true {
-                cell.checkBoxOutlet.isUserInteractionEnabled = true
-            }
-            else {
-                cell.checkBoxOutlet.isUserInteractionEnabled = false
-            }
-            
-            cell.checkBoxOutlet.isSelected = cocoii.quicklinks as! Bool
-            
-            if cell.checkBoxOutlet.isSelected == true {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Check_")!, for: .normal)
-            }
-            else {
-                cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
-            }
-            
+            handleBtnTag0ellForRow(indexPath, cell)
+        } else if btnTag == 1 {
+            handleBtnTag1(indexPath, cell)
+        } else if btnTag == 2 {
+            handleBtnTag2(indexPath, cell)
+        } else if btnTag == 3 {
+            handleBtnTag3CellforRow(indexPath, cell)
+        } else if btnTag == 4 {
+            handleBtnTag4CellForRow(indexPath, cell)
         }
         cell.checkBoxOutlet.addTarget(self, action: #selector(SettingsViewController.checkBoxClick(_:)) , for: .touchUpInside )
         cell.switchView.addTarget(self, action: #selector(SettingsViewController.switchClick(_:)) , for: .valueChanged)

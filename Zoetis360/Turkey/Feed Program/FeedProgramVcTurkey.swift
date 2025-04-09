@@ -529,11 +529,9 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             postingId = postingIdFromExisting as NSNumber
         }
         
-        else if UserDefaults.standard.bool(forKey: "Unlinked") == true
-        {
+        else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
             postingId =  UserDefaults.standard.integer(forKey: "postingId") as NSNumber
-        }
-        else{
+        } else {
             postingId = UserDefaults.standard.integer(forKey: "postingId") as NSNumber
         }
         
@@ -565,40 +563,34 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func myCoxtinDosageDataSetUp(_ i: Int) {
         if MyCoxtinBindersArray.count == 1{
             myCoxtinStarterDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myCoxtinStarterDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
         }
         
         if MyCoxtinBindersArray.count == 1{
             myCoxtinGrowerDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myCoxtinGrowerDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             myCoxtinFinisherDosge.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myCoxtinFinisherDosge.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             myCoxtinWDDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myCoxtinWDDosage.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             myCoxtin5DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
-        }
-        else{
+        } else {
             myCoxtin5DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
         }
         
         if MyCoxtinBindersArray.count == 1{
             myCoxtin6DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myCoxtin6DosageTextField.text =  (MyCoxtinBindersArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
         }
     }
@@ -606,39 +598,33 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func MyCoxtinMoleculeDataSetUp(_ i: Int) {
         if MyCoxtinBindersArray.count == 1{
             moleculeFeedType1MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType1MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             moleculeFeedType2MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType2MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             moleculeFeedType3MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType3MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             moleculeFeedType4MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType4MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
         }
         
         if MyCoxtinBindersArray.count == 1{
             moleculeFeedType5MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType5MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             moleculeFeedType6MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType6MyCoxtin.text =  (MyCoxtinBindersArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
         }
     }
@@ -646,39 +632,33 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func myCoxtinFromDaysDataSetup(_ i: Int) {
         if MyCoxtinBindersArray.count == 1{
             myFromFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myFromFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             myFromSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myFromSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             myFromThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myFromThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             myFromFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myFromFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             from5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
-        }
-        else{
+        } else {
             from5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
         }
         
         if MyCoxtinBindersArray.count == 1{
             from6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
-        }
-        else{
+        } else {
             from6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
         }
     }
@@ -686,41 +666,35 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func myCoxtinToDataSetUp(_ i: Int) {
         if MyCoxtinBindersArray.count == 1{
             myToFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myToFirstTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
         }
         
         if MyCoxtinBindersArray.count == 1{
             myToSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myToSecondTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
         }
         
         if MyCoxtinBindersArray.count == 1{
             myToThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myToThirdTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             myToFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             myToFourTextField.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
         }
         if MyCoxtinBindersArray.count == 1{
             to5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             to5TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
         }
         
         if MyCoxtinBindersArray.count == 1{
             to6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             to6TextFieldMycoxtin.text =  (MyCoxtinBindersArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
         }
     }
@@ -736,8 +710,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             if MyCoxtinBindersArray.count == 1{
                 feedProgramTextField.text = (MyCoxtinBindersArray.value(forKey:"feedProgram") as AnyObject).object(at:i) as? String
-            }
-            else{
+            } else {
                 feedProgramTextField.text = (MyCoxtinBindersArray.value(forKey:"feedProgram") as AnyObject).object(at:0) as? String
             }
             
@@ -747,40 +720,34 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func alternativeMoleculeFeedDataSetUp(_ i: Int) {
         if AlternativeArray.count == 1{
             moleculeFeedType1Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType1Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
         }
         if AlternativeArray.count == 1{
             moleculeFeedType2Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType2Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
         }
         
         if AlternativeArray.count == 1{
             moleculeFeedType3Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType3Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
         }
         if AlternativeArray.count == 1{
             moleculeFeedType4Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType4Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
         }
         if AlternativeArray.count == 1{
             moleculeFeedType5Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType5Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
         }
         
         if AlternativeArray.count == 1{
             moleculeFeedType6Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             moleculeFeedType6Alternativ.text =  (AlternativeArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
         }
     }
@@ -788,39 +755,33 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func alternativeDosageDataSetUp(_ i: Int) {
         if AlternativeArray.count == 1{
             alternativeDosageFirstText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeDosageFirstText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
         }
         if AlternativeArray.count == 1{
             alternativeDosageSecoondText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeDosageSecoondText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
         }
         if AlternativeArray.count == 1{
             alternativeDosageThirdText.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeDosageThirdText.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
         }
         if AlternativeArray.count == 1{
             alternativeDosageFourText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeDosageFourText.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
         }
         
         if AlternativeArray.count == 1{
             altrNativeDosage5Text.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             altrNativeDosage5Text.text = (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
         }
         if AlternativeArray.count == 1{
             altrNativeDosage6Text.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             altrNativeDosage6Text.text =  (AlternativeArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
         }
     }
@@ -828,40 +789,34 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func alternativeFromDaysDataSetup(_ i: Int) {
         if AlternativeArray.count == 1{
             alternativeFromFirstTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeFromFirstTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
         }
         if AlternativeArray.count == 1{
             alternativeFromSecondTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeFromSecondTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
         }
         
         if AlternativeArray.count == 1{
             alternativeFromthirdTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeFromthirdTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
         }
         if AlternativeArray.count == 1{
             alternativeFromFourTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeFromFourTextField.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
         }
         if AlternativeArray.count == 1{
             from5TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             from5TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
         }
         
         if AlternativeArray.count == 1{
             from6TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             from6TextAlternative.text =  (AlternativeArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
         }
     }
@@ -869,40 +824,34 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func alternativeToDaysDataSetup(_ i: Int) {
         if AlternativeArray.count == 1{
             alternativeToFirstTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeToFirstTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
         }
         if AlternativeArray.count == 1{
             alternativeToSecondTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeToSecondTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
         }
         if AlternativeArray.count == 1{
             alternativeTothirdTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeTothirdTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
         }
         if AlternativeArray.count == 1{
             alternativeToFourTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             alternativeToFourTextField.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
         }
         
         if AlternativeArray.count == 1{
             to5TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             to5TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
         }
         
         if AlternativeArray.count == 1{
             to6TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             to6TextAlternative.text =  (AlternativeArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
         }
     }
@@ -918,8 +867,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             if AlternativeArray.count == 1{
                 feedProgramTextField.text = (AlternativeArray.value(forKey:"feedProgram") as AnyObject).object(at:i) as? String
-            }
-            else{
+            } else {
                 feedProgramTextField.text = (AlternativeArray.value(forKey:"feedProgram") as AnyObject).object(at:0) as? String
             }
         }
@@ -928,39 +876,33 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func antibioticMoleculeDataSetup(_ i: Int) {
         if AntiboticArray.count == 1{
             antiMoleculeFeedType1.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiMoleculeFeedType1.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
         }
         if AntiboticArray.count == 1{
             antiMoleculeFeedType2.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiMoleculeFeedType2.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
         }
         if AntiboticArray.count == 1{
             antiMoleculeFeedType3.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiMoleculeFeedType3.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
         }
         
         if AntiboticArray.count == 1{
             antiMoleculeFeedType4.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiMoleculeFeedType4.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
         }
         if AntiboticArray.count == 1{
             antiMoleculeFeedType5.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiMoleculeFeedType5.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
         }
         if AntiboticArray.count == 1{
             antiMoleculeFeedType6.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiMoleculeFeedType6.text =  (AntiboticArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
         }
     }
@@ -968,40 +910,34 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func antibioticDossageDataSetup(_ i: Int) {
         if AntiboticArray.count == 1{
             antiDosageFirstTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiDosageFirstTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
         }
         
         if AntiboticArray.count == 1{
             antiDosageSecondTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiDosageSecondTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
         }
         if AntiboticArray.count == 1{
             antiDosageThirdTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiDosageThirdTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
         }
         if AntiboticArray.count == 1{
             antiDosageFourTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiDosageFourTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
         }
         if AntiboticArray.count == 1{
             antiDosageFivthTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiDosageFivthTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
         }
         
         if AntiboticArray.count == 1{
             antiDosageSixTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiDosageSixTextField.text =  (AntiboticArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
         }
     }
@@ -1009,40 +945,34 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func antibioticFromDaysDataSetup(_ i: Int) {
         if AntiboticArray.count == 1{
             antiFromDurationFirstTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiFromDurationFirstTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
         }
         if AntiboticArray.count == 1{
             antiFromDurationSecondTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiFromDurationSecondTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
         }
         if AntiboticArray.count == 1{
             antiFromDurationThirdTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiFromDurationThirdTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
         }
         if AntiboticArray.count == 1{
             antiFromDurationFourTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject
             ).object(at:i) as? String
-        }
-        else{
+        } else {
             antiFromDurationFourTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject
             ).object(at:3) as? String
         }
         if AntiboticArray.count == 1{
             antiFromFivthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiFromFivthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
         }
         if AntiboticArray.count == 1{
             antiFromSixthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiFromSixthTextField.text =  (AntiboticArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
         }
     }
@@ -1050,39 +980,33 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func antibioticToDaysDataSetup(_ i: Int) {
         if AntiboticArray.count == 1{
             antiToDurationFirstTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiToDurationFirstTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
         }
         if AntiboticArray.count == 1{
             antiToDurationSecondTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
-        }
-        else{
+        } else {
             antiToDurationSecondTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
         }
         if AntiboticArray.count == 1{
             antiToDurationThirdTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiToDurationThirdTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
         }
         if AntiboticArray.count == 1{
             antiToDurationFourTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiToDurationFourTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
         }
         if AntiboticArray.count == 1{
             antiToDurationfivthTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiToDurationfivthTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
         }
         
         if AntiboticArray.count == 1{
             antiToDurationSixTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             antiToDurationSixTextField.text =  (AntiboticArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
         }
     }
@@ -1100,8 +1024,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             if AntiboticArray.count == 1{
                 feedProgramTextField.text = (AntiboticArray.value(forKey:"feedProgram") as AnyObject).object(at:i) as? String
-            }
-            else{
+            } else {
                 feedProgramTextField.text = (AntiboticArray.value(forKey:"feedProgram") as AnyObject).object(at:0) as? String
             }
         }
@@ -1111,48 +1034,42 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         if cocciControlArray.count == 1{
             starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
             firstMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-        }
-        else{
+        } else {
             starterDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:0) as? String
             firstMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:0) as? Int ?? 0
         }
         if cocciControlArray.count == 1{
             growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
             secoundMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-        }
-        else{
+        } else {
             growerDosageCoccidiosisTEXT.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:1) as? String
             secoundMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:1) as? Int ?? 0
         }
         if cocciControlArray.count == 1{
             finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
             thirdMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-        }
-        else{
+        } else {
             finisherDosageTxtField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:2) as? String
             thirdMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:2) as? Int ?? 0
         }
         if cocciControlArray.count == 1{
             wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
             fourthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-        }
-        else{
+        } else {
             wdDosageTextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:3) as? String
             fourthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:3) as? Int ?? 0
         }
         if cocciControlArray.count == 1{
             feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
             fifthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-        }
-        else{
+        } else {
             feed5textField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:4) as? String
             fifthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:4) as? Int ?? 0
         }
         if cocciControlArray.count == 1{
             feed6TextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:i) as? String
             sixthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:i) as? Int ?? 0
-        }
-        else{
+        } else {
             feed6TextField.text =  (cocciControlArray.value(forKey:"dosage") as AnyObject).object(at:5) as? String
             sixthMolID = (cocciControlArray.value(forKey:"dosemoleculeId") as AnyObject).object(at:5) as? Int ?? 0
         }
@@ -1161,38 +1078,32 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func cocciFromDaysDataSetup(_ i: Int) {
         if cocciControlArray.count == 1{
             FromstarterDurationTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             FromstarterDurationTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:0) as? String
         }
         if cocciControlArray.count == 1{
             FromGrowerTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             FromGrowerTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:1) as? String
         }
         if cocciControlArray.count == 1{
             fromFinisherTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             fromFinisherTextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:2) as? String
         }
         if cocciControlArray.count == 1{
             fromWDtextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             fromWDtextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:3) as? String
         }
         if cocciControlArray.count == 1{
             from5TextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             from5TextField.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:4) as? String
         }
         if cocciControlArray.count == 1{
             from6teXTfield.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             from6teXTfield.text =  (cocciControlArray.value(forKey:"fromDays") as AnyObject).object(at:5) as? String
         }
     }
@@ -1200,187 +1111,162 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func cocciToDaysDataSetup(_ i: Int) {
         if cocciControlArray.count == 1{
             toStarterTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             toStarterTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:0) as? String
         }
         if cocciControlArray.count == 1{
             toGrowerTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             toGrowerTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:1) as? String
         }
         if cocciControlArray.count == 1{
             toFinisherTextField.text = (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             toFinisherTextField.text = (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:2) as? String
         }
         if cocciControlArray.count == 1{
             toWdTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             toWdTextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:3) as? String
         }
         if cocciControlArray.count == 1{
             toFeed5TextFeidl.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             toFeed5TextFeidl.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:4) as? String
         }
         if cocciControlArray.count == 1{
             toFeed6TextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:i) as? String
-        }
-        else{
+        } else {
             toFeed6TextField.text =  (cocciControlArray.value(forKey:"toDays") as AnyObject).object(at:5) as? String
         }
     }
     
+    fileprivate func handleCoccoControlArrayValidation(_ i: Int) {
+        var str1 = String()
+        if cocciControlArray.count == 1 {
+            str1 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
+        } else {
+            
+            str1 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String)!
+        }
+        if (str1.count) > 0 {
+            coccidsisGrowerDrinking.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
+        } else {
+            
+            coccidsisGrowerDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+            
+        }
+        var str2 = String()
+        if cocciControlArray.count == 1{
+            str2 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
+        } else {
+            
+            str2 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String)!
+        }
+        
+        if (str2.count) > 0 {
+            
+            cocciFinisherDrinkingWater.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
+        } else {
+            cocciFinisherDrinkingWater.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+            
+        }
+    }
+    
+    fileprivate func handleCoccoControlArrayFiveMoleculeIBLValidations(_ i: Int) {
+        if cocciControlArray.count == 1{
+            str4 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as! String
+        } else {
+            str4 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:4) as! String
+            )
+        }
+        
+        if (str4.count) > 0 {
+            fivthMoleculelBL.text = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
+        } else {
+            fivthMoleculelBL.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+            
+        }
+        
+        if cocciControlArray.count == 1 {
+            str5 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as! String
+        } else {
+            str5 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:5) as! String
+        }
+        
+        if (str5.count) > 0 {
+            sixthMoleculeLbl.text = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
+        } else {
+            sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+        }
+    }
+    
+    fileprivate func handleCocciControlAndDateStrValidations(_ i: Int) {
+        if cocciControlArray.count == 1 {
+            
+            let dateStr = "\((cocciControlArray.value(forKey:"feedDate") as AnyObject).object(at:i) as? String)"
+            if dateStr.contains(miliSecond) {
+                let str = dateStr.replacingOccurrences(of: miliSecond, with: "")
+                lblDate.text  = str
+            } else {
+                lblDate.text = "\((cocciControlArray.value(forKey:"feedDate") as AnyObject).object(at:i))"
+            }
+            
+        } else {
+            let dateStr = "\((cocciControlArray.value(forKey:"feedDate") as AnyObject).object(at:0))"
+            if dateStr.contains(miliSecond) {
+                let str = dateStr.replacingOccurrences(of: miliSecond, with: "")
+                lblDate.text  = str
+            } else {
+                lblDate.text = "\((cocciControlArray.value(forKey:"feedDate") as AnyObject).object(at:0))"
+            }
+        }
+    }
+    
     fileprivate func setCocciFeedData() {
-        for  i in 0..<cocciControlArray.count {
+        for i in 0..<cocciControlArray.count {
             
             let str = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
             if ((str?.count)! > 0) {
                 coccidsisStartrDrinking.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:0) as? String
-            }
-            else
-            {
+            } else {
                 coccidsisStartrDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
             }
-            var str1 = String()
-            if cocciControlArray.count == 1 {
-                str1 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
-            }
-            else {
-                
-                str1 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String)!
-            }
-            if (str1.count) > 0 {
-                coccidsisGrowerDrinking.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:1) as? String
-            }
-            else {
-                
-                coccidsisGrowerDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                
-            }
-            var str2 = String()
-            if cocciControlArray.count == 1{
-                str2 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
-            }
-            else{
-                
-                str2 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String)!
-            }
-            
-            if (str2.count) > 0
-            {
-                
-                cocciFinisherDrinkingWater.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:2) as? String
-            }
-            else
-            {
-                cocciFinisherDrinkingWater.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                
-            }
+            handleCoccoControlArrayValidation(i)
             var str3 = String()
             if cocciControlArray.count == 1{
                 str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
-            }
-            else{
+            } else {
                 
                 str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String)!
             }
             
-            if (str3.count) > 0
-            {
+            if (str3.count) > 0 {
                 
                 coccidiosisWdDrinking.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
-            }
-            else
-            {
+            } else {
                 coccidiosisWdDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                 
             }
             
-            if cocciControlArray.count == 1{
-                str4 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as! String
-            }
-            else{
-                
-                str4 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:4) as! String
-                )
-                
-            }
-            
-            if (str4.count) > 0
-            {
-                fivthMoleculelBL.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:4) as? String
-            }
-            else
-            {
-                fivthMoleculelBL.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                
-            }
-            
-            if cocciControlArray.count == 1{
-                str5 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as! String
-            }
-            else{
-                
-                str5 = (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:5) as! String
-            }
-            
-            if (str5.count) > 0
-            {
-                sixthMoleculeLbl.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:5) as? String
-            }
-            else
-            {
-                sixthMoleculeLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-            }
+            handleCoccoControlArrayFiveMoleculeIBLValidations(i)
             
             cocciDossageDataSetup(i)
             cocciFromDaysDataSetup(i)
             cocciToDaysDataSetup(i)
             if cocciControlArray.count == 1{
                 coccidiosisVaccineDrinkin.text =  (cocciControlArray.value(forKey:"coccidiosisVaccine") as AnyObject).object(at:i) as? String
-            }
-            else{
+            } else {
                 coccidiosisVaccineDrinkin.text =  (cocciControlArray.value(forKey:"coccidiosisVaccine") as AnyObject).object(at:0) as? String
             }
             if cocciControlArray.count == 1{
                 feedProgramTextField.text =
                 (cocciControlArray.value(forKey:"feedProgram") as AnyObject).object(at:i) as? String
-            }
-            else{
+            } else {
                 feedProgramTextField.text =
                 (cocciControlArray.value(forKey:"feedProgram") as AnyObject).object(at:0) as? String
             }
-            if cocciControlArray.count == 1{
-                
-                let dateStr = "\((cocciControlArray.value(forKey:"feedDate") as AnyObject).object(at:i) as? String)"
-                if dateStr.contains(miliSecond) {
-                    let str = dateStr.replacingOccurrences(of: miliSecond, with: "")
-                    lblDate.text  = str
-                }
-                else
-                {
-                    lblDate.text = "\((cocciControlArray.value(forKey:"feedDate") as AnyObject).object(at:i))"
-                }
-                
-            }
-            else{
-                let dateStr = "\((cocciControlArray.value(forKey:"feedDate") as AnyObject).object(at:0))"
-                if dateStr.contains(miliSecond)
-                {
-                    let str = dateStr.replacingOccurrences(of: miliSecond, with: "")
-                    lblDate.text  = str
-                }
-                else
-                {
-                    lblDate.text = "\((cocciControlArray.value(forKey:"feedDate") as AnyObject).object(at:0))"
-                }
-            }
+            handleCocciControlAndDateStrValidations(i)
         }
     }
     
@@ -1399,26 +1285,20 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func setSelectedFarmName() {
         let ftitle = NSMutableString()
         
-        for i in 0..<feedNameArr.count
-        {
+        for i in 0..<feedNameArr.count {
             let farms = feedNameArr.object(at:i) as! CaptureNecropsyDataTurkey
             let strfarmName = farms.farmName! as String
             // addFarmSelectLbl.text = strfarmName
             var label:UILabel
-            if (i == 0){
+            if (i == 0) {
                 label = UILabel()
                 label.frame = CGRect(x: 50, y: 519, width: 111, height: 21)
                 ftitle.append( strfarmName + " " )
                 
-            }
-            
-            else{
-                
+            } else {
                 label  = UILabel()
                 label.frame = CGRect(x: 50, y: 519, width: 111*(CGFloat(i)+1)+10, height: 21)
-                
-                ftitle.append(", " + strfarmName + " " )
-                
+                ftitle.append(", " + strfarmName + " ")
             }
             
             label.textAlignment = NSTextAlignment.center
@@ -1431,8 +1311,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func setDifferentVaccinationDatainArr() {
         if addfeed == "addfeed" {
             feedProgadd = "ExtingFeeed"
-        }
-        else{
+        } else {
             cocciControlArray = CoreDataHandlerTurkey().fetchAllCocciControlTurkey(self.FeedIdFromExisting as NSNumber)
             AntiboticArray = CoreDataHandlerTurkey().fetchAntiboticTurkey(self.FeedIdFromExisting as NSNumber)
             AlternativeArray = CoreDataHandlerTurkey().fetchAlternativeTurkey(self.FeedIdFromExisting as NSNumber)
@@ -1526,15 +1405,13 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                     feedNameArr = CoreDataHandlerTurkey().FetchFarmNameOnNecropsystep1neccIdTurkey(necId as NSNumber, feedProgramName: feedProgramTextField.text!,feedId : feedId as NSNumber).mutableCopy() as! NSMutableArray
                 }
                 
-                if (feedNameArr.count > 0)
-                {
+                if (feedNameArr.count > 0) {
                     setSelectedFarmName()
                 }
                 
             }
             
-        }
-        else{
+        } else {
             addFarmBtnOutlet.isHidden = true
             addFarmSelectLbl.isHidden = true
             addFarmDroper.isHidden = true
@@ -1576,7 +1453,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 let bt = btn as! UIButton
                 if bt.titleLabel?.text == NSLocalizedString(Constants.coccidioStr, comment: "") {
                     bt.isSelected = true
-                } else{
+                } else {
                     bt.isSelected = false
                 }
             }
@@ -1617,17 +1494,13 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
         if (tag == 0 ){
             cocciControlArrayfromServer =  CoreDataHandlerTurkey().fetchMoleCuleTurkeyLngId(lngId: 1).mutableCopy() as! NSMutableArray
-        }
-        else if (tag == 1){
+        } else if (tag == 1){
             AlternativeArrayfromServer =  CoreDataHandlerTurkey().fetchMoleCuleTurkeyLngId(lngId: 1).mutableCopy() as! NSMutableArray
-        }
-        else if (tag == 2){
+        } else if (tag == 2){
             AntiboticArrayfromServer =  CoreDataHandlerTurkey().fetchMoleCuleTurkeyLngId(lngId: 1).mutableCopy() as! NSMutableArray
-        }
-        else if (tag == 3){
+        } else if (tag == 3){
             MyCoxtinBindersArrayfromServer =  CoreDataHandlerTurkey().fetchMoleCuleTurkeyLngId(lngId: 1).mutableCopy() as! NSMutableArray
-        }
-        else{
+        } else {
             serviceDataHldArrfromServer =  CoreDataHandlerTurkey().fetchMoleCuleTurkeyLngId(lngId: 1).mutableCopy() as! NSMutableArray
         }
         
@@ -1689,7 +1562,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 let bt = btn as! UIButton
                 if bt.titleLabel?.text == NSLocalizedString(Constants.mytoxinStr, comment: "") {
                     bt.isSelected = true
-                } else{
+                } else {
                     bt.isSelected = false
                 }
             }
@@ -1711,7 +1584,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 let bt = btn as! UIButton
                 if bt.titleLabel?.text == NSLocalizedString("Alternative", comment: "") {
                     bt.isSelected = true
-                } else{
+                } else {
                     bt.isSelected = false
                 }
             }
@@ -1734,7 +1607,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 let bt = btn as! UIButton
                 if bt.titleLabel?.text == NSLocalizedString("Antibiotic", comment: "") {
                     bt.isSelected = true
-                } else{
+                } else {
                     bt.isSelected = false
                 }
             }
@@ -1769,8 +1642,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         cocciControlArrayfromServer =  CoreDataHandlerTurkey().fetchMoleCuleTurkeyLngId(lngId: 1).mutableCopy() as! NSMutableArray
         view.endEditing(true)
         Allbuttonbg = 0
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
+        if  Bundle.main.versionNumber > "7.5.1" {
             starterDosageTextField.text = appDelegateObj.selectStr
         }
         
@@ -1784,8 +1656,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
         view.endEditing(true)
         Allbuttonbg = 1
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
+        if  Bundle.main.versionNumber > "7.5.1" {
             growerDosageCoccidiosisTEXT.text = appDelegateObj.selectStr
         }
         tableViewpop()
@@ -1800,8 +1671,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
         view.endEditing(true)
         Allbuttonbg = 2
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
+        if  Bundle.main.versionNumber > "7.5.1" {
             finisherDosageTxtField.text = appDelegateObj.selectStr
         }
         tableViewpop()
@@ -1815,8 +1685,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         cocciControlArrayfromServer =  CoreDataHandlerTurkey().fetchMoleCuleTurkeyLngId(lngId: 1).mutableCopy() as! NSMutableArray
         view.endEditing(true)
         Allbuttonbg = 3
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
+        if  Bundle.main.versionNumber > "7.5.1" {
             wdDosageTextField.text =  appDelegateObj.selectStr
         }
         tableViewpop()
@@ -1830,8 +1699,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         cocciControlArrayfromServer =  CoreDataHandlerTurkey().fetchMoleCuleTurkeyLngId(lngId: 1).mutableCopy() as! NSMutableArray
         view.endEditing(true)
         Allbuttonbg = 40
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
+        if  Bundle.main.versionNumber > "7.5.1" {
             feed5textField.text = appDelegateObj.selectStr
         }
         tableViewpop()
@@ -1846,8 +1714,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         cocciControlArrayfromServer =  CoreDataHandlerTurkey().fetchMoleCuleTurkeyLngId(lngId: 1).mutableCopy() as! NSMutableArray
         
         Allbuttonbg = 50
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
+        if  Bundle.main.versionNumber > "7.5.1" {
             feed6TextField.text = appDelegateObj.selectStr
         }
         tableViewpop()
@@ -2368,8 +2235,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     fileprivate func callSyncApiMethd() {
         if self.exitPopUP.tag == 10{
-            if self.allSessionArr().count > 0
-            {
+            if self.allSessionArr().count > 0 {
                 if ConnectionManager.shared.hasConnectivity() {
                     Helper.showGlobalProgressHUDWithTitle(self.view,title : NSLocalizedString("Data syncing...", comment: ""))
                     self.callSyncApi()
@@ -2378,16 +2244,14 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                     
                     Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.offline, comment: ""))
                 }
-            } else{
+            } else {
                 
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("Data not available for syncing.", comment: ""))
             }
             
-        }
-        else if self.exitPopUP.tag == 20{
+        } else if self.exitPopUP.tag == 20{
             self.clickHelp()
-        }
-        else{
+        } else {
             self.navigationController?.popViewController(animated:true)
         }
     }
@@ -2397,18 +2261,14 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             UserDefaults.standard.set("feed0", forKey: "feed0")
             UserDefaults.standard.synchronize()
             feed = 0
-        }
-        else{
+        } else {
             if (strYesPop == NSLocalizedString("Yes", comment: "")){
                 
                 feed = feeid
-            }
-            else{
+            } else {
                 if (navigatePostingsession == "PostingFeedProgram"){
                     feed = feeid
-                }
-                else
-                {
+                } else {
                     feed = feeid-1
                 }
             }
@@ -2484,8 +2344,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                     self.clickHelpPopUp()
                 }
                 
-            }
-            else{
+            } else {
                 
                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.isFeedProgramClick = true
@@ -2819,8 +2678,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         if lngId == 3 {
             
             lblDate.text =  "Sélectionner une date"
-        }
-        else{
+        } else {
             lblDate.text =  "Select date"
         }
         ////print("value")
@@ -2952,8 +2810,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         if exitPopUP.tag == 10 {
             btnTagsave = 2
             callSaveMethod(btnTagSave: btnTagsave)
-        }
-        else if exitPopUP.tag == 20{
+        } else if exitPopUP.tag == 20{
             btnTagsave = 2
             callSaveMethod(btnTagSave: btnTagsave)
             
@@ -2978,8 +2835,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         if tableView == farmTableView{
             return addFarmArray.count
             
-        }
-        else{
+        } else {
             
             switch btnTag {
             case 0:
@@ -3020,8 +2876,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             let c = addFarmArrayWithUnCheckForm.object(at: indexPath.row) as! CaptureNecropsyDataTurkey
             
-            if c.isChecked == 1
-            {
+            if c.isChecked == 1 {
                 cell.accessoryType = .checkmark
             } else {
                 cell.accessoryType = .none
@@ -3034,9 +2889,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     fileprivate func handleBtnTag100(_ indexPath: IndexPath, _ cell: UITableViewCell) {
         if indexPath.row > fetchDosage.count {
             
-        }
-        else
-        {
+        } else {
             let cocoiControll = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
             cell.textLabel!.text = cocoiControll
         }
@@ -3532,8 +3385,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             let newString: NSString =
             currentString.replacingCharacters(in: range, with: string) as NSString
             let countdots = (textField.text?.components(separatedBy: ".").count)! - 1
-            if countdots > 0 && string == "."
-            {
+            if countdots > 0 && string == "." {
                 return false
             }
             return string == numberFiltered && newString.length <= maxLength
@@ -3581,8 +3433,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     func leftController(_ leftController: UserListView, didSelectTableView tableView: UITableView ,indexValue : String){
         
-        if indexValue == "Log Out"
-        {
+        if indexValue == "Log Out" {
             
             UserDefaults.standard.removeObject(forKey: "login")
             if ConnectionManager.shared.hasConnectivity() {
@@ -3649,8 +3500,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                ( antiFromDurationThirdTextField.text! >= antiToDurationThirdTextField.text!) ||
                ( antiFromDurationFourTextField.text! >= antiToDurationFourTextField.text!)){
                 return false
-            }
-            else{
+            } else {
                 return true
             }
         }
@@ -3660,8 +3510,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             if(( alternativeFromFirstTextField.text! >= alternativeToFirstTextField.text! ) || ( alternativeFromSecondTextField.text! >=
                                                                                                  alternativeToSecondTextField.text! ) || ( alternativeFromthirdTextField.text! >= alternativeTothirdTextField.text! ) || ( alternativeFromFourTextField.text! >= alternativeToFourTextField.text! )){
                 return false
-            }
-            else{
+            } else {
                 return true
             }
         }
@@ -3670,8 +3519,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             if(( myFromFirstTextField.text! >= myToFirstTextField.text! ) || ( myFromSecondTextField.text! >= myToSecondTextField.text! ) || ( myFromThirdTextField.text! >= myToFirstTextField.text! ) || ( myFromFourTextField.text! >= myToFourTextField.text! )){
                 return false
-            }
-            else{
+            } else {
                 return true
             }
         }
@@ -3995,7 +3843,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                     label  = UILabel(frame: CGRect(x: 50,y: 519,width: 111,height: 21))
                     ftitle.append( feepRGMR + " " )
                     
-                } else{
+                } else {
                     
                     label  = UILabel(frame: CGRect(x: 50,y: 519,width: 111*(CGFloat(i)+1)+10,height: 21))
                     
@@ -4011,27 +3859,22 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         } else {
             addFarmSelectLbl.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
         }
-        
-        
-        
         btnTag = 0
         backBtnnFrame.removeFromSuperview()
     }
+    
     func allSessionArr() -> NSMutableArray {
         
         let postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
         let cNecArr = CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncTurkey(true)
         let necArrWithoutPosting = NSMutableArray()
         
-        for j in 0..<cNecArr.count
-        {
+        for j in 0..<cNecArr.count {
             let captureNecropsyData = cNecArr.object(at:j)  as! CaptureNecropsyDataTurkey
             necArrWithoutPosting.add(captureNecropsyData)
-            for w in 0..<necArrWithoutPosting.count - 1
-            {
+            for w in 0..<necArrWithoutPosting.count - 1 {
                 let c = necArrWithoutPosting.object(at:w)  as! CaptureNecropsyDataTurkey
-                if c.necropsyId == captureNecropsyData.necropsyId
-                {
+                if c.necropsyId == captureNecropsyData.necropsyId {
                     necArrWithoutPosting.remove(c)
                 }
                 
@@ -4042,15 +3885,13 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         let allPostingSessionArr = NSMutableArray()
         
         var sessionId = NSNumber()
-        for i in 0..<postingArrWithAllData.count
-        {
+        for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at:i) as! PostingSessionTurkey
             sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
-        for i in 0..<necArrWithoutPosting.count
-        {
+        for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at:i) as! CaptureNecropsyDataTurkey
             sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
@@ -4086,11 +3927,9 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 self.showExitAlertWith(msg: "Please connect \(farms.count) farm(s) with feed program. Do you want not do it now?", tag: 20)
                 return
             }
-        }
-        else if farms.count > 0{
+        } else if farms.count > 0{
             self.showExitAlertWith(msg: "Please connect \(farms.count) farm(s) with feed program. Do you want not do it now?", tag: 20)
-        }
-        else{
+        } else {
             clickHelp()
         }
         
@@ -4101,8 +3940,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             // 10 < 12
             //not fill < 10 alert please fill first value
             //10 not fill
-        }
-        else if antiFromDurationFirstTextField.text! > antiToDurationFirstTextField.text! {
+        } else if antiFromDurationFirstTextField.text! > antiToDurationFirstTextField.text! {
             //fromToAlert()
             //12 < 10 alert
             
@@ -4194,23 +4032,18 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
         // fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
         
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
-            if coccidsisStartrDrinking.text == appDelegateObj.selectStr
-            {
+        if  Bundle.main.versionNumber > "7.5.1" {
+            if coccidsisStartrDrinking.text == appDelegateObj.selectStr {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(selectMoleculeFeed, comment: ""))
                 return
             }
             
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(firstMolID as NSNumber)
-            if fetchDosage.count == 0
-            {
+            if fetchDosage.count == 0 {
                 fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
             }
             
-        }
-        else
-        {
+        } else {
             
             fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
         }
@@ -4224,23 +4057,18 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     }
     @IBAction func feedType2Action(_ sender: Any) {
         
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
+        if  Bundle.main.versionNumber > "7.5.1" {
             
-            if coccidsisGrowerDrinking.text == appDelegateObj.selectStr
-            {
+            if coccidsisGrowerDrinking.text == appDelegateObj.selectStr {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(selectMoleculeFeed, comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(secoundMolID as NSNumber)
-            if fetchDosage.count == 0
-            {
+            if fetchDosage.count == 0 {
                 fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
             }
             
-        }
-        else
-        {
+        } else {
             
             fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
         }
@@ -4255,22 +4083,17 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     @IBAction func feedType3Action(_ sender: Any) {
         // fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
         
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
-            if cocciFinisherDrinkingWater.text == appDelegateObj.selectStr
-            {
+        if  Bundle.main.versionNumber > "7.5.1" {
+            if cocciFinisherDrinkingWater.text == appDelegateObj.selectStr {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(selectMoleculeFeed, comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(thirdMolID as NSNumber)
-            if fetchDosage.count == 0
-            {
+            if fetchDosage.count == 0 {
                 fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
             }
             
-        }
-        else
-        {
+        } else {
             
             fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
         }
@@ -4283,22 +4106,17 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
     }
     @IBAction func feedType4Action(_ sender: Any) {
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
-            if coccidiosisWdDrinking.text == appDelegateObj.selectStr
-            {
+        if  Bundle.main.versionNumber > "7.5.1" {
+            if coccidiosisWdDrinking.text == appDelegateObj.selectStr {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(selectMoleculeFeed, comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(fourthMolID as NSNumber)
-            if fetchDosage.count == 0
-            {
+            if fetchDosage.count == 0 {
                 fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
             }
             
-        }
-        else
-        {
+        } else {
             
             fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
         }
@@ -4311,23 +4129,18 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
     }
     @IBAction func feedType5Action(_ sender: Any) {
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
-            if fivthMoleculelBL.text == appDelegateObj.selectStr
-            {
+        if  Bundle.main.versionNumber > "7.5.1" {
+            if fivthMoleculelBL.text == appDelegateObj.selectStr {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(selectMoleculeFeed, comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(fifthMolID as NSNumber)
             
-            if fetchDosage.count == 0
-            {
+            if fetchDosage.count == 0 {
                 fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
             }
             
-        }
-        else
-        {
+        } else {
             
             fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
         }
@@ -4340,23 +4153,18 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
     }
     @IBAction func feedType6Action(_ sender: Any) {
-        if  Bundle.main.versionNumber > "7.5.1"
-        {
-            if sixthMoleculeLbl.text == appDelegateObj.selectStr
-            {
+        if Bundle.main.versionNumber > "7.5.1" {
+            if sixthMoleculeLbl.text == appDelegateObj.selectStr {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(selectMoleculeFeed, comment: ""))
                 return
             }
             fetchDosage = CoreDataHandler().fetchTurkeyDossgaeWithMoleculeId(sixthMolID as NSNumber)
             
-            if fetchDosage.count == 0
-            {
+            if fetchDosage.count == 0 {
                 fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
             }
             
-        }
-        else
-        {
+        } else {
             fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
         }
         
@@ -4701,8 +4509,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             //            dateFormatter2.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
             lblDate.text = dateFormatter2.string(from: datePicker.date) as String
-        }
-        else{
+        } else {
             let dateFormatter2 = DateFormatter()
             dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
             //            dateFormatter2.calendar = Calendar(identifier: .gregorian)

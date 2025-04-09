@@ -1104,7 +1104,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                             let arr : NSArray = value as! NSArray
                           
                             UserDefaults.standard.set("Yes", forKey: "Success")
-                            if arr.count>0{
+                            if arr.count>0 {
                                 CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramTurkey(self.postingId)
                                 CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramCocoiiSinleTurkey(self.postingId)
                                 CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramAlternativeSinleTurkey(self.postingId)
@@ -1204,7 +1204,50 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
     }
     
-    func getCNecStep1Data(){
+    fileprivate func handleArrAndSaveNecropsyDataValidations(_ arr: NSArray) {
+        if arr.count>0 {
+            CoreDataHandlerTurkey().deleteDataWithPostingIdCaptureStepDataTurkey(self.postingId)
+            for i in 0..<arr.count {
+                var posttingId = Int ()
+                let sessionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
+                let devSessionId = (arr.object(at: i) as AnyObject).value(forKey: "deviceSessionId") as! String
+                let lngId  = (arr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! NSNumber
+                let custId = (arr.object(at: i) as AnyObject).value(forKey: "CustomerId") as! Int
+                let complexId = (arr.object(at: i) as AnyObject).value(forKey: "ComplexId") as! Int
+                let complexName = (arr.object(at: i) as AnyObject).value(forKey: "ComplexName") as! String
+                let sessionDateOutlet = (arr.object(at: i) as AnyObject).value(forKey: "SessionDate") as! String
+                
+                let seesDat = self.convertDateFormater(sessionDateOutlet)
+                let farmArr = (arr.object(at:i) as AnyObject).value(forKey:  "Farms")
+                if (farmArr as AnyObject).count>0 {
+                    self.saveNecropsyDataInDataBase(farmArr, sessionId, &posttingId, complexName, seesDat, complexId, custId, devSessionId)
+                }
+            }
+            let necArr = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdTurkey()
+            if necArr.count>0 {
+                self.getPostingDataFromServerforNecorpsy()
+            }
+        } else {
+            self.getPostingDataFromServerforNecorpsy()
+        }
+    }
+    
+    fileprivate func handleGetFarmListBySessionIdAPISucessResponse(_ value: Any) {
+        if value != nil {
+            
+            UserDefaults.standard.set("Yes", forKey: "Success")
+            if value is NSArray{
+                let arr : NSArray = value as! NSArray
+                
+                self.handleArrAndSaveNecropsyDataValidations(arr)
+            } else {
+                self.getPostingDataFromServerforNecorpsy()
+                
+            }
+        }
+    }
+    
+    func getCNecStep1Data() {
         if WebClass.sharedInstance.connected() {
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
            // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
@@ -1221,63 +1264,18 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                     
                 }
                 
-                switch response.result{
+                switch response.result {
                 case let .success(value):
-                    if value != nil {
-                        
-                        UserDefaults.standard.set("Yes", forKey: "Success")
-                        if value is NSArray{
-                            let arr : NSArray = value as! NSArray
-                            
-                            if arr.count>0{
-                                CoreDataHandlerTurkey().deleteDataWithPostingIdCaptureStepDataTurkey(self.postingId)
-                                for  i in 0..<arr.count {
-                                    var posttingId =  Int ()
-                                    let sessionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
-                                    let devSessionId = (arr.object(at: i) as AnyObject).value(forKey: "deviceSessionId") as! String
-                                    let lngId  = (arr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! NSNumber
-                                    let custId = (arr.object(at: i) as AnyObject).value(forKey: "CustomerId") as! Int
-                                    let complexId = (arr.object(at: i) as AnyObject).value(forKey: "ComplexId") as! Int
-                                    let complexName = (arr.object(at: i) as AnyObject).value(forKey: "ComplexName") as! String
-                                    let sessionDateOutlet = (arr.object(at: i) as AnyObject).value(forKey: "SessionDate") as! String
-                                    
-                                    let seesDat = self.convertDateFormater(sessionDateOutlet)
-                                    let farmArr = (arr.object(at:i) as AnyObject).value(forKey:  "Farms")
-                                    if (farmArr as AnyObject).count>0{
-                                        self.saveNecropsyDataInDataBase(farmArr, sessionId, &posttingId, complexName, seesDat, complexId, custId, devSessionId)
-                                    }
-                                }
-                                let necArr = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdTurkey()
-                                if necArr.count>0{
-                                    self.getPostingDataFromServerforNecorpsy()
-                                }
-                            }
-                            else{
-                                self.getPostingDataFromServerforNecorpsy()
-                            }
-                        }
-                        else{
-                            self.getPostingDataFromServerforNecorpsy()
-                            
-                        }
-                    }
+                    self.handleGetFarmListBySessionIdAPISucessResponse(value)
                 case .failure(let encodingError):
                     
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        
-                        print(err)
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                    if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
                         print (encodingError)
                         print (responseString)
                     }
                 }
             }
-            
-        } else{
-            
         }
-        /************************************************************************************/
-        
     }
     
     func convertDateFormater(_ date: String) -> String {

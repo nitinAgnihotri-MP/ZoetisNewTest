@@ -284,17 +284,17 @@ class CoreDataHandler : NSObject  {
     }
     // MARK: 🟠 Fetch Saved Field Strain Data  *******************************************/
     
-    func getHatcheryDataFromServer(_ dict : NSDictionary)  {
+    func getHatcheryDataFromServer(_ dict : NSDictionary) {
         let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
         
         var allkeyArr = dict.allKeys as NSArray
         allkeyArr = allkeyArr.sorted(by: {($0 as! String).localizedStandardCompare($1 as! String) == .orderedAscending}) as NSArray
         
-        for  j in 0..<allkeyArr.count {
+        for j in 0..<allkeyArr.count {
             let person = NSManagedObject(entity: entity!, insertInto: managedContext)
             let stringValidate = allkeyArr.object(at: j) as! String
             
-            if  (stringValidate == "fieldStrain1") {
+            if (stringValidate == "fieldStrain1") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute1Id") as! Int {
@@ -340,12 +340,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-//                case 22:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 24:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 21:
-//                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -354,8 +348,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
-            }
-            else if(stringValidate == "fieldStrain2")   {
+            } else if(stringValidate == "fieldStrain2") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute2Id") as! Int {
@@ -401,12 +394,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -416,8 +403,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "fieldStrain3")  {
+            } else if (stringValidate == "fieldStrain3")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute3Id") as! Int {
@@ -463,12 +449,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -477,8 +457,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "fieldStrain4")  {
+            } else if (stringValidate == "fieldStrain4")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute4Id") as! Int {
@@ -524,12 +503,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -539,8 +512,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "fieldStrain5")  {
+            } else if (stringValidate == "fieldStrain5")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute5Id") as! Int {
@@ -586,12 +558,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -601,8 +567,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "fieldStrain6")  {
+            } else if (stringValidate == "fieldStrain6")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute6Id") as! Int {
@@ -648,12 +613,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -663,8 +622,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "fieldStrain7")  {
+            } else if (stringValidate == "fieldStrain7")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute7Id") as! Int {
@@ -710,12 +668,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -725,8 +677,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "fieldStrain8") {
+            } else if (stringValidate == "fieldStrain8") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute8Id") as! Int {
@@ -772,12 +723,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -787,8 +732,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
-            }
-            else if (stringValidate == "fieldStrain9") {
+            } else if (stringValidate == "fieldStrain9") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain9"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute9Id") as! Int {
@@ -835,12 +779,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -850,8 +788,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
                 
-            }
-            else if (stringValidate == "fieldStrain10") {
+            } else if (stringValidate == "fieldStrain10") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute10Id") as! Int {
@@ -897,12 +834,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -913,8 +844,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
                 person.setValue(false, forKey:"isSync")
                 
-            }
-            else if (stringValidate == "fieldStrain11") {
+            } else if (stringValidate == "fieldStrain11") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain11"), forKey:"strain")
                 switch dict.value(forKey: "fieldRoute11Id") as! Int {
@@ -960,12 +890,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -9940,108 +9864,108 @@ class CoreDataHandler : NSObject  {
         return captureNecSkeltetonArray
     }
     // MARK: 🟢 Fetch Observation name with bird & farm Name
-    func fetchObsWithBirdandFarmName(_ formName : String , birdNo : NSNumber , necId : NSNumber)-> NSMutableDictionary
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    fileprivate func handleNecropsyValdiationsFetchObsWithBirdFarmName(_ captureNecropsyViewData: CaptureNecropsyViewData, _ d: NSMutableDictionary, _ trimmedString: String) {
+        if captureNecropsyViewData.measure == "Y,N"
+        {
+            if captureNecropsyViewData.objsVisibilty != nil{
+                d.setValue(captureNecropsyViewData.objsVisibilty!, forKey: trimmedString)
+            }
+            
+        }
+        else if captureNecropsyViewData.measure == "Actual"
+        {
+            
+            if captureNecropsyViewData.actualText?.isEmpty == false
+            {
+                d.setValue(captureNecropsyViewData.actualText!, forKey: trimmedString)
+            }
+            
+        }
+        
+        else if captureNecropsyViewData.measure == "F,M"
+        {
+            if captureNecropsyViewData.actualText?.isEmpty == false
+            {
+                d.setValue(captureNecropsyViewData.actualText!, forKey: trimmedString)
+            }
+        }
+        
+        else
+        {
+            if captureNecropsyViewData.obsPoint != nil{
+                d.setValue(captureNecropsyViewData.obsPoint!, forKey: trimmedString)
+            }
+        }
+    }
+    
+    fileprivate func handleNecropsyTrimmedStringValidations(_ c: NSArray, _ d: NSMutableDictionary) {
+        for i in 0..<c.count {
+            let captureNecropsyViewData = c.object(at: i) as! CaptureNecropsyViewData
+            
+            var trimmedString =
+            captureNecropsyViewData.obsName!.replacingOccurrences(of: "/", with: "")
+            trimmedString =
+            captureNecropsyViewData.obsName!.replacingOccurrences(of: " ", with: "")
+            
+            if trimmedString == "BursaLesions"{
+                trimmedString = "BursaLesionScore"
+            }
+            else if  trimmedString == "MuscularHemorrhages"{
+                trimmedString = "MuscularHemorrhagies"
+            }
+            else if  trimmedString == "Cardiovascular/Hydropericardium"{
+                trimmedString = "CardiovascularHydropericardium"
+            }
+            else if  trimmedString == "TBD1"{
+                trimmedString = "WoodyBreast"
+            }
+            else if  trimmedString == "TBD2"{
+                trimmedString = "Pigmentation"
+            }
+            else if  trimmedString == "TBD3"{
+                trimmedString = "IntestinalContents"
+            }
+            else if  trimmedString == "TBD4"{
+                trimmedString = "ThickenedIntestine"
+            }
+            else if  trimmedString == "TBD5"{
+                trimmedString = "ThinIntestine"
+            }
+            else if  trimmedString == "TBD6"{
+                trimmedString = "Dehydrated"
+            }
+            else if  trimmedString == "TBD7"{
+                trimmedString = "ThymusAtrophy"
+            }
+            else if  trimmedString == "FemoralHeadSeparation(FHS)"{
+                trimmedString = "FemoralHeadSeparationFHS"
+            }
+            else if  trimmedString == "EimeriaTenellaMicro"{
+                trimmedString = "TenellaMicro"
+            }
+            else if trimmedString == Constants.maleFemaleStr
+            {
+                trimmedString = "MaleFemale"
+            }
+            handleNecropsyValdiationsFetchObsWithBirdFarmName(captureNecropsyViewData, d, trimmedString)
+        }
+    }
+    
+    func fetchObsWithBirdandFarmName(_ formName : String , birdNo : NSNumber , necId : NSNumber)-> NSMutableDictionary {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchPredicate = NSPredicate(format: "birdNo == %@  AND formName == %@ AND necropsyId == %@", birdNo, formName,necId)
-        let fetchRequest                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate                = fetchPredicate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
+        fetchRequest.predicate = fetchPredicate
         fetchRequest.returnsObjectsAsFaults = false
-        let d  =  NSMutableDictionary()
+        let d = NSMutableDictionary()
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
+            if let results = fetchedResult {
                 captureNecSkeltetonArray = results as NSArray
                 let c = results as NSArray
-                for i in 0..<c.count {
-                    let captureNecropsyViewData = c.object(at: i) as! CaptureNecropsyViewData
-                    
-                    var trimmedString =
-                    captureNecropsyViewData.obsName!.replacingOccurrences(of: "/", with: "")
-                    trimmedString =
-                    captureNecropsyViewData.obsName!.replacingOccurrences(of: " ", with: "")
-                    
-                    if trimmedString == "BursaLesions"{
-                        trimmedString = "BursaLesionScore"
-                    }
-                    else if  trimmedString == "MuscularHemorrhages"{
-                        trimmedString = "MuscularHemorrhagies"
-                    }
-                    else if  trimmedString == "Cardiovascular/Hydropericardium"{
-                        trimmedString = "CardiovascularHydropericardium"
-                    }
-                    else if  trimmedString == "TBD1"{
-                        trimmedString = "WoodyBreast"
-                    }
-                    else if  trimmedString == "TBD2"{
-                        trimmedString = "Pigmentation"
-                    }
-                    else if  trimmedString == "TBD3"{
-                        trimmedString = "IntestinalContents"
-                    }
-                    else if  trimmedString == "TBD4"{
-                        trimmedString = "ThickenedIntestine"
-                    }
-                    else if  trimmedString == "TBD5"{
-                        trimmedString = "ThinIntestine"
-                    }
-                    else if  trimmedString == "TBD6"{
-                        trimmedString = "Dehydrated"
-                    }
-                    else if  trimmedString == "TBD7"{
-                        trimmedString = "ThymusAtrophy"
-                    }
-                    else if  trimmedString == "FemoralHeadSeparation(FHS)"{
-                        trimmedString = "FemoralHeadSeparationFHS"
-                    }
-                    else if  trimmedString == "EimeriaTenellaMicro"{
-                        trimmedString = "TenellaMicro"
-                    }
-                    else if trimmedString == Constants.maleFemaleStr
-                    {
-                        trimmedString = "MaleFemale"
-                    }
-                    
-                    if captureNecropsyViewData.measure == "Y,N"
-                    {
-                        if captureNecropsyViewData.objsVisibilty != nil{
-                            d.setValue(captureNecropsyViewData.objsVisibilty!, forKey: trimmedString)
-                        }
-                        
-                    }
-                    else if captureNecropsyViewData.measure == "Actual"
-                    {
-                        
-                        if captureNecropsyViewData.actualText?.isEmpty == false
-                        {
-                            d.setValue(captureNecropsyViewData.actualText!, forKey: trimmedString)
-                        }
-                        
-                    }
-                    
-                    else if captureNecropsyViewData.measure == "F,M"
-                    {
-                        if captureNecropsyViewData.actualText?.isEmpty == false
-                        {
-                            d.setValue(captureNecropsyViewData.actualText!, forKey: trimmedString)
-                        }
-                    }
-                    
-                    else
-                    {
-                        if captureNecropsyViewData.obsPoint != nil{
-                            d.setValue(captureNecropsyViewData.obsPoint!, forKey: trimmedString)
-                        }
-                    }
-                }
-                
-            }
-            else
-            {
-                print(appDelegateObj.testFuntion())
+                handleNecropsyTrimmedStringValidations(c, d)
             }
         }
         catch

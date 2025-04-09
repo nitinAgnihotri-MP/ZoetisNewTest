@@ -333,6 +333,60 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         
     }
     var accestoken = String()
+    
+    fileprivate func handleTGetNecroCategoryObservationListAPISuccessResponse(_ value: Any) {
+        if let arrayValue = value as? NSArray {
+            self.dataArray.removeAllObjects()
+            self.appDelegate.globalDataArrTurkey.removeAllObjects()
+            
+            for i in 0..<arrayValue.count {
+                if let tempDict = arrayValue[i] as? NSDictionary {
+                    let serviceHolder = ServiceDataHolder()
+                    serviceHolder.CategoryDescp = tempDict["CategoryDescription"] as? NSString ?? ""
+                    serviceHolder.CataID = tempDict["CategoryId"] as? NSInteger ?? 0
+                    serviceHolder.ObservaionDetailsArr = (tempDict["ObservaionDetails"] as? NSArray)?.mutableCopy() as? NSMutableArray ?? []
+                    self.dataArray.add(serviceHolder)
+                }
+            }
+            
+            self.appDelegate.globalDataArrTurkey = self.dataArray
+            self.skelta(0)
+            self.cocoii(1)
+            self.gitract(2)
+            self.res(3)
+            self.immu(4)
+            
+            self.callCustmerWebService()
+        } else {
+            self.callCustmerWebService()
+        }
+    }
+    
+    fileprivate func handleTGetCatObsListAPIResponse(_ statusCode: Int, _ response: AFDataResponse<Any>) {
+        if statusCode == 401 {
+            self.loginMethod()
+        } else if (400...404).contains(statusCode) || (500...504).contains(statusCode) {
+            let alertController = UIAlertController(
+                title: "",
+                message: "Unable to get data from server. \n(\(statusCode))",
+                preferredStyle: .alert
+            )
+            let okAction = UIAlertAction(title: "Retry", style: .default) { _ in
+                Helper.dismissGlobalHUD(self.view)
+                self.callWebService()
+            }
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true)
+        } else {
+            switch response.result {
+            case let .success(value):
+                self.handleTGetNecroCategoryObservationListAPISuccessResponse(value)
+            case let .failure(error):
+                debugPrint("Network error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     ///// Setting get Turkey
     
     func callWebService() {
@@ -356,52 +410,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                     return
                 }
                 
-                if statusCode == 401 {
-                    self.loginMethod()
-                } else if (400...404).contains(statusCode) || (500...504).contains(statusCode) {
-                    let alertController = UIAlertController(
-                        title: "",
-                        message: "Unable to get data from server. \n(\(statusCode))",
-                        preferredStyle: .alert
-                    )
-                    let okAction = UIAlertAction(title: "Retry", style: .default) { _ in
-                        Helper.dismissGlobalHUD(self.view)
-                        self.callWebService()
-                    }
-                    alertController.addAction(okAction)
-                    self.present(alertController, animated: true)
-                } else {
-                    switch response.result {
-                    case let .success(value):
-                        if let arrayValue = value as? NSArray {
-                            self.dataArray.removeAllObjects()
-                            self.appDelegate.globalDataArrTurkey.removeAllObjects()
-                            
-                            for i in 0..<arrayValue.count {
-                                if let tempDict = arrayValue[i] as? NSDictionary {
-                                    let serviceHolder = ServiceDataHolder()
-                                    serviceHolder.CategoryDescp = tempDict["CategoryDescription"] as? NSString ?? ""
-                                    serviceHolder.CataID = tempDict["CategoryId"] as? NSInteger ?? 0
-                                    serviceHolder.ObservaionDetailsArr = (tempDict["ObservaionDetails"] as? NSArray)?.mutableCopy() as? NSMutableArray ?? []
-                                    self.dataArray.add(serviceHolder)
-                                }
-                            }
-                            
-                            self.appDelegate.globalDataArrTurkey = self.dataArray
-                            self.skelta(0)
-                            self.cocoii(1)
-                            self.gitract(2)
-                            self.res(3)
-                            self.immu(4)
-                            
-                            self.callCustmerWebService()
-                        } else {
-                            self.callCustmerWebService()
-                        }
-                    case let .failure(error):
-                        debugPrint("Network error: \(error.localizedDescription)")
-                    }
-                }
+                self.handleTGetCatObsListAPIResponse(statusCode, response)
             }
         } else {
             self.appDelegate.globalDataArrTurkey = self.dataArray
