@@ -76,6 +76,14 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     let selectLangStr = "Select language"
     let pleaseSelectLangStr = "Please select Language "
     
+    var emailIs: String = ""
+    var guidIs: String = ""
+    var guidSignatureIs: String = ""
+    var signatureTimestampIs: String = ""
+    
+    
+    
+    
     private let sessionManager: Session = {
            let configuration = URLSessionConfiguration.default
            configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
@@ -281,6 +289,46 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     
     
     
+    // MARK:  /*********** Fetch Gigya Country Languages List **************/
+    private func encryptUserName(emailId: String){
+        Constants.baseUrl = Constants.Api.fhBaseUrl
+        if ConnectionManager.shared.hasConnectivity() {
+            ZoetisWebServices.shared.getEncryptedUserName(emailIs: emailId,controller: self, parameters: [:], completion: { [weak self] (json, error) in
+                guard let _ = self, error == nil else {
+                    self?.dismissGlobalHUD(self?.view ?? UIView())
+                    
+                    return
+                }
+                let mainQueue = OperationQueue.main
+                mainQueue.addOperation{
+                    let jsonTextValue: String = json["Text"].stringValue
+                    
+                    self?.loginMethod(Email: jsonTextValue ?? "", GUID: self?.guidIs ?? "", GUIDSignature: self?.guidSignatureIs ?? "", SignatureTimestamp: self?.signatureTimestampIs ?? "")
+//                    for languages in dataArray {
+//                        var language = languages.1
+//                        let langCulture = language["Language_Culture"]
+//                        
+//                        self?.langCultureArray.append(langCulture.rawValue as! String)
+//                        let langName = language["Language_Name"]
+//                        
+//                        self?.langNameArray.append(langName.rawValue as! String)
+//                        let langId = language["Id"]
+//                        
+//                        self?.langIdArray.append(langId.rawValue as! NSNumber)
+//                        
+//                    }
+                }
+            })
+        }
+        
+        else{
+            self.showToastWithTimer(message: "Failed to get Gigya Country's Language list", duration: 3.0)
+            self.dismissGlobalHUD(self.view ?? UIView())
+        }
+    }
+    
+    
+    
     // MARK:  /*********** Country Button Action **************/
     @IBAction func countryBtnAction(_ sender: Any) {
         
@@ -333,7 +381,15 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     switch result {
                     case .onLogin(let account):
                         
-                        self.loginMethod(Email: account.profile?.email ?? "", GUID: account.UID ?? "", GUIDSignature: account.UIDSignature ?? "", SignatureTimestamp: account.signatureTimestamp ?? "")
+                      //
+                        
+                        self.encryptUserName(emailId: account.profile?.email ?? "")
+                        
+                        emailIs = account.profile?.email ?? ""
+                        guidIs = account.UID ?? ""
+                        guidSignatureIs = account.UIDSignature ?? ""
+                        signatureTimestampIs = account.signatureTimestamp ?? ""
+                        
                         
                     case .error(let event):
                         
@@ -409,12 +465,14 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         
         if WebClass.sharedInstance.connected() {
+            
+       
             self.deleteAllData("Login")
             _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.loginLoaderMessage)
             let Url = "Token"
             let urlString: String = WebClass.sharedInstance.webUrl + Url
             let headers: HTTPHeaders = [Constants.contentType: "application/x-www-form-urlencoded","Accept": "application/json"]
-            let parameters:[String:String] = ["grant_type": "password","UserName" : CryptoHelper.encrypt(input:Email), "Password" : "" , "LoginType": "App","DeviceId":udid as! String,"ChkEnvironment":WebClass.sharedInstance.ChkEnvironmentLive , "GUID":GUID , "GUIDSignature":GUIDSignature, "SignatureTimestamp":SignatureTimestamp , "AppVersion": "\(Bundle.main.versionNumber)" , "TokenVersion":"V2"]
+            let parameters:[String:String] = ["grant_type": "password","UserName" : Email, "Password" : "" , "LoginType": "App","DeviceId":udid as! String,"ChkEnvironment":WebClass.sharedInstance.ChkEnvironmentLive , "GUID":GUID , "GUIDSignature":GUIDSignature, "SignatureTimestamp":SignatureTimestamp , "AppVersion": "\(Bundle.main.versionNumber)" , "TokenVersion":"V2"]
             
             sessionManager.request(urlString, method: .post,parameters: parameters, headers: headers).responseJSON { response in
                 
@@ -433,7 +491,6 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Authorisation failed please contact PV360 support team poultryview360@zoetis.com.")
                         return
                     }
-                    
                 }
                 
                 switch response.result {
@@ -1546,18 +1603,22 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     }
     
     // MARK: ************* ZoetisWebServices Calling to GetVaccination Data for Posted Session Data From Server  ***************************************/
+    fileprivate func handlePosDictKeysValidations(_ posDict: [String : Any]) {
+        for key in posDict.keys {
+            if key.contains("hatchery") {
+                CoreDataHandler().getHatcheryDataFromServer(posDict as NSDictionary)
+            } else if key.contains("field") {
+                CoreDataHandler().getFieldDataFromServer(posDict as NSDictionary)
+            }
+        }
+    }
+    
     fileprivate func saveFieldHatcheryStrainData(_ jsonArray: [JSON], _ self: ViewController) {
         for item in jsonArray {
             if let vaccinations = item["Vaccination"].array {
                 for vaccination in vaccinations {
                     let posDict = vaccination.dictionaryObject ?? [:]
-                    for key in posDict.keys {
-                        if key.contains("hatchery") {
-                            CoreDataHandler().getHatcheryDataFromServer(posDict as NSDictionary)
-                        } else if key.contains("field") {
-                            CoreDataHandler().getFieldDataFromServer(posDict as NSDictionary)
-                        }
-                    }
+                    handlePosDictKeysValidations(posDict)
                 }
             }
         }
@@ -1867,7 +1928,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     }
     // MARK: Alert View
     func alerView(statusCode: Int) {
-        UserDefaults.standard.removeObject(forKey: "Id")
+      //  UserDefaults.standard.removeObject(forKey: "Id")
         self.deleteAllData("Login")
         let alertController = UIAlertController(title: "", message: "Unable to get data from server.\n(\(statusCode))", preferredStyle: UIAlertController.Style.alert)
         let okAction = UIAlertAction(title: "Retry", style: UIAlertAction.Style.default) {
@@ -1880,7 +1941,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     }
     // MARK: Internet Alert View
     func alerViewInternet() {
-        UserDefaults.standard.removeObject(forKey: "Id")
+     //   UserDefaults.standard.removeObject(forKey: "Id")
         self.deleteAllData("Login")
         let alertController = UIAlertController(title: "", message: "No internet connection. Please try again!", preferredStyle: UIAlertController.Style.alert) //Replace
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
@@ -2093,7 +2154,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             id = UserDefaults.standard.value(forKey: "Id") as! Int
             let lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
-            let url = "PostingSession/T_GetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
+            let url = "PostingSession/TurkeyGetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
+            
+      // Old      let url = "PostingSession/T_GetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
                                                         //(UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             let headerDict: HTTPHeaders = [Constants.authorization: accestoken]
@@ -2277,7 +2340,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
            // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let dev = "iOS"
-            let url = "PostingSession/T_GetFeedListByUser?UserId=\(id)&DeviceType=\(dev)"
+            // Old      let url = "PostingSession/T_GetFeedListByUser?UserId=\(id)&DeviceType=\(dev)"
+                  let url = "PostingSession/TurkeyGetFeedListByUser?UserId=\(id)&DeviceType=\(dev)"
             let urlString: String = WebClass.sharedInstance.webUrl + url
             
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
@@ -2503,7 +2567,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             var id = Int()
             id =  UserDefaults.standard.integer(forKey: "Id")
             let dev = "iOS"
-            let url = "PostingSession/T_GetBirdNotesListByUser?UserId=\(id)&DeviceType=\(dev)"
+            // Old     let url = "PostingSession/T_GetBirdNotesListByUser?UserId=\(id)&DeviceType=\(dev)"
+            let url = "PostingSession/TurkeyGetBirdNotesListByUser?UserId=\(id)&DeviceType=\(dev)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
             let headerDict: HTTPHeaders = [Constants.authorization: accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url

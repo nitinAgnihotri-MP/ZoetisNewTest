@@ -9,10 +9,9 @@ import Foundation
 import CoreData
 import UIKit
 
-class PEInfoDAO{
-//    private init(){print("Initializer")}
-    static let sharedInstance = PEInfoDAO()
+class PEInfoDAO {
     
+    static let sharedInstance = PEInfoDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     
     func getPlateTypeObj() -> PE_Info{
@@ -20,7 +19,7 @@ class PEInfoDAO{
         return vaccinationCertObj
     }
     
-    func deleteInfoObj(_ assessmentId:String){
+    func deleteInfoObj(_ assessmentId:String) {
         let userId = UserContext.sharedInstance.userDetailsObj?.userId ?? ""
         let predicate = NSPredicate(format:"userId = %@ AND assesmentId = %@", userId, assessmentId )
         deleteExisitingData(entityName: "PE_Info", predicate: predicate)

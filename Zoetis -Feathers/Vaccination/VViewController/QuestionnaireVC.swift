@@ -566,21 +566,18 @@ class QuestionnaireVC: BaseViewController {
                 handleTrainingId(&newTrainingId)
                 
                 let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfoByTrainingId(trainingId: newTrainingId)
-                if shippingInfoDB != nil {
-                    if shippingInfoDB?.address1 == "" || shippingInfoDB?.address2 == "" || shippingInfoDB?.pincode == "" || shippingInfoDB?.city == "" || shippingInfoDB?.countryID == 0 || shippingInfoDB?.stateID == 0 {
-                        displayAlertMessageForAddress(userMessage: "Please enter all the address details to submit the certification")
-                        return
-                    }
+                if shippingInfoDB != nil && (shippingInfoDB?.address1 == "" || shippingInfoDB?.address2 == "" || shippingInfoDB?.pincode == "" || shippingInfoDB?.city == "" || shippingInfoDB?.countryID == 0 || shippingInfoDB?.stateID == 0) {
+                    displayAlertMessageForAddress(userMessage: "Please enter all the address details to submit the certification")
+                    return
                 }
             } else {
                 var shippingInfoDB: ShippingAddressDTO?
                 handleSelectedFsmId(&shippingInfoDB)
                 
-                if shippingInfoDB != nil {
-                    if shippingInfoDB?.address1 == "" || shippingInfoDB?.address2 == "" || shippingInfoDB?.pincode == "" || shippingInfoDB?.city == "" {
-                        displayAlertMessageForAddress(userMessage: "Please enter all the address details to submit the certification")
-                        return
-                    }
+                if shippingInfoDB != nil && (shippingInfoDB?.address1 == "" || shippingInfoDB?.address2 == "" || shippingInfoDB?.pincode == "" || shippingInfoDB?.city == "") {
+                    displayAlertMessageForAddress(userMessage: "Please enter all the address details to submit the certification")
+                    return
+                    
                 }
             }
         }

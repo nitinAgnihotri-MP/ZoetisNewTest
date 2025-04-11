@@ -266,6 +266,17 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         }
     }
     
+    fileprivate func handleCertificateDataAndSorting() {
+        if certificateData.count > 0 {
+            self.certificateData =  self.certificateData.sorted(by: {
+                let id1 = $0.id as? Int ?? 0
+                let id2 = $1.id as? Int ?? 0
+                return id1 < id2
+            })
+            
+        }
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         self.navigationController?.navigationBar.isHidden = true
@@ -298,32 +309,23 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
             setRefrigeratorData(&carColIdArray, cat)
         }
         
-        for cat in catArrayForCollectionIs{
+        for cat in catArrayForCollectionIs {
             dayOfAgeData(cat)
         }
         
-        for cat in catArrayForCollectionIs{
+        for cat in catArrayForCollectionIs {
             setDayOfAgeSubData(cat)
         }
         
-        for cat in catArrayForCollectionIs{
+        for cat in catArrayForCollectionIs {
             setInovjectData(cat)
         }
         
-        
-        for cat in catArrayForCollectionIs{
+        for cat in catArrayForCollectionIs {
             setVaccineMixtureData(cat)
         }
         
-        if certificateData.count > 0 {
-            self.certificateData =  self.certificateData.sorted(by: {
-                let id1 = $0.id as? Int ?? 0
-                let id2 = $1.id as? Int ?? 0
-                return id1 < id2
-            })
-            
-        }
-        
+        handleCertificateDataAndSorting()
         
         for cat in catArrayForCollectionIs {
             if cat.catISSelected == 1 {

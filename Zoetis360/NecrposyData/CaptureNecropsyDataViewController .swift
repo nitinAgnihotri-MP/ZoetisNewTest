@@ -3744,18 +3744,105 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     // MARK: - 🔴 Delete Bird Data for Necropsy
+    fileprivate func handleDataArrValidations(_ farmName: String, _ noOfBird: Int) {
+        if dataSkeltaArray.count > 0
+        {
+            var  necId = Int()
+            
+            necId = getNecIdChicken()
+            
+            let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: 0) as! CaptureNecropsyViewData
+            CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta.obsID!, formName: farmName , catName: skleta.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
+            
+            dataSkeltaArray.removeAllObjects()
+            dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+        }
+        
+        if dataArrayCocoi.count > 0
+        {
+            var  necId = Int()
+            
+            necId = getNecIdChicken()
+            
+            let skleta1 : CaptureNecropsyViewData = dataArrayCocoi.object(at: 0) as! CaptureNecropsyViewData
+            CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta1.obsID!, formName: farmName , catName: skleta1.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
+            
+            dataArrayCocoi.removeAllObjects()
+            dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+        }
+        if dataArrayGiTract.count > 0
+        {
+            
+            var  necId = Int()
+            
+            necId = getNecIdChicken()
+            
+            let skleta2 : CaptureNecropsyViewData = dataArrayGiTract.object(at: 0) as! CaptureNecropsyViewData
+            CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta2.obsID!, formName: farmName , catName: skleta2.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
+            
+            dataArrayGiTract.removeAllObjects()
+            dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+        }
+        
+        
+        if dataArrayRes.count > 0
+        {
+            var  necId = Int()
+            necId = getNecIdChicken()
+            
+            let skleta3 : CaptureNecropsyViewData = dataArrayRes.object(at: 0) as! CaptureNecropsyViewData
+            CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta3.obsID!, formName: farmName , catName: skleta3.catName!, birdNo:noOfBird as NSNumber, necId : necId as NSNumber)
+            
+            dataArrayRes.removeAllObjects()
+            dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+        }
+        if dataArrayImmu.count > 0
+        {
+            
+            var  necId = Int()
+            necId = getNecIdChicken()
+            
+            let skleta4 : CaptureNecropsyViewData = dataArrayImmu.object(at: 0) as! CaptureNecropsyViewData
+            CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta4.obsID!, formName: farmName , catName: skleta4.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
+            
+            dataArrayImmu.removeAllObjects()
+            dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "Immune",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
+        }
+    }
+    
+    fileprivate func handleNoOfBirdsArrAndAddToArray(_ noOfBird: Int, _ noOfBirdsArr: NSMutableArray) {
+        for i in 0..<noOfBird {
+            noOfBirdsArr.add(i+1)
+        }
+        items.add(noOfBirdsArr)
+    }
+    
+    fileprivate func handleFarmArrAndValidations() {
+        for i in 0..<farmArray.count {
+            let formName = farmArray.object(at: i)
+            
+            var  necId = Int()
+            
+            necId = getNecIdChicken()
+            
+            let isNotes = CoreDataHandler().fetchNoofBirdWithForm("skeltaMuscular", formName: formName as! String,necId: necId as NSNumber)
+            let noOfBird = isNotes.count as Int
+            let noOfBirdsArr  = NSMutableArray()
+            
+            handleNoOfBirdsArrAndAddToArray(noOfBird, noOfBirdsArr)
+        }
+    }
+    
     func deleteBirdResponseData (_ completion: (_ status: Bool) -> Void) {
         
         var postingId = Int()
         if postingIdFromExistingNavigate == "Exting"{
             postingId = postingIdFromExisting
-        }
-        else{
+        } else {
             postingId = UserDefaults.standard.integer(forKey: "necId") as Int
         }
         
-        if  CoreDataHandler().reduceBirdNumberInNecropsystep1WithNecId(postingId as NSNumber, index: self.farmRow) == true
-        {
+        if CoreDataHandler().reduceBirdNumberInNecropsystep1WithNecId(postingId as NSNumber, index: self.farmRow) == true {
             var farmName = String()
             
             farmName = UserDefaults.standard.value(forKey: "farm") as! String
@@ -3777,91 +3864,11 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             var noOfBirdsArr1  = NSMutableArray()
             CoreDataHandler().deleteNotesBirdWithFarmname(farmName, birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
             
-            if dataSkeltaArray.count > 0
-            {
-                var  necId = Int()
-                
-                necId = getNecIdChicken()
-                
-                let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: 0) as! CaptureNecropsyViewData
-                CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta.obsID!, formName: farmName , catName: skleta.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
-                
-                dataSkeltaArray.removeAllObjects()
-                dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            }
+            handleDataArrValidations(farmName, noOfBird)
             
-            if dataArrayCocoi.count > 0
-            {
-                var  necId = Int()
-                
-                necId = getNecIdChicken()
-                
-                let skleta1 : CaptureNecropsyViewData = dataArrayCocoi.object(at: 0) as! CaptureNecropsyViewData
-                CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta1.obsID!, formName: farmName , catName: skleta1.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
-                
-                dataArrayCocoi.removeAllObjects()
-                dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            }
-            if dataArrayGiTract.count > 0
-            {
-                
-                var  necId = Int()
-                
-                necId = getNecIdChicken()
-                
-                let skleta2 : CaptureNecropsyViewData = dataArrayGiTract.object(at: 0) as! CaptureNecropsyViewData
-                CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta2.obsID!, formName: farmName , catName: skleta2.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
-                
-                dataArrayGiTract.removeAllObjects()
-                dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            }
+            handleFarmArrAndValidations()
             
-            
-            if dataArrayRes.count > 0
-            {
-                var  necId = Int()
-                necId = getNecIdChicken()
-                
-                let skleta3 : CaptureNecropsyViewData = dataArrayRes.object(at: 0) as! CaptureNecropsyViewData
-                CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta3.obsID!, formName: farmName , catName: skleta3.catName!, birdNo:noOfBird as NSNumber, necId : necId as NSNumber)
-                
-                dataArrayRes.removeAllObjects()
-                dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            }
-            if dataArrayImmu.count > 0
-            {
-                
-                var  necId = Int()
-                necId = getNecIdChicken()
-                
-                let skleta4 : CaptureNecropsyViewData = dataArrayImmu.object(at: 0) as! CaptureNecropsyViewData
-                CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta4.obsID!, formName: farmName , catName: skleta4.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
-                
-                dataArrayImmu.removeAllObjects()
-                dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(1, farmname: farmName , catName: "Immune",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
-            }
-            
-            for i in 0..<farmArray.count
-            {
-                let formName = farmArray.object(at: i)
-                
-                var  necId = Int()
-                
-                necId = getNecIdChicken()
-                
-                let isNotes = CoreDataHandler().fetchNoofBirdWithForm("skeltaMuscular", formName: formName as! String,necId: necId as NSNumber)
-                let noOfBird = isNotes.count as Int
-                let noOfBirdsArr  = NSMutableArray()
-                
-                for i in 0..<noOfBird
-                {
-                    noOfBirdsArr.add(i+1)
-                }
-                items.add(noOfBirdsArr)
-            }
-            
-            if self.farmRow == 0
-            {
+            if self.farmRow == 0 {
                 self.isFirstTimeLaunch = true
             }
             if postingIdFromExistingNavigate == "Exting"{
@@ -3871,9 +3878,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             neccollectionView.reloadData()
             birdsCollectionView.reloadData()
             birdsCollectionView.selectItem(at: IndexPath(item: 0 , section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.left)
-        }
-        else
-        {
+        } else {
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("At least one bird is required under a Farm.", comment: "") )
         }
         
@@ -3883,11 +3888,10 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
         }
         
-        else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
+        else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
             let necId = UserDefaults.standard.integer(forKey: "necId") as Int
             CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
-        }
-        else{
+        } else {
             let necId = UserDefaults.standard.integer(forKey: "necId") as Int
             CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
         }

@@ -711,6 +711,24 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         return peAssessmentArray
     }
     // MARK: - Get Last two Assessment from Data Base
+    fileprivate func handleDataCatIDToSubmitNumberIdArray(_ dataCatIDToSubmitNumberIdArray: inout [Int], _ fetchRequestNew: NSFetchRequest<any NSFetchRequestResult>, _ evaluationDateLatestAssessment: String, _ evaluationDateLatestSubmitId: String, _ managedContext: NSManagedObjectContext) {
+        for i in 0...dataCatIDToSubmitNumberIdArray.count-1 {
+            fetchRequestNew.predicate = NSPredicate(format: "evaluationDate == %@ AND catID == %d AND dataToSubmitID == %@", argumentArray: [ evaluationDateLatestAssessment,dataCatIDToSubmitNumberIdArray[i],evaluationDateLatestSubmitId])
+            fetchRequestNew.returnsObjectsAsFaults = false
+            
+            do {
+                let results = try managedContext.fetch(fetchRequestNew) as? [NSManagedObject]
+                if results?.count != 0 {
+                    if results?.count ?? 0 > 1 {
+                        resultCatfirstAssessment.append(results?[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
+                    }
+                    
+                }
+            } catch {
+            }
+        }
+    }
+    
     fileprivate func handleDataToSubmitNumberIdArrayValidations(_ dataToSubmitNumberIdArray: [Int], _ catColIdArrayDraftNumbers: NSArray, _ evaluationDateLatestAssessment: String, _ managedContext: NSManagedObjectContext) {
         if dataToSubmitNumberIdArray.count > 0 {
             var dataCatIDToSubmitNumberIdArray : [Int] = []
@@ -728,21 +746,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
                 resultCatfirstAssessment.removeAll()
             }
             let evaluationDateLatestSubmitId = lastTwoAssessmentsSubmitId[0] as? String ?? ""
-            for i in 0...dataCatIDToSubmitNumberIdArray.count-1 {
-                fetchRequestNew.predicate = NSPredicate(format: "evaluationDate == %@ AND catID == %d AND dataToSubmitID == %@", argumentArray: [ evaluationDateLatestAssessment,dataCatIDToSubmitNumberIdArray[i],evaluationDateLatestSubmitId])
-                fetchRequestNew.returnsObjectsAsFaults = false
-                
-                do {
-                    let results = try managedContext.fetch(fetchRequestNew) as? [NSManagedObject]
-                    if results?.count != 0 {
-                        if results?.count ?? 0 > 1 {
-                            resultCatfirstAssessment.append(results?[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                        }
-                        
-                    }
-                } catch {
-                }
-            }
+            handleDataCatIDToSubmitNumberIdArray(&dataCatIDToSubmitNumberIdArray, fetchRequestNew, evaluationDateLatestAssessment, evaluationDateLatestSubmitId, managedContext)
             
             if resultCatfirstAssessment.count > 0 {
                 setChartForAssesmentSubmittedOffline(count: 1)
@@ -780,10 +784,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         var peAssessmentDraftArray = getAllDateArrayStoredOffline()
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
+        dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+
         if(regionID == 3) {
             dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        } else {
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
         }
         
         let sortedArray = peAssessmentDraftArray.sorted {
@@ -1678,14 +1682,27 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     
+    fileprivate func updateDraftArraySyncRespose(_ dNumber: Int, _ getDraftArray: inout [PENewAssessment], _ obj: PENewAssessment) {
+        if dNumber != 0 {
+            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:obj.draftNumber ?? 0)
+        }
+    }
+    
+    fileprivate func manageOfflineArrayIteration(_ getOfflineArray: [PENewAssessment], _ carColIdArray: inout [Int], _ catArray: inout [PENewAssessment]) {
+        for cat in getOfflineArray {
+            if !carColIdArray.contains(cat.sequenceNo ?? 0){
+                carColIdArray.append(cat.sequenceNo ?? 0)
+                catArray.append(cat)
+            }
+        }
+    }
+    
     fileprivate func handleSyncResponseValidations(_ sNumber: Int, _ getOfflineArray: inout [PENewAssessment], _ obj: PENewAssessment, _ dNumber: Int, _ getDraftArray: inout [PENewAssessment]) {
         if syncResponse {
             if sNumber != 0 {
                 getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:obj.dataToSubmitID ?? "" )
             }
-            if dNumber != 0 {
-                getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:obj.draftNumber ?? 0)
-            }
+            updateDraftArraySyncRespose(dNumber, &getDraftArray, obj)
             callRequest4Int = 0
             
             totalImageToSync = []
@@ -1698,12 +1715,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 var comntArray : [JSONDictionary]  = []
                 var imgArray : [JSONDictionary]  = []
 
-                for cat in getOfflineArray {
-                    if !carColIdArray.contains(cat.sequenceNo ?? 0){
-                        carColIdArray.append(cat.sequenceNo ?? 0)
-                        catArray.append(cat)
-                    }
-                }
+                manageOfflineArrayIteration(getOfflineArray, &carColIdArray, &catArray)
                 handleCatArrSyncResponseValidations(catArray, obj, &catAllRowArray)
                 imgArray.removeAll()
                 handleCatAllRowArraySyncResponseValidations(catAllRowArray, &tempArr, &comntArray)

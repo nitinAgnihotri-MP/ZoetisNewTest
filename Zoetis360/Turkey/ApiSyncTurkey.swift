@@ -1529,23 +1529,28 @@ class ApiSyncTurkey: NSObject {
         }
     }
     
+    fileprivate func handleUpdateIsSyncOnBirdPhotoCapture(pId:NSNumber,cNecArr: NSArray, _ completion: @escaping (_ status: Bool) -> Void) {
+        CoreDataHandlerTurkey().updateisSyncOnNotesBirdDatabaseTurkey(pId , isSync: false, { (success) in
+            if success == true {
+                if cNecArr.count > 0 {
+                    self.updadateNacDataOnCoreData(cNecArr: cNecArr, { (success) in
+                        if success == true {
+                            completion(success)
+                        }
+                    })
+                } else {
+                    completion(success)
+                }
+            }
+        })
+    }
+    
     fileprivate func handleUpdateisSyncOnBirdPhotoCaptureDatabaseTurkey(pId:NSNumber,cNecArr: NSArray, _ completion: @escaping (_ status: Bool) -> Void) {
         CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(pId , isSync: false, { (success) in
             if success == true {
-                
-                CoreDataHandlerTurkey().updateisSyncOnNotesBirdDatabaseTurkey(pId , isSync: false, { (success) in
-                    if success == true {
-                        if cNecArr.count > 0 {
-                            self.updadateNacDataOnCoreData(cNecArr: cNecArr, { (success) in
-                                if success == true {
-                                    completion(success)
-                                }
-                            })
-                        } else {
-                            completion(success)
-                        }
-                    }
-                })
+                handleUpdateIsSyncOnBirdPhotoCapture(pId: pId, cNecArr: cNecArr) { status in
+                    completion(status)
+                }
             }
         })
     }

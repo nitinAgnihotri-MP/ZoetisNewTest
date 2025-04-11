@@ -9,12 +9,10 @@ import Foundation
 import CoreData
 import UIKit
 
-class PEDeletedDraftsDAO{
-//        private init(){print("Initializer")}
-        static let sharedInstance = PEDeletedDraftsDAO()
-        
-        let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
-
+class PEDeletedDraftsDAO {
+    static let sharedInstance = PEDeletedDraftsDAO()
+    let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
+    
     func getDeletedAssessmentObj() -> PE_DeletedAssessments{
         let vaccinationCertObj = NSEntityDescription.insertNewObject(forEntityName: "PE_DeletedAssessments" , into: managedContext) as! PE_DeletedAssessments
         //vaccinationCertObj.us
@@ -54,31 +52,19 @@ class PEDeletedDraftsDAO{
         }
     }
     
-    
-    func fetchDeletedAssessments(userId:String)->String{
-            var vaccinationCertificationArr = [PE_DeletedAssessments]()
-            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_DeletedAssessments")
-            fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format:"userId = %@", userId )
-            do {
-                vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [PE_DeletedAssessments]
-            } catch{
-               // managedContext.rollback()
-                print("Error while fetching PE Scheduled Assessments in \(type(of: self))")
-            }
+    func fetchDeletedAssessments(userId:String)->String {
+        var vaccinationCertificationArr = [PE_DeletedAssessments]()
+        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_DeletedAssessments")
+        fetchRequest.returnsObjectsAsFaults = false
+        fetchRequest.predicate = NSPredicate(format:"userId = %@", userId )
+        do {
+            vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [PE_DeletedAssessments]
+        } catch {
+            print("Error while fetching PE Scheduled Assessments in \(type(of: self))")
+        }
         
-        var arr = [String]()
-        arr  = vaccinationCertificationArr.map{$0.serverId ?? "0"}
+        var arr  = vaccinationCertificationArr.map{$0.serverId ?? "0"}
         let joinedStr = arr.joined(separator: ",")
-//        arr.joined
-        
         return joinedStr
-        
     }
-    
-    
-        
-    
-    
-    
 }

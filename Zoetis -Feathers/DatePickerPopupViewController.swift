@@ -35,11 +35,7 @@ class DatePickerPopupViewController: BaseViewController {
         pickUpDate()
     }
     
-    func pickUpDate()  {
-        
-        var donebutton: UIBarButtonItem = UIBarButtonItem()
-        var spaceButton: UIBarButtonItem = UIBarButtonItem()
-        
+    func pickUpDate() {
         datePicker.backgroundColor = UIColor.white
         datePicker.datePickerMode = UIDatePicker.Mode.date
         datePicker.layer.borderWidth = 1
@@ -51,99 +47,53 @@ class DatePickerPopupViewController: BaseViewController {
         let components: NSDateComponents = NSDateComponents()
         
         components.month = -12
-        let minDate: NSDate = gregorian.date(byAdding: components as DateComponents, to: currentDate as Date, options: NSCalendar.Options(rawValue: 0))! as NSDate as NSDate
-        //Vaccination
+        
         if #available(iOS 13.4, *) {
             datePicker.preferredDatePickerStyle = .wheels
             datePicker.backgroundColor = .white
         }
         
-        if isPVE == true{
+        if isPVE == true {
             datePicker.minimumDate = Calendar.current.date(byAdding: .month, value: -3, to: Date())
-        }        // ToolBar
-        else if isPVEVacExpiry == true && canSelectPreviousDate == true{
+        } else if isPVEVacExpiry == true && canSelectPreviousDate == true{
             let theDaysLater = TimeInterval(1200.months)
             datePicker.minimumDate = Date().addingTimeInterval(-theDaysLater)
-           // let theyearLater = TimeInterval(1200.years)
-           // datePicker.maximumDate = Date().addingTimeInterval(-theyearLater)
-            //            datePicker.minimumDate = Date()
-            
-        }
-        else if isVaccinationModule && canSelectPreviousDate{
-                let theDaysLater = TimeInterval(1200.months)
-                datePicker.minimumDate = Date().addingTimeInterval(-theDaysLater)
-                datePicker.maximumDate = Date()
-        }
-        else{
-            if evaluationDate != nil && evaluationDate != ""{
+        } else if isVaccinationModule && canSelectPreviousDate{
+            let theDaysLater = TimeInterval(1200.months)
+            datePicker.minimumDate = Date().addingTimeInterval(-theDaysLater)
+            datePicker.maximumDate = Date()
+        } else {
+            if evaluationDate != nil && evaluationDate != "" {
                 let theDaysLater = TimeInterval(3.months)
                 let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
+                dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
                 
-              //  dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
-                
-                let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
                 if regionID != 3 {
                     dateFormatterObj.dateFormat = appDelegateObj.ddMMyyyStr
                 }
-                else{
-                    dateFormatterObj.dateFormat=appDelegateObj.MMddyyyStr
-                }
-          
-               
+                
                 let evaluationDateObj = dateFormatterObj.date(from:self.evaluationDate!)
-                    
-               // let evalDate = dateFormatterObj.date(from: evaluationDate!)
+                
                 let currentQuarterDate = evaluationDateObj?.startOfQuarter.startOfMonth()
                 let lastDateOfCurrentQuarter = currentQuarterDate?.addingTimeInterval(theDaysLater).endOfMonth()
-                if currentQuarterDate != nil && lastDateOfCurrentQuarter != nil{
-                    let date1 = dateFormatterObj.string(from: currentQuarterDate!)
-                    let date2  =  dateFormatterObj.string(from: lastDateOfCurrentQuarter!)
+                if currentQuarterDate != nil && lastDateOfCurrentQuarter != nil {
                     datePicker.minimumDate = currentQuarterDate
                     datePicker.maximumDate =  lastDateOfCurrentQuarter
                 }
-               
-//                datePicker.minimumDate = minDate as Date
-//                           let threeDaysLater = TimeInterval(12.months)
-//                           if canSelectPreviousDate {
-//                               datePicker.minimumDate = Date().addingTimeInterval(-7776000)
-//                           } else {
-//                               datePicker.minimumDate = Date().addingTimeInterval(-threeDaysLater)
-//                               datePicker.maximumDate =  Date()
-//                           }
-            }
-            else{
+            } else {
                 let evaluationDateObj =  Date()
-              
-                if isCertificateDate == 0
-                {
+                
+                if isCertificateDate == 0 {
                     let currentQuarterDate =  evaluationDateObj.startOfQuarter.startOfMonth()
                     
                     let theDaysLater = TimeInterval(3.months)
-                     let lastDateOfCurrentQuarter = currentQuarterDate.addingTimeInterval(theDaysLater).endOfMonth()
+                    let lastDateOfCurrentQuarter = currentQuarterDate.addingTimeInterval(theDaysLater).endOfMonth()
                     
                     datePicker.minimumDate = Date().addingTimeInterval(-theDaysLater)
                     datePicker.maximumDate = Date()
                 }
-               
             }
-           
-        }       // ToolBar
-            
-        
-        
-        /*
-         
-         let threeDaysLater = TimeInterval(12.months)
-         if isVaccinationModule && canSelectPreviousDate{
-             let theDaysLater = TimeInterval(1200.months)
-             datePicker.minimumDate = Date().addingTimeInterval(-theDaysLater)
-             datePicker.maximumDate = Date()
-         }else{
-             datePicker.minimumDate = Date().addingTimeInterval(-threeDaysLater)
-             datePicker.maximumDate = Date()
-         }
-
-         */
+        }
         
         toolBar.barStyle = .default
         toolBar.isTranslucent = true
@@ -153,9 +103,9 @@ class DatePickerPopupViewController: BaseViewController {
         toolBar.tintColor = UIColor.red
         
         // Adding Button ToolBar
-        donebutton = UIBarButtonItem(title: NSLocalizedString("Done", comment: ""), style: .plain, target: nil, action: #selector(doneClick1))
+        let donebutton = UIBarButtonItem(title: NSLocalizedString("Done", comment: ""), style: .plain, target: nil, action: #selector(doneClick1))
         
-        spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let cancelButton = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: ""), style: .plain, target: nil, action: #selector(dismissKeyboard))
         
         toolBar.setItems([cancelButton,spaceButton,donebutton], animated: false)
@@ -172,18 +122,11 @@ class DatePickerPopupViewController: BaseViewController {
     
     @objc func doneClick1() {
         let dateFormatter = DateFormatter()
-        //dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
-        
-        let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID != 3 {
             dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-        }
-        else{
+        } else {
             dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
-           
         }
-  
-        
         
         let strdate1 = dateFormatter.string(from: datePicker.date) as String
 

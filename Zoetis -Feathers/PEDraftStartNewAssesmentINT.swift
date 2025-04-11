@@ -1009,6 +1009,61 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
         }
     }
     
+    
+    func handleBreedOfBirdValidations() -> Bool {
+        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != "" {
+            if ((peNewAssessment.breedOfBird?.lowercased().contains("other")) ?? false) {
+                if peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "" {
+                    
+                } else {
+                    changeMandatorySuperviewToRed()
+                    return true
+                }
+            }
+        } else {
+            changeMandatorySuperviewToRed()
+            return true
+        }
+        
+        return false
+    }
+    
+    func handleTxtManufacturerValidations() -> Bool {
+        if self.txtManufacturer.text != nil && self.txtManufacturer.text != "" {
+            if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
+                if manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "" {
+                    
+                } else {
+                    changeMandatorySuperviewToRed()
+                    return true
+                }
+            }
+        } else {
+            changeMandatorySuperviewToRed()
+            return true
+        }
+        
+        return false
+    }
+    
+    func handleTxtNumberOfEggsValidations() -> Bool {
+        if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != "" {
+            if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false) {
+                if eggsOtherTxt.text != nil && eggsOtherTxt.text != "" {
+                    
+                } else {
+                    changeMandatorySuperviewToRed()
+                    return true
+                }
+            }
+        } else {
+            changeMandatorySuperviewToRed()
+            return true
+        }
+        
+        return false
+    }
+    
     @IBAction func nextBtnAction(_ sender: Any) {
         
         self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { [self] status in
@@ -1041,55 +1096,24 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
             return
         }
         
-        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != "" {
-            if ((peNewAssessment.breedOfBird?.lowercased().contains("other")) ?? false) {
-                if peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "" {
-                    
-                } else {
-                    changeMandatorySuperviewToRed()
-                    return
-                }
-            }
-        } else {
-            changeMandatorySuperviewToRed()
+        if handleBreedOfBirdValidations() {
             return
         }
         
-        if self.txtManufacturer.text != nil && self.txtManufacturer.text != "" {
-            if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-                if manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "" {
-                    
-                } else {
-                    changeMandatorySuperviewToRed()
-                    return
-                }
-            }
-        } else {
-            changeMandatorySuperviewToRed()
+        if handleTxtManufacturerValidations() {
             return
         }
         
         if peNewAssessment.incubation != nil && peNewAssessment.incubation != ""{
             
-        }else{
+        } else {
             changeMandatorySuperviewToRed()
             return
         }
         
-        if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != ""{
-            if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false) {
-                if eggsOtherTxt.text != nil && eggsOtherTxt.text != "" {
-                    
-                }else{
-                    changeMandatorySuperviewToRed()
-                    return
-                }
-            }
-        }else{
-            changeMandatorySuperviewToRed()
+        if handleTxtNumberOfEggsValidations() {
             return
-        }
-        
+        }        
         handleBackNavigation()
     }
     

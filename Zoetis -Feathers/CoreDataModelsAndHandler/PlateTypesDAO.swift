@@ -9,8 +9,8 @@ import Foundation
 import CoreData
 import UIKit
 
-class PlateTypesDAO{
-//    private init(){print("Initializer")}
+class PlateTypesDAO {
+    
     static let sharedInstance = PlateTypesDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     

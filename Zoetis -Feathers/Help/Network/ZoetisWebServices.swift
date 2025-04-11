@@ -120,7 +120,9 @@ class ZoetisWebServices: BaseViewController {
         case postExtendedMicro = "/api/Assessment/AddEMAssessment"
         case getGigyaCountries = "/api/Login/GetCountrys"
         case getGigyaCountryLanguages = "/api/Login/GetLanguage?"
-        case getGigyaApiKeys = "/api/Login/GetGigyaApiKeys?"
+        case getGigyaApiKeys = "/api/Login/GetApiMobkeysList?"
+        
+        case getEncryptedEmail = "/api/Login/GetEncryptText?"
         //&StatusType=1
         //PVE--------------------
         /* Dev */
@@ -129,7 +131,7 @@ class ZoetisWebServices: BaseViewController {
         case getCustomerListPVE = "/api/CustomerDetails/GetAssignedCustomerByUser?userId="
         case getComplexPVEOld = "/api/ComplexDetails?customerId="
         case getComplexPVE = "/api/ComplexDetails?"
-        case getEvaluationTypePVE = "/api/EvaluationDetails/GetEvaluationType?Module_Id=2"
+        case getEvaluationTypePVE = "/api/EvaluationDetails/GetEvaluationType?moduleId=2"
         case getEvaluationForPVE = "/api/EvaluationDetails/GetEvaluationFor"
         case getSiteIDNameDetailsPVE = "/api/HatcherySitesDetails"
         case getBirdAgeDetailsPVE = "/api/BirdAgeDetails"
@@ -153,37 +155,11 @@ class ZoetisWebServices: BaseViewController {
         case postSNADetailsPVE = "/api/AssessmentDetails/CreateAssessmentDetails"
         case postScoreDetailsPVE = "/api/AssessmentDetails/SaveAssessmentScoresDetails"
         case postSaveAssessmentImagesDetailsPVE = "/api/AssessmentDetails/SaveAssessmentImagesDetails"
-        case postPDFPVE = "/api/VaccineNamesDetails/GetPdfReport?ReportType=1"
-        case postPDFPVENotBlank = "/api/VaccineNamesDetails/GetPdfReport?ReportType=0"
+        case postPDFPVE = "/api/VaccineNamesDetails/GetPdfReport?reportType=1"
+        case postPDFPVENotBlank = "/api/VaccineNamesDetails/GetPdfReport?reportType=0"
         case getPostingAssessmentCompleteImagesListByUser = "/api/AssignUserDetails/GetPostingAssessmentCompleteImagesListByUser?DeviceType=ios&api_key=GetPostingAssessmentListByUser"
         
-        //*/
-        
-        //Staging
-        
-        //         case getCustomerListPVE = "/PulletVaccineEvaluation/API/api/CustomerDetails/GetAssignedCustomerByUser?userId="
-        //          case getComplexPVEOld = "/PulletVaccineEvaluation/API/api/ComplexDetails?customerId="
-        //          case getComplexPVE = "/PulletVaccineEvaluation/API/api/ComplexDetails?"
-        //          case getEvaluationTypePVE = "/PulletVaccineEvaluation/API/api/EvaluationDetails/GetEvaluationType?Module_Id=2"
-        //          case getEvaluationForPVE = "/PulletVaccineEvaluation/API/api/EvaluationDetails/GetEvaluationFor"
-        //          case getSiteIDNameDetailsPVE = "/PulletVaccineEvaluation/API/api/HatcherySitesDetails"
-        //          case getBirdAgeDetailsPVE = "/PulletVaccineEvaluation/API/api/BirdAgeDetails"
-        //         case getBirdBreedsDetailsPVE = "/PulletVaccineEvaluation/API/api/BirdBreedsDetails/GetBirdBreeds"
-        //          case getHousingDetailsPVE = "/PulletVaccineEvaluation/API/api/HousingDetails"
-        //          case getAssignUserDetailPVE = "/PulletVaccineEvaluation/API/api/AssignUserDetails/GetAccountManagerList"
-        //          case getEvaluatorDetailPVE = "/PulletVaccineEvaluation/API/api/UserDetails/GetEvaluator"
-        //          case getModuleAssessmentCategoriesDetailsPVE = "/PulletVaccineEvaluation/API/api/ModuleAssessmentCategoriesDetails/GetModuleAssessmentCategoriesDetails?Module_Id=2"
-        //          case getModuleAssessmentsPVE = "/PulletVaccineEvaluation/API/api/ModuleAssessmentsDetails?Module_Cat_Id="
-        //          case getSerotypeDetailsPVE = "/PulletVaccineEvaluation/API/api/SerotypeDetails"
-        //          case getSurveyTypeDetailsPVE = "/PulletVaccineEvaluation/API/api/SurveyTypeDetails"
-        //          case getSiteInjctsDetailssPVE = "/PulletVaccineEvaluation/API/api/SiteInjctsDetails"
-        //          case getVaccineManDetailsPVE = "/PulletVaccineEvaluation/API/api/VaccineManDetails"
-        //         case getVaccineNamesDetailsPVE = "/PulletVaccineEvaluation/API/api/VaccineNamesDetails/GetVaccineNamesDetails?api_key=GetPostingAssessmentListByUs"
-        //         case getPostingAssessmentListByUser = "/PulletVaccineEvaluation/API/api/AssignUserDetails/GetPostingAssessmentListByUser"
-        //         case getPostingAssessmentImagesListByUser = "/PulletVaccineEvaluation/API/api/AssignUserDetails/GetPostingAssessmentImagesListByUser?DeviceType=ios&api_key=GetPostingAssessmentListByUser"
-        //         case postSNADetailsPVE = "/PulletVaccineEvaluation/API/api/AssessmentDetails/CreateAssessmentDetails"
-        //        case postScoreDetailsPVE = "/PulletVaccineEvaluation/API/api/AssessmentDetails/SaveAssessmentScoresDetails"
-        //        case postSaveAssessmentImagesDetailsPVE = "/PulletVaccineEvaluation/API/api/AssessmentDetails/SaveAssessmentImagesDetails"
+ 
         
         
         ///Microbial-----------------------------
@@ -273,7 +249,7 @@ class ZoetisWebServices: BaseViewController {
         
         case getTargetWeightForTurkey = "/api/PostingSession/GetTargetWeightProcessing"
         
-        case getTurkeyCocciVaccine = "/api/PostingSession/GetCocciVaccine"
+        case getTurkeyCocciVaccine = "/api/PostingSession/GetCocciVaccine?Languageid="
         
         case getChickenAndTurkeyComplexByUserId = "/api/PostingSession/GetComplexByUserId?UserId="
         
@@ -329,15 +305,20 @@ class ZoetisWebServices: BaseViewController {
      
         
         // ********************************************* Turkey **************************************************
-        case getTurkeyPostedSession  = "/api/PostingSession/T_GetPostingSessionListByUser?UserId="
+        case getTurkeyPostedSession  = "/api/PostingSession/TurkeyGetPostingSessionListByUser?UserId="
+      //  case getTurkeyPostedSession  = "/api/PostingSession/T_GetPostingSessionListByUser?UserId="
         
-        case getTurkeyPostedSessionsVacccine = "/api/PostingSession/T_GetVaccinationListByUser?UserId="
+      //  case getTurkeyPostedSessionsVacccine = "/api/PostingSession/T_GetVaccinationListByUser?UserId="
+        case getTurkeyPostedSessionsVacccine = "/api/PostingSession/TurkeyGetVaccinationListByUser?UserId="
         
-        case getTurkeyPostedNotes = "/api/PostingSession/T_GetBirdNotesListByUser?UserId="
+//        case getTurkeyPostedNotes = "/api/PostingSession/T_GetBirdNotesListByUser?UserId="
+        case getTurkeyPostedNotes = "/api/PostingSession/TurkeyGetBirdNotesListByUser?UserId="
         
-        case getTurkeyPostedImages = "/api/PostingSession/T_GetBirdImagesListByUser?UserId="
+       // case getTurkeyPostedImages = "/api/PostingSession/T_GetBirdImagesListByUser?UserId="
+        case getTurkeyPostedImages = "/api/PostingSession/TurkeyGetBirdImagesListByUser?UserId="
         
-        case getTukeyPostedFarmList = "/api/PostingSession/T_GetFarmListByUser?UserId="
+       // case getTukeyPostedFarmList = "/api/PostingSession/T_GetFarmListByUser?UserId="
+        case getTukeyPostedFarmList = "/api/PostingSession/TurkeyGetFarmListByUser?UserId="
         
         case getTutorial = "/api/PostingSession/GetTutorial"
         
@@ -428,7 +409,7 @@ extension ZoetisWebServices {
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryid = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getCustomerPE.latestUrl + String(id) + countryIdStr + String(countryid)  + regionIdStr + String(Regionid)
+        let url = EndPoint.getCustomerPE.latestUrl + String(id) + "&countryId=" + String(countryid)  + regionIdStr + String(Regionid)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -468,7 +449,7 @@ extension ZoetisWebServices {
         let id = UserDefaults.standard.integer(forKey: "Id")
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         
-        let url = EndPoint.getEvaluatorTypes.latestUrl + String(id) + countryIdStr + String(countryid) + languageIdStr + regionIdStr + String(Regionid)
+        let url = EndPoint.getEvaluatorTypes.latestUrl + String(id) + countryIdStr + String(countryid) + regionIdStr + String(Regionid)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -496,7 +477,7 @@ extension ZoetisWebServices {
         
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        let url = EndPoint.getVaccineManufacturer.latestUrl + String(id) +  countryIdStr + String(countryId) + languageIdStr  + "&Rollout=USC"
+        let url = EndPoint.getVaccineManufacturer.latestUrl + String(id) +  countryIdStr + String(countryId) + languageIdStr
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -504,7 +485,7 @@ extension ZoetisWebServices {
         
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        let url = EndPoint.getVaccineNames.latestUrl  + String(id)  +  countryIdStr + String(countryId) + languageIdStr + "&Rollout=USC"
+        let url = EndPoint.getVaccineNames.latestUrl  + String(id)  +  countryIdStr + String(countryId) + languageIdStr
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -512,7 +493,8 @@ extension ZoetisWebServices {
         
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        let url = EndPoint.getSubVaccineNames.latestUrl + String(id) + countryIdStr + String(countryId) + languageIdStr + "&Rollout=PEI"
+     //   let url = EndPoint.getSubVaccineNames.latestUrl + String(id) + countryIdStr + String(countryId) + languageIdStr + "&Rollout=PEI"
+        let url = EndPoint.getSubVaccineNames.latestUrl + String(id) + countryIdStr + String(countryId) + languageIdStr
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
         
     }
@@ -579,7 +561,7 @@ extension ZoetisWebServices {
         let countryid = UserDefaults.standard.integer(forKey: "nonUScountryId")
         
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getModuleAssessmentCategoriesDetailsPE.latestUrl + "Module_Id=" + moduleID +  countryIdStr + String(countryid) + languageIdStr + regionIdStr + String(Regionid) + "&EvalType=" + String(evalType) + "&Rollout="
+        let url = EndPoint.getModuleAssessmentCategoriesDetailsPE.latestUrl + "Module_Id=" + moduleID +  countryIdStr + String(countryid) + languageIdStr + regionIdStr + String(Regionid) + "&EvalType=" + String(evalType)
         
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
@@ -609,7 +591,9 @@ extension ZoetisWebServices {
         
         let Id =  UserDefaults.standard.value(forKey: "Id") as? Int ?? 0
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
-        let url = EndPoint.getPostingAssessmentListByUserPE.latestUrl + String(Id) + "&DeviceType=ios"  + regionIdStr + String(Regionid)
+    // old     let url = EndPoint.getPostingAssessmentListByUserPE.latestUrl + String(Id) + "&DeviceType=ios"  + regionIdStr + String(Regionid)
+        let url = EndPoint.getPostingAssessmentListByUserPE.latestUrl + String(Id)  + regionIdStr + String(Regionid)
+        
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
@@ -629,6 +613,13 @@ extension ZoetisWebServices {
         let url = EndPoint.getGigyaCountryLanguages.latestUrl + "countryid=\(countryID)"
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
+    
+    func getEncryptedUserName(emailIs: String, controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
+        let url = EndPoint.getEncryptedEmail.latestUrl + "Text=\(emailIs)"
+        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    
     
     func getGigyaApiKeys(countryID: String, controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getGigyaApiKeys.latestUrl + "countryid=\(countryID)" + "&TokenVersion=V2" + "&LoginType=App"
@@ -843,7 +834,7 @@ extension ZoetisWebServices {
     
     func getAssignUserDetailForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        let url = EndPoint.getAssignUserDetailPVE.latestUrl + "?CountryId=\(countryId)"
+        let url = EndPoint.getAssignUserDetailPVE.latestUrl + "?countryId=\(countryId)"
         print("GET SERVICE*** : getAssignUserDetailForPVE ", url)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
@@ -851,7 +842,7 @@ extension ZoetisWebServices {
     func getEvaluatorDetailForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
    
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        let url = EndPoint.getEvaluatorDetailPVE.latestUrl + "?CountryId=\(countryId)"
+        let url = EndPoint.getEvaluatorDetailPVE.latestUrl + "?countryId=\(countryId)"
         
         print("GET SERVICE*** : getEvaluatorDetailForPVE ", url)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
@@ -1092,7 +1083,8 @@ extension ZoetisWebServices {
     }
     
     func getCocciVaccineTurkeyResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
-        let url = EndPoint.getTurkeyCocciVaccine.latestUrl
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        let url = EndPoint.getTurkeyCocciVaccine.latestUrl + "\(lngId)"
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     

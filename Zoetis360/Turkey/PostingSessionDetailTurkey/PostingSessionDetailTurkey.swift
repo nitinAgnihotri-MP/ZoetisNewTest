@@ -1302,8 +1302,8 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             id =  UserDefaults.standard.value(forKey: "Id") as! Int
             let  lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
-            let url = "PostingSession/T_GetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
-           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            // old let url = "PostingSession/T_GetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
+            let url = "PostingSession/TurkeyGetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
             let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url

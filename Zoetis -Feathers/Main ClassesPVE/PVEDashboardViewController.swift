@@ -971,7 +971,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         
         let selectedBirdTypeId = getDraftValueForKey(key: "selectedBirdTypeId", syncId: syncId!) as? Int
         
-        let assessmentArr = CoreDataHandlerPVE().fetchDraftAssementArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: syncId!)
+        let assessmentArr = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: syncId!)
         let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
         let module_Cat_IdArr = assessmentArr.value(forKey: "id")  as? NSArray ?? NSArray()
         
@@ -1034,7 +1034,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         
         let selectedBirdTypeId = getDraftValueForKey(key: "selectedBirdTypeId", syncId: syncId!) as? Int
         
-        let assessmentArr = CoreDataHandlerPVE().fetchDraftAssementArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: syncId!)
+        let assessmentArr = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: syncId!)
         let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
         
         var scoreArr = [[String : Any]]()

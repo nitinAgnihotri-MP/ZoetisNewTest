@@ -697,6 +697,16 @@ extension MicrobialViewController {
         }
     }
     
+    fileprivate func handleAndIterateArrRequisition(_ arrRequisition: [RequisitionData]?) {
+        for objReq in arrRequisition ?? [] {
+            if let microbialDetailsList = objReq.microbialDetailsList {
+                for arrMicrobialDetailsList in microbialDetailsList{
+                    saveAlreadySyncdeDataAndChanegStatus(arrMicrobialDetailsList, objReq)
+                }
+            }
+        }
+    }
+    
     private func fetchGetAllSyncedDataForRequisition(){
         dismissGlobalHUD(self.view)
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
@@ -707,15 +717,8 @@ extension MicrobialViewController {
             UserDefaults.standard.synchronize()
             let jsonObject = RequisitionGetDataModel(json)
             let arrRequisition = jsonObject.requisitionArray
-            if arrRequisition?.count ?? 0 > 0{
-                for objReq in arrRequisition ?? []{
-                    if let microbialDetailsList = objReq.microbialDetailsList{
-                        
-                        for arrMicrobialDetailsList in microbialDetailsList{
-                            saveAlreadySyncdeDataAndChanegStatus(arrMicrobialDetailsList, objReq)
-                        }
-                    }
-                }
+            if arrRequisition?.count ?? 0 > 0 {
+                handleAndIterateArrRequisition(arrRequisition)
             }
             self.checkAndSync()
             self.loadDataForGraphDraftAndSubmittedReq()

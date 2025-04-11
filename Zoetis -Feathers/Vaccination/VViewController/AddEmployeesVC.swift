@@ -113,8 +113,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         NotificationCenter.default.addObserver(self, selector: #selector(updateEmployeeRoles(_:)), name: NSNotification.Name.init(rawValue: "UpdateEmployeeRoles") , object: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
+    fileprivate func handleViewWillAppearRefactoringPart1() {
         if (self.curentCertification == nil || self.curentCertification?.certificationId == nil){
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
                 
@@ -127,8 +126,10 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
                 fsmDropDownImgVw.isHidden = false
             }
         }
-        
-        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil){
+    }
+    
+    fileprivate func handleViewWillAppearRefactoringPart2() {
+        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil) {
             if !(self.curentCertification  != nil){
                 self.curentCertification = VaccinationCertificationVM()
             }
@@ -153,45 +154,60 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
             }
             
         }
-        if self.curentCertification?.certificationCategoryId == "1"{
+    }
+    
+    fileprivate func handleViewWillAppearRefactoringPart3() {
+        if self.curentCertification?.customerId != nil &&  self.curentCertification?.customerId != "" {
+            customerSites = VaccinationCustomersDAO.sharedInstance.getCustomerSitesVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", customerId: self.curentCertification?.customerId ?? "")
+        }
+        if curentCertification?.certificationCategoryId == "0" {
+            if self.customerTxtFld.isHidden {
+                self.customerTxtFld.isHidden = false
+            }
+            if self.siteTxtFld.isHidden {
+                self.siteTxtFld.isHidden = false
+            }
+            self.customerTxtFld.text = curentCertification?.customerName
+            self.siteTxtFld.text = curentCertification?.siteName
+            self.fsmTxtFld.text = curentCertification?.selectedFsmName
+            self.fieldServiceManagerLbl.isHidden = true
+            fsmBtn.isHidden = false
+            fsmDropDownImgVw.isHidden = false
+        }
+    }
+    
+    fileprivate func handleViewWillAppearRefactoringPart4() {
+        if self.curentCertification?.customerId != nil &&  self.curentCertification?.customerId != ""{
+            customerSites = VaccinationCustomersDAO.sharedInstance.getCustomerSitesVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", customerId: self.curentCertification?.customerId ?? "")
+        }
+        self.fieldServiceManagerLbl.isHidden = true
+        fsmBtn.isHidden = false
+        fsmDropDownImgVw.isHidden = false
+        showCustomerVw()
+        showsiteVw()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        handleViewWillAppearRefactoringPart1()
+        
+        handleViewWillAppearRefactoringPart2()
+        if self.curentCertification?.certificationCategoryId == "1" {
             isSafetyCertification = true
         }
         setUpFsmUI()
         configureVwForSafetyCertification()
-        if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
+        if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1" {
             VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certificationCategoryId:"1", certObj: self.curentCertification!)
         } else if self.curentCertification?.certificationCategoryId == nil || self.curentCertification?.certificationCategoryId == "" {
             VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
         }
-        if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
+        if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1" {
             customers = VaccinationCustomersDAO.sharedInstance.getCustomersVM(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "")
-            if self.curentCertification?.customerId != nil &&  self.curentCertification?.customerId != ""{
-                customerSites = VaccinationCustomersDAO.sharedInstance.getCustomerSitesVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", customerId: self.curentCertification?.customerId ?? "")
-            }
-            self.fieldServiceManagerLbl.isHidden = true
-            fsmBtn.isHidden = false
-            fsmDropDownImgVw.isHidden = false
-            showCustomerVw()
-            showsiteVw()
-        }else if !isSafetyCertification && self.curentCertification?.certificationCategoryId == "0"{
+            handleViewWillAppearRefactoringPart4()
+        } else if !isSafetyCertification && self.curentCertification?.certificationCategoryId == "0" {
             customers = VaccinationCustomersDAO.sharedInstance.getCustomersVM(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "")
-            if self.curentCertification?.customerId != nil &&  self.curentCertification?.customerId != ""{
-                customerSites = VaccinationCustomersDAO.sharedInstance.getCustomerSitesVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", customerId: self.curentCertification?.customerId ?? "")
-            }
-            if curentCertification?.certificationCategoryId == "0"{
-                if self.customerTxtFld.isHidden{
-                    self.customerTxtFld.isHidden = false
-                }
-                if self.siteTxtFld.isHidden{
-                    self.siteTxtFld.isHidden = false
-                }
-                self.customerTxtFld.text = curentCertification?.customerName
-                self.siteTxtFld.text = curentCertification?.siteName
-                self.fsmTxtFld.text = curentCertification?.selectedFsmName
-                self.fieldServiceManagerLbl.isHidden = true
-                fsmBtn.isHidden = false
-                fsmDropDownImgVw.isHidden = false
-            }
+            handleViewWillAppearRefactoringPart3()
             showCustomerVw()
             showsiteVw()
             self.customerlbl.isHidden = true
@@ -681,38 +697,42 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         return true
     }
     
-    @objc func updateEmployeeData(_ notification: NSNotification){
+    fileprivate func handleEmployeesAddedArrValidation(_ index: Int, _ empObj: VaccinationEmployeeVM) {
+        if employeesAddedArr.count > 0 {
+            if employeesAddedArr[index].firstName != empObj.firstName {
+                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+                
+            }
+            if employeesAddedArr[index].middleName != empObj.middleName {
+                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+                
+            }
+            if employeesAddedArr[index].startDate != empObj.startDate {
+                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+                
+            }
+            if employeesAddedArr[index].lastName != empObj.lastName {
+                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+                
+            }
+            employeesAddedArr[index] = empObj
+            if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1" {
+                VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certificationCategoryId:"1", certObj: self.curentCertification!)
+            } else {
+                VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
+            }
+            if self.curentCertification?.certificationId != nil && empObj.employeeId != nil {
+                
+                AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: empObj)
+            }
+        }
+    }
+    
+    @objc func updateEmployeeData(_ notification: NSNotification) {
         if let index = notification.userInfo?["index"]  as? Int{
             if index > -1{
                 if let empObj = notification.userInfo?["emp"]  as? VaccinationEmployeeVM{
-                    if employeesAddedArr.count > 0{
-                        if employeesAddedArr[index].firstName != empObj.firstName{
-                            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                            
-                        }
-                        if employeesAddedArr[index].middleName != empObj.middleName{
-                            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                            
-                        }
-                        if employeesAddedArr[index].startDate != empObj.startDate{
-                            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                            
-                        }
-                        if employeesAddedArr[index].lastName != empObj.lastName{
-                            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                            
-                        }
-                        if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                            VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certificationCategoryId:"1", certObj: self.curentCertification!)
-                        } else  {
-                            VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
-                        }
-                        employeesAddedArr[index] = empObj
-                        if self.curentCertification?.certificationId != nil &&  empObj.employeeId != nil{
-                            
-                            AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: empObj)
-                        }
-                    }
+                    handleEmployeesAddedArrValidation(index, empObj)
                 }
             }
         }
@@ -729,23 +749,27 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         }
     }
     
+    fileprivate func handleEmployeesAddedAddCertArrValidation(_ index: Int, _ selectedVal: String, _ notification: NSNotification) {
+        if self.employeesAddedArr.count > index {
+            var emp =  self.employeesAddedArr[index]
+            handleSelectedRolesStr(emp, selectedVal)
+            emp.selectedRolesStr = selectedVal
+            if let selectedObjStr = notification.userInfo?["selectedObjStr"]  as? String {
+                emp.rolesArrStr = selectedObjStr
+            }
+            AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: emp)
+            
+            self.employeesAddedArr[index] = emp
+            self.employeesTblVw.beginUpdates()
+            self.employeesTblVw.reloadRows(at: [IndexPath.init(row: index, section: 0)], with: .automatic)
+            self.employeesTblVw.endUpdates()
+        }
+    }
+    
     @objc func updateEmployeeRoles(_ notification: NSNotification) {
         if let index = notification.userInfo?["index"]  as? Int {
             if let selectedVal = notification.userInfo?["selectedValue"]  as? String {
-                if self.employeesAddedArr.count > index {
-                    var emp =  self.employeesAddedArr[index]
-                    handleSelectedRolesStr(emp, selectedVal)
-                    emp.selectedRolesStr = selectedVal
-                    if let selectedObjStr = notification.userInfo?["selectedObjStr"]  as? String {
-                        emp.rolesArrStr = selectedObjStr
-                    }
-                    AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: emp)
-                    
-                    self.employeesAddedArr[index] = emp
-                    self.employeesTblVw.beginUpdates()
-                    self.employeesTblVw.reloadRows(at: [IndexPath.init(row: index, section: 0)], with: .automatic)
-                    self.employeesTblVw.endUpdates()
-                }
+                handleEmployeesAddedAddCertArrValidation(index, selectedVal, notification)
             }
         }
     }

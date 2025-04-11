@@ -660,6 +660,52 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         return nil
     }
     
+    fileprivate func handleInvojectData() -> Bool? {
+        for inovo in self.inovojectData {
+            let switchAnti = inovo.invoHatchAntibiotic
+            let txtAnti = inovo.invoHatchAntibioticText
+            if (switchAnti == 1) && (txtAnti == "") {
+                showAlertForAntibiotic()
+                return false
+            }
+        }
+        return nil
+    }
+    
+    func handleRegionId3ValidationAndBool() -> Bool? {
+        if regionID == 3 {
+            showAlertForAntibiotic()
+        } else {
+            showAlertForAntibiotic()
+            return false
+        }
+        return nil
+    }
+    
+    func handleHatcheryAntibioticsCoaValidation() -> Bool? {
+        if (self.peNewAssessment.hatcheryAntibioticsDoa == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaText == ""){
+            if regionID == 3 {
+                showAlertForAntibiotic()
+            } else {
+                showAlertForAntibiotic()
+                return false
+            }
+        }
+        return nil
+    }
+    
+    func handlehatcheryAntibioticsDoaSValidation() -> Bool? {
+        if (self.peNewAssessment.hatcheryAntibioticsDoaS == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaSText == ""){
+            if regionID == 3 {
+                showAlertForAntibiotic()
+            } else {
+                showAlertForAntibiotic()
+                return false
+            }
+        }
+        return nil
+    }
+    
     func handleInovoInjectAndEvluationValidation() -> Bool? {
         if !(self.peNewAssessment.evaluationName?.contains("Non") ?? false) {
             if self.inovojectData.count > 0 {
@@ -676,31 +722,16 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                     handleRegionId3Validation()
                 }
                 
-                for inovo in self.inovojectData{
-                    let switchAnti = inovo.invoHatchAntibiotic
-                    let txtAnti = inovo.invoHatchAntibioticText
-                    if (switchAnti == 1) && (txtAnti == ""){
-                        showAlertForAntibiotic()
-                        return false
-                    }
-                }
-                if (self.peNewAssessment.hatcheryAntibioticsDoa == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaText == ""){
-                    if regionID == 3 {
-                        showAlertForAntibiotic()
-                    } else {
-                        showAlertForAntibiotic()
-                        return false
-                    }
-                }
-                if (self.peNewAssessment.hatcheryAntibioticsDoaS == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaSText == ""){
-                    if regionID == 3 {
-                        showAlertForAntibiotic()
-                    } else {
-                        showAlertForAntibiotic()
-                        return false
-                    }
+                if let status = handleInvojectData() {
+                    return status
                 }
                 
+                if let status = handleHatcheryAntibioticsCoaValidation() {
+                    return status
+                }
+                if let status = handlehatcheryAntibioticsDoaSValidation() {
+                    return status
+                }
             } else {
                 if regionID == 3 {
                     showAlertForNoValid()
@@ -742,26 +773,37 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         return nil
     }
     
+    func handlePeNewAssessmentPersonName() -> Bool? {
+        if regionID == 3 {
+            showAlertForNoPersonName()
+            return nil
+        } else {
+            showAlertForNoPersonName()
+            return false
+        }
+    }
+    
+    func handlepeNewAssessmentFrequency() -> Bool? {
+        if regionID == 3 {
+            showAlertForNoFrequency()
+            return nil
+        } else {
+            showAlertForNoFrequency()
+            return false
+        }
+    }
+    
     func handleFrquencyIdValidation() -> Bool? {
         if regionID == 3 {
             if(self.peNewAssessment.frequency?.count ?? 0 < 1) {
                 if(self.peNewAssessment.evaluationID == 1) {
-                    if regionID == 3 {
-                        showAlertForNoFrequency()
-                    } else {
-                        showAlertForNoFrequency()
-                        return false
-                    }
+                    return handlepeNewAssessmentFrequency()
                 }
             }
+            
             if(self.peNewAssessment.personName?.count ?? 0 < 1) {
                 if(self.peNewAssessment.evaluationID == 1) {
-                    if regionID == 3 {
-                        showAlertForNoPersonName()
-                    } else {
-                        showAlertForNoPersonName()
-                        return false
-                    }
+                    return handlePeNewAssessmentPersonName()
                 }
             }
         }
@@ -3568,10 +3610,6 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     var x = -1
                     handlevNameMfgIdArrValidation(vNameMfgIdArray, &x, ManufacturerId, &indexArray)
                     let indexOfA = vNameMfgIdArray.index(of: ManufacturerId)
-                    for index in indexArray {
-                        
-                        let item = vNameArray[index] as? String ?? ""
-                    }
                     
                     vNameFilterArray = vNameArray as? [String] ?? [String]()
                     if vNameFilterArray.count > 0 {

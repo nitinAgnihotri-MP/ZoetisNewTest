@@ -757,7 +757,9 @@ class SingleSyncDataTurkey: NSObject {
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
             if WebClass.sharedInstance.connected() {
-                let Url = "PostingSession/T_SaveMultiplePostingsSyncData"
+           // Old     let Url = "PostingSession/T_SaveMultiplePostingsSyncData"
+                let Url = "PostingSession/TurkeySaveMultiplePostingsSyncData"
+                
                // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
                 let headerDict = [Constants.authorization:accestoken]
@@ -1048,7 +1050,8 @@ class SingleSyncDataTurkey: NSObject {
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
                 let headerDict = [Constants.authorization:accestoken]
-                let Url = "PostingSession/T_SaveMultipleNecropsySyncData"
+            // old   let Url = "PostingSession/T_SaveMultipleNecropsySyncData"
+                let Url = "PostingSession/TurkeySaveMultipleNecropsySyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
                 request.httpMethod = "POST"

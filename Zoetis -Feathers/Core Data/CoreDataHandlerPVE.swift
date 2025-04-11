@@ -129,9 +129,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func saveSerotypeDetailsInDB(json:PVESerotypeDetailsRes) {
-        
-        
-
         let entity = NSEntityDescription.entity(forEntityName: "PVE_SerotypeDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(json.id, forKey: "id")
@@ -310,6 +307,7 @@ class CoreDataHandlerPVE: NSObject {
         
     }
     
+    ///Same implementatio of function fetchDraftAssementArr()
     func getSyncdAssementsArr(selectedBirdTypeId:Int, type:String, syncId:String) -> NSArray {
         
         var dataArray = NSArray()
@@ -331,30 +329,6 @@ class CoreDataHandlerPVE: NSObject {
         return dataArray
         
     }
-    
-    
-    func fetchDraftAssementArr(selectedBirdTypeId:Int, type:String, syncId:String) -> NSArray {
-        
-        var dataArray = NSArray()
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentCategoriesDetails")
-        fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "id != %d AND syncId == %@", argumentArray: [selectedBirdTypeId, syncId])
-        
-        do {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult {
-                dataArray = results as NSArray
-            } else {
-                
-            }
-        } catch {
-            print(message)
-        }
-        
-        return dataArray
-        
-    }
-    
     
     func fetchDetailsForAssessmentCategoriesDetails() -> NSArray {
         
@@ -446,8 +420,7 @@ class CoreDataHandlerPVE: NSObject {
         let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_CustomerComplexPopup")
         if valuee.count > 0 {
             
-            let customerIdArr = valuee.value(forKey: "customerId")  as! NSArray
-            let complexIdArr = valuee.value(forKey: "complexId")  as! NSArray
+       
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
             
@@ -1578,37 +1551,13 @@ class CoreDataHandlerPVE: NSObject {
         }
     }
     
-    func checkAtLeastOneSelectionInCategory(_ seq_Number: NSNumber) -> NSArray {
-        
-        var dataArray = NSArray()
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
-        fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: predicateSeqStr, seq_Number)
-        do {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult {
-                dataArray = results as NSArray
-            } else {
-                
-            }
-        } catch {
-            print(message)
-        }
-        
-        return dataArray
-        
-    }
-    
     func getSessionDetailsFromDB() -> NSArray {
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Session")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Session")
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
-                userIDArray = dataArray.value(forKey: "userId")  as! NSArray
+                let userIDArray = (results as NSArray).value(forKey: "userId")  as! NSArray
                 return userIDArray
             }
         } catch {
@@ -1618,10 +1567,6 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func saveUserInfoInDB(userId:Any) {
-        
-        
-
-        
         let entity = NSEntityDescription.entity(forEntityName: "PVE_UserInfo", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
@@ -1814,10 +1759,6 @@ class CoreDataHandlerPVE: NSObject {
     func saveSessionDetailsInDB() {
         
         CoreDataHandlerPVE().updateQuestionstoDeselect()
-        
-        
-
-        
         let entity = NSEntityDescription.entity(forEntityName: "PVE_Session", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
@@ -1836,15 +1777,14 @@ class CoreDataHandlerPVE: NSObject {
         person.setValue(1, forKey: "sessionId")
         person.setValue("", forKey: "accountManager")
         
-        var evaluatorNameStr = String()
-        evaluatorNameStr = (UserDefaults.standard.string(forKey: "FirstName") ?? "") + " " + (UserDefaults.standard.string(forKey: "LastName") ?? "")
+        var evaluatorNameStr = (UserDefaults.standard.string(forKey: "FirstName") ?? "") + " " + (UserDefaults.standard.string(forKey: "LastName") ?? "")
         
         let evalArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_Evaluator", id: currentUserId , keyStr: "id")
         if evalArr.count > 0 {
             person.setValue(evaluatorNameStr, forKey: "evaluator")
             person.setValue(currentUserId, forKey: "evaluatorId")
             print("EvaluatorIdExistInList")
-        }else{
+        } else {
             person.setValue("", forKey: "evaluator")
             person.setValue(0, forKey: "evaluatorId")
             print("EvaluatorId Not ExistInList")
@@ -1969,31 +1909,25 @@ class CoreDataHandlerPVE: NSObject {
         
         CoreDataHandlerPVE().updateQuestionstoDeselect()
         
-        
-
-        
         let entity = NSEntityDescription.entity(forEntityName: "PVE_Session", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
-        let currentUserId =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let currentUserId = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         person.setValue(currentUserId, forKey: "userId")
         
-        
         // ---- Add Additional Fields Values In DB
-        
         person.setValue("", forKey: "evaluationDate")
         person.setValue("", forKey: "evaluationFor")
         person.setValue("", forKey: "serveyNo")
         person.setValue(1, forKey: "sessionId")
         person.setValue("", forKey: "accountManager")
         
-        var evaluatorNameStr = String()
-        evaluatorNameStr = (UserDefaults.standard.string(forKey: "FirstName") ?? "") + " " + (UserDefaults.standard.string(forKey: "LastName") ?? "")
+        let evaluatorNameStr = (UserDefaults.standard.string(forKey: "FirstName") ?? "") + " " + (UserDefaults.standard.string(forKey: "LastName") ?? "")
         let evalArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_Evaluator", id: currentUserId , keyStr: "id")
         if evalArr.count > 0 {
             person.setValue(evaluatorNameStr, forKey: "evaluator")
             person.setValue(currentUserId, forKey: "evaluatorId")
-        }else{
+        } else {
             person.setValue("", forKey: "evaluator")
             person.setValue(0, forKey: "evaluatorId")
         }
@@ -2235,7 +2169,6 @@ class CoreDataHandlerPVE: NSObject {
     
     func updateDraft(_ assessmentId: Int, text: Any, forAttribute:String ) {
         
-        var dataArray = NSArray()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_Draft")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "sessionId == %@", argumentArray: [assessmentId])
@@ -2244,11 +2177,9 @@ class CoreDataHandlerPVE: NSObject {
             
             if forAttribute == "dateCreated" {
                 results?[0].setValue(text, forKey: "dateCreated")
-            }
-            else{
+            } else {
                 if let results = results {
-                    dataArray = results as NSArray
-                    let draftCountArr = dataArray.value(forKey: "draftCount") as? [Int]
+                    let draftCountArr = (results as NSArray).value(forKey: "draftCount") as? [Int]
                     var currentCount = draftCountArr?[0]
                     currentCount = (currentCount ?? 0) + 1
                     results[0].setValue(currentCount, forKey: forAttribute)
@@ -2269,17 +2200,14 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     
-    func updateSyncAssCatDetailsFor(_ syncId: String, text: Any, forAttribute:String ) {
+    func updateSyncAssCatDetailsFor(_ syncId: String, text: Any, forAttribute:String) {
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentCategoriesDetails")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if results?.count != 0 { // Atleast one was returned
-                
-                if forAttribute != "" {
-                    results![0].setValue(text, forKey: forAttribute)
-                }
+            if results?.count != 0,forAttribute != "" { // Atleast one was returned
+                results![0].setValue(text, forKey: forAttribute)
             }
         } catch {
             //   print("Fetch Failed: \(error)")
@@ -2287,19 +2215,12 @@ class CoreDataHandlerPVE: NSObject {
         
         do {
             try managedContext.save()
-        }
-        catch {
+        } catch {
             print(message)
         }
-        
     }
     
-    
-    
     func saveSyncAssCatDetails(type:String, syncId:String) {
-        
-        
-
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentCategoriesDetails")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -2542,121 +2463,8 @@ class CoreDataHandlerPVE: NSObject {
             } catch {
             }
             pveSync.append(person)
-            
         }
-        
     }
-    
-//    fileprivate func dataPopulationMethod1(_ person: NSManagedObject, _ vaccineInfoDetailsViewModel: [JSON]) {
-//        person.setValue(vaccineInfoDetailsViewModel, forKey: "cat_vaccinInfoDetailArr")
-//        if vaccineInfoDetailsViewModel.count > 0 {
-//            var vaccinatorInfoArr = [[String : Any]]()
-//            for (_, currntSyncObj) in vaccineInfoDetailsViewModel.enumerated(){
-//                let Vaccine_Mfg_Id = currntSyncObj["Vaccine_Mfg_Id"].intValue
-//                let mfgArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_VaccineManDetails", id: Vaccine_Mfg_Id, keyStr: "id")
-//                var manufecturer = ""
-//                if mfgArr.count > 0 {
-//                    manufecturer = (mfgArr.object(at: 0) as AnyObject).value(forKey: "name") as! String
-//                }
-//                
-//                let Vaccine_Id = currntSyncObj["Vaccine_Id"].intValue
-//                let vaccineArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_VaccineNamesDetails", id: Vaccine_Id, keyStr: "id")
-//                var vaccine = ""
-//                if vaccineArr.count > 0 {
-//                    vaccine = (vaccineArr.object(at: 0) as AnyObject).value(forKey: "name") as! String
-//                }
-//                
-//                let Serotype_Id = currntSyncObj["Serotype_Id"].intValue
-//                let serotypeArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id: Serotype_Id, keyStr: "id")
-//                var serotype = ""
-//                if serotypeArr.count > 0 {
-//                    serotype = (serotypeArr.object(at: 0) as AnyObject).value(forKey: "type") as! String
-//                }
-//                
-//                
-//                let Vaccine_antigen_Id = currntSyncObj["Vaccine_Id"].intValue
-//                let Vaccine_antigenArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id: Vaccine_antigen_Id, keyStr: "vaccine_Id")
-//                var antigentype = 23
-//                if Vaccine_antigenArr.count > 0 {
-//                    antigentype = (Vaccine_antigenArr.object(at: 0) as AnyObject).value(forKey: "vaccine_Id") as? Int ?? 0
-//                }
-//                
-//                let Site_Injct_Id = currntSyncObj["Site_Injct_Id"].intValue
-//                let siteInjArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SiteInjctsDetails", id: Site_Injct_Id, keyStr: "id")
-//                var siteInj = ""
-//                if siteInjArr.count > 0 {
-//                    siteInj = (siteInjArr.object(at: 0) as AnyObject).value(forKey: "name") as! String
-//                }
-//                
-//                let Serial = currntSyncObj["Serial"].stringValue
-//                let Exp_Date = currntSyncObj["Exp_Date"].stringValue
-//                
-//                var expDateString = String()
-//                if Exp_Date == "1900-12-12T00:00:00"{
-//                    expDateString = ""
-//                }else{
-//                    let dateTempArr = Exp_Date.components(separatedBy: "T")
-//                    let inputFormatter = DateFormatter()
-//                    inputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
-//                    let showDate = inputFormatter.date(from: dateTempArr[0])
-//                    inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
-//                    expDateString = inputFormatter.string(from: showDate!)
-//                }
-//                var tempVacName = String()
-//                var tempVaccine_Id = Int()
-//                
-//                if Vaccine_Mfg_Id == 17 {
-//                    tempVacName = currntSyncObj["Vaccine_Other"].stringValue
-//                    tempVaccine_Id = 1000
-//                }else{
-//                    tempVacName = vaccine
-//                    tempVaccine_Id = Vaccine_Id
-//                }
-//                
-//                let note = currntSyncObj["Note"].stringValue
-//                let otherAntigen = currntSyncObj["Serotype_Other"].stringValue
-//                let showMore = currntSyncObj["ShowMore"].stringValue
-//                let antigenModel = currntSyncObj["antigenDetailsViewModel"].arrayValue
-//                
-//                var antigenIdArr = [String]()
-//                var antigenNameArr = [String]()
-//                var otherAntigenArr = [String]()
-//                
-//                for antigen in antigenModel
-//                {
-//                    antigenIdArr.append("\(antigen["Antigen_Id"].intValue)")
-//                    antigenNameArr.append(antigen["ProperAntigenName"].stringValue)
-//                    otherAntigenArr.append(antigen["Antigen_Other"].stringValue)
-//                }
-//                
-//                
-//                let antigenOtherStr = otherAntigenArr.joined(separator: "")
-//                vaccinatorInfoArr.append(["man_id": Vaccine_Mfg_Id,
-//                                          "man" : manufecturer,
-//                                          
-//                                          "name_id": tempVaccine_Id,
-//                                          "name" : tempVacName,
-//                                          
-//                                          "serotype_id" : antigenIdArr,
-//                                          "serotype" : antigenNameArr,
-//                                          
-//                                          "siteOfInj_id" : Site_Injct_Id,
-//                                          "siteOfInj" : siteInj,
-//                                          
-//                                          "serial" : Serial,
-//                                          "expDate" : expDateString,
-//                                          "note" : note,
-//                                          
-//                                          "showMore" : showMore,
-//                                          "vaccine_id" : antigentype,
-//                                          
-//                                          "otherAntigen" : antigenOtherStr,
-//                                         ])
-//            }
-//            person.setValue(vaccinatorInfoArr, forKey: "cat_vaccinInfoDetailArr")
-//        }
-//    }
-    
     
     fileprivate func dataPopulationMethod1(_ person: NSManagedObject, _ vaccineInfoDetailsViewModel: [JSON]) {
         person.setValue(vaccineInfoDetailsViewModel, forKey: "cat_vaccinInfoDetailArr")
@@ -2667,7 +2475,7 @@ class CoreDataHandlerPVE: NSObject {
         for currntSyncObj in vaccineInfoDetailsViewModel {
             let manufecturer = fetchEntityName(entity: "PVE_VaccineManDetails", id: currntSyncObj["Vaccine_Mfg_Id"].intValue, key: "name")
             let vaccine = fetchEntityName(entity: "PVE_VaccineNamesDetails", id: currntSyncObj["Vaccine_Id"].intValue, key: "name")
-            let serotype = fetchEntityName(entity: "PVE_SerotypeDetails", id: currntSyncObj["Serotype_Id"].intValue, key: "type")
+            //let serotype = fetchEntityName(entity: "PVE_SerotypeDetails", id: currntSyncObj["Serotype_Id"].intValue, key: "type")
             let siteInj = fetchEntityName(entity: "PVE_SiteInjctsDetails", id: currntSyncObj["Site_Injct_Id"].intValue, key: "name")
             let antigentype = fetchEntityInt(entity: "PVE_SerotypeDetails", id: currntSyncObj["Vaccine_Id"].intValue, key: "vaccine_Id") ?? 23
             
@@ -2771,36 +2579,22 @@ class CoreDataHandlerPVE: NSObject {
         let assessmentCommentsViewModelArr = json["assessmentCommentsViewModel"].arrayValue
         for (_, currntObj) in assessmentCommentsViewModelArr.enumerated(){
             let comment = currntObj["Comment"].stringValue
-            if comment == ""{
-                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: comment, forAttribute: "comment")
-            }else{
-                self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: comment, forAttribute: "comment")
-            }
+            self.updateSyncAssQuestionsFor(syncId, id: currntObj["Assessment_Id"].intValue, text: comment, forAttribute: "comment")
         }
         
-        
-        
-        if saveType != "draft"{
+        if saveType != "draft" {
             
-            let assessmentArr = CoreDataHandlerPVE().fetchDraftAssementArr(selectedBirdTypeId: selectedBirdTypeId, type: saveType, syncId: syncId)
-            
+            let assessmentArr = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId, type: saveType, syncId: syncId)
             let catArray = assessmentArr.value(forKey: "category_Name") as? NSArray ?? NSArray()
-            
             let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
-            
-            var scoreArr = [Any]()
-            scoreArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(syncId, seqNoArr: seq_NumberArr).scoreArr as! [Any]
-            if scoreArr.count > 0
-            {
+            var scoreArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(syncId, seqNoArr: seq_NumberArr).scoreArr as! [Any]
+            if scoreArr.count > 0 {
                 scoreArr.removeLast()
             }
-            var evalScore = Double()
-            evalScore = inactivatedVaccinesViewModel[0]["Score"].doubleValue + choleraVaccinesViewModel[0]["Score"].doubleValue
-            
+            let evalScore = inactivatedVaccinesViewModel[0]["Score"].doubleValue + choleraVaccinesViewModel[0]["Score"].doubleValue
             scoreArr.append(evalScore)
             
-            var max_MarksArr = [Int]()
-            max_MarksArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(syncId, seqNoArr: seq_NumberArr).max_MarksArr as! [Int]
+            var max_MarksArr = (CoreDataHandlerPVE().fetchScoredArrForSyncId(syncId, seqNoArr: seq_NumberArr).max_MarksArr as! [Int])
             max_MarksArr.append(30)
             
             CoreDataHandlerPVE().updateDraftSNAFor(syncId, syncedStatus: true, text: catArray, forAttribute: "categoryArray")
@@ -2813,9 +2607,9 @@ class CoreDataHandlerPVE: NSObject {
     fileprivate func dataPopulationMethod3(_ catchersViewModel: [JSON], _ person: NSManagedObject, _ vaccinatorsViewModel: [JSON]) {
         if catchersViewModel.count > 0 {
             var catchersArr = [[String : String]]()
-            for (_, currntSyncObj) in catchersViewModel.enumerated(){
+            for (_, currntSyncObj) in catchersViewModel.enumerated() {
                 let name = currntSyncObj["MemberName"].stringValue
-                catchersArr.append((["name" : name ,"serology" : ""]))
+                catchersArr.append(["name" : name ,"serology" : ""])
             }
             person.setValue(catchersArr, forKey: "cat_NoOfCatchersDetailsArr")
         }
@@ -2942,10 +2736,9 @@ class CoreDataHandlerPVE: NSObject {
             person.setValue(json["No_of_Birds"].intValue, forKey: "noOfBirds")
             person.setValue(json["Notes"].stringValue, forKey: "notes")
             
-            var selectedBirdTypeId = Int()
             person.setValue(13, forKey: "selectedBirdTypeId")
-            selectedBirdTypeId = 13
-            if json["Type_of_Bird"].intValue == 1{
+            var selectedBirdTypeId = 13
+            if json["Type_of_Bird"].intValue == 1 {
                 person.setValue(14, forKey: "selectedBirdTypeId")
                 selectedBirdTypeId = 14
             }
@@ -3499,19 +3292,6 @@ class CoreDataHandlerPVE: NSObject {
                     let dataArray = tempObj! as NSArray
                     let catchersArr = (dataArray[0] as AnyObject).value(forKey: forAttribute) as? [[String: Any]]
                     
-//                    var tempArr = NSMutableArray()
-//                    
-//                    for (indx, obj) in catchersArr!.enumerated() {
-//                        
-//                        let dict = obj as [String: Any]
-//                        if (indx == currentIndPath.row) {
-//                            tempArr.add(["saroName": text])
-//                        } else {
-//                            tempArr.add(["saroName": dict["saroName"]!])
-//                        }
-//                    }
-                    
-                    
                     ///This code was changed to fix the issues reported by sonarQube.
                     ///https://sonarcloud.io/project/issues?open=AZUTWckX0tSHff4msruI&id=nitinAgnihotri-MP_ZoetisNewTest
                     var tempArr = catchersArr?.enumerated().map { (indx, obj) -> [String: Any] in
@@ -3551,41 +3331,23 @@ class CoreDataHandlerPVE: NSObject {
             let predicateStr1 = syncId.count > 0 ? predicateSync : predicateStr
             let predicateArr = syncId.count > 0 ? [syncId] : [currentUserId, customerStr, complexNameStr]
             fetchRequest.predicate = NSPredicate(format: predicateStr1, argumentArray: predicateArr)
-            
-//            do {
-                let tempObj = try? managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                if tempObj!.count > 0 { // Atleast one was returned
-                    let dataArray = tempObj! as NSArray
-                    let catchersArr = (dataArray[0] as AnyObject).value(forKey: forAttribute) as? [[String: String]]
-                    
-//                    var catchersDetailArr = [[String : Any]]()
-//                    
-//                    for (indx, obj) in catchersArr!.enumerated() {
-//                        let dict = obj as [String: Any]
-//                        if (indx == currentIndPath.row) {
-//                            catchersDetailArr.append(["name" : dict["name"]!,"serology" : text])
-//                            
-//                        }else{
-//                            catchersDetailArr.append(["name" : dict["name"]!,"serology" : dict["serology"]!])
-//                        }
-//                    }
-                    ///This code was changed to fix the issues reported by sonarQube.
-                    ///https://sonarcloud.io/project/issues?open=AZUTWckX0tSHff4msruJ&id=nitinAgnihotri-MP_ZoetisNewTest
-                    let catchersDetailArr = catchersArr?.enumerated().map { (indx, obj) -> [String: Any] in
-                        guard let dict = obj as? [String: Any] else { return [:] }
-                        return [
-                            "name": dict["name"] ?? "",
-                            "serology": (indx == currentIndPath.row) ? text : dict["serology"] ?? ""
-                        ]
-                    } ?? []
-
-                    tempObj![0].setValue(catchersDetailArr, forKey: forAttribute)
-                }
+            let tempObj = try? managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            if tempObj!.count > 0 { // Atleast one was returned
+                let dataArray = tempObj! as NSArray
+                let catchersArr = (dataArray[0] as AnyObject).value(forKey: forAttribute) as? [[String: String]]
+                ///This code was changed to fix the issues reported by sonarQube.
+                ///https://sonarcloud.io/project/issues?open=AZUTWckX0tSHff4msruJ&id=nitinAgnihotri-MP_ZoetisNewTest
+                let catchersDetailArr = catchersArr?.enumerated().map { (indx, obj) -> [String: Any] in
+                    guard let dict = obj as? [String: Any] else { return [:] }
+                    return [
+                        "name": dict["name"] ?? "",
+                        "serology": (indx == currentIndPath.row) ? text : dict["serology"] ?? ""
+                    ]
+                } ?? []
                 
-//                do {
-                try? managedContext.save()
-//                }
-//            }
+                tempObj![0].setValue(catchersDetailArr, forKey: forAttribute)
+            }
+            try? managedContext.save()
         }
     }
     
@@ -3606,24 +3368,11 @@ class CoreDataHandlerPVE: NSObject {
             let predicateStr1 = syncId.count > 0 ? predicateSync : predicateStr
             let predicateArr = syncId.count > 0 ? [syncId] : [currentUserId, customerStr, complexNameStr]
             fetchRequest.predicate = NSPredicate(format: predicateStr1, argumentArray: predicateArr)
-            
-//            do {
                 let tempObj = try? managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 if tempObj!.count > 0 { // Atleast one was returned
                     let dataArray = tempObj! as NSArray
                     let catchersArr = (dataArray[0] as AnyObject).value(forKey: forAttribute) as? [[String: String]]
                     
-//                    var catchersDetailArr = [[String : Any]]()
-//                    
-//                    for (indx, obj) in catchersArr!.enumerated() {
-//                        let dict = obj as [String: Any]
-//                        if (indx == currentIndPath.row) {
-//                            catchersDetailArr.append(["name" : text,"serology" : dict["serology"]!])
-//                        }else{
-//                            catchersDetailArr.append(["name" : dict["name"]!, "serology" : dict["serology"]!])
-//                            
-//                        }
-//                    }
                     ///This code was changed to fix the issues reported by sonarQube.
                     ///https://sonarcloud.io/project/issues?open=AZUTWckX0tSHff4msruK&id=nitinAgnihotri-MP_ZoetisNewTest
                     let catchersDetailArr = catchersArr?.enumerated().map { (indx, obj) -> [String: Any] in
@@ -3649,12 +3398,8 @@ class CoreDataHandlerPVE: NSObject {
         fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if results?.count != 0 { // Atleast one was returned
-                
-                if forAttribute != "" {
-                    results![0].setValue(text, forKey: forAttribute)
-                }
-                
+            if results?.count != 0,forAttribute != "" { // Atleast one was returned
+                results![0].setValue(text, forKey: forAttribute)
             }
         } catch {
             //   print("Fetch Failed: \(error)")
@@ -3678,13 +3423,9 @@ class CoreDataHandlerPVE: NSObject {
         fetchRequest.predicate = NSPredicate(format: predicateSync, argumentArray: [syncId])
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if results?.count != 0 { // Atleast one was returned
-                
-                if forAttribute != "" {
-                    results![0].setValue(text, forKey: forAttribute)
-                    results![0].setValue(syncedStatus, forKey: "syncedStatus")
-                }
-                
+            if results?.count != 0 ,forAttribute != "" { // Atleast one was returned
+                results![0].setValue(text, forKey: forAttribute)
+                results![0].setValue(syncedStatus, forKey: "syncedStatus")
             }
         } catch {
             
@@ -3732,16 +3473,8 @@ class CoreDataHandlerPVE: NSObject {
         
         let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_CustomerComplexPopup")
         if valuee.count > 0 {
-            
-            let customerArr = valuee.value(forKey: "customer") as! NSArray
-            let customerStr = customerArr[0] as! String
-            
             let customerIdArr = valuee.value(forKey: "customerId")  as! NSArray
             let customerId = customerIdArr[0] as! Int
-            
-            let complexNameArr = valuee.value(forKey: "complexName")  as! NSArray
-            let complexNameStr = complexNameArr[0] as! String
-            
             let complexIdArr = valuee.value(forKey: "complexId")  as! NSArray
             let complexId = complexIdArr[0] as! Int
             
@@ -3772,22 +3505,16 @@ class CoreDataHandlerPVE: NSObject {
     func saveCustomerComplexDetailsPoupInDB(_ customer: String, customerId:Int, complexName:String, complexId:Int) {
         
         let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_CustomerComplexPopup")
-        if valuee.count > 0{
+        if valuee.count > 0 {
             CoreDataHandler().deleteAllData("PVE_CustomerComplexPopup")
         }
         
-        var siteIdArr = NSArray()
-        var siteNameArr = NSArray()
-        var siteDetailsArray = NSArray()
-        siteDetailsArray = CoreDataHandlerPVE().fetchSiteNameAsComplexId( complexId as NSNumber)
-        siteIdArr = siteDetailsArray.value(forKey: "site_Id") as? NSArray ?? NSArray()
-        siteNameArr = siteDetailsArray.value(forKey: "site_Name") as? NSArray ?? NSArray()
+        var siteDetailsArray = CoreDataHandlerPVE().fetchSiteNameAsComplexId( complexId as NSNumber)
+        var siteIdArr = siteDetailsArray.value(forKey: "site_Id") as? NSArray ?? NSArray()
+        var siteNameArr = siteDetailsArray.value(forKey: "site_Name") as? NSArray ?? NSArray()
         
         let userId =  UserDefaults.standard.value(forKey: "Id") as? Int
         
-        
-        
-
         let entity = NSEntityDescription.entity(forEntityName: "PVE_CustomerComplexPopup", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(customer, forKey: "customer")
@@ -3813,12 +3540,9 @@ class CoreDataHandlerPVE: NSObject {
     
     func updateCustomerComplexDetailsPoupInDB(_ customer: String, customerId:Int, complexName:String, complexId:Int) {
         
-        var siteIdArr = NSArray()
-        var siteNameArr = NSArray()
-        var siteDetailsArray = NSArray()
-        siteDetailsArray = CoreDataHandlerPVE().fetchSiteNameAsComplexId( complexId as NSNumber)
-        siteIdArr = siteDetailsArray.value(forKey: "site_Id") as? NSArray ?? NSArray()
-        siteNameArr = siteDetailsArray.value(forKey: "site_Name") as? NSArray ?? NSArray()
+        var siteDetailsArray = CoreDataHandlerPVE().fetchSiteNameAsComplexId( complexId as NSNumber)
+        var siteIdArr = siteDetailsArray.value(forKey: "site_Id") as? NSArray ?? NSArray()
+        var siteNameArr = siteDetailsArray.value(forKey: "site_Name") as? NSArray ?? NSArray()
         let entity = NSEntityDescription.entity(forEntityName: "PVE_CustomerComplexPopup", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(customer, forKey: "customer")

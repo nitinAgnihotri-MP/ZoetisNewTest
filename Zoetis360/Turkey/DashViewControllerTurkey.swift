@@ -400,7 +400,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             ]
             let Id = UserDefaults.standard.integer(forKey: "Id")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
-            let Url = WebClass.sharedInstance.webUrl + "Setting/T_GetNecroCategoryObservationList?UserId=\(Id)&CountryId=\(countryId)"
+            let Url = WebClass.sharedInstance.webUrl + "Setting/TurkeyGetNecroCategoryObservationList?UserId=\(Id)&CountryId=\(countryId)"
+     // OLD      let Url = WebClass.sharedInstance.webUrl + "Setting/T_GetNecroCategoryObservationList?UserId=\(Id)&CountryId=\(countryId)"
             let urlString = URL(string: Url)
 
             sessionManager.request(urlString!, method: .get, headers: headerDict).responseJSON { response in

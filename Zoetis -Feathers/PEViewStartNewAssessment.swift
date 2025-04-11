@@ -102,39 +102,7 @@ class PEViewStartNewAssessment: BaseViewController {
     @IBOutlet weak var txtIncubationOthers: PEFormTextfield!
     @IBOutlet weak var handmixSwitch: UISwitch!
     
-    override func viewDidLoad() {
-        print("<<<<",self)
-        super.viewDidLoad()
-        self.navigationController?.navigationBar.isHidden = true
-        regionID = UserDefaults.standard.integer(forKey: "Regionid")
-        btn_MoveToDraft.isHidden = true
-        let dateFormatter = DateFormatter()
-        setupUI()
-        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
-//        dateFormatter.calendar = Calendar(identifier: .gregorian)
-//        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        let currentDate: NSDate = NSDate()
-        let strdate1 = dateFormatter.string(from: currentDate as Date) as String
-        self.cameraSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
-        self.extendedPESwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
-        self.hatcherySwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
-        self.chlorineStripsSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
-        self.isAutomaticSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
-        peHeaderViewController = PEHeaderViewController()
-        peHeaderViewController.titleOfHeader = "View Assessment"
-        peHeaderViewController.assId = "C-\(peNewAssessment.dataToSubmitID!)"
-        self.headerView.addSubview(peHeaderViewController.view)
-        self.topviewConstraint(vwTop: peHeaderViewController.view)
-        
-        notesTextView.delegate = self
-        notesTextView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
-        notesTextView.textContainer.lineFragmentPadding = 12
-        notesTextView.text = ""
-        notesTextView.text =  peNewAssessment.notes
-        selectedCustomerText.text = peNewAssessment.customerName
-        selectedSiteText.text =  peNewAssessment.siteName
-        let defautUsername =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
-        
+    fileprivate func viewDidLoadRefactoringPart1(_ strdate1: String, _ defautUsername: String) {
         if peNewAssessment.evaluationDate == "" {
             selectedEvaluationDateText.text = strdate1
             self.peNewAssessment.evaluationDate = strdate1
@@ -177,8 +145,9 @@ class PEViewStartNewAssessment: BaseViewController {
         txtBreedOfBirdsOthers.text =    self.peNewAssessment.breedOfBirdOther
         txtIncubation.text =  self.peNewAssessment.incubation
         txtIncubationOthers.text =   self.peNewAssessment.incubationOthers
-        
-        
+    }
+    
+    fileprivate func viewDidLoadRefactoringPart2() {
         if selectedEvaluationType.text == "" {
             hideFlockView()
         } else {
@@ -230,10 +199,10 @@ class PEViewStartNewAssessment: BaseViewController {
         else {
             print(appDelegateObj.testFuntion())
         }
-        hideManufacturerOthers()
-        hideEggsOthers()
-        txtManufacturer.text = self.peNewAssessment.manufacturer ?? ""
-        if  txtManufacturer.text != "" {
+    }
+    
+    fileprivate func viewDidLoadRefactoringPart3() {
+        if txtManufacturer.text != "" {
             if let character = peNewAssessment.manufacturer?.character(at:0) {
                 if txtManufacturer.text == "Other"{
                     showManufacturerOthers()
@@ -277,6 +246,46 @@ class PEViewStartNewAssessment: BaseViewController {
         }else{
             chlorineStripsSwitch.isOn = false
         }
+    }
+    
+    override func viewDidLoad() {
+        print("<<<<",self)
+        super.viewDidLoad()
+        self.navigationController?.navigationBar.isHidden = true
+        regionID = UserDefaults.standard.integer(forKey: "Regionid")
+        btn_MoveToDraft.isHidden = true
+        let dateFormatter = DateFormatter()
+        setupUI()
+        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+        let currentDate: NSDate = NSDate()
+        let strdate1 = dateFormatter.string(from: currentDate as Date) as String
+        self.cameraSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
+        self.extendedPESwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
+        self.hatcherySwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
+        self.chlorineStripsSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
+        self.isAutomaticSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
+        peHeaderViewController = PEHeaderViewController()
+        peHeaderViewController.titleOfHeader = "View Assessment"
+        peHeaderViewController.assId = "C-\(peNewAssessment.dataToSubmitID!)"
+        self.headerView.addSubview(peHeaderViewController.view)
+        self.topviewConstraint(vwTop: peHeaderViewController.view)
+        
+        notesTextView.delegate = self
+        notesTextView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
+        notesTextView.textContainer.lineFragmentPadding = 12
+        notesTextView.text = ""
+        notesTextView.text =  peNewAssessment.notes
+        selectedCustomerText.text = peNewAssessment.customerName
+        selectedSiteText.text =  peNewAssessment.siteName
+        let defautUsername =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
+        
+        viewDidLoadRefactoringPart1(strdate1, defautUsername)
+        
+        viewDidLoadRefactoringPart2()
+        hideManufacturerOthers()
+        hideEggsOthers()
+        txtManufacturer.text = self.peNewAssessment.manufacturer ?? ""
+        viewDidLoadRefactoringPart3()
         if peNewAssessment?.isAutomaticFail ?? 0 == 1{
             isAutomaticSwitch.isOn = true
         }else{
@@ -310,6 +319,77 @@ class PEViewStartNewAssessment: BaseViewController {
     }
     
     // MARK: - Assign Constraint
+    fileprivate func handleRightConstAssignConstraintValidation(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
+            }
+        case 2:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
+            }
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 60))
+            }
+        }
+    }
+    
+    fileprivate func handleRightConstAssignConstraintValidationCase2(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+            
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
+            }
+        case 2:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
+            }
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 50))
+            }
+        }
+    }
+    
+    fileprivate func handleRightConstAssignConstraintValidationCase3(_ rightConst: Int, _ leftConst: Int) {
+        switch rightConst {
+            
+        case 1:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
+            }
+        case 2:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
+            }
+        default:
+            if heightNumberOfEggsView.constant == 94{
+                notesTop.constant = CGFloat(((leftConst * 55 ) ))
+            }else{
+                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            }
+        }
+    }
+    
     func assignConstraint(otherEgg:Int = 0){
         let leftConst = leftConstraint()
         var rightConst = rightConstraint()
@@ -319,74 +399,11 @@ class PEViewStartNewAssessment: BaseViewController {
         
         switch leftConst {
         case 0:
-            
-            switch rightConst {
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
-                }
-            case 2:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
-                }
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 60))
-                }
-            }
-            
+            handleRightConstAssignConstraintValidation(rightConst, leftConst)
         case 1:
-            
-            switch rightConst {
-                
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
-                }
-            case 2:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
-                }
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 50))
-                }
-            }
+            handleRightConstAssignConstraintValidationCase2(rightConst, leftConst)
         case 2:
-            
-            switch rightConst {
-                
-            case 1:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
-                }
-            case 2:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
-                }
-            default:
-                if heightNumberOfEggsView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) ))
-                }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-                }
-            }
+            handleRightConstAssignConstraintValidationCase3(rightConst, leftConst)
             
         default:
             break;
