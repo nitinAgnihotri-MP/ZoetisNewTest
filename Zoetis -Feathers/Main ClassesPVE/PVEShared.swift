@@ -99,9 +99,7 @@ public class PVEShared: NSObject {
     
     public var vaccineEvaluationScoreTotal = Double()
     
-    
-    
-    func getCustomerAndSitePopupValueFromDB(key:String) -> Any{
+    func getCustomerAndSitePopupValueFromDB(key:String) -> Any {
         let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_CustomerComplexPopup")
         let valueArr = valuee.value(forKey: key) as! NSArray
         return valueArr[0]
@@ -131,15 +129,11 @@ public class PVEShared: NSObject {
     }
     
     func setBorderBlue(btn:UIButton) {
-        
         let superviewCurrent =  btn.superview
         for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                if view == btn{
-                    view.setDropdownStartAsessmentView(imageName:"dd")
-                }
+            if view.isKind(of:UIButton.self),view == btn {
+                view.setDropdownStartAsessmentView(imageName:"dd")
             }
         }
-        
     }
 }

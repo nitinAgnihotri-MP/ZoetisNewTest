@@ -507,7 +507,7 @@ class PEViewStartNewAssessment: BaseViewController {
             "countryId": "\(countryId)"
         ] as JSONDictionary
         ZoetisWebServices.shared.getMixerList(controller: self, parameters: parameter) { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleVaccineMixer(json)
         }
     }
@@ -2315,7 +2315,7 @@ extension PEViewStartNewAssessment{
                 if error != nil {
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                 }
-                guard let `self` = self, error == nil else { return }
+                guard let self = self, error == nil else { return }
                 
                 if json["StatusCode"]  == 200{
                     self.callRequest2(paramForDoaInnovoject: paramForDoaInnovoject, json: json)
@@ -2578,7 +2578,7 @@ extension PEViewStartNewAssessment{
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             
             if json["StatusCode"]  == 200{
                 self.handleSyncResponse(mjson)
@@ -2593,7 +2593,7 @@ extension PEViewStartNewAssessment{
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 self.CalculateImageCount()
             } else {
@@ -2851,7 +2851,7 @@ extension PEViewStartNewAssessment{
                     NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                 }
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 if self.saveTypeString.contains(11)
                 {
@@ -3054,7 +3054,7 @@ extension PEViewStartNewAssessment{
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
             
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 
                 self.dismissGlobalHUD(self.view)

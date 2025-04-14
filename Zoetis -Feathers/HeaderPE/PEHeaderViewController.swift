@@ -114,10 +114,7 @@ class PEHeaderViewController: BaseViewController {
     
     
     func logoutBtnAction(){
-        let moduleID =   UserDefaults.standard.string(forKey:"ModuleId")
-        let moduleName =   UserDefaults.standard.string(forKey:"ModuleName")
-        let userType =   UserDefaults.standard.string(forKey:"userType")
-        
+        let userType = UserDefaults.standard.string(forKey:"userType")
         let errorMSg = Constants.areYouSureToLogoutStr
         let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
@@ -125,20 +122,12 @@ class PEHeaderViewController: BaseViewController {
             
             
             self.ssologoutMethod()
-            if userType == "PVE" {// For PVE
-              //  UserDefaults.standard.set(false, forKey: "newlogin")
+            if userType == "PVE" {
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "syncDataNoti"),object: nil))
-//                for controller in (self.navigationController?.viewControllers ?? []) as Array {
-//                    if controller.isKind(of: ViewController.self) {
-//                        self.navigationController!.popToViewController(controller, animated: true)
-//                        break
-//                    }
-//                }
             }
-            if userType == "PE" {// For PE
+            if userType == "PE" {
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "peSyncDataNoti"),object: nil))
-            }
-            else  if userType == "Microbial"{
+            } else if userType == "Microbial" {
                 UserDefaults.standard.set(false, forKey: "newlogin")
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "microbialSyncDataNoti"),object: nil))
                 for controller in (self.navigationController?.viewControllers ?? []) as Array {
@@ -148,7 +137,6 @@ class PEHeaderViewController: BaseViewController {
                     }
                 }
             }
-
         }
         
         let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
@@ -158,25 +146,17 @@ class PEHeaderViewController: BaseViewController {
         
     }
     
-
-
-
-
-        // MARK:  /*********** Logout SSO Account **************/
-        func ssologoutMethod()
-        {
-            gigya.logout() { result in
-                switch result {
-                case .success(let data):
-                    print(data)
-                case .failure(let error):
-                    print(error)
-                }
+    // MARK:  /*********** Logout SSO Account **************/
+    func ssologoutMethod() {
+        gigya.logout() { result in
+            switch result {
+            case .success(let data):
+                print(data)
+            case .failure(let error):
+                print(error)
             }
         }
-    
-    
-    
+    }
     
     func finishSession()  {
         cleanSession()
@@ -229,45 +209,33 @@ class PEHeaderViewController: BaseViewController {
     
     @IBAction func menuButtonClicked(_ sender: Any) {
         NotificationCenter.default.post(name: NSNotification.Name("LeftMenuBtnNoti"), object: nil, userInfo: nil)
-        
     }
     
     @IBAction func pdfOptionBtnAction(_ sender: UIButton) {
         
         let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
         let vc = storyBoard.instantiateViewController(withIdentifier: "pdfOptionsViewController") as! pdfOptionsViewController
-       // vc.pdfURL = pdfUrl
         vc.modalPresentationStyle = .currentContext
         self.present(vc, animated: false, completion: nil)
-//        
-//                    if let viewController = UIStoryboard(name: "PEStoryboard", bundle: nil).instantiateViewController(withIdentifier: "pdfOptionsViewController") as? pdfOptionsViewController {
-//                        if let navigator = navigationController {
-//                           // viewController.base64Data = base64String
-//                            navigator.pushViewController(viewController, animated: true)
-//                        }
-//                    }
     }
-    
-    
-    
     
     @IBAction func clickToLogout(_ sender: Any) {
         logoutBtnAction()
     }
     
     @IBAction func clickToKillSession(_ sender: Any) {
-        var errorMSg =  String()
-        if (titleOfHeader == "Pullet Vaccine Evaluation"){
-            errorMSg =  "Are you sure you want to reset Customer and Complex?"
-        }else{
-            errorMSg =  "Are you sure you want to reset customer and site?"
+        var errorMSg = "Are you sure you want to reset customer and site?"
+
+        if (titleOfHeader == "Pullet Vaccine Evaluation") {
+            errorMSg = "Are you sure you want to reset Customer and Complex?"
         }
+        
         let alertController = UIAlertController(title: "Exit Session", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             
             let userType =   UserDefaults.standard.string(forKey:"userType")
-            if userType == "PE" {// For PE
+            if userType == "PE" {
                 self.finishSessionPE()
             } else {
                 self.finishSession()

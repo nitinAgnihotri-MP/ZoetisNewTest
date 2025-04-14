@@ -135,46 +135,28 @@ class PE_SessionIntCell: UITableViewCell {
         lblEvaluator.text = peNewAssessment.customerName
         lblSiteName.text = peNewAssessment.siteName
         let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
-        if infoObj?.isExtendedPE ?? false{
+        if infoObj?.isExtendedPE ?? false {
             extendedMicroLbl.text = "Yes"
-        }else{
+        } else {
             extendedMicroLbl.text = "No"
         }
         var AssessmentId = peNewAssessment.dataToSubmitNumber ?? 0
         if AssessmentId == 0 {
             AssessmentId = (peNewAssessment.serverAssessmentId as? NSString)!.integerValue
         }
-        let sbId =  peNewAssessment.dataToSubmitID ?? ""
+        let sbId = peNewAssessment.dataToSubmitID ?? ""
         let UniID = sbId
-        var score = 0
-        var DisplayId = peNewAssessment.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        var siteId = String(peNewAssessment.siteId ?? 0)
-        
         var countryName = peNewAssessment.countryName
-        debugPrint(countryName)
-        var sID = peNewAssessment.siteId ?? 0
-        sID = sID + 270101
-        var dID = AssessmentId ?? 0
-        dID = dID + 2903
-        // DisplayId = "C-" + DisplayId! + String(sID) + String(dID)
-        DisplayId = "C-" + UniID
-        if !Constants.isFromRejected{
-            lblCountryName.text = countryName //DisplayId
-            //lblAssessment.text = DisplayId
-        }else{
+        if !Constants.isFromRejected {
+            lblCountryName.text = countryName
+        } else {
             lblCountryName.text = countryName
             lblAction.text = "Rejected"
         }
-        
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
-//    @IBAction func idInfoClicked(sender: UIButton) {
-//    }
-    
 }
 

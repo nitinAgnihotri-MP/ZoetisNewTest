@@ -19,13 +19,10 @@ class GroupImagesPVEViewController: BaseViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     var imagesArray : [Int] = []
     var imagesDataArray : [Data] = []
-    ////imageCollectionPE
+    
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
-        for id in imagesArray{
- 
-        }
         collectionView.reloadData()
         hideBigView()
     }
@@ -59,7 +56,7 @@ class GroupImagesPVEViewController: BaseViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         let touch: UITouch = touches.first!
-        if (touch.view?.tag == 1111){
+        if (touch.view?.tag == 1111) {
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -70,9 +67,8 @@ class GroupImagesPVEViewController: BaseViewController {
     }
     
     @IBAction func crossClickedBigView(_ sender: Any) {
-    hideBigView()
+        hideBigView()
     }
-    
 }
 
 

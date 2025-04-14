@@ -3936,7 +3936,7 @@ extension PEViewAssesmentFinalize{
                 if error != nil {
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                 }
-                guard let `self` = self, error == nil else { return }
+                guard let self = self, error == nil else { return }
                 
                 if json["StatusCode"]  == 200{
                     
@@ -4133,7 +4133,7 @@ extension PEViewAssesmentFinalize{
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
             
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 
                 self.dismissGlobalHUD(self.view)
@@ -4408,7 +4408,7 @@ extension PEViewAssesmentFinalize{
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             
             if json["StatusCode"]  == 200{
                 self.handleSyncResponse(mjson)
@@ -4423,7 +4423,7 @@ extension PEViewAssesmentFinalize{
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 self.CalculateImageCount()
             } else {
@@ -4726,7 +4726,7 @@ extension PEViewAssesmentFinalize{
                     NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                 }
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 handleSaveTypeString(self)
                 handleSync(self)

@@ -321,18 +321,13 @@ class ComplexPoupViewController: BaseViewController {
 
 extension ComplexPoupViewController {
     
-    private func fetchCustomerList(){
-        
+    private func fetchCustomerList() {
         CoreDataHandler().deleteAllData("Customer_PVE")
-        
         self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...Please wait")
-        
-        let Id =  UserDefaults.standard.value(forKey: "Id") as? Int
-        
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         ZoetisWebServices.shared.getCustomerListForPVE(controller: self, countryID: String(countryId), parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
-            self.handlefetchCustomerResponse(json)
+            guard let selfObj = self, error == nil else { return }
+            selfObj.handlefetchCustomerResponse(json)
         })
     }
     
@@ -345,13 +340,13 @@ extension ComplexPoupViewController {
         fetchComplexListForPVE()
     }
     
-    private func fetchComplexListForPVE(){
+    private func fetchComplexListForPVE() {
         CoreDataHandler().deleteAllData("Complex_PVE")
         selectComplexText.text = ""
         
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         ZoetisWebServices.shared.getComplexListForPVE(controller: self, countryID: String(countryId), parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchAllComplexesResponseForPVE(json)
         })
     }
@@ -375,7 +370,7 @@ extension ComplexPoupViewController{
     private func fetchEvaluationTypeList(){
         CoreDataHandler().deleteAllData("PVE_EvaluationType")
         ZoetisWebServices.shared.getEvaluationTypeForPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleEvaluationTypeResponse(json)
         })
     }
@@ -393,7 +388,7 @@ extension ComplexPoupViewController{
     private func fetchEvaluationForList(){
         CoreDataHandler().deleteAllData("PVE_EvaluationFor")
         ZoetisWebServices.shared.getEvaluationForForPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleEvaluationForResponse(json)
         })
     }
@@ -412,7 +407,7 @@ extension ComplexPoupViewController{
         
         CoreDataHandler().deleteAllData("PVE_SiteIDName")
         ZoetisWebServices.shared.getSiteIdNameForPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleSiteIdNameResponse(json)
         })
     }
@@ -431,7 +426,7 @@ extension ComplexPoupViewController{
     private func fetchtAgeOfBirdsResponse(){
         CoreDataHandler().deleteAllData("PVE_AgeOfBirds")
         ZoetisWebServices.shared.getAgeOfBirdsForPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleAgeOfBirdsResponse(json)
         })
     }
@@ -450,7 +445,7 @@ extension ComplexPoupViewController{
     private func fetchtBreedOfBirdsResponse(){
         CoreDataHandler().deleteAllData("PVE_BreedOfBirds")
         ZoetisWebServices.shared.getBreedOfBirdsForPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleBreedOfBirdsResponse(json)
         })
     }
@@ -470,7 +465,7 @@ extension ComplexPoupViewController{
         
         CoreDataHandler().deleteAllData("PVE_Housing")
         ZoetisWebServices.shared.getHousingDetailsForPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleHousingDetailsResponse(json)
         })
     }
@@ -490,7 +485,7 @@ extension ComplexPoupViewController{
         
         CoreDataHandler().deleteAllData("PVE_AssignUserDetails")
         ZoetisWebServices.shared.getAssignUserDetailForPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleAssignUserDetailResponse(json)
         })
     }
@@ -510,7 +505,7 @@ extension ComplexPoupViewController{
         
         CoreDataHandler().deleteAllData("PVE_Evaluator")
         ZoetisWebServices.shared.getEvaluatorDetailForPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleEvaluatorDetailsResponse(json)
         })
     }
@@ -533,7 +528,7 @@ extension ComplexPoupViewController{
         CoreDataHandler().deleteAllData("PVE_AssessmentQuestion")
         
         ZoetisWebServices.shared.getAssessmentCategoriesDetailsPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleAssessmentCategoriesResponse(json)
         })
     }
@@ -556,7 +551,7 @@ extension ComplexPoupViewController{
         CoreDataHandler().deleteAllData("PVE_SerotypeDetails")
         
         ZoetisWebServices.shared.getSerotypeDetailsPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleSerotypeDetailsResponse(json)
         })
     }
@@ -575,7 +570,7 @@ extension ComplexPoupViewController{
         CoreDataHandler().deleteAllData("PVE_SurveyTypeDetails")
         
         ZoetisWebServices.shared.getSurveyTypeDetailsPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleSurveyTypeDetailsResponse(json)
         })
     }
@@ -596,7 +591,7 @@ extension ComplexPoupViewController{
         CoreDataHandler().deleteAllData("PVE_VaccineManDetails")
         
         ZoetisWebServices.shared.getVaccineManDetailsPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleVaccineManDetailsResponse(json)
         })
     }
@@ -615,7 +610,7 @@ extension ComplexPoupViewController{
         CoreDataHandler().deleteAllData("PVE_VaccineNamesDetails")
         
         ZoetisWebServices.shared.getVaccineNamesDetailsPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlegetVaccineNamesDetailsResponse(json)
         })
     }
@@ -634,7 +629,7 @@ extension ComplexPoupViewController{
         
         CoreDataHandler().deleteAllData("PVE_SiteInjctsDetails")
         ZoetisWebServices.shared.getSiteInjctsDetailssPVE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleSiteInjctsDetailsResponse(json)
         })
     }
@@ -673,7 +668,7 @@ extension ComplexPoupViewController{
             }
             
             ZoetisWebServices.shared.getblankPDFPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
+                guard let self = self, error == nil else { return }
                 print("res json -- \(json)")
                 self.handleblankPdfResponse(json)
                 
@@ -709,23 +704,14 @@ extension ComplexPoupViewController{
             }
             
             ZoetisWebServices.shared.getblankPDFPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
-                print("res json -- \(json)")
-                self.handleOtherPdfResponse(json)
-                
+                guard let self = self, error == nil else { return }
+                print("res json -- \(json)")                
             })
             
         } else {
             Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
         }
         stopLoader()
-        
-    }
-    
-    private func handleOtherPdfResponse(_ json: JSON) {
-        
-        let jsonObject = PVEOtherPdfResponse(json)
-        
     }
     
     @objc func stopLoader(notification: NSNotification){

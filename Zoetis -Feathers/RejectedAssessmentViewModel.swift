@@ -15,7 +15,7 @@ class RejectedAssessmentViewModel{
     
     func getRejectedAssessmentListByUser(controller: UIViewController){
         ZoetisWebServices.shared.getRejectedAssessmentListByUser(controller: controller, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             let mainQueue = OperationQueue.main
             mainQueue.addOperation{
                 print(appDelegateObj.testFuntion())

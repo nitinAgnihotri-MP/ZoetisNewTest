@@ -28,7 +28,7 @@ extension PELandingPoupViewController {
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         
         ZoetisWebServices.shared.getCustomerListForPE(controller: self, countryID: String(countryId), parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchAllCustomerResponse(json)
         })
     }
@@ -64,7 +64,7 @@ extension PELandingPoupViewController {
     
     private func fetchAllDoses(){
         ZoetisWebServices.shared.getPEDosagesListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchAllDosesResponse(json)
         })
         
@@ -82,7 +82,7 @@ extension PELandingPoupViewController {
     
     private func fetchEvaluator(){
         ZoetisWebServices.shared.getEvaluatorListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleFetchEvaluatorResponse(json)
         })
     }
@@ -99,7 +99,7 @@ extension PELandingPoupViewController {
     
     private func fetchApprovers(){
         ZoetisWebServices.shared.getApproversListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleFetchApproversResponse(json)
         })
     }
@@ -116,7 +116,7 @@ extension PELandingPoupViewController {
     
     private func fetchVisitTypes(){
         ZoetisWebServices.shared.getVisitTypesListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleFetchVisitTypesResponse(json)
         })
     }
@@ -133,7 +133,7 @@ extension PELandingPoupViewController {
     
     private func fetchEvaluationTypes(){
         ZoetisWebServices.shared.getEvaluatorTypesListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleFetchEvaluationTypesResponse(json)
         })
     }
@@ -150,7 +150,7 @@ extension PELandingPoupViewController {
     
     private func fetchSites(_ isEverytime:Bool = false){
         ZoetisWebServices.shared.getSitesListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleFetchSitesResponse(json, isEverytime)
         })
     }
@@ -192,7 +192,7 @@ extension PELandingPoupViewController {
     internal func fetchtAssessmentCategoriesResponse(){
         let evalTypeId = String(peNewAssessment.evalType?.id ?? 1)
         ZoetisWebServices.shared.getAssessmentCategoriesDetailsPE(controller: self, evalType:evalTypeId, moduleID: "1"  , parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if let responseJSONDict = json.dictionary{
                            if let response = responseJSONDict["Data"]{
                                let jsonDecoder = JSONDecoder()
@@ -221,7 +221,7 @@ extension PELandingPoupViewController {
     internal func fetchtQuestionInfo(){
         let evalTypeId = String(peNewAssessment.evalType?.id ?? 1)
         ZoetisWebServices.shared.getAssessmentQuesInfoPE(controller: self, evalType:evalTypeId, moduleID: "1"  , parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchtQuestionInfo(json)
         })
     }
@@ -238,7 +238,7 @@ extension PELandingPoupViewController {
     
     private func fetchManufacturer(){
         ZoetisWebServices.shared.getManufacturerListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchManufacturerResponse(json)
         })
     }
@@ -252,7 +252,7 @@ extension PELandingPoupViewController {
     
     private func fetchBirdBreed(){
         ZoetisWebServices.shared.getBirdBreedListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchBirdBreedResponse(json)
         })
     }
@@ -270,7 +270,7 @@ extension PELandingPoupViewController {
     
     private func fetchEggs(){
         ZoetisWebServices.shared.getEggsListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchEggsResponse(json)
         })
     }
@@ -289,7 +289,7 @@ extension PELandingPoupViewController {
     
     private func fetchVManufacturer(){
         ZoetisWebServices.shared.getVaccineManufacturerListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchVManufacturerResponse(json)
         })
     }
@@ -309,7 +309,7 @@ extension PELandingPoupViewController {
     
     private func fetchVaccineNames(){
         ZoetisWebServices.shared.getVaccineNamesListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchVaccineNamesResponse(json)
         })
     }
@@ -326,7 +326,7 @@ extension PELandingPoupViewController {
     
     private func fetchDiluentManufacturer(){
         ZoetisWebServices.shared.getDiluentManufacturerList(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchDiluentManufacturer(json)
         })
     }
@@ -340,7 +340,7 @@ extension PELandingPoupViewController {
     
     private func fetchBagSizes(){
         ZoetisWebServices.shared.getBagSizes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchBagSizes(json)
         })
     }
@@ -355,7 +355,7 @@ extension PELandingPoupViewController {
     
     private func fetchAmplePerBag(){
         ZoetisWebServices.shared.getAmplePerBag(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchAmplePerBag(json)
         })
     }
@@ -368,7 +368,7 @@ extension PELandingPoupViewController {
     
     private func fetchAmpleSizes(){
         ZoetisWebServices.shared.getAmpleSizes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchAmpleSizes(json)
         })
     }
@@ -381,7 +381,7 @@ extension PELandingPoupViewController {
     
     private func fetchRoles(){
         ZoetisWebServices.shared.getPERoles(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchRoles(json)
         })
     }
@@ -394,7 +394,7 @@ extension PELandingPoupViewController {
       
     private func fetchDOADiluentType(){
         ZoetisWebServices.shared.getPEDOADiluentType(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchDOADiluentType(json)
         })
     }
@@ -408,7 +408,7 @@ extension PELandingPoupViewController {
     
     private func fetchSubVaccineNames(){
         ZoetisWebServices.shared.getVaccineSubNamesListForPE(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchSubVaccineNamesResponse(json)
         })
     }
@@ -424,7 +424,7 @@ extension PELandingPoupViewController {
     
     private func fetchPEFrequency(){
           ZoetisWebServices.shared.getPEFrequency(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-              guard let `self` = self, error == nil else { return }
+              guard let self = self, error == nil else { return }
               self.handlefetchPEFrequency(json)
           })
       }
@@ -437,7 +437,7 @@ extension PELandingPoupViewController {
     
     private func fetchIncubationStyle(){
           ZoetisWebServices.shared.getPEIncubationStyle(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-              guard let `self` = self, error == nil else { return }
+              guard let self = self, error == nil else { return }
               self.handlefetchIncubationStyle(json)
           })
       }
@@ -450,7 +450,7 @@ extension PELandingPoupViewController {
     
     private func fetchDOASizes(){
           ZoetisWebServices.shared.getPEDOASizes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-              guard let `self` = self, error == nil else { return }
+              guard let self = self, error == nil else { return }
               self.handlefetchDOASizes(json)
           })
       }
@@ -490,7 +490,7 @@ extension PELandingPoupViewController{
     
     private func getPostingAssessmentListByUser(){
         ZoetisWebServices.shared.getPostedAssmntListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlGetPostingAssessmentListByUser(json)
           //  self.dismissGlobalHUD(self.view)
                  
@@ -1662,7 +1662,7 @@ extension PELandingPoupViewController{
     
     private func getPostingAssessmentImagesListByUser(){
         ZoetisWebServices.shared.getPostingImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlGetPostingAssessmentImagesListByUser(json)
         })
     }

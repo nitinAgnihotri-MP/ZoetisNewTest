@@ -250,26 +250,9 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
     }
     
     @IBAction func switchValueChanged(_ sender: UISwitch) {
-        
-        let green = ZoetisArt.ColorCode.green
-        let red = UIColor(hexString: ZoetisArt.ColorCode.orange)
-        
-        if sender.isOn{
-           // Constants.switchCount = Constants.switchCount - 1
-            
-            completion?(true,nil)
-        } else{
-           // Constants.switchCount = Constants.switchCount + 1
-            completion?(false,nil)
-        }
-  
-        
+        completion?(sender.isOn,nil)
     }
-    
-//    @IBAction func switchAction(_ sender: UISwitch) {
-//        
-//    }
-    
+        
     @IBAction func commentClicked(_ sender: Any) {
         commentCompletion?(nil)
     }
@@ -354,7 +337,6 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
         
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        //   print("TextField should return method called")
         textField.resignFirstResponder();
         return true;
     }

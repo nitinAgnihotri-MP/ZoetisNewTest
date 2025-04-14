@@ -67,7 +67,7 @@ class pdfOptionsViewController: BaseViewController , UITableViewDelegate, UITabl
             }
             
             ZoetisWebServices.shared.getBlankAssessmentFiles(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
+                guard let self = self, error == nil else { return }
                 self.handleBlankAssessmentResponse(json)
             })
             
@@ -158,7 +158,7 @@ class pdfOptionsViewController: BaseViewController , UITableViewDelegate, UITabl
             }
             
             ZoetisWebServices.shared.getDownloadBlankFile(controller: self, parameters: [:], fileName: fileName,  completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
+                guard let self = self, error == nil else { return }
                 let urlData = json["Data"].string
                 self.saveBase64StringToPDF(urlData ?? "", orderId: "12", nameOfFile: fileName)
             })

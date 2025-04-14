@@ -154,7 +154,9 @@ final public class YPDrawSignatureView: UIView {
     
     // Save the Signature as an UIImage
     public func getSignature(scale:CGFloat = 1) -> UIImage? {
-        if !doesContainSignature { return nil }
+        if !doesContainSignature {
+            return nil
+        }
         UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, scale)
         self.strokeColor.setStroke()
         self.path.stroke()
@@ -220,8 +222,3 @@ public protocol YPSignatureDelegate: class {
     func didStart(_ view : YPDrawSignatureView)
     func didFinish(_ view : YPDrawSignatureView)
 }
-
-//extension YPSignatureDelegate {
-//    func didStart(_ view : YPDrawSignatureView) {}
-//    func didFinish(_ view : YPDrawSignatureView) {}
-//}

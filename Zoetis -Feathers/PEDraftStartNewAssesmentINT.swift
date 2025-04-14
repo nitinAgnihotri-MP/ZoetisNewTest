@@ -983,7 +983,7 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
             "countryId": "\(countryId)"
         ] as JSONDictionary
         ZoetisWebServices.shared.getMixerList(controller: self, parameters: parameter) { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleVaccineMixer(json)
         }
     }
@@ -2138,7 +2138,7 @@ extension PEDraftStartNewAssesmentINT{
             "EvaluationDate": evalDate
         ] as JSONDictionary
         ZoetisWebServices.shared.getDuplicacyCheck(controller: self, parameters: parameter, completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["Data"].boolValue == true{
                 completion(false)
             }else{

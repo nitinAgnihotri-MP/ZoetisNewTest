@@ -92,42 +92,26 @@ class BaseViewController: UIViewController , SlideMenuDelegate{
     //slide
     
     func slideMenuItemSelectedAtIndex(_ index: Int32) {
-        let topViewController : UIViewController = self.navigationController!.topViewController!
-        //   print("View Controller is : \(topViewController) \n", terminator: "")
-        switch(index){
+        switch(index) {
         case 0:
-            //   print("Home\n", terminator: "")
-            
             self.navigationController?.popViewController(animated: true)
-            // self.openViewControllerBasedOnIdentifier("PEDashboardViewController")
-            
             break
         case 1:
-            
-            
             break
         default:
-            
             break
-            //   print("default\n", terminator: "")
         }
     }
     
     func openViewControllerBasedOnIdentifier(_ strIdentifier:String){
-        
-        /* Story board will change if we use in different module */
         let destViewController  = UIStoryboard.init(name: Constants.Storyboard.peStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: strIdentifier)
-        
         let topViewController : UIViewController = self.navigationController!.topViewController!
-        
-        if (topViewController == destViewController){
-            //   print("Same VC")
-        } else {
+        if topViewController != destViewController {
             self.navigationController!.pushViewController(destViewController, animated: true)
         }
     }
     
-    func addSlideMenuButton(){
+    func addSlideMenuButton() {
         let btnShowMenu = UIButton(type: UIButton.ButtonType.system)
         btnShowMenu.setImage(self.defaultMenuImage(), for: UIControl.State())
         btnShowMenu.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
@@ -137,8 +121,6 @@ class BaseViewController: UIViewController , SlideMenuDelegate{
     }
     
     func defaultMenuImage() -> UIImage {
-        var defaultMenuImage = UIImage()
-        
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 30, height: 22), false, 0.0)
         
         UIColor.black.setFill()
@@ -151,7 +133,7 @@ class BaseViewController: UIViewController , SlideMenuDelegate{
         UIBezierPath(rect: CGRect(x: 0, y: 11,  width: 30, height: 1)).fill()
         UIBezierPath(rect: CGRect(x: 0, y: 18, width: 30, height: 1)).fill()
         
-        defaultMenuImage = UIGraphicsGetImageFromCurrentImageContext()!
+        let defaultMenuImage = UIGraphicsGetImageFromCurrentImageContext()!
         
         UIGraphicsEndImageContext()
         

@@ -124,7 +124,7 @@ class PulletSelectionViewController: BaseViewController {
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as? String ?? ""
         let param = ["UserId":userID,"ModuleId":23,"FCMToken":FCMToken,"DeviceId":udid] as JSONDictionary
         ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             
             
         })

@@ -484,7 +484,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
             "countryId": "\(countryId)"
         ] as JSONDictionary
         ZoetisWebServices.shared.getMixerList(controller: self, parameters: parameter) { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleVaccineMixer(json)
         }
     }
@@ -2424,7 +2424,7 @@ extension PEViewStartNewAssesmentINT{
                 if error != nil {
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                 }
-                guard let `self` = self, error == nil else { return }
+                guard let self = self, error == nil else { return }
                 
                 if json["StatusCode"]  == 200{
                     self.callRequest2(paramForDoaInnovoject: paramForDoaInnovoject, json: json)
@@ -2684,7 +2684,7 @@ extension PEViewStartNewAssesmentINT{
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             
             if json["StatusCode"]  == 200{
                 self.handleSyncResponse(mjson)
@@ -2700,7 +2700,7 @@ extension PEViewStartNewAssesmentINT{
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 self.CalculateImageCount()
             } else {
@@ -2981,7 +2981,7 @@ extension PEViewStartNewAssesmentINT{
             self?.callRequest4Int = self!.callRequest4Int - 1
             
             self?.handleNoError(error)
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200 {
                 if self.saveTypeString.contains(11) {
                     if self.saveTypeString.contains(00) {

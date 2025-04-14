@@ -319,7 +319,7 @@ class DataService{
         let url = ZoetisWebServices.EndPoint.postvaccinationCertification.latestUrl
         ZoetisWebServices.shared.sendPostDataToServerVaccination(controller: viewController, parameters: param as JSONDictionary, url: url,  completion: {
             [weak self] (json, error) in
-            guard let `self` = self, error == nil else { completion(nil, error) ;return  ;}
+            guard let self = self, error == nil else { completion(nil, error) ;return  ;}
             if json["StatusCode"]  == 200{
                 completion("SUCCESS", nil)
             } else {
@@ -335,15 +335,14 @@ class DataService{
         do {
             let jsonData = try JSONSerialization.data(withJSONObject:param, options:[])
             let jsonDataString = String(data: jsonData, encoding: String.Encoding.utf8)!
-          //  print(<#T##Any...#>)
             print("Post Request Params : \(jsonDataString)")
         } catch {
             // // print("JSON serialization failed:  \(error)")
         }
         ZoetisWebServices.shared.sendPostDataToServerVaccination(controller: viewController, parameters: param as JSONDictionary, url: url,  completion: {
             [weak self] (json, error) in
-            guard let `self` = self, error == nil else { completion(nil, error) ;return  ;}
-            if json["StatusCode"]  == 200{
+            guard let self = self, error == nil else { completion(nil, error) ;return  ;}
+            if json["StatusCode"]  == 200 {
                 completion("SUCCESS", nil)
             } else {
                 completion("FAILURE", nil)

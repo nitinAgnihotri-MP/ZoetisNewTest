@@ -554,7 +554,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
             "countryId": "\(countryId)"
         ] as JSONDictionary
         ZoetisWebServices.shared.getMixerList(controller: self, parameters: parameter) { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             //  self.handleVaccineMixer(json)
             self.deleteAllData("PE_VaccineMixerDetail")
             

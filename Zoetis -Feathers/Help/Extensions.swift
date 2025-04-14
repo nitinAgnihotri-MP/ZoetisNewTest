@@ -38,13 +38,8 @@ extension Date {
         return dateFormatter.string(from: Date())
     }
     
+    ///Identical implementation of function: getCurrentDateNow()
     static func getCurrentDate() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        return dateFormatter.string(from: Date())
-    }
-    
-    static func getCurrentDateNow() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         return dateFormatter.string(from: Date())
@@ -151,8 +146,6 @@ extension UIImage {
     }
 
     class func delayForImageAtIndex(_ index: Int, source: CGImageSource!) -> Double {
-        var delay = 0.1
-
         let cfProperties = CGImageSourceCopyPropertiesAtIndex(source, index, nil)
         let gifProperties: CFDictionary = unsafeBitCast(
             CFDictionaryGetValue(cfProperties,
@@ -168,7 +161,7 @@ extension UIImage {
                 Unmanaged.passUnretained(kCGImagePropertyGIFDelayTime).toOpaque()), to: AnyObject.self)
         }
 
-        delay = delayObject as! Double
+        var delay = delayObject as! Double
 
         if delay < 0.1 {
             delay = 0.1

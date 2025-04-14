@@ -436,7 +436,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         let param = ["assessmentId":peAssessmentRejectedArray[index].serverAssessmentId!,"saveType":0,"appVersion":Bundle.main.versionNumber,"userId":UserContext.sharedInstance.userDetailsObj?.userId ?? ""] as JSONDictionary
         
         ZoetisWebServices.shared.postStatusUpdate(controller: self, parameters: param, url: "", completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             let mainQueue = OperationQueue.main
             mainQueue.addOperation{
                 

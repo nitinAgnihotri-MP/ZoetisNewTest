@@ -207,16 +207,6 @@ class PE_SessionCell: UITableViewCell {
         lblEvaluationType.text = peNewAssessment.evaluationName
         lblEvaluator.text = peNewAssessment.customerName
         lblSiteName.text = peNewAssessment.siteName
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
-
-        
-        if let isEMRequested = peNewAssessment.IsEMRequested {
-            print(isEMRequested)
-        }
-        
-        if let extndMicro = peNewAssessment.extndMicro {
-            print(extndMicro)
-        }
         
         if !Constants.isFromRejected {
             lblAction.text = "Submitted"
@@ -232,18 +222,10 @@ class PE_SessionCell: UITableViewCell {
         if AssessmentId == 0 {
             AssessmentId = (peNewAssessment.serverAssessmentId as? NSString)!.integerValue
         }
-        let sbId =  peNewAssessment.dataToSubmitID ?? ""
+        let sbId = peNewAssessment.dataToSubmitID ?? ""
         let UniID = sbId
-        var score = 0
         var DisplayId = peNewAssessment.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        var siteId = String(peNewAssessment.siteId ?? 0)
         
-        var sID = peNewAssessment.siteId ?? 0
-        sID = sID + 270101
-        var dID = AssessmentId ?? 0
-        dID = dID + 2903
-        // DisplayId = "C-" + DisplayId! + String(sID) + String(dID)
         DisplayId = "C-" + UniID
         if !Constants.isFromRejected{
             lblAssessment.text = DisplayId

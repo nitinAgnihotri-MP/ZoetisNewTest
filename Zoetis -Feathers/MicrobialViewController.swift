@@ -605,7 +605,7 @@ extension MicrobialViewController {
         }
         print(dict)
         ZoetisWebServices.shared.syncEnvironmentalData(reqType: reqType, controller: self, parameters: dict, completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.dismissGlobalHUD(self.view)
             print(json)
             
@@ -630,30 +630,14 @@ extension MicrobialViewController {
                 
             case .enviromental:
                 self.arrSyncIndex = self.arrSyncIndex + 1
-                if self.arrSyncIndex < self.arrSyncReqLimit{
+                if self.arrSyncIndex < self.arrSyncReqLimit {
                     self.syncData(data:  submittedRequisitionsEnvironmental[self.arrSyncIndex] as! Microbial_EnviromentalSurveyFormSubmitted, reqType: .enviromental, sessionType: sessionType)
-                }else{
+                } else {
                     Microbial_EnviromentalSurveyFormSubmitted.updateSyncCheckForAll(reqType: RequisitionType.enviromental.rawValue, sessionStatus: sessionType.rawValue)
                     if sessionType == .submitted{
                         self.suncDataBackToServer(reqType: .enviromental, sessionStatus: .saveAsDraft)
-                    }else{
-//                        self.suncDataBackToServer(reqType: .feathurePulp, sessionStatus: .submitted)
                     }
                 }
-                
-//            case .feathurePulp:
-//                self.arrSyncIndex = self.arrSyncIndex + 1
-//                if self.arrSyncIndex < self.arrSyncReqLimit{
-//                    self.syncData(data:  submittedRequisitionsFeatherPulp[self.arrSyncIndex] as! Microbial_EnviromentalSurveyFormSubmitted, reqType: .feathurePulp, sessionType: sessionType)
-//                }else{
-//                    Microbial_EnviromentalSurveyFormSubmitted.updateSyncCheckForAll(reqType: RequisitionType.feathurePulp.rawValue, sessionStatus: sessionType.rawValue)
-//                    if sessionType == .submitted{
-//                        self.suncDataBackToServer(reqType: .feathurePulp, sessionStatus: .saveAsDraft)
-//                    }else{
-//                        self.configureGraphViews()
-//                        break
-//                    }
-//                }
             }
             let syncCount = Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.bacterial.rawValue).count + Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.enviromental.rawValue).count
             self.syncBadgeBackgroundView.isHidden = (syncCount == 0)
@@ -662,7 +646,7 @@ extension MicrobialViewController {
     }
     
     fileprivate func getReviewerName(_ selectedReviewer: [Micro_Reviewer], _ reviewersText: inout String) {
-        if selectedReviewer.count > 0{
+        if selectedReviewer.count > 0 {
             if reviewersText == ""{
                 reviewersText = selectedReviewer.first?.reviewerName ?? ""
             }else{
@@ -712,7 +696,7 @@ extension MicrobialViewController {
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllSyncedRequisitionData(controller: self, parameters: [:], completion: { [weak self] (json, error) in
             self!.dismissGlobalHUD(self!.view)
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             UserDefaults.standard.set(false, forKey: "isFreshLaunched")
             UserDefaults.standard.synchronize()
             let jsonObject = RequisitionGetDataModel(json)
@@ -758,7 +742,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_Customer")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllCustomersForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchCustomerResponse(json)
         })
     }
@@ -776,7 +760,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_siteByCustomer")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcherySitesForMicrobial(controller: self, parameters:  [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchHatcherySiteResponse(json)
         })
     }
@@ -795,7 +779,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_Reviewer")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryReviewerForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchHatcheryReviewerResponse(json)
         })
     }
@@ -815,7 +799,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_AllConductType")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryAllConductTypeForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handleConductTypeResponse(json)
         })
     }
@@ -835,7 +819,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_AllSurveyPurpose")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryAllSurveyPurposeForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchAllSurveyPurposeListResponse(json)
         })
     }
@@ -854,7 +838,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_AllMicrobialTransferTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryAllTransferTypeForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchAllMicrobialTransferTypeListResponse(json)
         })
     }
@@ -874,7 +858,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Microbial_EnvironmentalLocationTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllEnvironmentalLocationTypes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             let jsonObject = EnvironmentalLocationTypeModel(json)
             let dropdownManager = ZoetisDropdownShared.sharedInstance
             dropdownManager.sharedAllEnvironmentalLocationTypeArray =  jsonObject.getAllLocationTypes(customerArray: jsonObject.locationTypeArray ?? [])
@@ -882,7 +866,7 @@ extension MicrobialViewController {
             // bacterial location types
             CoreDataHandlerMicro().deleteAllData("Microbial_BacterialLocationTypes")
             ZoetisWebServices.shared.getAllBacterialLocationTypes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
+                guard let self = self, error == nil else { return }
                 self.handleFetchedBacterialLocationTypeListResponse(json)
             })
         })
@@ -903,7 +887,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Microbial_LocationValues")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllLocationTypeValues(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             print("your json  is : \(json)")
             self.handlefetchedAllLocationTypeValuesListResponse(json)
         })
@@ -927,7 +911,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Microbial_AllMediaTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllMediaTypeValues(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchedAllMediaTypeListResponse(json)
         })
     }
@@ -949,7 +933,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Microbial_SamplingMethodTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllSamplingMethodValues(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchedAllSamplingMethodListResponse(json)
         })
     }
@@ -971,7 +955,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_AllMicrobialVisitTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryAllVisitTypeForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.handlefetchAllMicrobialVisitTypeResponse(json)
         })
     }
@@ -993,7 +977,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("MicrobialFeatherPulpSpecimenType")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllMicrobialSpecimenTypes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             print(json)
             let jsonObject = SpecimenTypeFeatherpulpModel(json)//LocationTypeValues(json)
             let dropdownManager = ZoetisDropdownShared.sharedInstance
@@ -1008,7 +992,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("MicrobialFeatherPulpBirdType")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllMicrobialBirdTypes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             print(json)
             let jsonObject = BirdTypeFeatherpulpModel(json)
             let dropdownManager = ZoetisDropdownShared.sharedInstance
@@ -1022,7 +1006,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("MicrobialFeatherPulpTestOptions")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllMicrobialFeatherPulpTest(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             print(json)
             let jsonObject = MicrobialFeatherpulpTestModel(json)
             print(jsonObject)
@@ -1037,7 +1021,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("MicrobialCaseStatus")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllCaseStatus(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             print(json)
             let jsonObject = MicrobialCaseStatusModel(json)
             print(jsonObject)

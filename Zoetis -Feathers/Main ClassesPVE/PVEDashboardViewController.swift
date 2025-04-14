@@ -80,14 +80,9 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
         
     }
     
-    @objc func forceSyncSingleData(notification:NSNotification){
-        if let userInfo = notification.userInfo as? [String: String]
-        {
-            
-            if let assId = userInfo["id"] {
-                print(assId)
-                self.singleDataSync(id: assId)
-            }
+    @objc func forceSyncSingleData(notification:NSNotification) {
+        if let userInfo = notification.userInfo as? [String: String], let assId = userInfo["id"] {
+            self.singleDataSync(id: assId)
         }
     }
     
@@ -151,18 +146,11 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
         if (UserDefaults.standard.value(forKey: "isSession") as? Bool) == true{
             peHeaderViewController.killSessionBtn.isHidden = false
         }
-        
-        
-        let newUserLogin = UserDefaults.standard.bool(forKey: "PENewUserLoginFlag")
         let getPVE_CustomerComplexPopupDetails = (CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_CustomerComplexPopup"))
-        
         let currentLoggedInUserForPopup = CoreDataHandlerPVE().fetchAllUserSavedDataInComplexPopup()
-        
         if getPVE_CustomerComplexPopupDetails.count == 0 || currentLoggedInUserForPopup.count == 0{
             addComplexPopup()
-        }
-        
-        else{
+        } else {
             peHeaderViewController.onGoingSessionView.isHidden = false
             let isAppTerminated = UserDefaults.standard.value(forKey: "isAppTerminated") as? Bool
             if isAppTerminated == true {
@@ -173,25 +161,16 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
                 checkDataForSync(isNotification: false)
                 
             } else {
-                
-                if Constants.syncToWebTapped == true
-                {
-                    
-                }
-                else
-                {
+                if Constants.syncToWebTapped == false {
                     self.checkDataForSyncViewDidAppear()
                 }
-                
-                
             }
         }
         
+        let IdPrev = UserDefaults.standard.value(forKey:"IdPrev") as? Int ?? 0
+        let currentUserId = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
-        let IdPrev =  UserDefaults.standard.value(forKey:"IdPrev") as? Int ?? 0
-        let currentUserId =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-        
-        if (currentUserId != IdPrev) && IdPrev != 0{
+        if (currentUserId != IdPrev) && IdPrev != 0 {
             
             UserDefaults.standard.set(0, forKey: "IdPrev")
             CoreDataHandler().deleteAllData("PVE_CustomerComplexPopup")
@@ -203,9 +182,9 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
         
     }
     
-    private func checkDataForSyncViewDidAppear(){
+    private func checkDataForSyncViewDidAppear() {
         let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
-        if ConnectionManager.shared.hasConnectivity(){
+        if ConnectionManager.shared.hasConnectivity() {
             if syncArr.count > 0{
                 let errorMSg = "Data available for sync, Do you want to sync now?"
                 let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
@@ -218,19 +197,12 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true, completion: nil)
             }
-            else {
-                
-            }
         }
     }
-    
     
     func setSyncDraftCountLabel() {
         let PVE_Draft = CoreDataHandlerPVE().fetchDetailsForTypeOfData(type: "draft")
         draftLable.text = "\(PVE_Draft.count)"
-        
-        let PVE_DraftUnsyncCount = CoreDataHandlerPVE().fetchUnsyncDetails(type: "draft")
-        
         let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
         peHeaderViewController.labelSyncCount.text = "\(syncArr.count)"
         peHeaderViewController.syncView.isHidden = false
@@ -240,35 +212,25 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
     
     func setSyncDraftCountLabelFinalAssessed() {
         let PVE_Draft = CoreDataHandlerPVE().fetchDetailsForTypeOfData(type: "draft")
-        
         draftLable.text = "\(PVE_Draft.count)"
-        
-        let PVE_DraftUnsyncCount = CoreDataHandlerPVE().fetchUnsyncDetails(type: "draft")
-        
         let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
         peHeaderViewController.labelSyncCount.text = "\(syncArr.count)"
         peHeaderViewController.syncView.isHidden = false
         
         if !Constants.syncToWebTapped {
             if syncArr.count > 0 {
-                print("another")
-                //   showToastWithTimer(message: "Assessment synced successfully. Please Wait while we set this up for you.", duration:1.0)
                 self.isSync = false
                 self.syncBtnTapped()
                 
-            }
-            else {
-                print("success")
+            } else {
                 if !isToastShown {
                     self.isToastShown = true
                     showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
-                    
                 }
                 DispatchQueue.main.async {
                     self.dismissGlobalHUD(self.view)
                     self.stopHud()
                 }
-                
                 self.refreshCountHideUnhide()
             }
         } else {
@@ -276,9 +238,7 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
             self.dismissGlobalHUD(self.view)
             self.stopHud()
             self.refreshCountHideUnhide()
-            
         }
-        
     }
     
     func refreshCountHideUnhide(){
@@ -408,11 +368,10 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
     }
     
     @IBAction func logOutBtnAction(_ sender: Any) {
-        //   print("logOutBtnAction")
         addComplexPopup()
     }
-    // MARK: Download Blank PDF File in iPad Device .
     
+    // MARK: Download Blank PDF File in iPad Device .
     @IBAction func downloadPdfBtnAction(_ sender: Any) {
         
         if CodeHelper.sharedInstance.reachability?.connection != .unavailable {
@@ -430,16 +389,10 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
             } else {
                 debugPrint("Invalid URL")
             }
-            
-            
-           
-            
         } else {
             Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to view PDF.", comment: ""))
         }
-        
     }
-    
     
     func loadingUrl(url: URL,  to localURl: URL) {
         
@@ -449,12 +402,8 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
         request.httpMethod = "GET"
         
         let task = session.downloadTask(with: request){(tempLocalUrl , responce , error) in
-            
             if let tempLocalUrl = tempLocalUrl , error == nil {
-                
                 if let statusCode = (responce as? HTTPURLResponse)?.statusCode{
-                    print("Sucess:\(statusCode)")
-                    
                     DispatchQueue.main.async {
                         print("pdf successfully saved!")
                         self.showtoast(message: "PDF Downloaded Sucessfully..")
@@ -466,18 +415,9 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
                 catch(let writeError){
                     print("error Writting Files\(localURl) : \(writeError)")
                 }
-            } else{
-                print("Failuer : %@ " , error?.localizedDescription as Any)
             }
         }
         task.resume()
-    }
-    
-    
-    private func handleblankPdfResponse(_ json: JSON) {
-        
-        let jsonObject = PVEBlankPdfResponse(json)
-        
     }
     
     func addComplexPopup() {
@@ -496,13 +436,9 @@ extension PVEDashboardViewController: ChartViewDelegate, IAxisValueFormatter {
     }
     
     func createChart(chartDatsArr:NSArray) {
-        
-        
         let scoreArray = (chartDatsArr[0] as AnyObject).value(forKey: "scoreArray")  as? [Double] ?? []
         let catArray = (chartDatsArr[0] as AnyObject).value(forKey: "categoryArray")  as? [String] ?? []
-        
         let maxScoreArray = (chartDatsArr[0] as AnyObject).value(forKey: "maxScoreArray")  as? [Double] ?? []
-        
         let customerStr = (chartDatsArr[0] as AnyObject).value(forKey: "customer")  as? String ?? ""
         let complexStr = (chartDatsArr[0] as AnyObject).value(forKey: "complexName")  as? String ?? ""
         let dateCreated = (chartDatsArr[0] as AnyObject).value(forKey: "evaluationDate")  as? String ?? ""
@@ -516,12 +452,10 @@ extension PVEDashboardViewController: ChartViewDelegate, IAxisValueFormatter {
         barChartLeft.xAxis.labelPosition = .bottom
         barChartLeft.animate(xAxisDuration: 2.0, yAxisDuration: 2.0)
         
-        var categoriesArray : [String] = []
-        categoriesArray = catArray
+        let categoriesArray = catArray
         var dataPoints : [String] = []
         
         if categoriesArray.count > 0 {
-            
             for (ind, obj) in categoriesArray.enumerated() {
                 let name = obj
                 var data = changeStringToArrayLevel3(name:name)
@@ -531,7 +465,6 @@ extension PVEDashboardViewController: ChartViewDelegate, IAxisValueFormatter {
         }
         
         setChart(values: scoreArray, dataPoints:dataPoints, barChart: barChartLeft)
-        
     }
     
     func createChart2(chartDatsArr:NSArray) {
@@ -552,14 +485,11 @@ extension PVEDashboardViewController: ChartViewDelegate, IAxisValueFormatter {
         barChartRight.xAxis.labelPosition = .bottom
         barChartRight.animate(xAxisDuration: 2.0, yAxisDuration: 2.0)
         
-        var categoriesArray : [String] = []
-        categoriesArray = catArray
+        var categoriesArray = catArray
         var dataPoints : [String] = []
         
         if categoriesArray.count > 0 {
-            
             for (ind, obj) in categoriesArray.enumerated() {
-                
                 let name = obj
                 var data = changeStringToArrayLevel3(name:name)
                 data = data + "(" + "\(maxScoreArray[ind])" + ")"
@@ -601,34 +531,29 @@ extension PVEDashboardViewController: ChartViewDelegate, IAxisValueFormatter {
         
     }
     
-    private func changeStringToArrayLevel3(name:String) -> String{
-        var tempName = ""
-        tempName = name.replacingOccurrences(of: "&", with: "")
-        var fullNameArr : [String]? = []
-        fullNameArr = tempName.split{$0 == " "}.map(String.init)
+    private func changeStringToArrayLevel3(name:String) -> String {
+        
+        let tempName = name.replacingOccurrences(of: "&", with: "")
+        var fullNameArr = tempName.split{$0 == " "}.map(String.init)
         var fullName1 = ""
         var fullName3 = ""
         var fullName2 = ""
-        if 0 >= 0 && 0 < fullNameArr?.count ?? 0 {
-            fullName1 = fullNameArr?[0] ?? ""
+        if 0 < fullNameArr.count {
+            fullName1 = fullNameArr[0]
         }
-        if 1 >= 0 && 1 < fullNameArr?.count ?? 0{
-            fullName2 = fullNameArr?[1] ?? ""
+        if 1 < fullNameArr.count {
+            fullName2 = fullNameArr[1]
         }
-        if 2 >= 0 && 2 < fullNameArr?.count ?? 0{
-            fullName3 = fullNameArr?[2] ?? ""
+        if 2 < fullNameArr.count {
+            fullName3 = fullNameArr[2]
         }
-        let data =  fullName1 + "\n" + fullName2 + "\n" + fullName3
+        let data = fullName1 + "\n" + fullName2 + "\n" + fullName3
         return data
-        
     }
     
     func sortFunc(_ num1: Int, num2: Int) -> Bool {
         return num1 < num2
     }
-    
-    
-    
 }
 
 extension PVEDashboardViewController:  SyncBtnDelegate {
@@ -636,44 +561,37 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     func checkDataForSync(isNotification:Bool) {
         
         let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
-        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
+        if CodeHelper.sharedInstance.reachability?.connection != .unavailable {
             
-            if syncArr.count > 0{
-                
+            if syncArr.count > 0 {
                 let errorMSg = Constants.informDataSync
                 let alertController = UIAlertController(title: "Alert!", message: errorMSg, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                     _ in
-                    
                     self.askForDataSync()
                 }
                 let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
                     _ in
                     self.forceSyncMessage()
-                    
                 }
                 
                 alertController.addAction(okAction)
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true, completion: nil)
                 
-            }else{
-                if isNotification == true{
+            } else {
+                if isNotification == true {
                     self.logoutAction()
                 }
             }
-            
         } else {
-            
-            if isNotification == true{
+            if isNotification == true {
                 self.logoutAction()
             }
         }
-        
-        
     }
     
-    func askForDataSync(){
+    func askForDataSync() {
         let errorMSg = Constants.askForDataSync
         let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
@@ -683,7 +601,6 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
             _ in
             self.forceSyncMessage()
-            
         }
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
@@ -700,7 +617,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     }
     
     
-    @objc private func syncBtnTappedNoti(notification: NSNotification){
+    @objc private func syncBtnTappedNoti(notification: NSNotification) {
         self.isLogoutTapped = true
         checkDataForSync(isNotification: true)
     }
@@ -712,25 +629,15 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
             let currentAssessmentQuestJson = getQuestionsDetails(dict: val as AnyObject)
             let forImgArrJson = getImageDetails(dict: val as AnyObject)
             
-            let jsonDictAssessmentQuestionImages = ["AssessmentQuestionImages" : forImgArrJson]
-            if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDictAssessmentQuestionImages, options: .prettyPrinted),
-               let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-            }
-            
             let syncId = json["syncId"] as! String
             let tempArr = [json]
             let jsonDict = ["AssessmentDataDetails" : tempArr]
             
-            if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),
-               let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-            }
-            
             ZoetisWebServices.shared.postStartNewAssessmentDetailForPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
-                
-                self.stopHud()
-                self.isResponseCalled = false
-                self.handleSyncResponse(json, syncId: syncId, assessmentScoreDict: currentAssessmentQuestJson, forImgArrJson: forImgArrJson)
+                guard let selfObject = self, error == nil else { return }
+                selfObject.stopHud()
+                selfObject.isResponseCalled = false
+                selfObject.handleSyncResponse(json, syncId: syncId, assessmentScoreDict: currentAssessmentQuestJson, forImgArrJson: forImgArrJson)
             })
         }
     }
@@ -752,31 +659,21 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     }
     
     fileprivate func extractedFunc1(_ syncArr: NSArray) {
-        for (_, val) in syncArr.enumerated(){
+        for (_, val) in syncArr.enumerated() {
             if !isSync {
                 self.isSync = true
                 let json = createSyncRequest(dict: val as AnyObject)
                 let currentAssessmentQuestJson = getQuestionsDetails(dict: val as AnyObject)
                 let forImgArrJson = getImageDetails(dict: val as AnyObject)
                 
-                let jsonDictAssessmentQuestionImages = ["AssessmentQuestionImages" : forImgArrJson]
-                if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDictAssessmentQuestionImages, options: .prettyPrinted),
-                   let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-                }
-                
-                
                 let syncId = json["syncId"] as! String
                 let tempArr = [json]
                 let jsonDict = ["AssessmentDataDetails" : tempArr]
                 
-                if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),
-                   let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-                }
-                
                 ZoetisWebServices.shared.postStartNewAssessmentDetailForPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                    guard let `self` = self, error == nil else { return }
-                    self.isResponseCalled = false
-                    self.handleSyncResponse(json, syncId: syncId, assessmentScoreDict: currentAssessmentQuestJson, forImgArrJson: forImgArrJson)
+                    guard let selfObject = self, error == nil else { return }
+                    selfObject.isResponseCalled = false
+                    selfObject.handleSyncResponse(json, syncId: syncId, assessmentScoreDict: currentAssessmentQuestJson, forImgArrJson: forImgArrJson)
                 })
             }
         }
@@ -793,7 +690,6 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
             if syncArr.count > 0{
                 dismissGlobalHUD(self.view)
                 self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + Constants.noMinimizeWhileSyncing)
-                
                 extractedFunc1(syncArr)
             }
         } else {
@@ -812,80 +708,59 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     
     private func handleSyncResponse(_ json: JSON,  syncId:String, assessmentScoreDict: [[String: Any]], forImgArrJson:[[String: Any]]) {
         if json["StatusCode"] == 200 {
-            
             let jsonDict = ["AssessmentScoresDataDetails" : assessmentScoreDict]
-            
-            if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),
-               let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-            }
-            
             ZoetisWebServices.shared.postScoreDetailsForPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
-                self.stopHud()
-                self.handleSyncScoreResponse(json, syncId: syncId, forImgArrJson: forImgArrJson)
-                
+                guard let selfObject = self, error == nil else { return }
+                selfObject.stopHud()
+                selfObject.handleSyncScoreResponse(json, syncId: syncId, forImgArrJson: forImgArrJson)
             })
         }
     }
     
     fileprivate func extractedFunc2(_ tempImgArrDict: [[String : Any]], _ syncId: String) {
-        for (indx, obj) in tempImgArrDict.enumerated(){
+        for (_, obj) in tempImgArrDict.enumerated() {
             
             self.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + Constants.noMinimizeWhileSyncing)
             ZoetisWebServices.shared.postSaveAssessmentImagesDetailsForPVE(controller: self, parameters: obj, completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
-                
-                if self.isResponseCalled == false {
-                    self.isResponseCalled = true
-                    self.handleImageSyncResponse(json, syncId: syncId)
-                    
+                guard let selfObject = self, error == nil else { return }
+                if selfObject.isResponseCalled == false {
+                    selfObject.isResponseCalled = true
+                    selfObject.handleImageSyncResponse(json, syncId: syncId)
                 }
-                
             })
         }
     }
     
     fileprivate func extractedFunc3(_ chunkArr: [[Int]], _ ModuleAssessmentIdArrrrr: inout [Int], _ forImgArrJson: [[String : Any]], _ tempImgArrDict: inout [[String : Any]]) {
-        for (currntIndx, indArr) in chunkArr.enumerated(){
-            
-            
+        for (_, indArr) in chunkArr.enumerated() {
             var chunkImgArrToSend = [[String : Any]]()
-            
-            for (indx, obj) in indArr.enumerated(){
+            for (_, obj) in indArr.enumerated() {
                 ModuleAssessmentIdArrrrr.append(forImgArrJson[obj-1]["ModuleAssessmentId"] as! Int)
                 chunkImgArrToSend.append(forImgArrJson[obj-1])
-                
                 CoreDataHandlerPVE().updateStatusSyncImageDataInAssementDetails(forImgArrJson[obj-1]["imgSyncId"] as! String)
             }
-            
             let jsonDict = ["AssessmentQuestionImages" : chunkImgArrToSend]
             tempImgArrDict.append(jsonDict)
-            
         }
     }
     
     fileprivate func extractedFunc4(_ syncArr: NSArray) {
         if !Constants.syncToWebTapped {
             if syncArr.count > 0 {
-                
                 self.isSync = false
                 self.syncBtnTapped()
-                
             } else {
-                
                 showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
                 DispatchQueue.main.async {
                     self.dismissGlobalHUD(self.view)
                     self.stopHud()
                 }
-                
                 self.refreshCountHideUnhide()
             }
         } else {
             Constants.syncToWebTapped = false
             self.dismissGlobalHUD(self.view)
             self.refreshCountHideUnhide()
-            
         }
     }
     
@@ -893,9 +768,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         
         if json["StatusCode"] == 200 {
             
-            if forImgArrJson.count > 0{
-                
-                //-------************
+            if forImgArrJson.count > 0 {
                 let imgArrCount : Int = forImgArrJson.count
                 let numbers = Array(1...imgArrCount)
                 let chunkArr = numbers.chunked(into: 5)
@@ -904,16 +777,12 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 var tempImgArrDict = [[String: Any]]()
                 
                 extractedFunc3(chunkArr, &ModuleAssessmentIdArrrrr, forImgArrJson, &tempImgArrDict)
-                
                 extractedFunc2(tempImgArrDict, syncId)
                 dismissGlobalHUD(self.view)
                 
                 let jsonDict = ["AssessmentQuestionImages" : forImgArrJson]
-                
-                
             } else {
                 CoreDataHandlerPVE().updateStatusForSync(syncId, text: true, forAttribute: "syncedStatus")
-                
                 let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
                 peHeaderViewController.labelSyncCount.text = "\(syncArr.count)"
                 extractedFunc4(syncArr)
@@ -922,19 +791,15 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     }
     
     private func handleImageSyncResponse(_ json: JSON,  syncId:String) {
-        
-        
         if json["StatusCode"] == 200 {
-            
             CoreDataHandlerPVE().updateStatusForSync(syncId, text: true, forAttribute: "syncedStatus")
-            
         }
         
         dismissGlobalHUD(self.view)
         setSyncDraftCountLabelFinalAssessed()
     }
     
-    func createCustomImgView(imgArr:[Data]){
+    func createCustomImgView(imgArr:[Data]) {
         
         let customView = UIView(frame: CGRect(x: 0, y: 400, width: self.view.frame.size.width, height: 100))
         customView.backgroundColor = .green
@@ -976,15 +841,11 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         let module_Cat_IdArr = assessmentArr.value(forKey: "id")  as? NSArray ?? NSArray()
         
         var imgArr = [[String : Any]]()
-        var newString = String()
-        var imageBase64 : String = ""
-        for (indx, seq_Number) in seq_NumberArr.enumerated(){
-            
+        for (indx, seq_Number) in seq_NumberArr.enumerated() {
             let currentModule_Cat_IdArr = module_Cat_IdArr[indx] as! Int
-            
             let savedImgArr = CoreDataHandlerPVE().fetchImgDetailsFromDB(seq_Number as! NSNumber, syncId: syncId!) as NSArray
             
-            for (_, currentQObj) in savedImgArr.enumerated(){
+            for (_, currentQObj) in savedImgArr.enumerated() {
                 var scoreDict = [String : Any]()
                 
                 scoreDict.merge(dict: ["Id" : id])
@@ -997,7 +858,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 scoreDict.merge(dict: ["DeviceId" : deviceId!])
                 
                 let imdDataa = (currentQObj as AnyObject).value(forKey: "imageData") as! Data
-                var imgBase64Data = convertImageToBase64String(imgData: imdDataa)
+                let imgBase64Data = convertImageToBase64String(imgData: imdDataa)
                 scoreDict.merge(dict: ["ImageBase64" : imgBase64Data])
                 scoreDict.merge(dict: ["ImageName" : "test"])
                 scoreDict.merge(dict: ["Folder_Path" : "test"])
@@ -1038,21 +899,21 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
         
         var scoreArr = [[String : Any]]()
-        for (_, seq_Number) in seq_NumberArr.enumerated(){
+        for (_, seq_Number) in seq_NumberArr.enumerated() {
             
             var scoreDict = [String : Any]()
             
             let questionsArr = CoreDataHandlerPVE().fetchDraftAssQuestion(seq_Number as! NSNumber, type: "sync", syncId: syncId!) as NSArray
             
-            for (_, currentQObj) in questionsArr.enumerated(){
+            for (_, currentQObj) in questionsArr.enumerated() {
                 scoreDict.merge(dict: ["syncId" : syncId!])
                 scoreDict.merge(dict: ["Id" : id])
                 scoreDict.merge(dict: ["UserId" : userId!])
                 scoreDict.merge(dict: ["Assessment_Detail_Id" : Assessment_Detail_Id])
                 scoreDict.merge(dict: ["Device_Id" : deviceId!])
-                if (currentQObj as AnyObject).value(forKey: "isSelected") as! Bool == true{
+                if (currentQObj as AnyObject).value(forKey: "isSelected") as! Bool == true {
                     scoreDict.merge(dict: ["Score" : (currentQObj as AnyObject).value(forKey: "max_Score") as! Int])
-                }else{
+                } else {
                     scoreDict.merge(dict: ["Score" : (currentQObj as AnyObject).value(forKey: "min_Score") as! Int])
                 }
                 
@@ -1078,11 +939,9 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 let commntStr = (currentQObj as AnyObject).value(forKey: "comment") ?? ""
                 if commntStr as! String == "" {
                     scoreDict.merge(dict: ["assessmentCommentsViewModel" : NSDictionary()])
-                }else{
+                } else {
                     scoreDict.merge(dict: ["assessmentCommentsViewModel" : commentDict])
                 }
-                
-                
                 scoreArr.append(scoreDict)
             }
         }
@@ -1090,7 +949,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     }
     
     
-    func createSyncRequest(dict: AnyObject) -> [String: AnyObject]{
+    func createSyncRequest(dict: AnyObject) -> [String: AnyObject] {
         
         let houseNumber = (dict).value(forKey: "houseNumber")  as? String
         let accountManagerId = (dict).value(forKey: "accountManagerId")  as? Int
@@ -1120,13 +979,10 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         
         let cameraState = (dict).value(forKey: "cameraEnabled")  as? String
         
-        var cameraEnabled = Bool()
+        var cameraEnabled = false
         
         if cameraState == "true"{
             cameraEnabled = true
-            
-        }else{
-            cameraEnabled = false
         }
         
         let id = 0
@@ -1137,8 +993,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         var catchersViewModelArr = [[String : Any]]()
         
         if cat_NoOfCatchersDetailsArr.count > 0 {
-            
-            for (index, val) in cat_NoOfCatchersDetailsArr.enumerated(){
+            for (index, val) in cat_NoOfCatchersDetailsArr.enumerated() {
                 let name = val["name"] ?? ""
                 catchersViewModelArr.append(["MemberName" : name,
                                              "Id" : id,
@@ -1157,12 +1012,12 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         
         if cat_NoOfVaccinatorsDetailsArr.count > 0 {
             
-            for (index, val) in cat_NoOfVaccinatorsDetailsArr.enumerated(){
+            for (index, val) in cat_NoOfVaccinatorsDetailsArr.enumerated() {
                 let serology = val["serology"] ?? ""
                 var IsSerology = Bool()
                 if serology == "selected" {
                     IsSerology = true
-                }else{
+                } else {
                     IsSerology = false
                 }
                 vaccinatorsViewModelArr.append(["MemberName" : val["name"] ?? "",
@@ -1187,7 +1042,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 var expDate = ""
                 if val["expDate"] as! String == "" {
                     expDate = "12/12/1900"
-                }else{
+                } else {
                     expDate = val["expDate"] as! String
                 }
                 
@@ -1197,12 +1052,11 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 if val["man_id"] as! Int == 17 {
                     Vaccine_Other = val["name"] as! String
                     Vaccine_Id = 0
-                }else{
+                } else {
                     Vaccine_Other = ""
                     Vaccine_Id = val["name_id"] as! Int
                 }
                 
-                let noteeeee = val["note"] ?? ""
                 let serotype = val["serotype"] as? [String] ?? [""]
                 let serotype_id = val["serotype_id"] as? [String] ?? [""]
                 let antigenOther = val["otherAntigen"] ?? ""
@@ -1263,12 +1117,8 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         tempCrewDetailsViewModel.merge(dict: ["CompFieldRepName" : CompFieldRepName!])
         tempCrewDetailsViewModel.merge(dict: ["CompFieldRepEmailId" : CompFieldRepEmailId!])
         tempCrewDetailsViewModel.merge(dict: ["CompFieldRepPhone" : CompFieldRepPhone!])
-        let isFreeSerology = (dict).value(forKey: "isFreeSerology")  as? Bool
-        if isFreeSerology == true{
-            tempCrewDetailsViewModel.merge(dict: ["IsSerology" : isFreeSerology ?? 0])
-        }else{
-            tempCrewDetailsViewModel.merge(dict: ["IsSerology" : isFreeSerology ?? 0])
-        }
+        let isFreeSerology = (dict).value(forKey: "isFreeSerology") as? Bool
+        tempCrewDetailsViewModel.merge(dict: ["IsSerology" : isFreeSerology ?? 0])
         
         let WasDyeAdded = (dict).value(forKey: "vacEval_DyeAdded")  as? Bool
         let Comments_observations = (dict).value(forKey: "vacEval_Comment")  as? String
@@ -1313,7 +1163,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 choleraVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
                 
             }
-            if n == 2{
+            if n == 2 {
                 choleraVaccinesViewModel.merge(dict: ["SiteofInjection" : "Wing Band"])
                 LeftWingInj = (dict).value(forKey: "injWingBand_LeftWing_Field") as! Double
                 RightWingInj = (dict).value(forKey: "injWingBand_RightWing_Field") as! Double
@@ -1331,7 +1181,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 choleraVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
                 
             }
-            if n == 3{
+            if n == 3 {
                 choleraVaccinesViewModel.merge(dict: ["SiteofInjection" : "Muscle Hit"])
                 LeftWingInj = (dict).value(forKey: "injMuscleHit_LeftWing_Field") as! Double
                 RightWingInj = (dict).value(forKey: "injMuscleHit_RightWing_Field")  as! Double
@@ -1349,7 +1199,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 choleraVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
                 
             }
-            if n == 4{
+            if n == 4 {
                 choleraVaccinesViewModel.merge(dict: ["SiteofInjection" : "Missed"])
                 LeftWingInj = (dict).value(forKey: "injMissed_LeftWing_Field")  as! Double
                 RightWingInj = (dict).value(forKey: "injMissed_RightWing_Field")  as! Double
@@ -1367,7 +1217,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 choleraVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
                 
             }
-            if n == 5{
+            if n == 5 {
                 choleraVaccinesViewModel.merge(dict: ["SiteofInjection" : "Total"])
                 
                 LeftWingInj = (dict).value(forKey: "subQLeftTotal") as! Double
@@ -1493,14 +1343,12 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat=appDelegateObj.MMddYYYYHHmmss
-        let date = dateFormatter.string(from: objEvaluationDate) as String
-        
         let evaluationDate = (dict).value(forKey: "evaluationDate")  as? String
         
         var tempBreedOfBirdsId = ""
         if breedOfBirdsId == 0 {
             tempBreedOfBirdsId = ""
-        }else{
+        } else {
             tempBreedOfBirdsId = "\(breedOfBirdsId ?? 0)"
         }
         
@@ -1607,29 +1455,12 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         }
         
         let session = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
-            
             do {
                 if error != nil {
                     print("Error -> \(error)")
                     return
                 }
-                
-                if (data!.count > 0){
-                    if let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String : Any]{
-                        
-                        let dispatchQueue = DispatchQueue(label: "QueueIdentification", qos: .background)
-                        dispatchQueue.async{//Time consuming task here
-                            
-                            let result = json
-                            print("Book result-\(result)")
-                            //let isMailSent = result
-                            
-                        }
-                        
-                    }
-                }
-                
-            }catch {
+            } catch {
                 print("Send request error while Serializing the data object")
                 return
             }
@@ -1649,95 +1480,74 @@ extension PVEDashboardViewController:  ComplexDelegate {
         
         let callDraftApi = UserDefaults.standard.bool(forKey:"callDraftApi")
         
-        if callDraftApi == true{
+        if callDraftApi == true {
             
             UserDefaults.standard.set(false, forKey: "callDraftApi")
             
             ZoetisWebServices.shared.GetPostingAssessmentListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
-                //print("Draft res json -- \(json["ResponseData"])")
+                guard let selfObject = self, error == nil else { return }
                 if json["ResponseData"].count > 0 {
-                    
-                    
                     let responseDataArr = json["ResponseData"].array
                     CoreDataHandler().deleteAllData("PVE_Sync")
                     CoreDataHandler().deleteAllData("PVE_ImageEntitySync")
                     
-                    for (_, currntSyncObj) in responseDataArr!.enumerated(){
-                        
+                    for (_, currntSyncObj) in responseDataArr!.enumerated() {
                         CoreDataHandlerPVE().saveSyncDetailsInDBFromResponse(json: currntSyncObj)
-                        
                     }
                     
-                    self.refreshCountHideUnhide()
+                    selfObject.refreshCountHideUnhide()
+                    selfObject.getSyncedImageResponse()
                     
-                    self.getSyncedImageResponse()
-                    
-                }else{
-                    self.stopHud()
+                } else {
+                    selfObject.stopHud()
                     NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "stopComplexPopupLosder"),object: nil))
                 }
-                
             })
-            
             UserDefaults.standard.set(true, forKey: "getApiCalled")
         }
     }
     
-    func getSyncedImageResponse(){
+    func getSyncedImageResponse() {
         self.showGlobalProgressHUDWithTitle(self.view, title: "Loading...Please wait, This may take a while.")
         
         ZoetisWebServices.shared.GetPostingAssessmentImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
-            if json["ResponseData"].count > 0{
+            guard let selfObject = self, error == nil else { return }
+            if json["ResponseData"].count > 0 {
                 CoreDataHandler().deleteAllData("PVE_ImageEntitySync")
                 
                 let responseDataArr = json["ResponseData"].array
-                
-                for (indxx, currntSyncObj) in responseDataArr!.enumerated(){
-                    
+                for (_, currntSyncObj) in responseDataArr!.enumerated() {
                     CoreDataHandlerPVE().saveSyncedImageDetailsInDBFromResponse(json: currntSyncObj)
-                    
                 }
-                self.getSyncedCompleteImageResponse()
-            }else{
-                self.stopHud()
+                selfObject.getSyncedCompleteImageResponse()
+            } else {
+                selfObject.stopHud()
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "stopComplexPopupLosder"),object: nil))
             }
         })
-        
     }
     
-    func getSyncedCompleteImageResponse(){
-        //  self.showGlobalProgressHUDWithTitle(self.view, title: "Fetching Images...Please wait, This may take a while.")
-        
+    func getSyncedCompleteImageResponse() {
         ZoetisWebServices.shared.GetPostingAssessmentCompleteImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
-            if json["ResponseData"].count > 0{
+            guard let selfObj = self, error == nil else { return }
+            if json["ResponseData"].count > 0 {
                 
                 let responseDataArr = json["ResponseData"].array
-                
-                for (indxx, currntSyncObj) in responseDataArr!.enumerated(){
-                    
+                for (_, currntSyncObj) in responseDataArr!.enumerated() {
                     CoreDataHandlerPVE().saveSyncedImageDetailsInDBFromResponse(json: currntSyncObj)
-                    self.stopHud()
+                    selfObj.stopHud()
                     NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "stopComplexPopupLosder"),object: nil))
-                    
                 }
-            }else{
-                self.stopHud()
+            } else {
+                selfObj.stopHud()
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "stopComplexPopupLosder"),object: nil))
-                
             }
         })
-        
     }
     
     func stopHud() {
         dismissGlobalHUD(self.view)
     }
-    
-    
 }
 
 extension Array {

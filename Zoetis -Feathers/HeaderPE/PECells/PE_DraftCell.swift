@@ -135,52 +135,41 @@ class PE_DraftCell: UITableViewCell {
         lblEvaluationType.text = peNewAssessment.evaluationName
         lblEvaluator.text = peNewAssessment.customerName
         lblSiteName.text = peNewAssessment.siteName
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
-            if peNewAssessment.isEMRejected == true{
-                extendedMicroStatus.text = "Rejected"
-                extendedRejectedComment.isHidden = false
+        if peNewAssessment.isEMRejected == true {
+            extendedMicroStatus.text = "Rejected"
+            extendedRejectedComment.isHidden = false
+        } else {
+            if peNewAssessment.sanitationValue == false {
+                extendedMicroLbl.text = Constants.noStr
+                extendedMicroStatus.text = "N/A"
+                extendedRejectedComment.isHidden = true
             } else {
-               if peNewAssessment.sanitationValue == false {
-                   extendedMicroLbl.text = Constants.noStr
-                   extendedMicroStatus.text = "N/A"
-                   extendedRejectedComment.isHidden = true
-               } else {
-                   extendedMicroLbl.text = "Yes"
-                   extendedMicroStatus.text = inProcessStr
-                   extendedRejectedComment.isHidden = true
-               }
+                extendedMicroLbl.text = "Yes"
+                extendedMicroStatus.text = inProcessStr
+                extendedRejectedComment.isHidden = true
             }
+        }
         var date = peNewAssessment.evaluationDate
-        date = date?.replacingOccurrences(of: "/", with: "")
         let draftID = peNewAssessment.draftID ?? ""
         date = "C-" + draftID.prefix(20)
         if peNewAssessment.statusType == 2 && peNewAssessment.isPERejected == true{
             rejectIndicatorBtn.isHidden = false
             deleteBtn.isHidden = true
-        }else{
+        } else {
             rejectIndicatorBtn.isHidden = true
-            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
-            {
+            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true {
                 deleteBtn.isHidden = true
                 rejectIndicatorBtn.isHidden = true
                 extendedRejectedComment.isHidden = false
-            }
-           else if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == true
-            {
+            } else if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == true {
                deleteBtn.isHidden = true
                rejectIndicatorBtn.isHidden = false
                extendedRejectedComment.isHidden = false
                
-            }
-            else if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == false
-             {
+            } else if peNewAssessment.isPERejected == true && peNewAssessment.isEMRejected == false {
                 deleteBtn.isHidden = true
                 rejectIndicatorBtn.isHidden = false
-               // extendedRejectedComment.isHidden = false
-             }
-            
-            else
-            {
+             } else {
                 deleteBtn.isHidden = false
             }
         }

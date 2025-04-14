@@ -510,7 +510,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             "countryId": "\(countryId)"
         ] as JSONDictionary
         ZoetisWebServices.shared.getMixerList(controller: self, parameters: parameter) { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.deleteAllData("PE_VaccineMixerDetail")
             VaccineMixerResponse(json)
             completion(true)
@@ -1820,7 +1820,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 cleanSession()
                 self.showtoast(message: appDelegateObj.dataSynedSuccess)

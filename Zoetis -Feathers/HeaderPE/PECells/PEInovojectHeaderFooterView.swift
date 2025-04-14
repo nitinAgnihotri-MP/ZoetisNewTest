@@ -40,13 +40,7 @@ class PEInovojectHeaderFooterView: UITableViewHeaderFooterView , UITextFieldDele
     override func awakeFromNib() {
         super.awakeFromNib()
         txtAntiBiotic.delegate = self
-//        hideDropdown()
     }
-    
-    
-//    func hideDropdown(hide: Bool = false){
-//        
-//    }
     
     func setDropdownStartAsessmentBtn(imageName:String,btn:UIButton) {
         

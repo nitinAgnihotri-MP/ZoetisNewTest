@@ -76,7 +76,7 @@ class PVEStartNewAssessment: BaseViewController {
         
         tblView.reloadData()
         
-        if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
+        if let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
         {
             self.reloadCellUI(cell: cell)
         }
@@ -95,21 +95,18 @@ class PVEStartNewAssessment: BaseViewController {
         
         peHeaderViewController = PEHeaderViewController()
         peHeaderViewController.titleOfHeader = "Start New Assessment"
-        
         self.headerView.addSubview(peHeaderViewController.view)
         self.topviewConstraint(vwTop: peHeaderViewController.view)
     }
     
-    func generateSeveyNumber(dateStr:String) -> String{
+    func generateSeveyNumber(dateStr:String) -> String {
         let inputFormatter = DateFormatter()
         inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        var generatedServeyNo = String()
         let siteId = sharedManager.getSessionValueForKeyFromDB(key: "siteId") as! Int
         let evaluationDateStr = sharedManager.getSessionValueForKeyFromDB(key: "evaluationDate") as? String
         let savedDateString = evaluationDateStr?.replacingOccurrences(of: "/", with: "", options: .literal, range: nil)
-        generatedServeyNo = "S-" + savedDateString! + "\(siteId)"
+        let generatedServeyNo = "S-" + savedDateString! + "\(siteId)"
         return generatedServeyNo
-        
     }
     
     @IBAction func actionMenu(_ sender: Any) {
@@ -132,12 +129,7 @@ extension PVEStartNewAssessment: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 1
-        default:
-            return 1
-        }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -259,9 +251,8 @@ extension PVEStartNewAssessment{
         let arr = dataArr.value(forKey: "customerId") as! NSArray
         let custId = arr[0] as! Int
         
-        var siteNameArr = NSArray()
         let namesArray = CoreDataHandlerPVE().fetchCustomerWithCustId( custId as NSNumber)
-        siteNameArr = namesArray.value(forKey: "complexName") as? NSArray ?? NSArray()
+        let siteNameArr = namesArray.value(forKey: "complexName") as? NSArray ?? NSArray()
         
         setDropdrown(sender, clickedField: Constants.ClickedFieldStartNewAssPVE.siteId, dropDownArr: siteNameArr as? [String])
     }
@@ -597,47 +588,34 @@ extension PVEStartNewAssessment{
     
     
     func setBorderBlueForCalender(btn:UIButton) {
-        
         let superviewCurrent =  btn.superview
         for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                if view == btn{
-                    view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
-                }
+            if view.isKind(of:UIButton.self),view == btn {
+                view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
             }
         }
-        
     }
     
     func setBorderBlue(btn:UIButton) {
-        
         let superviewCurrent =  btn.superview
         for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                if view == btn{
-                    view.setDropdownStartAsessmentView(imageName:"dd")
-                }
+            if view.isKind(of:UIButton.self),view == btn {
+                view.setDropdownStartAsessmentView(imageName:"dd")
             }
         }
-        
     }
     
     
     @IBAction func nextBtnAction(_ sender: UIButton) {
         checkValidation()
         
-        if let text = sharedManager.getSessionValueForKeyFromDB(key: "housing") as? String, !text.isEmpty
-        {
+        if let text = sharedManager.getSessionValueForKeyFromDB(key: "housing") as? String, !text.isEmpty {
             print(appDelegateObj.testFuntion())
-        }
-        else
-        {
+        } else {
             CoreDataHandlerPVE().updateSessionDetails(1, text: 0, forAttribute: "housingId")
             CoreDataHandlerPVE().updateSessionDetails(1, text: "", forAttribute: "housing")
         }
-        
     }
-    
 }
 
 // MARK: - Other Delegates -------------Date Picker Delegate------------------
@@ -649,8 +627,7 @@ extension PVEStartNewAssessment: DatePickerPopupViewControllerProtocol{
         
         if !isDateExistInDB.0 {
             
-            if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
-            {
+            if let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell {
                 ///-----dateCreated
                 
                 cell.evaluationDateTxtfield.text = string
@@ -661,23 +638,16 @@ extension PVEStartNewAssessment: DatePickerPopupViewControllerProtocol{
                 
                 self.setBorderBlueForCalender(btn: cell.evaluationDateBtn)
                 
-                let generatedServeyNo =  generateSeveyNumber(dateStr: string)
+                let generatedServeyNo = generateSeveyNumber(dateStr: string)
                 CoreDataHandlerPVE().updateSessionDetails(1, text: generatedServeyNo, forAttribute: "serveyNo")
-                
                 tblView.reloadData()
-                
             }
-            
-            
-        }
-        else{
+        } else {
             showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
-            if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
-            {
+            if let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell {
                 setBorderRedForMandatoryFiels(forBtn: cell.evaluationDateBtn)
             }
         }
-        
     }
     
     
@@ -720,17 +690,6 @@ extension PVEStartNewAssessment {
         }
     }
     
-    private func setBorderBlackFiels(forBtn:UIButton) {
-        
-        let superviewCurrent =  forBtn.superview
-        for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                view.layer.borderColor = UIColor.black.cgColor
-                view.layer.borderWidth = 2.0
-            }
-        }
-    }
-    
     fileprivate func otherFields(_ cell: StartNewAssignmentCell) {
         if cell.evaluatorTxtfield.text?.count == 0 {
             setBorderRedForMandatoryFiels(forBtn: cell.evaluatorBtn)
@@ -751,58 +710,43 @@ extension PVEStartNewAssessment {
         }
     }
     
-    private func checkValidationnn() -> Bool{
-        var isAllValidationOk = Bool()
-        isAllValidationOk = true
+    private func checkValidationnn() -> Bool {
+        var isAllValidationOk = true
         
-        if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
-        {
+        if let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell,cell.evaluationDateTxtfield.text?.count == 0 || cell.evaluatorTxtfield.text?.count == 0 || cell.siteIdTxtfield.text?.count == 0 || cell.customerTxtfield.text?.count == 0 || cell.evaluationForTxtfield.text?.count == 0 || cell.accManagerTxtfield.text?.count == 0 ||  cell.breedOfBirdsTxtfield.text?.count == 0 ||  cell.noOfBirdsTxtfield.text?.count == 0 {
             
-            if cell.evaluationDateTxtfield.text?.count == 0 || cell.evaluatorTxtfield.text?.count == 0 || cell.siteIdTxtfield.text?.count == 0 || cell.customerTxtfield.text?.count == 0 || cell.evaluationForTxtfield.text?.count == 0 || cell.accManagerTxtfield.text?.count == 0 ||  cell.breedOfBirdsTxtfield.text?.count == 0 ||  cell.noOfBirdsTxtfield.text?.count == 0 {
-                
-                if cell.customerTxtfield.text?.count == 0 {
-                    setBorderRedForMandatoryFiels(forBtn: cell.customerBtn)
-                }
-                if cell.evaluationDateTxtfield.text?.count == 0 {
-                    setBorderRedForMandatoryFiels(forBtn: cell.evaluationDateBtn)
-                }
-                
-                if cell.noOfBirdsTxtfield.text?.count == 0 {
-                    setBorderRedForMandatoryFiels(forBtn: cell.noOfBirdsBtn)
-                }
-                
-                otherFields(cell)
-                
-                showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
-                
-                
-                isAllValidationOk = false
+            if cell.customerTxtfield.text?.count == 0 {
+                setBorderRedForMandatoryFiels(forBtn: cell.customerBtn)
             }
+            if cell.evaluationDateTxtfield.text?.count == 0 {
+                setBorderRedForMandatoryFiels(forBtn: cell.evaluationDateBtn)
+            }
+            
+            if cell.noOfBirdsTxtfield.text?.count == 0 {
+                setBorderRedForMandatoryFiels(forBtn: cell.noOfBirdsBtn)
+            }
+            otherFields(cell)
+            showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
+            isAllValidationOk = false
+            
         }
-        
-        
         return isAllValidationOk
     }
-    
-    
-    
-    func checkValidation()  {
+
+    func checkValidation() {
         
-        if checkValidationnn() == true  {
+        if checkValidationnn() == true, let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell {
             
-            if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
-            {
-                let isDateExistInDB = checkDateInDB(dateStr: cell.evaluationDateTxtfield.text ?? "")
+            let isDateExistInDB = checkDateInDB(dateStr: cell.evaluationDateTxtfield.text ?? "")
+            
+            if !isDateExistInDB.0 {
+                let storyBoard : UIStoryboard = UIStoryboard(name: Constants.Storyboard.pveStoryboard, bundle:nil)
+                let vc = storyBoard.instantiateViewController(withIdentifier: Constants.ControllerIdentifier.PVEFinalizeSNA) as! PVEStartNewAssFinalizeAssement
                 
-                if !isDateExistInDB.0 {
-                    let storyBoard : UIStoryboard = UIStoryboard(name: Constants.Storyboard.pveStoryboard, bundle:nil)
-                    let vc = storyBoard.instantiateViewController(withIdentifier: Constants.ControllerIdentifier.PVEFinalizeSNA) as! PVEStartNewAssFinalizeAssement
-                    
-                    navigationController?.pushViewController(vc, animated: true)
-                }else{
-                    showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
-                    setBorderRedForMandatoryFiels(forBtn: cell.evaluationDateBtn)
-                }
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
+                setBorderRedForMandatoryFiels(forBtn: cell.evaluationDateBtn)
             }
         }
     }
@@ -841,38 +785,28 @@ extension PVEStartNewAssessment {
                 ]
             ]
         ] as Dictionary<String, AnyObject>
-        
-        if let theJSONData = try? JSONSerialization.data( withJSONObject: json, options: .prettyPrinted),
-           let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-            //   print("one way JSON string = \n\(theJSONText)")
-        }
-        
     }
     
     func getTimeStamp() -> String {
-        var postingId = Int()
-        postingId = UserDefaults.standard.integer(forKey: "postingId")
+        let postingId = UserDefaults.standard.integer(forKey: "postingId")
         var lblTimeStamp = String()
         lblTimeStamp = lblTimeStamp.replacingOccurrences(of: "/", with: "", options: .regularExpression)
         lblTimeStamp = lblTimeStamp.replacingOccurrences(of: ":", with: "", options: .regularExpression)
         let string = lblTimeStamp as String
         let character: Character = "i"
-        if ((string).contains(character)) {
-            
+        if (string).contains(character) {
+            print(appDelegateObj.testFuntion())
         } else {
-            let  udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
-            
-            let sessionGUID1 =   lblTimeStamp + "_" + String(describing: postingId as NSNumber)
+            let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
+            let sessionGUID1 = lblTimeStamp + "_" + String(describing: postingId as NSNumber)
             lblTimeStamp = sessionGUID1 + "_" + "iOS" + "_" + String(udid)
         }
         return lblTimeStamp
     }
-    
-    
 }
 
 extension Dictionary {
-    mutating func merge(dict: [Key: Value]){
+    mutating func merge(dict: [Key: Value]) {
         for (k, v) in dict {
             updateValue(v, forKey: k)
         }

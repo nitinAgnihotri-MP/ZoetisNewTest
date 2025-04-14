@@ -143,15 +143,14 @@ class PE_DraftIntCell: UITableViewCell {
         lblEvaluator.text = peNewAssessment.customerName
         lblSiteName.text = peNewAssessment.siteName
         lblCountryName.text = peNewAssessment.countryName
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
+        
         var date = peNewAssessment.evaluationDate
-        date = date?.replacingOccurrences(of: "/", with: "")
         let draftID = peNewAssessment.draftID ?? ""
         date = "C-" + draftID.prefix(20)
-        if peNewAssessment.statusType == 2{
+        if peNewAssessment.statusType == 2 {
             rejectIndicatorBtn.isHidden = false
             deleteBtn.isHidden = true
-        }else{
+        } else {
             rejectIndicatorBtn.isHidden = true
             deleteBtn.isHidden = false
         }

@@ -1403,7 +1403,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             "EvaluationDate": evalDate
         ] as JSONDictionary
         ZoetisWebServices.shared.getDuplicacyCheck(controller: self, parameters: parameter, completion: { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["Data"].boolValue == true{
                 completion(false)
             }else{
@@ -1419,7 +1419,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             
             if json["StatusCode"]  == 200{
                 self.group.enter()
@@ -1440,7 +1440,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 self.group.enter()
                 self.CalculateImageCount()
@@ -1578,7 +1578,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 }
                 
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             self.dismissGlobalHUD(self.view)
             handleStatusCode(json, self)
         })
@@ -1618,7 +1618,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200 {
                 extractedFunc4(self)
                 self.dismissGlobalHUD(self.view)
@@ -3907,7 +3907,7 @@ extension PEDashboardViewController{
             }
             
             ZoetisWebServices.shared.getBlankAssessmentFiles(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-                guard let `self` = self, error == nil else { return }
+                guard let self = self, error == nil else { return }
                 self.handleBlankAssessmentResponse(json)
             })
             
@@ -4723,7 +4723,7 @@ extension PEDashboardViewController{
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
+            guard let self = self, error == nil else { return }
             
             if json["StatusCode"]  == 200 {
                 if self.isSync {
