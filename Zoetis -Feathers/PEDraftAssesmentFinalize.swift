@@ -5003,23 +5003,17 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     private func delVMixerInPEModule(peCertificateData:PECertificateData) {
         
-        let imageCount = getVMixerCountInPEModule()
         let assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
-        if assessment != nil{
-            CoreDataHandlerPE().subtractVMixerMinusCategortIsSelctedDraft(assessment: assessment!, doaId: peCertificateData.id ?? 0)
+        if assessment != nil {
+            _ = CoreDataHandlerPE().updateDraftVMixerMinusCategortIsSelcted(assessment: assessment!, doaId: peCertificateData.id ?? 0)
         }
-        
-        
     }
     
-    
-    
     fileprivate func extractedFunc7() {
-        let c = Double(self.peNewAssessment.iCS ?? "0") ?? 0
         let inVoData = InovojectData(id: 0,vaccineMan:"",name:"",ampuleSize:"",ampulePerBag:"",bagSizeType:"",dosage:"", dilute: "")
         let id = self.saveInovojectInPEModule(inovojectData: inVoData)
         inVoData.id = id
-        if self.inovojectData.count > 0{
+        if self.inovojectData.count > 0 {
             let inovoObj = self.inovojectData[self.inovojectData.count - 1]
             
             inVoData.vaccineMan = inovoObj.vaccineMan
@@ -5028,7 +5022,6 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             inVoData.invoHatchAntibioticText = inovoObj.invoHatchAntibioticText
             inVoData.doaDilManOther = inovoObj.doaDilManOther
             inVoData.bagSizeType = inovoObj.bagSizeType
-            
         }
         self.inovojectData.append(inVoData)
         UIView.performWithoutAnimation {

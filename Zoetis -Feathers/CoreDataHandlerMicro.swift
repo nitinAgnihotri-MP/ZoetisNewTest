@@ -37,15 +37,15 @@ class CoreDataHandlerMicro: NSObject {
     
     func saveCustomerDetailsInDB(_ custId: NSNumber, custName: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext1 = appDelegate!.managedObjectContext
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        //let managedContext1 = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Micro_Customer", in: managedContext1)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext1)
+        let entity = NSEntityDescription.entity(forEntityName: "Micro_Customer", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(custId, forKey: "customerId")
         person.setValue(custName, forKey: "customerName")
         do {
-            try managedContext1.save()
+            try appDelegate!.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -57,10 +57,9 @@ class CoreDataHandlerMicro: NSObject {
     func saveCustomerDetailsInDBSessionData(_ barcode: String ,company : String,companyId:Int , emailId : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleColectionDate : String, sessionId : String , site: String, siteId : Int) {
         
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let managedContext2 = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "SessionMicrobial", in: managedContext2)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext2)
+        let entity = NSEntityDescription.entity(forEntityName: "SessionMicrobial", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(company, forKey: "companyName")
         person.setValue(companyId, forKey: "companyId")
         person.setValue(barcode, forKey: "barcode")
@@ -74,7 +73,7 @@ class CoreDataHandlerMicro: NSObject {
         person.setValue(siteId, forKey: "siteId")
         
         do {
-            try managedContext2.save()
+            try appDelegate!.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -82,13 +81,12 @@ class CoreDataHandlerMicro: NSObject {
     }
     
     func fetchSampleInfoDataForATimeStamp(_ entityName: String, predicate: NSPredicate) -> NSArray {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext3 = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = predicate
         do {
-            let fetchedResult = try managedContext3.fetch(fetchRequest) as? [NSManagedObject]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 dataArray = results as NSArray
             }
@@ -103,18 +101,16 @@ class CoreDataHandlerMicro: NSObject {
     func deleteWithPredicatesFeaherPulpSampleInfo(_ entity: String) {
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext4 = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate.init(format: "isSessionPlate==\(1)")
-        let objects = try? managedContext4.fetch(fetchRequest)
+        let objects = try? appDelegate.managedObjectContext.fetch(fetchRequest)
         if let objects1 = objects {
             for obj in objects1 {
-                managedContext4.delete(obj as! NSManagedObject)
+                appDelegate.managedObjectContext.delete(obj as! NSManagedObject)
             }
-            
             do {
-                try managedContext4.save() // <- remember to put this :)
+                try appDelegate.managedObjectContext.save() // <- remember to put this :)
             } catch {
                 // Do something... fatalerror
             }
@@ -124,9 +120,8 @@ class CoreDataHandlerMicro: NSObject {
     func saveFeatherPulpSampleInfoDataInDB(_ plateIdGenerated: String ,plateId : Int,flockId:String,houseNo:String ,sampleDescriptiopn:String , additionalTests : String , checkMark:String, microsporeCheck: String, sessionId : Int, timeStamp: String, isSessionPlate: Bool) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext5 = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpSampleInfo", in: managedContext5)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext5)
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpSampleInfo", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(plateIdGenerated, forKey: "plateIdGenerated")
         person.setValue(plateId, forKey: "plateId")
         person.setValue(flockId, forKey: "flockId")
@@ -139,9 +134,7 @@ class CoreDataHandlerMicro: NSObject {
         person.setValue(timeStamp, forKey: "timeStamp")
         person.setValue(isSessionPlate, forKey: "isSessionPlate")
         do {
-            try managedContext5.save()
-            
-            
+            try appDelegate!.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -152,10 +145,9 @@ class CoreDataHandlerMicro: NSObject {
     
     func saveCustomerDetailsInDBSubmitData(_ barcode: String ,company : String,companyId:Int , emailId : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleColectionDate : String, sessionId : Int , site: String, siteId : Int) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext6 = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialSession", in: managedContext6)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext6)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialSession", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(company, forKey: "company")
         person.setValue(companyId, forKey: "companyId")
         person.setValue(barcode, forKey: "barcode")
@@ -169,9 +161,7 @@ class CoreDataHandlerMicro: NSObject {
         person.setValue(siteId, forKey: "siteId")
         
         do {
-            try managedContext6.save()
-            
-            
+            try appDelegate!.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -180,17 +170,16 @@ class CoreDataHandlerMicro: NSObject {
     
     func updateFeatherPulpDetailsAsSubmittedData(timeStramp: String){
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext7 = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_EnviromentalSurveyFormSubmitted")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: appDelegate.timeStamp, argumentArray: [timeStramp])
-        let objects = try? managedContext7.fetch(fetchRequest)
+        let objects = try? appDelegate.managedObjectContext.fetch(fetchRequest)
         if let objects1 = objects {
             for obj in objects1 {
                 (obj as! Microbial_EnviromentalSurveyFormSubmitted).setValue(SessionStatus.submitted.rawValue, forKey: "sessionStatus")
                 (obj as! Microbial_EnviromentalSurveyFormSubmitted).setValue(false, forKey: "isSynced")
                 do {
-                    try managedContext7.save() // <- remember to put this :)
+                    try appDelegate.managedObjectContext.save() // <- remember to put this :)
                 } catch {
                 }
             }
@@ -199,13 +188,11 @@ class CoreDataHandlerMicro: NSObject {
     
     //MARK: - Save Enviromental Sample Info/ Case Info data Case Info When Submitted or Save As Draft
     
-    func saveFeatherPulpDetailsInDBDraftData(_ barcode: String ,company : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleCollectionDate : String , site: String, reasonForVisit: String,requisitionType : Int)
-    {
+    func saveFeatherPulpDetailsInDBDraftData(_ barcode: String ,company : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleCollectionDate : String , site: String, reasonForVisit: String,requisitionType : Int) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext8 = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSurveyFormSubmitted", in: managedContext8)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext8)
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSurveyFormSubmitted", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(company, forKey: "company")
         person.setValue(requestor, forKey: "requestor")
         person.setValue(reviewer, forKey: "reviewer")
@@ -216,7 +203,7 @@ class CoreDataHandlerMicro: NSObject {
         person.setValue(requisitionType, forKey: "requisitionType")
         person.setValue(barcode, forKey: "barcode")
         do {
-            try managedContext8.save()
+            try appDelegate!.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -227,11 +214,9 @@ class CoreDataHandlerMicro: NSObject {
                                 surveyConductedOn: String, sampleCollectionDate: String, sampleCollectionDateWithTimeStamp: String,
                                 purposeOfSurvey: String, transferIn: String, barCode: String, barCodeManualEntered: String, notes: String, reasonForVisit: String, currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, requisition_Id: String, timeStamp: String, isPlateIdGenerated: Bool, typeOfBird: String, typeOfBirdId: Int, reviewerId: Int, purposeOfSurveyId: Int, surveyConductedOnId: Int, reasonForVisitId: Int) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext9 = appDelegate!.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSurveyFormSubmitted", in: managedContext9)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext9)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSurveyFormSubmitted", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         managedObject.setValue(reasonForVisitId, forKey: "reasonForVisitId")
         managedObject.setValue(surveyConductedOnId, forKey: "surveyConductedOnId")
         managedObject.setValue(purposeOfSurveyId, forKey: "purposeOfSurveyId")
@@ -277,17 +262,15 @@ class CoreDataHandlerMicro: NSObject {
         }
         
         do {
-            try managedContext9.save()
+            try appDelegate!.managedObjectContext.save()
         } catch { }
     }
     
     func saveSampleInfoHeaderDataInToDB_Enviromental(currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, locationType: String, locationTypeId: Int, noOfPlates: Int, section: Int, requisition_Id: String, timeStamp: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext10 = appDelegate!.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeadersSubmitted", in: managedContext10)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext10)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeadersSubmitted", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(currentdate, forKey: "currentdate")
         managedObject.setValue(customerId, forKey: "customerId")
@@ -302,17 +285,15 @@ class CoreDataHandlerMicro: NSObject {
         managedObject.setValue(timeStamp, forKey: "timeStamp")
         
         do {
-            try managedContext10.save()
+            try appDelegate!.managedObjectContext.save()
         } catch { }
     }
     
     func addNewRowToPlatesSubmitted(currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, isBacterialChecked: Bool, isMicoscoreChecked: Bool, locationTypeId: Int, locationValue: String, plateId: String, row: Int, sampleDescription: String, section: Int, requisition_Id: String, timeStamp: String){
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext11 = appDelegate!.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlatesSubmitted", in: managedContext11)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext11)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlatesSubmitted", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(currentdate, forKey: "currentdate")
         managedObject.setValue(customerId, forKey: "customerId")
@@ -330,20 +311,15 @@ class CoreDataHandlerMicro: NSObject {
         managedObject.setValue(timeStamp, forKey: "timeStamp")
         
         do {
-            try managedContext11.save()
-        } catch { }
+            try appDelegate!.managedObjectContext.save()
+        } catch {}
     }
-    
-    
-    
     
     func saveRequisitionalIDs_Enviromental(requisition_Id: String, requisitionType: Int, sessionStatus: Int, totalHeader: Int, totalPlates: Int, timeStamp: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext12 = appDelegate!.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_Enviromental_RequisitionIDs", in: managedContext12)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext12)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_Enviromental_RequisitionIDs", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(requisition_Id, forKey: "requisition_Id")
         managedObject.setValue(requisitionType, forKey: "requisitionType")
@@ -353,7 +329,7 @@ class CoreDataHandlerMicro: NSObject {
         managedObject.setValue(timeStamp, forKey: "timeStamp")
         
         do {
-            try managedContext12.save()
+            try appDelegate!.managedObjectContext.save()
         } catch {
             
         }
@@ -364,17 +340,14 @@ class CoreDataHandlerMicro: NSObject {
         var dataArray2 = [Microbial_LocationTypeHeadersSubmitted]()
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext13 = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_LocationTypeHeadersSubmitted")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "requisition_Id == %@", "\(requisition_Id)")
         
         do {
-            let fetchedResult = try managedContext13.fetch(fetchRequest) as? [Microbial_LocationTypeHeadersSubmitted]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [Microbial_LocationTypeHeadersSubmitted]
             if let results = fetchedResult {
                 dataArray2 = results
-            } else {
-                
             }
         } catch {
             print(appDelegateObj.testFuntion())
@@ -388,17 +361,14 @@ class CoreDataHandlerMicro: NSObject {
         var dataArray4 = [Microbial_LocationTypeHeaderPlatesSubmitted]()
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext14 = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_LocationTypeHeaderPlatesSubmitted")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "section == %@ AND requisition_Id == %@ AND locationTypeId == %@ AND timeStamp == %@", section, requisition_Id, "\(locationTypeId)", timeStamp)
         
         do {
-            let fetchedResult = try managedContext14.fetch(fetchRequest) as? [Microbial_LocationTypeHeaderPlatesSubmitted]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [Microbial_LocationTypeHeaderPlatesSubmitted]
             if let results = fetchedResult {
                 dataArray4 = results
-            } else {
-                
             }
         } catch {
             print(appDelegateObj.testFuntion())
@@ -412,18 +382,14 @@ class CoreDataHandlerMicro: NSObject {
     func fetchSubmittedOrSaveAsDraftRequisitions(sessionStatus: Int, requisitionType: Int) -> NSArray {
         var dataArray2 = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext15 = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_EnviromentalSurveyFormSubmitted")
         fetchRequest.returnsObjectsAsFaults = false
         let userId = UserDefaults.standard.value(forKey: "Id") ?? 0
         fetchRequest.predicate = NSPredicate(format: "sessionStatus == \(sessionStatus) AND requisitionType == \(requisitionType) AND userId == \(userId) AND isSynced == 0")
         do {
-            let fetchedResult = try managedContext15.fetch(fetchRequest) as? [Microbial_EnviromentalSurveyFormSubmitted]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [Microbial_EnviromentalSurveyFormSubmitted]
             if let results = fetchedResult {
                 dataArray2 = results as NSArray
-                
-            } else {
-                
             }
         } catch {
             print(appDelegateObj.testFuntion())
@@ -439,11 +405,9 @@ class CoreDataHandlerMicro: NSObject {
                                            purposeOfSurvey: String, transferIn: String, barCode: String, barCodeManualEntered: String, notes: String, reasonForVisit: String,
                                            requisition_Id: String, requisitionType: Int, isPlateIdGenerate: Bool, typeOfBird: String, typeOfBirdId: Int) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext16 = appDelegate!.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSessionInProgress", in: managedContext16)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext16)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSessionInProgress", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(requestor, forKey: "requestor")
         managedObject.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
@@ -468,18 +432,16 @@ class CoreDataHandlerMicro: NSObject {
         managedObject.setValue(typeOfBird, forKey: "typeOfBird")
         managedObject.setValue(typeOfBirdId, forKey: "typeOfBirdId")
         do {
-            try managedContext16.save()
+            try appDelegate?.managedObjectContext.save()
         } catch { }
     }
     
     func saveEnviromentalLocationTypeHeaderInfo(locationType: String, locationTypeId: Int,
                                                 noOfPlates: Int, section: Int, requisition_Id: String, requisitionType: Int) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext17 = appDelegate!.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaders", in: managedContext17)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext17)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaders", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(locationType, forKey: "locationType")
         managedObject.setValue(locationTypeId, forKey: "locationTypeId")
@@ -489,7 +451,7 @@ class CoreDataHandlerMicro: NSObject {
         managedObject.setValue(requisitionType, forKey: "requisitionType")
         
         do {
-            try managedContext17.save()
+            try appDelegate?.managedObjectContext.save()
         } catch { }
     }
     
@@ -498,11 +460,9 @@ class CoreDataHandlerMicro: NSObject {
                                                 row: Int, section: Int, sampleDescription: String,
                                                 locationTypeId: Int?, requisition_Id: String, requisitionType: Int, mediaTypeValue: String, mediaTypeId: Int?, notes: String, samplingMethodId : Int?,samplingMethodTypeValue : String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext18 = appDelegate!.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlates", in: managedContext18)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext18)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlates", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(isBacterialChecked, forKey: "isBacterialChecked")
         managedObject.setValue(isMicoscoreChecked, forKey: "isMicoscoreChecked")
@@ -519,24 +479,20 @@ class CoreDataHandlerMicro: NSObject {
         managedObject.setValue(mediaTypeId, forKey: "mediaTypeId")
         managedObject.setValue(samplingMethodId, forKey: "samplingMethodTypeId")
         managedObject.setValue(notes, forKey: "notes")
-        
-        
         do {
-            try managedContext18.save()
+            try appDelegate!.managedObjectContext.save()
         } catch { }
     }
     
     func fetchEnviromentalLocationTypeHeaderInfoFor() -> NSArray {
         
         var dataArray7 = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext19 = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_LocationTypeHeaders")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_LocationTypeHeaders")
         fetchRequest.returnsObjectsAsFaults = false
         
         do {
-            let fetchedResult = try managedContext19.fetch(fetchRequest) as? [Microbial_LocationTypeHeaders]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [Microbial_LocationTypeHeaders]
             if let results = fetchedResult {
                 dataArray7 = results as NSArray
                 
@@ -553,16 +509,13 @@ class CoreDataHandlerMicro: NSObject {
     func fetchEnviromentalLocationTypePlatesInfoFor(section: Int, locationTypeId: Int) -> NSArray {
         
         var dataArray3 = NSArray()
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext20 = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_LocationTypeHeaderPlates")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_LocationTypeHeaderPlates")
         fetchRequest.returnsObjectsAsFaults = false
-        //fetchRequest.predicate = NSPredicate(format: "locationTypeId == %@", "\(locationTypeId)")
         fetchRequest.predicate = NSPredicate(format: "locationTypeId == %@ AND section == %d", "\(locationTypeId)", section)
         
         do {
-            let fetchedResult = try managedContext20.fetch(fetchRequest) as? [Microbial_LocationTypeHeaderPlates]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [Microbial_LocationTypeHeaderPlates]
             if let results = fetchedResult {
                 dataArray3 = results as NSArray
                 
@@ -580,11 +533,9 @@ class CoreDataHandlerMicro: NSObject {
     
     func saveSessionProgress(_ barcode: String ,company : String,companyId:Int , emailId : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleColectionDate : String, sampleCollectionDateWithTimeStamp: String, sessionId : Int , site: String, siteId : Int, manualEnteredBarCode: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext21 = appDelegate!.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "ProgressSessionMicrobial", in: managedContext21)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext21)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "ProgressSessionMicrobial", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(company, forKey: "company")
         person.setValue(companyId, forKey: "companyId")
         person.setValue(barcode, forKey: "barcode")
@@ -599,7 +550,7 @@ class CoreDataHandlerMicro: NSObject {
         person.setValue(sampleCollectionDateWithTimeStamp, forKey: "sampleCollectionDateWithTimeStamp")
         person.setValue(manualEnteredBarCode, forKey: "manualEnteredBarCode")
         do {
-            try managedContext21.save()
+            try appDelegate!.managedObjectContext.save()
             
             
         } catch {
@@ -609,10 +560,9 @@ class CoreDataHandlerMicro: NSObject {
     
     func saveSampleInfoDataInDB(_ noOfPlates: String ,plateId : Int,sampleDescriptiopn:String , additionalTests : String , checkMark:String, microsporeCheck: String, sessionId : Int) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext22 = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialSampleInfo", in: managedContext22)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext22)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialSampleInfo", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(noOfPlates, forKey: "noOfPlates")
         person.setValue(plateId, forKey: "plateId")
         person.setValue(sampleDescriptiopn, forKey: "sampleDescription")
@@ -622,9 +572,7 @@ class CoreDataHandlerMicro: NSObject {
         person.setValue(microsporeCheck, forKey: "microsporeCheckMark")
         
         do {
-            try managedContext22.save()
-            
-            
+            try appDelegate!.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -635,12 +583,11 @@ class CoreDataHandlerMicro: NSObject {
     
     func fetchSampleInfo(_ sessionId: Int) -> NSArray {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext23 = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "MicrobialSampleInfo")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "sessionId == %d", sessionId)
         do {
-            let fetchedResult = try managedContext23.fetch(fetchRequest) as? [NSManagedObject]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 
                 dataArray = results as NSArray
@@ -663,14 +610,13 @@ class CoreDataHandlerMicro: NSObject {
     func fetchFeatherPulpSampleInfo(_ sessionId: Int) -> [MicrobialFeatherPulpSampleInfo] {
         var dataArray3 = [MicrobialFeatherPulpSampleInfo]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext24 = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "MicrobialFeatherPulpSampleInfo")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MicrobialFeatherPulpSampleInfo")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "sessionId == %d", sessionId)
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "plateId", ascending: true)]
         
         do {
-            let fetchedResult = try managedContext24.fetch(fetchRequest) as? [MicrobialFeatherPulpSampleInfo]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [MicrobialFeatherPulpSampleInfo]
             if let results = fetchedResult {
                 dataArray3 = results
                 
@@ -693,7 +639,7 @@ class CoreDataHandlerMicro: NSObject {
             let results = try appDelegate.managedObjectContext.fetch(fetchUsers)
             if let lastObject = results.last as? NSManagedObject {
                 managedContext.delete(lastObject)
-                try managedContext.save()
+                try appDelegate.managedObjectContext.save()
             }
         } catch {
             print(appDelegateObj.testFuntion())
@@ -702,13 +648,12 @@ class CoreDataHandlerMicro: NSObject {
     
     func fetchDataFromDraftsAndRequisition(draftOrSubmit: Int, entityName: String)-> NSArray{
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext25 = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "sessionStatus == \(draftOrSubmit) AND userId == \(String(describing: UserDefaults.standard.value(forKey: "Id") ?? 0))")
         
         do {
-            let fetchedResult = try managedContext25.fetch(fetchRequest) as? [NSManagedObject]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 
                 dataArray = results as NSArray
@@ -726,13 +671,12 @@ class CoreDataHandlerMicro: NSObject {
     }
     
     func fetchAllData1(_ entityName: String) -> [NSManagedObject] {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext26 = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.returnsObjectsAsFaults = false
         var dataArrayNew = [NSManagedObject()]
         do {
-            let fetchedResult = try managedContext26.fetch(fetchRequest) as? [NSManagedObject]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 
                 dataArrayNew = results
@@ -744,9 +688,9 @@ class CoreDataHandlerMicro: NSObject {
         return dataArrayNew
     }
     func fetchAllData(_ entityName: String) -> NSArray {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
@@ -762,44 +706,26 @@ class CoreDataHandlerMicro: NSObject {
     func updateSampledesc(_ sessionId: Int,plateId: String,sampleDesc: String) {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "MicrobialSampleInfo")
-        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MicrobialSampleInfo")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSessionId, sessionId,plateId)
         
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
-            
             if fetchedResult!.count > 0 {
-                
                 let objTable: MicrobialSampleInfo = (fetchedResult![0] as? MicrobialSampleInfo)!
-                
                 objTable.setValue(sampleDesc, forKey: "sampleDescription")
                 do {
-                    try managedContext.save()
+                    try appDelegate.managedObjectContext.save()
                 } catch {
                 }
-                
-                
             }
-            
-            
-            
-        } catch {
-            
-        }
-        
-        
+        } catch {}
     }
     
     func updateFeatherPulpSampledesc(plateData: MicrobialFeatherPulpSampleInfo, predicate: NSPredicate) {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "MicrobialFeatherPulpSampleInfo")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MicrobialFeatherPulpSampleInfo")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = predicate
         
@@ -807,7 +733,7 @@ class CoreDataHandlerMicro: NSObject {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if fetchedResult!.count > 0 {
                 do {
-                    try managedContext.save()
+                    try appDelegate.managedObjectContext.save()
                 } catch {
                 }
             }
@@ -818,12 +744,8 @@ class CoreDataHandlerMicro: NSObject {
     
     func updateFeatherPulpCheckMark(_ sessionId: Int,plateId: String,checkMark: String) {
         
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "MicrobialFeatherPulpSampleInfo")
-        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MicrobialFeatherPulpSampleInfo")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: predicateSessionId, sessionId,plateId)
         
@@ -836,7 +758,7 @@ class CoreDataHandlerMicro: NSObject {
                 
                 objTable.setValue(checkMark, forKey: "checkMark")
                 do {
-                    try managedContext.save()
+                    try appDelegate.managedObjectContext.save()
                 } catch {
                 }
             }
@@ -866,7 +788,7 @@ class CoreDataHandlerMicro: NSObject {
                 
                 objTable.setValue(checkMark, forKey: "microsporeCheckMark")
                 do {
-                    try managedContext.save()
+                    try appDelegate.managedObjectContext.save()
                 } catch {
                 }
             }
@@ -910,7 +832,7 @@ class CoreDataHandlerMicro: NSObject {
                 managedContext.delete(managedObjectData)
             }
             do {
-                try managedContext.save()
+                try appDelegate.managedObjectContext.save()
             } catch {
             }
             
@@ -928,7 +850,7 @@ class CoreDataHandlerMicro: NSObject {
             if let lastObject = results.last as? NSManagedObject {
                 print(lastObject)
                 managedContext.delete(lastObject)
-                try managedContext.save()
+                try appDelegate.managedObjectContext.save()
             }
         } catch {
             print(appDelegateObj.testFuntion())
@@ -955,7 +877,7 @@ class CoreDataHandlerMicro: NSObject {
                 
                 objTable.setValue(checkMark, forKey: "microsporeCheckMark")
                 do {
-                    try managedContext.save()
+                    try appDelegate.managedObjectContext.save()
                 } catch {
                 }
             }
@@ -985,7 +907,7 @@ class CoreDataHandlerMicro: NSObject {
                 
                 objTable.setValue(checkMark, forKey: "checkMark")
                 do {
-                    try managedContext.save()
+                    try appDelegate.managedObjectContext.save()
                 } catch {
                 }
             }
@@ -998,10 +920,10 @@ class CoreDataHandlerMicro: NSObject {
     
     func saveCustomerDetailsInDraftData(_ barcode: String ,company : String,companyId:Int , emailId : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleColectionDate : String, sessionId : Int , site: String, siteId : Int,draftCheck : String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialDraft", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialDraft", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(company, forKey: "company")
         person.setValue(companyId, forKey: "companyId")
         person.setValue(barcode, forKey: "barcode")
@@ -1016,7 +938,7 @@ class CoreDataHandlerMicro: NSObject {
         person.setValue(draftCheck, forKey: "draftCheck")
         
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
             
             
         } catch {
@@ -1053,13 +975,13 @@ class CoreDataHandlerMicro: NSObject {
     func saveReviewerDetailsInDB(_ custId: NSNumber, ReviewerName: String) {
         
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Micro_Reviewer", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Micro_Reviewer", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(custId, forKey: "reviewerId")
         person.setValue(ReviewerName, forKey: "reviewerName")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1070,15 +992,15 @@ class CoreDataHandlerMicro: NSObject {
     
     func saveAllConductTypeDetailsInDB(_ id: NSNumber, text: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
-        let entity = NSEntityDescription.entity(forEntityName: "Micro_AllConductType", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Micro_AllConductType", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(id, forKey: "id")
         person.setValue(text, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1090,14 +1012,12 @@ class CoreDataHandlerMicro: NSObject {
     
     func saveAllSitesIdInDB(_ id: Int, text: String) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate?.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Micro_siteByCustomer", in: managedContext!)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Micro_siteByCustomer", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         managedObject.setValue(id, forKey: "id")
         managedObject.setValue(text, forKey: "text")
         do {
-            try managedContext?.save()
+            try appDelegate!.managedObjectContext.save()
         } catch {
             
         }
@@ -1127,10 +1047,10 @@ class CoreDataHandlerMicro: NSObject {
     func saveLocationTypeValuesInDB(_ locationId: NSNumber, id: NSNumber, value: String, std40: Bool, std20: Bool, rep20: Int, rep40: Int, standard: Bool, stnRep: Int , mediaTypeDefault : String, samplingMethodDefault : String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationValues", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationValues", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(locationId, forKey: "locationTypeId")
         managedObject.setValue(id, forKey: "id")
@@ -1145,7 +1065,7 @@ class CoreDataHandlerMicro: NSObject {
         managedObject.setValue(samplingMethodDefault, forKey: "sampling")
         
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1207,14 +1127,14 @@ class CoreDataHandlerMicro: NSObject {
     func saveAllMediaTypeDetailsInDB(_ id: NSNumber, text: String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_AllMediaTypes", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_AllMediaTypes", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(id, forKey: "id")
         person.setValue(text, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1227,13 +1147,13 @@ class CoreDataHandlerMicro: NSObject {
     func saveAllsamplingMethodTypeDetailsInDB(_ id: NSNumber, text: String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_SamplingMethodTypes", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_SamplingMethodTypes", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(id, forKey: "id")
         person.setValue(text, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1245,13 +1165,13 @@ class CoreDataHandlerMicro: NSObject {
     func saveAllSurveyPurposeDetailsInDB(_ id: NSNumber, text: String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Micro_AllSurveyPurpose", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Micro_AllSurveyPurpose", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(id, forKey: "id")
         person.setValue(text, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1263,13 +1183,13 @@ class CoreDataHandlerMicro: NSObject {
     func saveAllMicrobialTransferTypesDetailsInDB(_ id: NSNumber, text: String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Micro_AllMicrobialTransferTypes", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Micro_AllMicrobialTransferTypes", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(id, forKey: "id")
         person.setValue(text, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1321,7 +1241,7 @@ class CoreDataHandlerMicro: NSObject {
             for managedObject in results {
                 let managedObjectData: NSManagedObject = managedObject as! NSManagedObject
                 managedContext.delete(managedObjectData)
-                try managedContext.save()
+                try appDelegate.managedObjectContext.save()
             }
             
         } catch let error as NSError {
@@ -1333,12 +1253,12 @@ class CoreDataHandlerMicro: NSObject {
         var auto = self.fetchFromAutoIncrement()
         auto += 1
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Id", in: managedContext)
-        let contact1 = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Id", in: appDelegate!.managedObjectContext)
+        let contact1 = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         contact1.setValue(auto, forKey: "autoId")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1376,14 +1296,14 @@ class CoreDataHandlerMicro: NSObject {
     
     func updateRequestorBacterialServeyFormDetails(_ sessionId: Int, text: String, forAttribute:String ) {
         
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let entity = NSEntityDescription.entity(forEntityName: "SessionMicrobial", in: managedContext)
-        let contact1 = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "SessionMicrobial", in: appDelegate.managedObjectContext)
+        let contact1 = NSManagedObject(entity: entity!, insertInto: appDelegate.managedObjectContext)
         contact1.setValue(text, forKey: forAttribute)
         contact1.setValue(sessionId, forKey: "sessionId")
         do {
-            try managedContext.save()
+            try appDelegate.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1441,10 +1361,10 @@ class CoreDataHandlerMicro: NSObject {
     func saveStartNewAsessmentFormDetailsInDB() {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "SessionMicrobial", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "SessionMicrobial", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue("", forKey: "customer")
         person.setValue("company", forKey: "company")
         person.setValue("companyId", forKey: "companyId")
@@ -1459,7 +1379,7 @@ class CoreDataHandlerMicro: NSObject {
         person.setValue("barcode", forKey: "barcode")
         
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1485,7 +1405,7 @@ class CoreDataHandlerMicro: NSObject {
         }
         
         do {
-            try managedContext.save()
+            try appDelegate.managedObjectContext.save()
         }
         catch {
             print(appDelegateObj.testFuntion())
@@ -1496,16 +1416,16 @@ class CoreDataHandlerMicro: NSObject {
     func saveAllMicrobialHatcherySiteDetailsInDB(_ id :NSNumber, siteId :NSNumber, SiteName:String, ComplexId:Int,customerId:Int!) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Micro_siteByCustomer", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Micro_siteByCustomer", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(id, forKey: "id")
         person.setValue(siteId, forKey: "siteId")
         person.setValue(SiteName, forKey: "siteName")
         person.setValue(ComplexId, forKey: "complexId")
         person.setValue(customerId, forKey: "customerId")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1518,13 +1438,13 @@ class CoreDataHandlerMicro: NSObject {
     func saveAllMicrobialVisitTypesDetailsInDB(_ id: NSNumber, text: String) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Micro_AllMicrobialVisitTypes", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Micro_AllMicrobialVisitTypes", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(id, forKey: "id")
         person.setValue(text, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1538,10 +1458,10 @@ class CoreDataHandlerMicro: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_FeatherPulpCurrentSession", in: managedContext)
         
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_FeatherPulpCurrentSession", in: appDelegate!.managedObjectContext)
+        
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         person.setValue(company, forKey: "company")
         
@@ -1563,7 +1483,7 @@ class CoreDataHandlerMicro: NSObject {
         
         
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
             
             
         } catch {
@@ -1579,9 +1499,9 @@ class CoreDataHandlerMicro: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_FeatherPulp", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_FeatherPulp", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(company, forKey: "company")
         
         person.setValue(requestor, forKey: "requestor")
@@ -1600,7 +1520,7 @@ class CoreDataHandlerMicro: NSObject {
         
         
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
             
             
         } catch {
@@ -1611,14 +1531,11 @@ class CoreDataHandlerMicro: NSObject {
     
     //MARK: - Save Feather Pulp customer Draft Data in DB
     
-    func saveFeatherPulpCustomerDetailsInDBDraftData(_ barcode: String ,company : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleCollectionDate : String, sessionId : Int , site: String, siteId : Int,reasonForVisit: String)
-    {
+    func saveFeatherPulpCustomerDetailsInDBDraftData(_ barcode: String ,company : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleCollectionDate : String, sessionId : Int , site: String, siteId : Int,reasonForVisit: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_FeatherPulpDraft", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_FeatherPulpDraft", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(company, forKey: "company")
         
         person.setValue(requestor, forKey: "requestor")
@@ -1637,7 +1554,7 @@ class CoreDataHandlerMicro: NSObject {
         
         
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
             
             
         } catch {
@@ -1747,7 +1664,7 @@ class CoreDataHandlerMicro: NSObject {
                     data.setValue(requisition_Id, forKey: "requisition_Id")
                 }
             }else{
-                let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeadersSubmitted", in: managedContext)
+                let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeadersSubmitted", in: appDelegate.managedObjectContext)
                 let managedObject = NSManagedObject(entity: entity!, insertInto: context)
                 
                 managedObject.setValue(currentdate, forKey: "currentdate")
@@ -1763,7 +1680,7 @@ class CoreDataHandlerMicro: NSObject {
                 managedObject.setValue(timeStamp, forKey: "timeStamp")
                 
                 do {
-                    try managedContext.save()
+                    try appDelegate.managedObjectContext.save()
                 } catch { }
             }
         } catch {
@@ -1837,7 +1754,7 @@ class CoreDataHandlerMicro: NSObject {
             if results?.count != 0 {
                 for data in results ?? []{
                     data.setValue(noOfPlates, forKey: "noOfPlates")
-                    try managedContext.save()
+                    try appDelegate.managedObjectContext.save()
                 }
             }else{print(appDelegateObj.testFuntion())}
         } catch {
@@ -1860,7 +1777,7 @@ class CoreDataHandlerMicro: NSObject {
                     plate.setValue(timeStamp, forKey: "timeStamp")
                 }
                 do {
-                    try managedContext.save()
+                    try appDelegate.managedObjectContext.save()
                 } catch {
                 }
             }
@@ -1875,13 +1792,13 @@ class CoreDataHandlerMicro: NSObject {
 extension MicrobialFeatherPulpBirdType{
     class func saveBirdTypeValuesInDB(id: NSNumber, birdText: String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpBirdType", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpBirdType", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         managedObject.setValue(id, forKey: "id")
         managedObject.setValue(birdText, forKey: "birdText")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1893,13 +1810,13 @@ extension MicrobialFeatherPulpBirdType{
 extension MicrobialFeatherPulpSpecimenType{
     class func saveSpecimenTypeValuesInDB(id: NSNumber, specimenText: String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpSpecimenType", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpSpecimenType", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         managedObject.setValue(id, forKey: "id")
         managedObject.setValue(specimenText, forKey: "specimenText")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -1986,14 +1903,14 @@ extension MicrobialFeatherPulpSampleInfo{
     
     class func addSingleFarmDetails(isSessionPlate: Bool, plateId: Int, timeStamp: String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpSampleInfo", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpSampleInfo", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(isSessionPlate, forKey: "isSessionPlate")
         person.setValue(plateId, forKey: "plateId")
         person.setValue(timeStamp, forKey: "timeStamp")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -2001,9 +1918,9 @@ extension MicrobialFeatherPulpSampleInfo{
     
     class func insertAlreadySyncedFarmData(microbialFeatherDetailsList: MicrobialFeatherDetailsList, timeStamp: String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpSampleInfo", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpSampleInfo", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(false, forKey: "isSessionPlate")
         person.setValue(1, forKey: "plateId")
         person.setValue(timeStamp, forKey: "timeStamp")
@@ -2014,7 +1931,7 @@ extension MicrobialFeatherPulpSampleInfo{
         person.setValue(microbialFeatherDetailsList.SpecimenTypeId ?? 0, forKey: "specimenTypeId")
         person.setValue("\(microbialFeatherDetailsList.AgeWeeks ?? 0)", forKey: "weeks")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -2072,16 +1989,16 @@ extension MicrobialFeatherpulpServiceTestSampleInfo{
     
     class func saveFirstTimeTestOptionValuesInDB(timeStamp: String, testId: NSNumber, testType: String, isSessionType: Bool, isCheckBoxSelected: Bool) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherpulpServiceTestSampleInfo", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherpulpServiceTestSampleInfo", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         managedObject.setValue(timeStamp, forKey: "timeStamp")
         managedObject.setValue(testId, forKey: "testId")
         managedObject.setValue(testType, forKey: "testType")
         managedObject.setValue(isSessionType, forKey: "isSessionType")
         managedObject.setValue(isCheckBoxSelected, forKey: "isCheckBoxSelected")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -2171,13 +2088,13 @@ extension MicrobialFeatherpulpServiceTestSampleInfo{
 extension MicrobialFeatherPulpTestOptions{
     class func saveTestOptionValuesInDB(id: NSNumber, text: String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpTestOptions", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialFeatherPulpTestOptions", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         managedObject.setValue(id, forKey: "id")
         managedObject.setValue(text, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -2188,13 +2105,13 @@ extension MicrobialFeatherPulpTestOptions{
 extension MicrobialCaseStatus{
     class func saveCaseStatus(id: NSNumber, text: String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialCaseStatus", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialCaseStatus", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         managedObject.setValue(id, forKey: "id")
         managedObject.setValue(text, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -2205,9 +2122,9 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
     
     class func saveDataWhichIsAlreadySynced(reqData: MicrobialDetailsList, reqText: String, reqId: Int, isPlateIdGenerated: Bool, reviewerText: String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSurveyFormSubmitted", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSurveyFormSubmitted", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         managedObject.setValue(reqData.timeStamp, forKey: "timeStamp")
         managedObject.setValue(UserDefaults.standard.value(forKey: "Id") ?? 0, forKey: "userId")
         managedObject.setValue(reqData.visitReason ?? 0, forKey: "reasonForVisitId")
@@ -2282,7 +2199,7 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
         managedObject.setValue(reqData.status ?? 0, forKey: "reqStatus")
         managedObject.setValue(reqData.requisitionNo ?? "", forKey: "reqNo")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -2431,10 +2348,10 @@ extension Microbial_LocationTypeHeadersSubmitted{
     class func saveSampleInfoHeaderDataInToDB_Enviromental(reqDetails: MicrobialDetailsList, headerDetails: MicrobialSampleDetailsList, reqId: Int, reqName: String, numOfPlates: Int) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeadersSubmitted", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeadersSubmitted", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(reqDetails.sampleDate ?? "", forKey: "currentdate")
         managedObject.setValue("", forKey: "customerId")
@@ -2449,7 +2366,7 @@ extension Microbial_LocationTypeHeadersSubmitted{
         managedObject.setValue(reqDetails.timeStamp ?? "", forKey: "timeStamp")
         
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch { }
     }
     
@@ -2565,10 +2482,10 @@ extension Microbial_LocationTypeHeaderPlatesSubmitted{
     class func saveSampleInfoPlateDataInToDB_Enviromental(currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, isBacterialChecked: Bool, isMicoscoreChecked: Bool, locationTypeId: Int, locationValue: String, plateId: String, row: Int, sampleDescription: String, section: Int, requisition_Id: String, timeStamp: String, locationValueId: Int, mediaTypeId: Int, notes: String ,  samplingMethodTypeId: Int) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlatesSubmitted", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlatesSubmitted", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(currentdate, forKey: "currentdate")
         managedObject.setValue(customerId, forKey: "customerId")
@@ -2590,7 +2507,7 @@ extension Microbial_LocationTypeHeaderPlatesSubmitted{
         managedObject.setValue(RequisitionModel().getLocationValuesFromIds(id: locationValueId), forKey: "locationValue")
         
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch { }
     }
     
@@ -2598,10 +2515,10 @@ extension Microbial_LocationTypeHeaderPlatesSubmitted{
     class func saveSampleInfoPlateDataInToDB(currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, isBacterialChecked: Bool, isMicoscoreChecked: Bool, locationTypeId: Int, locationValue: String, plateId: String, row: Int, sampleDescription: String, section: Int, requisition_Id: String, timeStamp: String, locationValueId: Int, mediaTypeValue: String, mediaTypeId: Int, notes: String ,samplingMethodTypeValue : String, samplingMethodTypeId : Int) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlatesSubmitted", in: managedContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlatesSubmitted", in: appDelegate!.managedObjectContext)
+        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         managedObject.setValue(currentdate, forKey: "currentdate")
         managedObject.setValue(customerId, forKey: "customerId")
@@ -2625,7 +2542,7 @@ extension Microbial_LocationTypeHeaderPlatesSubmitted{
         managedObject.setValue(samplingMethodTypeValue, forKey: "samplingMethodTypeValue")
         managedObject.setValue(samplingMethodTypeId, forKey: "samplingMethodTypeId")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch { }
     }
     
@@ -2750,14 +2667,14 @@ extension Microbial_EnvironmentalLocationTypes{
     class func saveLocationTypesInDB(_ locationId: NSNumber, locationName: String) {
         
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnvironmentalLocationTypes", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnvironmentalLocationTypes", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(locationId, forKey: "id")
         person.setValue(locationName, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -2769,14 +2686,14 @@ extension Microbial_BacterialLocationTypes{
     class func saveLocationTypesInDB(_ locationId: NSNumber, locationName: String) {
         
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_BacterialLocationTypes", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Microbial_BacterialLocationTypes", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(locationId, forKey: "id")
         person.setValue(locationName, forKey: "text")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -2942,17 +2859,17 @@ extension MicrobialSelectedUnselectedReviewer{
     }
     
     class func saveReviewersInDB(_ timeStamp: String, reviewerId: Int, reviewerName: String, isSelected: Bool, isSessionType: Bool) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "MicrobialSelectedUnselectedReviewer", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        
+        let entity = NSEntityDescription.entity(forEntityName: "MicrobialSelectedUnselectedReviewer", in: appDelegate!.managedObjectContext)
+        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(isSelected, forKey: "isSelected")
         person.setValue(isSessionType, forKey: "isSessionType")
         person.setValue(reviewerId, forKey: "reviewerId")
         person.setValue(reviewerName, forKey: "reviewerName")
         person.setValue(timeStamp, forKey: "timeStamp")
         do {
-            try managedContext.save()
+            try appDelegate?.managedObjectContext.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }

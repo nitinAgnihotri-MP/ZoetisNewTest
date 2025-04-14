@@ -42,23 +42,6 @@ class CoreDataHandlerPE: NSObject {
         self.managedContext = appDelegate.managedObjectContext
     }
     
-    //save
-    func saveCustomerInDB(_ custId: NSNumber, CustName: String) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        let entity = NSEntityDescription.entity(forEntityName: "PE_Customer", in: appDelegate!.managedObjectContext)
-        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        person.setValue(custId, forKey: "customerID")
-        person.setValue(CustName, forKey: "customerName")
-        do {
-            try managedContext.save()
-        } catch {
-            print(appDelegateObj.testFuntion())
-        }
-        customerData.append(person)
-    }
-    
-    
     func saveRefrigatorInDB(_ id: NSNumber, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,schAssmentId:Int) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
@@ -83,7 +66,7 @@ class CoreDataHandlerPE: NSObject {
     }
     // save Refri for View
     func saveOfflineRefrigatorInDB(_ id: NSNumber, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,schAssmentId:Int) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Refrigator_Offline", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -106,7 +89,7 @@ class CoreDataHandlerPE: NSObject {
     }
     //    Save Draft Refrigator Data
     func saveDraftRefrigatorInDB(_ id: NSNumber, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,schAssmentId:Int) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Refrigator_InDraft", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -130,7 +113,7 @@ class CoreDataHandlerPE: NSObject {
     
     //    Save Draft Refrigator Data
     func saveRejectRefrigatorInDB(_ id: NSNumber, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,schAssmentId:Int) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Refrigator_Rejected", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -220,7 +203,7 @@ class CoreDataHandlerPE: NSObject {
     
     //    Update  Rejected Refrigator Data
     func updateRejectedRefrigatorInDB(_ id: Int, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,serverAssessmentId:Int) {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_Rejected")
         fetchRequest.predicate = NSPredicate(format: predicateId, id,serverAssessmentId)
@@ -294,10 +277,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                
                 for result in results {
-                    
-                    let dataArray = results as NSArray
                     let peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber , labelText: result.value(forKey: "labelText")  as! String, rollOut: result.value(forKey: "rollOut")  as! String, unit: result.value(forKey: "unit")  as! String, value: result.value(forKey: "value")  as! Double, catID: result.value(forKey: "catID")  as! NSNumber, isCheck: result.value(forKey: "isCheck")  as! Bool , isNA: result.value(forKey: "isNA")  as! Bool ,schAssmentId: result.value(forKey: "schAssmentId") as! Int)
                     peNewAssessmentArray.append(peNewAssessment)
                 }
@@ -310,8 +290,6 @@ class CoreDataHandlerPE: NSObject {
     // get Refri for View
     func getOfflineREfriData(id:Int) -> [PE_Refrigators] {
         var peNewAssessmentArray : [PE_Refrigators] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Refrigator_Offline")
@@ -320,11 +298,16 @@ class CoreDataHandlerPE: NSObject {
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                
                 for result in results {
-                    
-                    let dataArray = results as NSArray
-                    var peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber , labelText: result.value(forKey: "labelText")  as! String, rollOut: result.value(forKey: "rollOut")  as! String, unit: result.value(forKey: "unit")  as! String, value: result.value(forKey: "value")  as! Double, catID: result.value(forKey: "catID")  as! NSNumber, isCheck: result.value(forKey: "isCheck")  as! Bool , isNA: result.value(forKey: "isNA")  as! Bool ,schAssmentId: result.value(forKey: "schAssmentId") as! Int)
+                    let peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber,
+                                                         labelText: result.value(forKey: "labelText") as! String,
+                                                         rollOut: result.value(forKey: "rollOut") as! String,
+                                                         unit: result.value(forKey: "unit") as! String,
+                                                         value: result.value(forKey: "value") as! Double,
+                                                         catID: result.value(forKey: "catID") as! NSNumber,
+                                                         isCheck: result.value(forKey: "isCheck") as! Bool,
+                                                         isNA: result.value(forKey: "isNA") as! Bool,
+                                                         schAssmentId: result.value(forKey: "schAssmentId") as! Int)
                     peNewAssessmentArray.append(peNewAssessment)
                 }
             }
@@ -337,8 +320,6 @@ class CoreDataHandlerPE: NSObject {
     //    get Draft Refrigator Data
     func getDraftREfriData(id:Int) -> [PE_Refrigators] {
         var peNewAssessmentArray : [PE_Refrigators] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Refrigator_InDraft")
@@ -350,8 +331,8 @@ class CoreDataHandlerPE: NSObject {
                 
                 for result in results {
                     
-                    dataArray = results as NSArray
-                    var peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber , labelText: result.value(forKey: "labelText")  as! String, rollOut: result.value(forKey: "rollOut")  as! String, unit: result.value(forKey: "unit")  as! String, value: result.value(forKey: "value")  as! Double, catID: result.value(forKey: "catID")  as! NSNumber, isCheck: result.value(forKey: "isCheck")  as! Bool , isNA: result.value(forKey: "isNA")  as! Bool ,schAssmentId: result.value(forKey: "schAssmentId") as! Int)
+                    let dataArray = results as NSArray
+                    let peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber , labelText: result.value(forKey: "labelText")  as! String, rollOut: result.value(forKey: "rollOut") as! String, unit: result.value(forKey: "unit") as! String, value: result.value(forKey: "value")  as! Double, catID: result.value(forKey: "catID") as! NSNumber, isCheck: result.value(forKey: "isCheck")  as! Bool , isNA: result.value(forKey: "isNA")  as! Bool ,schAssmentId: result.value(forKey: "schAssmentId") as! Int)
                     peNewAssessmentArray.append(peNewAssessment)
                 }
             }
@@ -365,12 +346,9 @@ class CoreDataHandlerPE: NSObject {
     
     func getREfriData(id:Int) -> [PE_Refrigators] {
         var peNewAssessmentArray : [PE_Refrigators] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Refrigator")
-        //fetchRequest.predicate = NSPredicate(format: "schAssmentId == %d AND catID = %d", id , 81)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Refrigator")
         fetchRequest.predicate = NSPredicate(format: schAssmentId, id )
         fetchRequest.returnsObjectsAsFaults = false
         do {
@@ -379,8 +357,8 @@ class CoreDataHandlerPE: NSObject {
                 
                 for result in results {
                     
-                    dataArray = results as NSArray
-                    var peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber , labelText: result.value(forKey: "labelText")  as! String, rollOut: result.value(forKey: "rollOut")  as! String, unit: result.value(forKey: "unit")  as! String, value: result.value(forKey: "value")  as! Double, catID: result.value(forKey: "catID")  as! NSNumber, isCheck: result.value(forKey: "isCheck")  as! Bool , isNA: result.value(forKey: "isNA")  as! Bool ,schAssmentId: result.value(forKey: "schAssmentId") as! Int)
+                    let dataArray = results as NSArray
+                    let peNewAssessment = PE_Refrigators(id: result.value(forKey: "id") as! NSNumber , labelText: result.value(forKey: "labelText")  as! String, rollOut: result.value(forKey: "rollOut")  as! String, unit: result.value(forKey: "unit")  as! String, value: result.value(forKey: "value")  as! Double, catID: result.value(forKey: "catID")  as! NSNumber, isCheck: result.value(forKey: "isCheck")  as! Bool , isNA: result.value(forKey: "isNA")  as! Bool ,schAssmentId: result.value(forKey: "schAssmentId") as! Int)
                     peNewAssessmentArray.append(peNewAssessment)
                 }
             }
@@ -393,7 +371,7 @@ class CoreDataHandlerPE: NSObject {
     func someEntityExists(id: Int) -> Bool {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        var fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator")
         fetchRequest.predicate = NSPredicate(format: idStr, id)
         
         var results: [NSManagedObject] = []
@@ -411,7 +389,7 @@ class CoreDataHandlerPE: NSObject {
     func checkDraftSameAssesmentEntityExists(id: Int, serverAssessmentId: Int) -> Bool {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        var fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_InDraft")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_InDraft")
         fetchRequest.predicate = NSPredicate(format: predicateId, id,serverAssessmentId)
         
         var results: [NSManagedObject] = []
@@ -429,7 +407,7 @@ class CoreDataHandlerPE: NSObject {
     func checkSameAssesmentEntityExists(id: Int, serverAssessmentId: Int) -> Bool {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        var fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator")
         fetchRequest.predicate = NSPredicate(format: predicateId, id,serverAssessmentId)
         
         var results: [NSManagedObject] = []
@@ -447,7 +425,7 @@ class CoreDataHandlerPE: NSObject {
     func checkOfflineSameAssesmentEntityExists(id: Int, serverAssessmentId: Int) -> Bool {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        var fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_Offline")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_Offline")
         fetchRequest.predicate = NSPredicate(format: predicateId, id,serverAssessmentId)
         
         var results: [NSManagedObject] = []
@@ -464,7 +442,7 @@ class CoreDataHandlerPE: NSObject {
     func someDraftRefriEntityExists(id: Int) -> Bool {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        var fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_InDraft")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_InDraft")
         fetchRequest.predicate = NSPredicate(format: idStr, id)
         
         var results: [NSManagedObject] = []
@@ -481,7 +459,7 @@ class CoreDataHandlerPE: NSObject {
     func someRejectedRefriEntityExists(id: Int) -> Bool {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        var fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_Rejected")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "PE_Refrigator_Rejected")
         fetchRequest.predicate = NSPredicate(format: idStr, id)
         
         var results: [NSManagedObject] = []
@@ -497,7 +475,7 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func saveComplexInDB(_ custId: NSNumber, userId: NSNumber, complexId: NSNumber, complexName: String) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Complex", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -514,7 +492,7 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func saveSitesInDB(_ id: NSNumber, siteId: NSNumber, complexId: NSNumber, customerId: NSNumber, siteName: String) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Sites", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -534,9 +512,9 @@ class CoreDataHandlerPE: NSObject {
     
     func fetchCustomerWithCustId(_ custId: NSNumber) -> NSArray {
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "Complex_PVE")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Complex_PVE")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "customerId == %@", custId)
         do {
@@ -556,20 +534,20 @@ class CoreDataHandlerPE: NSObject {
             assessmentObj.serverAssessmentId = newAssessment.serverAssessmentId
             
             
-            if fromDoa ?? false{
+            if fromDoa ?? false {
                 let hatcheryAntibioticsInt = newAssessment.hatcheryAntibioticsDoa ?? 0
                 assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibioticsDoa")
                 assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
                 
             }
-            if fromDoaS ?? false{
+            if fromDoaS ?? false {
                 let hatcheryAntibioticsInt = newAssessment.hatcheryAntibioticsDoaS ?? 0
                 assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibioticsDoaS")
                 assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText
                                        , forKey: "hatcheryAntibioticsDoaSText")
                 
             }
-            if fromInvo ?? false{
+            if fromInvo ?? false {
                 let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
                 assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
                 assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
@@ -599,27 +577,25 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func updateInDoGInProgressInDB(newAssessment:PENewAssessment,fromDoa:Bool? = false ,fromDoaS:Bool? = false,fromInvo:Bool? = false,fromDraft:Bool?=false) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         
-        var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
+        var fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
         
         
         let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
         fetchRequest.predicate = NSPredicate(format: serverAssessmentId, currentServerAssessmentId)
         
         
-        if fromDraft ?? false{
-            fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
+        if fromDraft ?? false {
+            fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         }
         
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let fetchResult = try appDelegate?.managedObjectContext.fetch(fetchRequest) as? [PE_AssessmentInProgress]
-            if let fetchedResult = fetchResult{
-                if fetchedResult.count > 0 {
-                    updateInGIInDB(fetchedResult, newAssessment, fromDoa, fromDoaS, fromInvo, managedContext)
-                }
+            if let fetchedResult = fetchResult, fetchedResult.count > 0 {
+                updateInGIInDB(fetchedResult, newAssessment, fromDoa, fromDoaS, fromInvo, managedContext)
             }
         } catch {
             print(appDelegateObj.testFuntion())
@@ -627,7 +603,7 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func updateDraftInDoGInProgressInDB(newAssessment:PENewAssessment) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.returnsObjectsAsFaults = false
@@ -744,7 +720,7 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func updateAssessmentInProgressInDB(newAssessment:PENewAssessment,serverAssessmentId:String,deleteFlag:Bool = false) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
@@ -766,14 +742,13 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func updateDraftAssessmentInProgressInDB(newAssessment:PENewAssessment) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let fetchResult = try appDelegate?.managedObjectContext.fetch(fetchRequest) as? [PE_AssessmentInProgress]
             guard let fetchedResult = fetchResult else {return}
-            //            if let fetchedResult = fetchResult {
             if fetchedResult.count > 0 {
                 for i in 0..<fetchedResult.count {
                     let assessmentObj: PE_AssessmentInProgress = (fetchedResult[i])// as? PE_AssessmentInProgress)!
@@ -856,7 +831,7 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func saveDraftAssessmentInProgressInDB(newAssessment:PENewAssessment) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentIDraftInProgress", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -989,14 +964,13 @@ class CoreDataHandlerPE: NSObject {
     
     
     func saveNewAssessmentInProgressInDB(newAssessment:PENewAssessment) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInProgress", in: appDelegate!.managedObjectContext)
         
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         
         assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
-        
         assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
         assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
         assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
@@ -1108,21 +1082,18 @@ class CoreDataHandlerPE: NSObject {
     
     func getSavedOfflineAssessmentPEObject(id:Int) -> PENewAssessment {
         let peNewAssessment = PENewAssessment()
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
         fetchRequest.predicate = NSPredicate(format: "dataToSubmitNumber == %d AND userID == %d", id,userID)
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
-                
-                userIDArray = dataArray.value(forKey: "userID")  as? NSArray ?? []
+                let dataArray = results as NSArray
+                var userIDArray = dataArray.value(forKey: "userID")  as? NSArray ?? []
                 
                 peNewAssessment.userID = userIDArray.firstObject as? Int ?? 0
                 userIDArray = dataArray.value(forKey: "serverAssessmentId")  as? NSArray ?? []
@@ -1254,19 +1225,17 @@ class CoreDataHandlerPE: NSObject {
     
     func getSavedSavedAssessmentPEObject(dataToSubmitNumber:Int) -> PENewAssessment {
         let peNewAssessment = PENewAssessment()
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
         //dataToSubmitNumber
         fetchRequest.predicate = NSPredicate(format: "dataToSubmitNumber == %d", dataToSubmitNumber)
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
-                userIDArray = dataArray.value(forKey: "userID")  as? NSArray ?? []
+                let dataArray = results as NSArray
+                var userIDArray = dataArray.value(forKey: "userID")  as? NSArray ?? []
                 peNewAssessment.userID = userIDArray.firstObject as? Int ?? 0
                 userIDArray = dataArray.value(forKey: "serverAssessmentId")  as? NSArray ?? []
                 peNewAssessment.serverAssessmentId = userIDArray.firstObject as? String
@@ -1398,14 +1367,11 @@ class CoreDataHandlerPE: NSObject {
     
     func getOfflineAssessmentArrayPEObject(ofCurrentDate:Bool?=false) -> [PENewAssessment] {
         var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-        var onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
         
         if ofCurrentDate ?? false {
             fetchRequest.predicate = NSPredicate(format: "customerId == %d AND siteId == %d AND userID == %d AND evaluationDate == %@", onGoingPeNewAssessment.customerId ?? 0,onGoingPeNewAssessment.siteId ?? 0,userID,onGoingPeNewAssessment.evaluationDate ?? "")
@@ -1418,11 +1384,9 @@ class CoreDataHandlerPE: NSObject {
             if let results = fetchedResult {
                 
                 for result in results {
-                    var peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
-                    //                    userIDArray = dataArray.value(forKey: "serverAssessmentId")  as? NSArray ?? []
-                    peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
-                    
+                    let peNewAssessment = PENewAssessment()
+                    let dataArray = results as NSArray
+                    peNewAssessment.serverAssessmentId = result.value(forKey: "serverAssessmentId")  as? String
                     peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                     peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
                     peNewAssessment.customerId = result.value(forKey: "customerId")  as? Int ?? 0
@@ -1524,9 +1488,7 @@ class CoreDataHandlerPE: NSObject {
     
     func getDraftOnGoingAssessmentArrayPEObject() -> [PENewAssessment] {
         var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.returnsObjectsAsFaults = false
@@ -1535,8 +1497,8 @@ class CoreDataHandlerPE: NSObject {
             if let results = fetchedResult {
                 
                 for result in results {
-                    var peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
+                    let peNewAssessment = PENewAssessment()
+                    let dataArray = results as NSArray
                     peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
                     peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                     peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
@@ -1637,11 +1599,9 @@ class CoreDataHandlerPE: NSObject {
     
     func getOfflineAssessmentArray(id:String) -> [PENewAssessment] {
         var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
         fetchRequest.predicate = NSPredicate(format: "dataToSubmitID == %@", id)
         fetchRequest.returnsObjectsAsFaults = false
         do {
@@ -1649,11 +1609,11 @@ class CoreDataHandlerPE: NSObject {
             if let results = fetchedResult {
                 
                 for result in results {
-                    var peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
-                    peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
-                    peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
-                    peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
+                    let peNewAssessment = PENewAssessment()
+                    let dataArray = results as NSArray
+                    peNewAssessment.serverAssessmentId = result.value(forKey: "serverAssessmentId")  as? String
+                    peNewAssessment.userID = result.value(forKey: "userID")  as? Int ?? 0
+                    peNewAssessment.complexId = result.value(forKey: "complexId") as? Int ?? 0
                     peNewAssessment.customerId = result.value(forKey: "customerId")  as? Int ?? 0
                     peNewAssessment.siteId = result.value(forKey: "siteId") as? Int ?? 0
                     peNewAssessment.siteName = result.value(forKey: "siteName")  as? String ?? ""
@@ -1909,8 +1869,6 @@ class CoreDataHandlerPE: NSObject {
     
     func getDraftAssessmentArrayPEObject(ofCurrentAssessment:Bool?=false,ofCurrentDate:Bool?=false) -> [PENewAssessment] {
         var peNewAssessmentArray : [PENewAssessment] = []
-//        var dataArray = NSArray()
-//        var userIDArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
         var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
@@ -1929,7 +1887,6 @@ class CoreDataHandlerPE: NSObject {
         if let results = try? managedContext.fetch(fetchRequest) as? [NSManagedObject] {
             for result in results {
                 let peNewAssessment = PENewAssessment()
-//                dataArray = results as NSArray
                 peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
                 peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                 peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
@@ -2035,12 +1992,10 @@ class CoreDataHandlerPE: NSObject {
     
     func getSessionForViewAssessmentArrayPEObject(ofCurrentAssessment:Bool?=false, serverAssessmentId:String = "") -> [PENewAssessment] {
         var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
         if ofCurrentAssessment ?? false {
             fetchRequest.predicate = NSPredicate(format: "userID == %d ", userID)
@@ -2058,7 +2013,7 @@ class CoreDataHandlerPE: NSObject {
             if let results = fetchedResult {
                 for result in results {
                     let peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
+                    let dataArray = results as NSArray
                     peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
                     peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                     peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
@@ -2194,12 +2149,10 @@ class CoreDataHandlerPE: NSObject {
     
     func getSessionAssessmentArrayPEObject(ofCurrentAssessment:Bool?=false) -> [PENewAssessment] {
         var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
         if ofCurrentAssessment ?? false {
             var onGoingPeNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
@@ -2214,8 +2167,8 @@ class CoreDataHandlerPE: NSObject {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 for result in results {
-                    var peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
+                    let peNewAssessment = PENewAssessment()
+                    let dataArray = results as NSArray
                     peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
                     peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                     peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
@@ -2341,23 +2294,18 @@ class CoreDataHandlerPE: NSObject {
                     
                     peNewAssessmentArray.append(peNewAssessment)
                 }
-                
             }
-            
         } catch {
             print(appDelegateObj.testFuntion())
         }
         return peNewAssessmentArray
     }
     
-    
     func getSessionAssessmentArrayPEObjectDraft(ofCurrentAssessment:Bool?=false) -> [PENewAssessment] {
         var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
         if ofCurrentAssessment ?? false {
@@ -2372,7 +2320,7 @@ class CoreDataHandlerPE: NSObject {
             if let results = fetchedResult {
                 for result in results {
                     var peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
+                    let dataArray = results as NSArray
                     peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
                     peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                     peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
@@ -2496,9 +2444,7 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.sanitationValue = result.value(forKey: "sanitationValue")  as? Bool ?? false
                     peNewAssessmentArray.append(peNewAssessment)
                 }
-                
             }
-            
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -2506,12 +2452,11 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func deleteDraftByDrafyNumber(_ draftId: String) {
-        var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: "draftID == %@ AND userID == %d", draftId,userID)
         
         do {
@@ -2531,12 +2476,10 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func deleteRefriDataBySchAssNumber(_ id: Int) {
-        var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Refrigator")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Refrigator")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: schAssmentId,id)
         
         do {
@@ -2556,7 +2499,6 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func deleteAssessmentByAssId(_ assId: String) {
-        var dataArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
@@ -2581,7 +2523,6 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func deleteDraftByAssessmentId(_ draftId: String) {
-        var dataArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
@@ -2607,12 +2548,10 @@ class CoreDataHandlerPE: NSObject {
     
     
     func deleteDraftedRefregratorDataByAssessmentId(_ draftId: String) {
-        var dataArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Refrigator_InDraft")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         // fetchRequest.predicate = NSPredicate(format: "schAssmentId == %@ AND userID == %d", draftId,userID)
         fetchRequest.predicate = NSPredicate(format: "schAssmentId == %@ ", draftId)
         
@@ -2634,12 +2573,10 @@ class CoreDataHandlerPE: NSObject {
     
     
     func deleteRefregratorDataByStartAssessment(_ draftId: String) {
-        var dataArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Refrigator")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         //   fetchRequest.predicate = NSPredicate(format: "schAssmentId == %@ AND userID == %d", draftId,userID)
         fetchRequest.predicate = NSPredicate(format: "schAssmentId == %@ ", draftId)
         do {
@@ -2648,8 +2585,6 @@ class CoreDataHandlerPE: NSObject {
             for item in items {
                 managedContext.delete(item)// as! NSManagedObject)
             }
-            
-            // Save Changes
             try managedContext.save()
             
         } catch {
@@ -2658,27 +2593,21 @@ class CoreDataHandlerPE: NSObject {
         }
     }
     
-    
-    
-    
-    
-    
     func deleteOfflineBySubmitId(_ dataToSubmitID: String) {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: "dataToSubmitID == %@ AND userID == %d", dataToSubmitID,userID)
         
         do {
             let items = try appDelegate.managedObjectContext.fetch(fetchRequest) as! [NSManagedObject]
             
             for item in items {
-                managedContext.delete(item)// as! NSManagedObject)
+                managedContext.delete(item)
             }
             
-            // Save Changes
             try managedContext.save()
             
         } catch {
@@ -2689,22 +2618,16 @@ class CoreDataHandlerPE: NSObject {
     
     
     func deleteDraftAndMoveToSessionInProgress(_ draftNumber:Int)-> Bool  {
-        var peNewAssessmentArray : [PENewAssessment] = []
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
-        
-        let currentServerAssessmentId =  UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
-        
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
+        let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
         fetchRequest.predicate = NSPredicate(format: "serverAssessmentId  == %@ AND userID == %d", currentServerAssessmentId,userID)
         fetchRequest.returnsObjectsAsFaults = false
         
         if let results = try? managedContext.fetch(fetchRequest) as? [NSManagedObject] {
             CoreDataHandler().deleteAllData("PE_AssessmentIDraftInProgress")
-            for result in results ?? [] {
+            for result in results {
                 
                 let peNewAssessment = PENewAssessment()
                 peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
@@ -2901,7 +2824,6 @@ class CoreDataHandlerPE: NSObject {
     
     
     func fetchCustomerForSyncWithCatID(_ catID: NSNumber,dataToSubmitNumber:NSNumber) -> [PENewAssessment]{
-        var dataArray = NSArray()
         var peNewAssessmentArray : [PENewAssessment] = []
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
@@ -2916,12 +2838,12 @@ class CoreDataHandlerPE: NSObject {
                 
                 for result in results {
                     var peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
-                    peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
-                    peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
+                    let dataArray = results as NSArray
+                    peNewAssessment.serverAssessmentId = result.value(forKey: "serverAssessmentId")  as? String
+                    peNewAssessment.userID = result.value(forKey: "userID")  as? Int ?? 0
                     peNewAssessment.dataToSubmitNumber = result.value(forKey: "dataToSubmitNumber")  as? Int ?? 0
                     peNewAssessment.dataToSubmitID = result.value(forKey: "dataToSubmitID") as? String ?? ""
-                    peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
+                    peNewAssessment.complexId = result.value(forKey: "complexId") as? Int ?? 0
                     peNewAssessment.customerId = result.value(forKey: "customerId")  as? Int ?? 0
                     peNewAssessment.siteId = result.value(forKey: "siteId") as? Int ?? 0
                     peNewAssessment.siteName = result.value(forKey: "siteName")  as? String ?? ""
@@ -2930,16 +2852,16 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.evaluationDate = result.value(forKey: "evaluationDate") as? String ?? ""
                     peNewAssessment.evaluatorName = result.value(forKey: "evaluatorName") as? String ?? ""
                     peNewAssessment.evaluatorID = result.value(forKey: "evaluatorID")  as? Int ?? 0
-                    peNewAssessment.visitName =  result.value(forKey: "visitName") as? String ?? ""
+                    peNewAssessment.visitName = result.value(forKey: "visitName") as? String ?? ""
                     peNewAssessment.visitID = result.value(forKey: "visitID") as? Int ?? 0
                     peNewAssessment.evaluationName = result.value(forKey: "evaluationName") as? String ?? ""
                     peNewAssessment.evaluationID = result.value(forKey: "evaluationID")   as? Int ?? 0
                     peNewAssessment.approver = result.value(forKey: "approver") as? String ?? ""
                     peNewAssessment.notes = result.value(forKey: "notes")  as? String ?? ""
-                    let hatcheryAntibiotics =  result.value(forKey: "hatcheryAntibiotics")   as? Int
+                    let hatcheryAntibiotics = result.value(forKey: "hatcheryAntibiotics")   as? Int
                     hatcheryAntibiotics == 1 ? 1 : 0
                     peNewAssessment.hatcheryAntibiotics = hatcheryAntibiotics
-                    let camera =  result.value(forKey: "camera")  as? Int
+                    let camera = result.value(forKey: "camera")  as? Int
                     camera == 1 ? 1 : 0
                     peNewAssessment.camera = camera
                     let isFlopSelected =  result.value(forKey: "isFlopSelected")  as? Int
@@ -3039,11 +2961,9 @@ class CoreDataHandlerPE: NSObject {
     
     func getRejectedAssessmentArrayPEObject(ofCurrentAssessment:Bool?=false,ofCurrentDate:Bool?=false) -> [PENewAssessment] {
         var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentRejected")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentRejected")
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         let currentServerAssessmentId =  UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
         if ofCurrentAssessment ?? false{
@@ -3056,9 +2976,8 @@ class CoreDataHandlerPE: NSObject {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 for result in results {
-                    var peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
-                    //                            peNewAssessment.dataToSubmitID =  result.value(forKey: "dataToSubmitID")  as? String
+                    let peNewAssessment = PENewAssessment()
+                    let dataArray = results as NSArray
                     peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
                     peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                     peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
@@ -3109,8 +3028,6 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.assID = result.value(forKey: "assID")  as? Int ?? 0
                     peNewAssessment.assDetail1 = result.value(forKey: "assDetail1") as? String ?? ""
                     peNewAssessment.assDetail2 = result.value(forKey: "assDetail2") as? String ?? ""
-                    //                                peNewAssessment.assMinScore = result.value(forKey: "assMinScore") as? Int ?? 0
-                    //                                peNewAssessment.assMinScore = result.value(forKey: "assMinScore")  as? Int ?? 0
                     peNewAssessment.draftNumber = result.value(forKey: "draftNumber")  as? Int ?? 0
                     peNewAssessment.assCatType = result.value(forKey: "assCatType")  as? String ?? ""
                     peNewAssessment.assModuleCatID = result.value(forKey: "assModuleCatID") as? Int ?? 0
@@ -3197,7 +3114,7 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func saveRejectedAssessmentInProgressInDB(newAssessment:PENewAssessment) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentRejected", in: appDelegate!.managedObjectContext)
         
@@ -3310,12 +3227,11 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func fetchCustomerForSyncWithCatIDDraft(_ catID: NSNumber,draftNumber:NSNumber) -> [PENewAssessment]{
-        var dataArray = NSArray()
         var peNewAssessmentArray : [PENewAssessment] = []
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: "sequenceNo == %@ AND userID == %d AND draftNumber == %d",argumentArray:[catID,userID,draftNumber])
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -3324,7 +3240,7 @@ class CoreDataHandlerPE: NSObject {
             if let results = fetchedResult {
                 for result in results {
                     var peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
+                    let dataArray = results as NSArray
                     peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                     peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
                     peNewAssessment.draftNumber = result.value(forKey: "draftNumber")  as? Int ?? 0
@@ -3409,8 +3325,6 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.personName = result.value(forKey: "personName")  as? String ?? ""
                     peNewAssessment.statusType = result.value(forKey: "statusType")  as? Int ?? 0
                     
-                    
-                    
                     peNewAssessment.hatcheryAntibioticsDoaSText = result.value(forKey: "hatcheryAntibioticsDoaSText")  as? String ?? ""
                     peNewAssessment.hatcheryAntibioticsDoaText = result.value(forKey: "hatcheryAntibioticsDoaText")  as? String ?? ""
                     peNewAssessment.hatcheryAntibioticsText = result.value(forKey: "hatcheryAntibioticsText")  as? String ?? ""
@@ -3418,8 +3332,6 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.hatcheryAntibioticsDoaS = result.value(forKey: "hatcheryAntibioticsDoaS")  as? Int ?? 0
                     peNewAssessment.hatcheryAntibioticsDoa = result.value(forKey: "hatcheryAntibioticsDoa")  as? Int ?? 0
                     peNewAssessment.doaS = result.value(forKey: "doaS") as? [Int] ?? []
-                    
-                    
                     
                     // PE International Changes
                     peNewAssessment.countryName = result.value(forKey: Constants.countryNamStrSmall)  as? String ?? ""
@@ -3438,8 +3350,6 @@ class CoreDataHandlerPE: NSObject {
                     peNewAssessment.refrigeratorNote = result.value(forKey: "refrigeratorNote")  as? String ?? ""
                     peNewAssessment.qSeqNo = result.value(forKey: "qSeqNo") as? Int ?? 0
                     peNewAssessmentArray.append(peNewAssessment)
-                    
-                    
                 }
             }
             
@@ -3474,7 +3384,6 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func fetchCustomerWithCatIDCount(_ catID: Int64 ,isDraft: Bool = false) -> Int {
-        var dataArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
         var entityNameAssessment = "PE_AssessmentInProgress"
@@ -3553,19 +3462,16 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func getSavedOnGoingAssessmentUserIdArray() -> NSArray {
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
         fetchRequest.returnsObjectsAsFaults = false
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: userIdStr, userID)
         do {
-            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
+            let fetchedResult = try appDelegate?.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
-                userIDArray = dataArray.value(forKey: "userID")  as?  NSArray ?? NSArray()
+                let dataArray = results as NSArray
+                let userIDArray = dataArray.value(forKey: "userID")  as?  NSArray ?? NSArray()
                 return userIDArray
             }
         } catch {
@@ -3576,8 +3482,7 @@ class CoreDataHandlerPE: NSObject {
     
     
     func saveEvaluatorInDB(_ id: NSNumber, evaluatorName: String) {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Evaluator", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3594,7 +3499,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveApproverInDB(_ id: NSNumber, username: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Approvers", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3612,7 +3517,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveVisitTypeInDB(_ id: NSNumber, visitName: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_VisitTypes", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3629,7 +3534,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveVaccineMixerInDB(_ id: NSNumber, Name: String, certificationDate: String, isCertExpired: Bool, signatureImg: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_VaccineMixerDetail", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3650,7 +3555,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveScoreDataInDB(_ score: String, _ id: NSNumber) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "ScoreData", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3667,7 +3572,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveEvaluationInDB(_ id: NSNumber, evaluationName: String, hatModuleId:NSNumber) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_EvaluationType", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3686,7 +3591,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveManufacturerInDB(mFG_Id:NSNumber,mFG_Name: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Manufacturer", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3702,7 +3607,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveBreedBirdddInDB(birdId:NSNumber,birdBreedName: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_BirdBreed", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3718,7 +3623,7 @@ class CoreDataHandlerPE: NSObject {
     
     
     func saveEggsInDB(EggId:NSNumber,EggCount: String) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Eggs", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3734,7 +3639,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveVManufacturerInDB(id:NSNumber,mfgName: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_VManufacturer", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3750,7 +3655,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveVNamesInDB(id:NSNumber,mfgId:NSNumber,name: String,isSubVaccine:Bool=false,vaccineTypeId: Int64 = 0, vaccineTypeName:String = "" ) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         var entity = NSEntityDescription.entity(forEntityName: "PE_VNames", in: appDelegate!.managedObjectContext)
         if isSubVaccine {
@@ -3775,7 +3680,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveDManufacturerInDB(diluentMfgId:NSNumber,diluentMfgName: String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_DManufacturer", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3790,26 +3695,10 @@ class CoreDataHandlerPE: NSObject {
         customerData.append(person)
     }
     
+    ///Same implementation of function: saveAmpleSizeInDB()
     func saveBagSizeInDB(id:NSNumber,size: String,forEntityName:String,firstKey:String,secondKey:String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        let entity = NSEntityDescription.entity(forEntityName:forEntityName, in: appDelegate!.managedObjectContext)
-        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        person.setValue(id, forKey: firstKey)
-        person.setValue(size, forKey: secondKey)
-        
-        do {
-            try managedContext.save()
-        } catch {
-            print(appDelegateObj.testFuntion())
-        }
-        customerData.append(person)
-    }
-    func saveAmpleSizeInDB(id:NSNumber,size: String,forEntityName:String,firstKey:String,secondKey:String) {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let entity = NSEntityDescription.entity(forEntityName:forEntityName, in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(id, forKey: firstKey)
@@ -3825,7 +3714,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveCountriesInDB(id:NSNumber,country: String, regionId:NSNumber, forEntityName:String,firstKey:String,secondKey:String  ,thirdKey:String) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName:forEntityName, in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3841,10 +3730,8 @@ class CoreDataHandlerPE: NSObject {
     }
     
     func savePDFDetails(fileId:NSNumber,fileName: String, fileExtension:String , docxfile:String) {
-        
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+                
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let entity = NSEntityDescription.entity(forEntityName: "BlankAssessmentFiles", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         person.setValue(fileName, forKey: "fileName")
@@ -3858,27 +3745,11 @@ class CoreDataHandlerPE: NSObject {
             print(appDelegateObj.testFuntion())
         }
         customerData.append(person)
-        
-        //        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        //        
-        //        let entity = NSEntityDescription.entity(forEntityName:forEntityName, in: appDelegate!.managedObjectContext)
-        //        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        //        person.setValue(fileId, forKey: firstKey)
-        //        person.setValue(fileName, forKey: secondKey)
-        //        person.setValue(fileExtension, forKey: thirdKey)
-        //        do {
-        //            try managedContext.save()
-        //        } catch {
-        //        }
-        //        customerData.append(person)
     }
-    
-    
-    
     
     func saveClorineInDB(id:NSNumber,clorineName: String, forEntityName:String,firstKey:String,secondKey:String ) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName:forEntityName, in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3896,7 +3767,7 @@ class CoreDataHandlerPE: NSObject {
     
     func saveStatesInDB(id:NSNumber,StateName: String, forEntityName:String,firstKey:String,secondKey:String ) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName:forEntityName, in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3938,7 +3809,7 @@ class CoreDataHandlerPE: NSObject {
     
     //Pending
     func saveCustomerInSession(_ custId: NSNumber, CustName: String) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Customer", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -3955,7 +3826,7 @@ class CoreDataHandlerPE: NSObject {
     //pending
     func saveCustomerInSession(_ customer: PE_Customer) {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_Session", in: appDelegate!.managedObjectContext)
@@ -3998,10 +3869,7 @@ class CoreDataHandlerPE: NSObject {
     
     //fetchCustomer
     func fetchCustomerWithCustnameNew(_ custName: String) -> NSArray {
-        
-        var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_Customer")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "customerName == %@", custName)
@@ -4009,8 +3877,6 @@ class CoreDataHandlerPE: NSObject {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 customerData = (results as NSArray) as! [NSManagedObject]
-            } else {
-                
             }
         } catch {
             print(appDelegateObj.testFuntion())
@@ -4882,14 +4748,10 @@ class CoreDataHandlerPE: NSObject {
         }
     }
     func update_ISNA_AssessmentInProgress(assessment: PE_AssessmentInProgress) {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-        
-        let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
-        
         fetchRequest.predicate = NSPredicate(format: " assID == %@", argumentArray:  [assessment.assID])
         
         do {
@@ -4976,9 +4838,8 @@ class CoreDataHandlerPE: NSObject {
     
     func updateDraftAssementDetailsForStatus(assessment: PE_AssessmentInProgress) {
         
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.returnsObjectsAsFaults = false
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: "catID == %@ AND assID == %@ AND userID == %d", argumentArray: [assessment.catID,assessment.assID,userID])
@@ -4995,7 +4856,7 @@ class CoreDataHandlerPE: NSObject {
         }
         do {
             try managedContext.save()
-            var result = self.updateCatDetailsForStatus(assessment:assessment)
+            var _ = self.updateCatDetailsForStatus(assessment:assessment)
             
         }
         catch {
@@ -5209,7 +5070,7 @@ class CoreDataHandlerPE: NSObject {
 extension CoreDataHandlerPE {
     
     func saveImageInPEFinishModule(imageId:Int,imageData:Data) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_ImageEntity", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -5225,7 +5086,7 @@ extension CoreDataHandlerPE {
     }
     
     func saveImageInPEModule(assessment: PE_AssessmentInProgress,imageId:Int,imageData:Data,fromDraft:Bool?=false) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_ImageEntity", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -5242,7 +5103,7 @@ extension CoreDataHandlerPE {
     }
     
     func saveImageInPEModuleDraft(assessment: PE_AssessmentInProgress,imageId:Int,imageData:Data) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_ImageEntity", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -5259,7 +5120,7 @@ extension CoreDataHandlerPE {
     }
     
     func saveImageInGetApi(imageId:Int,imageData:Data) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_ImageEntity", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -5274,7 +5135,7 @@ extension CoreDataHandlerPE {
     }
     
     func imageAlreadySyncStatus(imageId:Int) -> Bool {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_ImageEntity")
@@ -5283,10 +5144,8 @@ extension CoreDataHandlerPE {
         do {
             let results = try appDelegate?.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if results?.count != 0 { // Atleast one was returned
-                for result in results ?? []{
-                    return true
-                }
-            }else {
+                return true
+            } else {
                 return false
             }
         } catch {
@@ -5467,7 +5326,7 @@ extension CoreDataHandlerPE {
             let results = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if results?.count != 0 { // Atleast one was returned
                 for result in results ?? []{
-                    var imagesPreviousArray =  result.value(forKey: "images")  as? [Int] ?? []
+                    let imagesPreviousArray = result.value(forKey: "images")  as? [Int] ?? []
                     return imagesPreviousArray.count
                 }
             }
@@ -5508,7 +5367,6 @@ extension CoreDataHandlerPE {
     }
     
     func getImageBase64ByImageID(idArray: Int)-> String {
-        var imageDataToReturn : Data = Data()
         var str = ""
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
@@ -5521,7 +5379,7 @@ extension CoreDataHandlerPE {
             if results?.count != 0 { // Atleast one was returned
                 for result in results ?? []{
                     let imageData =  result.value(forKey: "imageData")  as? Data ?? Data()
-                    imageDataToReturn = imageData
+                    let imageDataToReturn = imageData
                     str = imageData.base64EncodedString(options: .lineLength64Characters)                  }
             }
             return str
@@ -5533,7 +5391,6 @@ extension CoreDataHandlerPE {
     
     //""__
     func setImageStatusTrue(idArray: Int) {
-        var imageDataToReturn : Data = Data()
         var str = ""
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
@@ -5565,202 +5422,52 @@ extension CoreDataHandlerPE {
     
     
     
-    func checkDraftByDate(newAssessment:PENewAssessment,draftNumber:Int) -> Bool{
-        var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+    func checkDraftByDate(newAssessment:PENewAssessment,draftNumber:Int) -> Bool {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
         fetchRequest.returnsObjectsAsFaults = false
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         let evaluationID =  newAssessment.evaluationID ?? 0
         if evaluationID == 0 {
             fetchRequest.predicate = NSPredicate(format: "evaluationDate == %@ AND userID == %d ", newAssessment.evaluationDate ?? "",userID)
-        }else {
+        } else {
             fetchRequest.predicate = NSPredicate(format: "evaluationDate == %@ AND userID == %d AND evaluationID == %d AND draftNumber == %d", argumentArray: [newAssessment.evaluationDate ?? "",userID,newAssessment.evaluationID ?? 0,draftNumber])
         }
         if let results = try? managedContext.fetch(fetchRequest) as? [NSManagedObject] {
-            if results.count ?? 0 > 0 {
-                for result in results ?? []{
-                    var draftNum = result.value(forKey: "draftID") as? String ?? ""
-                    self.deleteDraftByDrafyNumber(draftNum)
-                    return false
-                }
+            if results.count > 0 {
+                let draftNum = results[0].value(forKey: "draftID") as? String ?? ""
+                self.deleteDraftByDrafyNumber(draftNum)
                 return false
             } else {
                 return false
             }
-            return false
         }
         return false
     }
     
     
     func checkDraftByDates(newAssessment:PE_AssessmentIDraftInProgress,draftNumber:Int) -> Bool{
-        //        var peNewAssessmentArray : [PENewAssessment] = []
-        //        var dataArray = NSArray()
-        //        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-        let evaluationID =  newAssessment.evaluationID ?? 0
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let evaluationID = newAssessment.evaluationID ?? 0
         if evaluationID == 0 {
             fetchRequest.predicate = NSPredicate(format: "evaluationDate == %@ AND userID == %d ", newAssessment.evaluationDate ?? "",userID)
-        }else {
+        } else {
             fetchRequest.predicate = NSPredicate(format: "evaluationDate == %@ AND userID == %d AND evaluationID == %d AND draftNumber == %d", argumentArray: [newAssessment.evaluationDate ?? "",userID,newAssessment.evaluationID ?? 0,draftNumber])
         }
         if let results = try? managedContext.fetch(fetchRequest) as? [NSManagedObject] {
             if results.count > 0 {
-                for result in results {
-                    let draftNum = result.value(forKey: "draftID") as? String ?? ""
-                    self.deleteDraftByDrafyNumber(draftNum)
-                    return false
-                }
+                let draftNum = results[0].value(forKey: "draftID") as? String ?? ""
+                self.deleteDraftByDrafyNumber(draftNum)
                 return false
             } else {
                 return false
             }
-            return false
         }
         return false
     }
-    
-    //    func saveDraftPEInDB(newAssessmentArray:[PE_AssessmentIDraftInProgress],draftNumber:Int,isfromDraft:Bool? = false,isfromRejected:Bool? = false ) {
-    //
-    //
-    //        let date = Date()
-    //        var formate = ""
-    //        if formate == "" {
-    //            formate = date.getFormattedDate(format: dateFormatMMDDYY) // Set output formate
-    //        }
-    //
-    //        if checkDraftByDates(newAssessment:newAssessmentArray[0] , draftNumber: draftNumber){
-    //
-    //        } else {
-    //            for newAssessment in newAssessmentArray {
-    //                let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-    //                
-    //                let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInDraft", in: appDelegate!.managedObjectContext)
-    //                let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-    //
-    //                formate = formate.replacingOccurrences(of:" ", with: "")
-    //                formate = formate.replacingOccurrences(of:"/", with: "")
-    //                formate = formate.replacingOccurrences(of:":", with: "")
-    //                formate = formate.replacingOccurrences(of:"Z", with: "")
-    //                print(formate)
-    //                assessmentObj.setValue(1, forKey: "asyncStatus")
-    //                if isfromDraft ?? false {
-    //                    assessmentObj.setValue(newAssessment.draftID, forKey: "draftID")
-    //                } else if isfromRejected ?? false {
-    //                    assessmentObj.setValue(newAssessment.dataToSubmitID, forKey: "dataToSubmitID")
-    //                }
-    //
-    //                else {
-    //                    assessmentObj.setValue(formate, forKey: "draftID")
-    //                }
-    //                let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
-    //                assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
-    //
-    //
-    //                assessmentObj.setValue(NSNumber(value:draftNumber), forKey: "draftNumber")
-    //                assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
-    //                assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
-    //
-    //                assessmentObj.setValue(newAssessment.siteId, forKey: "siteId")
-    //                assessmentObj.setValue(newAssessment.assID, forKey: "assID")
-    //                assessmentObj.setValue(newAssessment.customerId, forKey: "customerId")
-    //                assessmentObj.setValue(newAssessment.complexId, forKey: "complexId")
-    //                assessmentObj.setValue(newAssessment.siteName, forKey: "siteName")
-    //                assessmentObj.setValue(newAssessment.userID, forKey: "userID")
-    //                assessmentObj.setValue(newAssessment.customerName, forKey: "customerName")
-    //                assessmentObj.setValue(newAssessment.firstname, forKey: "firstname")
-    //                assessmentObj.setValue(newAssessment.username, forKey: "username")
-    //                assessmentObj.setValue(newAssessment.evaluationDate, forKey: "evaluationDate")
-    //                assessmentObj.setValue(newAssessment.evaluatorName, forKey: "evaluatorName")
-    //                assessmentObj.setValue(newAssessment.evaluatorID, forKey: "evaluatorID")
-    //                assessmentObj.setValue(newAssessment.visitName, forKey: "visitName")
-    //                assessmentObj.setValue(newAssessment.visitID , forKey: "visitID")
-    //                assessmentObj.setValue(newAssessment.evaluationName, forKey: "evaluationName")
-    //                assessmentObj.setValue(newAssessment.evaluationID , forKey: "evaluationID")
-    //                assessmentObj.setValue(newAssessment.approver, forKey: "approver")
-    //                assessmentObj.setValue(newAssessment.noOfEggs ?? 0, forKey: "noOfEggs")
-    //                assessmentObj.setValue(newAssessment.manufacturer, forKey: "manufacturer")
-    //                assessmentObj.setValue(newAssessment.notes, forKey: "notes")
-    //                assessmentObj.setValue(newAssessment.note, forKey: "note")
-    //                let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
-    //                let camera = newAssessment.camera == 1 ? 1 : 0
-    //                let flock = newAssessment.isFlopSelected == 1 ? 1:0
-    //                assessmentObj.setValue(hatcheryAntibioticsInt, forKey: "hatcheryAntibiotics")
-    //                assessmentObj.setValue(NSNumber(value:camera ), forKey: "camera")
-    //                assessmentObj.setValue(NSNumber(value:flock ), forKey: "isFlopSelected")
-    //                assessmentObj.setValue(newAssessment.catID, forKey: "catID")
-    //                assessmentObj.setValue(newAssessment.catName, forKey: "catName")
-    //                assessmentObj.setValue(newAssessment.catMaxMark, forKey: "catMaxMark")
-    //                assessmentObj.setValue(newAssessment.catResultMark, forKey: "catResultMark")
-    //                assessmentObj.setValue(newAssessment.catEvaluationID, forKey: "catEvaluationID")
-    //                assessmentObj.setValue(newAssessment.catISSelected, forKey: "catISSelected")
-    //                assessmentObj.setValue(newAssessment.catEvaluationID , forKey: "catEvaluationID")
-    //                assessmentObj.setValue(newAssessment.assDetail1, forKey: "assDetail1")
-    //                assessmentObj.setValue(newAssessment.assDetail2, forKey: "assDetail2")
-    //                assessmentObj.setValue(newAssessment.assMinScore , forKey: "assMinScore")
-    //                assessmentObj.setValue(newAssessment.assMaxScore , forKey: "assMaxScore")
-    //                assessmentObj.setValue(newAssessment.assCatType, forKey: "assCatType")
-    //                assessmentObj.setValue(newAssessment.assModuleCatID , forKey: "assModuleCatID")
-    //                assessmentObj.setValue(newAssessment.assModuleCatName, forKey: "assModuleCatName")
-    //                assessmentObj.setValue(newAssessment.assStatus , forKey: "assStatus")
-    //                assessmentObj.setValue(newAssessment.sequenceNo , forKey: "sequenceNo")
-    //                assessmentObj.setValue(newAssessment.images , forKey: "images")
-    //                assessmentObj.setValue(newAssessment.doa , forKey: "doa")
-    //                assessmentObj.setValue(newAssessment.inovoject , forKey: "inovoject")
-    //                assessmentObj.setValue(newAssessment.vMixer , forKey: "vMixer")
-    //                assessmentObj.setValue(newAssessment.isFlopSelected , forKey: "isFlopSelected")
-    //                assessmentObj.setValue(newAssessment.breedOfBird , forKey: "breedOfBird")
-    //                assessmentObj.setValue(newAssessment.breedOfBirdOther , forKey: "breedOfBirdOther")
-    //                assessmentObj.setValue(newAssessment.incubation , forKey: "incubation")
-    //                assessmentObj.setValue(newAssessment.incubationOthers , forKey: "incubationOthers")
-    //                assessmentObj.setValue(newAssessment.catResultMark , forKey: "catResultMark")
-    //                assessmentObj.setValue(newAssessment.sig, forKey: "sig")
-    //                assessmentObj.setValue(newAssessment.sig2, forKey: "sig2")
-    //                assessmentObj.setValue(newAssessment.sig_Date, forKey: "sig_Date")
-    //                assessmentObj.setValue(newAssessment.sig_EmpID, forKey: "sig_EmpID")
-    //                assessmentObj.setValue(newAssessment.sig_EmpID2, forKey: "sig_EmpID2")
-    //                assessmentObj.setValue(newAssessment.sig_Name, forKey: "sig_Name")
-    //                assessmentObj.setValue(newAssessment.sig_Name2, forKey: "sig_Name2")
-    //                assessmentObj.setValue(newAssessment.sig_Phone, forKey: "sig_Phone")
-    //                assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
-    //                assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
-    //                assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
-    //                assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
-    //                assessmentObj.setValue(newAssessment.micro, forKey: "micro")
-    //                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaSText, forKey: "hatcheryAntibioticsDoaSText")
-    //                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaText, forKey: "hatcheryAntibioticsDoaText")
-    //                assessmentObj.setValue(newAssessment.hatcheryAntibioticsText, forKey: "hatcheryAntibioticsText")
-    //                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoaS, forKey: "hatcheryAntibioticsDoaS")
-    //                assessmentObj.setValue(newAssessment.hatcheryAntibioticsDoa, forKey: "hatcheryAntibioticsDoa")
-    //                assessmentObj.setValue(newAssessment.doaS, forKey: "doaS")
-    //                assessmentObj.setValue(newAssessment.qcCount, forKey: "qcCount")
-    //                assessmentObj.setValue(newAssessment.personName, forKey: "personName")
-    //                assessmentObj.setValue(newAssessment.ampmValue, forKey: "ampmValue")
-    //                assessmentObj.setValue(newAssessment.frequency, forKey: "frequency")
-    //                assessmentObj.setValue(newAssessment.dDDT, forKey: "dDDT")
-    //                assessmentObj.setValue(newAssessment.dDCS, forKey: "dDCS")
-    //                assessmentObj.setValue(newAssessment.residue, forKey: "residue")
-    //                assessmentObj.setValue(newAssessment.statusType, forKey: "statusType")
-    //                assessmentObj.setValue(newAssessment.informationText, forKey: "informationText")
-    //                assessmentObj.setValue(newAssessment.informationImage, forKey: "informationImage")
-    //                do {
-    //                    try managedContext.save()
-    //                } catch {
-    //                }
-    //                customerData.append(assessmentObj)
-    //            }
-    //        }
-    //    }
-    
-    
     
     fileprivate func getStatusType(_ newAssessment: PENewAssessment, _ assessmentObj: NSManagedObject) -> Int {
         if newAssessment.isEMRejected == true && newAssessment.isPERejected == true {
@@ -5776,7 +5483,7 @@ extension CoreDataHandlerPE {
     
     fileprivate func extractedFunc(_ newAssessmentArray: [PENewAssessment], _ formate: inout String, _ isfromDraft: Bool?, _ isfromRejected: Bool?, _ draftNumber: Int) {
         for newAssessment in newAssessmentArray {
-            let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate
             
             let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInDraft", in: appDelegate!.managedObjectContext)
             let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -5796,9 +5503,8 @@ extension CoreDataHandlerPE {
             } else {
                 assessmentObj.setValue(formate, forKey: "draftID")
             }
-            let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
-            assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
             
+            assessmentObj.setValue(newAssessment.serverAssessmentId, forKey: "serverAssessmentId")
             assessmentObj.setValue(NSNumber(value:draftNumber), forKey: "draftNumber")
             assessmentObj.setValue(newAssessment.selectedTSR, forKey: "selectedTSR")
             assessmentObj.setValue(newAssessment.selectedTSRID, forKey: "selectedTSRID")
@@ -5930,12 +5636,9 @@ extension CoreDataHandlerPE {
     
     func saveDraftPEInDB(newAssessmentArray:[PENewAssessment],draftNumber:Int,isfromDraft:Bool? = false,isfromRejected:Bool? = false) {
         
-        var regionID = Int()
-        regionID = UserDefaults.standard.integer(forKey: "Regionid")
+        let regionID = UserDefaults.standard.integer(forKey: "Regionid")
         let date = Date()
         var formate = ""
-//        if formate == "" {
-            
             if regionID == 3 {
                 formate = date.getFormattedDate(format: dateFormatMMDDYY)   // Set output formate
                 let random = newAssessmentArray[0].serverAssessmentId
@@ -5945,12 +5648,7 @@ extension CoreDataHandlerPE {
                 let random = newAssessmentArray[0].serverAssessmentId
                 formate = "\(formate)\(random ?? "")"
             }
-            
-//        }
-        
-        if checkDraftByDate(newAssessment:newAssessmentArray[0] , draftNumber: draftNumber) {
-            
-        } else {
+        if checkDraftByDate(newAssessment:newAssessmentArray[0] , draftNumber: draftNumber) == false {
             extractedFunc(newAssessmentArray, &formate, isfromDraft, isfromRejected, draftNumber)
         }
     }
@@ -5961,7 +5659,7 @@ extension CoreDataHandlerPE {
         self.deleteDraftByDrafyNumber(draftId)
         
         for newAssessment in newAssessmentArray {
-            let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate
             
             let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInDraft", in: appDelegate!.managedObjectContext)
             let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -6106,7 +5804,7 @@ extension CoreDataHandlerPE {
                                     _ param: [String : String]?) -> Bool {
         for newAssessment in newAssessmentArray {
             count = count + 1
-            let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate
             
             let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInOffline", in: appDelegate!.managedObjectContext)
             let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -6274,8 +5972,7 @@ extension CoreDataHandlerPE {
     
     func saveDataToSyncPEInDBArray(newAssessmentArray:[PENewAssessment],dataToSubmitNumber:Int,param:[String:String]?,fromDraft:Bool? = false) -> Bool{
         
-        var regionID = Int()
-        regionID = UserDefaults.standard.integer(forKey: "Regionid")
+        let regionID = UserDefaults.standard.integer(forKey: "Regionid")
         let date = Date()
         var formate = date.getFormattedDate(format: dateFormatDDMMYY)
         
@@ -6307,14 +6004,13 @@ extension CoreDataHandlerPE {
     func saveDataToSyncPEInDB(newAssessment:PE_AssessmentInProgress,dataToSubmitNumber:Int,param:[String:String]?,fromDraft:Bool? = false) {
         
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInOffline", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         assessmentObj.setValue(0, forKey: "asyncStatus")
         
-        var regionID = Int()
-        regionID = UserDefaults.standard.integer(forKey: "Regionid")
+        let regionID = UserDefaults.standard.integer(forKey: "Regionid")
         let date = Date()
         var formate = ""
         if formate == "" {
@@ -6488,16 +6184,15 @@ extension CoreDataHandlerPE {
     
     
     func saveDataToRejectedSyncPEInDBFromGet(newAssessment:PE_AssessmentInProgress,dataToSubmitNumber:Int,param:[String:String]?,formateFromServer:String? = "", rejectionComment:String) {
-        print(newAssessment)
+        
         self.deleteOfflineBySubmitId(formateFromServer ?? "")
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentRejected", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         assessmentObj.setValue(1, forKey: "asyncStatus")
         
-        var regionID = Int()
-        regionID = UserDefaults.standard.integer(forKey: "Regionid")
+        let regionID = UserDefaults.standard.integer(forKey: "Regionid")
         
         if formateFromServer == "" {
             let date = Date()
@@ -6652,30 +6347,23 @@ extension CoreDataHandlerPE {
     }
     
     func saveDataToSyncPEInDBFromGet(newAssessment:PE_AssessmentInProgress,dataToSubmitNumber:Int,param:[String:String]?,formateFromServer:String? = "") {
-        //        self.deleteOfflineBySubmitId(formateFromServer ?? "")
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInOffline", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         assessmentObj.setValue(1, forKey: "asyncStatus")
-        var regionID = Int()
-        regionID = UserDefaults.standard.integer(forKey: "Regionid")
+        
+        let regionID = UserDefaults.standard.integer(forKey: "Regionid")
         if formateFromServer == "" {
             let date = Date()
             var formate = ""
             if formate == "" {
-                
-                if regionID == 3{
+                if regionID == 3 {
                     formate = date.getFormattedDate(format: dateFormatMMDDYY)
-                }
-                else
-                {
+                } else {
                     formate = date.getFormattedDate(format: dateFormatDDMMYY)
                 }
             }
             
-            
-            //  var formate = date.getFormattedDate(format: dateFormatMMDDYY) // Set output formate
             let random = newAssessment.serverAssessmentId
             formate = "\(formate)\(random ?? "")"
             formate = formate.replacingOccurrences(of:" ", with: "")
@@ -6819,13 +6507,13 @@ extension CoreDataHandlerPE {
     
     func saveDraftDataToSyncPEInDBFromGet(newAssessment:PE_AssessmentInProgress,dataToSubmitNumber:Int,param:[String:String]?,formateFromServer:String? = "") {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInDraft", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
         assessmentObj.setValue(1, forKey: "asyncStatus")
-        var regionID = Int()
-        regionID = UserDefaults.standard.integer(forKey: "Regionid")
+        
+        let regionID = UserDefaults.standard.integer(forKey: "Regionid")
         if formateFromServer == "" {
             let date = Date()
             var formate = ""
@@ -6968,7 +6656,7 @@ extension CoreDataHandlerPE {
     
     func saveGetDraftDataToSyncPEInDBFromGet(newAssessment:PE_AssessmentInProgress,dataToSubmitNumber:Int,param:[String:String]?,formateFromServer:String? = "",deviceID:String? = "") {
         
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_AssessmentInDraft", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -7140,21 +6828,15 @@ extension CoreDataHandlerPE {
     
     func getLastTwoOfflineDataForGraph(siteName:String , customerName:String) {
         
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: userIdStr, userID)
-        
         
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let resultsGetIs : [NSManagedObject] = []
             let results = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
-            if results?.count != 0 { // Atleast one was returned
-                
-                
-            }
         }
         catch {
             //   print("Fetch Failed: \(error)")
@@ -7167,7 +6849,7 @@ extension CoreDataHandlerPE {
 extension CoreDataHandlerPE {
     
     func saveDOAPEModule(assessment: PE_AssessmentInProgress,doaId:Int,inovojectData:InovojectData,fromDoaS:Bool?=false,fromDraft:Bool?=false) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_DayOfAge", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -7189,7 +6871,7 @@ extension CoreDataHandlerPE {
     }
     
     func saveDraftDOAPEModule(assessment: PE_AssessmentInProgress,doaId:Int,inovojectData:InovojectData) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_DayOfAge", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -7209,13 +6891,10 @@ extension CoreDataHandlerPE {
         } catch {
             print(appDelegateObj.testFuntion())
         }
-        
     }
-    //updateInovojectCategortIsSelcted
-    
     
     func saveVMixerPEModule(assessment: PE_AssessmentInProgress,id:Int,peCertificateData:PECertificateData) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_VMixer", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -7225,16 +6904,14 @@ extension CoreDataHandlerPE {
         
         do {
             try managedContext.save()
-            updateUpdateVMixerMinusCategortIsSelcted(assessment: assessment, doaId: id)
+            _ = updateUpdateVMixerMinusCategortIsSelcted(assessment: assessment, doaId: id)
         } catch {
             print(appDelegateObj.testFuntion())
         }
-        
     }
     
-    
     func saveVMixerPEModuleGet(peCertificateData:PECertificateData,evalutionID:Int? = 1 , CategoryID:Int? = 0) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_VMixer", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -7249,7 +6926,7 @@ extension CoreDataHandlerPE {
         assessmentObj.setValue(peCertificateData.fsrSign, forKey: "fsrSign")
         do {
             try managedContext.save()
-            updateUpdateVMixerGet(doaId: certificateID,evalutionID: evalutionID , NewCatID:CategoryID)
+            _ = updateUpdateVMixerGet(doaId: certificateID,evalutionID: evalutionID , NewCatID:CategoryID)
         } catch {
             print(appDelegateObj.testFuntion())
         }
@@ -7257,7 +6934,7 @@ extension CoreDataHandlerPE {
     
     
     func saveDraftVMixerPEModule(assessment: PE_AssessmentInProgress,id:Int,peCertificateData:PECertificateData) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_VMixer", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -7274,7 +6951,7 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
             //  //   print("PE_DayOfAge---\(CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VMixer"))")
-            updateDraftVMixerAddCategortIsSelcted(assessment: assessment, doaId: id)
+            _ = updateDraftVMixerAddCategortIsSelcted(assessment: assessment, doaId: id)
             
         } catch {
             print(appDelegateObj.testFuntion())
@@ -7282,29 +6959,9 @@ extension CoreDataHandlerPE {
         
     }
     
-    
-    func saveMinusDraftVMixerPEModule(assessment: PE_AssessmentInProgress,id:Int,peCertificateData:PECertificateData) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        let entity = NSEntityDescription.entity(forEntityName: "PE_VMixer", in: appDelegate!.managedObjectContext)
-        let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        assessmentObj.setValue(id, forKey: "vmid")
-        assessmentObj.setValue(peCertificateData.certificateDate, forKey: "certificateDate")
-        assessmentObj.setValue(peCertificateData.name, forKey: "certificateName")
-        
-        do {
-            try managedContext.save()
-            //  //   print("PE_DayOfAge---\(CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VMixer"))")
-            updateUpdateVMixerMinusCategortIsSelcted(assessment: assessment, doaId: id)
-            
-        } catch {
-            print(appDelegateObj.testFuntion())
-        }
-        
-    }
     
     func saveInovojectPEModule(assessment: PE_AssessmentInProgress,doaId:Int,inovojectData:InovojectData,fromDraft:Bool?=false) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_DayOfAge", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -7331,7 +6988,7 @@ extension CoreDataHandlerPE {
     }
     
     func saveDraftInovojectPEModule(assessment: PE_AssessmentInProgress,doaId:Int,inovojectData:InovojectData) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "PE_DayOfAge", in: appDelegate!.managedObjectContext)
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
@@ -7345,8 +7002,7 @@ extension CoreDataHandlerPE {
         assessmentObj.setValue(inovojectData.ampulePerBag, forKey: "doaAmpulePerBag")
         do {
             try managedContext.save()
-            // //   print("PE_DayOfAge---\(CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_DayOfAge"))")
-            updateDraftInovojectCategortIsSelcted(assessment: assessment, doaId: doaId)
+            _ = updateDraftInovojectCategortIsSelcted(assessment: assessment, doaId: doaId)
             
         } catch {
             print(appDelegateObj.testFuntion())
@@ -7558,35 +7214,6 @@ extension CoreDataHandlerPE {
         }
     }
     
-    func updateDraftVMixerMinusCategortIsSelcted(assessment: PE_AssessmentInProgress, doaId: Int) -> Bool {
-        
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
-        fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: catIdStr, argumentArray: [assessment.catID])
-        do {
-            let results = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
-            if results?.count != 0 { // Atleast one was returned
-                for result in results ?? []{
-                    var imagesPreviousArray =  result.value(forKey: "vMixer")  as? [Int] ?? []
-                    //   imagesPreviousArray.remove(at: <#T##[Int]#>)(doaId)
-                    imagesPreviousArray.index(of: doaId).map { imagesPreviousArray.remove(at: $0) }
-                    result.setValue(imagesPreviousArray, forKey: "vMixer")
-                }
-            }
-        } catch {
-            //   print("Fetch Failed: \(error)")
-        }
-        do {
-            try managedContext.save()
-            return true
-        }
-        catch {
-            return false
-        }
-    }
-    
     func updateUpdateVMixerGet(doaId: Int,evalutionID:Int? = 1 , NewCatID:Int? = 1) -> Bool {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
@@ -7696,11 +7323,11 @@ extension CoreDataHandlerPE {
         }
     }
     
-    func subtractVMixerMinusCategortIsSelctedDraft(assessment: PE_AssessmentInProgress, doaId: Int) -> Bool {
+    //Same implementation of function: subtractVMixerMinusCategortIsSelctedDraft()
+    func updateDraftVMixerMinusCategortIsSelcted(assessment: PE_AssessmentInProgress, doaId: Int) -> Bool {
         
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: catIdStr, argumentArray: [assessment.catID])
         do {
@@ -7710,11 +7337,9 @@ extension CoreDataHandlerPE {
                     var imagesPreviousArray =  result.value(forKey: "vMixer")  as? [Int] ?? []
                     imagesPreviousArray.index(of: doaId).map { imagesPreviousArray.remove(at: $0) }
                     result.setValue(imagesPreviousArray, forKey: "vMixer")
-                    
                 }
             }
         } catch {
-            
         }
         do {
             try managedContext.save()
@@ -7724,7 +7349,6 @@ extension CoreDataHandlerPE {
             return false
         }
     }
-    
     
     func updateVmixerMinusCategortIsSelcted(assessment: PE_AssessmentInProgress, doaId: Int,fromDraft:Bool? = false) -> Bool {
         
@@ -7973,7 +7597,7 @@ extension CoreDataHandlerPE {
     }
     //id:0,name:"",date:"",isCertExpired: false,isReCert: false,vacOperatorId: 0, signatureImg: ""
     func updateVMixerNewInDB(peCertificateData:PECertificateData,id:Int) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_VMixer")
         fetchRequest.predicate = NSPredicate(format: vmID, id)
@@ -8012,7 +7636,7 @@ extension CoreDataHandlerPE {
     
     
     func updateVMixerNewInDBandReplaceNewID(peCertificateData:PECertificateData,id:Int , replaceNewID : Int) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_VMixer")
         fetchRequest.predicate = NSPredicate(format: vmID, id)
@@ -8048,7 +7672,7 @@ extension CoreDataHandlerPE {
         
     }
     func updateAlreadyInProgressInDB(newAssessment:PENewAssessment) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
         let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
@@ -8115,7 +7739,7 @@ extension CoreDataHandlerPE {
     }
     
     func updateDraftAlreadyInProgressInDB(newAssessment:PENewAssessment) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.predicate = NSPredicate(format: draftNo, newAssessment.draftNumber ?? 0)
@@ -8616,7 +8240,7 @@ extension CoreDataHandlerPE {
                     peNewAssessment.refrigeratorNote = userIDArray.firstObject as? String ?? ""
                 }else{
                     if createNewObject{
-                        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+                        let appDelegate = UIApplication.shared.delegate as? AppDelegate
                         
                         let obj = getAssessmentInProgressObject()
                         obj.userID = userID as NSNumber
@@ -8647,9 +8271,7 @@ extension CoreDataHandlerPE {
     
     func getSavedOnGoingAssessmentPEObject() -> PENewAssessment {
         let peNewAssessment = PENewAssessment()
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
@@ -8661,8 +8283,8 @@ extension CoreDataHandlerPE {
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
-                userIDArray = dataArray.value(forKey: "userID")  as? NSArray ?? []
+                let dataArray = results as NSArray
+                var userIDArray = dataArray.value(forKey: "userID")  as? NSArray ?? []
                 peNewAssessment.userID = userIDArray.firstObject as? Int ?? 0
                 userIDArray = dataArray.value(forKey: "serverAssessmentId")  as? NSArray ?? []
                 peNewAssessment.serverAssessmentId = userIDArray.firstObject as? String ?? ""

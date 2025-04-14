@@ -449,10 +449,6 @@ class CoreDataHandlerPVE: NSObject {
         
         let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_CustomerComplexPopup")
         if valuee.count > 0 {
-            
-            let customerIdArr = valuee.value(forKey: "customerId")  as! NSArray
-            let complexIdArr = valuee.value(forKey: "complexId")  as! NSArray
-            
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
             
@@ -482,8 +478,6 @@ class CoreDataHandlerPVE: NSObject {
         let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_CustomerComplexPopup")
         if valuee.count > 0 {
             
-            let customerIdArr = valuee.value(forKey: "customerId")  as! NSArray
-            let complexIdArr = valuee.value(forKey: "complexId")  as! NSArray
             let userIdArr = valuee.value(forKey: "userId")  as! NSArray
             let userIdStr = userIdArr[0] as! Int
             
@@ -1022,14 +1016,11 @@ class CoreDataHandlerPVE: NSObject {
     }
     
     func fetchDraftSumOfSelectedMarks(_ seqNo: NSNumber, type:String, syncId:String) -> String {
-        
-        var isSelected = Bool()
-        isSelected = true
         var sumMarks = Int()
         var maxMarks = Int()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_SyncAssessmentQuestion")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "seq_Number == %@ AND isSelected == %@ AND type == %@ AND syncId == %@", argumentArray: [seqNo, isSelected, type, syncId])
+        fetchRequest.predicate = NSPredicate(format: "seq_Number == %@ AND isSelected == %@ AND type == %@ AND syncId == %@", argumentArray: [seqNo, true, type, syncId])
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
@@ -1216,14 +1207,12 @@ class CoreDataHandlerPVE: NSObject {
         
         for (ind, seqNo) in seqNoArr.enumerated() {
             
-            var isSelected = Bool()
-            isSelected = true
             var dataArray = NSArray()
             var sumMarks = Int()
             
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PVE_AssessmentQuestion")
             fetchRequest.returnsObjectsAsFaults = false
-            fetchRequest.predicate = NSPredicate(format: predicateSeqisSelectedStr, argumentArray: [seqNo, isSelected])
+            fetchRequest.predicate = NSPredicate(format: predicateSeqisSelectedStr, argumentArray: [seqNo, true])
             do {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 if let results = fetchedResult {
