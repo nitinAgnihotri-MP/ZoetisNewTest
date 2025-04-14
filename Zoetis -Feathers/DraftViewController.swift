@@ -26,8 +26,8 @@ class DraftViewController: BaseViewController {
        //MARK:- Other Outlets
        @IBOutlet weak var lblNoDraftFound: UILabel!
     
-       private let seperatorColor = UIColor(displayP3Red: 156/255, green: 187/255, blue: 225/255, alpha: 1.0)
-       private let borderColorOfTextField = UIColor(displayP3Red: 204/255, green: 227/255, blue: 255/255, alpha: 1.0).cgColor
+       private let seperatorColor = UIColor(displayP3Red: 156/255, green: 187/255, blue: 1, alpha: 1.0)
+       private let borderColorOfTextField = UIColor(displayP3Red: 204/255, green: 227/255, blue: 1, alpha: 1.0).cgColor
        private let heightOfFooter = CGFloat(0.1)
        private let heightOfRow = CGFloat(73.0)
        private let cornerRadius = CGFloat(18.5)
@@ -36,8 +36,8 @@ class DraftViewController: BaseViewController {
        
        private let gradientColorHeaderTable1 = UIColor(displayP3Red: 21/255, green: 165/255, blue: 198/255, alpha: 1.0).cgColor
        private let gradientColorHeaderTable2 = UIColor(displayP3Red: 15/255, green: 117/255, blue: 187/255, alpha: 1.0).cgColor
-       private let gradientstatusSurveyView1 = UIColor(displayP3Red: 255/255, green: 255/255, blue: 255/255, alpha: 1.0).cgColor
-       private let gradientstatusSurveyView2 = UIColor(displayP3Red: 210/255, green: 231/255, blue: 255/255, alpha: 1.0).cgColor
+       private let gradientstatusSurveyView1 = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0).cgColor
+       private let gradientstatusSurveyView2 = UIColor(displayP3Red: 210/255, green: 231/255, blue: 1.0, alpha: 1.0).cgColor
        
        private let kDraftsCell = "DraftsTableViewCell"
        private let kLeftMenuNotification = "LeftMenuBtnNoti"
@@ -66,16 +66,11 @@ class DraftViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.arrDraftsViewRequisition = self.getDataFromLocal()
-//        self.arrSurveyStatus = self.objDraftViewModel.getRequisitionArray(arrDraft: self.arrDraftsViewRequisition)
-//        for item in self.arrSurveyStatus {
-//            print("your array is : \(item)")
-//        }
         for item in self.objDraftViewModel.getRequisitionArray(arrDraft: self.arrDraftsViewRequisition) {
             print("your item is here :\(item)")
             if item != "" {
-            self.arrSurveyStatus.append(item)
-            }
-            else {
+                self.arrSurveyStatus.append(item)
+            } else {
                 print("one case is genrated")
             }
         }
@@ -88,7 +83,7 @@ class DraftViewController: BaseViewController {
     }
     
     //MARK:- Set TableView Attributes
-    private func setTableViewAttributes(){
+    private func setTableViewAttributes() {
         self.tblViewRequisition.register(UINib(nibName: kDraftsCell, bundle: nil), forCellReuseIdentifier: kDraftsCell)
         self.tblViewRequisition.delegate = self
         self.tblViewRequisition.dataSource = self
@@ -96,17 +91,14 @@ class DraftViewController: BaseViewController {
     }
     
     //MARK:- Set Other Attributes
-    private func setAttributes(){
+    private func setAttributes() {
         self.setAttributesOfTextField(textField: selectSurveyTextField)
-        //        self.statusSurveyView.roundCorners(corners: [.topLeft, .topRight], radius: cornerRadius)
-        //        self.tblHeaderFixedView.roundCorners(corners: [.topLeft, .topRight], radius: cornerRadius)
         self.selectSurveyDropDownBtn.addTarget(self, action: #selector(selectSurveyAction(_:)), for: .touchUpInside)
         self.sideMenuBtn.addTarget(self, action: #selector(openSideMenu(_:)), for: .touchUpInside)
         self.setGradient()
     }
     
-    
-    private func setAttributesOfTextField(textField: UITextField){
+    private func setAttributesOfTextField(textField: UITextField) {
         textField.layer.cornerRadius = cornerRadius
         textField.layer.borderWidth  = borderWidth
         textField.layer.borderColor  = borderColorOfTextField
@@ -115,7 +107,7 @@ class DraftViewController: BaseViewController {
         textField.delegate = self
     }
     
-    private func setGradient(){
+    private func setGradient() {
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.colors = [gradientColorHeaderTable1, gradientColorHeaderTable2]
         gradient.locations = [0.0 , 1.0]
@@ -134,7 +126,7 @@ class DraftViewController: BaseViewController {
     }
     
     
-    private func showData(isDataAvailable: Bool){
+    private func showData(isDataAvailable: Bool) {
         self.statusSurveyView.isHidden = !isDataAvailable
         self.tblHeaderFixedView.isHidden = !isDataAvailable
         self.tblViewRequisition.isHidden = !isDataAvailable
@@ -142,13 +134,15 @@ class DraftViewController: BaseViewController {
     }
     
     
-    private func setDropdrown(_ textField: UITextField, dropDownArr:[String]?){
-        if  dropDownArr!.count > 0 {
+    private func setDropdrown(_ textField: UITextField, dropDownArr:[String]?) {
+        if let dropDownArray = dropDownArr,
+            dropDownArray.count > 0 {
+            
             self.dropDownVIewNew(arrayData: dropDownArr!, kWidth: textField.frame.width, kAnchor: textField, yheight: textField.bounds.height) {  selectedVal, index  in
-                if selectedVal != self.kNoValue{
+                if selectedVal != self.kNoValue {
                     textField.text = selectedVal
                     self.arrDraftsViewRequisition = self.objDraftViewModel.filterDataAccordingToRequisitionSelected(selectedRequistion: selectedVal, arrViewRequisition: self.getDataFromLocal())
-                }else{
+                } else {
                     textField.text = ""
                     self.arrDraftsViewRequisition = self.getDataFromLocal()
                 }
@@ -173,46 +167,18 @@ class DraftViewController: BaseViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    
-    func pushToRequisitionControllers(detailsOfRequistion: Microbial_EnviromentalSurveyFormSubmitted){
-        switch detailsOfRequistion.requisitionType?.intValue {
-        case RequisitionType.bacterial.rawValue:
-            if let viewController = UIStoryboard(name: kMicrobial, bundle: nil).instantiateViewController(withIdentifier: kEnviromentalSurveyController) as? EnviromentalSurveyController {
-                viewController.savedData = detailsOfRequistion
-                viewController.requisitionSavedSessionType = .SHOW_DRAFT_FOR_EDITING
-                viewController.currentRequisitionType = .bacterial
-                if let navigator = navigationController {
-                    navigator.pushViewController(viewController, animated: true)
-                }
-            }
-            
-        case RequisitionType.enviromental.rawValue:
-            if let viewController = UIStoryboard(name: kMicrobial, bundle: nil).instantiateViewController(withIdentifier: kEnviromentalSurveyController) as? EnviromentalSurveyController {
-                viewController.savedData = detailsOfRequistion
-                viewController.requisitionSavedSessionType = .SHOW_DRAFT_FOR_EDITING
-                viewController.currentRequisitionType = .enviromental
-                if let navigator = navigationController {
-                    navigator.pushViewController(viewController, animated: true)
-                }
-            }
-            
-//        case RequisitionType.feathurePulp.rawValue:
-//            if let viewController = UIStoryboard(name: kMicrobial, bundle: nil).instantiateViewController(withIdentifier: kFeatherPulpVC) as? FeatherPulpVC {
-//                viewController.featherPulpData = detailsOfRequistion
-//                viewController.requisitionSavedSessionType = .SHOW_DRAFT_FOR_EDITING
-//                if let navigator = navigationController {
-//                    navigator.pushViewController(viewController, animated: true)
-//                }
-//            }
+    func pushToRequisitionControllers(detailsOfRequistion: Microbial_EnviromentalSurveyFormSubmitted) {
+        guard let requisitionType = detailsOfRequistion.requisitionType?.intValue,
+              requisitionType == RequisitionType.bacterial.rawValue || requisitionType == RequisitionType.enviromental.rawValue,
+              let viewController = UIStoryboard(name: kMicrobial, bundle: nil).instantiateViewController(withIdentifier: kEnviromentalSurveyController) as? EnviromentalSurveyController,
+              let navigator = navigationController else { return }
         
-        default:
-            break
-        }
+        viewController.savedData = detailsOfRequistion
+        viewController.requisitionSavedSessionType = .SHOW_DRAFT_FOR_EDITING
+        viewController.currentRequisitionType = requisitionType == RequisitionType.bacterial.rawValue ? .bacterial : .enviromental
+        navigator.pushViewController(viewController, animated: true)
     }
 }
-
-
-
 
 //MARK:- UITableViewDelegate, UITableViewDataSource
 extension DraftViewController: UITableViewDelegate, UITableViewDataSource{

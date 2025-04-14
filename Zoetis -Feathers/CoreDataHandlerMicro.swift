@@ -1270,27 +1270,20 @@ class CoreDataHandlerMicro: NSObject {
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "Id")
         fetchRequest.returnsObjectsAsFaults = false
-        var auto: Int?
+        var auto = 0
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
-            
-            auto = fetchedResult?.count == 0 ? 0 : 0
             if let results = fetchedResult {
                 if results.count > 0 {
                     let ob: Id = results.last as! Id
                     auto = Int(ob.autoId!)
                 }
-            } else {
-                
             }
-            
-            
         } catch {
             print(appDelegateObj.testFuntion())
         }
         
-        return auto!
-        
+        return auto
     }
     
     
@@ -2140,41 +2133,35 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
         managedObject.setValue(isPlateIdGenerated, forKey: "isPlateIdGenerated")
         managedObject.setValue(reqData.deviceId ?? "", forKey: "syncDeviceId")
         
-        if let visitReasonId = reqData.visitReason{ managedObject.setValue(RequisitionModel().getReasonForVisitFromItsId(reasonForVisitId: visitReasonId), forKey: "reasonForVisit")
-        }else{
+        if let visitReasonId = reqData.visitReason {
+            managedObject.setValue(RequisitionModel().getReasonForVisitFromItsId(reasonForVisitId: visitReasonId), forKey: "reasonForVisit")
+        } else {
             managedObject.setValue("", forKey: "reasonForVisit")
         }
-        
         managedObject.setValue(reqData.conductedType ?? 0, forKey: "surveyConductedOnId")
-        
-        
         managedObject.setValue(reqData.purposeType ?? 0, forKey: "purposeOfSurveyId")
         
-        if let purposeType = reqData.purposeType{
+        if let purposeType = reqData.purposeType {
             managedObject.setValue(RequisitionModel().getPurposeOfSurveyFromItsId(purposeOfSurveyId: purposeType), forKey: "purposeOfSurvey")
-        }else{
+        } else {
             managedObject.setValue("", forKey: "purposeOfSurvey")
         }
         
         managedObject.setValue(0, forKey: "reviewerId")
         managedObject.setValue(reviewerText, forKey: "reviewer")
-        
-        //        managedObject.setValue(reqData.requestorId ?? 0, forKey: "requestor_Id")
-        //        managedObject.setValue(reqData.requestorId ?? 0, forKey: "requestor")
-        
         managedObject.setValue(reqData.customerId ?? 0, forKey: "companyId")
         
         if let customerId = reqData.customerId{
             managedObject.setValue(RequisitionModel().getCompanyfromId(id: customerId), forKey: "company")
-        }else{
+        } else {
             managedObject.setValue("", forKey: "company")
         }
         
         managedObject.setValue(reqData.siteId ?? 0, forKey: "siteId")
         
-        if let siteId = reqData.siteId{
+        if let siteId = reqData.siteId {
             managedObject.setValue(RequisitionModel().getSiteIdforSelectedSite(id: siteId), forKey: "site")
-        }else{
+        } else {
             managedObject.setValue("", forKey: "site")
         }
         
@@ -2185,14 +2172,11 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
         managedObject.setValue(reqData.notes ?? "", forKey: "notes")
         managedObject.setValue(reqData.conductedType ?? 0, forKey: "surveyConductedOnId")
         
-        if let conductedType = reqData.conductedType{
+        if let conductedType = reqData.conductedType {
             managedObject.setValue(RequisitionModel().getSurveyConductedOnFromItsId(surveyConductedOnId: conductedType), forKey: "surveyConductedOn")
-        }else{
+        } else {
             managedObject.setValue("", forKey: "surveyConductedOn")
         }
-        
-        //        managedObject.setValue(RequisitionModel().getSurveyConductedOnFromItsId(surveyConductedOnId: reqData.conductedType ?? 0) , forKey: "surveyConductedOn")
-        
         managedObject.setValue(reqId, forKey: "requisitionType")
         managedObject.setValue(reqData.barcode ?? "", forKey: "requisition_Id")
         managedObject.setValue(reqData.sessionStatus ?? 0, forKey: "sessionStatus")
@@ -2211,9 +2195,9 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_EnviromentalSurveyFormSubmitted")
         fetchRequest.returnsObjectsAsFaults = false
         let userId = UserDefaults.standard.value(forKey: "Id") ?? 0
-        if sessionStatus == .submitted{
+        if sessionStatus == .submitted {
             fetchRequest.predicate = NSPredicate(format: "siteId == %@ AND userId == %d AND sampleCollectionDate == %@ AND requisitionType == %d AND sessionStatus == %d", argumentArray: [siteId, userId, sampleCollectionDate, reqType, SessionStatus.submitted.rawValue])
-        }else{
+        } else {
             fetchRequest.predicate = NSPredicate(format: "siteId == %@ AND userId == %d AND sampleCollectionDate == %@ AND requisitionType == %d", argumentArray: [siteId, userId, sampleCollectionDate, reqType])
         }
         do {
@@ -2227,10 +2211,8 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
         return false
     }
     
-    
-    
-    class func isSameTimeStampAndUserIdAlreadyExisits(reqData: MicrobialDetailsList) -> Bool{
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+    class func isSameTimeStampAndUserIdAlreadyExisits(reqData: MicrobialDetailsList) -> Bool {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "Microbial_EnviromentalSurveyFormSubmitted")
         fetchRequest.returnsObjectsAsFaults = false
@@ -2256,7 +2238,6 @@ extension Microbial_EnviromentalSurveyFormSubmitted{
         fetchRequest.returnsObjectsAsFaults = false
         let userId = UserDefaults.standard.value(forKey: "Id") ?? 0
         fetchRequest.predicate = NSPredicate(format: "requisitionType == \(requisitionType) AND userId == \(userId) AND isSynced == 0")
-        //NSPredicate(format: "sessionStatus == %@ AND requisitionType == %@ AND isSynced == 0 AND userId == %d", "\(sessionStatus)", "\(requisitionType)", "\(userId)")
         do {
             let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [Microbial_EnviromentalSurveyFormSubmitted]
             if let results = fetchedResult {
@@ -2711,15 +2692,12 @@ extension MicrobialSelectedUnselectedReviewer{
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = predicate
         if let fetchedResult = try? appDelegate.managedObjectContext.fetch(fetchRequest) as? [MicrobialSelectedUnselectedReviewer] {
-//            if let results = fetchedResult {
                 for obj in fetchedResult {
                     appDelegate.managedObjectContext.delete(obj as NSManagedObject)
                 }
-//            }
             do {
                 try appDelegate.managedObjectContext.save() // <- remember to put this :)
             } catch {
-                // Do something... fatalerror
             }
         }
     }

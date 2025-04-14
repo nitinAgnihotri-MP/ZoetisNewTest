@@ -32,13 +32,13 @@ class MicrobialCaseInfoCell: UITableViewCell {
     
     @IBOutlet weak var noteTextView: UITextView!
     
-    var defaultBorderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+    var defaultBorderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        //        self.caseInfoContainerView.topGradientColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
-        //        self.caseInfoContainerView.bottomGradientColor = UIColor(red: 210/255, green: 231/255, blue: 255/255, alpha: 1)
+        //        self.caseInfoContainerView.topGradientColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1)
+        //        self.caseInfoContainerView.bottomGradientColor = UIColor(red: 210/255, green: 231/255, blue: 1.0, alpha: 1)
         //        self.contentView.layer.cornerRadius = 20
         //        self.contentView.layer.masksToBounds = true
         
@@ -47,8 +47,8 @@ class MicrobialCaseInfoCell: UITableViewCell {
         self.reviewerTxt.text = firstName
         self.requestorTxt.text = firstName
         
-        caseInfoContainerView.firstColor =  UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
-        caseInfoContainerView.secondColor =  UIColor(red: 210/255, green: 231/255, blue: 255/255, alpha: 1)
+        caseInfoContainerView.firstColor =  UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1)
+        caseInfoContainerView.secondColor =  UIColor(red: 210/255, green: 231/255, blue: 1.0, alpha: 1)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -83,16 +83,14 @@ class PVEDraftSNAssessment: BaseViewController {
         self.topviewConstraint(vwTop: peHeaderViewController.view)
     }
     
-    func generateSeveyNumber(dateStr:String) -> String{
+    func generateSeveyNumber(dateStr:String) -> String {
         let inputFormatter = DateFormatter()
         inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        var generatedServeyNo = String()
-        let siteId = sharedManager.getSessionValueForKeyFromDB(key: "siteId") as! Int
+        let siteId = sharedManager.getSessionValueForKeyFromDB(key: "siteId") as? Int ?? 0
         let evaluationDateStr = sharedManager.getSessionValueForKeyFromDB(key: "evaluationDate") as? String
         let savedDateString = evaluationDateStr?.replacingOccurrences(of: "/", with: "", options: .literal, range: nil)
-        generatedServeyNo = "S-" + savedDateString! + "\(siteId)"
+        let generatedServeyNo = "S-" + savedDateString! + "\(siteId)"
         return generatedServeyNo
-        
     }
     
     @IBAction func actionMenu(_ sender: Any) {
@@ -140,21 +138,16 @@ extension PVEDraftSNAssessment: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 1
-        default:
-            return 1
-        }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         switch indexPath.section {
         case 0:
-            return  self.assesssmentCellHeight
+            return self.assesssmentCellHeight
         case 1:
-            return  250
+            return 250
         default:
             return 0
         }
@@ -263,11 +256,10 @@ extension PVEDraftSNAssessment{
         
         let dataArr = CoreDataHandlerPVE().fetchCurrentSessionInDB()
         let arr = dataArr.value(forKey: "customerId") as! NSArray
-        let custId = arr[0] as! Int
+        let custId = arr[0] as? Int ?? 0
         
-        var siteNameArr = NSArray()
         let namesArray = CoreDataHandlerPVE().fetchCustomerWithCustId( custId as NSNumber)
-        siteNameArr = namesArray.value(forKey: "complexName") as? NSArray ?? NSArray()
+        let siteNameArr = namesArray.value(forKey: "complexName") as? NSArray ?? NSArray()
         
         setDropdrown(sender, clickedField: Constants.ClickedFieldStartNewAssPVE.siteId, dropDownArr: siteNameArr as? [String])
     }
@@ -598,38 +590,26 @@ extension PVEDraftSNAssessment{
     
     
     func setBorderBlueForCalender(btn:UIButton) {
-        
         let superviewCurrent =  btn.superview
         for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                if view == btn{
-                    view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
-                    //                                            } else{
-                    //                                            view.setDropdownStartAsessmentView(imageName:"dd")
-                }
+            if view.isKind(of:UIButton.self),view == btn {
+                view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
             }
         }
-        
     }
     
     func setBorderBlue(btn:UIButton) {
-        
         let superviewCurrent =  btn.superview
         for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                if view == btn{
-                    view.setDropdownStartAsessmentView(imageName:"dd")
-                }
+            if view.isKind(of:UIButton.self),view == btn {
+                view.setDropdownStartAsessmentView(imageName:"dd")
             }
         }
-        
     }
     
     @IBAction func nextBtnAction(_ sender: UIButton) {
         checkValidation()
-        
     }
-    
 }
 
 // MARK: - Other Delegates -------------Date Picker Delegate------------------
@@ -640,35 +620,18 @@ extension PVEDraftSNAssessment: DatePickerPopupViewControllerProtocol{
         let isDateExistInDB = checkDateInDB(dateStr: string)
         
         if !isDateExistInDB.0 {
-            
-            if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
-            {
+            if let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0)) as? StartNewAssignmentCell {
                 cell.evaluationDateTxtfield.text = string
-                
                 CoreDataHandlerPVE().updateDraftSNAFor(currentTimeStamp, syncedStatus: false, text: string, forAttribute: "evaluationDate")
-                
                 CoreDataHandlerPVE().updateDraftSNAFor(currentTimeStamp, syncedStatus: false, text: objDate, forAttribute: "objEvaluationDate")
-                
-                let dataSavedInDB = CoreDataHandlerPVE().fetchDraftForSyncId(type: "draft", syncId: currentTimeStamp)
-                
                 self.setBorderBlueForCalender(btn: cell.evaluationDateBtn)
-                
-                let generatedServeyNo =  generateSeveyNumber(dateStr: string)
+                let generatedServeyNo = generateSeveyNumber(dateStr: string)
                 CoreDataHandlerPVE().updateDraftSNAFor(currentTimeStamp, syncedStatus: false, text: generatedServeyNo, forAttribute: "serveyNo")
-                
                 tblView.reloadData()
-                
             }
-            
-            
-        }
-        else{
+        } else {
             showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
-            if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell
-            {
-            }
         }
-        
     }
     
     func checkDateInDB(dateStr:String) -> (Bool, String) {
@@ -710,35 +673,19 @@ extension PVEDraftSNAssessment {
         }
     }
     
-    private func setBorderBlackFiels(forBtn:UIButton) {
-        
-        let superviewCurrent =  forBtn.superview
-        for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                view.layer.borderColor = UIColor.black.cgColor
-                view.layer.borderWidth = 2.0
-            }
-        }
-    }
-    
     fileprivate func textfieldValidation(_ evaluationForId: Int, _ cell: StartNewAssignmentCell) {
-        if (evaluationForId == 5 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0) || (evaluationForId == 0 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0) || (cell.breedOfBirdsFemaleTxtfield.text?.count == 0 ){
+        if (evaluationForId == 5 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0) || (evaluationForId == 0 && cell.breedOfBirdsFemaleTxtfield.text?.count == 0) || (cell.breedOfBirdsFemaleTxtfield.text?.count == 0) {
             setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsFemaleBtn)
-            // }
         }
         if (evaluationForId == 5 && cell.breedOfBirdsFemaleOtherTxtfield.text?.count == 0 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false){
-            if cell.breedOfBirdsFemaleOtherTxtfield.text?.count == 0 {
-                setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsFemaleOtherBtn)
-            }
+            setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsFemaleOtherBtn)
         }
-        if (evaluationForId == 5 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false && cell.breedOfBirdsOtherTxtfield.text?.count == 0) || (evaluationForId == 4 && cell.breedOfBirdsOtherTxtfield.text?.count == 0 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false){
-            if cell.breedOfBirdsOtherTxtfield.text?.count == 0 {
-                setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsOtherBtn)
-            }
+        if (evaluationForId == 5 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false && cell.breedOfBirdsOtherTxtfield.text?.count == 0) || (evaluationForId == 4 && cell.breedOfBirdsOtherTxtfield.text?.count == 0 && cell.breesOfBirdsMaleOtherSuperView.isHidden == false) {
+            setBorderRedForMandatoryFiels(forBtn: cell.breedOfBirdsOtherBtn)
         }
     }
     
-    fileprivate func pveValidation(_ cell: StartNewAssignmentCell, _ evaluationForId: Int, _ isAllValidationOk: inout Bool) {
+    fileprivate func pveValidation(_ cell: StartNewAssignmentCell, _ evaluationForId: Int) {
         if cell.customerTxtfield.text?.count == 0 {
             setBorderRedForMandatoryFiels(forBtn: cell.customerBtn)
         }
@@ -770,13 +717,9 @@ extension PVEDraftSNAssessment {
         
         textfieldValidation(evaluationForId, cell)
         showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
-        isAllValidationOk = false
     }
     
     private func checkValidationnn() -> Bool {
-        var isAllValidationOk = Bool()
-        isAllValidationOk = true
-        
         if let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell {
             let dataSavedInDB = CoreDataHandlerPVE().fetchDraftForSyncId(type: "draft", syncId: currentTimeStamp)
             var evaluationForId = Int()
@@ -786,35 +729,27 @@ extension PVEDraftSNAssessment {
             } else {
                 evaluationForId = 0
             }
-            if cell.evaluationDateTxtfield.text?.count == 0 || cell.evaluatorTxtfield.text?.count == 0 || cell.siteIdTxtfield.text?.count == 0 || /*cell.housingTxtfield.text?.count == 0 ||*/ cell.customerTxtfield.text?.count == 0 || cell.evaluationForTxtfield.text?.count == 0 || cell.accManagerTxtfield.text?.count == 0 || /*cell.ageOfBirdsTxtfield.text?.count == 0 ||*/ cell.breedOfBirdsTxtfield.text?.count == 0{
-                
-                pveValidation(cell, evaluationForId, &isAllValidationOk)
+            if cell.evaluationDateTxtfield.text?.count == 0 || cell.evaluatorTxtfield.text?.count == 0 || cell.siteIdTxtfield.text?.count == 0 || cell.customerTxtfield.text?.count == 0 || cell.evaluationForTxtfield.text?.count == 0 || cell.accManagerTxtfield.text?.count == 0 || cell.breedOfBirdsTxtfield.text?.count == 0 {
+                pveValidation(cell, evaluationForId)
             }
         }
-        return isAllValidationOk
+        return true
     }
 
-    func checkValidation()  {
-        if checkValidationnn() == true  {
-            if  let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell {
-                //
-                let isDateExistInDB = checkDateInDB(dateStr: cell.evaluationDateTxtfield.text ?? "")
-                
-                if !isDateExistInDB.0 {
-                    
-                    let currentSyncedStatus = getDraftValueForKey(key: "syncedStatus") as! Bool
-                    UserDefaults.standard.set(currentSyncedStatus, forKey: "syncedStatus")
-                    
-                    let storyBoard : UIStoryboard = UIStoryboard(name: Constants.Storyboard.pveStoryboard, bundle:nil)
-                    let vc = storyBoard.instantiateViewController(withIdentifier: "PVEDraftSNAFinalizeAssement") as! PVEDraftSNAFinalizeAssement
-                    vc.currentTimeStamp = currentTimeStamp
-                    navigationController?.pushViewController(vc, animated: true)
-       
-                } else {
-                    showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
-                    // cell.evaluationDateTxtfield.text = ""
-                    setBorderRedForMandatoryFiels(forBtn: cell.evaluationDateBtn)
-                }
+    func checkValidation() {
+        if checkValidationnn(),
+           let cell = self.tblView.cellForRow(at: IndexPath(row: 0, section: 0) ) as? StartNewAssignmentCell {
+            let isDateExistInDB = checkDateInDB(dateStr: cell.evaluationDateTxtfield.text ?? "")
+            if !isDateExistInDB.0 {
+                let currentSyncedStatus = getDraftValueForKey(key: "syncedStatus") as! Bool
+                UserDefaults.standard.set(currentSyncedStatus, forKey: "syncedStatus")
+                let storyBoard : UIStoryboard = UIStoryboard(name: Constants.Storyboard.pveStoryboard, bundle:nil)
+                let vc = storyBoard.instantiateViewController(withIdentifier: "PVEDraftSNAFinalizeAssement") as! PVEDraftSNAFinalizeAssement
+                vc.currentTimeStamp = currentTimeStamp
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                showAlert(title: Constants.alertStr, message: "Assessment already exists for the customer, complex and date. Please try another one.", owner: self)
+                setBorderRedForMandatoryFiels(forBtn: cell.evaluationDateBtn)
             }
         }
     }

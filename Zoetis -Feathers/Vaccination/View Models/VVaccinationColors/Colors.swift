@@ -42,12 +42,12 @@ extension UIColor{
     }
     
     class func getSafetyCertBorderLowerGradColor()->UIColor{
-        return UIColor(red: 255/255.0, green: 215/255.0, blue: 223/255.0, alpha: 1.0);
+        return UIColor(red: 1.0, green: 215/255.0, blue: 223/255.0, alpha: 1.0);
     }
     
     
     class func getViewCertUpperGradColor()->UIColor{
-        return UIColor(red: 40/255.0, green: 237/255.0, blue: 255/255.0, alpha: 1.0);
+        return UIColor(red: 40/255.0, green: 237/255.0, blue: 1.0, alpha: 1.0);
     }
     
     class func getViewCertLowerGradColor()->UIColor{
@@ -59,7 +59,7 @@ extension UIColor{
     }
     
     class func getViewCertBorderUpperGradColor()->UIColor{
-        return UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0);
+        return UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0);
     }
     
     class func getViewCertBorderLowerGradColor()->UIColor{
@@ -67,7 +67,7 @@ extension UIColor{
     }
     
     class func getDraftUpperGradColor()->UIColor{
-        return UIColor(red: 238/255.0, green: 247/255.0, blue: 255/255.0, alpha: 1.0);
+        return UIColor(red: 238/255.0, green: 247/255.0, blue: 1.0, alpha: 1.0);
     }
     
     class func getDraftLowerGradColor()->UIColor{
@@ -75,7 +75,7 @@ extension UIColor{
     }
     
     class func getDraftBorderUpperGradColor()->UIColor{
-        return UIColor(red: 223/255.0, green: 240/255.0, blue: 255/255.0, alpha: 1.0);
+        return UIColor(red: 223/255.0, green: 240/255.0, blue: 1.0, alpha: 1.0);
     }
     
     class func getDraftBorderLowerGradColor()->UIColor{
@@ -113,7 +113,7 @@ extension UIColor{
     }
     
     class  func getAddEmployeeGradient()->UIColor{
-        return UIColor(red: 210/255.0, green: 231/255.0, blue: 255/255.0, alpha: 1.0);
+        return UIColor(red: 210/255.0, green: 231/255.0, blue: 1.0, alpha: 1.0);
     }
     
     class  func greyTblBackground()->UIColor{
@@ -125,14 +125,14 @@ extension UIColor{
     }
     
     class func getUpcomingCertLowerGradColor()->UIColor{
-        return UIColor(red: 255/255.0, green: 100/255.0, blue: 0/255.0, alpha: 1.0);
+        return UIColor(red: 1.0, green: 100/255.0, blue: 0/255.0, alpha: 1.0);
     }
     
     
     
     
     class func getBorderColorr()->UIColor{
-        return UIColor(red: 204/255.0, green: 227/255.0, blue: 255/255.0, alpha: 1.0);
+        return UIColor(red: 204/255.0, green: 227/255.0, blue: 1.0, alpha: 1.0);
     }
     
     class func getPopupTblGradientColor()->UIColor{

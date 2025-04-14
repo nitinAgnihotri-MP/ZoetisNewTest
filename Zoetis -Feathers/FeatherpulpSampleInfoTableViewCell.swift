@@ -23,7 +23,7 @@ class FeatherpulpSampleInfoTableViewCell: UITableViewCell {
     
     let padding = CGFloat(5.0)
     let collectionViewCellIdentifier = "FeatherpulpSampleInfoTestCollectionViewCell"
-    let borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+    let borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
     let cornerRadius = CGFloat(18.0)
     var delegate : FeatherpulpSampleInfoTableViewCellProtocol?
     var arrTestOptions = [MicrobialFeatherpulpServiceTestSampleInfo]()

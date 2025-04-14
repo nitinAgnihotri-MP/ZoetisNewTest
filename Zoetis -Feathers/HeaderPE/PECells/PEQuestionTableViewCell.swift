@@ -230,19 +230,9 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
         
     }
     
-//    func switchClicked(status: Bool) {
-//    }
-    
-    
-    
     @IBAction func inventorybtnClicked(_ sender: Any) {
         btnInventoryClickedCompletion?(nil)
-        
     }
-    // MARK: - IB ACTIONS
-    
-//    @IBAction func cameraBtnCLicked(_ sender: Any) {
-//    }
     
     @IBAction func na_BtnClicked(_ sender: Any) {
         btnNA?()

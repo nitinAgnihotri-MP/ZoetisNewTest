@@ -40,13 +40,13 @@ public struct Customer {
     let customerName: String?
     
     init(_ json: JSON) {
-        customerId = json["CustomerId"].intValue ?? 0
-        customerName = json["CustomerName"].stringValue ?? ""
-        CoreDataHandlerPE().saveCustomerInDB(NSNumber(value: customerId ?? 0), CustName: customerName ?? "")
+        customerId = json["CustomerId"].intValue
+        customerName = json["CustomerName"].stringValue
+        CoreDataHandlerPE().saveCustomerInSessionWithCustomerNameAndId(NSNumber(value: customerId ?? 0), CustName: customerName ?? "")
     }
     
     init(_ customerManagedObject: PE_Customer) {
-        customerId = customerManagedObject.customerID as! Int
+        customerId = customerManagedObject.customerID as? Int
         customerName = customerManagedObject.customerName
     }
 }

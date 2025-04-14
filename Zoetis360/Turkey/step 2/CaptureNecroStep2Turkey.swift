@@ -4308,14 +4308,14 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             cell.quickLinkIcon.isHidden = false
             
             if (cell.isSelected) {
-                cell.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0) // highlight selection
+                cell.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0) // highlight selection
                 cell.QuickLink.alpha = 1
                 cell.quickLinkIcon.alpha = 1
                 farmRow = indexPath.row
                  selectedFarmIndexTurkey = indexPath.row
             }  else {
                 
-                cell.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                cell.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
                 cell.QuickLink.alpha = 0
                 cell.quickLinkIcon.alpha = 0
             }
@@ -4983,7 +4983,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
 //            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CaptureNecroStep2TurkeyCell
             let cell = collectionView.cellForItem(at: indexPath) as! CaptureNecroStep2TurkeyCell
             
-            cell.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+            cell.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
             cell.QuickLink.alpha = 1
             cell.quickLinkIcon.alpha = 1
             
@@ -5221,10 +5221,10 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         let cell:StartNecropsyTableViewCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! StartNecropsyTableViewCell
         
         if (cell.isSelected) {
-            cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+            cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
             
         } else {
-            cell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+            cell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
         }
         
         cell.selectionStyle = UITableViewCell.SelectionStyle.none
@@ -5258,7 +5258,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         if btnTag == 0 {
             let removeIndexPath: IndexPath = IndexPath(row: 0, section: 0)
             if let removeCell = tableView.cellForRow(at: removeIndexPath) as? StartNecropsyTableViewCell {
-                removeCell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                removeCell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
             }
         }
 
@@ -5266,7 +5266,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         switch indexPath.row {
         case 0:
             btnTag = 0
-            cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+            cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
             dataSkeltaArray.removeAllObjects()
             let necId = getNecId()
             dataSkeltaArray = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(
@@ -5346,7 +5346,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
 
         // Save the selected index and update the cell background color
         UserDefaults.standard.set(btnTag, forKey: "clickindex")
-        cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+        cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
     }
 
     
@@ -5368,7 +5368,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         if indexPath.row == 0 {
             
             btnTag = 0
-            cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+            cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
             dataSkeltaArray.removeAllObjects()
             
             var  necId = getNecId()
@@ -5390,7 +5390,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             {
                 let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
                 let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
             }
             
             btnTag = 1
@@ -5413,7 +5413,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             {
                 let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
                 let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
                 
             }
             
@@ -5437,7 +5437,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             {
                 let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
                 let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
                 
             }
             
@@ -5461,7 +5461,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             {
                 let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
                 let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
                 
             }
             
@@ -5480,19 +5480,19 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         }
         
         UserDefaults.standard.set(btnTag, forKey: "clickindex")
-        cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+        cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
         
     }
     */
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let cell:StartNecropsyTableViewCell = tableView.cellForRow(at: indexPath) as! StartNecropsyTableViewCell
-        cell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+        cell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
         if btnTag == 0
         {
             let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
             let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-            removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+            removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
             
         }
     }

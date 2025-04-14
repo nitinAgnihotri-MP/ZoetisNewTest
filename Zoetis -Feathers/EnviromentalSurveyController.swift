@@ -27,18 +27,12 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
     let fillAllStr = "Please fill all mandatory fields"
     @IBOutlet weak var deleteBtn: UIButton!
     let userLogedIn = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
-    let userId =  UserDefaults.standard.value(forKey: "Id") as? String ?? ""
     var plateIdIndex = 0
-    
-    
     var currentRequisition = RequisitionModel()
-    
     var isSubmitButtonPressed = false
     var currentRequisitionType = RequisitionType.enviromental
     var requisitionSavedSessionType = REQUISITION_SAVED_SESSION_TYPE.CREATE_NEW_SESSION
-    
-    var defaultBorderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-    
+    var defaultBorderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
     var savedData = Microbial_EnviromentalSurveyFormSubmitted()
     var reviewerDetails : [MicrobialSelectedUnselectedReviewer] = []
     var dropButton = DropDown()
@@ -50,7 +44,6 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         case STD20 = 0
         case STD40 = 1
         case STD = 2
-
     }
     
     override func viewDidLoad() {
@@ -119,8 +112,6 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         NotificationCenter.default.post(name: NSNotification.Name("LeftMenuBtnNoti"), object: nil, userInfo: nil)
     }
     
-    
-    
     @IBAction func saveAsDraftPressed(_ sender: UIButton) {
         self.saveAsDraft()
     }
@@ -130,24 +121,14 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         self.currentRequisition.actualCreatedHeaders[notesIndexPath.section - 1].numberOfPlateIDCreated[notesIndexPath.row].isSelectedNote = true
         self.currentRequisition.actualCreatedHeaders[notesIndexPath.section - 1].numberOfPlateIDCreated[notesIndexPath.row].tag = notesIndexPath.row
             notesView.removeFromSuperview()
-        
-        let indexPath = IndexPath(row:notesIndexPath.row, section:notesIndexPath.section - 1)
-       // tableView.reloadRows(at: [indexPath], with: .automatic)
        self.reloadTableView()
-//        tableView.reloadData()
     }
     
     @IBAction func notesCancelBtnClick(_ sender: UIButton) {
         notesView.removeFromSuperview()
     }
     
-    
-    
-    private func navigateToMocrobialViewController(){
-//        let storyBoard : UIStoryboard = UIStoryboard(name: "Microbial", bundle:nil)
-//        let vc = storyBoard.instantiateViewController(withIdentifier: "MicrobialViewController") as! MicrobialViewController
-//        navigationController?.pushViewController(vc, animated: true)
-        
+    private func navigateToMocrobialViewController() {
         for controller in self.navigationController!.viewControllers as Array {
             if controller.isKind(of: MicrobialViewController.self) {
                 self.navigationController!.popToViewController(controller, animated: true)
@@ -156,8 +137,6 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         }
     }
 
-    
-    
     @IBAction func submitButtonPressed(_ sender: UIButton) {
         
         self.isSubmitButtonPressed = true
@@ -275,7 +254,7 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
     }
     
     
-    private func refreshReviewerData(){
+    private func refreshReviewerData() {
         self.reviewerDetails.removeAll()
         switch requisitionSavedSessionType {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
@@ -297,7 +276,6 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         }
         return true
     }
-    //sampleDescriptionTextField
     
     fileprivate func isSampleTextFieldFilled() -> Bool {
         for header in self.currentRequisition.actualCreatedHeaders {
@@ -311,13 +289,9 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
     }
 
     fileprivate func isAllSampleInfoMandatoryFiledsFilled() -> Bool {
-        if  self.currentRequisition.company.isEmpty ||
+        if self.currentRequisition.company.isEmpty ||
             self.currentRequisition.site.isEmpty ||
-            self.currentRequisition.barCode.isEmpty  
-//                ||
-//            self.currentRequisition.reviewer.isEmpty
-        {
-            
+            self.currentRequisition.barCode.isEmpty {
             return false
         }
         
@@ -335,14 +309,11 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight =  610
         self.tableView.separatorStyle = .none
-        
         self.tableView.register(EnviromentalFormCell.nib, forCellReuseIdentifier: EnviromentalFormCell.identifier)
         self.tableView.register(BacterialFormCell.nib, forCellReuseIdentifier: BacterialFormCell.identifier)
         self.tableView.register(EnviromentalSampleInfoCell.nib, forCellReuseIdentifier: EnviromentalSampleInfoCell.identifier)
-        
         self.tableView.register(UINib(nibName: "EnviromentalLocationHeaderView", bundle: nil), forHeaderFooterViewReuseIdentifier: "EnviromentalLocationHeaderView")
     }
-    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1 + self.currentRequisition.actualCreatedHeaders.count
@@ -358,10 +329,8 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
             } else {
                 return self.currentRequisition.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count
             }
-            //return self.enviromentalSessionInProgressModel.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count
         }
     }
-    
     
     //MARK: - Configure data for Enviromental
     fileprivate func configureData_Enviromental(_ cell: EnviromentalFormCell) {
@@ -370,14 +339,9 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
         cell.sampleCollectedByText.text = self.currentRequisition.sampleCollectedBy
         cell.companyTextField.text = self.currentRequisition.company
         cell.siteTextField.text = self.currentRequisition.site
-//        cell.emailIdTextField.text = self.currentRequisition.email
         cell.surveyConductedTextField.text = self.currentRequisition.surveyConductedOn
         cell.sampleDateTextField.text = self.currentRequisition.sampleCollectionDate
         cell.purposeOfSurveyTextField.text = self.currentRequisition.purposeOfSurvey
-//        cell.transferInTextField.text = self.currentRequisition.transferIn
-//        if self.currentRequisition.barCodeManualEntered.isEmpty == false {
-//            self.currentRequisition.barCode = self.currentRequisition.barCodeManualEntered
-//        }
         cell.barcodeTextField.text = self.currentRequisition.barCode
         cell.noteTextView.text = self.currentRequisition.notes
     }
@@ -389,14 +353,9 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
        cell.companyTextField.text = self.currentRequisition.company
        cell.siteTextField.text = self.currentRequisition.site
        cell.sampleDateTextField.text = self.currentRequisition.sampleCollectionDate
-//       if self.currentRequisition.barCodeManualEntered.isEmpty == false {
-//           self.currentRequisition.barCode = self.currentRequisition.barCodeManualEntered
-//       }
        cell.barcodeTextField.text = self.currentRequisition.barCode
        cell.noteTextView.text = self.currentRequisition.notes
    }
-
-    
     
     fileprivate func cellForRowOfBacterialCaseInfo(_ tableView: UITableView, indexPath: IndexPath) -> BacterialFormCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "BacterialFormCell", for: indexPath) as! BacterialFormCell
@@ -552,20 +511,10 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
         }
     }
     
-    @objc func addInfoPopup(PlateID : String){
-
+    @objc func addInfoPopup(PlateID : String) {
         showtoast(message: PlateID)
-         //  loadPopupVw(index: sender.tag)
-
-       }
-    private func loadPopupVw(index: Int){
-        let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-        let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
-        vc.headerValue = "Rejection Comment"
-        //        vc.titleValue = "Comment"
-        vc.textOfTextView = "SS"
-        self.navigationController?.present(vc, animated: false, completion: nil)
     }
+    
     //MARK: - Mandatory Fields Validation for Header
     func mandatoryFieldValidationForHeader(_ view: EnviromentalLocationHeaderView, section: Int) {
         if self.currentRequisition.actualCreatedHeaders[view.tag].isPlusButtonPressed &&
@@ -587,8 +536,6 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
     fileprivate func setUpHeaderView(_ headerView: EnviromentalLocationHeaderView, _ section: Int) {
         headerView.addLocationButton.isHidden = section == 1 ? false : true
         headerView.generatePlateIdButton.isHidden = true //section == 1 ? false : true
-//        headerView.generatePlateIdButton.isEnabled = self.currentRequisition.actualCreatedHeaders[0].numberOfPlateIDCreated.count > 0
-            //(self.currentRequisition.actualCreatedHeaders[view.tag].numberOfPlateIDCreated.count > 0) ? true : false
         headerView.deleteLocationButton.isHidden = section == 1 ? false : true
         headerView.btnsStackView.isHidden = section == 1 ? false : true
         headerView.btnStd40.isHidden = section == 1 ? false : true
@@ -634,25 +581,16 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
             headerView.collapsableButton.setImage(UIImage(named: "expand_view_icon"), for: .normal)
             headerView.platesTitleView.isHidden = true
             headerView.backgrounfView.isHidden = true
-            
-            if self.currentRequisition.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count > 0 {
-                headerView.locationTypeContainerViewHeight.constant = 68
-            } else {
-                headerView.locationTypeContainerViewHeight.constant = 68
-            }
+            headerView.locationTypeContainerViewHeight.constant = 68
         } else {
             headerView.collapsableButton.setImage(UIImage(named: "collapse_view_icon"), for: .normal)
             headerView.platesTitleView.isHidden = false
             headerView.backgrounfView.isHidden = false
-            
             headerView.platesTitleView.isHidden = !(self.currentRequisition.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count > 0)
-//            headerView.platesTitleView.roundCorners(corners: [.topLeft, .topRight], radius: 21.0)
-            
+            headerView.locationTypeContainerViewHeight.constant = 68
             if self.currentRequisition.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count > 0 {
-                headerView.locationTypeContainerViewHeight.constant = 68
-                headerView.backgrounfView.isHidden = false
+                headerView.backgrounfView.isHidden = !(self.currentRequisition.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count > 0)
             } else {
-                headerView.locationTypeContainerViewHeight.constant = 68
                 headerView.backgrounfView.isHidden = true
             }
         }
@@ -929,89 +867,44 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
         let locationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: locationTypeId).locationValues
         dataFiltered = locationValues
         data = locationValues
-        
-//        var HatchLocationValues: [String] = []
-//        var SetterslocationValues: [String] = []
-//        var HallVentilatiolocationValues: [String] = []
-//        var HatcherVentilationlocationValues: [String] = []
-//        var GenerallocationValues: [String] = []
-//        var MislocationValues: [String] = []
-//      
-//        
-//        if self.currentRequisitionType.rawValue == 1 {
-//            // Bacterial
-//            HatchLocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 9).locationValues
-//            SetterslocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 10).locationValues
-//            HallVentilatiolocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 12).locationValues
-//            HatcherVentilationlocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 15).locationValues
-//            GenerallocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 16).locationValues
-//            MislocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 17).locationValues
-//        }
-//        else
-//        {
-//            //environmental
-//             HatchLocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 1).locationValues
-//             SetterslocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 2).locationValues
-//             HallVentilatiolocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 3).locationValues
-//             HatcherVentilationlocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 4).locationValues
-//             GenerallocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 18).locationValues
-//             MislocationValues =  self.currentRequisition.getAllLocationValuesFor(locationTypeId: 19).locationValues
-//        }
-//        
-//        
-//        dataFiltered =  HatchLocationValues + SetterslocationValues + HallVentilatiolocationValues + HatcherVentilationlocationValues + GenerallocationValues + MislocationValues //locationValues
-//        data = HatchLocationValues + SetterslocationValues + HallVentilatiolocationValues + HatcherVentilationlocationValues + GenerallocationValues + MislocationValues //locationValues
     }
     
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
-        
         dropButton.dataSource.removeAll()
-            dataFiltered = searchText.isEmpty ? data : data.filter({ (dat) -> Bool in
-                dat.range(of: searchText, options: .caseInsensitive) != nil
-            })
-      
+        dataFiltered = searchText.isEmpty ? data : data.filter({ (dat) -> Bool in
+            dat.range(of: searchText, options: .caseInsensitive) != nil
+        })
+        
         dropButton.dataSource = dataFiltered as [AnyObject]
-       
-     //   }
         print("your data is here : \(dataFiltered)")
         let cell = searchBar.superview?.superview?.superview?.superview as! EnviromentalSampleInfoCell
-       self.setDropdrown(cell.locationValueButton, clickedField: Constants.ClickedFieldMicrobialSurvey.locationValue, dropDownArr: dataFiltered, cell: cell)
-     //   d
-        
+        self.setDropdrown(cell.locationValueButton, clickedField: Constants.ClickedFieldMicrobialSurvey.locationValue, dropDownArr: dataFiltered, cell: cell)
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
-        
-        // previous code   self.getLocationValuesOnType(locationTypeId: self.currentRequisition.getAllLocationTypes().locationTypeIds[Constants.locationValueType])
-        
         var selectedIndex = 0
         var superview = searchBar.superview
         while let view = superview, !(view is UITableViewCell) {
             superview = view.superview
         }
         
-        if let cell = superview as? UITableViewCell {
-            if let indexPath = tableView.indexPath(for: cell) {
-                selectedIndex = indexPath.section-1
-            }
+        if let cell = superview as? UITableViewCell, let indexPath = tableView.indexPath(for: cell) {
+            selectedIndex = indexPath.section-1
         }
         
         if requisitionSavedSessionType == .SHOW_DRAFT_FOR_EDITING {
             let idOfSelectedLocationTypeIs = self.currentRequisition.actualCreatedHeaders[selectedIndex].selectedLocationTypeId ?? 0
             self.getLocationValuesOnType(locationTypeId: idOfSelectedLocationTypeIs)
-        }
-        else
-        {
+        } else {
             let idOfSelectedLocationTypeIs = currentRequisition.selectedLocationTypes[selectedIndex]
             self.getLocationValuesOnType(locationTypeId: idOfSelectedLocationTypeIs)
         }
-
+        
         Constants.cell = searchBar.superview?.superview?.superview?.superview as! EnviromentalSampleInfoCell
         
-        for ob: UIView in ((searchBar.subviews[0] )).subviews {
+        for ob: UIView in (searchBar.subviews[0]).subviews {
             if let z = ob as? UIButton {
                 let btn: UIButton = z
                 btn.setTitleColor(UIColor.white, for: .normal)
@@ -1030,19 +923,14 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
         dropButton.hide()
     }
     
-    func dropHiddenAndShow(){
-        if dropDown.isHidden{
+    func dropHiddenAndShow() {
+        if dropDown.isHidden {
             let _ = dropDown.show()
         } else {
             dropDown.hide()
         }
     }
-    
-    
-    
-    
-    
-    
+        
     func setDropdrown(_ sender: UIButton, clickedField:String, dropDownArr:[String]?, cell: UITableViewCell? = nil, view: UIView? = nil){
         if  dropDownArr!.count > 0 {
             self.dropDownVIewNew(arrayData: dropDownArr!, kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) {  selectedVal, index  in
@@ -1066,9 +954,9 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
     }
     
     fileprivate func extractedFunc3(_ cell: UITableViewCell?, _ selectedValue: String) {
-        if let cell = cell as? EnviromentalFormCell  {
+        if let cell = cell as? EnviromentalFormCell {
             cell.companyTextField.text = selectedValue
-        } else if let cell = cell as? BacterialFormCell  {
+        } else if let cell = cell as? BacterialFormCell {
             cell.companyTextField.text = selectedValue
         }
         
@@ -1449,7 +1337,7 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
         self.reloadTableView()
     }
     
-    func deleteLocationButton(){
+    func deleteLocationButton() {
         if !currentRequisition.isPlateIdGenerated{
             guard self.currentRequisition.actualCreatedHeaders.count > 1 else {
                 Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "You can't delete all the locations.")

@@ -47,9 +47,9 @@ class PEInfoDAO {
         }
     }
     
-    func saveData(userId:String, isExtendedPE:Bool, assessmentId:String, date:Date?, override:Bool = true, subcutaneousTxt:String? = "", dayOfAgeTxt:String? = "", hasChlorineStrips:Bool = false, isAutomaticFail:Bool = false){
+    func saveData(userId:String, isExtendedPE:Bool, assessmentId:String, date:Date?, override:Bool = true, subcutaneousTxt:String? = "", dayOfAgeTxt:String? = "", hasChlorineStrips:Bool = false, isAutomaticFail:Bool = false) {
         let vaccinationCertificationArr = fetchInfoMoObj(userId: userId, assessmentId: assessmentId)
-        if vaccinationCertificationArr.count > 0{
+        if vaccinationCertificationArr.count > 0 {
             if override{
                 let obj = vaccinationCertificationArr[0]
                 obj.subcutaneousAntibioticTxt = subcutaneousTxt

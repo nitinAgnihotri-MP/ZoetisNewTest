@@ -40,7 +40,7 @@ class BacterialFormCell: UITableViewCell {
     
     var requisitionSavedSessionType = REQUISITION_SAVED_SESSION_TYPE.CREATE_NEW_SESSION
     weak var delegate: BacterialFormCellDelegates?
-    var defaultBorderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+    var defaultBorderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -4591,13 +4591,13 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             cell.quickLinkIcon.isHidden = false
             
             if (cell.isSelected) {
-                cell.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0) // highlight selection
+                cell.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0) // highlight selection
                 cell.QuickLink.alpha = 1
                 cell.quickLinkIcon.alpha = 1
                 selectedBirdIndex = indexPath.row
             }
             else {
-                cell.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                cell.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
                 cell.QuickLink.alpha = 0
                 cell.quickLinkIcon.alpha = 0
             }
@@ -5264,7 +5264,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
 
             isBirdClick = false
 //            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CaptureNecropsyCollectionViewCell
-            cell.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+            cell.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
             cell.QuickLink.alpha = 1
             cell.quickLinkIcon.alpha = 1
             
@@ -5319,11 +5319,11 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let cell:StartNecropsyTableViewCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! StartNecropsyTableViewCell
         
         if (cell.isSelected) {
-            cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0) // highlight selection
+            cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0) // highlight selection
         }
         else
         {
-            cell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+            cell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
         }
         cell.selectionStyle = UITableViewCell.SelectionStyle.none
         cell.dataLabel.text = categoryArray[indexPath.row] as? String
@@ -5351,7 +5351,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if indexPath.row == 0 {
             
             btnTag = 0
-            cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+            cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
             dataSkeltaArray.removeAllObjects()
             var  necId = Int()
             
@@ -5370,7 +5370,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             {
                 let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
                 let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
             }
             
             btnTag = 1
@@ -5393,7 +5393,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             {
                 let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
                 let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
             }
             
             btnTag = 2
@@ -5414,7 +5414,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             {
                 let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
                 let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
             }
             
             btnTag = 3
@@ -5435,7 +5435,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             {
                 let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
                 let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
             }
             
             btnTag = 4
@@ -5451,17 +5451,17 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
         
         UserDefaults.standard.set(btnTag, forKey: "clickindex")
-        cell.bgView.backgroundColor = UIColor(red: 255/255, green: 93/255, blue: 48/255, alpha: 1.0)
+        cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let cell:StartNecropsyTableViewCell = tableView.cellForRow(at: indexPath) as! StartNecropsyTableViewCell
-        cell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+        cell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
         if btnTag == 0
         {
             let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
             let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-            removecell.bgView.backgroundColor = UIColor(red: 255/255, green: 141/255, blue: 54/255, alpha: 1.0)
+            removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
         }
     }
     

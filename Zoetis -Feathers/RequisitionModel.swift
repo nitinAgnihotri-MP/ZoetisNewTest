@@ -14,7 +14,7 @@ enum SessionStatus: Int {
     case submitted = 2
 }
 
-enum REQUISITION_SAVED_SESSION_TYPE: Int{
+enum REQUISITION_SAVED_SESSION_TYPE: Int {
     case RESTORE_OLD_SESSION = 0
     case CREATE_NEW_SESSION = 1
     case SHOW_DRAFT_FOR_EDITING = 2

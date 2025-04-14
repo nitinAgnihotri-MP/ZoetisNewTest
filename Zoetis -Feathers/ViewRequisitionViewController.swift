@@ -31,7 +31,7 @@ class ViewRequisitionViewController: BaseViewController {
     
     //MARK:- Other Properties
     private let seperatorColor = UIColor(displayP3Red: 156/255, green: 187/255, blue: 225/255, alpha: 1.0)
-    private let borderColorOfTextField = UIColor(displayP3Red: 204/255, green: 227/255, blue: 255/255, alpha: 1.0).cgColor
+    private let borderColorOfTextField = UIColor(displayP3Red: 204/255, green: 227/255, blue: 1.0, alpha: 1.0).cgColor
     private let heightOfFooter = CGFloat(0.1)
     private let heightOfRow = CGFloat(73.0)
     private let cornerRadius = CGFloat(18.5)
@@ -40,8 +40,8 @@ class ViewRequisitionViewController: BaseViewController {
     
     private let gradientColorHeaderTable1 = UIColor(displayP3Red: 21/255, green: 165/255, blue: 198/255, alpha: 1.0).cgColor
     private let gradientColorHeaderTable2 = UIColor(displayP3Red: 15/255, green: 117/255, blue: 187/255, alpha: 1.0).cgColor
-    private let gradientstatusSurveyView1 = UIColor(displayP3Red: 255/255, green: 255/255, blue: 255/255, alpha: 1.0).cgColor
-    private let gradientstatusSurveyView2 = UIColor(displayP3Red: 210/255, green: 231/255, blue: 255/255, alpha: 1.0).cgColor
+    private let gradientstatusSurveyView1 = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0).cgColor
+    private let gradientstatusSurveyView2 = UIColor(displayP3Red: 210/255, green: 231/255, blue: 1.0, alpha: 1.0).cgColor
     
     private let kRequisitionCell = "ViewRequisistionTableViewCell"
     private let kLeftMenuNotification = "LeftMenuBtnNoti"

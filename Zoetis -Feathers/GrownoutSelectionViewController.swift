@@ -28,9 +28,7 @@ class GrownoutSelectionViewController: BaseViewController {
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: true)
         setupHeader()
-        let moduleID =   UserDefaults.standard.string(forKey:"ModuleId")
-        let ModuleIdsArray =   UserDefaults.standard.string(forKey:"ModuleIdsArray")
-        
+        let ModuleIdsArray = UserDefaults.standard.string(forKey:"ModuleIdsArray")
         let arr = ModuleIdsArray?.components(separatedBy: "~")
 
         processEvalBtn.alpha = 0.3
@@ -94,7 +92,6 @@ class GrownoutSelectionViewController: BaseViewController {
         self.navigationController?.pushViewController(vc!, animated: false)
     }
     
-    
     // MARK: IBActions
     
     @IBAction func clickedBreeder(_ sender: Any) {
@@ -111,14 +108,10 @@ class GrownoutSelectionViewController: BaseViewController {
     
     @IBAction func microbialClicked(_ sender: Any) {
         let RoleId =  UserDefaults.standard.string(forKey: "RoleId")
-        if RoleId == "TSR"{
-            
-        } else if RoleId == "FSR"{
-            
-        } else {
+        if RoleId != "TSR",
+           RoleId != "FSR" {
             navigateToMicrobial()
         }
-        
     }
     
     @IBAction func processEvalBtnClicked(_ sender: Any) {
@@ -126,23 +119,16 @@ class GrownoutSelectionViewController: BaseViewController {
         self.callDashBoard()
     }
     
-    
-    
-    private func navigateToPEDashboard(){
-        UserDefaults.standard.set(1, forKey: "moduleID")
-        let vc = UIStoryboard.init(name: Constants.Storyboard.peStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "PEDashboardViewController") as? PEDashboardViewController
-        self.navigationController?.pushViewController(vc!, animated: true)
-    }
-    private func navigateToModuleSelectionPE(){
+    private func navigateToModuleSelectionPE() {
         let vc = UIStoryboard.init(name: Constants.Storyboard.selection, bundle: Bundle.main).instantiateViewController(withIdentifier: "HatcherySelectionViewController") as? HatcherySelectionViewController
         self.navigationController?.pushViewController(vc!, animated: false)
     }
     
-    private func navigateToModuleSelectionPVE(){
+    private func navigateToModuleSelectionPVE() {
         let vc = UIStoryboard.init(name: Constants.Storyboard.selection, bundle: Bundle.main).instantiateViewController(withIdentifier: "PulletSelectionViewController") as? PulletSelectionViewController
         self.navigationController?.pushViewController(vc!, animated: false)
     }
-    private func navigateToMicrobial(){
+    private func navigateToMicrobial() {
         UserDefaults.standard.set(3, forKey: "moduleID")
         let vc = UIStoryboard.init(name: Constants.Storyboard.microbialStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "Microbial") as? MicrobialViewController
         self.navigationController?.pushViewController(vc!, animated: false)

@@ -127,7 +127,7 @@ class FeatherPulpVC: BaseViewController {
     }
     
     
-    func addSingleFarmDataForNewSession(){
+    func addSingleFarmDataForNewSession() {
         CoreDataHandlerMicro().deleteWithPredicatesFeaherPulpSampleInfo("MicrobialFeatherPulpSampleInfo")
         MicrobialFeatherPulpSampleInfo.addSingleFarmDetails(isSessionPlate: true, plateId: 1, timeStamp: self.currentRequisition.timeStamp)
         let id = UserDefaults.standard.integer(forKey: "sessionId")
@@ -146,13 +146,12 @@ class FeatherPulpVC: BaseViewController {
     
     
     @IBAction func actionMenu(_ sender: Any) {
-        switch requisitionSavedSessionType{
+        switch requisitionSavedSessionType {
         case .RESTORE_OLD_SESSION, .CREATE_NEW_SESSION:
             CoreDataHandlerMicro().deleteAllData("Microbial_EnviromentalSessionInProgress")
             CoreDataHandlerMicro().deleteAllData("ProgressSessionMicrobial")
             CoreDataHandlerMicro().deleteAllData("Microbial_FeatherPulpCurrentSession")
             self.saveCurrentSession()
-            // self.startSavingInSession()
             
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
             CoreDataHandlerMicro().deleteAllData("Microbial_EnviromentalSessionInProgress")
@@ -178,18 +177,14 @@ class FeatherPulpVC: BaseViewController {
         }
     }
     
-    //MARK:- Save data into DB for current Session
     func saveCurrentSession() {
         switch requisitionSavedSessionType {
         case .RESTORE_OLD_SESSION, .CREATE_NEW_SESSION:
-            //            if  !self.currentRequisition.company.isEmpty || !self.currentRequisition.site.isEmpty || self.currentRequisition.barCode != "F-" {
             CoreDataHandlerMicro().autoIncrementidtable()
             CoreDataHandlerMicro().deleteAllData("Microbial_EnviromentalSessionInProgress")
             CoreDataHandlerMicro().saveEnviromentalSessionInProgress(requestor: currentRequisition.requestor, sampleCollectedBy: currentRequisition.sampleCollectedBy, company: currentRequisition.company, companyId: self.currentRequisition.companyId, site: currentRequisition.site, siteId: self.currentRequisition.siteId, email: "", reviewer: currentRequisition.reviewer, surveyConductedOn: "", sampleCollectionDate: currentRequisition.sampleCollectionDate, sampleCollectionDateWithTimeStamp: self.currentRequisition.timeStamp, purposeOfSurvey: "", transferIn: "", barCode: currentRequisition.barCode, barCodeManualEntered: "", notes: currentRequisition.notes, reasonForVisit: currentRequisition.reasonForVisit, requisition_Id: currentRequisition.barCode, requisitionType: self.currentRequisition.requisitionType.rawValue, isPlateIdGenerate: false, typeOfBird: self.currentRequisition.typeOfBird, typeOfBirdId: self.currentRequisition.typeOfBirdId)
             self.saveReviewersDataToDatabase(isSessionType: true)
             UserDefaults.standard.set(true, forKey: "sessionprogresss")
-            //            }
-            
             
         case .SHOW_DRAFT_FOR_EDITING:
             CoreDataHandlerMicro().deleteAllData("Microbial_EnviromentalSessionInProgress")
@@ -197,8 +192,6 @@ class FeatherPulpVC: BaseViewController {
             self.currentRequisition.updateDataForDraft(isFinalSubmit: false)
             
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
-            
-            
         }
         
     }
@@ -207,7 +200,7 @@ class FeatherPulpVC: BaseViewController {
         
         switch requisitionSavedSessionType {
             
-        case .CREATE_NEW_SESSION,.RESTORE_OLD_SESSION :
+        case .CREATE_NEW_SESSION,.RESTORE_OLD_SESSION, .SHOW_DRAFT_FOR_EDITING :
             guard !self.currentRequisition.company.isEmpty else {
                 featherPulpTableView.reloadData()
                 Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select company first.")
@@ -222,40 +215,10 @@ class FeatherPulpVC: BaseViewController {
                 Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "There are no sites for selected company")
                 return
             }
-            
             self.currentRequisition.barCodeManualEntered = ""
-            //              self.setDropdrown(cell.siteButton, clickedField: Constants.ClickedFieldMicrobialSurvey.siteId, dropDownArr: sitesArray)
-            
-            self.setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.siteId, dropDownArr: sitesArray) 
-            
-            
-            
-            
-        case .SHOW_DRAFT_FOR_EDITING:
-            guard !self.currentRequisition.company.isEmpty else {
-                featherPulpTableView.reloadData()
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select company first.")
-                return
-            }
-            
-            let sitesObjectArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_siteByCustomer", customerId: self.currentRequisition.companyId)
-            let sitesArray = sitesObjectArray.value(forKey: "siteName") as? [String] ?? []
-            self.currentRequisition.barCodeManualEntered = ""
-            
-            if sitesArray.count == 0 {
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "There are no sites for selected company")
-                return
-            }
-            
-            self.currentRequisition.barCodeManualEntered = ""
-            //              self.setDropdrown(cell.siteButton, clickedField: Constants.ClickedFieldMicrobialSurvey.siteId, dropDownArr: sitesArray)
-            
             self.setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.siteId, dropDownArr: sitesArray)
-            
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
         }
-        
-        
     }
     
     @IBAction func dateBtnAction(_ sender: UIButton) {
@@ -274,12 +237,7 @@ class FeatherPulpVC: BaseViewController {
     
     @IBAction func companyBtnAction(_ sender: UIButton) {
         switch self.requisitionSavedSessionType {
-        case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
-            let customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer")
-            let customerNamesArray  = customerDetailsArray.value(forKey: "customerName") as? [String] ?? []
-            setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.company, dropDownArr: customerNamesArray)
-                        
-        case .SHOW_DRAFT_FOR_EDITING:
+        case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION, .SHOW_DRAFT_FOR_EDITING:
             let customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer")
             let customerNamesArray  = customerDetailsArray.value(forKey: "customerName") as? [String] ?? []
             setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.company, dropDownArr: customerNamesArray)
@@ -293,127 +251,41 @@ class FeatherPulpVC: BaseViewController {
                 self.setValueInTextFields(selectedValue: selectedVal, selectedIndex: index, clickedField: clickedField)
             }
             self.dropHiddenAndShow()
-        } else {
-            // fetchResponse(clickedField: clickedField)
         }
     }
     
     func setDropdrownForTextField(_ sender: UITextField, clickedField:String, dropDownArr:[String]?){
-        if  dropDownArr!.count > 0 {
+        if dropDownArr!.count > 0 {
             self.dropDownVIewNew(arrayData: dropDownArr!, kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) {  selectedVal,index  in
                 self.setValueInTextFields(selectedValue: selectedVal, selectedIndex: index, clickedField: clickedField)
             }
             self.dropHiddenAndShow()
-        } else {
-            // fetchResponse(clickedField: clickedField)
         }
     }
     
     @IBAction func reasonForVisitAction(_ sender: UIButton) {
-        
-        
         switch self.requisitionSavedSessionType {
-            
         case .CREATE_NEW_SESSION,.SHOW_DRAFT_FOR_EDITING:   let reasonForVisitObjectArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_AllMicrobialVisitTypes")
-        let reasonsForVisit = reasonForVisitObjectArray.value(forKey: "text")  as? [String] ?? []
-        setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.reasonForVisit, dropDownArr: reasonsForVisit)
+            let reasonsForVisit = reasonForVisitObjectArray.value(forKey: "text")  as? [String] ?? []
+            setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.reasonForVisit, dropDownArr: reasonsForVisit)
             
         case .RESTORE_OLD_SESSION: break
-     //   case .SHOW_DRAFT_FOR_EDITING: break
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
         }
-        
-        
     }
     
     @IBAction func sampleCollectedByAction(_ sender: UIButton) {
         switch self.requisitionSavedSessionType {
-        case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
-            let customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "MicrobialFeatherPulpBirdType")
-            let customerNamesArray  = customerDetailsArray.value(forKey: "birdText") as? [String] ?? []
-            setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.birdType, dropDownArr: customerNamesArray)
-            
-        case .SHOW_DRAFT_FOR_EDITING:
+        case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION, .SHOW_DRAFT_FOR_EDITING:
             let customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "MicrobialFeatherPulpBirdType")
             let customerNamesArray  = customerDetailsArray.value(forKey: "birdText") as? [String] ?? []
             setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.birdType, dropDownArr: customerNamesArray)
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
         }
-//        switch self.requisitionSavedSessionType {
-//        case .CREATE_NEW_SESSION , .SHOW_DRAFT_FOR_EDITING :
-//            setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.SampleCollectedBy, dropDownArr: [firstName])
-//        case .RESTORE_OLD_SESSION: break
-//     //   case .SHOW_DRAFT_FOR_EDITING: break
-//        case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
-//        }
     }
     
     @IBAction func reviewerBtnAction(_ sender: UIButton) {
-        
-//        let reviewerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer")
-//        let reviewerNamesArray  = reviewerDetailsArray.value(forKey: "reviewerName") as? [String] ?? []
-//        self.setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.reviewer, dropDownArr: reviewerNamesArray)
         self.saveCurrentSession()
-        self.presentReviewerController()
-    }
-    
-    private func presentReviewerController(){
-      /*
-        let obj = ReviewerViewController(nibName: "ReviewerViewController", bundle: nil)
-        obj.definesPresentationContext = true
-        obj.providesPresentationContextTransitionStyle = true
-        obj.view.backgroundColor = UIColor.clear
-        obj.modalPresentationStyle = .overCurrentContext
-        obj.cancelAction = { sender in
-            let selectedReviewer = self.reviewerDetails.filter{ $0.isSelected?.boolValue == true }
-            if selectedReviewer.count > 0{
-                self.currentRequisition.reviewer = selectedReviewer[0].reviewerName ?? ""
-            }else{
-                self.currentRequisition.reviewer =  ""
-            }
-            if selectedReviewer.count > 1{
-                for i in 1..<selectedReviewer.count{
-                    self.currentRequisition.reviewer = "\(self.currentRequisition.reviewer), \(selectedReviewer[i].reviewerName ?? "")"
-                }
-            }
-            self.dismiss(animated: false, completion: {
-                self.saveCurrentSession()
-                self.featherPulpTableView.reloadData()
-
-            })
-        }
-        
-        obj.doneAction = { sender in
-            let selectedReviewer = self.reviewerDetails.filter{ $0.isSelected?.boolValue == true }
-            if selectedReviewer.count > 0{
-                self.currentRequisition.reviewer = selectedReviewer[0].reviewerName ?? ""
-            }else{
-                self.currentRequisition.reviewer =  ""
-            }
-            if selectedReviewer.count > 1{
-                for i in 1..<selectedReviewer.count{
-                    self.currentRequisition.reviewer = "\(self.currentRequisition.reviewer), \(selectedReviewer[i].reviewerName ?? "")"
-                }
-            }
-            self.dismiss(animated: false, completion: {
-                self.saveCurrentSession()
-                self.featherPulpTableView.reloadData()
-
-            })
-        }
-        
-        obj.reviewerIdSelected = { reviewer in
-            //update bool value
-            self.updateBoolValueOfReviewer(reviewerData: reviewer)
-            self.refreshReviewerData()
-            obj.reviewerDetails = self.reviewerDetails
-        }
-        self.refreshReviewerData()
-        obj.reviewerDetails = self.reviewerDetails
-        self.present(obj, animated: false) {
-            print("presented")
-        }
-        */
     }
     
     private func updateBoolValueOfReviewer(reviewerData: MicrobialSelectedUnselectedReviewer){
@@ -425,12 +297,11 @@ class FeatherPulpVC: BaseViewController {
         case .SHOW_DRAFT_FOR_EDITING, .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
             let predicate = NSPredicate(format: "timeStamp = %@ AND reviewerId == %d", argumentArray: [self.currentRequisition.timeStamp, reviewerData.reviewerId ?? 0])
             MicrobialSelectedUnselectedReviewer.updateBoolValueOfReviewer(predicate: predicate)
-
         }
         self.refreshReviewerData()
     }
     
-    private func refreshReviewerData(){
+    private func refreshReviewerData() {
         self.reviewerDetails.removeAll()
         switch requisitionSavedSessionType {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
@@ -508,7 +379,7 @@ class FeatherPulpVC: BaseViewController {
             let alert = UIAlertController(title: Constants.alertStr, message: "Are you sure you want to Save To draft...?", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil))
             alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (_) in
-                self.saveCaseInfoData(sessionStatus: .saveAsDraft)
+//                self.saveCaseInfoData(sessionStatus: .saveAsDraft)
             }))
             self.present(alert, animated: true, completion: nil)
             
@@ -522,49 +393,9 @@ class FeatherPulpVC: BaseViewController {
         }
     }
     
-     //MARK:- Save  Sample Info/ Case Info data into DB when Submitted or Save As Draft
-    func saveCaseInfoData(sessionStatus: SessionStatus) {
-        /*
-        switch self.requisitionSavedSessionType {
-        case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
-            CoreDataHandlerMicro().autoIncrementidtable()
-            CoreDataHandlerMicro().saveCaseInfoDataInToDB(requestor: currentRequisition.requestor, sampleCollectedBy: currentRequisition.sampleCollectedBy, company: currentRequisition.company, companyId: self.currentRequisition.companyId, site: currentRequisition.site, siteId: self.currentRequisition.siteId, email: "", reviewer: currentRequisition.reviewer, surveyConductedOn:"", sampleCollectionDate: currentRequisition.sampleCollectionDate, sampleCollectionDateWithTimeStamp: "", purposeOfSurvey: "", transferIn: "", barCode: currentRequisition.barCode, barCodeManualEntered: currentRequisition.barCodeManualEntered, notes: currentRequisition.notes, reasonForVisit: currentRequisition.reasonForVisit, currentdate: currentRequisition.currentdate, customerId: "", requisitionType: currentRequisition.requisitionType.rawValue, sessionStatus: sessionStatus.rawValue, requisition_Id: currentRequisition.barCode, timeStamp: currentRequisition.timeStamp, isPlateIdGenerated: false, typeOfBird: currentRequisition.typeOfBird, typeOfBirdId: currentRequisition.typeOfBirdId, reviewerId: currentRequisition.reviewerId, purposeOfSurveyId: -100, surveyConductedOnId: -100, reasonForVisitId: currentRequisition.reasonForVisitId)
-            CoreDataHandlerMicro().deleteAllData("Microbial_EnviromentalSessionInProgress")
-            CoreDataHandlerMicro().updatePlateIDInfoForFeatherPulp(timeStamp: self.currentRequisition.timeStamp)
-            let predicate = NSPredicate(format: timeStampStr, argumentArray: [self.currentRequisition.timeStamp])
-            MicrobialFeatherpulpServiceTestSampleInfo.updateBoolTypesTestOptions(key: "isSessionType", value: false, predicate: predicate)
-            let predicateMicrobialSelectedUnselectedReviewer = NSPredicate(format: "isSessionType = %d", argumentArray: [true])
-            MicrobialSelectedUnselectedReviewer.updateTimeStampFromSession(predicate: predicateMicrobialSelectedUnselectedReviewer, timeStamp: self.currentRequisition.timeStamp)
-            UserDefaults.standard.removeObject(forKey: "sessionprogresss")
-            if sessionStatus == .saveAsDraft{
-                self.navigationController?.popViewController(animated: true)
-            }else if sessionStatus == .submitted{
-                for controller in self.navigationController!.viewControllers as Array {
-                    if controller.isKind(of: MicrobialViewController.self) {
-                        _ =  self.navigationController!.popToViewController(controller, animated: true)
-                        break
-                    }
-                }
-            }
-        case .SHOW_DRAFT_FOR_EDITING:
-            CoreDataHandlerMicro().updateFeatherPulpDetailsAsSubmittedData(timeStramp: self.currentRequisition.timeStamp)
-            for controller in self.navigationController!.viewControllers as Array {
-                if controller.isKind(of: MicrobialViewController.self) {
-                    _ =  self.navigationController!.popToViewController(controller, animated: true)
-                    break
-                }
-            }
-            
-        case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
-            break
-        }
-        */
-    }
-    
-    func checkIfAllFieldsAreFilledInCaseInfo() -> Bool{
+    func checkIfAllFieldsAreFilledInCaseInfo() -> Bool {
         let cellCaseInfo = featherPulpTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? MicrobialCaseInfoCell
-        let cellSampleInfo = featherPulpTableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? MicrobialSampleInfoCell
-
+        
         let company = cellCaseInfo?.selectedCompanyTxt.text ?? ""
         let site = cellCaseInfo?.siteTxt.text ?? ""
         let barcode = cellCaseInfo?.barcodeTxt.text ?? ""
@@ -601,105 +432,25 @@ class FeatherPulpVC: BaseViewController {
         }
         return true
     }
-    /*
-    func checkIfSampleInfoAreFilled() -> Bool{
-      
-        let cell = featherPulpTableView.cellForRow(at: IndexPath(row: 0, section: 2)) as? FeatherpulpSampleInfoTableViewCell
-        if let farmeEnterNameTextField = cell?.farmeEnterNameTextField.text{
-            if farmeEnterNameTextField.isEmpty {
-                cell?.farmeEnterNameTextField.layer.borderWidth = 2.0
-                cell?.farmeEnterNameTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter farm name.")
-                return false
-            }
-        }
-        
-        if let ageWeeksTextField = cell?.ageWeeksTextField.text{
-            if ageWeeksTextField.isEmpty {
-                cell?.ageWeeksTextField.layer.borderWidth = 2.0
-                cell?.ageWeeksTextField.layer.borderColor = UIColor.red.cgColor
-
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter the weeks")
-                return false
-            }
-            if Int(ageWeeksTextField) ?? 0 >= 20{
-                cell?.ageWeeksTextField.layer.borderWidth = 2.0
-                cell?.ageWeeksTextField.layer.borderColor = UIColor.red.cgColor
-
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Weeks should be less than or equal to 20")
-                return false
-            }
-        }
-        
-        if let ageDaysTextField = cell?.ageDaysTextField.text{
-            if ageDaysTextField.isEmpty {
-                cell?.ageDaysTextField.layer.borderWidth = 2.0
-                cell?.ageDaysTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter the days")
-                return false
-            }
-            if Int(ageDaysTextField) ?? 0 > 6{
-                cell?.ageDaysTextField.layer.borderWidth = 2.0
-                cell?.ageDaysTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Days should be less than 7")
-                return false
-            }
-        }
-        
-        
-        
-        if let specimenTypeTextField = cell?.specimenTypeTextField.text{
-            if specimenTypeTextField.isEmpty {
-                cell?.specimenTypeTextField.layer.borderWidth = 2.0
-                cell?.specimenTypeTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select specimen")
-                return false
-            }
-        }
-        
-        if let enterNoOfPlatesTextField = cell?.enterNoOfPlatesTextField.text{
-            if enterNoOfPlatesTextField.isEmpty {
-                cell?.enterNoOfPlatesTextField.layer.borderWidth = 2.0
-                cell?.enterNoOfPlatesTextField.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please enter number of plates.")
-                return false
-            }
-        } 
-        
-        let selectedTests = cell?.arrTestOptions.filter{ $0.isCheckBoxSelected!.boolValue }
-        if selectedTests?.count == 0{
-            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Please select at least one test.")
-            return false
-        }
-        return true
-        
-    }
-     */
+    
     @IBAction func submitBtnClk(_ sender: UIButton) {
-        if !checkIfAllFieldsAreFilledInCaseInfo(){
+        if !checkIfAllFieldsAreFilledInCaseInfo() {
             return
         }
-        
-        
-//        if !checkIfSampleInfoAreFilled(){
-//            return
-//        }
-                
         let alert = UIAlertController(title: Constants.alertStr, message: "Are you Sure you want to submit the requisition?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: { (_) in
-            self.saveCaseInfoData(sessionStatus: .submitted)
+//            self.saveCaseInfoData(sessionStatus: .submitted)
         }))
         self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction func plusButtonAction(_ sender: UIButton) {
         let cellSampleInfo = featherPulpTableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? MicrobialSampleInfoCell
-        let cellCaseInfo = featherPulpTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? MicrobialCaseInfoCell
-        if !checkIfAllFieldsAreFilledInCaseInfo(){
+        if !checkIfAllFieldsAreFilledInCaseInfo() {
             return
         }
-        if plateArr.count > 0{
+        if plateArr.count > 0 {
             let lastVal = plateArr.count + 1
             cellSampleInfo?.noOfPlates.text = String(lastVal)
             rowCount = lastVal
@@ -709,9 +460,6 @@ class FeatherPulpVC: BaseViewController {
         } else {
             let txtVale = Int(cellSampleInfo?.noOfPlates.text ?? "0")!
             rowCount = txtVale
-            let sessionId = UserDefaults.standard.integer(forKey: "sessionId")
-            // UserDefaults.standard.set(txtVale, forKey: "lastVal")
-            
             for i in 0..<txtVale {
                 self.addMorePlates(plateId: i + 1)
             }
@@ -747,7 +495,6 @@ class FeatherPulpVC: BaseViewController {
     
     //MARK: - Delete plate button action
     @IBAction func globaldeleteBtnAction(_ sender: UIButton) {
-        let indexPath = IndexPath(row: sender.tag, section: 2)
         let sessionId = UserDefaults.standard.integer(forKey: "sessionId")
         let timeStamp = self.currentRequisition.timeStamp
         
@@ -788,56 +535,27 @@ class FeatherPulpVC: BaseViewController {
         featherPulpTableView.reloadData()
     }
     
-    
-    //---------
-    
     //MARK: - Check box Button action  // bacterial
+    /// Identicle implementation of function: checkMarkUpdateSerotypeAction()
     @IBAction func checkMarkHVTUpdateAction(_ sender: UIButton) {
         let index = IndexPath(row: sender.tag, section: 2)
         sender.isSelected = !sender.isSelected
-//        if sender.isSelected {
-//            plateArr[index.row].checkMark = "true"
-//            sender.setImage(UIImage(named: "checkIcon"), for: .normal)
-//        } else {
-//            plateArr[index.row].checkMark = "false"
-//            sender.setImage(UIImage(named: "uncheckIcon"), for: .normal)
-//        }
         self.updateFeatherPulpPlateDataInfo(indexPath: index as NSIndexPath)
     }
     
-    
-    @IBAction func checkMarkUpdateSerotypeAction(_ sender: UIButton) {
-        let index = IndexPath(row: sender.tag, section: 2)
-        sender.isSelected = !sender.isSelected
-//        if sender.isSelected {
-//            plateArr[index.row].microsporeCheckMark = "true"
-//            sender.setImage(UIImage(named: "checkIcon"), for: .normal)
-//        } else {
-//            plateArr[index.row].microsporeCheckMark = "false"
-//            sender.setImage(UIImage(named: "uncheckIcon"), for: .normal)
-//        }
-        self.updateFeatherPulpPlateDataInfo(indexPath: index as NSIndexPath)
-    }
-    
-    func textFieldShouldStartEditingForCell(indexPath: IndexPath, cell: FeatherpulpSampleInfoTableViewCell, textField: UITextField){
-        if textField == cell.specimenTypeTextField{
+    func textFieldShouldStartEditingForCell(indexPath: IndexPath, cell: FeatherpulpSampleInfoTableViewCell, textField: UITextField) {
+        if textField == cell.specimenTypeTextField {
             switch self.requisitionSavedSessionType {
-            case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
-                let customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "MicrobialFeatherPulpSpecimenType")
-                let customerNamesArray  = customerDetailsArray.value(forKey: "specimenText") as? [String] ?? []
-                self.setDropdrownForTextField(textField, clickedField: Constants.ClickedFieldMicrobialSurvey.specimenType, dropDownArr: customerNamesArray)
-                
-            case .SHOW_DRAFT_FOR_EDITING:
+            case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION, .SHOW_DRAFT_FOR_EDITING:
                 let customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "MicrobialFeatherPulpSpecimenType")
                 let customerNamesArray  = customerDetailsArray.value(forKey: "specimenText") as? [String] ?? []
                 self.setDropdrownForTextField(textField, clickedField: Constants.ClickedFieldMicrobialSurvey.specimenType, dropDownArr: customerNamesArray)
             case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
-        }
+            }
         }
     }
     
-    
-    func textFieldDidEndEditingForCell(indexPath: IndexPath, cell: FeatherpulpSampleInfoTableViewCell, textField: UITextField){
+    func textFieldDidEndEditingForCell(indexPath: IndexPath, cell: FeatherpulpSampleInfoTableViewCell, textField: UITextField) {
         let predicate = NSPredicate(format: timeStampStr, argumentArray: [self.currentRequisition.timeStamp])
         var key = ""
         var value = ""
@@ -908,11 +626,9 @@ extension FeatherPulpVC: UITableViewDelegate, UITableViewDataSource, MicrobialSa
             return 1
         case 2:
             return self.plateArr.count
-            
         default:
             return 0
         }
-        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -923,7 +639,7 @@ extension FeatherPulpVC: UITableViewDelegate, UITableViewDataSource, MicrobialSa
         var height = CGFloat()
         switch indexPath.section {
         case 0:
-            height = 450//344
+            height = 450
         case 1:
             height = 100
         case 2:
@@ -957,7 +673,6 @@ extension FeatherPulpVC: UITableViewDelegate, UITableViewDataSource, MicrobialSa
             cell.barcodeTxt.text = currentRequisition.barCode
             cell.barcodeTxt.delegate = self
             featherPulpTableView.allowsSelection = false
-          //  cell.configureMandatoryFiledsValidation(isPlusBtnClicked, isSubmitButtonPressed: self.isSubmitBtnClk, currentSessionInProgressModel: self.currentRequisition)
             cell.unableDisableAccordingToSessionType(sessionType: self.requisitionSavedSessionType)
             return cell
             

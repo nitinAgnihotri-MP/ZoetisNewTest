@@ -66,15 +66,10 @@ extension PVEDraftViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return getSubmitToSyncArrFromDb().count
-        // return 0
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        var height:CGFloat = CGFloat()
-        height = 70
-        return height
-        
+        return 70.0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -82,11 +77,8 @@ extension PVEDraftViewController: UITableViewDelegate, UITableViewDataSource{
             cell.delegate = self
             cell.currentIndPath = indexPath as NSIndexPath
             let dict = getSubmitToSyncArrFromDb()[indexPath.row]
-            //   print("dict------***\(dict)")
             cell.config(dict: dict  as! NSObject)
             cell.selectionStyle = .none
-            
-            //cell.lblAssessment.text = "\(indexPath.row + 1)"
             return cell
         }
         return UITableViewCell()

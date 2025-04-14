@@ -292,10 +292,10 @@ class MicrobialViewController: BaseViewController {
                 }
             }
         }
-        draftContainerView.firstColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
-        draftContainerView.secondColor = UIColor(red: 223/255, green: 240/255, blue: 255/255, alpha: 1)
+        draftContainerView.firstColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1)
+        draftContainerView.secondColor = UIColor(red: 223/255, green: 240/255, blue: 1.0, alpha: 1)
         
-        draftContainer.firstColor = UIColor(red: 238/255, green: 247/255, blue: 255/255, alpha: 1)
+        draftContainer.firstColor = UIColor(red: 238/255, green: 247/255, blue: 1.0, alpha: 1)
         draftContainer.secondColor = UIColor(red: 207/255, green: 225/255, blue: 242/255, alpha: 1)
     }
     

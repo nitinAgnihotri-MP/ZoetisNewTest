@@ -474,27 +474,21 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
         selectedIndex = indexPath!.section as Int
         
         questionsArr = CoreDataHandlerPVE().fetchDraftAssQuestion(currentSel_seq_Number, type: "draft", syncId: currentTimeStamp) as NSArray
-        var max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
-        
-        var idArr = questionsArr.value(forKey: "id") as? [Int]
-        
-        var commentArr = questionsArr.value(forKey: "comment") as? [String]
-        
-        
+        var max_ScoreArr: [Int]?// = questionsArr.value(forKey: "seq_Number") as? [Int]
+        var idArr: [Int]?// = questionsArr.value(forKey: "id") as? [Int]
+        var commentArr: [String]?// = questionsArr.value(forKey: "comment") as? [String]
         let storyBoard : UIStoryboard = UIStoryboard(name: Constants.Storyboard.pveStoryboard, bundle:nil)
         let vc = storyBoard.instantiateViewController(withIdentifier: "PVECommentPopupViewController") as! PVECommentPopupViewController
         vc.delegate = self
         vc.typeStr = "draft"
         vc.timeStampStr = currentTimeStamp
         
-        if currentSel_seq_Number == 2
-        {
+        if currentSel_seq_Number == 2 {
             liveQuesArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).contains("Live")}) as NSArray
             inactiveQuessArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).contains("Inactivated")}) as NSArray
             otherQuessArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).isEmpty}) as NSArray
             
-            if selectedIndex == 4
-            {
+            if selectedIndex == 4 {
                 max_ScoreArr = liveQuesArr.value(forKey: "seq_Number") as? [Int]
                 let seq_Number = max_ScoreArr![0]
                 vc.seq_Number = seq_Number
@@ -506,9 +500,7 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
                 commentArr = liveQuesArr.value(forKey: "comment") as? [String]
                 let comment = commentArr![indexPath!.row]
                 vc.commentStr = comment
-            }
-            else  if selectedIndex == 5
-            {
+            } else if selectedIndex == 5 {
                 max_ScoreArr = inactiveQuessArr.value(forKey: "seq_Number") as? [Int]
                 let seq_Number = max_ScoreArr![0]
                 vc.seq_Number = seq_Number
@@ -520,8 +512,8 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
                 commentArr = inactiveQuessArr.value(forKey: "comment") as? [String]
                 let comment = commentArr![indexPath!.row]
                 vc.commentStr = comment
-            }
-            else{
+                
+            } else {
                 max_ScoreArr = otherQuessArr.value(forKey: "seq_Number") as? [Int]
                 let seq_Number = max_ScoreArr![0]
                 vc.seq_Number = seq_Number
@@ -534,9 +526,7 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
                 let comment = commentArr![indexPath!.row]
                 vc.commentStr = comment
             }
-        }
-        
-        else{
+        } else {
             max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
             let seq_Number = max_ScoreArr![0]
             vc.seq_Number = seq_Number
@@ -551,15 +541,13 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
         }
         
         self.navigationController?.present(vc, animated: false, completion: nil)
-        
     }
     
     
     @IBAction func syncToWebBtnAction(_ sender: UIButton) {
         let errorMSg = "Are you sure, you want to sync this session data to web?"
         let alertController = UIAlertController(title: "PVE", message: errorMSg, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
-            _ in
+        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
             self.singleDataSync()
         }
         let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
@@ -569,7 +557,7 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
         
     }
     
-    func singleDataSync(){
+    func singleDataSync() {
         for controller in self.navigationController!.viewControllers as Array {
             if controller.isKind(of: PVEDashboardViewController.self) {
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "forceSync"),object: nil, userInfo:["id": currentTimeStamp]))

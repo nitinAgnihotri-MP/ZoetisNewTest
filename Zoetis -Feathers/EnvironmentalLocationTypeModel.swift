@@ -25,11 +25,11 @@ class EnvironmentalLocationTypeModel {
     }
     
     func getAllLocationTypes(customerArray: [LocationType]) -> [String] {
-        var locationTypeArray : [String] = []
+        var allLocationTypeArray : [String] = []
         for obj in customerArray {
-            locationTypeArray.append(obj.text ?? "")
+            allLocationTypeArray.append(obj.text ?? "")
         }
-        return locationTypeArray
+        return allLocationTypeArray
     }
 }
 

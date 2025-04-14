@@ -591,10 +591,6 @@ private struct CBCBlockMode {
 // MARK: - Padding
 
 private struct PKCS7 {
-
-//    init() {
-//    }
-
     func add(bytes: [UInt8], blockSize: Int) -> [UInt8] {
         let padding = UInt8(blockSize - (bytes.count % blockSize))
         var withPadding = bytes
@@ -617,6 +613,8 @@ private struct PKCS7 {
         if padding >= 1 {
             return Array(bytes[0..<finalLength])
         }
+        
+        print(blockSize ?? 0)
         return bytes
     }
 }

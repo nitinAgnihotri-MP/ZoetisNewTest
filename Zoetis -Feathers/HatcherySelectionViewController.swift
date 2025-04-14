@@ -111,15 +111,6 @@ class HatcherySelectionViewController: BaseViewController {
           self.topviewConstraint(vwTop: bottomViewController.view)
      }
      
-     // MARK: Custom Functions
-     
-     private func navigateToHatcheryViewController(isModule: String){
-          let vc = UIStoryboard.init(name: Constants.Storyboard.selection, bundle: Bundle.main).instantiateViewController(withIdentifier: "HatcheryLandingViewController") as? HatcheryLandingViewController
-          vc?.selectedBtnStr = isModule
-          self.navigationController?.pushViewController(vc!, animated: false)
-     }
-     
-     
      // MARK: IBActions
      // MARK:  ********** Breeder Button Action**************************************/
      @IBAction func clickedBreeder(_ sender: Any) {
@@ -151,8 +142,9 @@ class HatcherySelectionViewController: BaseViewController {
                let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as? String ?? ""
                let param = ["UserId":userID,"ModuleId":18,"FCMToken":FCMToken,"DeviceId":udid] as JSONDictionary
                ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
-                    guard let `self` = self, error == nil else { return }
-
+                    guard let selfObj = self, error == nil else {
+                         return
+                    }
                })
                self.dismissGlobalHUD(self.view)
                Constants.baseUrl = Constants.Api.tcBaseUrl
@@ -190,20 +182,17 @@ class HatcherySelectionViewController: BaseViewController {
           let vc = UIStoryboard.init(name: Constants.Storyboard.selection, bundle: Bundle.main).instantiateViewController(withIdentifier: "HatcherySelectionViewController") as? HatcherySelectionViewController
           self.navigationController?.pushViewController(vc!, animated: false)
      }
-     private func navigateToPEDashboard(){
+     private func navigateToPEDashboard() {
           
           self.showGlobalProgressHUDWithTitle(self.view, title: "")
           UserDefaults.standard.set("PE", forKey: "userType")
           let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
           let keychainHelper = AccessTokenHelper()
           let FCMToken = keychainHelper.getFromKeychain(keyed: "Token")
-
-         // let FCMToken =  UserDefaults.standard.value(forKey:"Token") as? String ?? ""
           let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as? String ?? ""
           let param = ["UserId":userID,"ModuleId":18,"FCMToken":FCMToken,"DeviceId":udid] as JSONDictionary
           ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
-               guard let `self` = self, error == nil else { return }
-               
+               guard let selfObj = self, error == nil else { return }
           })
           self.dismissGlobalHUD(self.view)
           let vc = UIStoryboard.init(name: Constants.Storyboard.peStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "PEDashboardViewController") as? PEDashboardViewController
@@ -233,16 +222,11 @@ class HatcherySelectionViewController: BaseViewController {
           let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as? String ?? ""
           let param = ["UserId":userID,"ModuleId":21,"FCMToken":FCMToken,"DeviceId":udid] as JSONDictionary
           ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
-               guard let `self` = self, error == nil else { return }
-               
+               guard let selfObj = self, error == nil else { return }
           })
           self.dismissGlobalHUD(self.view)
           UserDefaults.standard.set("Microbial", forKey: "userType")
           let vc = UIStoryboard.init(name: Constants.Storyboard.microbialStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "Microbial") as? MicrobialViewController
           self.navigationController?.pushViewController(vc!, animated: false)
-          
      }
-     
- 
-     
 }

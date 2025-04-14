@@ -16,9 +16,6 @@ class GradientView1: UIView {
         didSet {
             updateView()
         }
-        
-        
-      
     }
     
     @IBInspectable var secondColor: UIColor = UIColor.clear {
@@ -31,30 +28,16 @@ class GradientView1: UIView {
         
         get {
             return Double(self.layer.cornerRadius)
-        }set {
+        } set {
             self.layer.cornerRadius = CGFloat(newValue)
         }
-        
     }
-    
-    
-    
     
     @IBInspectable var borderWidth: CGFloat = 8.0 {
         didSet {
             setNeedsLayout()
         }
     }
-//    @IBInspectable var borderColor: UIColor? {
-//
-//        get {
-//            return UIColor(cgColor: self.layer.borderColor!)
-//        }
-//        set {
-//            self.layer.borderColor = newValue?.cgColor
-//        }
-//
-//    }
     
     @IBInspectable
     var shadowRadius: CGFloat {
@@ -133,9 +116,6 @@ class GradientView1: UIView {
     func updateView() {
         let layer = self.layer as! CAGradientLayer
         layer.colors = [firstColor, secondColor].map {$0.cgColor}
-        
-      //  gradientLayer.cornerRadius = layer.cornerRadius
-        
         if (isHorizontal) {
             layer.startPoint = CGPoint(x: 0, y: 0.5)
             layer.endPoint = CGPoint (x: 1, y: 0.5)
@@ -166,7 +146,6 @@ class GradientView1: UIView {
         
         gradient.frame = bounds
         gradient.colors = [UIColor.clear.cgColor,UIColor.clear.cgColor,UIColor.clear.cgColor]
-       // [UIColor.green.cgColor, UIColor.orange.cgColor, UIColor.red.cgColor]
         gradient.cornerRadius = 0
          gradient.borderWidth = 0
         gradient.startPoint = CGPoint(x: 0.1, y: 0.78)
@@ -179,7 +158,5 @@ class GradientView1: UIView {
         gradient.mask = shapeLayer
         
     }
-
-    
 }
 

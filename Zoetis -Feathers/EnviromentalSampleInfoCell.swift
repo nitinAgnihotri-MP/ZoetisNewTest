@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol EnviromentalSampleInfoCellDelegate: class {
+protocol EnviromentalSampleInfoCellDelegate: AnyObject {
     func locationValueButtonPressed(_ cell: EnviromentalSampleInfoCell)
     func bacterialCheckBoxButtonPressed(_ cell: EnviromentalSampleInfoCell, _ sender: UIButton)
     func micoscoreCheckBoxButtonPressed(_ cell: EnviromentalSampleInfoCell, _ sender: UIButton)
@@ -21,33 +21,21 @@ protocol EnviromentalSampleInfoCellDelegate: class {
 class EnviromentalSampleInfoCell: UITableViewCell {
 
     @IBOutlet weak var searchBarLocation: UISearchBar!
-    
-//    @IBOutlet weak var searchbarLocation: UISearchBar!
-    
     @IBOutlet weak var plateIdLabel: UILabel!
     @IBOutlet weak var locationValueButton: customButton!
     @IBOutlet weak var locationValueTextField: UITextField!
     @IBOutlet weak var sampleDescriptionTextField: UITextField!
     @IBOutlet weak var sampleDescriptionButton: customButton!
-    
     @IBOutlet weak var mediaTypeButton: customButton!
-    
     @IBOutlet weak var samplingTypeButton: customButton!
-    
     @IBOutlet weak var mediaTypeTextField: UITextField!
-    
-   
     @IBOutlet weak var infoIconImage: UIImageView!
     @IBOutlet weak var notesButton: UIButton!
-    
     @IBOutlet weak var bacterialCheckBoxButton: UIButton!
     @IBOutlet weak var additionalTestLabel: UILabel!
-    
     @IBOutlet weak var infoDetailButton: UIButton!
-    
     @IBOutlet weak var lineBetweenCellsView: UIView!
     @IBOutlet weak var lineBetweenCellsViewHeight: NSLayoutConstraint!
-    
     @IBOutlet weak var noteButtonNew: UIButton!
     @IBOutlet weak var samplingTextField: UITextField!
     weak var delegate: EnviromentalSampleInfoCellDelegate?
@@ -62,12 +50,7 @@ class EnviromentalSampleInfoCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
         self.disableAllEventsAccordingToSavedSession()
-//         notesButton.setTitle("", for: .normal)
-//        notesButton.setImage(UIImage(named: "PEComment"), for: .normal)
-//        if isPlateIdGenerated {disableAllEvents()}
-        
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(PE_SessionCell.tapFunctionForInfo))
                 self.infoIconImage.isUserInteractionEnabled = true
                 self.infoIconImage.addGestureRecognizer(tap1)
@@ -75,10 +58,9 @@ class EnviromentalSampleInfoCell: UITableViewCell {
     
     
     @objc func tapFunctionForInfo(sender: UITapGestureRecognizer) {
-            self.tapGestureOnLabel1?(sender)
-        }
-    
-    
+        self.tapGestureOnLabel1?(sender)
+    }
+
     func disableAllEventsAccordingToSavedSession(){
         switch requisitionSavedSessionType {
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
@@ -142,10 +124,8 @@ class EnviromentalSampleInfoCell: UITableViewCell {
         switch isPlateIdGenerated {
         case true:
             self.disableAllEvents()
-            
         case false:
             self.enableAllEvents()
-//        default: break
         }
     }
     
@@ -215,9 +195,6 @@ class EnviromentalSampleInfoCell: UITableViewCell {
     @IBAction func notesButtonPressed(_ sender: UIButton) {
         delegate?.notesButtonPressed(self, sender)
     }
-    // @IBAction func notesButtonPressed(_ sender: UIButton) {
-        
-   // }
 }
 
 
@@ -229,23 +206,9 @@ extension EnviromentalSampleInfoCell: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-//        let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
-//        
-//        if self.sampleDescriptionTextField == textField {
-//            let allowedCharacters = CharacterSet(charactersIn:"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,-()")
-//            guard allowedCharacters.isSuperset(of: CharacterSet(charactersIn: newString)) else {
-//                return false
-//            }
-//            return true
-//        }
         return true
     }
-    
-    
 }
-
-
 
 extension UIButton {
     func displayTooltip(_ message: String, completion: (() -> Void)? = nil) {

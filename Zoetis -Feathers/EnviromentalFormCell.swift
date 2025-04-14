@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol EnviromentalFormCellDelegates: class {
+protocol EnviromentalFormCellDelegates: AnyObject {
     func reasonForVisitButtonPressed(_ cell: EnviromentalFormCell)
     func sampleCollectedPressed(_ cell: EnviromentalFormCell)
     func companyButtonPressed(_ cell: EnviromentalFormCell)
@@ -18,7 +18,6 @@ protocol EnviromentalFormCellDelegates: class {
     func sampleDateButtonPressed(_ cell: EnviromentalFormCell)
     func purposeOfSurveyButtonPressed(_ cell: EnviromentalFormCell)
     func transferInButtonPressed(_ cell: EnviromentalFormCell)
-    
     func emailEntered(cell: EnviromentalFormCell, activeTextField: UITextField)
     func noteEntered(cell: EnviromentalFormCell, activeTextView: UITextView)
 }
@@ -52,7 +51,7 @@ class EnviromentalFormCell: UITableViewCell {
     @IBOutlet weak var noteTextView: UITextView!
     var requisitionSavedSessionType = REQUISITION_SAVED_SESSION_TYPE.CREATE_NEW_SESSION
     weak var enviromentalFormCellDelegates: EnviromentalFormCellDelegates?
-    var defaultBorderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+    var defaultBorderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -60,7 +59,7 @@ class EnviromentalFormCell: UITableViewCell {
         self.configureCell()
     }
     
-    func disableAllEvents(){
+    func disableAllEvents() {
         switch requisitionSavedSessionType {
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY:
             reasonForVisitButton.isUserInteractionEnabled = false
@@ -171,38 +170,6 @@ class EnviromentalFormCell: UITableViewCell {
         } else {
             self.barcodeButton.layer.borderColor = defaultBorderColor
         }
-        
-        
-//        if header.isPlusButtonPressed && header.numberOfPlateIDCreated.count > 0 {
-//            let backgroundColor =  UIColor(red: 236/255, green: 236/255, blue: 236/255, alpha: 0.2)
-//            self.companyButton.backgroundColor = backgroundColor
-//            self.companyTextField.textColor = .black
-//            self.siteButton.backgroundColor =  backgroundColor
-//            self.siteTextField.textColor = .black
-//            self.barcodeButton.backgroundColor =  backgroundColor
-//            self.barcodeTextField.textColor = .black
-//            self.sampleDateButton.backgroundColor =  backgroundColor
-//            self.sampleDateTextField.textColor = .black
-//
-//            self.companyButton.isUserInteractionEnabled = false
-//            self.siteButton.isUserInteractionEnabled = false
-//            self.sampleDateButton.isUserInteractionEnabled = false
-//            self.barcodeTextField.isUserInteractionEnabled = false
-//        } else {
-//            self.companyButton.backgroundColor =  .white
-//            self.companyTextField.textColor = .black
-//            self.siteButton.backgroundColor =  .white
-//            self.siteTextField.textColor = .black
-//            self.barcodeButton.backgroundColor =  .white
-//            self.barcodeTextField.textColor = .black
-//            self.sampleDateButton.backgroundColor =  .white
-//            self.sampleDateTextField.textColor = .black
-//
-//            self.companyButton.isUserInteractionEnabled = true
-//            self.siteButton.isUserInteractionEnabled = true
-//            self.sampleDateButton.isUserInteractionEnabled = true
-//            self.barcodeTextField.isUserInteractionEnabled = true
-//        }
     }
 }
 

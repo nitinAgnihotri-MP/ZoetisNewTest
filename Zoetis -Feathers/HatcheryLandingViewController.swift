@@ -19,87 +19,79 @@ class HatcheryLandingViewController: BaseViewController {
     @IBOutlet weak var hatcheryView: UIView!
     @IBOutlet weak var breederView: UIView!
     @IBOutlet weak var growoutView: UIView!
-    
-    
-    
+
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
         resetViewandButtons(selectedBtn: selectedBtnStr)
-
     }
     
     // MARK: Custom Functions
 
-    private func navigateToPEDashboard(){
+    private func navigateToPEDashboard() {
         let RoleId =  UserDefaults.standard.string(forKey: "RoleId")
-        if RoleId == "TSR"{
+        if RoleId == "TSR" {
             let vc = UIStoryboard.init(name: Constants.Storyboard.peStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "PEDashboardViewController") as? PEDashboardViewController
             self.navigationController?.pushViewController(vc!, animated: true)
-        } else if RoleId == "FSR"{
+        } else if RoleId == "FSR" {
             let vc = UIStoryboard.init(name: Constants.Storyboard.peStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "PEDashboardViewController") as? PEDashboardViewController
             self.navigationController?.pushViewController(vc!, animated: true)
-        } else {
-            
         }
-          
     }
     
-    private func navigateToPVEDashboard(moduleSelected:String){
-             UserDefaults.standard.set(2, forKey: "moduleID")
-             let vc = UIStoryboard.init(name: Constants.Storyboard.pveStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "PVEDashboardViewController") as? PVEDashboardViewController
-            // vc?.currentSelectedModule = moduleSelected
-             self.navigationController?.pushViewController(vc!, animated: false)
+    private func navigateToPVEDashboard(moduleSelected:String) {
+        UserDefaults.standard.set(2, forKey: "moduleID")
+        let vc = UIStoryboard.init(name: Constants.Storyboard.pveStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "PVEDashboardViewController") as? PVEDashboardViewController
+        self.navigationController?.pushViewController(vc!, animated: false)
     }
+    
     // MARK: IBActions
-    
     @IBAction func clickedBreeder(_ sender: Any) {
         btnBreeder.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-                 UIView.animate(withDuration: 2.0,
-                   delay: 0,
-                   usingSpringWithDamping: 0.2,
-                   initialSpringVelocity: 6.0,
-                   options: .allowUserInteraction,
-                   animations: { [weak self] in
-                     self?.btnBreeder.transform = .identity
-                   }, completion: { (success) -> Void in
-                      if success {
-                           self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
-                       }
-                   })
-        
+        UIView.animate(withDuration: 2.0,
+                       delay: 0,
+                       usingSpringWithDamping: 0.2,
+                       initialSpringVelocity: 6.0,
+                       options: .allowUserInteraction,
+                       animations: { [weak self] in
+            self?.btnBreeder.transform = .identity
+        }, completion: { (success) -> Void in
+            if success {
+                self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
+            }
+        })
     }
     
     @IBAction func clickedGrowout(_ sender: Any) {
         btnGrowout.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-                        UIView.animate(withDuration: 2.0,
-                          delay: 0,
-                          usingSpringWithDamping: 0.2,
-                          initialSpringVelocity: 6.0,
-                          options: .allowUserInteraction,
-                          animations: { [weak self] in
-                            self?.btnGrowout.transform = .identity
-                          }, completion: { (success) -> Void in
-                             if success {
-                                  self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
-                              }
-                          })
+        UIView.animate(withDuration: 2.0,
+                       delay: 0,
+                       usingSpringWithDamping: 0.2,
+                       initialSpringVelocity: 6.0,
+                       options: .allowUserInteraction,
+                       animations: { [weak self] in
+            self?.btnGrowout.transform = .identity
+        }, completion: { (success) -> Void in
+            if success {
+                self.navigationController?.popToViewController(ofClass: HatcherySelectionViewController.self)
+            }
+        })
     }
     
     @IBAction func clickedProcessEvaluation(_ sender: Any) {
         buttonProcessEvaluation.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         UIView.animate(withDuration: 2.0,
-          delay: 0,
-          usingSpringWithDamping: 0.2,
-          initialSpringVelocity: 6.0,
-          options: .allowUserInteraction,
-          animations: { [weak self] in
+                       delay: 0,
+                       usingSpringWithDamping: 0.2,
+                       initialSpringVelocity: 6.0,
+                       options: .allowUserInteraction,
+                       animations: { [weak self] in
             self?.buttonProcessEvaluation.transform = .identity
-          }, completion: { (success) -> Void in
-              if success {
-                  self.navigateToPEDashboard()
-              }
-          })
+        }, completion: { (success) -> Void in
+            if success {
+                self.navigateToPEDashboard()
+            }
+        })
     }
     
    @IBAction func clickedMicrobial(_ sender: Any) {

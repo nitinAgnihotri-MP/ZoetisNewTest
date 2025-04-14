@@ -45,9 +45,9 @@ public struct EvaluationType {
         evaluationName = json["EvaluationName"].stringValue
         hatModuleId = json["HatModuleId"].intValue
         
-        var evaluationNameIs = evaluationName ?? ""
-        var idN = id ?? 0
-        var hatModuleIdIs = hatModuleId ?? 0
+        let evaluationNameIs = evaluationName ?? ""
+        let idN = id ?? 0
+        let hatModuleIdIs = hatModuleId ?? 0
         CoreDataHandlerPE().saveEvaluationInDB(NSNumber(value: idN), evaluationName: evaluationNameIs, hatModuleId:NSNumber(value: hatModuleIdIs))
         
     }
@@ -87,8 +87,8 @@ public struct Manufacturer {
         MFG_Id = json["MFG_Id"].intValue
         MFG_Name = json["MFG_Name"].stringValue
         
-        var MFG_NameIs = MFG_Name ?? ""
-        var MFG_IdIs = MFG_Id ?? 0
+        let MFG_NameIs = MFG_Name ?? ""
+        let MFG_IdIs = MFG_Id ?? 0
         CoreDataHandlerPE().saveManufacturerInDB(mFG_Id:NSNumber(value: MFG_IdIs),mFG_Name: MFG_NameIs)
         
     }
@@ -129,8 +129,8 @@ public struct BreedBird {
         BirdId = json["BirdId"].intValue
         BirdBreedName = json["BirdBreedName"].stringValue
         
-        var BirdBreedNameIs = BirdBreedName ?? ""
-        var BirdIdIs = BirdId ?? 0
+        let BirdBreedNameIs = BirdBreedName ?? ""
+        let BirdIdIs = BirdId ?? 0
         CoreDataHandlerPE().saveBreedBirdddInDB(birdId:NSNumber(value: BirdIdIs),birdBreedName: BirdBreedNameIs)
         
     }
@@ -160,8 +160,8 @@ public struct PEDose {
         ID = json["Id"].intValue
         Dose = json["Dose"].stringValue
         
-        var DoseIs = Dose ?? ""
-        var IDIs = ID ?? 0
+        let DoseIs = Dose ?? ""
+        let IDIs = ID ?? 0
         
         CoreDataHandlerPE().saveBagSizeInDB(id:NSNumber(value: IDIs),size: DoseIs,forEntityName:"PE_Dose",firstKey:"id",secondKey:"dose")
     }
@@ -226,15 +226,10 @@ public struct PEClorine {
         
         let clorineNameIs = ClorineName ?? ""
         let clorineIdIs = ClorineId ?? 0
-        
-        
         CoreDataHandlerPE().saveClorineInDB(id: NSNumber(value: clorineIdIs), clorineName: clorineNameIs, forEntityName: "AllClorinePE",firstKey: "clorineId", secondKey: "clorineName")
-                
     }
     
-    
     public struct PEStatesResponse {
-        
         let success: Bool?
         let statusCode: Int?
         let message: String?
@@ -249,7 +244,6 @@ public struct PEClorine {
     }
 
     public struct PEStates {
-        
         let StateId: Int?
         let StateName: String?
         
@@ -258,30 +252,10 @@ public struct PEClorine {
             StateName = json["StateName"].stringValue
             let StateIs = StateName ?? ""
             let StateIdIs = StateId ?? 0
-            
             CoreDataHandlerPE().saveStatesInDB(id: NSNumber(value: StateIdIs), StateName: StateIs, forEntityName: "VaccinationStatesList", firstKey: "stateId", secondKey: "stateName")
-            
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
-
-
-
-
-
-
-
 
 public struct EggsResponse {
     
@@ -296,15 +270,6 @@ public struct EggsResponse {
         message = json["Message"].stringValue
         eggsArray = json["Data"].arrayValue.map { Eggs($0) }
     }
-    
-    //    func getAllEggsNames(EggsArray:[Eggs]) -> [String] {
-    //        var  eggsNameArray : [String] = []
-    //        for obj in EggsArray {
-    //            eggsNameArray  .append(obj.BirdBreedName ?? "")
-    //        }
-    //        return eggsNameArray
-    //    }
-    
 }
 
 public struct Eggs {
@@ -316,15 +281,11 @@ public struct Eggs {
         EggId = json["EggId"].intValue
         EggCount = json["EggCount"].stringValue
         
-        var EggCountIs = EggCount ?? ""
-        var EggIdIs = EggId ?? 0
-        // CoreDataHandlerPE().saveBreedBirdddInDB(EggId:NSNumber(value: EggId),EggCount: EggCountIs)
-        CoreDataHandlerPE().saveEggsInDB(EggId:NSNumber(value: EggIdIs),EggCount: EggCountIs)
+        let eggCountIs = EggCount ?? ""
+        let eggIdIs = EggId ?? 0
+        CoreDataHandlerPE().saveEggsInDB(EggId:NSNumber(value: eggIdIs),EggCount: eggCountIs)
     }
 }
-
-
-
 
 public struct VManufacturerResponse {
     
@@ -359,8 +320,8 @@ public struct VManufacturer {
         id = json["Id"].intValue
         mfgName = json["MfgName"].stringValue
         
-        var mfgNameIs = mfgName ?? ""
-        var idIs = id ?? 0
+        let mfgNameIs = mfgName ?? ""
+        let idIs = id ?? 0
         CoreDataHandlerPE().saveVManufacturerInDB(id:NSNumber(value: idIs),mfgName: mfgNameIs)
         
     }
@@ -403,9 +364,9 @@ public struct VNames {
         id = json["Id"].intValue
         name = json["Name"].stringValue
         mfgId = json["MfgId"].intValue
-        var nameIs = name ?? ""
-        var idIs = id ?? 0
-        var mfgIdIs = mfgId ?? 0
+        let nameIs = name ?? ""
+        let idIs = id ?? 0
+        let mfgIdIs = mfgId ?? 0
         CoreDataHandlerPE().saveVNamesInDB(id:NSNumber(value: idIs),mfgId:NSNumber(value: mfgIdIs),name: nameIs)
         
     }
@@ -496,8 +457,8 @@ public struct DManufacturer {
     init(_ json: JSON) {
         diluentMfgId = json["DiluentMfgId"].intValue
         diluentMfgName = json["DiluentMfgName"].stringValue
-        var diluentMfgIdIs = diluentMfgId ?? 0
-        var diluentMfgNameIs = diluentMfgName ?? ""
+        let diluentMfgIdIs = diluentMfgId ?? 0
+        let diluentMfgNameIs = diluentMfgName ?? ""
         CoreDataHandlerPE().saveDManufacturerInDB(diluentMfgId:NSNumber(value: diluentMfgIdIs),diluentMfgName: diluentMfgNameIs)
         
     }
@@ -530,8 +491,8 @@ public struct BagSize {
     init(_ json: JSON) {
         id = json["Id"].intValue
         size = json["Size"].stringValue
-        var idIs = id ?? 0
-        var sizeIs = size ?? ""
+        let idIs = id ?? 0
+        let sizeIs = size ?? ""
         CoreDataHandlerPE().saveBagSizeInDB(id:NSNumber(value: idIs),size: sizeIs,forEntityName:"PE_BagSizes",firstKey:"id",secondKey:"size")
         
     }
@@ -564,8 +525,8 @@ public struct AmplePerBag {
     init(_ json: JSON) {
         id = json["BagId"].intValue
         size = json["BagNo"].stringValue
-        var idIs = id ?? 0
-        var sizeIs = size ?? ""
+        let idIs = id ?? 0
+        let sizeIs = size ?? ""
         CoreDataHandlerPE().saveBagSizeInDB(id:NSNumber(value: idIs),size: sizeIs,forEntityName:"PE_AmplePerBag",firstKey:"bagId",secondKey:"bagNo")
         
     }
@@ -594,11 +555,11 @@ public struct AmpleSize {
     init(_ json: JSON) {
         id = json["Id"].intValue
         size = json["Size"].stringValue
-        var idIs = id ?? 0
-        var sizeIs = size ?? ""
-        var removingSpaceSize = sizeIs.replacingOccurrences(of: " ", with: "")
+        let idIs = id ?? 0
+        let sizeIs = size ?? ""
+        let removingSpaceSize = sizeIs.replacingOccurrences(of: " ", with: "")
         
-        CoreDataHandlerPE().saveAmpleSizeInDB(id:NSNumber(value: idIs),size: removingSpaceSize,forEntityName:"PE_AmpleSizes",firstKey:"id",secondKey:"size")
+        CoreDataHandlerPE().saveBagSizeInDB(id:NSNumber(value: idIs),size: removingSpaceSize,forEntityName:"PE_AmpleSizes",firstKey:"id",secondKey:"size")
     }
 }
 
@@ -636,9 +597,6 @@ public struct PERoles {
     }
 }
 
-
-
-
 public struct PEDOADiluentTypeResponce {
     
     let success: Bool?
@@ -671,8 +629,6 @@ public struct PEDOADiluentType {
     }
 }
 
-
-
 public struct PEFrequencyResponse {
     
     let success: Bool?
@@ -701,7 +657,6 @@ public struct PEFrequency {
         let removingSpaceSize = roleNameIs.replacingOccurrences(of: " ", with: "")
         
         CoreDataHandlerPE().saveBagSizeInDB(id:NSNumber(value: roleIdIs),size: removingSpaceSize,forEntityName:"PE_Frequency",firstKey:"frequencyId",secondKey:"frequencyName")
-        
     }
 }
 
@@ -737,10 +692,6 @@ public struct  PEIncubationStyle {
         
     }
 }
-
-
-
-
 
 public struct PEDOASizesResponse {
     

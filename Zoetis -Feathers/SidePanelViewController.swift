@@ -117,7 +117,7 @@ class SidePanelViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         let gradient = CAGradientLayer()
         gradient.frame = view.bounds
-        gradient.colors = [UIColor(red: 238.0/255, green: 247.0/255, blue: 255.0/255, alpha: 1.0).cgColor, UIColor(red: 207.0/255, green: 225.0/255, blue: 242.0/255, alpha: 1.0).cgColor]
+        gradient.colors = [UIColor(red: 238.0/255, green: 247.0/255, blue: 1.0, alpha: 1.0).cgColor, UIColor(red: 207.0/255, green: 225.0/255, blue: 242.0/255, alpha: 1.0).cgColor]
         view.layer.insertSublayer(gradient, at: 0)
     }
     

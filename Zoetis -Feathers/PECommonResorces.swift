@@ -185,16 +185,16 @@ extension UIColor{
         return UIColor(red: 252.0/255.0, green: 219.0/255.0, blue: 207/255.0, alpha: 1.0);
     }
     class func getGradientUpperColor()->UIColor{
-        return UIColor(red: 238.0/255.0, green: 247.0/255.0, blue: 255/255.0, alpha: 1.0);
+        return UIColor(red: 238.0/255.0, green: 247.0/255.0, blue: 1.0, alpha: 1.0);
     }
     class func getGradientUpperColorStartAssessment()->UIColor{
-        return UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 1.0);
+        return UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0);
     }
     class func getGradientUpperColorStartAssessmentMid()->UIColor{
-        return UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 1.0);
+        return UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0);
     }
     class func getGradientUpperColorStartAssessmentLast()->UIColor{
-        return UIColor(red: 210.0/255.0, green: 231.0/255.0, blue: 255.0/255.0, alpha: 1.0);
+        return UIColor(red: 210.0/255.0, green: 231.0/255.0, blue: 1.0, alpha: 1.0);
     }
     class func getGradientLowerColor()->UIColor{
         return UIColor(red: 207.0/255.0, green: 225.0/255.0, blue: 242/255.0, alpha: 1.0);
@@ -205,7 +205,7 @@ extension UIColor{
     }
     
     class func getTextViewBorderColor()->UIColor{
-        return UIColor(red: 204.0/255.0, green: 227.0/255.0, blue: 255/255.0, alpha: 1.0);
+        return UIColor(red: 204.0/255.0, green: 227.0/255.0, blue: 1.0, alpha: 1.0);
     }
     class func getTextViewBorderColorStartAssessment()->UIColor{
         return UIColor(red: 15.0/255.0, green: 117.0/255.0, blue: 187/255.0, alpha: 1.0);
@@ -220,7 +220,7 @@ extension UIColor{
         return UIColor(red:15.0/255.0, green: 117.0/255.0, blue: 187/255.0, alpha: 1.0);
     }
     class func getloginBtnBorderColor()->UIColor{
-        return UIColor(red:204.0/255.0, green: 227.0/255.0, blue: 255/255.0, alpha: 1.0);
+        return UIColor(red:204.0/255.0, green: 227.0/255.0, blue: 1.0, alpha: 1.0);
     }
     class func getSyncWebBtnColorUpper()->UIColor{
         return UIColor(red: 28.0/255.0, green: 157.0/255.0, blue: 245/255.0, alpha: 0.0);

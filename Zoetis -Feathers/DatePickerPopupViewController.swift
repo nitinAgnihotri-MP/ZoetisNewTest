@@ -41,13 +41,9 @@ class DatePickerPopupViewController: BaseViewController {
         datePicker.layer.borderWidth = 1
         datePicker.layer.cornerRadius = 3
         datePicker.layer.borderColor = UIColor.white.cgColor
-        
-        let gregorian: NSCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        let currentDate: NSDate = NSDate()
         let components: NSDateComponents = NSDateComponents()
-        
         components.month = -12
-        
+
         if #available(iOS 13.4, *) {
             datePicker.preferredDatePickerStyle = .wheels
             datePicker.backgroundColor = .white
@@ -85,10 +81,7 @@ class DatePickerPopupViewController: BaseViewController {
                 
                 if isCertificateDate == 0 {
                     let currentQuarterDate =  evaluationDateObj.startOfQuarter.startOfMonth()
-                    
                     let theDaysLater = TimeInterval(3.months)
-                    let lastDateOfCurrentQuarter = currentQuarterDate.addingTimeInterval(theDaysLater).endOfMonth()
-                    
                     datePicker.minimumDate = Date().addingTimeInterval(-theDaysLater)
                     datePicker.maximumDate = Date()
                 }
@@ -104,16 +97,12 @@ class DatePickerPopupViewController: BaseViewController {
         
         // Adding Button ToolBar
         let donebutton = UIBarButtonItem(title: NSLocalizedString("Done", comment: ""), style: .plain, target: nil, action: #selector(doneClick1))
-        
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let cancelButton = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: ""), style: .plain, target: nil, action: #selector(dismissKeyboard))
-        
         toolBar.setItems([cancelButton,spaceButton,donebutton], animated: false)
         toolBar.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self,
-                                                action: #selector(dismissKeyboard))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
-        //   view.addSubview(datePicker)
     }
     
     @objc func dismissKeyboard() {

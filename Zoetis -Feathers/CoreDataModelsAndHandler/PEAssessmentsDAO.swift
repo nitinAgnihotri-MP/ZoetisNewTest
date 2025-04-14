@@ -11,20 +11,23 @@ import UIKit
 
 class PEAssessmentsDAO{
     static let sharedInstance = PEAssessmentsDAO()
-    let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
+    
     let loginAssStatus = "loginUserId = %@ AND  assessmentStatus = %@"
     let message = "test message"
     func getAssessmentObject()-> PE_ScheduledAssessments{
+        let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         let vaccinationCertObj = NSEntityDescription.insertNewObject(forEntityName: "PE_ScheduledAssessments" , into: managedContext) as! PE_ScheduledAssessments
         return vaccinationCertObj
     }
     
-    func getRejectedAssessmentObject()-> PE_AssessmentInProgress{
+    func getRejectedAssessmentObject()-> PE_AssessmentInProgress {
+        let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         let vaccinationCertObj = NSEntityDescription.insertNewObject(forEntityName: "PE_AssessmentRejected" , into: managedContext) as! PE_AssessmentInProgress
         return vaccinationCertObj
     }
     
-    func deleteExisitingData(entityName:String, predicate:NSPredicate?){
+    func deleteExisitingData(entityName:String, predicate:NSPredicate?) {
+        let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
         if predicate != nil{
             fetchRequest.predicate = predicate
@@ -46,6 +49,7 @@ class PEAssessmentsDAO{
     }
     // MARK: - Save Rejected Assessments
     func saveRejectedAssessments(certificationDTOArr:[PE_AssessmentRejectedDTO], loginUserId:String){
+        let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         do{
             if certificationDTOArr.count > 0{
                 deleteExisitingData(entityName: "PE_RejectedAssessments", predicate: NSPredicate(format:"loginUserId = %@", loginUserId))
@@ -59,7 +63,6 @@ class PEAssessmentsDAO{
                         moObj.visitID = rejectedObj.visitID as NSNumber?
                         moObj.scheduledDate = rejectedObj.scheduledDate
                     }
-                    
                 }
                 try managedContext.save()
             }
@@ -85,7 +88,8 @@ class PEAssessmentsDAO{
         return dataArray
     }
     // MARK: - Save Scheduled Assessments
-    func saveScheduledAssessments(certificationDTOArr:[ScheduledPEAssessmentsDTO], loginUserId:String){
+    func saveScheduledAssessments(certificationDTOArr:[ScheduledPEAssessmentsDTO], loginUserId:String) {
+        let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         do{
             if certificationDTOArr.count > 0{
                 
@@ -95,8 +99,8 @@ class PEAssessmentsDAO{
                 
                 for certificationDTOObj in certificationDTOArr{
                     
-                    let moObj = getAssessmentObject()
-                    convertDtotoMo(userId: loginUserId, dtoObj: certificationDTOObj, moObj: moObj)
+                    var moObj = getAssessmentObject()
+                    convertDtotoMo(userId: loginUserId, dtoObj: certificationDTOObj, moObj: &moObj)
                     if let draftObj = getDraftAssessment(userId: loginUserId, serverAssessmentId: (String(describing: certificationDTOObj.id ?? 0))){
                         moObj.assessmentStatus = "draft"
                         moObj.visitType = draftObj.visitName
@@ -129,7 +133,8 @@ class PEAssessmentsDAO{
         }
     }
     // MARK: - Update Assessments Status
-    func updateAssessmentStatus(status:String = "Schedule",userId:String,serverAssessmentId:String,assessmentobj:PENewAssessment = PENewAssessment()){
+    func updateAssessmentStatus(status:String = "Schedule",userId:String,serverAssessmentId:String,assessmentobj:PENewAssessment = PENewAssessment()) {
+        let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         var vaccinationCertificationArr = [PE_ScheduledAssessments]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_ScheduledAssessments")
         fetchRequest.returnsObjectsAsFaults = false
@@ -188,19 +193,36 @@ class PEAssessmentsDAO{
     
     ///This function was re-written by Nitin on 13-02-2025 to fix the issue reported by sonarQube
     ///This new function has reduced cognitive complexity from 21 to 15
-    func convertDtotoMo(userId: String, dtoObj: ScheduledPEAssessmentsDTO, moObj: PE_ScheduledAssessments) {
+    func convertDtotoMo(userId: String, dtoObj: ScheduledPEAssessmentsDTO, moObj: inout PE_ScheduledAssessments) {
         moObj.loginUserId = userId
-
         // Assign numeric values
-        if let customerId = dtoObj.customerId { moObj.customerId = customerId as NSNumber }
-        if let year = dtoObj.year { moObj.year = year as NSNumber }
-        if let evaluationId = dtoObj.evaluationId { moObj.evaluationId = evaluationId as NSNumber }
-        if let evaluationTypeId = dtoObj.evaluationTypeId { moObj.evaluationTypeId = evaluationTypeId as NSNumber }
-        if let id = dtoObj.id { moObj.id = id as NSNumber }
-        if let siteId = dtoObj.siteId { moObj.siteId = siteId as NSNumber }
-        if let countryID = dtoObj.countryID { moObj.countryID = countryID as NSNumber }
-        if let visitTypeId = dtoObj.peVisitTypeId { moObj.visitTypeId = visitTypeId as NSNumber }
-        if let approverId = dtoObj.approverId { moObj.approverId = approverId as NSNumber }
+        if let customerId = dtoObj.customerId {
+            moObj.customerId = customerId as NSNumber
+        }
+        if let year = dtoObj.year {
+            moObj.year = year as NSNumber
+        }
+        if let evaluationId = dtoObj.evaluationId {
+            moObj.evaluationId = evaluationId as NSNumber
+        }
+        if let evaluationTypeId = dtoObj.evaluationTypeId {
+            moObj.evaluationTypeId = evaluationTypeId as NSNumber
+        }
+        if let id = dtoObj.id {
+            moObj.id = id as NSNumber
+        }
+        if let siteId = dtoObj.siteId {
+            moObj.siteId = siteId as NSNumber
+        }
+        if let countryID = dtoObj.countryID {
+            moObj.countryID = countryID as NSNumber
+        }
+        if let visitTypeId = dtoObj.peVisitTypeId {
+            moObj.visitTypeId = visitTypeId as NSNumber
+        }
+        if let approverId = dtoObj.approverId {
+            moObj.approverId = approverId as NSNumber
+        }
         
         // Assign string values
         moObj.quarter = dtoObj.quarter
@@ -307,16 +329,12 @@ class PEAssessmentsDAO{
 //        
 //    }
     // MARK: - Get Scheduled Assessments
-    func getAssesmentsMo(userId:String, customerId:Int64 , siteId:Int64 )->[PE_ScheduledAssessments]{
+    func getAssesmentsMo(userId:String, customerId:Int64 , siteId:Int64 )->[PE_ScheduledAssessments] {
+        let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         var vaccinationCertificationArr = [PE_ScheduledAssessments]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_ScheduledAssessments")
         fetchRequest.returnsObjectsAsFaults = false
-        if customerId == 0 && siteId == 0{
-            fetchRequest.predicate = NSPredicate(format:loginAssStatus, userId,"Schedule")
-        }else{
-            fetchRequest.predicate = NSPredicate(format:loginAssStatus, userId,"Schedule")
-            
-        }
+        fetchRequest.predicate = NSPredicate(format:loginAssStatus, userId,"Schedule")
         do {
             vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [PE_ScheduledAssessments]
         } catch{
@@ -334,16 +352,12 @@ class PEAssessmentsDAO{
     }
     
     // MARK: - Get Rejected Assessments
-    func getRejectedAssesmentsMo(userId:String, customerId:Int64 , siteId:Int64 )->[PE_AssessmentRejected]{
+    func getRejectedAssesmentsMo(userId:String, customerId:Int64 , siteId:Int64 )->[PE_AssessmentRejected] {
+        let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         var vaccinationCertificationArr = [PE_AssessmentRejected]()
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentRejected")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentRejected")
         fetchRequest.returnsObjectsAsFaults = false
-        if customerId == 0 && siteId == 0{
-            fetchRequest.predicate = NSPredicate(format:loginAssStatus, userId,"Rejected")
-        }else{
-            fetchRequest.predicate = NSPredicate(format:loginAssStatus, userId,"Rejected")
-            // fetchRequest.predicate = NSPredicate(format:"loginUserId = %@ AND customerId = %i AND siteId = %i AND assessmentStatus = %@", userId, customerId, siteId,"Schedule" )
-        }
+        fetchRequest.predicate = NSPredicate(format:loginAssStatus, userId,"Rejected")
         do {
             vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [PE_AssessmentRejected]
         } catch{
@@ -490,59 +504,41 @@ class PEAssessmentsDAO{
     }
     
     // MARK: - Get rejected Assessments
-    func  getRejectedAssessment(userId: String, result: PE_AssessmentRejectedDTO)->PEAssessmentRejected? {
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
-        var loginUserId = Int(userId) ?? 0
-        
-        do {
-            let peNewAssessment = PEAssessmentRejected()
-            peNewAssessment.userID =  result.userID
-            peNewAssessment.customerId = result.customerId
-            peNewAssessment.siteId = result.siteId
-            peNewAssessment.siteName = result.siteName
-            peNewAssessment.customerName = result.customerName
-            peNewAssessment.evaluationDate = result.evaluationDate
-            peNewAssessment.evaluatorID = result.evaluatorID
-            peNewAssessment.visitName =  result.visitName
-            peNewAssessment.visitID = result.visitID
-            peNewAssessment.evaluationName = result.evaluationName
-            peNewAssessment.evaluationID = result.evaluationId
-            peNewAssessment.notes = result.notes
-            let hatcheryAntibiotics =  result.hatcheryAntibiotics
-            hatcheryAntibiotics == 1 ? 1 : 0
-            peNewAssessment.hatcheryAntibiotics = hatcheryAntibiotics
-            let camera =  result.camera
-            camera == 1 ? 1 : 0
-            peNewAssessment.camera = camera
-            return peNewAssessment
-            
-        } catch
-        {
-            print(message)
-        }
-        return nil
+    func getRejectedAssessment(userId: String, result: PE_AssessmentRejectedDTO)->PEAssessmentRejected? {
+        let peNewAssessment = PEAssessmentRejected()
+        peNewAssessment.userID =  result.userID
+        peNewAssessment.customerId = result.customerId
+        peNewAssessment.siteId = result.siteId
+        peNewAssessment.siteName = result.siteName
+        peNewAssessment.customerName = result.customerName
+        peNewAssessment.evaluationDate = result.evaluationDate
+        peNewAssessment.evaluatorID = result.evaluatorID
+        peNewAssessment.visitName =  result.visitName
+        peNewAssessment.visitID = result.visitID
+        peNewAssessment.evaluationName = result.evaluationName
+        peNewAssessment.evaluationID = result.evaluationId
+        peNewAssessment.notes = result.notes
+        let hatcheryAntibiotics =  result.hatcheryAntibiotics
+        peNewAssessment.hatcheryAntibiotics = hatcheryAntibiotics == 1 ? 1 : 0
+        peNewAssessment.camera = result.camera == 1 ? 1 : 0
+        return peNewAssessment
     }
     
     // MARK: - Get Drafted Assessments
-    func  getDraftAssessment(userId:String, serverAssessmentId:String)->PENewAssessment? {
+    func getDraftAssessment(userId:String, serverAssessmentId:String)->PENewAssessment? {
         var peNewAssessmentArray : [PENewAssessment] = []
-        var dataArray = NSArray()
-        var userIDArray = NSArray()
         var loginUserId = Int(userId) ?? 0
         
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
         _ =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format:"userID == %d AND serverAssessmentId = %@", loginUserId,serverAssessmentId )
         fetchRequest.returnsObjectsAsFaults = false
         do {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 for result in results {
                     let peNewAssessment = PENewAssessment()
-                    dataArray = results as NSArray
                     peNewAssessment.serverAssessmentId =  result.value(forKey: "serverAssessmentId")  as? String
                     peNewAssessment.userID =  result.value(forKey: "userID")  as? Int ?? 0
                     peNewAssessment.complexId =  result.value(forKey: "complexId") as? Int ?? 0
@@ -560,15 +556,12 @@ class PEAssessmentsDAO{
                     peNewAssessment.evaluationID = result.value(forKey: "evaluationID")   as? Int ?? 0
                     peNewAssessment.approver = result.value(forKey: "approver") as? String ?? ""
                     peNewAssessment.notes = result.value(forKey: "notes")  as? String ?? ""
-                    let hatcheryAntibiotics =  result.value(forKey: "hatcheryAntibiotics")   as? Int
-                    hatcheryAntibiotics == 1 ? 1 : 0
-                    peNewAssessment.hatcheryAntibiotics = hatcheryAntibiotics
-                    let camera =  result.value(forKey: "camera")  as? Int
-                    camera == 1 ? 1 : 0
-                    peNewAssessment.camera = camera
+                    let hatcheryAntibiotics = result.value(forKey: "hatcheryAntibiotics") as? Int
+                    peNewAssessment.hatcheryAntibiotics = hatcheryAntibiotics == 1 ? 1 : 0
+                    let camera = result.value(forKey: "camera")  as? Int
+                    peNewAssessment.camera = camera == 1 ? 1 : 0
                     let isFlopSelected =  result.value(forKey: "isFlopSelected")  as? Int
-                    isFlopSelected == 1 ? 1 : 0
-                    peNewAssessment.isFlopSelected = isFlopSelected
+                    peNewAssessment.isFlopSelected = isFlopSelected == 1 ? 1 : 0
                     peNewAssessment.catID = result.value(forKey: "catID")  as? Int ?? 0
                     peNewAssessment.cID = result.value(forKey: "cID")  as? Int ?? 0
                     peNewAssessment.catName = result.value(forKey: "catName")  as? String ?? ""

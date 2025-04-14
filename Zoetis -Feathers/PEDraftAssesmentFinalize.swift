@@ -6294,13 +6294,11 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
         
     }
     
-    private func saveMinusVMixerInPEModule(peCertificateData:PECertificateData) -> Int{
-        
-        var allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VMixer")
+    private func saveMinusVMixerInPEModule(peCertificateData:PECertificateData) -> Int {
         let imageCount = getVMixerCountInPEModule()
-        var assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
-        if  assessment != nil{
-            CoreDataHandlerPE().saveMinusDraftVMixerPEModule(assessment: assessment!, id: imageCount+1, peCertificateData: peCertificateData)
+        let assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
+        if assessment != nil {
+            CoreDataHandlerPE().saveVMixerPEModule(assessment: assessment!, id: imageCount+1, peCertificateData: peCertificateData)
         }
         return imageCount+1
         
@@ -6312,7 +6310,7 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
         var allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VMixer")
         let imageCount = getVMixerCountInPEModule()
         var assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
-        if assessment != nil{
+        if assessment != nil {
             CoreDataHandlerPE().saveDraftVMixerPEModule(assessment: assessment!, id: imageCount+1, peCertificateData: peCertificateData)
         }
         return imageCount+1
@@ -6335,10 +6333,10 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
     // MARK: - Get Vaccine Mixture Count
     func getVMixerCountInPEModule() -> Int {
         let allAssesmentDraftArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VMixer")
-        let carColIdArrayDraftNumbers  = allAssesmentDraftArr.value(forKey: "vmid") as? NSArray ?? []
+        let carColIdArrayDraftNumbers = allAssesmentDraftArr.value(forKey: "vmid") as? NSArray ?? []
         var carColIdArray : [Int] = []
         for obj in carColIdArrayDraftNumbers {
-            if !carColIdArray.contains(obj as? Int ?? 0){
+            if !carColIdArray.contains(obj as? Int ?? 0) {
                 carColIdArray.append(obj as? Int ?? 0)
             }
         }
@@ -6368,7 +6366,7 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
     // MARK: - Delete Vaccine Mixture in PE Module
     private func deleteDraftVMixerInPEModule(id:Int) {
         
-        var assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
+        let assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
         CoreDataHandlerPE().updateDraftVMixerMinusCategortIsSelcted(assessment: assessment ?? PE_AssessmentInProgress(), doaId: id)
         
     }

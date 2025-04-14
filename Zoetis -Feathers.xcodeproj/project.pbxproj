@@ -407,7 +407,6 @@
 		7889E1ED242E204400CA5139 /* BacterialCaseInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E1E9242E204400CA5139 /* BacterialCaseInfoCell.swift */; };
 		7889E1F2242E20FB00CA5139 /* EnviromentalSurveyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E1EE242E20A800CA5139 /* EnviromentalSurveyController.swift */; };
 		7889E1F3242E20FB00CA5139 /* EnvironmentalTextfieldInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E1EF242E20C500CA5139 /* EnvironmentalTextfieldInfoCell.swift */; };
-		7889E1F4242E20FB00CA5139 /* EnvironmentalSampleInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E1F0242E20DC00CA5139 /* EnvironmentalSampleInfoCell.swift */; };
 		7889E1F5242E20FB00CA5139 /* EnvironmentalCaseInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E1F1242E20FB00CA5139 /* EnvironmentalCaseInfoCell.swift */; };
 		7889E1FA242E21A900CA5139 /* LocationTypeCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E1F7242E216700CA5139 /* LocationTypeCellModel.swift */; };
 		7889E1FB242E21A900CA5139 /* RequisitionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E1F8242E217E00CA5139 /* RequisitionModel.swift */; };
@@ -1319,7 +1318,6 @@
 		7889E1E9242E204400CA5139 /* BacterialCaseInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BacterialCaseInfoCell.swift; sourceTree = "<group>"; };
 		7889E1EE242E20A800CA5139 /* EnviromentalSurveyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnviromentalSurveyController.swift; sourceTree = "<group>"; };
 		7889E1EF242E20C500CA5139 /* EnvironmentalTextfieldInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentalTextfieldInfoCell.swift; sourceTree = "<group>"; };
-		7889E1F0242E20DC00CA5139 /* EnvironmentalSampleInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentalSampleInfoCell.swift; sourceTree = "<group>"; };
 		7889E1F1242E20FB00CA5139 /* EnvironmentalCaseInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentalCaseInfoCell.swift; sourceTree = "<group>"; };
 		7889E1F7242E216700CA5139 /* LocationTypeCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTypeCellModel.swift; sourceTree = "<group>"; };
 		7889E1F8242E217E00CA5139 /* RequisitionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequisitionModel.swift; sourceTree = "<group>"; };
@@ -3687,7 +3685,6 @@
 				7889E1F6242E212800CA5139 /* ViewModel */,
 				7889E1EE242E20A800CA5139 /* EnviromentalSurveyController.swift */,
 				7889E1F1242E20FB00CA5139 /* EnvironmentalCaseInfoCell.swift */,
-				7889E1F0242E20DC00CA5139 /* EnvironmentalSampleInfoCell.swift */,
 				7889E1EF242E20C500CA5139 /* EnvironmentalTextfieldInfoCell.swift */,
 			);
 			name = EnvironmentalSurvey;
@@ -4462,7 +4459,6 @@
 				B729603D24A7C5BC003237C7 /* ModelVacation.swift in Sources */,
 				B7B8A6F224B77CFB0069DBA9 /* AcknowledgementCollectionViewCell.swift in Sources */,
 				B7B8A71E24B77CFB0069DBA9 /* OperatorInfoDTO.swift in Sources */,
-				7889E1F4242E20FB00CA5139 /* EnvironmentalSampleInfoCell.swift in Sources */,
 				1015FB2823FC9FBB008C8B56 /* PE_FinalizeCell.swift in Sources */,
 				B72960D224A7C5BC003237C7 /* imageTableViewCell.swift in Sources */,
 				B729604C24A7C5BC003237C7 /* HelpScreenVcTurkey.swift in Sources */,

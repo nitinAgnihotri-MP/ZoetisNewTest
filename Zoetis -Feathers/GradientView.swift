@@ -16,9 +16,6 @@ class GradientView: UIView {
         didSet {
             updateView()
         }
-        
-        
-      
     }
     
     @IBInspectable var secondColor: UIColor = UIColor.clear {
@@ -42,16 +39,6 @@ class GradientView: UIView {
             setNeedsLayout()
         }
     }
-//    @IBInspectable var borderColor: UIColor? {
-//
-//        get {
-//            return UIColor(cgColor: self.layer.borderColor!)
-//        }
-//        set {
-//            self.layer.borderColor = newValue?.cgColor
-//        }
-//
-//    }
     
     @IBInspectable
     var shadowRadius: CGFloat {
@@ -121,8 +108,7 @@ class GradientView: UIView {
     }
     
     override class var layerClass: AnyClass {
-        get
-        {
+        get{
             return CAGradientLayer.self
         }
     }
@@ -130,9 +116,6 @@ class GradientView: UIView {
     func updateView() {
         let layer = self.layer as! CAGradientLayer
         layer.colors = [firstColor, secondColor].map {$0.cgColor}
-        
-      //  gradientLayer.cornerRadius = layer.cornerRadius
-        
         if (isHorizontal) {
             layer.startPoint = CGPoint(x: 0, y: 0.5)
             layer.endPoint = CGPoint (x: 1, y: 0.5)
@@ -163,7 +146,6 @@ class GradientView: UIView {
         
         gradient.frame = bounds
         gradient.colors = [UIColor.clear.cgColor,UIColor.clear.cgColor,UIColor.clear.cgColor]
-    //    [UIColor.green.cgColor, UIColor.orange.cgColor, UIColor.red.cgColor]
         gradient.cornerRadius = 10
          gradient.borderWidth = 5
         gradient.startPoint = CGPoint(x: 0.1, y: 0.78)
@@ -171,7 +153,6 @@ class GradientView: UIView {
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = UIBezierPath(rect: bounds).cgPath
         shapeLayer.fillColor = UIColor.clear.cgColor
-       // shapeLayer.strokeColor = UIColor.black.cgColor
         shapeLayer.lineWidth = 10
         gradient.mask = shapeLayer
         
@@ -187,7 +168,6 @@ class GradientView: UIView {
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = UIBezierPath(rect: bounds).cgPath
         shapeLayer.fillColor = UIColor.clear.cgColor
-        // shapeLayer.strokeColor = UIColor.black.cgColor
         shapeLayer.lineWidth = 10
         gradient.mask = shapeLayer
     }

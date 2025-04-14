@@ -204,7 +204,7 @@ class BacterialSurveyVC: BaseViewController {
             cell.buttonForCornerRadius.layer.masksToBounds = true
             cell.buttonForCornerRadius.layer.cornerRadius = 23
             cell.buttonForCornerRadius.layer.borderWidth = 1
-            cell.buttonForCornerRadius.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+            cell.buttonForCornerRadius.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
         }
         self.isSiteFieldCheck = false
         
@@ -239,7 +239,7 @@ class BacterialSurveyVC: BaseViewController {
             cell.companyBtn.layer.masksToBounds = true
             cell.companyBtn.layer.cornerRadius = 23
             cell.companyBtn.layer.borderWidth = 1
-            cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+            cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
         }
     }
     
@@ -447,7 +447,7 @@ class BacterialSurveyVC: BaseViewController {
                 cell.barcodeBtn.layer.borderColor = UIColor.red.cgColor
                 return
             }
-            cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+            cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
         }
         
         if(cell?.noOfPlates.text == "" ) {
@@ -507,7 +507,7 @@ extension BacterialSurveyVC: DatePickerPopupViewControllerProtocol{
                 cell.sampleCollectionDateBtn.layer.borderColor = UIColor.red.cgColor
             } else {
                 self.isDateFieldCheck = true
-                cell.sampleCollectionDateBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                cell.sampleCollectionDateBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
             }
             
             stringForBarcode =  dateForBarcode.replacingOccurrences(of: "/", with: "")
@@ -543,7 +543,7 @@ extension BacterialSurveyVC: DatePickerPopupViewControllerProtocol{
             if (cell.sampleCollectionDateTxt.text == "") {
                 cell.sampleCollectionDateBtn.layer.borderColor = UIColor.red.cgColor
             } else {  self.isDateFieldCheck = true
-                cell.sampleCollectionDateBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                cell.sampleCollectionDateBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
             }
             
             stringForBarcode =  dateForBarcode.replacingOccurrences(of: "/", with: "")
@@ -719,7 +719,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
     
     fileprivate func extractedFunc2(_ cell: BacterialCaseInfoCell) {
         if isPlusBtnClicked {
-            cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+            cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
             
             if(cell.selectedCompanyTxt.text == "") {
                 cell.companyBtn.layer.masksToBounds = true
@@ -727,7 +727,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
                 cell.companyBtn.layer.borderWidth = 1
                 cell.companyBtn.layer.borderColor = UIColor.red.cgColor
             }
-            cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+            cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
             
             if (cell.siteTxt.text == "") {
                 cell.buttonForCornerRadius.layer.masksToBounds = true
@@ -769,7 +769,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
                 cell.companyBtn.layer.borderColor = UIColor.red.cgColor
             } else {
                 self.isCompanyFieldCheck = true
-                cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                cell.companyBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
             }
             
             cell.buttonForCornerRadius.layer.masksToBounds = true
@@ -781,7 +781,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
                 self.isSiteFieldCheck = false
             } else {
                 self.isSiteFieldCheck = true
-                cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                cell.siteBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
             }
             
             cell.sampleCollectionDateBtn.layer.masksToBounds = true
@@ -792,7 +792,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
                 cell.barcodeBtn.layer.borderColor = UIColor.red.cgColor
             } else {
                 self.isbarcodeFieldCheck = true
-                cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
             }
             cell.tag = sessionId
         }
@@ -810,7 +810,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
         
         UserDefaults.standard.setValue(cell.barcodeTxt.text, forKey: "barcode")
         
-        cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+        cell.barcodeBtn.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
         
         if(self.isPlusBtnClicked) && plateArr.count > 0 {
             cell.barcodeTxt.isEnabled = false
@@ -876,7 +876,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
         let numberOfPlates = Int(cell.noOfPlates.text ?? "0") ?? 0
         if isPlusBtnClicked && numberOfPlates > 0 {
             cell.plateContainerView.layer.borderWidth = 1
-            cell.plateContainerView.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+            cell.plateContainerView.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
         } else {
             cell.plateContainerView.layer.borderWidth = 1
             cell.plateContainerView.layer.borderColor = UIColor.red.cgColor
@@ -892,7 +892,7 @@ extension BacterialSurveyVC: UITableViewDelegate,UITableViewDataSource,Bacterial
             if numberOfPlates > 0 {
                 self.isNoOfPlates = true
                 cell.plateContainerView.layer.borderWidth = 1
-                cell.plateContainerView.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                cell.plateContainerView.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
                 
             } else {
                 self.isNoOfPlates = false
@@ -981,29 +981,24 @@ extension BacterialSurveyVC: UITextFieldDelegate {
             CoreDataHandlerMicro().updateSampledesc(sessionId, plateId: cell?.plateIdTxt.text ?? "", sampleDesc: textField.text ?? "")
             plateArr =  CoreDataHandlerMicro().fetchSampleInfo(sessionId)
             bacterialSurveyTableView.reloadData()
-            
         } else if textField == cell1?.barcodeTxt {
             self.globalBarcode = textField.text ?? ""
-        }
-            
-            //------------
-        else if textField == cell1?.emailIdTxt {
+        } else if textField == cell1?.emailIdTxt {
             let email = cell1?.emailIdTxt.text ?? ""
             let arrayOfEmail = email.components(separatedBy: ",")
             
             for item in arrayOfEmail {
                 guard isValidEmail(item) else {
                     if  email.isEmpty {
-                        cell1?.emailIdButton.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+                        cell1?.emailIdButton.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
                     } else {
                         cell1?.emailIdButton.layer.borderColor = UIColor.red.cgColor
                     }
                     return
                 }
             }
-            
-            cell1?.emailIdButton.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
-        }//----------
+            cell1?.emailIdButton.layer.borderColor = UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
+        }
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -1012,8 +1007,7 @@ extension BacterialSurveyVC: UITextFieldDelegate {
         print(newString)
         let cell = bacterialSurveyTableView.cellForRow(at: IndexPath(row: textField.tag, section: 2)) as? BacterialTextfieldInfoCell
         let cell1 = bacterialSurveyTableView.cellForRow(at: IndexPath(row: textField.tag, section: 1)) as? BacterialSampleInfoCell
-        if cell1?.noOfPlates == textField
-        {
+        if cell1?.noOfPlates == textField {
             let allowedCharacters = CharacterSet(charactersIn:"0123456789")
             guard allowedCharacters.isSuperset(of: CharacterSet(charactersIn: newString)) else {
                 return false

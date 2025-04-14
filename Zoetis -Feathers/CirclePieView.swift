@@ -69,7 +69,7 @@ import UIKit
         // Drawing code
         //Base circle
         
-        //let selectedColor =  UIColor(red: 204.0/255, green: 227.0/255, blue: 255.0/255, alpha: 1.0).cgColor
+        //let selectedColor =  UIColor(red: 204.0/255, green: 227.0/255, blue: 1.0, alpha: 1.0).cgColor
         UIColor(red: 16.0/255, green: 112.0/255, blue: 202.0/255, alpha: 1.0).setFill()
         let outerPath = UIBezierPath(ovalIn: rect)
         outerPath.fill()
