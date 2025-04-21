@@ -76,11 +76,10 @@ class BlankPDFViewController: BaseViewController {
         let session =  URLSession(configuration: config)
         let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
             if error == nil, let pdfData = data {
-                //                if let pdfData = data {
                 let pathURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\("Blank").PDF")
                 do {
                     try pdfData.write(to: pathURL, options: .atomic)
-                }catch{
+                } catch {
                     print("Error while writting")
                 }
                 
@@ -94,7 +93,7 @@ class BlankPDFViewController: BaseViewController {
                         let activityViewController: UIActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                         activityViewController.popoverPresentationController?.sourceView=self.view
                         self.present(activityViewController, animated: true, completion: nil)
-                    }else {
+                    } else {
                         let url = URL(fileURLWithPath: "\(pathURL)")
                         let vc = UIActivityViewController(activityItems: [url], applicationActivities: [])
                         vc.popoverPresentationController?.sourceView = self.view
@@ -103,10 +102,7 @@ class BlankPDFViewController: BaseViewController {
                         vc.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
                         self.present(vc, animated: true)
                     }
-                    
-                    
                 }
-                //                }
             }
         }); task.resume()
     }
@@ -184,37 +180,5 @@ class BlankPDFViewController: BaseViewController {
             }
         }
         task.resume()
-    }
-    
-//    func loadingBlankPdfUrl(url: URL,  to localURl: URL) {
-//        
-//        let sessionConfig = URLSessionConfiguration.default
-//        let session = URLSession(configuration: sessionConfig)
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "GET"
-//        
-//        let task = session.downloadTask(with: request){(tempLocalUrl , responce , error) in
-//            
-//            if let tempLocalUrl = tempLocalUrl , error == nil {
-//                
-//                if let statusCode = (responce as? HTTPURLResponse)?.statusCode{
-//                    print("Sucess:\(statusCode)")
-//                    
-//                    DispatchQueue.main.async {
-//                        self.showtoast(message: "PDF Downloaded Sucessfully..")
-//                    }
-//                }
-//                do {
-//                    try FileManager.default.copyItem(at: tempLocalUrl, to: localURl)
-//                }
-//                catch(let writeError){
-//                    print("error Writting Files\(localURl) : \(writeError)")
-//                }
-//            } else{
-//                print("Failuer : %@ " , error?.localizedDescription as Any)
-//            }
-//        }
-//        task.resume()
-//    }
-    
+    }    
 }

@@ -558,7 +558,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     fileprivate func handleGetNecropsyAPIResponse(_ statusCode: Int, _ response: AFDataResponse<Any>) {
         if statusCode == 401 {
             self.loginMethod()
-        } else if (400...404).contains(statusCode) || (500...504).contains(statusCode) {
+        } else if (400...403).contains(statusCode) || (500...504).contains(statusCode) {
             let alertController = UIAlertController(title: "", message:NSLocalizedString("Unable to get data from server. \n(\(String(describing: statusCode)))", comment: ""), preferredStyle: UIAlertController.Style.alert)
             let okAction = UIAlertAction(title: NSLocalizedString("Retry", comment: ""), style: UIAlertAction.Style.default) {
                 (result : UIAlertAction) -> Void in
@@ -2246,17 +2246,10 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 if statusCode == 401{
                     self.loginMethod()
                 }
-                
-                if statusCode == 500  || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                    let alertController = UIAlertController(title:"", message: NSLocalizedString("Unable to get data from server. \n(\(String(describing: statusCode!)))", comment: "") , preferredStyle: UIAlertController.Style.alert) //Replace
-                    let okAction = UIAlertAction(title: NSLocalizedString("Retry", comment: ""), style: UIAlertAction.Style.default) {
-                        (result : UIAlertAction) -> Void in
-                        Helper.dismissGlobalHUD(self.view)
-                        self.callWebService()
-                    }
-                    alertController.addAction(okAction)
-                    self.present(alertController, animated: true, completion: nil)
+                if statusCode == 204  || statusCode == 400 ||  statusCode == 404 ||  statusCode==500 {
+                    self.callVeterianService()
                 }
+             
                 else{
                     switch response.result {
                     case let .success(value):

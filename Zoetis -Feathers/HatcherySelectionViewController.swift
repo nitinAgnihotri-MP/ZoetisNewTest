@@ -136,13 +136,10 @@ class HatcherySelectionViewController: BaseViewController {
                let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
                let keychainHelper = AccessTokenHelper()
                let FCMToken = keychainHelper.getFromKeychain(keyed: "Token")//keychainHelper.getFromKeychain(keyed: "Token”)
-                                                                   
-              // let FCMToken =  UserDefaults.standard.value(forKey:"Token") as? String ?? ""
-               
                let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as? String ?? ""
                let param = ["UserId":userID,"ModuleId":18,"FCMToken":FCMToken,"DeviceId":udid] as JSONDictionary
-               ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
-                    guard let selfObj = self, error == nil else {
+               ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: {(json, error) in
+                    guard error == nil else {
                          return
                     }
                })
@@ -159,7 +156,6 @@ class HatcherySelectionViewController: BaseViewController {
      }
      // MARK:  ********** PE BUtton Clicked**************************************/
      @IBAction func processEvalBtnClicked(_ sender: Any) {
-//          Constants.isApiLoaded = true
           Constants.baseUrl = Constants.Api.peBaseUrl
           self.navigateToPEDashboard()
      }
@@ -178,7 +174,7 @@ class HatcherySelectionViewController: BaseViewController {
           self.navigationController?.pushViewController(vc!, animated: false)
      }
      // MARK:  ********** Navigate to Module Selection for PE**************************************/
-     private func navigateToModuleSelectionPE(){
+     private func navigateToModuleSelectionPE() {
           let vc = UIStoryboard.init(name: Constants.Storyboard.selection, bundle: Bundle.main).instantiateViewController(withIdentifier: "HatcherySelectionViewController") as? HatcherySelectionViewController
           self.navigationController?.pushViewController(vc!, animated: false)
      }
@@ -191,8 +187,8 @@ class HatcherySelectionViewController: BaseViewController {
           let FCMToken = keychainHelper.getFromKeychain(keyed: "Token")
           let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as? String ?? ""
           let param = ["UserId":userID,"ModuleId":18,"FCMToken":FCMToken,"DeviceId":udid] as JSONDictionary
-          ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
-               guard let selfObj = self, error == nil else { return }
+          ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: {(json, error) in
+               print(json)
           })
           self.dismissGlobalHUD(self.view)
           let vc = UIStoryboard.init(name: Constants.Storyboard.peStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "PEDashboardViewController") as? PEDashboardViewController
@@ -216,13 +212,11 @@ class HatcherySelectionViewController: BaseViewController {
           UserDefaults.standard.set("Microbial", forKey: "userType")
           let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
           let keychainHelper = AccessTokenHelper()
-               let FCMToken = keychainHelper.getFromKeychain(keyed: "Token")
-
-         // let FCMToken =  UserDefaults.standard.value(forKey:"Token") as? String ?? ""
+          let FCMToken = keychainHelper.getFromKeychain(keyed: "Token")
           let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as? String ?? ""
           let param = ["UserId":userID,"ModuleId":21,"FCMToken":FCMToken,"DeviceId":udid] as JSONDictionary
-          ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
-               guard let selfObj = self, error == nil else { return }
+          ZoetisWebServices.shared.sendFCMTokenDataToServer(controller: self, parameters: param, completion: { (json, error) in
+               print(json)
           })
           self.dismissGlobalHUD(self.view)
           UserDefaults.standard.set("Microbial", forKey: "userType")

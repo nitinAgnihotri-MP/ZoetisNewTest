@@ -25,9 +25,8 @@ class Regions: NSObject {
         
         switch countryID {
             
-        case 40: observations = [607,612,613,611]
-            break
-        case 35: observations = [607,612,613,611]
+        case 35, 40:
+            observations = [607,612,613,611]
             break
             
         default: break

@@ -81,19 +81,25 @@ class Terms_ConditionViewController: UIViewController,WKUIDelegate,WKNavigationD
             self.webLoads -= 1
         }
         
-        if lngId == 1{
-            
+        if lngId == 1 {
             var navigationAction: WKNavigationAction?
             
-            if let url = navigationAction?.request.url, !(url.absoluteString.lowercased().range(of: "terms-of-use.html") != nil) { print("exists")
+            if let url = navigationAction?.request.url,
+               !(url.absoluteString.lowercased().range(of: "terms-of-use.html") != nil)
+            {
+                print("exists")
                 isFirstTimeLoad = true
             } else {
                 isFirstTimeLoad = false
             }
         }
-        else if lngId == 3{
+        else if lngId == 3 {
             var navigationAction: WKNavigationAction?
-            if let url = navigationAction?.request.url, !(url.absoluteString.lowercased().range(of: "index(1).html") != nil) { print("exists")
+            
+            if let url = navigationAction?.request.url,
+               !(url.absoluteString.lowercased().range(of: "index(1).html") != nil)
+            {
+                print("exists")
                 isFirstTimeLoad = true
             } else {
                 isFirstTimeLoad = false

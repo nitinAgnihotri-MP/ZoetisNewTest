@@ -260,8 +260,6 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         if UserDefaults.standard.bool(forKey: "Unlinked") == true
         {
             postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-          //  let postinSeesion =  CoreDataHandler().fetchAllPostingSession(postingId  as NSNumber)
-         //   let totalExustingArr = CoreDataHandler().fetchAllPostingExistingSessionwithFullSession(1, birdTypeId: 1).mutableCopy() as! NSMutableArray
             if appDelegate.sendFeedVariable == "Feed"{
                 let value  = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
                 if value.count>0{
@@ -482,14 +480,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         if UserDefaults.standard.bool(forKey: "Unlinked") == true
         {
             postingId = UserDefaults.standard.integer(forKey: "necUnLinked")
-            if appDelegate.sendFeedVariable == "Feed"{
-            }
-            else if appDelegate.sendFeedVariable == "vaccination"{
-            }
-            else
-            {
-                print(appDelegateObj.testFuntion())
-            }
+          
         }
         else
         {
@@ -980,9 +971,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             }
         }
         else{
-            if UserDefaults.standard.bool(forKey: "Unlinked") == true{
-            }
-            else{
+            if UserDefaults.standard.bool(forKey: "Unlinked") == false {
                 lblVeteration.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                 lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
             }

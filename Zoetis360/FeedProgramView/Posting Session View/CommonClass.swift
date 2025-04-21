@@ -120,7 +120,7 @@ class CommonClass: NSObject {
         
         let buttonBg: UIButton = UIButton()
         var xFrame = Int()
-        var widthFrame = Int()
+        var widthFrame : Int
         
         if #available(iOS 13.4, *) {
             xFrame = 350
@@ -132,9 +132,9 @@ class CommonClass: NSObject {
         buttonBg.setTitleColor(UIColor.blue, for: UIControl.State())
         buttonBg.frame = CGRect(x: 0, y: 0, width: 400, height: 400) // X, Y, width, height
         buttonBg.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.8)
-        var datePicker: UIDatePicker = UIDatePicker()
+      
         // DatePicker
-        datePicker = UIDatePicker(frame:CGRect(x: xFrame, y: 200, width: widthFrame, height: 350))
+        var datePicker = UIDatePicker(frame: CGRect(x: xFrame, y: 200, width: widthFrame, height: 350))
         datePicker.backgroundColor = UIColor.white
         datePicker.datePickerMode = UIDatePicker.Mode.date
         var xToolBar = CGFloat()

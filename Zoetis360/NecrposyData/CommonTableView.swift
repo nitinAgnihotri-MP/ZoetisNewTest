@@ -35,12 +35,7 @@ class CommonTableView: NSObject,UITableViewDataSource,UITableViewDelegate{
     
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if (cellIdentifier == "Cell") {
-            return items.count
-        }
-        else{
-            return items.count
-        }
+        return items.count
         
     }
     

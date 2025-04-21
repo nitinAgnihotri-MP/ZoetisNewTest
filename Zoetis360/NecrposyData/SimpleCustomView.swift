@@ -50,10 +50,10 @@ protocol infoLinkk: class {
         
         let bundle = Bundle(for: type(of: self))
         let nib = UINib(nibName: "SimpleCustomView", bundle: bundle)
-        let view = nib.instantiate(withOwner: self, options: nil)[0] as! UIView
-        view.frame = bounds
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.addSubview(view)
+        let sampleView = nib.instantiate(withOwner: self, options: nil)[0] as! UIView
+        sampleView.frame = bounds
+        sampleView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.addSubview(sampleView)
         
         self.infoCollectionView.delegate = self
         self.infoCollectionView.dataSource = self
@@ -166,9 +166,7 @@ protocol infoLinkk: class {
                 }
                 self.infoLinkkDelegate!.cancelBtnAction(btnIndex, data: obsData)
             }
-            else if obsData.measure ==  "Actual" {
-                
-            } else {
+             else {
                 if  obsData.refId == 58{
                     
                     if indexPath.row == 0 {

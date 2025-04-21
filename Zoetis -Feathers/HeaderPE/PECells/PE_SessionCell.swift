@@ -217,16 +217,10 @@ class PE_SessionCell: UITableViewCell {
             
             extractedFunc1(peNewAssessment)
         }
-        
-        var AssessmentId = peNewAssessment.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            AssessmentId = (peNewAssessment.serverAssessmentId as? NSString)!.integerValue
-        }
         let sbId = peNewAssessment.dataToSubmitID ?? ""
         let UniID = sbId
-        var DisplayId = peNewAssessment.evaluationDate
         
-        DisplayId = "C-" + UniID
+        let DisplayId = "C-" + UniID
         if !Constants.isFromRejected{
             lblAssessment.text = DisplayId
         }

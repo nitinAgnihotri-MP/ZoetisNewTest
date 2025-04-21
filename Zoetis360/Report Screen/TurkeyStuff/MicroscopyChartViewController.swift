@@ -15,9 +15,6 @@ import GigyaTfa
 import GigyaAuth
 
 
-
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -29,8 +26,6 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
 fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -146,15 +141,10 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        //print(AllValidSessions.sharedInstance.allValidSession)
         
         self.subjectString = NSLocalizedString(summaryLastSession, comment: "") as NSString
         self.BtnSummuaryPressed(self.btnLastSession)
-        //        for gestture in self.barChartView.gestureRecognizers! {
-        //            if gestture.isKind(of: UIGestureRecognizer.self) {
-        //                barChartView.removeGestureRecognizer(gestture)
-        //            }
-        //        }
+   
     }
     func stringForValue(_ value: Double,
                         axis: AxisBase?) -> String {
@@ -162,7 +152,6 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     // MARK: - Delegates handling
     
@@ -202,12 +191,9 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
         self.Bacteria_Nonmotile_Array.add(Bacteria_Nonmotile)
         self.Pepto_Array.add(Pepto)
         
-        if !isFarmSelected! {
-            
-            if (Bacteria_Motile > 0) || (Coccidia > 0) || (Bacteria_Nonmotile > 0) || (Pepto > 0) {
-                verticalValuesForWeek.append(verticalValues[maxFarmCount-1])
-                indexValueArray.append(maxFarmCount-1)
-            }
+        if let isFarmSelected = isFarmSelected, !isFarmSelected && ((Bacteria_Motile > 0) || (Coccidia > 0) || (Bacteria_Nonmotile > 0) || (Pepto > 0)) {
+            verticalValuesForWeek.append(verticalValues[maxFarmCount-1])
+            indexValueArray.append(maxFarmCount-1)
         }
     }
     

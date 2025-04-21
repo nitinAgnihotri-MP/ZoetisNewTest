@@ -84,14 +84,6 @@ class GrownoutSelectionViewController: BaseViewController {
         self.topviewConstraint(vwTop: bottomViewController.view)
     }
     
-    // MARK: Custom Functions
-    
-    private func navigateToHatcheryViewController(isModule: String){
-        let vc = UIStoryboard.init(name: Constants.Storyboard.selection, bundle: Bundle.main).instantiateViewController(withIdentifier: "HatcheryLandingViewController") as? HatcheryLandingViewController
-        vc?.selectedBtnStr = isModule
-        self.navigationController?.pushViewController(vc!, animated: false)
-    }
-    
     // MARK: IBActions
     
     @IBAction func clickedBreeder(_ sender: Any) {

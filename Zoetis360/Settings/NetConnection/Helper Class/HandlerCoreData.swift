@@ -9,8 +9,7 @@ import Foundation
 import CoreData
 import UIKit
 
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -21,8 +20,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         return false
     }
 }
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
+
 fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -32,8 +30,6 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
 fileprivate func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -46,7 +42,7 @@ fileprivate func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 class CoreDataHandler : NSObject  {
     
-    var managedContext  = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType) //: NSManagedObjectContext! = nil
+    var backgroundContext  = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType)
     var hatcheryVaccinationObject = [NSManagedObject]()
     var settingsSkeletaObject = [NSManagedObject]()
     var settingsCocoii = [NSManagedObject]()
@@ -123,7 +119,7 @@ class CoreDataHandler : NSObject  {
     
     func setupContext()  {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        self.managedContext = appDelegate.managedObjectContext
+        self.backgroundContext = appDelegate.managedObjectContext
         
     }
     
@@ -285,13 +281,13 @@ class CoreDataHandler : NSObject  {
     // MARK: 🟠 Fetch Saved Field Strain Data  *******************************************/
     
     func getHatcheryDataFromServer(_ dict : NSDictionary) {
-        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: backgroundContext)
         
         var allkeyArr = dict.allKeys as NSArray
         allkeyArr = allkeyArr.sorted(by: {($0 as! String).localizedStandardCompare($1 as! String) == .orderedAscending}) as NSArray
         
         for j in 0..<allkeyArr.count {
-            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
             let stringValidate = allkeyArr.object(at: j) as! String
             
             if (stringValidate == "fieldStrain1") {
@@ -902,7 +898,7 @@ class CoreDataHandler : NSObject  {
             }
             do
             {
-                try managedContext.save()
+                try backgroundContext.save()
             }
             catch
             {
@@ -976,12 +972,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1045,12 +1035,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1115,12 +1099,7 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
+
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1184,12 +1163,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1253,12 +1226,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1321,12 +1288,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1390,12 +1351,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1459,12 +1414,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1529,12 +1478,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1599,12 +1542,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1668,12 +1605,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -1696,12 +1627,12 @@ class CoreDataHandler : NSObject  {
     
     func getFieldDataFromServer(_ dict : NSDictionary)  {
         
-        let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: managedContext)
+        let entity         = NSEntityDescription.entity(forEntityName: "FieldVaccination", in: backgroundContext)
         var allkeyArr = dict.allKeys as NSArray
         allkeyArr = allkeyArr.sorted(by: {($0 as! String).localizedStandardCompare($1 as! String) == .orderedAscending}) as NSArray
         
         for  j in 0..<allkeyArr.count{
-            let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
+            let person  = NSManagedObject(entity: entity!, insertInto: backgroundContext)
             
             let stringValidate = allkeyArr.object(at: j) as! String
             
@@ -1751,12 +1682,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1811,12 +1736,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1871,12 +1790,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1931,12 +1844,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -1991,12 +1898,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2051,12 +1952,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2111,12 +2006,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2173,12 +2062,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2236,12 +2119,6 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2299,12 +2176,7 @@ class CoreDataHandler : NSObject  {
                     person.setValue("Ocular", forKey:"route")
                 case 23:
                     person.setValue(Constants.Subcutânea, forKey:"route")
-                case 22:
-                    person.setValue(Constants.inovo, forKey:"route")
-                case 24:
-                    person.setValue("Intramuscular", forKey:"route")
-                case 21:
-                    person.setValue(Constants.spray, forKey:"route")
+
                 default:
                     person.setValue(" ", forKey:"route")
                 }
@@ -2315,7 +2187,7 @@ class CoreDataHandler : NSObject  {
             }
             do
             {
-                try managedContext.save()
+                try backgroundContext.save()
             }
             catch
             {
@@ -2391,12 +2263,7 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
+
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2464,12 +2331,7 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
+
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2536,12 +2398,7 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
+       
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2608,12 +2465,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2679,12 +2530,6 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2751,12 +2596,7 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
+            
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2823,12 +2663,7 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
+                 
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2900,12 +2735,7 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
+                  
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -2973,12 +2803,7 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
+                   
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -3046,12 +2871,7 @@ class CoreDataHandler : NSObject  {
                         person.setValue("Ocular", forKey:"route")
                     case 23:
                         person.setValue(Constants.Subcutânea, forKey:"route")
-                    case 22:
-                        person.setValue(Constants.inovo, forKey:"route")
-                    case 24:
-                        person.setValue("Intramuscular", forKey:"route")
-                    case 21:
-                        person.setValue(Constants.spray, forKey:"route")
+                  
                     default:
                         person.setValue(" ", forKey:"route")
                     }
@@ -5367,11 +5187,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5388,11 +5208,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5410,11 +5230,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5431,11 +5251,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5453,11 +5273,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5474,11 +5294,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5496,11 +5316,11 @@ class CoreDataHandler : NSObject  {
         do
             
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5520,11 +5340,11 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5542,11 +5362,11 @@ class CoreDataHandler : NSObject  {
         do
             
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5563,11 +5383,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5585,11 +5405,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5607,11 +5427,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5630,11 +5450,11 @@ class CoreDataHandler : NSObject  {
         do
             
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5652,11 +5472,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5672,11 +5492,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
             
         }
@@ -5695,11 +5515,11 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -5717,7 +5537,7 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let fetchedResult = try managedContext.fetch(fetchUsers) as? [NSManagedObject]
+            let fetchedResult = try backgroundContext.fetch(fetchUsers) as? [NSManagedObject]
             
             if fetchedResult?.count>0{
                 
@@ -5727,7 +5547,7 @@ class CoreDataHandler : NSObject  {
                     objTable.setValue(isSync, forKey:"isSync")
                     do
                     {
-                        try managedContext.save()
+                        try backgroundContext.save()
                     }
                     catch{
                     }
@@ -6989,8 +6809,8 @@ class CoreDataHandler : NSObject  {
     func getDataFromCocoiiControll(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
         
         
-        let entity = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeed", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeed", in: backgroundContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         person.setValue(postingId, forKey:"loginSessionId")
         person.setValue( postingId , forKey:"postingId")
         person.setValue( dict.value(forKey: "molecule") , forKey:"molecule")
@@ -7013,7 +6833,7 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -7023,8 +6843,8 @@ class CoreDataHandler : NSObject  {
         cocciCoccidiosControl.append(person)
     }
     func getDataFromCocoiiControllForSingleData(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,postingIdCocoii:NSNumber , feedDate:String ) {
-        let entity = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeed", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "CoccidiosisControlFeed", in: backgroundContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         
         person.setValue(postingId, forKey:"loginSessionId")
         person.setValue( postingIdCocoii , forKey:"postingId")
@@ -7043,7 +6863,7 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -7598,20 +7418,18 @@ class CoreDataHandler : NSObject  {
     func fetchMyBindersViaIsSync(_ isSync : Bool , postingID : NSNumber) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        let managedContextForBinderFeed = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeed")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
         
         do
         {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            let fetchedResult = try managedContextForBinderFeed.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult
             {
                 MyCoxtinBindersArray = results as NSArray
             }
-            else {print(appDelegateObj.testFuntion())}
-            
         }
         
         catch{print(appDelegateObj.testFuntion())}
@@ -7746,8 +7564,8 @@ class CoreDataHandler : NSObject  {
     
     func getDataFromAntiboitic(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
         
-        let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: backgroundContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         person.setValue(postingId, forKey:"loginSessionId")
         person.setValue( postingId , forKey:"postingId")
         person.setValue( dict.value(forKey: "molecule") , forKey:"molecule")
@@ -7767,7 +7585,7 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -7779,8 +7597,8 @@ class CoreDataHandler : NSObject  {
     
     func getDataFromAntiboiticWithSigleData(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,postingIdAlterNative: NSNumber  , feedDate:String) {
         
-        let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "AntiboticFeed", in: backgroundContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         person.setValue(postingId, forKey:"loginSessionId")
         person.setValue( postingIdAlterNative , forKey:"postingId")
         person.setValue( dict.value(forKey: "molecule") , forKey:"molecule")
@@ -7796,7 +7614,7 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -8017,8 +7835,8 @@ class CoreDataHandler : NSObject  {
     
     func getDataFromAlterNative(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
         
-        let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: backgroundContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         person.setValue(postingId, forKey:"loginSessionId")
         person.setValue( postingId , forKey:"postingId")
         person.setValue( dict.value(forKey: "molecule") , forKey:"molecule")
@@ -8038,7 +7856,7 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -8050,8 +7868,8 @@ class CoreDataHandler : NSObject  {
     
     func getDataFromAlterNativeForSingleDevToken(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,postingAlterNative:NSNumber  , feedDate:String) {
         
-        let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "AlternativeFeed", in: backgroundContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         person.setValue(postingId, forKey:"loginSessionId")
         person.setValue( postingAlterNative , forKey:"postingId")
         person.setValue( dict.value(forKey: "molecule") , forKey:"molecule")
@@ -8067,7 +7885,7 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -8268,8 +8086,8 @@ class CoreDataHandler : NSObject  {
     func getDataFromMyCocotinBinder(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,startDate: String) {
         
         
-        let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeed", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeed", in: backgroundContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         person.setValue(postingId, forKey:"loginSessionId")
         person.setValue( postingId , forKey:"postingId")
         person.setValue( dict.value(forKey: "molecule") , forKey:"molecule")
@@ -8289,7 +8107,7 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -8302,8 +8120,8 @@ class CoreDataHandler : NSObject  {
     func getDataFromMyCocotinBinderWithSingleData(_ dict:NSDictionary,feedId:NSNumber,postingId:NSNumber,feedProgramName:String,postingidMycotxin:NSNumber, feedDate:String) {
         
         
-        let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeed", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "MyCotoxinBindersFeed", in: backgroundContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         person.setValue(postingId, forKey:"loginSessionId")
         person.setValue( postingidMycotxin , forKey:"postingId")
         person.setValue( dict.value(forKey: "molecule") , forKey:"molecule")
@@ -8319,7 +8137,7 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -8393,9 +8211,9 @@ class CoreDataHandler : NSObject  {
     
     func getFeedNameFromGetApi (_ postingId : NSNumber, sessionId: NSNumber ,feedProgrameName: String,feedId: NSNumber,startDate: String) {
         
-        let entity = NSEntityDescription.entity(forEntityName: "FeedProgram", in: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "FeedProgram", in: backgroundContext)
         
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         person.setValue(feedProgrameName, forKey:"feddProgramNam")
         person.setValue(feedId, forKey:"feedId")
         person.setValue(sessionId, forKey:"loginSessionId")
@@ -8405,7 +8223,7 @@ class CoreDataHandler : NSObject  {
         person.setValue(startDate, forKey:"feedDate")
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -8417,8 +8235,8 @@ class CoreDataHandler : NSObject  {
     
     func getFeedNameFromGetApiSingleDeviceToken (_ postingId : NSNumber, sessionId: NSNumber ,feedProgrameName: String,feedId: NSNumber,postingIdFeed: NSNumber) {
         
-        let entity = NSEntityDescription.entity(forEntityName: "FeedProgram", in: managedContext)
-        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "FeedProgram", in: backgroundContext)
+        let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
         person.setValue(feedProgrameName, forKey:"feddProgramNam")
         person.setValue(feedId, forKey:"feedId")
         person.setValue(sessionId, forKey:"loginSessionId")
@@ -8427,7 +8245,7 @@ class CoreDataHandler : NSObject  {
         person.setValue(false, forKey:"isSync")
         do
         {
-            try managedContext.save()
+            try backgroundContext.save()
         }
         catch
         {
@@ -8458,7 +8276,7 @@ class CoreDataHandler : NSObject  {
                     
                     do
                     {
-                        try managedContext.save()
+                        try backgroundContext.save()
                     }
                     catch{
                     }
@@ -8468,8 +8286,8 @@ class CoreDataHandler : NSObject  {
         }
         else {
             
-            let entity = NSEntityDescription.entity(forEntityName: "FeedProgram", in: managedContext)
-            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+            let entity = NSEntityDescription.entity(forEntityName: "FeedProgram", in: backgroundContext)
+            let person = NSManagedObject(entity: entity!, insertInto: backgroundContext)
             person.setValue(feedProgrameName, forKey:"feddProgramNam")
             person.setValue(feedId, forKey:"feedId")
             person.setValue(sessionId, forKey:"loginSessionId")
@@ -8480,7 +8298,7 @@ class CoreDataHandler : NSObject  {
             
             do
             {
-                try managedContext.save()
+                try backgroundContext.save()
             }
             catch
             {
@@ -8605,9 +8423,9 @@ class CoreDataHandler : NSObject  {
     {
         
         let entityDescription =
-        NSEntityDescription.entity(forEntityName: "CaptureNecropsyData",in: managedContext)
+        NSEntityDescription.entity(forEntityName: "CaptureNecropsyData",in: backgroundContext)
         
-        let contact = CaptureNecropsyData(entity: entityDescription!,insertInto: managedContext)
+        let contact = CaptureNecropsyData(entity: entityDescription!,insertInto: backgroundContext)
         contact.age = age
         contact.farmName = farmName
         contact.feedProgram = feedProgram
@@ -8632,7 +8450,7 @@ class CoreDataHandler : NSObject  {
         contact.farmcount = count
         
         do {
-            try managedContext.save()
+            try backgroundContext.save()
             
         } catch {
             
@@ -8647,9 +8465,9 @@ class CoreDataHandler : NSObject  {
     {
         
         let entityDescription =
-        NSEntityDescription.entity(forEntityName: "CaptureNecropsyData",in: managedContext)
+        NSEntityDescription.entity(forEntityName: "CaptureNecropsyData",in: backgroundContext)
         
-        let contact = CaptureNecropsyData(entity: entityDescription!,insertInto: managedContext)
+        let contact = CaptureNecropsyData(entity: entityDescription!,insertInto: backgroundContext)
         contact.age = age
         contact.farmName = farmName
         contact.feedProgram = feedProgram
@@ -8672,7 +8490,7 @@ class CoreDataHandler : NSObject  {
         contact.imageId = imgId
         
         do {
-            try managedContext.save()
+            try backgroundContext.save()
             
         } catch {
             
@@ -9987,11 +9805,11 @@ class CoreDataHandler : NSObject  {
         do
             
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -10010,11 +9828,11 @@ class CoreDataHandler : NSObject  {
         do
             
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -10106,11 +9924,11 @@ class CoreDataHandler : NSObject  {
         do
             
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -10373,11 +10191,11 @@ class CoreDataHandler : NSObject  {
         let fetchUsers = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -10460,11 +10278,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate                = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -10933,11 +10751,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate   = fetchPredicate
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -11014,36 +10832,7 @@ class CoreDataHandler : NSObject  {
         }
         
     }
-    
-    func st(_ catName : String,formName : String,   birdNo : NSNumber ,necId : NSNumber)-> NSArray
-    
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBird")
-        fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
-        fetchRequest.returnsObjectsAsFaults = false
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                fetchBirdNotesArray = results as NSArray
-                return fetchBirdNotesArray
-            }
-            else
-            {
-                print(appDelegateObj.testFuntion())
-            }
-        }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        
-        return fetchBirdNotesArray
-    }
+
     
     // MARK: 🟢 Fetching Number of Birds with farm name necropsy id & category
     func fetchNoofBirdWithForm(_ catName : String,formName : String , necId: NSNumber )-> NSArray
@@ -11144,11 +10933,11 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -11164,11 +10953,11 @@ class CoreDataHandler : NSObject  {
         
         do
         {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch
@@ -12075,11 +11864,11 @@ class CoreDataHandler : NSObject  {
         let fetchUsers = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
         fetchUsers.predicate = fetchPredicate
         do        {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
             
         }
@@ -12098,11 +11887,11 @@ class CoreDataHandler : NSObject  {
         
         do {
             
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch {
@@ -12118,11 +11907,11 @@ class CoreDataHandler : NSObject  {
         fetchUsers.predicate = fetchPredicate
         do {
             
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch {
@@ -12137,10 +11926,10 @@ class CoreDataHandler : NSObject  {
         let fetchUsers = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCapture")
         fetchUsers.predicate = fetchPredicate
         do {
-            let results = try managedContext.fetch(fetchUsers)
+            let results = try backgroundContext.fetch(fetchUsers)
             for managedObject in results {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                managedContext.delete(managedObjectData)
+                backgroundContext.delete(managedObjectData)
             }
         }
         catch {

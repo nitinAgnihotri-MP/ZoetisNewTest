@@ -367,7 +367,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        let lngIdIs = UserDefaults.standard.integer(forKey: "lngId")
         
         if addfeed == "addfeed" {
             feedId = UserDefaults.standard.integer(forKey:"feedId")
@@ -612,7 +612,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         targetArray =  (UserDefaults.standard.value(forKey:"target") as? NSArray)!
         
         
-        if lngId == 3 {
+        if lngIdIs == 3 {
             
             feedProgrmTitle.text = "Programme alimentaire"
             startDatellbl.text = "Date de début"
@@ -621,7 +621,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             setDefaultText()
             
             
-            if lngId == 1 {
+            if lngIdIs == 1 {
                 let labels: [UILabel] = [
                     starterDosageTextField,
                     growerDosageCoccidiosisTEXT,
@@ -640,7 +640,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
         }
         
-        if lngId == 4 {
+        if lngIdIs == 4 {
             cocciDosFirstTextField.placeholder = placeholderText
             cocciDosSecTextField.placeholder   = placeholderText
             cocciDosThrdTextField.placeholder  = placeholderText

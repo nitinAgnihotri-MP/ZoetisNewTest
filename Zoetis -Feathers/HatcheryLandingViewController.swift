@@ -29,11 +29,8 @@ class HatcheryLandingViewController: BaseViewController {
     // MARK: Custom Functions
 
     private func navigateToPEDashboard() {
-        let RoleId =  UserDefaults.standard.string(forKey: "RoleId")
-        if RoleId == "TSR" {
-            let vc = UIStoryboard.init(name: Constants.Storyboard.peStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "PEDashboardViewController") as? PEDashboardViewController
-            self.navigationController?.pushViewController(vc!, animated: true)
-        } else if RoleId == "FSR" {
+        let RoleId = UserDefaults.standard.string(forKey: "RoleId")
+        if RoleId == "TSR" && RoleId == "FSR" {
             let vc = UIStoryboard.init(name: Constants.Storyboard.peStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "PEDashboardViewController") as? PEDashboardViewController
             self.navigationController?.pushViewController(vc!, animated: true)
         }

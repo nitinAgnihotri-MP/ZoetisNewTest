@@ -232,8 +232,8 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             sender.setImage(nil, for: .normal)
             sender.setImage(UIImage(named: "Uncheck_")!, for: .normal)
         }
-        var observationId = NSInteger()
-        var  vsibilityValue = Bool()
+        var observationId: Int
+        var vsibilityValue: Bool
         
         if btnTag == 0 {
             let skeletaObject : Skeleta = dataSkeletaArray.object(at: sender.tag) as! Skeleta
@@ -524,10 +524,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         Internaldict.setValue(lngId, forKey: "LanguageId")
         arr1.add(Internaldict)
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else  { return }
-        
-        var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-        jsonString = jsonString.trimmingCharacters(in: NSCharacterSet.whitespaces)
+
         if WebClass.sharedInstance.connected() {
             
             let Url = "Setting/SaveUserSetting"
@@ -583,7 +580,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
             cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
         }
         
-        var observationId = NSInteger()
+        var observationId: Int
         
         if btnTag == 0 {
             
@@ -739,7 +736,7 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
+        var sessionId: NSNumber
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
@@ -869,10 +866,6 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         }
         
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
-        
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-        var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-        jsonString = jsonString.trimmingCharacters(in: NSCharacterSet.whitespaces)
         
         if WebClass.sharedInstance.connected() {
             

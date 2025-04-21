@@ -28,45 +28,34 @@ class HelpViewController: UIViewController, userLogOut, UIScrollViewDelegate, sy
     let buttonbg1 = UIButton()
     let buttonbg = UIButton()
     @IBOutlet weak var userNameLabel: UILabel!
-    
-    let gigya =  Gigya.sharedInstance(GigyaAccount.self)
-    
+    let gigya = Gigya.sharedInstance(GigyaAccount.self)
+    var lngId = NSInteger()
+
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: true)
         let terms =  UserDefaults.standard.bool(forKey: "termsAcceptedTrue")
-        if terms == true {
-            acceptButton.alpha = 1
-            gifView.frame = CGRect(x: 0, y: 0, width: 1024, height: 768)
-        }
-        else {
-            acceptButton.alpha = 1
-            gifView.frame = CGRect(x: 0, y: 0, width: 1024, height: 768)
-        }
+        acceptButton.alpha = 1
+        gifView.frame = CGRect(x: 0, y: 0, width: 1024, height: 768)
         objApiSync.delegeteSyncApi = self
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
-        if lngId == 3 {
+        if UserDefaults.standard.integer(forKey: "lngId") == 3 {
             let jeremyGif = UIImage.gifImageWithName("chicken_french_2")
             let imageView = UIImageView(image: jeremyGif)
             imageView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
             gifView.addSubview(imageView)
-        }
-        else {
+        } else {
             let jeremyGif = UIImage.gifImageWithName("chicken")
             let imageView = UIImageView(image: jeremyGif)
             imageView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
             gifView.addSubview(imageView)
         }
-        
     }
-    var lngId = NSInteger()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         lngId = UserDefaults.standard.integer(forKey: "lngId")
-        
     }
     
     @IBAction func loginBtnAction(_ sender: AnyObject) {
@@ -131,19 +120,12 @@ class HelpViewController: UIViewController, userLogOut, UIScrollViewDelegate, sy
     
     @IBAction func acceptButton(_ sender: AnyObject) {
         UserDefaults.standard.set(false, forKey: "termsAcceptedTrue")
-        
         self.dasBoradPush()
     }
     
-//    @IBAction func declinetButton(_ sender: AnyObject) {
-//    }
-    
     func dasBoradPush() {
-        
-        let birdTypeId = UserDefaults.standard.integer(forKey: "birdTypeId")
         let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "DashView_Controller") as? DashViewController
         self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-        
     }
     
     @IBAction func synvBtnAction(_ sender: AnyObject) {
@@ -183,16 +165,15 @@ class HelpViewController: UIViewController, userLogOut, UIScrollViewDelegate, sy
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         

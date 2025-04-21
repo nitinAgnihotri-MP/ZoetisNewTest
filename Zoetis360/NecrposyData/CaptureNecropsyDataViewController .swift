@@ -77,7 +77,6 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     
     var arrayAddBirds  = NSMutableArray()
     var incremnet :Int = 5
-    var button = UIButton()
     var ButtonList = NSMutableArray()
     
     var myPickerView = UIPickerView()
@@ -318,8 +317,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 for x in 0..<(items[j] as AnyObject).count
                 {
                     let numOfBird = Int((items.object(at: j) as AnyObject).object(at: x) as! NSNumber) as Int
-                    var  necId = Int()
-                    necId = getNecIdChicken()
+                    var  necId = getNecIdChicken()
                     
                     let isNotes =  CoreDataHandler().fetchNoofBirdWithNotes(catArr[i] as! String, formName: farmArray[j] as! String, birdNo: numOfBird as NSNumber , necId: necId as NSNumber)
                     
@@ -2161,7 +2159,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
-            var  necId = Int()
+            var  necId : Int
             if postingIdFromExistingNavigate == "Exting"{
                 
                 necId =  postingIdFromExisting
@@ -2254,7 +2252,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
-            var  necId = Int()
+            var  necId : Int
             
             if postingIdFromExistingNavigate == "Exting"{
                 necId =  postingIdFromExisting
@@ -2317,7 +2315,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let cocoi : CaptureNecropsyViewData = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
-            var  necId = Int()
+            var  necId : Int
             
             if postingIdFromExistingNavigate == "Exting"{
                 necId =  postingIdFromExisting
@@ -2383,7 +2381,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let gitract : CaptureNecropsyViewData = dataArrayGiTract.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
-            var  necId = Int()
+            var  necId : Int
             
             if postingIdFromExistingNavigate == "Exting"{
                 necId =  postingIdFromExisting
@@ -2448,7 +2446,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let resp : CaptureNecropsyViewData = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
             
-            var  necId = Int()
+            var  necId : Int
             if postingIdFromExistingNavigate == "Exting"{
                 necId =  postingIdFromExisting
             }
@@ -2511,7 +2509,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
-            var  necId = Int()
+            var  necId : Int
             
             if postingIdFromExistingNavigate == "Exting"{
                 necId =  postingIdFromExisting
@@ -2591,7 +2589,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewData
          
-            var  necId = Int()
+            var  necId : Int
             
             if postingIdFromExistingNavigate == "Exting" {
                 necId =  postingIdFromExisting
@@ -2633,7 +2631,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let cocoi : CaptureNecropsyViewData = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
-            var  necId = Int()
+            var  necId : Int
             
             if postingIdFromExistingNavigate == "Exting"{
                 necId =  postingIdFromExisting
@@ -2678,7 +2676,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let image = UIImage(named:"Image01")
             
-            var  necId = Int()
+            var  necId : Int
             if postingIdFromExistingNavigate == "Exting"{
                 
                 necId =  postingIdFromExisting
@@ -2720,7 +2718,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let resp : CaptureNecropsyViewData = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
             
-            var  necId = Int()
+            var  necId : Int
             if postingIdFromExistingNavigate == "Exting"{
                 
                 necId =  postingIdFromExisting
@@ -2766,7 +2764,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if btnTag == 4 {
             let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
-            var necId = Int()
+            var  necId : Int
             necId = UserDefaults.standard.integer(forKey: "necId") as Int
             
             if postingIdFromExistingNavigate == "Exting" {
@@ -2845,7 +2843,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewData
             let image = UIImage(named:"Image01")
-            var  necId = Int()
+            var  necId : Int
             
             if postingIdFromExistingNavigate == "Exting"{
                 necId =  postingIdFromExisting
@@ -3317,9 +3315,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
         
         self.dataSkeltaArray.removeAllObjects()
-        var  necId = Int()
-        
-        necId = getNecIdChicken()
+        var  necId = getNecIdChicken()
         
         self.dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
@@ -3639,15 +3635,13 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         for i in 0..<farmArray.count {
             let formName = farmArray.object(at: i)
             
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var  necId =  getNecIdChicken()
             
             let isNotes = CoreDataHandler().fetchNoofBirdWithForm("skeltaMuscular", formName: formName as! String,necId: necId as NSNumber)
             let noOfBird = isNotes.count as Int
-            let noOfBirdsArr  = NSMutableArray()
+            let arrayForNumbrOfBirds  = NSMutableArray()
             
-            handleNoOfBirdsArrAndAddToArray(noOfBird, noOfBirdsArr)
+            handleNoOfBirdsArrAndAddToArray(noOfBird, arrayForNumbrOfBirds)
         }
     }
     
@@ -3661,12 +3655,8 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
         
         if CoreDataHandler().reduceBirdNumberInNecropsystep1WithNecId(postingId as NSNumber, index: self.farmRow) == true {
-            var farmName = String()
-            
-            farmName = UserDefaults.standard.value(forKey: "farm") as! String
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var farmName =  UserDefaults.standard.value(forKey: "farm") as! String
+            var  necId = getNecIdChicken()
             
             let isNotes = CoreDataHandler().fetchNoofBirdWithForm("skeltaMuscular", formName: farmName, necId: necId as NSNumber)
             
@@ -3679,7 +3669,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             }
             
             items.removeAllObjects()
-            var noOfBirdsArr1  = NSMutableArray()
+           
             CoreDataHandler().deleteNotesBirdWithFarmname(farmName, birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
             
             handleDataArrValidations(farmName, noOfBird)
@@ -3780,11 +3770,10 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         CommonClass.sharedInstance.updateCount()
         let necId = UserDefaults.standard.integer(forKey: "necId") as Int
         let postingDataa = CoreDataHandler().fetchAllPostingSession(necId as NSNumber)
-        
-        var issync = Bool()
+       
         if postingDataa.count > 0 {
             let sync :  PostingSession =  postingDataa.object(at: 0) as! PostingSession
-            issync =   sync.isSync! as! Bool
+            var issync =   sync.isSync! as! Bool
             if issync == false{
                 CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
             }
@@ -3795,7 +3784,8 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
         }else
         {
-            var  postingId = Int()
+           // var  postingId = Int()
+            var postingId: Int
             if UserDefaults.standard.bool(forKey: "Unlinked") == true
             {
                 postingId = 0
@@ -3861,7 +3851,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         let rowToSelect:IndexPath = IndexPath(row: tableViewSelectedRow, section: 0)
         tableView.selectRow(at: rowToSelect, animated: true, scrollPosition: UITableView.ScrollPosition.none)
         self.tableView(self.tableView, didSelectRowAt: rowToSelect)
-        var necId = Int()
+        var  necId : Int
         if postingIdFromExistingNavigate == "Exting"{
             necId =  postingIdFromExisting
         }
@@ -3939,7 +3929,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
         
         let  bird = UserDefaults.standard.value(forKey: "bird") as! NSNumber
-        var  necId = Int()
+        var  necId : Int
         
         if postingIdFromExistingNavigate == "Exting"{
             necId =  postingIdFromExisting
@@ -3983,7 +3973,6 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     // MARK: 🟠 Resize Image
     func resizeImage(_ image: UIImage, newWidth: CGFloat) -> UIImage {
         
-        let scale = newWidth / image.size.width
         UIGraphicsBeginImageContext(CGSize(width: newWidth, height: 500))
         image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: 500))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -4018,7 +4007,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         } else {
             DispatchQueue.main.async(execute: { () -> Void in
                 
-                var necId  = Int()
+                var  necId : Int
                 if self.postingIdFromExistingNavigate == "Exting"{
                     necId =  self.postingIdFromExisting
                 }
@@ -4140,7 +4129,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let formName = UserDefaults.standard.value(forKey: "farm") as! String
                     let catName = "skeltaMuscular"
                     let noOfBird = indexPath.row + 1
-                    var necId = Int()
+                    var  necId : Int
                     if postingIdFromExistingNavigate == "Exting"{
                         necId = postingIdFromExisting
                     } else {
@@ -4172,7 +4161,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let formName = cocoii.formName
                     let catName = cocoii.catName
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
+                    var  necId : Int
                     
                     if postingIdFromExistingNavigate == "Exting"{
                         necId =  postingIdFromExisting
@@ -4187,7 +4176,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let formName = UserDefaults.standard.value(forKey: "farm") as! String
                     let catName = "Coccidiosis"
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
+                    var  necId : Int
                     if postingIdFromExistingNavigate == "Exting"{
                         necId =  postingIdFromExisting
                     }
@@ -4223,7 +4212,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let formName = gitract.formName
                     let catName = gitract.catName
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
+                    var  necId : Int
                     if postingIdFromExistingNavigate == "Exting"{
                         necId =  postingIdFromExisting
                     }
@@ -4237,7 +4226,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let formName = UserDefaults.standard.value(forKey: "farm") as! String
                     let catName = "GITract"
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
+                    var  necId : Int
                     if postingIdFromExistingNavigate == "Exting"{
                         necId =  postingIdFromExisting
                     }
@@ -4271,7 +4260,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let formName = res.formName
                     let catName = res.catName
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
+                    var  necId : Int
                     if postingIdFromExistingNavigate == "Exting"{
                         necId =  postingIdFromExisting
                     }
@@ -4286,7 +4275,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let formName = UserDefaults.standard.value(forKey: "farm") as! String
                     let catName = "Resp"
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
+                    var  necId : Int
                     if postingIdFromExistingNavigate == "Exting"{
                         necId =  postingIdFromExisting
                     }
@@ -4319,7 +4308,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let formName = immu.formName
                     let catName = immu.catName
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
+                    var  necId : Int
                     if postingIdFromExistingNavigate == "Exting"{
                         necId =  postingIdFromExisting
                     }
@@ -4333,7 +4322,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let formName = UserDefaults.standard.value(forKey: "farm") as! String
                     let catName = "Immune"
                     let noOfBird  = indexPath.row + 1
-                    var  necId = Int()
+                    var  necId : Int
                     if postingIdFromExistingNavigate == "Exting"{
                         necId =  postingIdFromExisting
                     }
@@ -4428,7 +4417,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             if farmLength.count > 60  {
                 
                 let fullName = farmLength
-                let fullNameArr = fullName.components(separatedBy: "[")
+               
                 let myStringPrefix = String(fullName.prefix(60))
                 var firstName = myStringPrefix + "..." + " " + "[" + age + "]"
                 var farmName2 = String()
@@ -4474,7 +4463,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 let measure = skleta.measure
                 cell.mesureValue = measure!
                 cell.myLabel.text = skleta.obsName
-                var  necId = Int()
+                var  necId : Int
                 
                 if postingIdFromExistingNavigate == "Exting"{
                     necId =  postingIdFromExisting
@@ -4554,7 +4543,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 let measure = cocoii.measure
                 cell.mesureValue = measure!
                 
-                var necId = Int()
+                var  necId : Int
                 if postingIdFromExistingNavigate == "Exting"{
                     necId =  postingIdFromExisting
                 }
@@ -4630,7 +4619,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 cell.myLabel.text = gitract.obsName
                 let measure = gitract.measure
                 cell.mesureValue = measure!
-                var necId = Int()
+                var  necId : Int
                 if postingIdFromExistingNavigate == "Exting"{
                     necId =  postingIdFromExisting
                 }
@@ -4713,7 +4702,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 cell.myLabel.text = res.obsName
                 let measure = res.measure
                 cell.mesureValue = measure!
-                var necId = Int()
+                var  necId : Int
                 if postingIdFromExistingNavigate == "Exting"{
                     necId =  postingIdFromExisting
                 }
@@ -4792,7 +4781,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 let measure = immu.measure
                 cell.mesureValue = measure!
                 
-                var necId = Int()
+                var  necId : Int
                 if postingIdFromExistingNavigate == "Exting"{
                     necId =  postingIdFromExisting
                 }
@@ -4993,7 +4982,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                         if btnTag == 4 {
                             
                             let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewData
-                            var  necId = Int()
+                            var  necId : Int
                             if postingIdFromExistingNavigate == "Exting"{
                                 necId =  postingIdFromExisting
                             }
@@ -5007,11 +4996,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             if FetchObsArr.count > 0 {
                                 
                                 let imageName = "Immune" + "_" + immune1.obsName! + "_n"
-                                var image = UIImage(named:imageName)
-                                if image == nil
-                                {
-                                    image = UIImage(named:"Image01")
-                                }
+                                var image = UIImage(named: imageName) ?? UIImage(named: "Image01")
                                 
                                 CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("Immune", obsName: immune1.obsName!, formName:immune.formName! , birdNo: immune.birdNo!,  actualName : selectedSexValue, index: indexPath.row, necId :necId as NSNumber, isSync :true,refId:immune.refId!)
                             }
@@ -5171,9 +5156,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             btnTag = 0
             cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
             dataSkeltaArray.removeAllObjects()
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            let  necId = getNecIdChicken()
             
             dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5194,9 +5177,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             btnTag = 1
             dataArrayCocoi.removeAllObjects()
             
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            let  necId = getNecIdChicken()
             
             dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Coccidiosis",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5217,8 +5198,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             btnTag = 2
             dataArrayGiTract.removeAllObjects()
             
-            var  necId = Int()
-            necId = getNecIdChicken()
+            let  necId = getNecIdChicken()
             dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "GITract",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
             
@@ -5237,8 +5217,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             btnTag = 3
             dataArrayRes.removeAllObjects()
-            var  necId = Int()
-            necId = getNecIdChicken()
+            let  necId = getNecIdChicken()
             
             dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Resp",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5258,8 +5237,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             btnTag = 4
             dataArrayImmu.removeAllObjects()
-            var  necId = Int()
-            necId = getNecIdChicken()
+            let  necId = getNecIdChicken()
             
             dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.reloadData()
@@ -5342,8 +5320,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if btnTag == 0 {
             
             let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewData
-            var  necId = Int()
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!,Obsid: skleta.obsID!,necId: necId as NSNumber)
             let skleta1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
@@ -5360,8 +5337,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if btnTag == 1 {
             
             let cocoi : CaptureNecropsyViewData = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewData
-            var  necId = Int()
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(cocoi.birdNo!, farmname: cocoi.formName!, catName: cocoi.catName!,Obsid: cocoi.obsID!,necId: necId as NSNumber)
             
@@ -5380,8 +5356,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if btnTag == 2 {
             
             let gitract : CaptureNecropsyViewData = dataArrayGiTract.object(at: rowIndex) as! CaptureNecropsyViewData
-            var  necId = Int()
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!,Obsid: gitract.obsID!,necId: necId as NSNumber)
             
@@ -5399,8 +5374,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if btnTag == 3 {
             
             let resp : CaptureNecropsyViewData = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewData
-            var  necId = Int()
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(resp.birdNo!, farmname: resp.formName!, catName: resp.catName!,Obsid: resp.obsID!,necId: necId as NSNumber)
             
@@ -5419,9 +5393,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if btnTag == 4 {
             
             let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewData
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
             let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId:necId as NSNumber)
             
@@ -5470,7 +5442,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         buttonback.setTitle("", for: UIControl.State())
         buttonback.addTarget(self, action: #selector(buttonAcntion), for: .touchUpInside)
         self.view.addSubview(buttonback)
-        var  necId = Int()
+        var necId: Int
         
         customPopV = AddFarm.loadFromNibNamed("AddFarm") as! AddFarm
         customPopV.AddFarmDelegate = self
@@ -5773,8 +5745,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let skleta : CaptureNecropsyViewData = notes.object(at: 0) as! CaptureNecropsyViewData
             let formName = skleta.formName
             let catName  = skleta.catName
-            var  necId = Int()
-            necId = getNecIdChicken()
+            var  necId =  getNecIdChicken()
             
             let isNotes = CoreDataHandler().fetchNoofBirdWithNotes(catName!, formName: formName!, birdNo: noOfBird as NSNumber, necId: necId as NSNumber)
             let note : NotesBird = isNotes[0] as! NotesBird
@@ -5784,8 +5755,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             {
                 for i in  0..<catArr.count
                 {
-                    var  necId = Int()
-                    necId = getNecIdChicken()
+                    var  necId =  getNecIdChicken()
                     CoreDataHandler().updateNoofBirdWithNotes(catArr.object(at: i) as! String,  formName: note.formName!, birdNo: note.noofBirds!,notes:note.notes!,necId: necId as NSNumber,isSync :true)
                 }
                 return
@@ -5797,8 +5767,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let note : NotesBird = isNotes[0] as! NotesBird
                     for i in  0..<catArr.count
                     {
-                        var  necId = Int()
-                        necId = getNecIdChicken()
+                        var  necId = getNecIdChicken()
                         CoreDataHandler().updateNoofBirdWithNotes(catArr.object(at: i) as! String,  formName: note.formName!, birdNo: note.noofBirds!,notes:notesText,necId: necId as NSNumber,isSync :true)
                     }
                 }
@@ -5806,8 +5775,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 {
                     for i in  0..<catArr.count
                     {
-                        var  necId = Int()
-                        necId = getNecIdChicken()
+                        var  necId = getNecIdChicken()
                         CoreDataHandler().saveNoofBirdWithNotes(catArr.object(at: i) as! String , notes: notesText, formName: formName! , birdNo: noOfBird as NSNumber, index: 0 , necId: necId as NSNumber, isSync :true)
                     }
                 }

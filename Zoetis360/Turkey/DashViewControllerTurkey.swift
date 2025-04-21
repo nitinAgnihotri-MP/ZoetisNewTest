@@ -691,7 +691,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             switch statusCode {
             case 401:
                 self.loginMethod() // Re-login on unauthorized access
-            case 400...599:
+                
+            case 400...599 where statusCode != 404:  // <- Notice this line
                 // Handle server errors with a user-friendly alert
                 let alertController = UIAlertController(
                     title: "Error",
@@ -704,6 +705,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 }
                 alertController.addAction(retryAction)
                 self.present(alertController, animated: true)
+
             default:
                 // Handle success response
                 switch response.result {

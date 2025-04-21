@@ -50,40 +50,7 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
     func callWebApiforTutorial(_ completion: @escaping (_ status: Bool) -> Void)  {
         
         if WebClass.sharedInstance.connected() {
-            /*
-            accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-            let headers: HTTPHeaders = [Constants.authorization:accestoken]
-            let Url = WebClass.sharedInstance.webUrl + "PostingSession/GetTutorial"
-            
-            AF.request(Url, method: .get, headers: headers).responseJSON { response in
-                switch response.result {
-                case let .success(value):
-                    
-                    self.pathArr.removeAllObjects()
-                    let dict : NSDictionary = value as! NSDictionary
-                   
-                    
-                    if let paths = dict["PDFPath"] as? NSDictionary {
-                        for (_, value) in paths {
-                            
-                            self.pathArr.add(value as! String)
-                        }
-                        
-                    }
-                    completion(true)
-                    break
-                case let .failure(error):
-                    print(error.localizedDescription)
-                    //completion(nil, error as NSError)
-                    break
-                }
-                
-                
-            }
-            */
         }
-        
-        
     }
     func makeBodyBackgroundTransparent() {
         
@@ -119,7 +86,6 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
                         self.downloadSize = 0.0
                         self.dataToDownload = NSMutableData()                        
                     }
-                    
                 }
             }
         }
@@ -162,7 +128,6 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
                     
                     if status == true
                     {
-                        // self.loadHtmlFile()
                     }
                 })
             }
@@ -192,24 +157,18 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
             {
                 self.lblOfflineMessage.isHidden = true
                 self.loadHtmlFile()
-                
                 progressview.isHidden = true
                 labelProgress.isHidden = true
             }
             else
             {
                 self.lblOfflineMessage.isHidden = false
-                //Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Pdfs available online.")
                 progressview.isHidden = true
                 labelProgress.isHidden = true
             }
             
         }
-        
-        
-        
-        
-        
+   
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -254,15 +213,7 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         let url = URL(fileURLWithPath: path)
         let filePath = url.appendingPathComponent(pdfFileNameOne).path
-        // let fileLength = self.sizeForLocalFilePath(filePath) / 1048576
-        
-        //        if fileLength < 2
-        //        {
-        //            self.removeFileContentsInLocally(filePath)
-        //            return false
-        //
-        //        }
-        //        else{
+
         let fileManager = FileManager.default
         if fileManager.fileExists(atPath: filePath) {
             print("FILE AVAILABLE")
@@ -272,13 +223,9 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
             return false
         }
         
-        // }
-        
-        
     }
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         hud1.hide(animated: true)
-        
         progressview.isHidden = true
         labelProgress.isHidden = true
     }
@@ -318,11 +265,9 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
                 if self.downloadSize != 0.0
                 {
                     self.progressview.progress = Float(datalocal.length) / self.downloadSize
-                    self.labelProgress.text =  NSString(format: "%d %%", Int((Float(datalocal.length) * 100 / self.downloadSize))) as String// "\(Float(dataToDownload!.length) * 100 / downloadSize) %"
+                    self.labelProgress.text =  NSString(format: "%d %%", Int(Float(datalocal.length) * 100 / self.downloadSize)) as String
                 }
-                
             }
-            
         })
     }
     func urlSession(_ session: Foundation.URLSession, didBecomeInvalidWithError error: Error?) {
@@ -335,17 +280,12 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
         }
         else if dataToDownload != nil {
             
-            //  [self.webview loadData:webdata MIMEType: @"text/html" textEncodingName: @"UTF-8" baseURL:nil];
             let finaldata = dataToDownload?.copy() as! Data
             
             self.wkwebView.load(finaldata as Data, mimeType: "application/pdf", characterEncodingName: "UTF-8", baseURL: Bundle.main.bundleURL)
             
-            
-            
-            //Get the local docs directory and append your local filename.
             var docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
             docURL = docURL?.appendingPathComponent(pdfFileNameOne)
-            //Lastly, write your file to the disk.
             try? finaldata.write(to: docURL!, options: [.atomic])
             
             if self.checkPdfExitOnLocal() == false {
@@ -364,12 +304,9 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
         hud1.hide(animated: true)
         dataToDownload = nil
         self.defaultSession?.invalidateAndCancel()
-        //hud1.removeFromSuperViewOnHide = true
         if self.pathArr.count > 1{
             UserDefaults.standard.setValue(self.pathArr.object(at: 1) as! String, forKey: "pdf1Path")
-            
         }
-        
     }
 }
 

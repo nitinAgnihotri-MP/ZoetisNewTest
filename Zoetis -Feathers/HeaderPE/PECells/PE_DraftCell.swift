@@ -149,9 +149,9 @@ class PE_DraftCell: UITableViewCell {
                 extendedRejectedComment.isHidden = true
             }
         }
-        var date = peNewAssessment.evaluationDate
+        
         let draftID = peNewAssessment.draftID ?? ""
-        date = "C-" + draftID.prefix(20)
+        let date = "C-" + draftID.prefix(20)
         if peNewAssessment.statusType == 2 && peNewAssessment.isPERejected == true{
             rejectIndicatorBtn.isHidden = false
             deleteBtn.isHidden = true

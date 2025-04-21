@@ -295,9 +295,9 @@ enum ZoetisArt {
         static let background = "#D8D8D8"
         static let orangeColor = UIColor(red: 246.0 / 255.0, green: 121.0 / 255.0, blue: 45.0 / 255.0, alpha: CGFloat(1))
         
-        static let loginButtonColor = UIColor(red: 40.0 / 255.0, green: 122.0 / 255.0, blue: 255.0 / 255.0, alpha: CGFloat(1))
+        static let loginButtonColor = UIColor(red: 40.0 / 255.0, green: 122.0 / 255.0, blue: 1.0, alpha: CGFloat(1))
         
-        static let blue1 = UIColor(red: 40.0 / 255.0, green: 237.0 / 255.0, blue: 255.0 / 255.0, alpha: CGFloat(1))
+        static let blue1 = UIColor(red: 40.0 / 255.0, green: 237.0 / 255.0, blue: 1.0, alpha: CGFloat(1))
         static let blue2 = UIColor(red: 1.0 / 255.0, green: 167.0 / 255.0, blue: 199.0 / 255.0, alpha: CGFloat(1))
         static let orange = "#F6792D"
         static let green = UIColor(red: 41.0 / 255.0, green: 193.0 / 255.0, blue: 86.0 / 255.0, alpha: CGFloat(1))
@@ -310,13 +310,6 @@ enum ZoetisArt {
         static let semiBold = Font.regular
         static let bold = Font.regular
     }
-//    struct Font {
-//        static let light = "SFProText-Regular"
-//        static let regular = "SFProText-Regular"
-//        static let medium = "SFProText-Regular"
-//        static let semiBold = "SFProText-Regular"
-//        static let bold = "SFProText-Regular"
-//    }
     
     struct SfProTextFont {
         
@@ -423,16 +416,11 @@ struct KeyChainHelper {
 
 extension NSMutableDictionary {
     func toJSONDictionary() -> [String: Any]? {
-        // Convert NSMutableDictionary to Data
-        if let jsonData = try? JSONSerialization.data(withJSONObject: self, options: []) {
-            
-            // Convert Data back to Swift Dictionary
-            if let jsonDictionary = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-                return jsonDictionary
-            }
+        if let jsonData = try? JSONSerialization.data(withJSONObject: self, options: []),let jsonDictionary = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+            return jsonDictionary
         }
         return nil
     }
 }
 
- let appDelegateObj = UIApplication.shared.delegate as! AppDelegate
+let appDelegateObj = UIApplication.shared.delegate as! AppDelegate

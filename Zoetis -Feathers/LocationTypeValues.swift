@@ -27,11 +27,11 @@ class LocationTypeValues {
     }
     
     func getAllLocationTypes(array: [LocationValues]) -> [LocationValues] {
-        var locationValueArray : [LocationValues] = []
+        var allLocationValueArray : [LocationValues] = []
         for obj in array {
-            locationValueArray.append(obj)
+            allLocationValueArray.append(obj)
         }
-        return locationValueArray
+        return allLocationValueArray
     }
 }
 
@@ -47,10 +47,7 @@ public class LocationValues {
     let stnRep: Int?
     var mediaTypeDefault : String?
     var samplingMethodDefault : String?
-
-    var locationValues: LocationValue?
-//    var media : Media?
-//    var sampling : Sampling?
+    var locationValuesObj: LocationValue?
     
     init(_ json: JSON) {
         locatgionTypeId = json["LocationTypeId"].intValue
@@ -62,46 +59,20 @@ public class LocationValues {
         stnRep = json["StndRep"].intValue
         mediaTypeDefault = ""
         samplingMethodDefault = ""
-        var new = json["Media"].dictionary
-        if let object = new {
-            
-           if let moreData = object["Text"]?.string  {
-                print("your more data is here : \(moreData)")
-               mediaTypeDefault = moreData
-            }
-            
-          
+        let new = json["Media"].dictionary
+        if let object = new,let moreData = object["Text"]?.string {
+            mediaTypeDefault = moreData
         }
-        else {
-           print("your not")
-        }
-        var newZ = json["Sampling"].dictionary
         
-        if let object = newZ {
-            
-            if let sampling = object["Text"]?.string {
-                samplingMethodDefault = sampling
-            }
+        let newZ = json["Sampling"].dictionary
+        
+        if let object = newZ,let sampling = object["Text"]?.string {
+            samplingMethodDefault = sampling
         }
-
-    
-        locationValues = LocationValue(json["LocationValue"], locatgionTypeId, std40: std40, std20: std20, rapNo40: rapNo40, rapoNo20: rapNo20, standard: standard, stnRep: stnRep ,mediaTypeDefault : mediaTypeDefault, samplingMethodDefault : samplingMethodDefault)
-    }
-    
+        
+        locationValuesObj = LocationValue(json["LocationValue"], locatgionTypeId, std40: std40, std20: std20, rapNo40: rapNo40, rapoNo20: rapNo20, standard: standard, stnRep: stnRep ,mediaTypeDefault : mediaTypeDefault, samplingMethodDefault : samplingMethodDefault)
+    }    
 }
-//public class Media {
-//    
-//    init(_ json : JSON) {
-//        
-//        
-//    }
-//    
-//}
-//public class Sampling {
-//    
-//    
-//    
-//}
 
 public class LocationValue {
     

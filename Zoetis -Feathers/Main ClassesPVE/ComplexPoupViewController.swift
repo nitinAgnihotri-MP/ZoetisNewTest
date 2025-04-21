@@ -67,14 +67,6 @@ class ComplexPoupViewController: BaseViewController {
         btn_updateCustomerDetails.setAttributedTitle(attributeString, for: .normal)
     }
     
-    private func getValueFromDB(key:String) -> String{
-        let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_LoginRespone")
-        //   print("fetchedLoginResultFromDB valuee----\(valuee)")
-        let valueArr = valuee.value(forKey: key) as! NSArray
-        return valueArr[0]  as! String
-    }
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         
         
@@ -88,29 +80,24 @@ class ComplexPoupViewController: BaseViewController {
         
         let getCustomerArr = CoreDataHandlerPVE().fetchDetailsFor(entityName: "Customer_PVE")
         
-        if getCustomerArr.count > 0{
+        if getCustomerArr.count > 0 {
             let Id =  UserDefaults.standard.value(forKey: "Id") as? Int
             CoreDataHandlerPVE().saveUserInfoInDB(userId: Id!)
             
             CoreDataHandlerPVE().saveSessionDetailsInDB()
-            let pVE_Session =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
             fetchMasterDataIfCountZero()
-            
             return
-        }else{
-            
+        } else {
             fetchCustomerList()
             let Id =  UserDefaults.standard.value(forKey: "Id") as? Int
             CoreDataHandlerPVE().saveUserInfoInDB(userId: Id!)
             CoreDataHandlerPVE().saveSessionDetailsInDB()
-            let pVE_Session =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
         }
-        
     }
     
     func fetchMasterDataIfCountZero() {
         
-        if  getCountFor(key: "Customer_PVE") == 0 ||
+        if getCountFor(key: "Customer_PVE") == 0 ||
                 getCountFor(key: "Complex_PVE") == 0 ||
                 getCountFor(key: "PVE_EvaluationType") == 0 ||
                 getCountFor(key: "PVE_EvaluationFor") == 0 ||
@@ -126,8 +113,7 @@ class ComplexPoupViewController: BaseViewController {
                 getCountFor(key: "PVE_SurveyTypeDetails") == 0 ||
                 getCountFor(key: "PVE_VaccineManDetails") == 0 ||
                 getCountFor(key: "PVE_VaccineNamesDetails") == 0 ||
-                getCountFor(key: "PVE_SiteInjctsDetails") == 0
-        {
+                getCountFor(key: "PVE_SiteInjctsDetails") == 0 {
             fetchCustomerList()
             
             let Id =  UserDefaults.standard.value(forKey: "Id") as? Int
@@ -148,7 +134,6 @@ class ComplexPoupViewController: BaseViewController {
     
     private func setBorderBlackFiels(forBtn:UIButton) {
         
-        let superviewCurrent =  forBtn.superview
         customerView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
         customerView.layer.borderWidth = 2.0
         
@@ -156,9 +141,8 @@ class ComplexPoupViewController: BaseViewController {
         siteView.layer.borderWidth = 2.0
     }
     
-    private func checkValidation() -> Bool{
-        var isAllValidationOk = Bool()
-        isAllValidationOk = true
+    private func checkValidation() -> Bool {
+        var isAllValidationOk = true
         if selectCompanyText.text?.count == 0{
             customerView.layer.borderColor = UIColor.red.cgColor
             customerView.layer.borderWidth = 2.0
@@ -180,37 +164,32 @@ class ComplexPoupViewController: BaseViewController {
             self.dismiss(animated: true, completion: nil)
             CoreDataHandlerPVE().saveCustomerComplexDetailsPoupInDB(self.selectCompanyText.text!, customerId: self.customerId, complexName: self.selectComplexText.text!, complexId: self.siteId)
             CoreDataHandlerPVE().updateSessionDetails(1, text: "", forAttribute: "")
-            let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
             refreshDashboardPVE()
             updateEvaluatorIfExist()
             
-        }else{
+        } else {
             showAlert(title: Constants.alertStr, message: "Please fill the mandatory fields.", owner: self)
-            
         }
         
         stopLoader()
     }
     
-    func updateEvaluatorIfExist(){
+    func updateEvaluatorIfExist() {
         
-        let currentUserId =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let currentUserId = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
         let evalArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_Evaluator", id: currentUserId , keyStr: "id")
         if evalArr.count > 0 {
-            var evaluatorNameStr = String()
-            evaluatorNameStr = (UserDefaults.standard.string(forKey: "FirstName") ?? "") + " " + (UserDefaults.standard.string(forKey: "LastName") ?? "")
+            let evaluatorNameStr = (UserDefaults.standard.string(forKey: "FirstName") ?? "") + " " + (UserDefaults.standard.string(forKey: "LastName") ?? "")
             
             CoreDataHandlerPVE().updateSessionDetails(1, text: evaluatorNameStr, forAttribute: "evaluator")
             CoreDataHandlerPVE().updateSessionDetails(1, text: currentUserId, forAttribute: "evaluatorId")
             print("EvaluatorIdExistInList")
-        }else{
-            
+        } else {
             CoreDataHandlerPVE().updateSessionDetails(1, text: "", forAttribute: "evaluator")
             CoreDataHandlerPVE().updateSessionDetails(1, text: 0, forAttribute: "evaluatorId")
             print("EvaluatorId Not ExistInList")
         }
-        
     }
     
     private func refreshDashboardPVE() {
@@ -231,18 +210,13 @@ class ComplexPoupViewController: BaseViewController {
                 }
             }
         }
-        
     }
     
-    
-    
     @IBAction func customerBtnAction(_ sender: UIButton) {
-        var customerNamesArray = NSArray()
-        var customerDetailsArray = NSArray()
-        customerDetailsArray = CoreDataHandlerPVE().fetchDetailsFor(entityName: "Customer_PVE")
-        customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray()
+        let customerDetailsArray = CoreDataHandlerPVE().fetchDetailsFor(entityName: "Customer_PVE")
+        let customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray()
         
-        if  customerNamesArray.count > 0 {
+        if customerNamesArray.count > 0 {
             self.dropDownVIewNew(arrayData: customerNamesArray as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index  in
                 
                 self.customerId = (customerDetailsArray.object(at: index) as AnyObject).value(forKey: "customerId") as! Int
@@ -254,7 +228,6 @@ class ComplexPoupViewController: BaseViewController {
                 CoreDataHandlerPVE().updateUserInfoSavedInDB(self.customerId, forAttribute: "customerId")
                 
                 CoreDataHandlerPVE().updateSessionDetails(1, text: "", forAttribute: "")
-                let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
                 
                 self.customerView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
                 self.customerView.layer.borderWidth = 2.0
@@ -275,28 +248,19 @@ class ComplexPoupViewController: BaseViewController {
             return
         }
         
+        let siteDetailsArray = CoreDataHandlerPVE().fetchCustomerWithCustId( customerId as NSNumber)
         
-        var siteNameArr = NSArray()
-        var siteDetailsArray = NSArray()
-        siteDetailsArray = CoreDataHandlerPVE().fetchCustomerWithCustId( customerId as NSNumber)
-        
-        siteNameArr = siteDetailsArray.value(forKey: "complexName") as? NSArray ?? NSArray()
-        if  siteNameArr.count > 0 {
+        let siteNameArr = siteDetailsArray.value(forKey: "complexName") as? NSArray ?? NSArray()
+        if siteNameArr.count > 0 {
             
             self.dropDownVIewNew(arrayData: siteNameArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
                 
                 self.selectComplexText.text = selectedVal
-                
                 let complexId = (siteDetailsArray.object(at: index) as AnyObject).value(forKey: "complexId") as? Int
-                
                 self.siteId = complexId!
-                
                 CoreDataHandlerPVE().updateUserInfoSavedInDB(selectedVal, forAttribute: "complexName")
                 CoreDataHandlerPVE().updateUserInfoSavedInDB(self.siteId, forAttribute: "complexId")
-                
                 CoreDataHandlerPVE().updateSessionDetails(1, text: "", forAttribute: "")
-                let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
-                
                 self.siteView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
                 self.siteView.layer.borderWidth = 2.0
                 
@@ -539,7 +503,6 @@ extension ComplexPoupViewController{
         sharedManager.sharedAssCategoriesDetailsResArrPVE = jsonObject.getCategoriesDetailsResponse(dataArray: jsonObject.categoriesDetailsArr ?? [])
         sharedManager.sharedAssCategoriesDetailsResPVE =  jsonObject.categoriesDetailsArr ?? []
         let currntAA = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_AssessmentCategoriesDetails")
-        let assessmentQuestionArray = currntAA.value(forKey: "assessmentQuestion") as! NSObject
         fetchtSerotypeDetailsResponse()
         
     }
@@ -557,8 +520,6 @@ extension ComplexPoupViewController{
     }
     
     private func handleSerotypeDetailsResponse(_ json: JSON) {
-        //
-        let jsonObject = PVESerotypeDetailsResponse(json)
         getSurveyTypeDetailsPVE()
     }
     
@@ -576,11 +537,7 @@ extension ComplexPoupViewController{
     }
     
     private func handleSurveyTypeDetailsResponse(_ json: JSON) {
-        //
-        let jsonObject = PVESurveyTypeDetailsResponse(json)
-        
         fetchtVaccineManDetailsPVE()
-        
     }
     
     
@@ -597,15 +554,12 @@ extension ComplexPoupViewController{
     }
     
     private func handleVaccineManDetailsResponse(_ json: JSON) {
-        //
-        let jsonObject = PVEVaccineManDetailsResponse(json)
-        
         getVaccineNamesDetailsPVE()
     }
     
     // ---- Fetch getVaccineNamesDetailsPVE for PVE -----------------
     
-    private func getVaccineNamesDetailsPVE(){
+    private func getVaccineNamesDetailsPVE() {
         
         CoreDataHandler().deleteAllData("PVE_VaccineNamesDetails")
         
@@ -616,11 +570,7 @@ extension ComplexPoupViewController{
     }
     
     private func handlegetVaccineNamesDetailsResponse(_ json: JSON) {
-        //
-        let jsonObject = PVEVaccineNameDetailsResponse(json)
-        
         getSiteInjctsDetailssPVE()
-        
     }
     
     // ---- Fetch getSiteInjctsDetailssPVE for PVE -----------------
@@ -635,9 +585,6 @@ extension ComplexPoupViewController{
     }
     
     private func handleSiteInjctsDetailsResponse(_ json: JSON) {
-        //
-        let jsonObject = PVESiteInjctsDetailsResponse(json)
-        
         dismissGlobalHUD(self.view)
         UserDefaults.standard.set(false, forKey: "getApiCalled")
         if !isUpdateCustomer {
@@ -668,50 +615,14 @@ extension ComplexPoupViewController{
             }
             
             ZoetisWebServices.shared.getblankPDFPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                guard let self = self, error == nil else { return }
+                guard error == nil else { return }
                 print("res json -- \(json)")
-                self.handleblankPdfResponse(json)
-                
             })
-            //  showtoast(message: "Downloading")
-            
         } else {
             Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
         }
         stopLoader()
         
-    }
-    
-    private func handleblankPdfResponse(_ json: JSON) {
-        
-        let jsonObject = PVEBlankPdfResponse(json)
-        
-    }
-    
-    private func getOtherPDFDetailsPVE(){
-        
-        CoreDataHandler().deleteAllData("PVE_PdfDetails")
-        
-        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
-            
-            self.showGlobalProgressHUDWithTitle(self.view, title: "")
-            
-            let jsonDict = ["ReportType" : "0"]
-            
-            if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),
-               let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-                print("SNA Json = \n\(theJSONText)")
-            }
-            
-            ZoetisWebServices.shared.getblankPDFPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                guard let self = self, error == nil else { return }
-                print("res json -- \(json)")                
-            })
-            
-        } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
-        }
-        stopLoader()
     }
     
     @objc func stopLoader(notification: NSNotification){

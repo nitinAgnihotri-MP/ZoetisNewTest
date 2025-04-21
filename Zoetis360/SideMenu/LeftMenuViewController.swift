@@ -22,7 +22,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
     let textCellIdentifier = "TextCell"
     var dataArray: NSMutableArray?
     var postingId = Int()
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    let appDelegates = UIApplication.shared.delegate as! AppDelegate
     var switchBird1 :Int!
     var lngId = NSInteger()
     
@@ -122,7 +122,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
+        var sessionId: NSNumber
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
             sessionId = pSession.postingId!
@@ -157,7 +157,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
         }
         
         let allPostingSessionArr = NSMutableArray()
-        var sessionId = NSNumber()
+        var sessionId: NSNumber
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
             sessionId = pSession.postingId!
@@ -396,7 +396,7 @@ class LeftMenuViewController: UIViewController,UITableViewDelegate,syncApi,syncA
                 UserDefaults.standard.set(0, forKey: "postingId")
                 UserDefaults.standard.set(1, forKey: "sessionId")
                 UserDefaults.standard.set(0, forKey: "isBackWithoutFedd")
-                appDelegate.sendFeedVariable = ""
+                appDelegates.sendFeedVariable = ""
                 loadUnknownView()
             }
         case 2:

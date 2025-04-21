@@ -145,11 +145,7 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         self.currentRequisition.actualCreatedHeaders[notesIndexPath.section - 1].numberOfPlateIDCreated[notesIndexPath.row].isSelectedNote = true
         self.currentRequisition.actualCreatedHeaders[notesIndexPath.section - 1].numberOfPlateIDCreated[notesIndexPath.row].tag = notesIndexPath.row
             notesView.removeFromSuperview()
-        
-        let indexPath = IndexPath(row:notesIndexPath.row, section:notesIndexPath.section - 1)
-       // tableView.reloadRows(at: [indexPath], with: .automatic)
        self.reloadTableView()
-//        tableView.reloadData()
     }
     
     @IBAction func notesCancelBtnClick(_ sender: UIButton) {
@@ -158,11 +154,7 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
     
     
     
-    private func navigateToMocrobialViewController(){
-//        let storyBoard : UIStoryboard = UIStoryboard(name: "Microbial", bundle:nil)
-//        let vc = storyBoard.instantiateViewController(withIdentifier: "MicrobialViewController") as! MicrobialViewController
-//        navigationController?.pushViewController(vc, animated: true)
-        
+    private func navigateToMocrobialViewController() {
         for controller in self.navigationController!.viewControllers as Array {
             if controller.isKind(of: MicrobialViewController.self) {
                 self.navigationController!.popToViewController(controller, animated: true)
@@ -275,15 +267,15 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         UserDefaults.standard.set(true, forKey: "sessionprogresss")
     }
     
-    private func saveReviewersDataToDatabase(isSessionType: Bool){
+    private func saveReviewersDataToDatabase(isSessionType: Bool) {
         let prediacateForNonSessionType = NSPredicate(format: "timeStamp == %@", argumentArray: [self.currentRequisition.timeStamp])
         let prediacateForSessionType = NSPredicate(format: "isSessionType == %d", argumentArray: [true])
         let doesReviewerExists = MicrobialSelectedUnselectedReviewer.doReviewersExisitsFortheTimeStamp(predicate: isSessionType ? prediacateForSessionType : prediacateForNonSessionType)
         if !doesReviewerExists{
             let reviewerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
             for reviewer in reviewerDetailsArray  {
-                let userId = UserDefaults.standard.value(forKey:"Id") ?? 0
-                let isReviewerSelected = ((userId as! Int) == reviewer.reviewerId?.intValue ?? 0)
+                let userIdStr = UserDefaults.standard.value(forKey:"Id") ?? 0
+                let isReviewerSelected = ((userIdStr as! Int) == reviewer.reviewerId?.intValue ?? 0)
                 MicrobialSelectedUnselectedReviewer.saveReviewersInDB( self.currentRequisition.timeStamp, reviewerId: reviewer.reviewerId?.intValue ?? 0, reviewerName: reviewer.reviewerName ?? "", isSelected: isReviewerSelected, isSessionType: isSessionType)
             }
         }
@@ -312,7 +304,6 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         }
         return true
     }
-    //sampleDescriptionTextField
     
     fileprivate func isSampleTextFieldFilled() -> Bool {
         for header in self.currentRequisition.actualCreatedHeaders {
@@ -328,11 +319,7 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
     fileprivate func isAllSampleInfoMandatoryFiledsFilled() -> Bool {
         if  self.currentRequisition.company.isEmpty ||
             self.currentRequisition.site.isEmpty ||
-            self.currentRequisition.barCode.isEmpty
-//                ||
-//            self.currentRequisition.reviewer.isEmpty
-        {
-            
+            self.currentRequisition.barCode.isEmpty {
             return false
         }
         
@@ -373,10 +360,8 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
             } else {
                 return self.currentRequisition.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count
             }
-            //return self.enviromentalSessionInProgressModel.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count
         }
     }
-    
     
     //MARK: - Configure data for Enviromental
     fileprivate func configureData_Enviromental(_ cell: EnviromentalFormCell) {
@@ -385,14 +370,9 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
         cell.sampleCollectedByText.text = self.currentRequisition.sampleCollectedBy
         cell.companyTextField.text = self.currentRequisition.company
         cell.siteTextField.text = self.currentRequisition.site
-//        cell.emailIdTextField.text = self.currentRequisition.email
         cell.surveyConductedTextField.text = self.currentRequisition.surveyConductedOn
         cell.sampleDateTextField.text = self.currentRequisition.sampleCollectionDate
         cell.purposeOfSurveyTextField.text = self.currentRequisition.purposeOfSurvey
-//        cell.transferInTextField.text = self.currentRequisition.transferIn
-//        if self.currentRequisition.barCodeManualEntered.isEmpty == false {
-//            self.currentRequisition.barCode = self.currentRequisition.barCodeManualEntered
-//        }
         cell.barcodeTextField.text = self.currentRequisition.barCode
         cell.noteTextView.text = self.currentRequisition.notes
     }
@@ -404,22 +384,15 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
        cell.companyTextField.text = self.currentRequisition.company
        cell.siteTextField.text = self.currentRequisition.site
        cell.sampleDateTextField.text = self.currentRequisition.sampleCollectionDate
-//       if self.currentRequisition.barCodeManualEntered.isEmpty == false {
-//           self.currentRequisition.barCode = self.currentRequisition.barCodeManualEntered
-//       }
        cell.barcodeTextField.text = self.currentRequisition.barCode
        cell.noteTextView.text = self.currentRequisition.notes
    }
-
-    
     
     fileprivate func cellForRowOfBacterialCaseInfo(_ tableView: UITableView, indexPath: IndexPath) -> BacterialFormCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "BacterialFormCell", for: indexPath) as! BacterialFormCell
         cell.requisitionSavedSessionType = self.requisitionSavedSessionType
         cell.delegate = self
         cell.barcodeTextField.delegate = cell
-//        cell.barcodeTextField.isUserInteractionEnabled = false
-        
         cell.noteTextView.delegate = cell
         self.configureData_Bacterial(cell)
         if self.currentRequisition.actualCreatedHeaders.count > 0  {
@@ -434,9 +407,7 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
         let cell = tableView.dequeueReusableCell(withIdentifier: "EnviromentalFormCell", for: indexPath) as! EnviromentalFormCell
         cell.requisitionSavedSessionType = self.requisitionSavedSessionType
         cell.enviromentalFormCellDelegates = self
-//        cell.emailIdTextField.delegate = cell
         cell.barcodeTextField.delegate = cell
-//        cell.barcodeTextField.isUserInteractionEnabled = false
         cell.noteTextView.delegate = cell
         
         self.configureData_Enviromental(cell)
@@ -480,7 +451,7 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
             cell.searchBarLocation.placeholder = "Location Value"
             dropButton.dataSource = data as [AnyObject]
             dropButton.selectionAction = { [unowned self] (index: Int, item: String) in
-            self.setValueInTextFields(selectedValue: item, selectedIndex:index, clickedField: Constants.ClickedFieldMicrobialSurvey.locationValue, cell: Constants.cell, view: view)
+                self.setValueInTextFields(selectedValue: item, selectedIndex:index, clickedField: Constants.ClickedFieldMicrobialSurvey.locationValue, cell: Constants.cell, view: view)
             }
             
             if let id = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].selectedLocationTypeId {
@@ -488,7 +459,7 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
             }
             cell.plateIdLabel.text = ""
             let key = "\(String(describing: locationTypeId)) - \(indexPath.section) - \(indexPath.row + 1)"
-          
+            
             if let index = self.generatePlateIndex()[key] {
                 self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].plateId = "\(self.currentRequisition.barCode)-\(index)"
                 print("your plate id in cell :\(index)  : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].plateId)")
@@ -514,7 +485,7 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
                         popover!.present(from: sender.frame, in: cell, permittedArrowDirections: UIPopoverArrowDirection.down, animated: true)
                         
                     }
-                                                    
+                    
                 }else{
                     cell.plateIdLabel.text = "\(index)"
                     cell.plateIdLabel.textAlignment = .center
@@ -523,7 +494,7 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
                     cell.infoIconImage.isHidden = true
                 }
             }
-           
+            
             cell.sampleDescriptionTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].sampleDescription
             
             if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
@@ -533,41 +504,33 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
                 saveButtonAndDraftBurronView.isHidden = true
                 cell.samplingTypeButton.isUserInteractionEnabled = false
                 cell.noteButtonNew.isUserInteractionEnabled = false
-              //  cell.isUserInteractionEnabled = false
                 cell.selectionStyle = .none
-            }
-            else {
+            } else {
                 cell.searchBarLocation.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues
             }
-          
-//            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues.contains(stringOne) {
-                if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue == "" {
-                    cell.mediaTypeTextField.text =   self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault
-                    self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault ?? ""
-                    self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedMediaTypeId = 1
-                   
-                    }
-                    else {
-                        cell.mediaTypeTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue
-                    }
-
+            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue == "" {
+                cell.mediaTypeTextField.text =   self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault
+                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault ?? ""
+                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedMediaTypeId = 1
+                
+            } else {
+                cell.mediaTypeTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue
+            }
+            
             if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue == "" {
                 cell.samplingTextField.text =   self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault
                 
                 self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault ?? ""
                 self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeId = 1
-                }
-                else {
-                    cell.samplingTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue
-                }
-
+            } else {
+                cell.samplingTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue
+            }
+            
             print("your section no. : \(indexPath.section - 1) and index no: \(indexPath.row) and note string : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].notes)")
- 
+            
             if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues != "Other" {
-                //                cell.sampleDescriptionTextField.isEnabled = false
                 cell.sampleDescriptionButton.backgroundColor =  UIColor(red: 236/255, green: 236/255, blue: 236/255, alpha: 0.2)
             } else {
-                //                cell.sampleDescriptionTextField.isEnabled = true
                 cell.sampleDescriptionButton.backgroundColor = .white
             }
             
@@ -576,40 +539,19 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
             } else {
                 cell.bacterialCheckBoxButton.setImage(UIImage(named: "uncheckIcon"), for: .normal)
             }
-       //  cell.notesButton.setImage(UIImage(named: "PEComment"), for: .normal)
             print("note button is selected : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isSelectedNote)")
-           // cell.notesButton.setImage(UIImage(named: "pe_comments"), for: .normal)
-          //  DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
             if  self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].notes.count > 0 {
-                    cell.noteButtonNew.setImage(UIImage(named: "PECommentSelected"), for: .normal)
+                cell.noteButtonNew.setImage(UIImage(named: "PECommentSelected"), for: .normal)
                 if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
                     cell.noteButtonNew.isUserInteractionEnabled = true
                 }
-                else
-                {
-                    
-                }
-               
-                }
-                else{
-                  //  if isSelectionStart {
-                    cell.noteButtonNew.contentMode = .scaleToFill
-                    cell.noteButtonNew.setTitle("", for: .normal)
-                   
-                    cell.noteButtonNew.setImage(UIImage(named: "NewImgeComment"), for: .normal)
-                      //  cell.noteButtonNew.setImage(UIImage(named: "PEComment"), for: .normal)
-                   // }
-                }
-         //  }
-             
-           
-//
-            
-//            cell.bacterialCheckBoxButton.isEnabled = !(self.currentRequisitionType == .bacterial)
-            
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isMicoscoreChecked {
-               // cell.micoscoreCheckBoxButton.setImage(UIImage(named: "checkIcon"), for: .normal)
+            } else {
+                cell.noteButtonNew.contentMode = .scaleToFill
+                cell.noteButtonNew.setTitle("", for: .normal)
+                cell.noteButtonNew.setImage(UIImage(named: "NewImgeComment"), for: .normal)
             }
+            
+            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isMicoscoreChecked { }
             
             if self.isSubmitButtonPressed && self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues.isEmpty {
                 cell.locationValueButton.layer.borderColor = UIColor.red.cgColor
@@ -635,20 +577,11 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
             return cell
         }
     }
-    @objc func addInfoPopup(PlateID : String){
-
+    
+    @objc func addInfoPopup(PlateID : String) {
         showtoast(message: PlateID)
-         //  loadPopupVw(index: sender.tag)
-
-       }
-    private func loadPopupVw(index: Int){
-        let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-        let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
-        vc.headerValue = "Rejection Comment"
-        //        vc.titleValue = "Comment"
-        vc.textOfTextView = "SS"
-        self.navigationController?.present(vc, animated: false, completion: nil)
     }
+    
     //MARK: - Mandatory Fields Validation for Header
     func mandatoryFieldValidationForHeader(_ view: EnviromentalLocationHeaderView, section: Int) {
         if self.currentRequisition.actualCreatedHeaders[view.tag].isPlusButtonPressed &&
@@ -669,9 +602,7 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
     //MARK: - Set Up Header View
     fileprivate func setUpHeaderView(_ headerView: EnviromentalLocationHeaderView, _ section: Int) {
         headerView.addLocationButton.isHidden = section == 1 ? false : true
-        headerView.generatePlateIdButton.isHidden = true //section == 1 ? false : true
-//        headerView.generatePlateIdButton.isEnabled = self.currentRequisition.actualCreatedHeaders[0].numberOfPlateIDCreated.count > 0
-            //(self.currentRequisition.actualCreatedHeaders[view.tag].numberOfPlateIDCreated.count > 0) ? true : false
+        headerView.generatePlateIdButton.isHidden = true
         headerView.deleteLocationButton.isHidden = section == 1 ? false : true
         headerView.btnsStackView.isHidden = section == 1 ? false : true
         headerView.btnStd40.isHidden = section == 1 ? false : true
@@ -717,25 +648,18 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
             headerView.collapsableButton.setImage(UIImage(named: "expand_view_icon"), for: .normal)
             headerView.platesTitleView.isHidden = true
             headerView.backgrounfView.isHidden = true
+            headerView.locationTypeContainerViewHeight.constant = 68
             
-            if self.currentRequisition.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count > 0 {
-                headerView.locationTypeContainerViewHeight.constant = 68
-            } else {
-                headerView.locationTypeContainerViewHeight.constant = 68
-            }
         } else {
             headerView.collapsableButton.setImage(UIImage(named: "collapse_view_icon"), for: .normal)
             headerView.platesTitleView.isHidden = false
             headerView.backgrounfView.isHidden = false
-            
             headerView.platesTitleView.isHidden = !(self.currentRequisition.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count > 0)
-//            headerView.platesTitleView.roundCorners(corners: [.topLeft, .topRight], radius: 21.0)
+            headerView.locationTypeContainerViewHeight.constant = 68
             
             if self.currentRequisition.actualCreatedHeaders[section - 1].numberOfPlateIDCreated.count > 0 {
-                headerView.locationTypeContainerViewHeight.constant = 68
                 headerView.backgrounfView.isHidden = false
             } else {
-                headerView.locationTypeContainerViewHeight.constant = 68
                 headerView.backgrounfView.isHidden = true
             }
         }
@@ -1033,34 +957,27 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
-        
-        // previous code   self.getLocationValuesOnType(locationTypeId: self.currentRequisition.getAllLocationTypes().locationTypeIds[Constants.locationValueType])
-        
         var selectedIndex = 0
         var superview = searchBar.superview
         while let view = superview, !(view is UITableViewCell) {
             superview = view.superview
         }
         
-        if let cell = superview as? UITableViewCell {
-            if let indexPath = tableView.indexPath(for: cell) {
-                selectedIndex = indexPath.section-1
-            }
+        if let cell = superview as? UITableViewCell,let indexPath = tableView.indexPath(for: cell) {
+            selectedIndex = indexPath.section-1
         }
         
         if requisitionSavedSessionType == .SHOW_DRAFT_FOR_EDITING {
             let idOfSelectedLocationTypeIs = self.currentRequisition.actualCreatedHeaders[selectedIndex].selectedLocationTypeId ?? 0
             self.getLocationValuesOnType(locationTypeId: idOfSelectedLocationTypeIs)
-        }
-        else
-        {
+        } else {
             let idOfSelectedLocationTypeIs = currentRequisition.selectedLocationTypes[selectedIndex]
             self.getLocationValuesOnType(locationTypeId: idOfSelectedLocationTypeIs)
         }
-
+        
         Constants.cell = searchBar.superview?.superview?.superview?.superview as! EnviromentalSampleInfoCell
         
-        for ob: UIView in ((searchBar.subviews[0] )).subviews {
+        for ob: UIView in (searchBar.subviews[0]).subviews {
             if let z = ob as? UIButton {
                 let btn: UIButton = z
                 btn.setTitleColor(UIColor.white, for: .normal)
@@ -1102,17 +1019,25 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
         }
     }
     
+    fileprivate func populateSelectedValueVisitIdEnviromentalFormCell(_ cell: EnviromentalFormCell, _ selectedValue: String) {
+        cell.reasonForVisitTextField.text = selectedValue
+        self.currentRequisition.reasonForVisit = selectedValue
+        self.currentRequisition.reasonForVisitId = self.currentRequisition.getReasonForVisitId()
+    }
+    
+    fileprivate func populateSelectedValueVisitIdBacterialFormCell(_ cell: BacterialFormCell, _ selectedValue: String) {
+        cell.reasonForVisitTextField.text = selectedValue
+        self.currentRequisition.reasonForVisit = selectedValue
+        self.currentRequisition.reasonForVisitId = self.currentRequisition.getReasonForVisitId()
+    }
+    
     func setValueInTextFields(selectedValue: String, selectedIndex: Int, clickedField:String, cell: UITableViewCell?, view: UIView? = nil) {
         switch clickedField {
         case Constants.ClickedFieldMicrobialSurvey.reasonForVisit:
             if let cell = cell as? EnviromentalFormCell {
-                cell.reasonForVisitTextField.text = selectedValue
-                self.currentRequisition.reasonForVisit = selectedValue
-                self.currentRequisition.reasonForVisitId = self.currentRequisition.getReasonForVisitId()
+                populateSelectedValueVisitIdEnviromentalFormCell(cell, selectedValue)
             } else if let cell = cell as? BacterialFormCell  {
-                cell.reasonForVisitTextField.text = selectedValue
-                self.currentRequisition.reasonForVisit = selectedValue
-                self.currentRequisition.reasonForVisitId = self.currentRequisition.getReasonForVisitId()
+                populateSelectedValueVisitIdBacterialFormCell(cell, selectedValue)
             }
          
         case Constants.ClickedFieldMicrobialSurvey.SampleCollectedBy:
@@ -1149,10 +1074,10 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
             self.currentRequisition.generatebarCode()
             
         case Constants.ClickedFieldMicrobialSurvey.reviewer:
-            if let cell = cell as? EnviromentalFormCell  {
+            if let _ = cell as? EnviromentalFormCell  {
                 self.currentRequisition.reviewer = selectedValue
                 self.currentRequisition.reviewerId = self.currentRequisition.getReviewerId()
-            } else if let cell = cell as? BacterialFormCell  {
+            } else if let _ = cell as? BacterialFormCell  {
                 self.currentRequisition.reviewer = selectedValue
                 self.currentRequisition.reviewerId = self.currentRequisition.getReviewerId()
             }
@@ -1238,7 +1163,7 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
 
 //MARK: - Enviromental Location HeaderView Delegates
 extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates {
-    func setTemplateFor(templateType: STANDARD_TEMPLATE_TYPE){
+    func setTemplateFor(templateType: STANDARD_TEMPLATE_TYPE) {
         self.currentRequisition.actualCreatedHeaders.removeAll()
 
         let locationTypeIds = self.currentRequisition.getAllLocationTypes().locationTypeIds
@@ -1251,69 +1176,41 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
             locationHeader.selectedLocationTypeId = id
             locationHeader.selectedLocationType = name
             var locationValues = [Microbial_LocationValues]()
-            
             var tempValue = 0
-            
             if self.currentRequisition.requisitionType == .enviromental {
                 locationValues = (templateType == .STD) ? self.currentRequisition.getAllLocationValuesWhichAreTrueForStd(locationTypeId: id) : self.currentRequisition.getAllLocationValuesWhichAreTrueForStd40(locationTypeId: id)
                 tempValue = 1
-            }
-            else{
+            } else {
                 locationValues = (templateType == .STD20) ? self.currentRequisition.getAllLocationValuesWhichAreTrueForStd20(locationTypeId: id) : self.currentRequisition.getAllLocationValuesWhichAreTrueForStd40(locationTypeId: id)
                 tempValue = 0
             }
             var i = 0
             if locationValues.count > 0 {
-                print("you enter how many times : \(i)")
                 i = i + 1
                 self.currentRequisition.actualCreatedHeaders.append(locationHeader)
                 let index = self.currentRequisition.actualCreatedHeaders.count - 1
-               
-                for lValue in locationValues{
+                
+                for lValue in locationValues {
                     let limit = (templateType == (tempValue == 0 ? .STD20 : .STD)) ? (tempValue == 0 ? lValue.rep20!.intValue : lValue.stnRep!.intValue) : lValue.rep40!.intValue
-                    for j in 0..<limit{
+                    for _ in 0..<limit {
                         let plateCell = LocationTypeCellModel()
                         let i = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.append(plateCell)
-                      
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].isBacterialChecked = false
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].isMicoscoreChecked = true
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedLocationTypeId = id
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedLocationValues = lValue.text ?? ""
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedLocationValueId = lValue.id?.intValue
-                        print("your location id is :\(lValue.id?.intValue)")
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].mediaDefault = lValue.media ?? ""
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].mediaTypeValue = lValue.media ?? ""
-                       // self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault ?? ""
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedMediaTypeId = 1
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].samplingDefault = lValue.sampling ?? ""
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].samplingMethodTypeValue = lValue.sampling ?? ""
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].samplingMethodTypeId = 1
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].row = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count - 1
-                        print("your plate id is here : \(self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count - 1)")
                         self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].section = self.currentRequisition.actualCreatedHeaders.count
-                        print("your number of plate id created during: \(self.currentRequisition.actualCreatedHeaders.count)")
                         self.currentRequisition.actualCreatedHeaders[index].noOfPlates = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count
-                        print("your total count of plate is here : \(self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count)")
-                        var locationTypeId = ""
-                        if let id = self.currentRequisition.actualCreatedHeaders[self.currentRequisition.actualCreatedHeaders.count - 1].selectedLocationTypeId {
-                            locationTypeId = "\(id)"
-                        }
-                        
-                        let key = "\(String(describing: locationTypeId)) - \(self.currentRequisition.actualCreatedHeaders.count - 1) - \(index + 1)"
-                      
-                       
-//                        var fullIndex = ""
-//                        let indexDict = self.generatePlateIndex()
-            print("your section here : \(self.currentRequisition.actualCreatedHeaders.count - 1)")
-                        print("your row index at : \(fullIndex)")
-                        print("your for loop inner cell index :\(index)")
-                        
-                            self.currentRequisition.actualCreatedHeaders[self.currentRequisition.actualCreatedHeaders.count - 1].numberOfPlateIDCreated[i].plateId = "\(self.currentRequisition.barCode)-\(fullIndex + 1)"
-                          //  fullIndex = "\(indexDict[key])"
-                        
-                        
-                        print("your genrated id is here :\(fullIndex) :\(self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].plateId)")
+                        self.currentRequisition.actualCreatedHeaders[self.currentRequisition.actualCreatedHeaders.count - 1].numberOfPlateIDCreated[i].plateId = "\(self.currentRequisition.barCode)-\(fullIndex + 1)"
                         fullIndex = fullIndex + 1
                     }
                 }
@@ -1450,21 +1347,11 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
                 return
             }
         }
-        var isAllHeaderChecked = true
         for header in self.currentRequisition.actualCreatedHeaders {
             if header.ischeckBoxSelected == false {
-                isAllHeaderChecked = false
                 break
             }
         }
-        
-//        if !currentRequisition.isPlateIdGenerated{
-//            guard isAllHeaderChecked == false else {
-//                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You can't delete all the locations.")
-//                return
-//            }
-//        }
-        
         let alert = UIAlertController(title: "Alert", message: "Are you sure you want to delete?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (_) in
@@ -1567,8 +1454,6 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
             self.currentRequisition.actualCreatedHeaders[view.tag].noOfPlates += 1
             plateCell.row = totalPlatesInHeader //(plateCell.row ?? 0) + 1
             plateCell.section = view.tag
-            //   print("row\(plateCell.row)  section\(plateCell.section)")
-//            plateCell.isBacterialChecked = self.currentRequisition.requisitionType == RequisitionType.bacterial
             plateCell.selectedLocationTypeId = self.currentRequisition.actualCreatedHeaders[view.tag].selectedLocationTypeId
             self.currentRequisition.actualCreatedHeaders[view.tag].numberOfPlateIDCreated.append(plateCell)
         } else {
@@ -1576,16 +1461,11 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
                 let plateCell = LocationTypeCellModel()
                 plateCell.row = i
                 plateCell.section = view.tag
-//                plateCell.isBacterialChecked = self.currentRequisition.requisitionType == RequisitionType.bacterial
                 plateCell.selectedLocationTypeId = self.currentRequisition.actualCreatedHeaders[view.tag].selectedLocationTypeId
                 self.currentRequisition.actualCreatedHeaders[view.tag].numberOfPlateIDCreated.append(plateCell)
             }
         }
-//        self.currentRequisition.isPlateIdGenerated = self.currentRequisition.actualCreatedHeaders[0].numberOfPlateIDCreated.count > 0
-//        self.currentRequisition.addNewRowToPlatesSubmitted()
         self.saveCurrentDataInLocalDB(isFinalSubmit: false)
-//        self.currentRequisition.saveLocationTypeHeaderCurrentSessionInfoInDB()
-//        self.currentRequisition.saveLocationTypePlatesCurrentSessionInfoInToDB()
         self.reloadTableView()
     }
     
@@ -1597,18 +1477,12 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
             if let dataToDelete = self.currentRequisition.actualCreatedHeaders[view.tag].numberOfPlateIDCreated.last{
                 if requisitionSavedSessionType == .SHOW_DRAFT_FOR_EDITING{
                     self.currentRequisition.deletePlates(data: dataToDelete, locationId: self.currentRequisition.actualCreatedHeaders[view.tag].selectedLocationTypeId ?? 0, numberOfPlates: self.currentRequisition.actualCreatedHeaders[view.tag].noOfPlates)
-                    //   print("draft")
-                }else{
+                } else {
                     self.saveCurrentDataInLocalDB(isFinalSubmit: false)
-//                            self.currentRequisition.updateSampleInfoDataInToDB_Enviromental(isFinalSubmit: false)
-
                 }
             self.currentRequisition.actualCreatedHeaders[view.tag].numberOfPlateIDCreated.removeLast()
-
             }
-//            self.saveCurrentDataInLocalDB(isFinalSubmit: false)
         }
-        
         self.reloadTableView()
     }
     

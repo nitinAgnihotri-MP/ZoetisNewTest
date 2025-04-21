@@ -144,9 +144,8 @@ class PE_DraftIntCell: UITableViewCell {
         lblSiteName.text = peNewAssessment.siteName
         lblCountryName.text = peNewAssessment.countryName
         
-        var date = peNewAssessment.evaluationDate
         let draftID = peNewAssessment.draftID ?? ""
-        date = "C-" + draftID.prefix(20)
+        let date = "C-" + draftID.prefix(20)
         if peNewAssessment.statusType == 2 {
             rejectIndicatorBtn.isHidden = false
             deleteBtn.isHidden = true

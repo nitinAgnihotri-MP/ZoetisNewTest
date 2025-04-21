@@ -44,7 +44,7 @@ class LocationTypeCellModel {
         self.row = plateObject.row as? Int ?? nil
         self.section = plateObject.section as? Int ?? nil
         self.isBacterialChecked = plateObject.isBacterialChecked == 1 ? true : false
-        self.isMicoscoreChecked = plateObject.isMicoscoreChecked == 1 ? true : true
+        self.isMicoscoreChecked = true
 
         self.selectedLocationValues = plateObject.locationValue ?? ""
         self.sampleDescription = plateObject.sampleDescription ?? ""
@@ -65,7 +65,7 @@ class LocationTypeCellModel {
         self.row = plateObject.row as? Int ?? nil
         self.section = plateObject.section as? Int ?? nil
         self.isBacterialChecked = plateObject.isBacterialChecked == 1 ? true : false
-        self.isMicoscoreChecked = plateObject.isMicoscoreChecked == 1 ? true : true //we need to send allways true
+        self.isMicoscoreChecked = true
         self.plateId = plateObject.plateId ?? ""
         self.selectedLocationValues = plateObject.locationValue ?? ""
         self.sampleDescription = plateObject.sampleDescription ?? ""

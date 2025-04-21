@@ -648,10 +648,22 @@ extension Report_MainVCViewController {
                 
         let dataSet = BarChartDataSet(entries: self.entries_Array as NSArray as? [ChartDataEntry], label: "")
         
-        if let values = verticalValues.last {
-            dataSet.stackLabels = [verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 0",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 1",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 2",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 3",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 4"]
-            dataSet.colors = [UIColor.green,UIColor.yellow,UIColor.orange,UIColor.red,UIColor.blue]
+        if let values = verticalValues.last?.trimmingCharacters(in: .whitespaces) {
+            dataSet.stackLabels = [
+                values + " 0",
+                values + " 1",
+                values + " 2",
+                values + " 3",
+                values + " 4"
+            ]
+            dataSet.colors = [UIColor.green, UIColor.yellow, UIColor.orange, UIColor.red, UIColor.blue]
         }
+        
+        
+//        if let values = verticalValues.last {
+//            dataSet.stackLabels = [verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 0",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 1",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 2",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 3",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 4"]
+//            dataSet.colors = [UIColor.green,UIColor.yellow,UIColor.orange,UIColor.red,UIColor.blue]
+//        }
         
         let farmNames1 = NSMutableArray()
         for frNme in farmNames{

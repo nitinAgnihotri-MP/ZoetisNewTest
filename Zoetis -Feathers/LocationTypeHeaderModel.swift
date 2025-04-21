@@ -32,12 +32,12 @@ class LocationTypeHeaderModel {
         self.noOfPlates =  headerObject.noOfPlates as? Int ?? 0
         self.selectedLocationType = headerObject.locationType ?? ""
         self.selectedLocationTypeId = headerObject.locationTypeId as? Int ?? nil
-        let section = headerObject.section as? Int ?? 0
+        let headerSection = headerObject.section as? Int ?? 0
         self.requisition_Id = headerObject.requisition_Id ?? ""
         self.requisitionType = headerObject.requisitionType  as? Int ?? nil
         self.numberOfPlateIDCreated = []
         
-        let plates = CoreDataHandlerMicro().fetchEnviromentalLocationTypePlatesInfoFor(section: section, locationTypeId: self.selectedLocationTypeId ?? -100)
+        let plates = CoreDataHandlerMicro().fetchEnviromentalLocationTypePlatesInfoFor(section: headerSection, locationTypeId: self.selectedLocationTypeId ?? -100)
         if plates.count > 0 {
             self.isPlusButtonPressed = true
             var totalHeaderPlates = [LocationTypeCellModel]()
