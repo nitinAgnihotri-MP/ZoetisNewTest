@@ -419,13 +419,17 @@ class ApiSyncTurkey: NSObject {
             //var error : NSError?
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             
+//            if let jsonString = String(data: jsonData, encoding: .utf8) {
+//                print(jsonString)
+//            }
+            
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
          //   debugPrint(jsonString)
             
             if WebClass.sharedInstance.connected() {
-                
+                         
                 let Url = "PostingSession/SaveMultipleFeedsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
                 let headerDict = [Constants.authorization:accestoken]
@@ -443,7 +447,7 @@ class ApiSyncTurkey: NSObject {
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
-                    
+                    // Feed Program Data
                     if statusCode == 401  {
                         self.loginMethod()
                     }
@@ -655,6 +659,10 @@ class ApiSyncTurkey: NSObject {
             
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
             
+//            if let jsonString = String(data: jsonData, encoding: .utf8) {
+//                print(jsonString)
+//            }
+            
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -669,9 +677,7 @@ class ApiSyncTurkey: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
-                
-              //  request.httpBody = try! JSONSerialization.data(withJSONObject: sessionDictWithVac, options: [])
+    
                 
                 if let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: []) {
                     request.httpBody = jsonData

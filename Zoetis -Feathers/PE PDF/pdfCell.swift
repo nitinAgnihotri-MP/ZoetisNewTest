@@ -19,11 +19,7 @@ class pdfCell: UITableViewCell {
     @IBOutlet weak var pdfFileBtn: UIButton!
     
     @IBOutlet weak var docxFileBtn: UIButton!
-    
-//    class var nib: UINib {
-//        return UINib(nibName: classIdentifier, bundle: nil)
-//    }
-    
+        
     override func awakeFromNib() {
         super.awakeFromNib()
     }

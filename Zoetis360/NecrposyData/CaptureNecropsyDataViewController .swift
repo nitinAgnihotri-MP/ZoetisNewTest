@@ -1332,328 +1332,164 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     
     // MARK: 🟠 Setup Observation Images Description for GiTract
     
-    func setObsImageDescForGitract(desc : Int) -> NSMutableArray
-    {
+    func setObsImageDescForGitract(desc: Int) -> NSMutableArray {
         let obsDescArr = NSMutableArray()
         lngId = UserDefaults.standard.integer(forKey: "lngId")
-        switch desc {
-        case 27:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-        case 28 :
-            if lngId == 1{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Swollen glands.")
-                obsDescArr.add("Swollen glands and enlarged.")
-                obsDescArr.add("Greatly enlarged and flaccid.")
-            }
-            else if lngId == 3{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Glandes gonflées.")
-                obsDescArr.add("Glandes gonflées et élargies.")
-                obsDescArr.add("Très élargi et mou."  )
-            }
-            else if lngId == 4{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Glândulas inchadas.")
-                obsDescArr.add("Glândulas inchadas e aumentadas.")
-                obsDescArr.add("Muito ampliado e flácido."  )
-            }
-            
-            break
-            
-        case 29 :
-            if lngId == 1{
-                obsDescArr.add("A normal smooth lining of the gizzard with no (change 'no' to minimal) roughening to the surface lining through rough appearance to the lining but no ulcerations or hemorrhages present.")
-                obsDescArr.add("Erosion that does not go through gizzard lining.")
-                obsDescArr.add("Severe erosion through gizzard lining.")
-                obsDescArr.add("Erosions into the gizzard muscle.")
-            }
-            else if lngId == 3{
-                obsDescArr.add("Muqueuse normale lisse du gésier avec une rugosité minime de la surface mais sans ulcération ni hémorragie.")
-                obsDescArr.add("Erosion ne traversant pas la paroi du gésier.")
-                obsDescArr.add("Erosion sévère traversant la paroi du gésier.")
-                obsDescArr.add("Erosion du muscle du gésier.")
-            }
-            else if lngId == 4{
-                obsDescArr.add(Constants.normalStr)
-                obsDescArr.add("Erosão que não atravessa a membrana coilínea.")
-                obsDescArr.add("Lesão severa que atravessa a membrana coilínea.")
-                obsDescArr.add("Erosões no músculo da moela.")
-            }
-            break
-            
-        case 31 :
-            if lngId == 1{
-                obsDescArr.add("<50% of gizzard contents is litter.")
-                obsDescArr.add(">50% gizzard contents is litter.")
-            }
-            else if lngId == 3{
-                obsDescArr.add("<50% du contenu du gésier est de la littière.")
-                obsDescArr.add(">50% du contenu du gésier est de la littière.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("< 50% do conteúdo é cama.")
-                obsDescArr.add("> 50% do conteúdo é cama")
-            }
-            break
-            
-        case 32 :
-            if lngId == 1{
-                obsDescArr.add("Normal gut tone and color.")
-                obsDescArr.add("Loss of tone with either decreased or increased thickness of intestinal tract. Slight loss of tensile strength. Reddening of duodenal loop alone is not a reason to justify this score but is to be considered if a slight redness extends into the midgut.")
-                obsDescArr.add("Intestine lays flat or has no tone when opened.  There may be significant loss of tensile strength and thinning.  Intestine may have a layer of mucous, moderate reddening, cellular debris, and an increased amount of fluid or orange material present.")
-                obsDescArr.add("A generalized thinning and loss of intestinal mucosal surface.  Significant feed passage is observed.  There may be formation of diphtheritic membrane and/or severe reddening with petechiae hemorrhaging readily apparent.  No tensile strength of gut.Ballooning of gut may be observed.")
-            }
-            else if lngId == 3{
-                obsDescArr.add("Tonus et couleur intestinale normaux.")
-                obsDescArr.add("Perte de tonus avec diminution ou augmentation d'épaisseur du tractus intestinal. Légère perte de résistance à la traction. Coloration plus rouge de la boucle duodénale seule n'est pas une raison justifiant la note mais doit être considérée si une légère rougeur s'étend à l'intestin moyen.")
-                obsDescArr.add("Paroi intestinale molle ou sans tonus à l'ouverture. Possible perte significative de résistance à la traction et amincissement. L'intestin peu avoir une couche de mucus, modérément rouge, des débris cellulaires, et une augmentation de la quantité de fluide ou présence de matériel orange.")
-                obsDescArr.add("Un amincissement généralisé et une perte de la surface mucosale intestinale. Un passage alimentaire significatif est observé. Possible formation de membrane diphtérique et/ou rougeur sévère avec pétécchies hémorragiques facilement apparentes. Absence de résistance à la traction de l'intestin. Possible ballonement intestinal.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Ausência de lesões.")
-                obsDescArr.add("Perda de tônus com diminuição ou aumento da espessura do trato intestinal. Ligeira perda de resistência à tração. A vermelhidão por si só da alça duodenal não é uma razão para justificar essa pontuação.")
-                obsDescArr.add("Parede intestinal sem tônus ​​quando aberta. Possível perda significativa de resistência à tração e afinamento. O intestino pode ter uma camada de muco e estar moderadamente vermelho.")
-                obsDescArr.add(" Petéquias + conteúdo laranja com alteração de mucosa, flocos de sangue/coágulos e inchaço. ")
-            }
-            break
-            
-        case 33 :
-            if lngId == 1{
-                obsDescArr.add("No evidence of necrotic enteritis present.")
-                obsDescArr.add("Necrotic enteritis present.")
-            }
-            else if lngId == 3{
-                obsDescArr.add("Aucun signe d'entérite nécrotique.")
-                obsDescArr.add("Présence d'entérite nécrotique.")
-                
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não há evidência de enterite necrótica presente.")
-                obsDescArr.add("Enterite necrótica presente.")
-                
-            }
-            break
-            
-        case 34 :
-            if lngId == 1{
-                
-                obsDescArr.add("No.")
-                obsDescArr.add("Multiple fragments of undigested feed present in colon.")
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Multiples fragments d'aliment indigéré présents dans le colon.")
-                
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Múltiplos fragmentos de ração não digerida presentes no cólon.")
-                
-            }
-            break
-        case 35:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-        case 37:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-        case 45 :
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-        case 46 :
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            
-            break
-            
-        case 47:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-        case 40 :
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-        case 36:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            
-            break
-            
-        case 41:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-        case 39:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-        case 38:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-        case 48:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
-            
-        default:
-            if lngId == 1{
-                obsDescArr.add("No.")
-                obsDescArr.add(Constants.yesStr)
-            }
-            else if lngId == 3{
-                obsDescArr.add("Non.")
-                obsDescArr.add("Oui.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Não.")
-                obsDescArr.add("Sim.")
-            }
-            break
-            
+
+        let noYesArr: [Int: [String]] = [
+            27, 35, 36, 37, 38, 39, 40, 41, 45, 46, 47, 48
+        ].reduce(into: [:]) { dict, value in
+            dict[value] = getYesNoArray(for: lngId)
         }
-        
+
+        if let predefined = noYesArr[desc] {
+            obsDescArr.addObjects(from: predefined)
+            return obsDescArr
+        }
+
+        switch desc {
+        case 28:
+            obsDescArr.addObjects(from: getGlandsArray(for: lngId))
+        case 29:
+            obsDescArr.addObjects(from: getGizzardArray(for: lngId))
+        case 31:
+            obsDescArr.addObjects(from: getGizzardContentsArray(for: lngId))
+        case 32:
+            obsDescArr.addObjects(from: getGutToneArray(for: lngId))
+        case 33:
+            obsDescArr.addObjects(from: getNecroticEnteritisArray(for: lngId))
+        case 34:
+            obsDescArr.addObjects(from: getUndigestedFeedArray(for: lngId))
+        default:
+            obsDescArr.addObjects(from: getYesNoArray(for: lngId)) // fallback default
+        }
+
         return obsDescArr
-        
     }
-    
+
+    // MARK: - Helper methods
+
+    private func getYesNoArray(for lngId: Int) -> [String] {
+        switch lngId {
+        case 1:
+            return ["No.", Constants.yesStr]
+        case 3:
+            return ["Non.", "Oui."]
+        case 4:
+            return ["Não.", "Sim."]
+        default:
+            return []
+        }
+    }
+
+    private func getGlandsArray(for lngId: Int) -> [String] {
+        switch lngId {
+        case 1:
+            return [Constants.normalStr, "Swollen glands.", "Swollen glands and enlarged.", "Greatly enlarged and flaccid."]
+        case 3:
+            return [Constants.normalStr, "Glandes gonflées.", "Glandes gonflées et élargies.", "Très élargi et mou."]
+        case 4:
+            return [Constants.normalStr, "Glândulas inchadas.", "Glândulas inchadas e aumentadas.", "Muito ampliado e flácido."]
+        default:
+            return []
+        }
+    }
+
+    private func getGizzardArray(for lngId: Int) -> [String] {
+        switch lngId {
+        case 1:
+            return [
+                "A normal smooth lining of the gizzard with no (change 'no' to minimal) roughening to the surface lining through rough appearance to the lining but no ulcerations or hemorrhages present.",
+                "Erosion that does not go through gizzard lining.",
+                "Severe erosion through gizzard lining.",
+                "Erosions into the gizzard muscle."
+            ]
+        case 3:
+            return [
+                "Muqueuse normale lisse du gésier avec une rugosité minime de la surface mais sans ulcération ni hémorragie.",
+                "Erosion ne traversant pas la paroi du gésier.",
+                "Erosion sévère traversant la paroi du gésier.",
+                "Erosion du muscle du gésier."
+            ]
+        case 4:
+            return [
+                Constants.normalStr,
+                "Erosão que não atravessa a membrana coilínea.",
+                "Lesão severa que atravessa a membrana coilínea.",
+                "Erosões no músculo da moela."
+            ]
+        default:
+            return []
+        }
+    }
+
+    private func getGizzardContentsArray(for lngId: Int) -> [String] {
+        switch lngId {
+        case 1:
+            return ["<50% of gizzard contents is litter.", ">50% gizzard contents is litter."]
+        case 3:
+            return ["<50% du contenu du gésier est de la littière.", ">50% du contenu du gésier est de la littière."]
+        case 4:
+            return ["< 50% do conteúdo é cama.", "> 50% do conteúdo é cama"]
+        default:
+            return []
+        }
+    }
+
+    private func getGutToneArray(for lngId: Int) -> [String] {
+        switch lngId {
+        case 1:
+            return [
+                "Normal gut tone and color.",
+                "Loss of tone with either decreased or increased thickness of intestinal tract. Slight loss of tensile strength. Reddening of duodenal loop alone is not a reason to justify this score but is to be considered if a slight redness extends into the midgut.",
+                "Intestine lays flat or has no tone when opened.  There may be significant loss of tensile strength and thinning.  Intestine may have a layer of mucous, moderate reddening, cellular debris, and an increased amount of fluid or orange material present.",
+                "A generalized thinning and loss of intestinal mucosal surface.  Significant feed passage is observed.  There may be formation of diphtheritic membrane and/or severe reddening with petechiae hemorrhaging readily apparent.  No tensile strength of gut.Ballooning of gut may be observed."
+            ]
+        case 3:
+            return [
+                "Tonus et couleur intestinale normaux.",
+                "Perte de tonus avec diminution ou augmentation d'épaisseur du tractus intestinal. Légère perte de résistance à la traction. Coloration plus rouge de la boucle duodénale seule n'est pas une raison justifiant la note mais doit être considérée si une légère rougeur s'étend à l'intestin moyen.",
+                "Paroi intestinale molle ou sans tonus à l'ouverture. Possible perte significative de résistance à la traction et amincissement. L'intestin peu avoir une couche de mucus, modérément rouge, des débris cellulaires, et une augmentation de la quantité de fluide ou présence de matériel orange.",
+                "Un amincissement généralisé et une perte de la surface mucosale intestinale. Un passage alimentaire significatif est observé. Possible formation de membrane diphtérique et/ou rougeur sévère avec pétécchies hémorragiques facilement apparentes. Absence de résistance à la traction de l'intestin. Possible ballonement intestinal."
+            ]
+        case 4:
+            return [
+                "Ausência de lesões.",
+                "Perda de tônus com diminuição ou aumento da espessura do trato intestinal. Ligeira perda de resistência à tração. A vermelhidão por si só da alça duodenal não é uma razão para justificar essa pontuação.",
+                "Parede intestinal sem tônus ​​quando aberta. Possível perda significativa de resistência à tração e afinamento. O intestino pode ter uma camada de muco e estar moderadamente vermelho.",
+                " Petéquias + conteúdo laranja com alteração de mucosa, flocos de sangue/coágulos e inchaço. "
+            ]
+        default:
+            return []
+        }
+    }
+
+    private func getNecroticEnteritisArray(for lngId: Int) -> [String] {
+        switch lngId {
+        case 1:
+            return ["No evidence of necrotic enteritis present.", "Necrotic enteritis present."]
+        case 3:
+            return ["Aucun signe d'entérite nécrotique.", "Présence d'entérite nécrotique."]
+        case 4:
+            return ["Não há evidência de enterite necrótica presente.", "Enterite necrótica presente."]
+        default:
+            return []
+        }
+    }
+
+    private func getUndigestedFeedArray(for lngId: Int) -> [String] {
+        switch lngId {
+        case 1:
+            return ["No.", "Multiple fragments of undigested feed present in colon."]
+        case 3:
+            return ["Non.", "Multiples fragments d'aliment indigéré présents dans le colon."]
+        case 4:
+            return ["Não.", "Múltiplos fragmentos de ração não digerida presentes no cólon."]
+        default:
+            return []
+        }
+    }
+
     // MARK: 🟠 Setup Observation images Description for Resp.
     fileprivate func handleLngIdObsDescForRespCase49(_ obsDescArr: NSMutableArray) {
         switch lngId {
@@ -1929,15 +1765,8 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         {
             dataSkeltaArray.removeAllObjects()
             
-            var  necId = Int()
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
-//            if postingIdFromExistingNavigate == "Exting"{
-//                necId =  postingIdFromExisting
-//            }
-//            else{
-//                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-//            }
             dataSkeltaArray =   CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -1947,9 +1776,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         {
             dataArrayCocoi.removeAllObjects()
             
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var  necId =  getNecIdChicken()
             
             dataArrayCocoi = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             
@@ -1961,9 +1788,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         {
             dataArrayGiTract.removeAllObjects()
             
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var  necId =  getNecIdChicken()
             
             dataArrayGiTract =   CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -1973,9 +1798,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         {
             dataArrayRes.removeAllObjects()
             
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var  necId =  getNecIdChicken()
             
             dataArrayRes =   CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -1986,9 +1809,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         {
             dataArrayImmu.removeAllObjects()
             
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
             dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(data.birdNo!, farmname: data.formName!, catName: data.catName!,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
             neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
@@ -2078,24 +1899,50 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 }
                 else
                 {
-                    for  i in 0..<array.count
-                    {
-                        let lastElement = (Int(array.last!)! as Int)
-                        if lastElement == Int(array[i])!
-                        {
-                            
-                        }
-                        else
-                        {
-                            if Int(array[i])! as NSNumber == skleta1.obsPoint
-                            {
+                    
+                    for i in 0..<array.count {
+                        guard let currentElement = Int(array[i]), let lastElement = Int(array.last!) else { continue }
+                        
+                        if lastElement != currentElement {
+                            if NSNumber(value: currentElement) == skleta1.obsPoint {
                                 cell.incrementLabel.text = String(array[i+1])
-                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(truncating: skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[i+1])! , index: rowIndex, obsId: Int(truncating: skleta1.obsID!),necId: necId as NSNumber,isSync :true)
+                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase(
+                                    "skeltaMuscular",
+                                    obsName: skleta1.obsName!,
+                                    formName: skleta.formName!,
+                                    obsVisibility: Bool(truncating: skleta1.objsVisibilty!),
+                                    birdNo: skleta.birdNo!,
+                                    camraImage: image!,
+                                    obsPoint: Int(array[i+1])!,
+                                    index: rowIndex,
+                                    obsId: Int(truncating: skleta1.obsID!),
+                                    necId: necId as NSNumber,
+                                    isSync: true
+                                )
                                 break
-                                
                             }
                         }
                     }
+
+                    
+//                    for  i in 0..<array.count
+//                    {
+//                        let lastElement = (Int(array.last!)! as Int)
+//                        if lastElement == Int(array[i])!
+//                        {
+//                            
+//                        }
+//                        else
+//                        {
+//                            if Int(array[i])! as NSNumber == skleta1.obsPoint
+//                            {
+//                                cell.incrementLabel.text = String(array[i+1])
+//                                CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(truncating: skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[i+1])! , index: rowIndex, obsId: Int(truncating: skleta1.obsID!),necId: necId as NSNumber,isSync :true)
+//                                break
+//                                
+//                            }
+//                        }
+//                    }
                 }
             }
             
@@ -2743,7 +2590,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if btnTag == 0 {
             
             let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewData
-            let image = UIImage(named:"Image01")
+         
             var  necId = Int()
             
             if postingIdFromExistingNavigate == "Exting" {
@@ -3496,15 +3343,13 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 if cocoiDis.measure! == "Y,N" {
                     
                     
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,obsPoint: 0 , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
                 }
                 else if ( cocoiDis.measure! == "Actual"){
                     
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId =  getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
                 }
@@ -3514,8 +3359,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
                     
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: cocoiDis.observationId!.intValue,measure: cocoiDis.measure!,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!, actualText: "")
                 }
@@ -3526,9 +3370,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         self.dataArrayCocoi.removeAllObjects()
         
-        var  necId = Int()
-        
-        necId = getNecIdChicken()
+        var  necId =  getNecIdChicken()
         
         self.dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
@@ -3538,8 +3380,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     
     // MARK: 🟢 Save GITract Data to Server
     func addGitractResponseData (_ noOfBirdsArr1: NSMutableArray,completion: (_ status: Bool) -> Void) {
-        var formName  = String()
-        formName  = UserDefaults.standard.value(forKey: "farm") as! String
+        var formName  = UserDefaults.standard.value(forKey: "farm") as! String
         
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         UserDefaults.standard.synchronize()
@@ -3553,15 +3394,13 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 if gitract2.measure! == "Y,N" {
                     
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,obsPoint: 0 , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract2.refId!, actualText: "")
                 }
                 
                 else if ( gitract2.measure! == "Actual"){
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId = getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true ,lngId:lngId as NSNumber,refId:gitract2.refId!, actualText: "")
                 }
@@ -3569,8 +3408,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 {
                     let trimmed = gitract2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId =  getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: gitract2.observationId!.intValue,measure: gitract2.measure!,quickLink: gitract2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract2.refId!, actualText: "")
                 }
@@ -3582,9 +3420,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         self.dataArrayGiTract.removeAllObjects()
         
-        var  necId = Int()
-        
-        necId = getNecIdChicken()
+        var  necId = getNecIdChicken()
         
         self.dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         
@@ -3603,30 +3439,26 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             if ((resp1.object(at: j) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                 let resp2 : Respiratory = resp1.object(at: j) as! Respiratory
                 if resp2.measure! == "Y,N" {
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId =  getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp2.observationField!, formName:formName, obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber,  obsPoint: 0 , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp2.refId!, actualText: "")
                 }
                 else if ( resp2.measure! == "Actual"){
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId = getNecIdChicken()
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId:necId as NSNumber,isSync:true ,lngId:lngId as NSNumber,refId:resp2.refId!, actualText: "")
                 }
                 else
                 {
                     let trimmed = resp2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     let array = (trimmed.components(separatedBy: ",") as [String])
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId =  getNecIdChicken()
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: resp2.observationId!.intValue,measure: resp2.measure!,quickLink: resp2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp2.refId!, actualText: "")
                 }
             }
         }
         
         self.dataArrayRes.removeAllObjects()
-        var  necId = Int()
-        necId = getNecIdChicken()
+        var  necId = getNecIdChicken()
         
         self.dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation((noOfBirdsArr1[self.farmRow] as AnyObject).count as! NSNumber, farmname: formName , catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         completion (true)
@@ -3634,8 +3466,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     // MARK: 🟢 Save Immune & Other's Data to Server
     func addImmuneResponseData (_ noOfBirdsArr1: NSMutableArray,completion: (_ status: Bool) -> Void) {
-        var formName  = String()
-        formName = UserDefaults.standard.value(forKey: "farm") as! String
+        var formName  = UserDefaults.standard.value(forKey: "farm") as! String
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         UserDefaults.standard.synchronize()
         let immu1 =   CoreDataHandler().fetchAllImmuneUsingLngId(lngId: lngId as NSNumber).mutableCopy() as! NSMutableArray
@@ -3647,25 +3478,22 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 let immune2 : Immune = immu1.object(at: j) as! Immune
                 if immune2.measure! == "Y,N" {
                     
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId =  getNecIdChicken()
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName, obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
                 }
                 else if ( immune2.measure! == "Actual"){
-                    var necId = Int()
-                    necId = getNecIdChicken()
+                    var necId = getNecIdChicken()
                     
                     
                     CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count! as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
                 }
                 
                 else if ( immune2.measure! == "F,M"){  /// New Addition for Bird Sex
-                    let trimmed = immune2.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                 
                     if immune2.observationField == Constants.maleFemaleStr
                     {
-                        var necId = Int()
-                        necId = getNecIdChicken()
+                        var necId = getNecIdChicken()
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count! as NSNumber, obsPoint: 0 , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0")
                     }
@@ -3679,16 +3507,14 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     if immune2.observationField == "Bursa Size"
                     {
                         
-                        var necId = Int()
-                        necId = getNecIdChicken()
+                        var necId =  getNecIdChicken()
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[3])! , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
                     }
                     else
                     {
                         
-                        var necId = Int()
-                        necId = getNecIdChicken()
+                        var necId =  getNecIdChicken()
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Immune", obsName: immune2.observationField!, formName:formName , obsVisibility: false, birdNo: (noOfBirdsArr1[self.farmRow] as AnyObject).count as NSNumber, obsPoint: Int(array[0])! , index: self.items.count, obsId: immune2.observationId!.intValue,measure: immune2.measure!,quickLink: immune2.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:immune2.refId!, actualText: "0.0")
                     }
@@ -3747,9 +3573,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     fileprivate func handleDataArrValidations(_ farmName: String, _ noOfBird: Int) {
         if dataSkeltaArray.count > 0
         {
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var  necId =  getNecIdChicken()
             
             let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: 0) as! CaptureNecropsyViewData
             CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta.obsID!, formName: farmName , catName: skleta.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -3760,9 +3584,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         if dataArrayCocoi.count > 0
         {
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
             let skleta1 : CaptureNecropsyViewData = dataArrayCocoi.object(at: 0) as! CaptureNecropsyViewData
             CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta1.obsID!, formName: farmName , catName: skleta1.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -3773,9 +3595,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if dataArrayGiTract.count > 0
         {
             
-            var  necId = Int()
-            
-            necId = getNecIdChicken()
+            var  necId =  getNecIdChicken()
             
             let skleta2 : CaptureNecropsyViewData = dataArrayGiTract.object(at: 0) as! CaptureNecropsyViewData
             CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta2.obsID!, formName: farmName , catName: skleta2.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)
@@ -3787,8 +3607,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         if dataArrayRes.count > 0
         {
-            var  necId = Int()
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
             let skleta3 : CaptureNecropsyViewData = dataArrayRes.object(at: 0) as! CaptureNecropsyViewData
             CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta3.obsID!, formName: farmName , catName: skleta3.catName!, birdNo:noOfBird as NSNumber, necId : necId as NSNumber)
@@ -3799,8 +3618,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         if dataArrayImmu.count > 0
         {
             
-            var  necId = Int()
-            necId = getNecIdChicken()
+            var  necId = getNecIdChicken()
             
             let skleta4 : CaptureNecropsyViewData = dataArrayImmu.object(at: 0) as! CaptureNecropsyViewData
             CoreDataHandler().deleteCaptureNecropsyViewDataWithFarmnameandBirdsize(skleta4.obsID!, formName: farmName , catName: skleta4.catName!, birdNo: noOfBird as NSNumber, necId : necId as NSNumber)

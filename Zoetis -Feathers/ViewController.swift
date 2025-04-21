@@ -1488,8 +1488,129 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             }
         }
     }
+
+ 
+    // MARK: *********** Get Necropsy data Acessing From Server **************/
+
+    func getPostingDataFromServerforNecorpsy(){
+        self.deleteAllData("CaptureNecropsyViewData")
+        if WebClass.sharedInstance.connected() {
+            
+            var id = Int()
+            id =  UserDefaults.standard.value(forKey: "Id") as! Int
+            let lngId = UserDefaults.standard.integer(forKey: "lngId")
+            let countryId = UserDefaults.standard.integer(forKey: "countryId")
+            let url = "PostingSession/GetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+            let headerDict: HTTPHeaders = ["Authorization":accestoken]
+            let urlString: String = WebClass.sharedInstance.webUrl + url
+            AF.request(urlString, method: .get, headers: headerDict).responseJSON { response in
+                let statusCode =  response.response?.statusCode
+                
+                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 408{
+                    self.alerView(statusCode:statusCode!)
+                    return
+                    
+                }
+                switch response.result{
+                case let .success(value):
+                    DispatchQueue.main.async {
+                        if value != nil {
+                            
+                            if value is NSArray{
+                                
+                                let arr : NSArray = value as! NSArray
+                                
+                                if arr.count>0{
+                                    
+                                    for  i in 0..<arr.count {
+                                        let seesionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
+                                        let farmArr = (arr.object(at: i) as AnyObject).value( forKey: "Farms")
+                                        for  j in 0..<(farmArr! as AnyObject).count {
+                                            let farmName = ((farmArr! as AnyObject).object(at: j) as AnyObject).value( forKey: "FarmName") as! String
+                                            let catArr = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "Category")
+                                            for  k in 0..<(catArr! as AnyObject).count {
+                                                let catName = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Category") as! String
+                                                let ObArr = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Observations")
+                                                for  l in 0..<(ObArr! as AnyObject).count {
+                                                    let obsId  = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ObservationId") as! Int
+                                                    let refId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ReferenceId") as! NSNumber
+                                                    let languageId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "LanguageId") as! NSNumber
+                                                    let obsName = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Observations") as! String
+                                                    let measure = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Measure") as! String
+                                                    let quickLink = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "DefaultQLink")
+                                                    //
+                                                    let birdArr = (((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Birds") as AnyObject).object(at: 0)
+                                                    for  m in 0..<10 {
+                                                        
+                                                        let keyStr = NSString(format: "BirdNumber%d",m+1)
+                                                        let chkKey = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).boolValue
+                                                        let chkKey1 = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).integerValue
+                                                        let chkKey3 = (birdArr as AnyObject).value(forKey: keyStr as String) as! String
+                                                        if chkKey3 == "NA"{
+                                                            break
+                                                        }
+                                                        else{
+                                                            var catstr = String()
+                                                            
+                                                            if catName == "Coccidiosis"{
+                                                                catstr = "Coccidiosis"
+                                                            }
+                                                            else if catName == "GI Tract" {
+                                                                catstr = "GITract"
+                                                            }
+                                                            else if catName == "Immune/Others" {
+                                                                catstr = "Immune"
+                                                            }
+                                                            else if catName == "Respiratory" {
+                                                                catstr = "Resp"
+                                                            }
+                                                            else if catName == "Skeletal/Muscular/Integumentary" {
+                                                                catstr = "skeltaMuscular"
+                                                            }
+                                                            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: catstr, obsName: obsName, formName: farmName , obsVisibility: chkKey!, birdNo: (m+1) as NSNumber, obsPoint: chkKey1! , index: m, obsId: obsId,measure: measure,quickLink:(quickLink! as AnyObject).integerValue! as NSNumber,necId :seesionId as NSNumber,isSync:false, lngId: languageId, refId: refId, actualText: chkKey3)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    self.getNotesFromServer()
+                                }
+                                else{
+                                    self.getNotesFromServer()
+                                }
+                            }
+                            else{
+                                self.getNotesFromServer()
+                                
+                            }
+                        }
+                    }
+                case .failure(let encodingError):
+                    
+                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                        self.alerViewInternet()
+                        debugPrint(err)
+                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                        debugPrint (encodingError)
+                        debugPrint (responseString)
+                        self.alerViewInternet()
+                    }
+                }
+            }
+            
+        } else{
+            
+        }
+        
+    }
+    
+
     
     // MARK: *********** ZoetisWebServices to  Get Necropsy data Acessing From Server **************/
+ /*
     func getPostingDataFromServerforNecorpsy(){
         self.deleteAllData("CaptureNecropsyViewData")
         if WebClass.sharedInstance.connected() {
@@ -1530,22 +1651,134 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                                     }
 
                                     for observation in observations {
-                                        guard
-                                            let obsId = observation["ObservationId"].int,
-                                            let refId = observation["ReferenceId"].number,
-                                            let languageId = observation["LanguageId"].number,
-                                            let obsName = observation["Observations"].string,
-                                            let measure = observation["Measure"].string,
-                                            let quickLink = observation["DefaultQLink"].number,
-                                            let birds = observation["Birds"].array,
-                                            let birdData = birds.first
-                                        else {
-                                            continue
+                                        let obsId = observation["ObservationId"].intValue
+                                        let refId = observation["ReferenceId"].numberValue
+                                        let languageId = observation["LanguageId"].numberValue
+                                        let obsName = observation["Observations"].stringValue
+                                        let measure = observation["Measure"].stringValue
+                                        let quickLink = observation["DefaultQLink"].stringValue  // It's a string, not number
+
+                                      //  print("✅ Observation found: \(obsId) - \(obsName)")
+
+                                        let birdsArray = observation["Birds"].arrayValue
+
+                                        // Make sure to check bird data within this block
+                                        if let birdDict = birdsArray.first?.dictionaryValue {
+                                            print("🐥 Bird Data:")
+                                            for i in 1...10 {
+                                                let key = "BirdNumber\(i)"
+                                                if let value = birdDict[key]?.string, value != "NA" {
+                                                    print(" - \(key): \(value)")
+
+                                                    // Handle the bird data and save it
+                                                    let categoryStr: String
+                                                    switch categoryName {
+                                                    case "Coccidiosis":
+                                                        categoryStr = "Coccidiosis"
+                                                    case "GI Tract":
+                                                        categoryStr = "GITract"
+                                                    case "Immune/Others":
+                                                        categoryStr = "Immune"
+                                                    case "Respiratory":
+                                                        categoryStr = "Resp"
+                                                    case "Skeletal/Muscular/Integumentary":
+                                                        categoryStr = "skeltaMuscular"
+                                                    default:
+                                                        categoryStr = categoryName
+                                                    }
+
+                                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(
+                                                        catName: categoryStr,
+                                                        obsName: obsName,
+                                                        formName: farmName,
+                                                        obsVisibility: birdDict[key]?.boolValue ?? false,
+                                                        birdNo: NSNumber(value: i), // Using 'i' for the bird number
+                                                        obsPoint: birdDict[key]?.intValue ?? 0,
+                                                        index: i - 1, // Since 'i' starts from 1, adjust it to match the index
+                                                        obsId: obsId,
+                                                        measure: measure,
+                                                        quickLink: NSNumber(value: Int(quickLink) ?? 0), // Convert quickLink to Int
+                                                        necId: NSNumber(value: sessionId),
+                                                        isSync: false,
+                                                        lngId: languageId,
+                                                        refId: refId,
+                                                        actualText: value // bird value
+                                                    )
+                                                } else {
+                                                    // Break the loop when 'NA' is found
+                                                    break
+                                                }
+                                            }
+                                        } else {
+                                            print("⚠️ No bird data found for observation \(obsId)")
                                         }
+                                    }
+                                }
+                            }
+                        }
+                        self.getNotesFromServer()
+                    } else {
+                        self.getNotesFromServer()
+                    }
+                }
+
+                
+               /*
+                DispatchQueue.main.async {
+                    if let arr = JSON(json).array, !arr.isEmpty {
+                        for item in arr {
+                            guard
+                                let sessionId = item["SessionId"].int,
+                                let farms = item["Farms"].array
+                            else {
+                                continue
+                            }
+
+                            for farm in farms {
+                                guard
+                                    let farmName = farm["FarmName"].string,
+                                    let categories = farm["Category"].array
+                                else {
+                                    continue
+                                }
+
+                                for category in categories {
+                                    guard
+                                        let categoryName = category["Category"].string,
+                                        let observations = category["Observations"].array
+                                    else {
+                                        continue
+                                    }
+
+                                    for observation in observations {
+                                        let obsId = observation["ObservationId"].intValue
+                                                        let refId = observation["ReferenceId"].numberValue
+                                                        let languageId = observation["LanguageId"].numberValue
+                                                        let obsName = observation["Observations"].stringValue
+                                                        let measure = observation["Measure"].stringValue
+                                                        let quickLink = observation["DefaultQLink"].stringValue  // It's a string, not number
+
+                                                        print("✅ Observation found: \(obsId) - \(obsName)")
+
+                                                        let birdsArray = observation["Birds"].arrayValue
+
+                                                        if let birdDict = birdsArray.first?.dictionaryValue {
+                                                            print("🐥 Bird Data:")
+                                                            for i in 1...10 {
+                                                                let key = "BirdNumber\(i)"
+                                                                if let value = birdDict[key]?.string, value != "NA" {
+                                                                    print(" - \(key): \(value)")
+                                                                } else {
+                                                                    break
+                                                                }
+                                                            }
+                                                        } else {
+                                                            print("⚠️ No bird data found for observation \(obsId)")
+                                                        }
 
                                         for m in 0..<10 {
                                             let keyStr = "BirdNumber\(m + 1)"
-                                            if let birdValue = birdData[keyStr].string {
+                                            if let birdValue = birdDict[keyStr]?.string {
                                                 if birdValue == "NA" {
                                                     break
                                                 } else {
@@ -1569,9 +1802,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                                                         catName: categoryStr,
                                                         obsName: obsName,
                                                         formName: farmName,
-                                                        obsVisibility: birdData[keyStr].boolValue,
+                                                        obsVisibility: birdDict[keyStr]?.boolValue ?? false,
                                                         birdNo: NSNumber(value: m + 1),
-                                                        obsPoint: birdData[keyStr].intValue,
+                                                        obsPoint: birdDict[keyStr]?.intValue ?? 0,
                                                         index: m,
                                                         obsId: obsId,
                                                         measure: measure,
@@ -1594,6 +1827,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         self.getNotesFromServer()
                     }
                 }
+                */
             })
         } 
         else{
@@ -1601,7 +1835,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
         
     }
-    
+    */
     // MARK: ************* ZoetisWebServices Calling to GetVaccination Data for Posted Session Data From Server  ***************************************/
     fileprivate func handlePosDictKeysValidations(_ posDict: [String : Any]) {
         for key in posDict.keys {
@@ -1706,7 +1940,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let devType = Constants.deviceType
             let newUrl = ZoetisWebServices.EndPoint.getSubmittedNotesForChicken.latestUrl + "\(id)&DeviceType=\(devType)"
             
-            ZoetisWebServices.shared.getPostedSessionNotesResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
+            ZoetisWebServices.shared.getNotesPostedSessionResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
                 guard let self = self else { return }
                 if let error = error {
                     print("Error fetching data: \(error.localizedDescription)")
@@ -1880,7 +2114,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         self.deleteAllData("BirdPhotoCapture")
         if WebClass.sharedInstance.connected() {
             
-            let Id =  Constants.selectedIndex
+            let Id =   UserDefaults.standard.value(forKey: "Id") as! Int
             let DevType = Constants.deviceType
             let newUrl = ZoetisWebServices.EndPoint.getNecropsySubmittedImagesforChicken.latestUrl + "\(Id)&DeviceType=\(DevType)"
             
@@ -2007,7 +2241,29 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 }
                 
                 DispatchQueue.main.async {
-                    self.handlePostedTurkeySession(json: json)
+                    if let arr = JSON(json).array, !arr.isEmpty {
+                        // Use a single CoreDataHandler instance
+                        let coreDataHandler = CoreDataHandlerTurkey()
+                        
+                        // Loop through and process each item in the array
+                        for posDict in arr {
+                            if let dict = posDict.dictionaryObject {
+                                coreDataHandler.getPostingDataTurkey(dict as NSDictionary)
+                            }
+                        }
+                        
+                        // Fetch posting data only once after processing
+                        let postingData = coreDataHandler.fetchAllPostingExistingSessionTurkey()
+                        
+                        // Check if postingData exists
+                        if postingData.count>0 {
+                            self.getPostingDataFromServerforVaccinationTurkey()
+                        }
+                    } else {
+                        // Handle case where arr is empty or nil
+                        self.getPostingDataFromServerforVaccinationTurkey()
+                    }
+                   // self.handlePostedTurkeySession(json: json)
                 }
 
             })
@@ -2164,7 +2420,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
                 let statusCode =  response.response?.statusCode
                 
-                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408 {
+                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 408 {
                     self.alerView(statusCode: statusCode!)
                     
                 }
@@ -2347,7 +2603,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
                 
                 let statusCode =  response.response?.statusCode
-                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
+                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 408{
                     self.alerView(statusCode:statusCode!)
                     
                 }

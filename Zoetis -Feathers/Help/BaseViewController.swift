@@ -280,6 +280,10 @@ class BaseViewController: UIViewController , SlideMenuDelegate{
                  print("Post Request Params of Add Assessment.  : \(jsonDataString)")
             }
             
+            else if  apiName == "Test" {
+                 print("Post Request Params of Images.  : \(jsonDataString)")
+            }
+            
         } catch {
             // // print("JSON serialization failed:  \(error)")
         }

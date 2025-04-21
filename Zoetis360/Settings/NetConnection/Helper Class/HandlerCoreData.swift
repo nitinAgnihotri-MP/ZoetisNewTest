@@ -297,7 +297,7 @@ class CoreDataHandler : NSObject  {
             if (stringValidate == "fieldStrain1") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain1"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute1Id") as! Int {
+                switch dict.value(forKey: "fieldRoute1Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -351,7 +351,7 @@ class CoreDataHandler : NSObject  {
             } else if(stringValidate == "fieldStrain2") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain2"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute2Id") as! Int {
+                switch dict.value(forKey: "fieldRoute2Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -406,7 +406,7 @@ class CoreDataHandler : NSObject  {
             } else if (stringValidate == "fieldStrain3")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain3"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute3Id") as! Int {
+                switch dict.value(forKey: "fieldRoute3Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -460,7 +460,7 @@ class CoreDataHandler : NSObject  {
             } else if (stringValidate == "fieldStrain4")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain4"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute4Id") as! Int {
+                switch dict.value(forKey: "fieldRoute4Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -515,7 +515,7 @@ class CoreDataHandler : NSObject  {
             } else if (stringValidate == "fieldStrain5")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain5"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute5Id") as! Int {
+                switch dict.value(forKey: "fieldRoute5Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -570,7 +570,7 @@ class CoreDataHandler : NSObject  {
             } else if (stringValidate == "fieldStrain6")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain6"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute6Id") as! Int {
+                switch dict.value(forKey: "fieldRoute6Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -625,7 +625,7 @@ class CoreDataHandler : NSObject  {
             } else if (stringValidate == "fieldStrain7")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain7"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute7Id") as! Int {
+                switch dict.value(forKey: "fieldRoute7Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -680,7 +680,7 @@ class CoreDataHandler : NSObject  {
             } else if (stringValidate == "fieldStrain8") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain8"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute8Id") as! Int {
+                switch dict.value(forKey: "fieldRoute8Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -735,7 +735,7 @@ class CoreDataHandler : NSObject  {
             } else if (stringValidate == "fieldStrain9") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain9"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute9Id") as! Int {
+                switch dict.value(forKey: "fieldRoute9Id") as? Int {
                     
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
@@ -791,7 +791,7 @@ class CoreDataHandler : NSObject  {
             } else if (stringValidate == "fieldStrain10") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain10"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute10Id") as! Int {
+                switch dict.value(forKey: "fieldRoute10Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -847,7 +847,7 @@ class CoreDataHandler : NSObject  {
             } else if (stringValidate == "fieldStrain11") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "fieldStrain11"), forKey:"strain")
-                switch dict.value(forKey: "fieldRoute11Id") as! Int {
+                switch dict.value(forKey: "fieldRoute11Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -1708,7 +1708,7 @@ class CoreDataHandler : NSObject  {
             if  (stringValidate == "hatcheryStrain1") {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
+                switch dict.value(forKey: "hatcheryRoute1Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -1828,7 +1828,7 @@ class CoreDataHandler : NSObject  {
             else if (stringValidate == "hatcheryStrain3")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
+                switch dict.value(forKey: "hatcheryRoute3Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -1888,7 +1888,7 @@ class CoreDataHandler : NSObject  {
             else if (stringValidate == "hatcheryStrain4")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
+                switch dict.value(forKey: "hatcheryRoute4Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -1948,7 +1948,7 @@ class CoreDataHandler : NSObject  {
             else if (stringValidate == "hatcheryStrain5")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
+                switch dict.value(forKey: "hatcheryRoute5Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -2008,7 +2008,7 @@ class CoreDataHandler : NSObject  {
             else if (stringValidate == "hatcheryStrain6")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
+                switch dict.value(forKey: "hatcheryRoute6Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -2068,7 +2068,7 @@ class CoreDataHandler : NSObject  {
             else if (stringValidate == "hatcheryStrain7")  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
-                switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
+                switch dict.value(forKey: "hatcheryRoute7Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -2130,7 +2130,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "hatcheryStrain8"), forKey:"strain")
                 
-                switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
+                switch dict.value(forKey: "hatcheryRoute8Id") as? Int {
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
                 case 2:
@@ -2192,7 +2192,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "hatcheryStrain9"), forKey:"strain")
                 
-                switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
+                switch dict.value(forKey: "hatcheryRoute9Id") as? Int {
                     
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
@@ -2255,7 +2255,7 @@ class CoreDataHandler : NSObject  {
                 person.setValue("", forKey:"type")
                 person.setValue(dict.value(forKey: "hatcheryStrain10"), forKey:"strain")
                 
-                switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
+                switch dict.value(forKey: "hatcheryRoute10Id") as? Int {
                     
                 case 1:
                     person.setValue(Constants.wingWeb, forKey:"route")
@@ -6048,6 +6048,7 @@ class CoreDataHandler : NSObject  {
         contact1.setValue(dict.value(forKey: "FemaleBreedName"), forKey:"female")
         contact1.setValue(dict.value(forKey: "Finalized"), forKey:"finalizeExit")
         contact1.setValue(false, forKey:"isSync")
+      //  contact1.setValue(1, forKey:"catptureNec") // New line added becasue we are not getting the data for first time we launch the App and try to get the data which is already synced
         contact1.setValue(dict.value(forKey: "DeviceSessionId"), forKey:"timeStamp")
         contact1.setValue(dict.value(forKey: "DeviceSessionId"), forKey:"actualTimeStamp")
         UserDefaults.standard.set(dict.value(forKey: "DeviceSessionId"), forKey: "devTimeStamp")

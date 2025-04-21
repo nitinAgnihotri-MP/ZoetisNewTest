@@ -2226,11 +2226,39 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                         self.saveAntibioticDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
                             
                             if status == true {
-                                saveAlternativeAndMycoxtinData()
-                            }
-                        })
+                                self.saveAlternativeDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
+                                    
+                                    if status == true {
+                                        self.saveMyCoxtinDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
+                                            
+                                            if status == true {
+                                                
+                                                UserDefaults.standard.set(false, forKey: "isNewPostingId")
+                                                UserDefaults.standard.synchronize()
+                                                
+                                            }})
+                                    }})
+                            }})
                     }})
             }})
+        
+//        self.saveFeedProgrameInDatabase(feedId: feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
+//            
+//            ////print("Feed")
+//            
+//            if status == true {
+//                
+//                self.saveCoccoiControlDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
+//                    
+//                    if status == true {
+//                        self.saveAntibioticDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
+//                            
+//                            if status == true {
+//                                saveAlternativeAndMycoxtinData()
+//                            }
+//                        })
+//                    }})
+//            }})
     }
     
     fileprivate func callSyncApiMethd() {
@@ -3047,66 +3075,69 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         } else {
             
             let cell:UITableViewCell = tableView.cellForRow(at: indexPath as IndexPath)!
-           
-            handleBtnTagValidations(indexPath)
             
-            let doseName = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
+            
+            if btnTag == 0 {
+                // Not sure this will work will check when we get the issue
+                switch Allbuttonbg {
+                case 0:
+                    coccidsisStartrDrinking.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    firstMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+                    
+                case 1:
+                    coccidsisGrowerDrinking.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    secoundMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
 
-            switch btnTag {
-            case 101:
-                starterDosageTextField.text = doseName
-            case 102:
-                growerDosageCoccidiosisTEXT.text = doseName
-            case 103:
-                finisherDosageTxtField.text = doseName
-            case 104:
-                wdDosageTextField.text = doseName
-            case 105:
-                feed5textField.text = doseName
-            case 106:
-                feed6TextField.text = doseName
-            case 111:
-                alternativeDosageFirstText.text = doseName
-            case 112:
-                alternativeDosageSecoondText.text = doseName
-            case 113:
-                alternativeDosageThirdText.text = doseName
-            case 114:
-                alternativeDosageFourText.text = doseName
-            case 115:
-                altrNativeDosage5Text.text = doseName
-            case 116:
-                altrNativeDosage6Text.text = doseName
-            case 121:
-                myCoxtinStarterDosage.text = doseName
-            case 122:
-                myCoxtinGrowerDosage.text = doseName
-            case 123:
-                myCoxtinFinisherDosge.text = doseName
-            case 124:
-                myCoxtinWDDosage.text = doseName
-            case 125:
-                myCoxtin5DosageTextField.text = doseName
-            case 126:
-                myCoxtin6DosageTextField.text = doseName
-            case 131:
-                antiDosageFirstTextField.text = doseName
-            case 132:
-                antiDosageSecondTextField.text = doseName
-            case 133:
-                antiDosageThirdTextField.text = doseName
-            case 134:
-                antiDosageFourTextField.text = doseName
-            case 135:
-                antiDosageFivthTextField.text = doseName
-            case 136:
-                antiDosageSixTextField.text = doseName
-            default:
-                break
+                case 2:
+                    cocciFinisherDrinkingWater.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    thirdMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+
+                case 3:
+                    coccidiosisWdDrinking.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    fourthMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+
+                case 40:
+                    fivthMoleculelBL.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    fifthMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+
+                case 50:
+                    sixthMoleculeLbl.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
+                    sixthMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
+                    isClickOnAnyField = true
+
+                default:
+                    break
+                }
             }
+            
+           
+            else if btnTag == 4 {
+                
+                coccidiosisVaccineDrinkin.text = (cocodiceVacine.value(forKey:"cocoiiVacname") as AnyObject).object(at:indexPath.row) as? String
+                CocoiVacId = ((cocodiceVacine.value(forKey:"cocvaccId") as AnyObject).object(at:indexPath.row) as? NSNumber)!
+                buttonCocotarget()
+                isClickOnAnyField = true
+            }
+            else if btnTag == 5 {
+               
+                buttonCocotarget()
+                
+                isClickOnAnyField = true
+            }
+            
+            if (101...136).contains(btnTag) {
+                let doseName = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String ?? ""
+                SetDossage(doseName: doseName)
+            }
+            
+          //  SetDossage(doseName: (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String ?? "")
 
-            isClickOnAnyField = true
-            /*
+        /*
             else if btnTag == 101 {
                 
                 starterDosageTextField.text = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
@@ -3245,47 +3276,69 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 isClickOnAnyField = true
                 
             }
-            */
-            if btnTag == 0 {
-                // Not sure this will work will check when we get the issue
-                switch Allbuttonbg {
-                case 0:
-                    coccidsisStartrDrinking.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
-                    firstMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-                    
-                case 1:
-                    coccidsisGrowerDrinking.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
-                    secoundMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-
-                case 2:
-                    cocciFinisherDrinkingWater.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
-                    thirdMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-
-                case 3:
-                    coccidiosisWdDrinking.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
-                    fourthMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-
-                case 40:
-                    fivthMoleculelBL.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
-                    fifthMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-
-                case 50:
-                    sixthMoleculeLbl.text = (cocciControlArrayfromServer.value(forKey: "desc") as AnyObject).object(at: indexPath.row) as? String
-                    sixthMolID = (cocciControlArrayfromServer.value(forKey: "moleculeId") as AnyObject).object(at: indexPath.row) as? Int ?? 0
-                    isClickOnAnyField = true
-
-                default:
-                    break
-                }
-            }
+         */
             
         }
         buttonPressed1()
+    }
+    
+    
+    func SetDossage (doseName:String)
+    {
+        switch btnTag {
+        case 101:
+            starterDosageTextField.text = doseName
+        case 102:
+            growerDosageCoccidiosisTEXT.text = doseName
+        case 103:
+            finisherDosageTxtField.text = doseName
+        case 104:
+            wdDosageTextField.text = doseName
+        case 105:
+            feed5textField.text = doseName
+        case 106:
+            feed6TextField.text = doseName
+        case 111:
+            alternativeDosageFirstText.text = doseName
+        case 112:
+            alternativeDosageSecoondText.text = doseName
+        case 113:
+            alternativeDosageThirdText.text = doseName
+        case 114:
+            alternativeDosageFourText.text = doseName
+        case 115:
+            altrNativeDosage5Text.text = doseName
+        case 116:
+            altrNativeDosage6Text.text = doseName
+        case 121:
+            myCoxtinStarterDosage.text = doseName
+        case 122:
+            myCoxtinGrowerDosage.text = doseName
+        case 123:
+            myCoxtinFinisherDosge.text = doseName
+        case 124:
+            myCoxtinWDDosage.text = doseName
+        case 125:
+            myCoxtin5DosageTextField.text = doseName
+        case 126:
+            myCoxtin6DosageTextField.text = doseName
+        case 131:
+            antiDosageFirstTextField.text = doseName
+        case 132:
+            antiDosageSecondTextField.text = doseName
+        case 133:
+            antiDosageThirdTextField.text = doseName
+        case 134:
+            antiDosageFourTextField.text = doseName
+        case 135:
+            antiDosageFivthTextField.text = doseName
+        case 136:
+            antiDosageSixTextField.text = doseName
+        default:
+            break
+        }
+
+        isClickOnAnyField = true
     }
     
     // MARK: - TEXTFIELD DELEGATES

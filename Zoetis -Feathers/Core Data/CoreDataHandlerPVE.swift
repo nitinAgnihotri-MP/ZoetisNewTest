@@ -163,9 +163,6 @@ class CoreDataHandlerPVE: NSObject {
     
     
     func saveBlankPdfInDB(fileName: String, pdfPathStr: String , pdfCompletePathStr: String ) {
-        
-        
-        
 
         let entity = NSEntityDescription.entity(forEntityName: "PVE_PdfDetails", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)

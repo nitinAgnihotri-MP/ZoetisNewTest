@@ -1280,8 +1280,9 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         }
 
         guard let arr = JSON(json).array, !arr.isEmpty else {
-            print(Constants.noDataReceivedStr)
-            self.showToastWithTimer(message: Constants.noDataRecieved, duration: 3.0)
+           
+            self.dismissGlobalHUD(self.view ?? UIView())
+            self.showToastWithTimer(message: "Failed to get complex's list", duration: 3.0)
             return
         }
 
@@ -1714,7 +1715,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         }
 
         guard let arr = JSON(json).array, !arr.isEmpty else {
-            print("No data received for Sales Representatives.")
+            showToastWithTimer(message: "No data received for Sales Representatives.", duration: 3.0)
+           
             callAddVaccination()
             return
         }
@@ -1904,6 +1906,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     
     
     func allSessionArrChicken() ->NSMutableArray{
+        
         
         let postingArrWithAllData = CoreDataHandler().fetchAllPostingSessionWithisSyncisTrue(true).mutableCopy() as! NSMutableArray
         let cNecArr = CoreDataHandler().FetchNecropsystep1WithisSync(true)

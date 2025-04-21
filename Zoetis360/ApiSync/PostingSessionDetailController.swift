@@ -1331,6 +1331,12 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 self.getPostingDataFromServerforVaccination()
             }
         }
+        else
+        {
+            Helper.dismissGlobalHUD(self.view)
+            self.showAlert(title: Constants.alertStr, message: "Unable to get updated data from server.", owner: self)
+           
+        }
     }
     
     func pullFromWeb() {

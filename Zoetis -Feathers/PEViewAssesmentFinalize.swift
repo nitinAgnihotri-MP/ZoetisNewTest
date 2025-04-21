@@ -47,9 +47,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     var categoarylabelText : String = ""
     var textValue  : Int?
     var tempArr : [JSONDictionary]  = []
-    let refrigStr = "Refrigerator\n/Freezer\n/Liquid Nitrogen"
-    let syncToWebStr = "Sync to Web"
-    let peCommentStr = "PECommentSelected.png"
+    
     @IBOutlet weak var constraintConstantHeight: NSLayoutConstraint!
     @IBOutlet weak var buttonFinishAssessment: PESubmitButton!
     @IBOutlet weak var buttonSaveAsDraft: PESubmitButton!
@@ -142,139 +140,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     }
     
     @IBAction func btnAction(_ sender: Any) {
-        print(appDelegateObj.testFuntion())
-    }
-    
-    fileprivate func setInovjectData(_ cat: PENewAssessment) {
-        if cat.inovoject.count > 0 {
-            var idArr : [Int] = []
-            for obj in  cat.inovoject {
-                let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                if idArr.contains(data!.id ?? 0){
-                }else{
-                    idArr.append(data!.id ?? 0)
-                    inovojectData.append(data!)
-                }
-            }
-        }
-    }
-    
-    fileprivate func setDayOfAgeSubData(_ cat: PENewAssessment) {
-        if cat.doaS.count > 0 {
-            var idArr : [Int] = []
-            for obj in  cat.doaS {
-                let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                if data != nil {
-                    if idArr.contains(data!.id ?? 0){
-                    }else{
-                        idArr.append(data!.id ?? 0)
-                        dayOfAgeSData.append(data!)
-                    }
-                }
-            }
-        }
-    }
-    
-    fileprivate func dayOfAgeData(_ cat: PENewAssessment) {
-        if cat.doa.count > 0 {
-            var idArr : [Int] = []
-            for obj in  cat.doa {
-                let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                if data != nil {
-                    if idArr.contains(data!.id ?? 0){
-                    }else{
-                        idArr.append(data!.id ?? 0)
-                        dayOfAgeData.append(data!)
-                    }
-                }
-            }
-        }
-    }
-    
-    fileprivate func setRefrigeratorData(_ carColIdArray: inout [Int], _ cat: PENewAssessment) {
-        if !carColIdArray.contains(cat.sequenceNo ?? 0){
-            carColIdArray.append(cat.sequenceNo ?? 0)
-            if(cat.catName == "Refrigerator"){
-                cat.catName = refrigStr // "Sanitation and Embrex Evaluation"
-                
-            }
-            catArrayForCollectionIs.append(cat)
-            
-        }
-    }
-    
-    fileprivate func setLastCategoryName() {
-        if showExtendedPE {
-            let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-            
-            if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
-                catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
-            }
-            
-            let catObjectPE = PENewAssessment()
-            catObjectPE.catName = appDelegateObj.extendedMicrobialStr // "Sanitation and Embrex Evaluation"
-            catObjectPE.sequenceNo = 12
-            catObjectPE.sequenceNoo = 12
-            catArrayForCollectionIs.append(catObjectPE)
-            
-            let plateInfoCell = UINib(nibName: "PlateInfoCell", bundle: nil)
-            tableview.register(UINib(nibName: "PlateInfoCell", bundle: nil), forCellReuseIdentifier: "PlateInfoCell")
-            
-            let nibPlateInfoHeader = UINib(nibName: "PlateInfoHeader", bundle: nil)
-            tableview.register(nibPlateInfoHeader, forHeaderFooterViewReuseIdentifier: "PlateInfoHeader")
-            
-            
-        }
-        else{
-            if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
-                catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
-            }
-        }
-    }
-    
-    fileprivate func setVaccineMixtureData(_ cat: PENewAssessment) {
-        if cat.vMixer.count > 0 {
-            var idArr : [Int] = []
-            for obj in  cat.vMixer {
-                let data = CoreDataHandlerPE().getCertificateData(doaId: obj)
-                if idArr.contains(data!.id ?? 0){
-                }else{
-                    idArr.append(data!.id ?? 0)
-                    certificateData.append(data!)
-                }
-            }
-        }
-    }
-    
-    fileprivate func extractedFunc() {
-        if isFromEditMicro{
-            bckButton.isHidden = true
-            
-        }
-        else {
-            bckButton.isHidden = false
-            
-        }
         
-        if(regionID == 3){
-            lblNA.isHidden = true
-            btnNA.isHidden = true
-        }else{
-            lblNA.isHidden = false
-            btnNA.isHidden = false
-            showHideNA(sequenceNoo: self.selectedCategory?.sequenceNoo ?? 0, catName: self.selectedCategory?.catName ?? "")
-        }
-    }
-    
-    fileprivate func handleCertificateDataAndSorting() {
-        if certificateData.count > 0 {
-            self.certificateData =  self.certificateData.sorted(by: {
-                let id1 = $0.id as? Int ?? 0
-                let id2 = $1.id as? Int ?? 0
-                return id1 < id2
-            })
-            
-        }
     }
     
     override func viewDidLoad() {
@@ -306,26 +172,87 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         var row = 0
         
         for cat in peNewAssessmentArray1 {
-            setRefrigeratorData(&carColIdArray, cat)
+            if !carColIdArray.contains(cat.sequenceNo ?? 0){
+                carColIdArray.append(cat.sequenceNo ?? 0)
+                if(cat.catName == "Refrigerator"){
+                    cat.catName = "Refrigerator\n/Freezer\n/Liquid Nitrogen" // "Sanitation and Embrex Evaluation"
+                    
+                }
+                catArrayForCollectionIs.append(cat)
+                
+            }
         }
         
-        for cat in catArrayForCollectionIs {
-            dayOfAgeData(cat)
+        for cat in catArrayForCollectionIs{
+            if cat.doa.count > 0 {
+                var idArr : [Int] = []
+                for obj in  cat.doa {
+                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
+                    if data != nil {
+                        if idArr.contains(data!.id ?? 0){
+                        }else{
+                            idArr.append(data!.id ?? 0)
+                            dayOfAgeData.append(data!)
+                        }
+                    }
+                }
+            }
         }
         
-        for cat in catArrayForCollectionIs {
-            setDayOfAgeSubData(cat)
+        for cat in catArrayForCollectionIs{
+            if cat.doaS.count > 0 {
+                var idArr : [Int] = []
+                for obj in  cat.doaS {
+                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
+                    if data != nil {
+                        if idArr.contains(data!.id ?? 0){
+                        }else{
+                            idArr.append(data!.id ?? 0)
+                            dayOfAgeSData.append(data!)
+                        }
+                    }
+                }
+            }
         }
         
-        for cat in catArrayForCollectionIs {
-            setInovjectData(cat)
+        for cat in catArrayForCollectionIs{
+            if cat.inovoject.count > 0 {
+                var idArr : [Int] = []
+                for obj in  cat.inovoject {
+                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
+                    if idArr.contains(data!.id ?? 0){
+                    }else{
+                        idArr.append(data!.id ?? 0)
+                        inovojectData.append(data!)
+                    }
+                }
+            }
         }
         
-        for cat in catArrayForCollectionIs {
-            setVaccineMixtureData(cat)
+        
+        for cat in catArrayForCollectionIs{
+            if cat.vMixer.count > 0 {
+                var idArr : [Int] = []
+                for obj in  cat.vMixer {
+                    let data = CoreDataHandlerPE().getCertificateData(doaId: obj)
+                    if idArr.contains(data!.id ?? 0){
+                    }else{
+                        idArr.append(data!.id ?? 0)
+                        certificateData.append(data!)
+                    }
+                }
+            }
         }
         
-        handleCertificateDataAndSorting()
+        if certificateData.count > 0 {
+            self.certificateData =  self.certificateData.sorted(by: {
+                let id1 = $0.id as? Int ?? 0
+                let id2 = $1.id as? Int ?? 0
+                return id1 < id2
+            })
+            
+        }
+        
         
         for cat in catArrayForCollectionIs {
             if cat.catISSelected == 1 {
@@ -372,7 +299,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
                 
             }
             else {
-                synWebBtn.setTitle(syncToWebStr, for: .normal)
+                synWebBtn.setTitle("Sync to Web", for: .normal)
                 self.synWebBtn.isEnabled = true
                 self.synWebBtn.alpha = 1.0
             }
@@ -390,8 +317,22 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         assessmentDateText.text =  catArrayForCollectionIs.first?.evaluationDate
         chechForLastCategory()
         setupUI()
-
+        
+        //        let dateFormatter2 = DateFormatter()
+        //        if regionID == 3
+        //        {
+        //        }
+        //
+        //        dateFormatter2.dateFormat="MM/dd/yyyy"
+        //        dateFormatter2.calendar = Calendar(identifier: .gregorian)
+        //        dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
+        //        sig_Date.text = dateFormatter2.string(from: selectedCategory?.sig_Date) as String
+        
+        
+        
+        
         sig_Date.text = selectedCategory?.sig_Date
+        
         
         fsrSign = selectedCategory?.FSTSignatureImage ?? ""
         sig_Name.text = selectedCategory?.sig_Name
@@ -413,7 +354,32 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         if regionID == 3
         {
             
-            setLastCategoryName()
+            if showExtendedPE {
+                let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
+                
+                if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
+                    catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
+                }
+                
+                let catObjectPE = PENewAssessment()
+                catObjectPE.catName = "Extended Microbial" // "Sanitation and Embrex Evaluation"
+                catObjectPE.sequenceNo = 12
+                catObjectPE.sequenceNoo = 12
+                catArrayForCollectionIs.append(catObjectPE)
+                
+                let plateInfoCell = UINib(nibName: "PlateInfoCell", bundle: nil)
+                tableview.register(UINib(nibName: "PlateInfoCell", bundle: nil), forCellReuseIdentifier: "PlateInfoCell")
+                
+                let nibPlateInfoHeader = UINib(nibName: "PlateInfoHeader", bundle: nil)
+                tableview.register(nibPlateInfoHeader, forHeaderFooterViewReuseIdentifier: "PlateInfoHeader")
+                
+                
+            }
+            else{
+                if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
+                    catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
+                }
+            }
         }
         collectionView.reloadData()
         tableview.reloadData()
@@ -422,7 +388,23 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         NotificationCenter.default.addObserver(self, selector: #selector(refreshScores(_:)), name: NSNotification.Name.init(rawValue: "RefreshExtendedPEScores") , object: nil)
         collectionViewSignature.reloadData()
         synWebBtn.isHidden = false
-        extractedFunc()
+        if isFromEditMicro{
+            bckButton.isHidden = true
+            
+        }
+        else {
+            bckButton.isHidden = false
+            
+        }
+        
+        if(regionID == 3){
+            lblNA.isHidden = true
+            btnNA.isHidden = true
+        }else{
+            lblNA.isHidden = false
+            btnNA.isHidden = false
+            showHideNA(sequenceNoo: self.selectedCategory?.sequenceNoo ?? 0, catName: self.selectedCategory?.catName ?? "")
+        }
         
     }
     
@@ -439,7 +421,6 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         totalScoreLabel.text = "100"
         
         if sanitationIndex > -1{
-            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -515,13 +496,15 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     @IBAction func finalizeButtonClicked(_ sender: Any) {
         
         let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            
+            NSLog("OK Pressed")
             self.saveFinalizedData()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+            _ in
+        }
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -530,14 +513,17 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     }
     // MARK:  Draft Button Action
     @IBAction func draftBtnClicked(_ sender: Any) {
-        let errorMSg = Constants.areYouSureSaveAsmntStr
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default   ) {
+        let errorMSg = "Are you sure you want to save assessment in Draft?"
+        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            
+            NSLog("OK Pressed")
             self.saveDraftData()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+            _ in
+            
+        }
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -545,14 +531,17 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     }
     
     @IBAction func draftButtonClickedInitial(_ sender: Any) {
-        let errorMSg = Constants.areYouSureSaveAsmntStr
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let errorMSg = "Are you sure you want to save assessment in Draft?"
+        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            
+            NSLog("OK Pressed")
             self.saveDraftData()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+            _ in
+            
+        }
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -645,144 +634,104 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    fileprivate func handleDefaultCase() -> Int {
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigStr{
-            return 1
-        } else if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr{
-            return 3
-        } else {
-            return 1
-        }
-    }
-    
-    fileprivate func handleCatArrayForTable() -> Int {
-        var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
-        if assessment?.sequenceNoo == 1  {
-            if checkForTraning(){
-                return 5
-            } else {
-                return 4
-            }
-        } else if assessment?.sequenceNoo == 3 {
-            if regionID != 3{
-                return 1
-            } else {
-                if peNewAssessment.evaluationID == 1{
-                    return 1
-                } else {
-                    return 2
-                }
-            }
-        } else if assessment?.sequenceNoo == 1 {
-            return 5
-        }
-        return handleDefaultCase()
-    }
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         if catArrayForTableIs.count > 0 {
-            return handleCatArrayForTable()
+            var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
+            if assessment?.sequenceNoo == 1  {
+                if checkForTraning(){
+                    return 5
+                } else {
+                    return 4
+                }
+            } else if assessment?.sequenceNoo == 3 {
+                if regionID != 3{
+                    return 1
+                }
+                else
+                {
+                    if peNewAssessment.evaluationID == 1{
+                        return 1
+                    }
+                    else{
+                        return 2
+                    }
+                }
+                
+            }
+            else if assessment?.sequenceNoo == 1 {
+                return 5
+            }
+            if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+                return 1
+            }
+            if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
+                return 3
+            }
+            else {
+                return 1
+            }
         }
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigStr{
+        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
             return 1
-        } else if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr{
+        }
+        if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
             return 3
         }
         
         return 2
     }
     
-    fileprivate func handleCheckForTrainingFailCase(_ section: Int) -> Int {
-        var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
-        if assessment?.sequenceNoo == 3 {
-            if section == 0 {
-                return catArrayForTableIs.count                }
-            if section == 1 {
-                return 1
-            }
-        } else {
-            if section == 1 {
-                return inovojectData.count
-            }
-            if section == 2 {
-                return dayOfAgeData.count
-            }
-            if section == 3 {
-                return dayOfAgeSData.count
-            }
-        }
-        return catArrayForTableIs.count
-    }
-    
-    fileprivate func getNoOfRowsInSection(_ section: Int) -> Int {
-        if section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigStr {
-            return sanitationQuesArr.count
-        }
-        
-        if (selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr){
-            return 2
-        }
-        if section == 1 {
-            return certificateData.count
-        }
-        if section == 2 {
-            return inovojectData.count
-        }
-        if section == 3 {
-            return dayOfAgeData.count
-        }
-        if section == 4 {
-            return dayOfAgeSData.count
-        }
-        return catArrayForTableIs.count
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if checkForTraning(){
-            return getNoOfRowsInSection(section)
+            if section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen" {
+                return sanitationQuesArr.count
+            }
+            
+            if (selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                return 2
+            }
+            if section == 1 {
+                return certificateData.count
+            }
+            if section == 2 {
+                return inovojectData.count
+            }
+            if section == 3 {
+                return dayOfAgeData.count
+            }
+            if section == 4 {
+                return dayOfAgeSData.count
+            }
+            return catArrayForTableIs.count
         } else {
-            return handleCheckForTrainingFailCase(section)
+            var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
+            if assessment?.sequenceNoo == 3 {
+                if section == 0 {
+                    return catArrayForTableIs.count                }
+                if section == 1 {
+                    return 1
+                }
+            } else {
+                if section == 1 {
+                    return inovojectData.count
+                }
+                if section == 2 {
+                    return dayOfAgeData.count
+                }
+                if section == 3 {
+                    return dayOfAgeSData.count
+                }
+            }
+            return catArrayForTableIs.count
         }
         
     }
     
     
-    fileprivate func handleCatNameValidation(_ indexPath: IndexPath, _ assDetail1Height: CGFloat) -> CGFloat? {
-        if(selectedCategory?.catName != refrigStr) {
-            if indexPath.section > 0 {
-                var height:CGFloat = CGFloat()
-                height = 130
-                return height
-            } else {
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
-    
-    fileprivate func handleSeqNo3(_ indexPath: IndexPath, _ assessment: PE_AssessmentInProgress?) -> CGFloat {
-        if (indexPath.section == 0) {
-            if selectedCategory?.sequenceNoo == 3 && assessment?.rollOut == "Y" && assessment?.qSeqNo == 1{
-                var height:CGFloat = CGFloat()
-                height = 120
-                return height
-            } else {
-                var height:CGFloat = CGFloat()
-                height = 70
-                return height
-            }
-        } else {
-            var height:CGFloat = CGFloat()
-            height = 0
-            return height
-        }
-    }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if checkForTraning() {
-            if(selectedCategory?.catName != refrigStr){
+        if checkForTraning(){
+            if(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
                 if indexPath.section == 1 {
                     var height:CGFloat = CGFloat()
                     height = 130
@@ -794,25 +743,50 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
         }
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != refrigStr{
+        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
             var height:CGFloat = CGFloat()
             height = 70
             return height
         }
         let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
         if selectedCategory?.sequenceNoo == 3 {
-            return handleSeqNo3(indexPath, assessment)
+            if (indexPath.section == 0){
+                if selectedCategory?.sequenceNoo == 3 && assessment?.rollOut == "Y" && assessment?.qSeqNo == 1{
+                    var height:CGFloat = CGFloat()
+                    height = 120
+                    return height
+                }
+                else {
+                    var height:CGFloat = CGFloat()
+                    height = 70
+                    return height
+                }
+            }
+            else {
+                var height:CGFloat = CGFloat()
+                height = 0
+                return height
+            }
         }
-        var assDetail1Height:CGFloat = CGFloat()
-        assDetail1Height = self.estimatedHeightOfLabel(text: assessment?.assDetail1 ?? "") + 50
-
-        if selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == refrigStr{
+        
+        if selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
             var height:CGFloat = CGFloat()
             height = 80
             return height
             
         }
-        return handleCatNameValidation(indexPath, assDetail1Height) ?? assDetail1Height
+        if(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+            if indexPath.section > 0 {
+                var height:CGFloat = CGFloat()
+                height = 130
+                return height
+            }
+        }
+        
+        var height:CGFloat = CGFloat()
+        height = self.estimatedHeightOfLabel(text: assessment?.assDetail1 ?? "") + 50
+        return height
+        
     }
     
     func estimatedHeightOfLabel(text: String) -> CGFloat {
@@ -833,7 +807,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if checkForTraning(){
-            if indexPath.section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName == appDelegateObj.extendedMicrobialStr{
+            if indexPath.section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName == "Extended Microbial"{
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PlateInfoCell", for: indexPath) as! PlateInfoCell
                 cell.currentIndex = indexPath.row
                 cell.plateTypeBtn.isUserInteractionEnabled = false
@@ -900,11 +874,11 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     }
                     vc.commentCompleted = {[unowned self] ( note) in
                         if note == "" {
-                            let image = UIImage(named: appDelegateObj.peCommentStr)
+                            let image = UIImage(named: "PEcomment.png")
                             cell.noteBtn.setImage(image, for: .normal)
                             
                         } else {
-                            let image = UIImage(named: peCommentStr)
+                            let image = UIImage(named: "PECommentSelected.png")
                             cell.noteBtn.setImage(image, for: .normal)
                         }
                         
@@ -930,7 +904,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 return cell
             }
             
-            if(selectedCategory?.catName == refrigStr){
+            if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
                 
                 return  setUpRerigatorQuesCell(tableView, cellForRowAt: indexPath)
             }
@@ -1100,8 +1074,8 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 cell.btn_ImageCount.isHidden = false
             }
             
-            let image1 = UIImage(named: appDelegateObj.peCommentStr)
-            let image2 = UIImage(named: peCommentStr)
+            let image1 = UIImage(named: "PEcomment.png")
+            let image2 = UIImage(named: "PECommentSelected.png")
             if assessment?.note == "" || assessment?.note == nil {
                 cell.btn_Comment.setImage(image1, for: .normal)
             } else {
@@ -1248,7 +1222,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         }
                     }
                     
-                    if(selectedCategory?.catName == refrigStr){
+                    if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
                         catArrayForTableIs = CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0,dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
                     }
                     else{
@@ -1496,8 +1470,8 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             } else {
                 cell.btnImageCount.isHidden = false
             }
-            let image1 = UIImage(named: appDelegateObj.peCommentStr)
-            let image2 = UIImage(named: peCommentStr)
+            let image1 = UIImage(named: "PEcomment.png")
+            let image2 = UIImage(named: "PECommentSelected.png")
             if assessment?.note?.count ?? 0 < 1 {
                 cell.noteBtn.setImage(image1, for: .normal)
             } else {
@@ -1549,7 +1523,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 
                 vc.editable = false
                 vc.commentCompleted = {[unowned self] ( note) in
-                    print(appDelegateObj.testFuntion())
+                    
                 }
                 if vc.editable{
                     self.navigationController?.present(vc, animated: false, completion: nil)
@@ -1634,7 +1608,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             return headerView
             
         }
-        if selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == refrigStr{
+        if selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
             let array =   CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0,dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SetFrezzerPointCell" ) as! SetFrezzerPointCell
             headerView.isUserInteractionEnabled = false
@@ -1815,7 +1789,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr){
+        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
             let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
             
             refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
@@ -1936,7 +1910,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         if selectedCategory?.sequenceNoo == 1 {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEInovojectHeaderFooterView" ) as! PEInovojectHeaderFooterView
             headerView.isUserInteractionEnabled = false
-            headerView.lblTitle.text = Constants.inOvoStr
+            headerView.lblTitle.text = "In Ovo"
             headerView.txtCSize.text = peNewAssessment.iCS
             headerView.txtDType.text = peNewAssessment.iDT
             headerView.txtAntiBiotic.text = peNewAssessment.hatcheryAntibioticsText
@@ -2015,7 +1989,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         scrollToBottom(section:section)
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr){
+        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
             if(section == 2) {
                 return 100
             }
@@ -2042,7 +2016,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         return 0.0
     }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == refrigStr){
+        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
             if ((  section == 0) || ( section == 1)) {
                 return 350
             }
@@ -2107,7 +2081,9 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView  == collectionViewSignature {
             return certificateData.count + 1
-        } else {
+        }
+        else {
+            
             return catArrayForCollectionIs.count + 1 ?? 0
         }
     }
@@ -2121,17 +2097,20 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
                 cell.imgSignature.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[indexPath.row].signatureImg)
                 cell.lblSignatureName.text = "Vaccination Mixer Operator Name : \(certificateData[indexPath.row].name ?? "")"
             }
-            if certificateData.count == indexPath.row,
-               certificateData.count > 0 {
-                let data = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].fsrSign)
-                DispatchQueue.main.async() {
-                    cell.imgSignature.contentMode = .scaleAspectFit
-                    cell.imgSignature.image =  data
-                    cell.lblSignatureName.text = "FSR Sign"
+            if certificateData.count == indexPath.row {
+                if certificateData.count > 0 {
+                    let data = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].fsrSign)
+                    DispatchQueue.main.async() {
+                        cell.imgSignature.contentMode = .scaleAspectFit
+                        cell.imgSignature.image =  data
+                        cell.lblSignatureName.text = "FSR Sign"
+                    }
                 }
             }
+            
             return cell
-        } else {
+        }
+        else {
             if indexPath.row == catArrayForCollectionIs.count  {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewIDPE", for: indexPath as IndexPath) as! PECategoryCell
                 // let category = catArrayForCollectionIs[indexPath.row]
@@ -2196,87 +2175,24 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
         }
     }
     
-    fileprivate func handlecellsArr(_ cellsArray: [UICollectionViewCell], _ indexPath: IndexPath) {
-        for cell in cellsArray{
-            if cell as! PECategoryCell == self.collectionView.cellForItem(at: indexPath) as! PECategoryCell{
-                (cell as! PECategoryCell).imageview.image = UIImage(named: "tabSelect") ?? UIImage()
-                
-            }else{
-                (cell as! PECategoryCell).imageview.image = UIImage(named: "tabUnselect") ?? UIImage()
-            }
-        }
-    }
-    
-    fileprivate func handleRefrid() {
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        if regionID != 3 {
-            if(selectedCategory?.catName == refrigStr){
-                showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
-            } else {
-                showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
-            }
-        }
-    }
-    
-    fileprivate func handleBooleans() {
-        categoarylabelText = ""
-        self.tableview.isUserInteractionEnabled = true
-        lblextenderMicro.isHidden = true
-        extendedMicroSwitch.isHidden = true
-        extendedMicroSwitch.isUserInteractionEnabled = false
-        catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-        if(checkCategoryisNA()) {
-            self.btnNA.isSelected = true
-        } else {
-            self.btnNA.isSelected = false
-        }
-    }
-    
-    fileprivate func handleSubmitExtend() {
-        if self.submitExtend == true {
-            self.extendedMicroSwitch.isOn = true
-            self.synWebBtn.isEnabled = true
-            self.synWebBtn.alpha = 1.0
-            UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
-            UserDefaults.standard.set(true, forKey:"ExtendedMicro")
-            
-        } else {
-            self.extendedMicroSwitch.isOn = false
-            self.synWebBtn.isEnabled = false
-            self.synWebBtn.alpha = 0.3
-            UserDefaults.standard.setValue(false, forKey: "extendedAvailable")
-            UserDefaults.standard.set(false, forKey:"ExtendedMicro")
-        }
-    }
-    
-    fileprivate func handleIsEmRequired() {
-        if self.peNewAssessment.IsEMRequested == false {
-            handleSubmitExtend()
-            lblextenderMicro.isHidden = false
-            extendedMicroSwitch.isHidden = false
-            self.synWebBtn.setTitle("Finish Extended Microbial", for: .normal)
-        } else {
-            self.synWebBtn.isEnabled = true
-            self.synWebBtn.alpha = 1.0
-            lblextenderMicro.isHidden = true
-            extendedMicroSwitch.isHidden = true
-            UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
-            UserDefaults.standard.set(true, forKey:"ExtendedMicro")
-            self.synWebBtn.setTitle(syncToWebStr, for: .normal)
-        }
-    }
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         categoarylabelText = ""
         self.synWebBtn.isEnabled = true
         self.synWebBtn.alpha = 1.0
         self.bckButton.isHidden = true
-        self.synWebBtn.setTitle(syncToWebStr, for: .normal)
+        self.synWebBtn.setTitle("Sync to Web", for: .normal)
         self.tableview.isUserInteractionEnabled = true
         let cellsArray = self.collectionView.visibleCells
         if cellsArray.count > 0{
-            handlecellsArr(cellsArray, indexPath)
+            for cell in cellsArray{
+                if cell as! PECategoryCell == self.collectionView.cellForItem(at: indexPath) as! PECategoryCell{
+                    (cell as! PECategoryCell).imageview.image = UIImage(named: "tabSelect") ?? UIImage()
+                    
+                }else{
+                    (cell as! PECategoryCell).imageview.image = UIImage(named: "tabUnselect") ?? UIImage()
+                }
+            }
         }
         
         
@@ -2305,7 +2221,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
             selectedCategory?.catISSelected = 0
             viewForMultiSignature.isHidden = true
             self.updateCategoryInDb(assessment:selectedCategory!)
-            if catArrayForCollectionIs.count > indexPath.row {
+            if catArrayForCollectionIs.count > indexPath.row{
                 let selectedCategoryIS = catArrayForCollectionIs[indexPath.row]
                 collectionviewIndexPath = indexPath
                 selectedCategory = catArrayForCollectionIs[indexPath.row]
@@ -2316,7 +2232,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
                 let totalMark = selectedCategory?.catMaxMark ?? 0
                 totalScoreLabel.text = String(totalMark)
                 resultScoreLabel.text = String(0)
-                if(selectedCategory?.catName == refrigStr) {
+                if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
                     lblextenderMicro.isHidden = true
                     extendedMicroSwitch.isHidden = true
                     extendedMicroSwitch.isUserInteractionEnabled = false
@@ -2324,30 +2240,83 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
                         let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
                         refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
                     }
+                    
                 }
-                
-                if(selectedCategory?.catName == appDelegateObj.extendedMicrobialStr) {
-                    categoarylabelText = appDelegateObj.extendedMicrobialStr
+                if(selectedCategory?.catName == "Extended Microbial"){
+                    categoarylabelText = "Extended Microbial"
                     
                     selectedCategory?.sequenceNoo = 12
                     extendedMicroSwitch.isUserInteractionEnabled = true
-                    handleIsEmRequired()
-                } else {
-                    handleBooleans()
+                    if self.peNewAssessment.IsEMRequested == false {
+                        if self.submitExtend == true {
+                            self.extendedMicroSwitch.isOn = true
+                            self.synWebBtn.isEnabled = true
+                            self.synWebBtn.alpha = 1.0
+                            UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
+                            UserDefaults.standard.set(true, forKey:"ExtendedMicro")
+                            
+                        }
+                        else {
+                            self.extendedMicroSwitch.isOn = false
+                            self.synWebBtn.isEnabled = false
+                            self.synWebBtn.alpha = 0.3
+                            UserDefaults.standard.setValue(false, forKey: "extendedAvailable")
+                            UserDefaults.standard.set(false, forKey:"ExtendedMicro")
+                        }
+                        
+                        lblextenderMicro.isHidden = false
+                        extendedMicroSwitch.isHidden = false
+                        self.synWebBtn.setTitle("Finish Extended Microbial", for: .normal)
+                        
+                        
+                    } else {
+                        self.synWebBtn.isEnabled = true
+                        self.synWebBtn.alpha = 1.0
+                        lblextenderMicro.isHidden = true
+                        extendedMicroSwitch.isHidden = true
+                        UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
+                        UserDefaults.standard.set(true, forKey:"ExtendedMicro")
+                        self.synWebBtn.setTitle("Sync to Web", for: .normal)
+                    }
+                }
+                else{
+                    categoarylabelText = ""
+                    self.tableview.isUserInteractionEnabled = true
+                    lblextenderMicro.isHidden = true
+                    extendedMicroSwitch.isHidden = true
+                    extendedMicroSwitch.isUserInteractionEnabled = false
+                    catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
+                    if(checkCategoryisNA()){
+                        self.btnNA.isSelected = true
+                    }
+                    else{
+                        self.btnNA.isSelected = false
+                    }
                 }
                 tableview.reloadData()
                 updateScore()
-                handleRefrid()
+                
+                let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
+                if regionID != 3
+                {
+                    if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
+                        showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0,catName: selectedCategory?.catName ?? "")
+                    }
+                    else{
+                        //                        showHideNA(sequenceNo:selectedCategory?.sequenceNo ?? 0,catName: selectedCategory?.catName ?? "")
+                        showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
+                    }
+                }
+                
                 refreshTableView()
             }
         }
         synWebBtn.isHidden = false
     }
-    
     // MARK:  Show Hide is NA
     func showHideNA(sequenceNoo:Int,catName:String){
         
-        if( sequenceNoo == 11 && catName == refrigStr ){
+        if( sequenceNoo == 11 && catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen" ){
             lblNA.isHidden = true
             btnNA.isHidden = true
             scoreParentView.isHidden = true
@@ -2376,33 +2345,8 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
     }
     
     func updateCategoriesInShared(){
-        appDelegateObj.testFuntion()
     }
     // MARK:  Check for Last Category
-    fileprivate func manageBckButton(_ count: Int) {
-        if let cat = catArrayForCollectionIs[count] as? PENewAssessment {
-            if cat.sequenceNo == selectedCategory?.sequenceNo {
-                bckButton.isHidden = true
-            } else {
-                bckButton.isHidden = false
-            }
-        } else {
-            bckButton.isHidden = false
-        }
-    }
-    
-    fileprivate func manageBackButton2() {
-        if let cat = catArrayForCollectionIs[0] as? PENewAssessment{
-            if cat.sequenceNo == selectedCategory?.sequenceNo{
-                bckButton.isHidden = false
-            }  else {
-                bckButton.isHidden = true
-            }
-        } else {
-            bckButton.isHidden = true
-        }
-    }
-    
     func chechForLastCategory(){
         var  peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: peNewAssessment.serverAssessmentId ?? "")
         var catArrayForCollectionIsAre : [PENewAssessment] = []
@@ -2417,11 +2361,32 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
         
         let count = catArrayForCollectionIs.count - 1
         if count > 0 {
-            manageBckButton(count)
-            manageBackButton2()
+            if let cat = catArrayForCollectionIs[count] as? PENewAssessment {
+                if cat.sequenceNo == selectedCategory?.sequenceNo {
+                    bckButton.isHidden = true
+                    
+                } else {
+                    bckButton.isHidden = false
+                }
+            }
+            else {
+                bckButton.isHidden = false
+                
+            }
+            
+            if let cat = catArrayForCollectionIs[0] as? PENewAssessment{
+                if cat.sequenceNo == selectedCategory?.sequenceNo{
+                    bckButton.isHidden = false
+                }  else {
+                    bckButton.isHidden = true
+                }
+            } else {
+                bckButton.isHidden = true
+            }
             
             for cat in catArrayForCollectionIsAre {
                 if cat.catResultMark == 0 {
+                    
                     return
                 }
             }
@@ -2459,7 +2424,7 @@ extension PEViewAssesmentFinalize{
 // MARK:  ************** Camera Button Action ***************************************/
 extension PEViewAssesmentFinalize: UIImagePickerControllerDelegate , UINavigationControllerDelegate{
     @objc func takePhoto(_ sender: UIButton) {
-        print(appDelegateObj.testFuntion())
+        
     }
     
     // MARK: ************* Alert View Methods ***********************************/
@@ -2497,12 +2462,15 @@ extension PEViewAssesmentFinalize: UIImagePickerControllerDelegate , UINavigatio
                 }
             }
         }
-        imagePicker.dismiss(animated: true)
+        imagePicker.dismiss(animated: true, completion: {
+        })
     }
     /******************************************************************************************************/
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
-        dismiss(animated: true)
+        dismiss(animated: true, completion: {
+            
+        })
     }
     // MARK:  Save Image in PE Module
     private func saveImageInPEModule(imageData:Data){
@@ -2612,10 +2580,10 @@ extension PEViewAssesmentFinalize{
     // MARK: Change date Fromate
     func convertDateFormat(inputDate: String) -> String {
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
+        olDateFormatter.dateFormat = "MMM d, yyyy"
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+        convertDateFormatter.dateFormat = "yyyy-MM-dd"
         if oldDate != nil{
             return convertDateFormatter.string(from: oldDate!)
         }
@@ -2625,10 +2593,10 @@ extension PEViewAssesmentFinalize{
     // MARK: - Date Formatter
     func convertSign_DateFormat(inputDate: String) -> String {
         let olDateFormatter = DateFormatter()
-        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
+        olDateFormatter.dateFormat = "MMM d, yyyy"
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+        convertDateFormatter.dateFormat = "yyyy-MM-dd"
         
         if oldDate != nil{
             return convertDateFormatter.string(from: oldDate!)
@@ -2664,9 +2632,9 @@ extension PEViewAssesmentFinalize{
     func detectDateFormat(of dateString: String) -> String? {
         // List of common date formats to check
         let dateFormats = [
-            appDelegateObj.yyyyMMddStr,
-            appDelegateObj.ddMMyyyStr,
-            appDelegateObj.MMddyyyStr,
+            "yyyy-MM-dd",
+            "dd/MM/yyyy",
+            "MM/dd/yyyy",
             "dd-MM-yyyy",
             "yyyy/MM/dd",
             "MMMM d, yyyy",
@@ -2840,10 +2808,10 @@ extension PEViewAssesmentFinalize{
         let RepresentativeName = ""
         let Notes = dict.notes
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddYYYYHHmmss
-        // Date().stringFormat(format: appDelegateObj.mmddyyStr
-        let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
-        let datastr = date?.toString(withFormat: appDelegateObj.MMddYYYYHHmmss)
+        dateFormatter.dateFormat = "MM/dd/YYYY HH:mm:ss Z"
+        // Date().stringFormat(format: "MMM d, yyyy"
+        let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
+        let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
         let  sig_Datetext = dict.sig_Date
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
@@ -2863,12 +2831,10 @@ extension PEViewAssesmentFinalize{
         var base64Str = ""
         var base64Str2 = ""
         if sigNumber == 0 {
-            print(appDelegateObj.testFuntion())
         } else {
             base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig) ?? 0)
         }
         if sigNumber2 == 0 {
-            print(appDelegateObj.testFuntion())
         } else {
             base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
         }
@@ -2906,10 +2872,9 @@ extension PEViewAssesmentFinalize{
         
         var json : JSONDictionary = JSONDictionary()
         if dateSig != ""{
-            print(appDelegateObj.testFuntion())
         }else{
             let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+            convertDateFormatter.dateFormat = "yyyy-MM-dd"
             convertDateFormatter.timeZone = Calendar.current.timeZone
             convertDateFormatter.locale = Calendar.current.locale
         }
@@ -2923,40 +2888,40 @@ extension PEViewAssesmentFinalize{
         if regionId == 3 {
             
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            inputFormatter.dateFormat = "MM/dd/yyyy"
             
             // Convert the string to a Date object
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
                 
                 // Create another DateFormatter for the desired output format
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                outputFormatter.dateFormat = "yyyy-MM-dd"
                 
                 let formattedDateString = outputFormatter.string(from: date)
                 evalDateStr = formattedDateString
             } else {
-                print(appDelegateObj.invalidDateStr)
+                print("Invalid date format")
             }
         }
         else
         {
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            inputFormatter.dateFormat = "dd/MM/yyyy"
             
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
                 
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                outputFormatter.dateFormat = "yyyy-MM-dd"
                 
                 let formattedDateString = outputFormatter.string(from: date)
                 evalDateStr = formattedDateString
             } else {
-                print(appDelegateObj.invalidDateStr)
+                print("Invalid date format")
             }
         }
         
         //        let evalDateObj = dateFormatterObj.date(from: evaluationDate ?? "")
-        //        dateFormatterObj.dateFormat = appDelegateObj.yyyyMMddStr
+        //        dateFormatterObj.dateFormat = "yyyy-MM-dd"
         //        let evalDateStr = dateFormatterObj.string(from: evalDateObj ?? Date())
         
         let inovoFluid : Bool
@@ -3084,12 +3049,6 @@ extension PEViewAssesmentFinalize{
         
     }
     // MARK: Create Sync request for Inovoject Data
-    fileprivate func         manageHatcheryAntibiotics(_ HatcheryAntibiotics: Bool, _ AntibioticInformation: inout String, _ inovojectData: InovojectData) {
-        if HatcheryAntibiotics {
-            AntibioticInformation =  inovojectData.invoHatchAntibioticText ?? ""
-        }
-    }
-    
     func createSyncRequestForInvoject(dictArray: PENewAssessment,inovojectData :InovojectData) -> JSONDictionary{
         
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
@@ -3112,10 +3071,11 @@ extension PEViewAssesmentFinalize{
         if let id = dictArray.serverAssessmentId{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
-        score = dictArray.assMinScore ?? 0
-
-        if dictArray.assStatus == 1 {
+        
+        if  dictArray.assStatus == 1 {
             score = dictArray.assMaxScore ?? 0
+        } else {
+            score = dictArray.assMinScore ?? 0
         }
         var DisplayId = dictArray.evaluationDate
         DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
@@ -3159,11 +3119,11 @@ extension PEViewAssesmentFinalize{
         vNameDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
         vNameArray = vNameDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
         vNameIDArray = vNameDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        VaccineId = 0
-
         if vNameArray.contains(inovojectData.vaccineMan){
             let indexOfe = vNameArray.index(of: inovojectData.vaccineMan) // 3
             VaccineId = vNameIDArray[indexOfe] as? Int ?? 0
+        } else {
+            VaccineId = 0
         }
         
         var vNameDetailsArrayIS = NSArray()
@@ -3179,7 +3139,7 @@ extension PEViewAssesmentFinalize{
             let indexOfe = vNameArrayIS.index(of: inovojectData.name) // 3
             VaccineId = vNameIDArrayIS[indexOfe] as? Int ?? 0
             ManufacturerId = vNameMfgIdArrayIS[indexOfe] as? Int ?? 0
-        } else if (inovojectData.name != "") {
+        } else if (inovojectData.name != ""){
             otherVaccine = inovojectData.name ?? ""
         }
         var y = 2
@@ -3200,7 +3160,9 @@ extension PEViewAssesmentFinalize{
         
         let ampulePerBag = Int(inovojectData.ampulePerBag ?? "0")
         var AntibioticInformation  =  ""
-        manageHatcheryAntibiotics(HatcheryAntibiotics, &AntibioticInformation, inovojectData)
+        if HatcheryAntibiotics {
+            AntibioticInformation =  inovojectData.invoHatchAntibioticText ?? ""
+        }
         var json = [
             "VaccineId":  VaccineId == 0 ? "" : VaccineId,
             "AmpulePerbag":ampulePerBag == 0 ? "" : ampulePerBag,
@@ -3518,9 +3480,9 @@ extension PEViewAssesmentFinalize{
         var resultString = String()
         if(regionID != 3){
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = "dd/MM/yyyy"
             let date = dateFormatter.date(from: peCertificateData.certificateDate ?? "")
-            dateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+            dateFormatter.dateFormat = "yyyy-MM-dd"
             if date != nil {
                 resultString = dateFormatter.string(from: date ?? Date())
                 
@@ -3542,7 +3504,7 @@ extension PEViewAssesmentFinalize{
                 "Name": peCertificateData.name,
                 "CertificationDate": resultString,
                 "AlternateName": "string",
-                "CertificationDate2": appDelegateObj.date2020_05_23,
+                "CertificationDate2": "2020-05-23T06:36:50.915Z",
                 "ModuleAssessmentCatId":  dictArray.catID,
                 "userId": dictArray.userID,
                 "DeviceId": deviceIDFORSERVER,
@@ -3570,7 +3532,7 @@ extension PEViewAssesmentFinalize{
                 "Name": peCertificateData.name,
                 "CertificationDate": resultString,
                 "AlternateName": "string",
-                "CertificationDate2": appDelegateObj.date2020_05_23,
+                "CertificationDate2": "2020-05-23T06:36:50.915Z",
                 "ModuleAssessmentCatId":  dictArray.catID,
                 "userId": dictArray.userID,
                 "DeviceId": deviceIDFORSERVER,
@@ -3700,7 +3662,7 @@ extension PEViewAssesmentFinalize{
             "Name": "",
             "CertificationDate": "",
             "AlternateName": "string",
-            "CertificationDate2": appDelegateObj.date2020_05_23,
+            "CertificationDate2": "2020-05-23T06:36:50.915Z",
             "ModuleAssessmentCatId":  dictArray.catID,
             "userId": dictArray.userID,
             "DeviceId": deviceIDFORSERVER,
@@ -3737,71 +3699,8 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Sync Functionality
-    fileprivate func syncDataForDayOfAgeSub() {
-        var idArr : [Int] = []
-        for objn in  peNewAssessment.doaS {
-            let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-            if data != nil {
-                if idArr.contains(data!.id ?? 0){
-                }else{
-                    idArr.append(data!.id ?? 0)
-                    if data != nil{
-                        dayOfAgeSData.append(data!)
-                    }
-                }
-            }
-        }
-    }
-    
-    fileprivate func syncDataForInovoject() {
-        var idArr : [Int] = []
-        for objn in  peNewAssessment.inovoject {
-            let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-            if data != nil {
-                if idArr.contains(data!.id ?? 0){
-                }else{
-                    idArr.append(data!.id ?? 0)
-                    if data != nil{
-                        inovojectData.append(data!)
-                    }
-                }
-            }
-        }
-    }
-    
-    fileprivate func syncDataForVaxineMixture() {
-        var idArr : [Int] = []
-        for objn in  peNewAssessment.vMixer {
-            let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
-            if idArr.contains(data!.id ?? 0){
-            }else{
-                idArr.append(data!.id ?? 0)
-                if data != nil{
-                    certificateData.append(data!)
-                }
-            }
-        }
-    }
-    
-    fileprivate func dayOfAgeSyncData() {
-        var idArr : [Int] = []
-        for objn in  peNewAssessment.doa {
-            let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-            if data != nil {
-                if idArr.contains(data!.id ?? 0){
-                    //   // // print("already there",idArr)
-                }else{
-                    idArr.append(data!.id ?? 0)
-                    if data != nil{
-                        dayOfAgeData.append(data!)
-                    }
-                }
-            }
-        }
-    }
-    
     func syncBtnTapped(showHud: Bool){
-        if self.submitExtend == true && self.categoarylabelText != appDelegateObj.extendedMicrobialStr {
+        if self.submitExtend == true && self.categoarylabelText != "Extended Microbial" {
             let alert = UIAlertController(title: "Alert!", message: "Please finish Extended Microbial first or turn off the switch in order to sync the other data",
                                           preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default, handler: nil))
@@ -3855,22 +3754,70 @@ extension PEViewAssesmentFinalize{
             
             dayOfAgeSData.removeAll()
             if peNewAssessment.doaS.count > 0 {
-                syncDataForDayOfAgeSub()
+                var idArr : [Int] = []
+                for objn in  peNewAssessment.doaS {
+                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
+                    if data != nil {
+                        if idArr.contains(data!.id ?? 0){
+                        }else{
+                            idArr.append(data!.id ?? 0)
+                            if data != nil{
+                                dayOfAgeSData.append(data!)
+                            }
+                        }
+                    }
+                }
             }
             
             dayOfAgeData.removeAll()
             if peNewAssessment.doa.count > 0 {
-                dayOfAgeSyncData()
+                var idArr : [Int] = []
+                for objn in  peNewAssessment.doa {
+                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
+                    if data != nil {
+                        if idArr.contains(data!.id ?? 0){
+                            //   // // print("already there",idArr)
+                        }else{
+                            idArr.append(data!.id ?? 0)
+                            if data != nil{
+                                dayOfAgeData.append(data!)
+                            }
+                        }
+                    }
+                }
             }
             inovojectData.removeAll()
             if peNewAssessment.inovoject.count > 0 {
-                syncDataForInovoject()
+                var idArr : [Int] = []
+                for objn in  peNewAssessment.inovoject {
+                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
+                    if data != nil {
+                        if idArr.contains(data!.id ?? 0){
+                        }else{
+                            idArr.append(data!.id ?? 0)
+                            if data != nil{
+                                inovojectData.append(data!)
+                            }
+                        }
+                    }
+                }
             }
             certificateData.removeAll()
             if peNewAssessment.vMixer.count > 0 {
-                syncDataForVaxineMixture()
+                var idArr : [Int] = []
+                for objn in  peNewAssessment.vMixer {
+                    let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
+                    if idArr.contains(data!.id ?? 0){
+                    }else{
+                        idArr.append(data!.id ?? 0)
+                        if data != nil{
+                            certificateData.append(data!)
+                            
+                        }
+                    }
+                }
             }
-            tempArr.removeAll()
+            
             let json = createSyncRequest(dict: peNewAssessment, certificationData: certificateData)
             tempArr.append(json)
             
@@ -3936,7 +3883,7 @@ extension PEViewAssesmentFinalize{
                 if error != nil {
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                 }
-                guard let self = self, error == nil else { return }
+                guard let `self` = self, error == nil else { return }
                 
                 if json["StatusCode"]  == 200{
                     
@@ -3951,13 +3898,6 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: ------------ Extended Micro Create Sync Request --------------
-    fileprivate func configureDict(_ dict: PENewAssessment) {
-        //  print("draft id id",dict.assDetail2 )
-        if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
-            deviceIDFORSERVER = dict.assDetail2 ?? ""
-        }
-    }
-    
     func createSyncRequestForExtendedMicro(dict: PENewAssessment ,certificationData : [PECertificateData]) -> JSONDictionary{
         
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
@@ -3971,7 +3911,7 @@ extension PEViewAssesmentFinalize{
         let jsonEncoder = JSONEncoder()
         let jsonDataArr = try? jsonEncoder.encode(arr)
         if jsonDataArr != nil{
-            extendedData = try? JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
+            extendedData = try! JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
         }
         
         
@@ -3989,7 +3929,10 @@ extension PEViewAssesmentFinalize{
         deviceIDFORSERVER = deviceIdForServer
         
         if AssessmentId == 0 {
-            configureDict(dict)
+            //  print("draft id id",dict.assDetail2 )
+            if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
+                deviceIDFORSERVER = dict.assDetail2 ?? ""
+            }
             AssessmentId = dict.draftNumber ?? 0
             Draft = 1
             Complete = 0
@@ -4022,10 +3965,10 @@ extension PEViewAssesmentFinalize{
         let dateFormatter = DateFormatter()
         
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
-        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat="MM/dd/YYYY"
         
-        let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
-        let datastr = date?.toString(withFormat: appDelegateObj.MMddYYYYHHmmss)
+        let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
+        let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
         
         
         let  sig_Datetext = dict.sig_Date
@@ -4042,42 +3985,49 @@ extension PEViewAssesmentFinalize{
         // dict.evaluationDate = dateSig
         
         var json : JSONDictionary = JSONDictionary()
-        let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
-        convertDateFormatter.timeZone = Calendar.current.timeZone
-        convertDateFormatter.locale = Calendar.current.locale
-
         if dateSig != ""{
             dict.evaluationDate = dateSig
+        }else {
+            let convertDateFormatter = DateFormatter()
+            convertDateFormatter.dateFormat = "yyyy-MM-dd"
+            convertDateFormatter.timeZone = Calendar.current.timeZone
+            convertDateFormatter.locale = Calendar.current.locale
         }
         let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
         let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
         if regionId == 3 {
+            
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            inputFormatter.dateFormat = "MM/dd/yyyy"
             
             // Convert the string to a Date object
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
                 
                 // Create another DateFormatter for the desired output format
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                outputFormatter.dateFormat = "yyyy-MM-dd"
                 
                 // Convert the Date object back to a string
                 let formattedDateString = outputFormatter.string(from: date)
                 dict.evaluationDate = evaluationDate
+            } else {
+                print("Invalid date format")
             }
-        } else {
+        }
+        else
+        {
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            inputFormatter.dateFormat = "dd/MM/yyyy"
             
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
                 
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                outputFormatter.dateFormat = "yyyy-MM-dd"
                 
                 let formattedDateString = outputFormatter.string(from: date)
                 dict.evaluationDate = evaluationDate
+            } else {
+                print("Invalid date format")
             }
         }
         
@@ -4087,15 +4037,17 @@ extension PEViewAssesmentFinalize{
         let appVersion = "\(Bundle.main.versionNumber)"
         
         var saveType = 0
-        
-        self.peNewAssessment.IsEMRequested = false
-        CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: false)
-        saveType = 0
-
-        if self.extendedMicroSwitch.isOn {
+        if self.extendedMicroSwitch.isOn
+        {
             saveType = 1
             self.peNewAssessment.IsEMRequested = true
             CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: true)
+        }
+        else
+        {
+            self.peNewAssessment.IsEMRequested = false
+            CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: false)
+            saveType = 0
         }
         
         tempArr.removeAll()
@@ -4118,14 +4070,6 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: ------------ Call Extended Micro Sync API --------------
-    fileprivate func navigateBack() {
-        for controller in self.navigationController!.viewControllers as Array {
-            if controller.isKind(of: PEDashboardViewController.self) {
-                self.navigationController!.popToViewController(controller, animated: true)
-            }
-        }
-    }
-    
     func callExtendedMicro(param:JSONDictionary){
         
         ZoetisWebServices.shared.sendExtendedMicroToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
@@ -4133,7 +4077,7 @@ extension PEViewAssesmentFinalize{
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
             
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 
                 self.dismissGlobalHUD(self.view)
@@ -4143,7 +4087,11 @@ extension PEViewAssesmentFinalize{
                     let alertController = UIAlertController(title: "Success!", message: errorMSg, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
                         _ in
-                        self.navigateBack()
+                        for controller in self.navigationController!.viewControllers as Array {
+                            if controller.isKind(of: PEDashboardViewController.self) {
+                                self.navigationController!.popToViewController(controller, animated: true)
+                            }
+                        }
                     }
                     alertController.addAction(okAction)
                     self.present(alertController, animated: true, completion: nil)
@@ -4160,43 +4108,25 @@ extension PEViewAssesmentFinalize{
     @IBAction func syncBtnAction(_ sender: Any) {
         if ConnectionManager.shared.hasConnectivity(){
             let errorMSg = "Are you sure, you want to sync the data?"
-            let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
                 self.syncBtnTapped(showHud: true)
                 // As per discussion with Imran and binu we have commented this code so that client can submit their assessment irsepective of their Assessment Approved or not.
               //  self.getAssessmentStatusCheck(assessmentId: self.peNewAssessment.serverAssessmentId ?? "")
             }
-            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) 
+            let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+                _ in
+            }
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }else{
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to sync data.", comment: ""))
         }
     }
     
     // MARK: Post request for Score
-    fileprivate func populateParams(_ dictArray: PENewAssessment, _ QCCount: inout String, _ TextAmPm: inout String, _ PPMValue: inout String, _ PersonName: inout String, _ FrequencyValue: inout Int) {
-        if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12 {
-            QCCount =  dictArray.qcCount ?? ""
-        } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous" {
-            TextAmPm =  dictArray.ampmValue ?? ""
-        } else if  dictArray.rollOut == "Y" && dictArray.sequenceNoo == 5  && dictArray.qSeqNo == 5 {
-            PPMValue =  dictArray.ppmValue ?? ""
-        } else if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 1 {
-            PersonName =  dictArray.personName ?? ""
-            let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
-            let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
-            let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-            if dictArray.frequency?.count ?? 0 > 0,
-               visitNameArray.contains(dictArray.frequency ?? "") {
-                let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
-                FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
-            }
-        }
-    }
-    
     func createSyncRequestForScore(dictArray: PENewAssessment) -> JSONDictionary{
         var UniID = dictArray.dataToSubmitID ?? ""
         if UniID == "" {
@@ -4210,10 +4140,10 @@ extension PEViewAssesmentFinalize{
         var DisplayId = dictArray.evaluationDate
         DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
         DisplayId = "C-" + UniID
-        
-        score = dictArray.assMinScore ?? 0
-        if dictArray.assStatus == 1 {
+        if  dictArray.assStatus == 1 {
             score = dictArray.assMaxScore ?? 0
+        } else {
+            score = dictArray.assMinScore ?? 0
         }
         var TextAmPm = ""
         var PersonName = ""
@@ -4221,10 +4151,34 @@ extension PEViewAssesmentFinalize{
         var QCCount = ""
         var PPMValue = ""
         let assID =  dictArray.assID ?? 0
-        populateParams(dictArray, &QCCount, &TextAmPm, &PPMValue, &PersonName, &FrequencyValue)
+        if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12
+        {
+            QCCount =  dictArray.qcCount ?? ""
+        } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous"
+        {
+            TextAmPm =  dictArray.ampmValue ?? ""
+        }
+        else if  dictArray.rollOut == "Y" && dictArray.sequenceNoo == 5  && dictArray.qSeqNo == 5
+                    
+        {
+            PPMValue =  dictArray.ppmValue ?? ""              }
+        
+        else if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 1
+        {
+            PersonName =  dictArray.personName ?? ""
+            let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
+            let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
+            let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
+            if dictArray.frequency?.count ?? 0 > 0 {
+                if visitNameArray.contains(dictArray.frequency ?? ""){
+                    let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
+                    FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
+                }
+            }
+        }
         
         var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId {
+        if let id = dictArray.serverAssessmentId{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
         
@@ -4249,7 +4203,9 @@ extension PEViewAssesmentFinalize{
             ] as JSONDictionary
             return json
             
-        } else {
+        }
+        else
+        {
             let json = [
                 "DisplayId":DisplayId?.prefix(22) ?? "",
                 "AppAssessmentId": String(AssessmentId),
@@ -4267,6 +4223,7 @@ extension PEViewAssesmentFinalize{
                 "isNA":dictArray.isNA ?? false
             ] as JSONDictionary
             return json
+            
         }
     }
     
@@ -4322,7 +4279,22 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Handle Sync Response
-    fileprivate func handleOfflineArray(_ getOfflineArray: [PENewAssessment]) {
+    private func handleSyncResponse(_ json: JSON) {
+        
+        let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
+        let dNumber = peNewAssessment.draftNumber ?? 0
+        var  getOfflineArray : [PENewAssessment] = []
+        var  getDraftArray : [PENewAssessment] = []
+        if sNumber != 0 {
+            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
+        }
+        if dNumber != 0 {
+            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
+        }
+        callRequest4Int = 0
+        
+        totalImageToSync = []
+        
         if getOfflineArray.count > 0 {
             var carColIdArray : [Int] = []
             var catArray : [PENewAssessment] = []
@@ -4352,25 +4324,6 @@ extension PEViewAssesmentFinalize{
             self.callRequest3(param:param)
             
         }
-    }
-    
-    private func handleSyncResponse(_ json: JSON) {
-        
-        let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
-        let dNumber = peNewAssessment.draftNumber ?? 0
-        var  getOfflineArray : [PENewAssessment] = []
-        var  getDraftArray : [PENewAssessment] = []
-        if sNumber != 0 {
-            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
-        }
-        if dNumber != 0 {
-            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
-        }
-        callRequest4Int = 0
-        
-        totalImageToSync = []
-        
-        handleOfflineArray(getOfflineArray)
         
         if getDraftArray.count > 0 {
             var carColIdArray : [Int] = []
@@ -4408,10 +4361,12 @@ extension PEViewAssesmentFinalize{
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             
             if json["StatusCode"]  == 200{
                 self.handleSyncResponse(mjson)
+                
+            } else {
             }
         })
     }
@@ -4423,7 +4378,7 @@ extension PEViewAssesmentFinalize{
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             if json["StatusCode"]  == 200{
                 self.CalculateImageCount()
             } else {
@@ -4669,49 +4624,6 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Call Request for images
-    fileprivate func handleSyncArrCount(_ syncArr: Int) {
-        if syncArr > 0 {
-            self.showtoast(message: appDelegateObj.dataSynedSuccess)
-            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-            self.dismissGlobalHUD(self.view)
-            self.syncBtnTapped(showHud: true)
-            
-        } else {
-            for i in self.totalImageToSync{
-                CoreDataHandlerPE().setImageStatusTrue(idArray: i)
-            }
-            
-            self.showtoast(message: appDelegateObj.dataSynedSuccess)
-            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-            self.dismissGlobalHUD(self.view)
-        }
-    }
-    
-    fileprivate func handleSync(_ self: PEViewAssesmentFinalize) {
-        if ConnectionManager.shared.hasConnectivity() {
-            if self.callRequest4Int == 0 {
-                if regionID == 3 {
-                    if peNewAssessment.IsEMRequested == true {
-                        self.syncExtendedMicrobial()
-                    }
-                }
-                let syncArr = self.getAllAssessmentInOfflineFromDb()
-                handleSyncArrCount(syncArr)
-            }
-        }
-    }
-    
-    fileprivate func handleSaveTypeString(_ self: PEViewAssesmentFinalize) {
-        if self.saveTypeString.contains(11) {
-            if self.saveTypeString.contains(00) {
-                CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
-            }
-            CoreDataHandlerPE().updateOfflineStatus(assessment: self.peNewAssessment)
-        } else {
-            CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
-        }
-    }
-    
     func callRequest4(paramForImages:JSONDictionary){
         callRequest4Int = callRequest4Int + 1
         ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages, completion: { [weak self] (json, error) in
@@ -4722,17 +4634,55 @@ extension PEViewAssesmentFinalize{
                 if syncArr ?? 0 > 0{
                     self?.syncBtnTapped(showHud: false)
                 } else {
-                    self?.showtoast(message: appDelegateObj.dataSynedSuccess)
+                    self?.showtoast(message: "Data synced successfully.")
                     NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                 }
             }
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             if json["StatusCode"]  == 200{
-                handleSaveTypeString(self)
-                handleSync(self)
+                if self.saveTypeString.contains(11)
+                {
+                    if self.saveTypeString.contains(00) {
+                        CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
+                    }
+                    CoreDataHandlerPE().updateOfflineStatus(assessment: self.peNewAssessment)
+                } else {
+                    CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
+                }
+                if ConnectionManager.shared.hasConnectivity() {
+                    
+                    if self.callRequest4Int == 0 {
+                        
+                        if regionID == 3
+                        {
+                            if peNewAssessment.IsEMRequested == true {
+                                self.syncExtendedMicrobial()
+                            }
+                        }
+                        
+                        let syncArr = self.getAllAssessmentInOfflineFromDb()
+                        if syncArr > 0{
+                            
+                            self.showtoast(message: "Data synced successfully.")
+                            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+                            self.dismissGlobalHUD(self.view)
+                            self.syncBtnTapped(showHud: true)
+                            
+                        } else {
+                            for i in self.totalImageToSync{
+                                CoreDataHandlerPE().setImageStatusTrue(idArray: i)
+                            }
+                            
+                            self.showtoast(message: "Data synced successfully.")
+                            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+                            self.dismissGlobalHUD(self.view)
+                        }
+                    }
+                }
             } else {
                 self.dismissGlobalHUD(self.view)
             }
+            
         })
     }
     

@@ -6741,7 +6741,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         
         FeddProgram.append(person)
-        debugPrint("enter into sync area out")
+       
     }
     
     func getFeedNameFromGetApiSingleDeviceTokenTurkey (_ postingId : NSNumber, sessionId: NSNumber ,feedProgrameName: String,feedId: NSNumber,postingIdFeed: NSNumber) {

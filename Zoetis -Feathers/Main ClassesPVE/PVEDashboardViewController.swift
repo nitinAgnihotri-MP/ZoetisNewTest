@@ -669,6 +669,14 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 let syncId = json["syncId"] as! String
                 let tempArr = [json]
                 let jsonDict = ["AssessmentDataDetails" : tempArr]
+                if let jsonData = try? JSONSerialization.data(withJSONObject: jsonDict, options: .prettyPrinted),
+                   let jsonString = String(data: jsonData, encoding: .utf8) {
+                    
+                    print("Assessment's Details - " ,jsonString)
+                    
+                }
+                
+              
                 
                 ZoetisWebServices.shared.postStartNewAssessmentDetailForPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
                     guard let selfObject = self, error == nil else { return }
@@ -709,6 +717,13 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     private func handleSyncResponse(_ json: JSON,  syncId:String, assessmentScoreDict: [[String: Any]], forImgArrJson:[[String: Any]]) {
         if json["StatusCode"] == 200 {
             let jsonDict = ["AssessmentScoresDataDetails" : assessmentScoreDict]
+            
+            
+            if let jsonData = try? JSONSerialization.data(withJSONObject: jsonDict, options: .prettyPrinted),
+               let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("Score JSON - " , jsonString)
+            }
+            
             ZoetisWebServices.shared.postScoreDetailsForPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
                 guard let selfObject = self, error == nil else { return }
                 selfObject.stopHud()
@@ -1483,11 +1498,13 @@ extension PVEDashboardViewController:  ComplexDelegate {
         if callDraftApi == true {
             
             UserDefaults.standard.set(false, forKey: "callDraftApi")
-            
-            ZoetisWebServices.shared.GetPostingAssessmentListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
+            let currentUserId = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+            ZoetisWebServices.shared.GetPostingAssessmentListByUser(controller: self, header: ["UserId" : currentUserId], parameters: [:], completion: { [weak self] (json, error) in
                 guard let selfObject = self, error == nil else { return }
-                if json["ResponseData"].count > 0 {
-                    let responseDataArr = json["ResponseData"].array
+                
+               
+                if json["data"].count > 0 {
+                    let responseDataArr = json["data"].array
                     CoreDataHandler().deleteAllData("PVE_Sync")
                     CoreDataHandler().deleteAllData("PVE_ImageEntitySync")
                     
@@ -1512,10 +1529,10 @@ extension PVEDashboardViewController:  ComplexDelegate {
         
         ZoetisWebServices.shared.GetPostingAssessmentImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
             guard let selfObject = self, error == nil else { return }
-            if json["ResponseData"].count > 0 {
+            if json["data"].count > 0 {
                 CoreDataHandler().deleteAllData("PVE_ImageEntitySync")
                 
-                let responseDataArr = json["ResponseData"].array
+                let responseDataArr = json["data"].array
                 for (_, currntSyncObj) in responseDataArr!.enumerated() {
                     CoreDataHandlerPVE().saveSyncedImageDetailsInDBFromResponse(json: currntSyncObj)
                 }
@@ -1530,9 +1547,9 @@ extension PVEDashboardViewController:  ComplexDelegate {
     func getSyncedCompleteImageResponse() {
         ZoetisWebServices.shared.GetPostingAssessmentCompleteImagesListByUser(controller: self, parameters: [:], completion: { [weak self] (json, error) in
             guard let selfObj = self, error == nil else { return }
-            if json["ResponseData"].count > 0 {
+            if json["data"].count > 0 {
                 
-                let responseDataArr = json["ResponseData"].array
+                let responseDataArr = json["data"].array
                 for (_, currntSyncObj) in responseDataArr!.enumerated() {
                     CoreDataHandlerPVE().saveSyncedImageDetailsInDBFromResponse(json: currntSyncObj)
                     selfObj.stopHud()

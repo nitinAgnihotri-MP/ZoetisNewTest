@@ -30,8 +30,6 @@ class pdfOptionsViewController: BaseViewController , UITableViewDelegate, UITabl
         view.backgroundColor = .clear
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         
-        let regionID = UserDefaults.standard.integer(forKey: "Regionid")
-        
         fileDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "BlankAssessmentFiles")
         backgroundHeigthConstarint.constant = CGFloat(80 + 75*fileDetailArray.count)
         
@@ -80,7 +78,7 @@ class pdfOptionsViewController: BaseViewController , UITableViewDelegate, UITabl
     private func handleBlankAssessmentResponse(_ json: JSON) {
         
         self.deleteAllData("BlankAssessmentFiles")
-        let jsonObject = PEBlankAssessmentResponse(json)
+      
         
         fileDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "BlankAssessmentFiles")
         fileNamesArray = fileDetailArray.value(forKey: "fileName") as? NSArray ?? NSArray()
@@ -109,9 +107,8 @@ class pdfOptionsViewController: BaseViewController , UITableViewDelegate, UITabl
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var height:CGFloat = CGFloat()
-        height = 70
-        return height
+       
+        return 70
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

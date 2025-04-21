@@ -5541,7 +5541,7 @@ extension PEAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate, UIT
                 
             }
             else {
-                let date =   Date.getCurrentDateNow()
+                let date =   Date.getCurrentDate()
                 cell.certDateSelectBtn.setTitle(date, for: .normal)
             }
             if selectedValue != "" {

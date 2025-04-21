@@ -753,14 +753,14 @@ extension ZoetisWebServices {
     
     func getCustomerListForPVE( controller: UIViewController, countryID: String, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let Id =  UserDefaults.standard.value(forKey: "Id") as? Int
-        let url = EndPoint.getCustomerListPVE.latestUrl + String(Id ?? 0) + "&CountryId=\(countryID)"
+        let url = EndPoint.getCustomerListPVE.latestUrl + String(Id ?? 0) + "&countryId=\(countryID)"
         print("GET SERVICE*** : getCustomerListForPVE ", url)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getComplexListForPVE( controller: UIViewController, countryID: String,  parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let customerID =  UserDefaults.standard.value(forKey: "Id") as? Int
-        let url = EndPoint.getComplexPVE.latestUrl + "CountryId=\(countryID)"
+        let url = EndPoint.getComplexPVE.latestUrl + "countryId=\(countryID)"
         print("GET SERVICE*** : getComplexListForPVE ", url)
         
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
@@ -848,10 +848,10 @@ extension ZoetisWebServices {
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
-    func GetPostingAssessmentListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
-        let url = EndPoint.getPostingAssessmentListByUser.latestUrl + "?DeviceType=ios"
+    func GetPostingAssessmentListByUser( controller: UIViewController, header: [String: Any] ,parameters: JSONDictionary, completion: @escaping CompletionBlock) {
+        let url = EndPoint.getPostingAssessmentListByUser.latestUrl + "?deviceType=ios"
         print("GET SERVICE*** : getPostingAssessmentListByUser ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: header, completion: completion)
     }
     
     func GetPostingAssessmentImagesListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -886,6 +886,8 @@ extension ZoetisWebServices {
         do{
             let jsonData = try JSONSerialization.data(withJSONObject:parameters, options:[])
             let jsonDataString = String(data: jsonData, encoding: String.Encoding.utf8)!
+            
+            print("Images JSON Data" , jsonDataString)
         }
         catch
         {
@@ -955,7 +957,9 @@ extension ZoetisWebServices {
     
     func getAllSyncedRequisitionData( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getSyncedReqData.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        let currentUserId = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        
+        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: ["UserId" : currentUserId], completion: completion)
     }
     
     func syncEnvironmentalData(reqType: RequisitionType, controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -1049,7 +1053,7 @@ extension ZoetisWebServices {
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
  
-    func getPostedSessionNotesResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+    func getNotesPostedSessionResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
         print(url)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
@@ -1293,7 +1297,7 @@ extension ZoetisWebServices {
         dismissGlobalHUD(viewController.view)
     }
     
-    func getRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary, headers: JSONDictionary, completion: @escaping CompletionBlock) {
+    func getRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary,  headers: [String: Any], completion: @escaping CompletionBlock) {
         viewController = controller
         ZoetisApiManager.GET(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, headers: headers, success: { (json) in
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)

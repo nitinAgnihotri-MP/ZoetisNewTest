@@ -385,12 +385,13 @@ class ApiSync: NSObject {
                     let acttimeStamp = tempArrTime.object(at: i)
                     var  fullData  = String()
                     let id = UserDefaults.standard.integer(forKey: "Id")
+                    let langId = UserDefaults.standard.integer(forKey: "lngId")
                     
                     fullData = acttimeStamp as! String
                     mainDict.setValue(fullData, forKey: "deviceSessionId")
                     mainDict.setValue(id, forKey: "UserId")
                     mainDict.setValue(false, forKey: "finalized")
-                    sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds]
+                    sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id, "LanguageId":langId, "feeds" : mainFeeds]
                     sessionArray.add(sessionDict)
                     sessionDict = NSMutableDictionary()
                     sessionDictMain = ["Sessions" : sessionArray]
@@ -400,6 +401,9 @@ class ApiSync: NSObject {
         do {
              //guard let
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+                        if let jsonString = String(data: jsonData, encoding: .utf8) {
+                            print(jsonString)
+                        }
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -739,11 +743,14 @@ class ApiSync: NSObject {
         
         do {
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+                        if let jsonString = String(data: jsonData, encoding: .utf8) {
+                            print(jsonString)
+                        }
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
             if WebClass.sharedInstance.connected() {
-                let Url = "/PostingSession//SaveMultipleVaccinationsSyncData"
+                let Url = "/PostingSession/SaveMultipleVaccinationsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
              //   accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 let headerDict = [Constants.authorization:accestoken]
@@ -1467,12 +1474,15 @@ class ApiSync: NSObject {
         
         do {
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("Images JSON :" , jsonString)
+            }
+            
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 let headerDict = [Constants.authorization:accestoken]
                 let Url = "PostingSession/SaveBirdImageSyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url

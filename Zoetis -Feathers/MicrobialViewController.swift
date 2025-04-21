@@ -53,7 +53,7 @@ class MicrobialViewController: BaseViewController {
     let gigya =  Gigya.sharedInstance(GigyaAccount.self)
 
     override func viewDidLoad() {
-        print("<<<<",self)
+      
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: true)
         let FirstName = UserDefaults.standard.value(forKey: "FirstName") as! String
@@ -82,9 +82,9 @@ class MicrobialViewController: BaseViewController {
         var customerDetailsArray = NSArray()
         customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer") //empty
         if (UserDefaults.standard.value(forKey: "isFreshLaunched") as? Bool) ?? true {
-            fetchCustomerList() //gets called every time
+            fetchCustomerList()
         }else{
-        //            fetchGetAllSyncedDataForRequisition()
+       
         }
     }
         
@@ -95,20 +95,19 @@ class MicrobialViewController: BaseViewController {
     
     private func startLogoutProcess(){
         let syncCount = Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.bacterial.rawValue).count + Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.enviromental.rawValue).count
-//            Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.feathurePulp.rawValue).count
         if ConnectionManager.shared.hasConnectivity() {
 
             if syncCount > 0{
                 
                 let errorMSg = "Data available for sync. Do you want to sync now? \n\n\n *Note - Please don't minimize App while syncing."
-                let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
+                let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                     _ in
                     
                     self.suncDataBackToServer(reqType: .bacterial, sessionStatus: .submitted)
                     
                 }
-                let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) {
+                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
                     _ in
                     
                     self.logoutAction()
@@ -124,19 +123,20 @@ class MicrobialViewController: BaseViewController {
             
         } else {
             self.logoutAction()
-            //            Helper.showAlertMessage(self, titleStr: NSLocalizedString("Alert", comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
         }
     }
     
     @IBAction func logoutNavBarBtn(_ sender: UIButton) {
-        let errorMSg = Constants.areYouSureToLogoutStr
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
+        let errorMSg = "Are you sure you want to logout?"
+        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
             self.startLogoutProcess()
             
         }
         
-        let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) 
+        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+            _ in
+        }
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -174,41 +174,24 @@ class MicrobialViewController: BaseViewController {
      }
     
     
-    
-    
-    
-    
     private func tapGestureForDraftImageView(){
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.draftAction(_:)))
         draftImageView.addGestureRecognizer(tap)
     }
     
     @objc func draftAction(_ sender: UITapGestureRecognizer? = nil){
-        print(appDelegateObj.testFuntion())
+
     }
     
     @IBAction func viewRequisitionBtnClicked(_ sender: UIButton) {//DraftViewController      ViewRequisitionViewController
         if let viewController = UIStoryboard(name: "ViewRequisition", bundle: nil).instantiateViewController(withIdentifier: "ViewRequisitionViewController") as? ViewRequisitionViewController {
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            
-//            appDelegate.viewRequisitionFlag = true
-//
-//            //   print("ViewRequisition Flag \(appDelegate.viewRequisitionFlag)")
-            
-//            CoreDataHandlerMicro().deleteAllData("Microbial_EnviromentalSessionInProgress")
-//
-//            CoreDataHandlerMicro().deleteAllData("ProgressSessionMicrobial")
-//
-//            CoreDataHandlerMicro().deleteAllData("Microbial_FeatherPulpCurrentSession")
             
             if let navigator = navigationController {
                 navigator.pushViewController(viewController, animated: true)
             }
         }
     }
-    
-    
-    
+        
     @IBAction func bacterialBtnClicked(_ sender: UIButton) {
         self.navigateToBacterialViewController(requisitionSavedSessionType: .CREATE_NEW_SESSION)
     }
@@ -221,9 +204,7 @@ class MicrobialViewController: BaseViewController {
         vc.requisitionSavedSessionType = requisitionSavedSessionType
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-    
-    
+        
     @IBAction func environmentalServeyBtnClicked(_ sender: UIButton) {
         self.navigateToEnvironmentalViewController(requisitionSavedSessionType: .CREATE_NEW_SESSION)
     }
@@ -242,15 +223,15 @@ class MicrobialViewController: BaseViewController {
 //            Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.feathurePulp.rawValue).count
 
         if syncCount == 0{
-            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "No data available to sync.")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "No data available to sync.")
             return
         }
         if !ConnectionManager.shared.hasConnectivity(){
-            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "No Internet connection available.")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "No Internet connection available.")
             return
         }
-        let alert = UIAlertController(title: Constants.alertStr, message: "Data Available for Sync.\nAre you sure you want to Sync ?", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil))
+        let alert = UIAlertController(title: "Alert", message: "Data Available for Sync.\nAre you sure you want to Sync ?", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (_) in
             self.suncDataBackToServer(reqType: .bacterial, sessionStatus: .submitted)
         }))
@@ -292,10 +273,10 @@ class MicrobialViewController: BaseViewController {
                 }
             }
         }
-        draftContainerView.firstColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1)
-        draftContainerView.secondColor = UIColor(red: 223/255, green: 240/255, blue: 1.0, alpha: 1)
+        draftContainerView.firstColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        draftContainerView.secondColor = UIColor(red: 223/255, green: 240/255, blue: 255/255, alpha: 1)
         
-        draftContainer.firstColor = UIColor(red: 238/255, green: 247/255, blue: 1.0, alpha: 1)
+        draftContainer.firstColor = UIColor(red: 238/255, green: 247/255, blue: 255/255, alpha: 1)
         draftContainer.secondColor = UIColor(red: 207/255, green: 225/255, blue: 242/255, alpha: 1)
     }
     
@@ -303,20 +284,22 @@ class MicrobialViewController: BaseViewController {
     
     func checkAndSync(){
         let syncCount = Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.bacterial.rawValue).count + Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.enviromental.rawValue).count
-//            Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.feathurePulp.rawValue).count
         if ConnectionManager.shared.hasConnectivity() {
 
             if syncCount > 0{
                 
                 let errorMSg = "Data available for sync. Do you want to sync now? \n\n\n *Note - Please don't minimize App while syncing."
-                let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
+                let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                     _ in
                     
                     self.suncDataBackToServer(reqType: .bacterial, sessionStatus: .submitted)
                     
                 }
-                let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
+                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
+                    _ in
+                    
+                }
                 
                 alertController.addAction(okAction)
                 alertController.addAction(cancelAction)
@@ -327,7 +310,6 @@ class MicrobialViewController: BaseViewController {
             }
             
         } else {
-            print(appDelegateObj.testFuntion())
         }
     }
     
@@ -454,8 +436,8 @@ class MicrobialViewController: BaseViewController {
     }
     
     @IBAction func sessionBtnAction(_ sender: UIButton) {
-        let alert = UIAlertController(title: Constants.alertStr, message: "Are you sure to clear current session?", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.default, handler: nil))
+        let alert = UIAlertController(title: "Alert", message: "Are you sure to clear current session?", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (_) in
             self.sessionBtn.isHidden = true
             self.widthOfSessionButton.constant = 0
@@ -605,7 +587,7 @@ extension MicrobialViewController {
         }
         print(dict)
         ZoetisWebServices.shared.syncEnvironmentalData(reqType: reqType, controller: self, parameters: dict, completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.dismissGlobalHUD(self.view)
             print(json)
             
@@ -630,14 +612,30 @@ extension MicrobialViewController {
                 
             case .enviromental:
                 self.arrSyncIndex = self.arrSyncIndex + 1
-                if self.arrSyncIndex < self.arrSyncReqLimit {
+                if self.arrSyncIndex < self.arrSyncReqLimit{
                     self.syncData(data:  submittedRequisitionsEnvironmental[self.arrSyncIndex] as! Microbial_EnviromentalSurveyFormSubmitted, reqType: .enviromental, sessionType: sessionType)
-                } else {
+                }else{
                     Microbial_EnviromentalSurveyFormSubmitted.updateSyncCheckForAll(reqType: RequisitionType.enviromental.rawValue, sessionStatus: sessionType.rawValue)
                     if sessionType == .submitted{
                         self.suncDataBackToServer(reqType: .enviromental, sessionStatus: .saveAsDraft)
+                    }else{
+//                        self.suncDataBackToServer(reqType: .feathurePulp, sessionStatus: .submitted)
                     }
                 }
+                
+//            case .feathurePulp:
+//                self.arrSyncIndex = self.arrSyncIndex + 1
+//                if self.arrSyncIndex < self.arrSyncReqLimit{
+//                    self.syncData(data:  submittedRequisitionsFeatherPulp[self.arrSyncIndex] as! Microbial_EnviromentalSurveyFormSubmitted, reqType: .feathurePulp, sessionType: sessionType)
+//                }else{
+//                    Microbial_EnviromentalSurveyFormSubmitted.updateSyncCheckForAll(reqType: RequisitionType.feathurePulp.rawValue, sessionStatus: sessionType.rawValue)
+//                    if sessionType == .submitted{
+//                        self.suncDataBackToServer(reqType: .feathurePulp, sessionStatus: .saveAsDraft)
+//                    }else{
+//                        self.configureGraphViews()
+//                        break
+//                    }
+//                }
             }
             let syncCount = Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.bacterial.rawValue).count + Microbial_EnviromentalSurveyFormSubmitted.dataToBeSynced(requisitionType: RequisitionType.enviromental.rawValue).count
             self.syncBadgeBackgroundView.isHidden = (syncCount == 0)
@@ -645,68 +643,58 @@ extension MicrobialViewController {
         })
     }
     
-    fileprivate func getReviewerName(_ selectedReviewer: [Micro_Reviewer], _ reviewersText: inout String) {
-        if selectedReviewer.count > 0 {
-            if reviewersText == ""{
-                reviewersText = selectedReviewer.first?.reviewerName ?? ""
-            }else{
-                reviewersText = "\(reviewersText), \(selectedReviewer.first?.reviewerName ?? "")"
-            }
-        }
-    }
-    
-    fileprivate func saveAlreadySyncdeDataAndChanegStatus(_ arrMicrobialDetailsList: MicrobialDetailsList, _ objReq: RequisitionData) {
-        if !Microbial_EnviromentalSurveyFormSubmitted.isSameTimeStampAndUserIdAlreadyExisits(reqData: arrMicrobialDetailsList){
-            var isPlateIdGenerated = false
-            
-            let arrReviewers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
-            let reviewerIds = arrMicrobialDetailsList.reviewerIds ?? []
-            for reviewer in arrReviewers{
-                let isSelected = reviewerIds.contains(reviewer.reviewerId?.intValue ?? 0)
-                MicrobialSelectedUnselectedReviewer.saveReviewersInDB(arrMicrobialDetailsList.timeStamp ?? "", reviewerId: reviewer.reviewerId?.intValue ?? 0, reviewerName: reviewer.reviewerName ?? "", isSelected: isSelected, isSessionType: false)
-            }
-            
-            var reviewersText = ""
-            for selectsId in reviewerIds{
-                let selectedReviewer = arrReviewers.filter{ $0.reviewerId?.intValue ?? 0 == selectsId }
-                getReviewerName(selectedReviewer, &reviewersText)
-            }
-            
-            Microbial_EnviromentalSurveyFormSubmitted.saveDataWhichIsAlreadySynced(reqData: arrMicrobialDetailsList, reqText: objReq.SurveyType?.Text ?? "", reqId: objReq.SurveyType?.Id ?? 0, isPlateIdGenerated: isPlateIdGenerated, reviewerText: reviewersText)
-            
-        }else{
-            //update case status
-            
-            Microbial_EnviromentalSurveyFormSubmitted.updateCaseStatusOfReq(timeStamp: arrMicrobialDetailsList.timeStamp ?? "", caseStatus: arrMicrobialDetailsList.status ?? 0)
-        }
-    }
-    
-    fileprivate func handleAndIterateArrRequisition(_ arrRequisition: [RequisitionData]?) {
-        for objReq in arrRequisition ?? [] {
-            if let microbialDetailsList = objReq.microbialDetailsList {
-                for arrMicrobialDetailsList in microbialDetailsList{
-                    saveAlreadySyncdeDataAndChanegStatus(arrMicrobialDetailsList, objReq)
-                }
-            }
-        }
-    }
-    
     private func fetchGetAllSyncedDataForRequisition(){
         dismissGlobalHUD(self.view)
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllSyncedRequisitionData(controller: self, parameters: [:], completion: { [weak self] (json, error) in
             self!.dismissGlobalHUD(self!.view)
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             UserDefaults.standard.set(false, forKey: "isFreshLaunched")
             UserDefaults.standard.synchronize()
             let jsonObject = RequisitionGetDataModel(json)
             let arrRequisition = jsonObject.requisitionArray
-            if arrRequisition?.count ?? 0 > 0 {
-                handleAndIterateArrRequisition(arrRequisition)
+            if arrRequisition?.count ?? 0 > 0{
+                for objReq in arrRequisition ?? []{
+                    if let microbialDetailsList = objReq.microbialDetailsList{
+                        
+                        for arrMicrobialDetailsList in microbialDetailsList{
+                            if !Microbial_EnviromentalSurveyFormSubmitted.isSameTimeStampAndUserIdAlreadyExisits(reqData: arrMicrobialDetailsList){
+                                var isPlateIdGenerated = false
+                                
+                                let arrReviewers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
+                                let reviewerIds = arrMicrobialDetailsList.reviewerIds ?? []
+                                for reviewer in arrReviewers{
+                                    let isSelected = reviewerIds.contains(reviewer.reviewerId?.intValue ?? 0)
+                                    MicrobialSelectedUnselectedReviewer.saveReviewersInDB(arrMicrobialDetailsList.timeStamp ?? "", reviewerId: reviewer.reviewerId?.intValue ?? 0, reviewerName: reviewer.reviewerName ?? "", isSelected: isSelected, isSessionType: false)
+                                }
+                                
+                                var reviewersText = ""
+                                for selectsId in reviewerIds{
+                                    let selectedReviewer = arrReviewers.filter{ $0.reviewerId?.intValue ?? 0 == selectsId }
+                                    if selectedReviewer.count > 0{
+                                        if reviewersText == ""{
+                                            reviewersText = selectedReviewer.first?.reviewerName ?? ""
+                                        }else{
+                                            reviewersText = "\(reviewersText), \(selectedReviewer.first?.reviewerName ?? "")"
+                                        }
+                                    }
+                                }
+                                
+                                Microbial_EnviromentalSurveyFormSubmitted.saveDataWhichIsAlreadySynced(reqData: arrMicrobialDetailsList, reqText: objReq.SurveyType?.Text ?? "", reqId: objReq.SurveyType?.Id ?? 0, isPlateIdGenerated: isPlateIdGenerated, reviewerText: reviewersText)
+
+
+                            }else{
+                                //update case status
+                                
+                                Microbial_EnviromentalSurveyFormSubmitted.updateCaseStatusOfReq(timeStamp: arrMicrobialDetailsList.timeStamp ?? "", caseStatus: arrMicrobialDetailsList.status ?? 0)
+                            }
+                        }
+                    }
+                }
             }
             self.checkAndSync()
             self.loadDataForGraphDraftAndSubmittedReq()
-          //  print(json)
+            print(json)
         })
     }
     
@@ -742,7 +730,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_Customer")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllCustomersForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.handlefetchCustomerResponse(json)
         })
     }
@@ -760,7 +748,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_siteByCustomer")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcherySitesForMicrobial(controller: self, parameters:  [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.handlefetchHatcherySiteResponse(json)
         })
     }
@@ -779,7 +767,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_Reviewer")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryReviewerForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.handlefetchHatcheryReviewerResponse(json)
         })
     }
@@ -799,7 +787,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_AllConductType")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryAllConductTypeForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.handleConductTypeResponse(json)
         })
     }
@@ -819,7 +807,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_AllSurveyPurpose")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryAllSurveyPurposeForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.handlefetchAllSurveyPurposeListResponse(json)
         })
     }
@@ -838,7 +826,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_AllMicrobialTransferTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryAllTransferTypeForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.handlefetchAllMicrobialTransferTypeListResponse(json)
         })
     }
@@ -858,7 +846,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Microbial_EnvironmentalLocationTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllEnvironmentalLocationTypes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             let jsonObject = EnvironmentalLocationTypeModel(json)
             let dropdownManager = ZoetisDropdownShared.sharedInstance
             dropdownManager.sharedAllEnvironmentalLocationTypeArray =  jsonObject.getAllLocationTypes(customerArray: jsonObject.locationTypeArray ?? [])
@@ -866,7 +854,7 @@ extension MicrobialViewController {
             // bacterial location types
             CoreDataHandlerMicro().deleteAllData("Microbial_BacterialLocationTypes")
             ZoetisWebServices.shared.getAllBacterialLocationTypes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-                guard let self = self, error == nil else { return }
+                guard let `self` = self, error == nil else { return }
                 self.handleFetchedBacterialLocationTypeListResponse(json)
             })
         })
@@ -887,7 +875,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Microbial_LocationValues")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllLocationTypeValues(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             print("your json  is : \(json)")
             self.handlefetchedAllLocationTypeValuesListResponse(json)
         })
@@ -911,7 +899,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Microbial_AllMediaTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllMediaTypeValues(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.handlefetchedAllMediaTypeListResponse(json)
         })
     }
@@ -933,7 +921,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Microbial_SamplingMethodTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllSamplingMethodValues(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.handlefetchedAllSamplingMethodListResponse(json)
         })
     }
@@ -955,7 +943,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("Micro_AllMicrobialVisitTypes")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllHatcheryAllVisitTypeForMicrobial(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             self.handlefetchAllMicrobialVisitTypeResponse(json)
         })
     }
@@ -977,7 +965,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("MicrobialFeatherPulpSpecimenType")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllMicrobialSpecimenTypes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             print(json)
             let jsonObject = SpecimenTypeFeatherpulpModel(json)//LocationTypeValues(json)
             let dropdownManager = ZoetisDropdownShared.sharedInstance
@@ -992,7 +980,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("MicrobialFeatherPulpBirdType")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllMicrobialBirdTypes(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             print(json)
             let jsonObject = BirdTypeFeatherpulpModel(json)
             let dropdownManager = ZoetisDropdownShared.sharedInstance
@@ -1006,7 +994,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("MicrobialFeatherPulpTestOptions")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllMicrobialFeatherPulpTest(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             print(json)
             let jsonObject = MicrobialFeatherpulpTestModel(json)
             print(jsonObject)
@@ -1021,7 +1009,7 @@ extension MicrobialViewController {
         CoreDataHandlerMicro().deleteAllData("MicrobialCaseStatus")
         self.showGlobalProgressHUDWithTitle(self.view, title: "")
         ZoetisWebServices.shared.getAllCaseStatus(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
+            guard let `self` = self, error == nil else { return }
             print(json)
             let jsonObject = MicrobialCaseStatusModel(json)
             print(jsonObject)
@@ -1232,4 +1220,5 @@ extension MicrobialViewController {
 }
 //water - Lab water
 //Lab -
+
 

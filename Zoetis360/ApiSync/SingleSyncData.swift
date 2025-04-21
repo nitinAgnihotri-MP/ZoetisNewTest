@@ -392,11 +392,13 @@ class SingleSyncData: NSObject {
                 var  fullData  = String()
                 fullData = acttimeStamp as! String
                 mainDict.setValue(fullData, forKey: "deviceSessionId")
+                let langId =  UserDefaults.standard.integer(forKey: "lngId")
                 
                 let id = UserDefaults.standard.integer(forKey: "Id")
                 mainDict.setValue(id, forKey: "UserId")
                 mainDict.setValue(false, forKey: "finalized")
-                sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds]
+               
+                sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id, "LanguageId":langId  , "feeds" : mainFeeds]
                 sessionArray.add(sessionDict)
                 sessionDict = NSMutableDictionary()
                 sessionDictMain = ["Sessions" : sessionArray]
@@ -407,6 +409,11 @@ class SingleSyncData: NSObject {
         do {
             
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+            
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print("Feed Programe's " , jsonString)
+            }
+        
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -692,12 +699,16 @@ class SingleSyncData: NSObject {
         do {
             
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                            print("Vaccination Data -",  jsonString)
+            }
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
             if WebClass.sharedInstance.connected() {
                 
-                let Url = "/PostingSession//SaveMultipleVaccinationsSyncData"
+             // Avinash Asked to do this change    let Url = "/PostingSession//SaveMultipleVaccinationsSyncData"
+                let Url = "/PostingSession/SaveMultipleVaccinationsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
               //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 let headerDict = [Constants.authorization:accestoken]
@@ -1026,6 +1037,9 @@ class SingleSyncData: NSObject {
         do {
             
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("Necropsy Data -", jsonString)
+            }
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
@@ -1242,6 +1256,9 @@ class SingleSyncData: NSObject {
         
         do {
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print(jsonString)
+            }
             
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)

@@ -3369,7 +3369,7 @@ class CoreDataHandlerPE: NSObject {
     func fetchDraftCustomerWithCatID(_ catID: NSNumber,peNewAssessment:PENewAssessment) -> NSArray {
         var dataArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
+        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.returnsObjectsAsFaults = false
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
@@ -3378,12 +3378,12 @@ class CoreDataHandlerPE: NSObject {
         
         
         do {
-            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
+            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 dataArray = results as NSArray
+            } else {
             }
         } catch {
-            print(appDelegateObj.testFuntion())
         }
         return dataArray
     }

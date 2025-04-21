@@ -5567,7 +5567,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.6.3;
+				MARKETING_VERSION = 7.6.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mp.PV360;
 				PRODUCT_NAME = "PoultryView 360";
 				PROVISIONING_PROFILE = "";
@@ -5613,7 +5613,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.6.3;
+				MARKETING_VERSION = 7.6.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mp.PV360;
 				PRODUCT_NAME = "PoultryView 360";
 				PROVISIONING_PROFILE = "";

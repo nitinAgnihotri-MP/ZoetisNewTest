@@ -81,11 +81,11 @@ class PVEViewSNASession: BaseViewController {
     func generateSeveyNumber(dateStr:String) -> String{
         let inputFormatter = DateFormatter()
         inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        var generatedServeyNo = String()
+       
         let siteId = sharedManager.getSessionValueForKeyFromDB(key: "siteId") as! Int
         let evaluationDateStr = sharedManager.getSessionValueForKeyFromDB(key: "evaluationDate") as? String
         let savedDateString = evaluationDateStr?.replacingOccurrences(of: "/", with: "", options: .literal, range: nil)
-        generatedServeyNo = "S-" + savedDateString! + "\(siteId)"
+        let generatedServeyNo = "S-" + savedDateString! + "\(siteId)"
         return generatedServeyNo
         
     }
@@ -111,12 +111,7 @@ extension PVEViewSNASession: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 1
-        default:
-            return 1
-        }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -181,8 +176,8 @@ extension PVEViewSNASession: UITableViewDelegate, UITableViewDataSource{
                 let cameraState = getDraftValueForKey(key: "cameraEnabled") as? String
                 cameraSetting(cameraState, cell)
                 
-                var selectedBirdTypeId = Int()
-                selectedBirdTypeId = getDraftValueForKey(key: "selectedBirdTypeId") as! Int
+            
+                var  selectedBirdTypeId = getDraftValueForKey(key: "selectedBirdTypeId") as! Int
                 if selectedBirdTypeId == 14 {
                     cell.birdWelfareImg.image = UIImage(named: "checkIconPE")
                     cell.birdPresentationImg.image = UIImage(named: "uncheckIconPE")
@@ -249,11 +244,8 @@ extension PVEViewSNASession{
         let dataArr = CoreDataHandlerPVE().fetchCurrentSessionInDB()
         let arr = dataArr.value(forKey: "customerId") as! NSArray
         let custId = arr[0] as! Int
-        
-        var siteNameArr = NSArray()
         let namesArray = CoreDataHandlerPVE().fetchCustomerWithCustId( custId as NSNumber)
-        siteNameArr = namesArray.value(forKey: "complexName") as? NSArray ?? NSArray()
-        
+        let  siteNameArr = namesArray.value(forKey: "complexName") as? NSArray ?? NSArray()
         setDropdrown(sender, clickedField: Constants.ClickedFieldStartNewAssPVE.siteId, dropDownArr: siteNameArr as? [String])
     }
     
@@ -333,7 +325,7 @@ extension PVEViewSNASession{
             print(appDelegateObj.testFuntion())
         }
         
-        let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
+      
     }
     
     func reloadCellUI(cell:StartNewAssignmentCell)  {

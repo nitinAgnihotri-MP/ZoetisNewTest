@@ -72,35 +72,5 @@ class MicrobialCaseInfoCell: UITableViewCell {
         default: break
         }
     }
-    
-/*
-    func configureMandatoryFiledsValidation(_ isPlusButtonPressed: Bool,
-                                               isSubmitButtonPressed: Bool,
-                                               currentSessionInProgressModel: RequisitionModel) {
-        
-        if (isPlusButtonPressed || isSubmitButtonPressed) && currentSessionInProgressModel.typeOfBird.isEmpty {
-            self.typeOfBirdView.layer.borderColor = UIColor.red.cgColor
-        } else {
-            self.typeOfBirdView.layer.borderColor = defaultBorderColor
-        }
-        
-        if (isPlusButtonPressed || isSubmitButtonPressed) && currentSessionInProgressModel.company.isEmpty {
-            self.companySelectionView.layer.borderColor = UIColor.red.cgColor
-        } else {
-            self.companySelectionView.layer.borderColor = defaultBorderColor
-        }
-        
-        if (isPlusButtonPressed || isSubmitButtonPressed) && currentSessionInProgressModel.site.isEmpty {
-            self.siteSelectionView.layer.borderColor = UIColor.red.cgColor
-        } else {
-            self.siteSelectionView.layer.borderColor = defaultBorderColor
-        }
-        
-        if (isPlusButtonPressed || isSubmitButtonPressed) && currentSessionInProgressModel.barCode == "F-" {
-            self.barcodeSelectionView.layer.borderColor = UIColor.red.cgColor
-        } else {
-            self.barcodeSelectionView.layer.borderColor = defaultBorderColor
-        }
-    }
-    */
+
 }

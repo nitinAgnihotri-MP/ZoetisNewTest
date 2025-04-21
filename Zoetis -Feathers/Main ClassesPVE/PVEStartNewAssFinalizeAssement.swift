@@ -176,7 +176,7 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
             if controller.isKind(of: PVEDashboardViewController.self) {
                 self.navigationController!.popToViewController(controller, animated: true)
                 
-                
+                let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
                 let catArray = assessmentArr.value(forKey: "category_Name") as? NSArray ?? NSArray()
                 
                 let timeStampStr = sharedManager.generateCurrentTimeStamp()
@@ -186,7 +186,7 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
                 CoreDataHandlerPVE().saveSyncAssQuestions(type: "draft", syncId: timeStampStr)
                 
                 CoreDataHandlerPVE().saveSyncImageDetailsInDB(syncId: timeStampStr)
-                
+                let PVE_ImageEntitySyncArr = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_ImageEntitySync")
                 
                 CoreDataHandler().deleteAllData("PVE_Session")
                 CoreDataHandler().deleteAllData("PVE_ImageEntity")
@@ -199,14 +199,16 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
     
     @IBAction func draftBtnAction(_ sender: Any) {
         
-        let errorMSg = Constants.areYouSureSaveAsmntStr
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let errorMSg = "Are you sure you want to save assessment in draft?"
+        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            
+            NSLog("OK Pressed")
             self.saveDataInDraft()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+            _ in
+        }
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -220,11 +222,13 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
                 
                 let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
                 
-                var scoreArr = CoreDataHandlerPVE().fetchScoredArr(seq_NumberArr).scoreArr as! [Any]
+                var scoreArr = [Any]()
+                scoreArr = CoreDataHandlerPVE().fetchScoredArr(seq_NumberArr).scoreArr as! [Any]
                 scoreArr.removeLast()
                 scoreArr.append(sharedManager.vaccineEvaluationScoreTotal)
                 
-                var max_MarksArr = CoreDataHandlerPVE().fetchScoredArr(seq_NumberArr).max_MarksArr as! [Int]
+                var max_MarksArr = [Int]()
+                max_MarksArr = CoreDataHandlerPVE().fetchScoredArr(seq_NumberArr).max_MarksArr as! [Int]
                 
                 if currentSel_seq_Number == 6 {
                     let seq_NumberArr = assessmentArr.value(forKey: "max_Mark")  as? NSArray ?? NSArray()
@@ -232,12 +236,19 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
                     max_MarksArr.append(marks)
                 }
                 
+                
                 let catArray = assessmentArr.value(forKey: "category_Name") as? NSArray ?? NSArray()
+                
                 let timeStampStr = sharedManager.generateCurrentTimeStamp()
+                
                 CoreDataHandlerPVE().saveSyncDetailsInDB(maxScoreArray: max_MarksArr as NSArray, scoreArray: scoreArr as NSArray, categoryArray: catArray, syncId: timeStampStr,  dataTypeStr: "sync")
+                
                 CoreDataHandlerPVE().saveSyncAssCatDetails(type: "sync", syncId: timeStampStr)
                 CoreDataHandlerPVE().saveSyncAssQuestions(type: "sync", syncId: timeStampStr)
+                
                 CoreDataHandlerPVE().saveSyncImageDetailsInDB(syncId: timeStampStr)
+                let PVE_ImageEntitySyncArr = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_ImageEntitySync")
+                
                 CoreDataHandler().deleteAllData("PVE_Session")
                 CoreDataHandler().deleteAllData("PVE_ImageEntity")
                 CoreDataHandlerPVE().resetCurrentSessionDetailsInDB()
@@ -251,8 +262,8 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
         
         for (indx, _) in vaccinInfoDetailArr.enumerated() {
             
-            if vaccinInfoDetailArr[indx]["man"] as? String == "" || vaccinInfoDetailArr[indx]["name"] as? String == "" || vaccinInfoDetailArr[indx]["serotype"] as? String == "" {
-                showAlert(title: Constants.alertStr, message: "Please fill the mandatory fields.", owner: self)
+            if vaccinInfoDetailArr[indx]["man"] as? String == "" || vaccinInfoDetailArr[indx]["name"] as? String == "" || (vaccinInfoDetailArr[indx]["serotype"] as? [String])?.isEmpty ?? true {
+                showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
                 
                 selectColeectionViewCell(currentSel_CategoryIndex: 1)
                 let selectedItem = IndexPath(row: Int(truncating: NSNumber(value: 1)), section: 0)
@@ -261,21 +272,33 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
                 let indexPath = IndexPath(row: indx, section: 4)
                 self.tblView.scrollToRow(at:  indexPath, at: UITableView.ScrollPosition.bottom, animated: false)
                 showtoast(message: "Please enter vaccine details in the Vaccine preparation, Storage & Sterility Tab.")
+                
                 return
             }
+            
         }
         
+        
         let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
-            
+            NSLog("OK Pressed")
             self.saveFinalizedData()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+            _ in
+        }
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
+        
+    }
+    
+    private func getEvaluationDateFromDB(key:String) -> Date{
+        let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_Session")
+        let valueArr = valuee.value(forKey: key) as! NSArray
+        return valueArr[0] as! Date
     }
     
     func setInitialValues() {
@@ -317,6 +340,8 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
         assessmentArr = CoreDataHandlerPVE().fetchDetailsForAssessmentCategoriesDetails()
         resetBoderderCatcherVac()
         tblView.reloadData()
+        
+        let allCategorySelected = checkAllCategorySeledtedOneQuestion()
         setMarksLabel()
     }
     
@@ -348,8 +373,8 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
         var image_NameArr = questionsArr.value(forKey: "image_Name") as? [String]
         var image_Name = image_NameArr![indexPath!.row]
         
-        var questionsAssessmentArr = questionsArr.value(forKey: "assessment") as? [String]
-        var assessment = questionsAssessmentArr![indexPath!.row]
+        var assessmentArr = questionsArr.value(forKey: "assessment") as? [String]
+        var assessment = assessmentArr![indexPath!.row]
         
         var idArr = questionsArr.value(forKey: "id") as? [Int]
         var qId = idArr![indexPath!.row]
@@ -377,8 +402,8 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
                 image_NameArr = liveQuesArr.value(forKey: "image_Name") as? [String]
                 image_Name = image_NameArr![indexPath!.row]
                 
-                questionsAssessmentArr = liveQuesArr.value(forKey: "assessment") as? [String]
-                assessment = questionsAssessmentArr![indexPath!.row]
+                assessmentArr = liveQuesArr.value(forKey: "assessment") as? [String]
+                assessment = assessmentArr![indexPath!.row]
                 
             }
             else if selectedIndex == 5{
@@ -395,8 +420,8 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
                 image_NameArr = inactiveQuessArr.value(forKey: "image_Name") as? [String]
                 image_Name = image_NameArr![indexPath!.row]
                 
-                questionsAssessmentArr = inactiveQuessArr.value(forKey: "assessment") as? [String]
-                assessment = questionsAssessmentArr![indexPath!.row]
+                assessmentArr = inactiveQuessArr.value(forKey: "assessment") as? [String]
+                assessment = assessmentArr![indexPath!.row]
             }
             else{
                 max_ScoreArr = otherQuessArr.value(forKey: "max_Score") as? [Int]
@@ -411,8 +436,8 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
                 image_NameArr = otherQuessArr.value(forKey: "image_Name") as? [String]
                 image_Name = image_NameArr![indexPath!.row]
                 
-                questionsAssessmentArr = otherQuessArr.value(forKey: "assessment") as? [String]
-                assessment = questionsAssessmentArr![indexPath!.row]
+                assessmentArr = otherQuessArr.value(forKey: "assessment") as? [String]
+                assessment = assessmentArr![indexPath!.row]
             }
         }
         else{
@@ -428,8 +453,8 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
             image_NameArr = questionsArr.value(forKey: "image_Name") as? [String]
             image_Name = image_NameArr![indexPath!.row]
             
-            questionsAssessmentArr = questionsArr.value(forKey: "assessment") as? [String]
-            assessment = questionsAssessmentArr![indexPath!.row]
+            assessmentArr = questionsArr.value(forKey: "assessment") as? [String]
+            assessment = assessmentArr![indexPath!.row]
             
             idArr = questionsArr.value(forKey: "id") as? [Int]
             qId = idArr![indexPath!.row]
@@ -449,87 +474,86 @@ class PVEStartNewAssFinalizeAssement: BaseViewController  , UISearchBarDelegate 
         questionsArr = CoreDataHandlerPVE().fetchAssessmentQuestion(currentSel_seq_Number) as NSArray
         selectedIndex = indexPath!.section as Int
         
-        var max_ScoreArr:[Int]?// questionsArr.value(forKey: "seq_Number") as? [Int]
+        var max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
+        var seq_Number = max_ScoreArr![0]
+        
+        var idArr = questionsArr.value(forKey: "id") as? [Int]
+        var id = idArr![indexPath!.row]
+        
         var commentArr = questionsArr.value(forKey: "comment") as? [String]
+        var comment = commentArr![indexPath!.row]
+        
         let storyBoard : UIStoryboard = UIStoryboard(name: Constants.Storyboard.pveStoryboard, bundle:nil)
         let vc = storyBoard.instantiateViewController(withIdentifier: "PVECommentPopupViewController") as! PVECommentPopupViewController
         vc.delegate = self
         
-        if currentSel_seq_Number == 2 {
+        if currentSel_seq_Number == 2
+        {
             liveQuesArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).contains("Live")}) as NSArray
             inactiveQuessArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).contains("Inactivated")}) as NSArray
             otherQuessArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).isEmpty}) as NSArray
             
-            if selectedIndex == 4 {
+            if selectedIndex == 4
+            {
                 max_ScoreArr = liveQuesArr.value(forKey: "seq_Number") as? [Int]
-                vc.seq_Number = max_ScoreArr![0]
+                seq_Number = max_ScoreArr![0]
+                vc.seq_Number = seq_Number
                 
-                let idArr = liveQuesArr.value(forKey: "id") as? [Int]
-                vc.rowId = idArr![indexPath!.row]
+                idArr = liveQuesArr.value(forKey: "id") as? [Int]
+                id = idArr![indexPath!.row]
+                vc.rowId = id
                 
                 commentArr = liveQuesArr.value(forKey: "comment") as? [String]
-                vc.commentStr = commentArr![indexPath!.row]
-            } else if selectedIndex == 5 {
+                comment = commentArr![indexPath!.row]
+                vc.commentStr = comment
+            }
+            else if selectedIndex == 5
+            {
                 max_ScoreArr = inactiveQuessArr.value(forKey: "seq_Number") as? [Int]
-                vc.seq_Number = max_ScoreArr![0]
+                seq_Number = max_ScoreArr![0]
+                vc.seq_Number = seq_Number
                 
-                let idArr = inactiveQuessArr.value(forKey: "id") as? [Int]
-                vc.rowId = idArr![indexPath!.row]
+                idArr = inactiveQuessArr.value(forKey: "id") as? [Int]
+                id = idArr![indexPath!.row]
+                vc.rowId = id
                 
                 commentArr = inactiveQuessArr.value(forKey: "comment") as? [String]
-                vc.commentStr = commentArr![indexPath!.row]
-            } else {
+                comment = commentArr![indexPath!.row]
+                vc.commentStr = comment
+            }
+            else{
                 max_ScoreArr = otherQuessArr.value(forKey: "seq_Number") as? [Int]
-                vc.seq_Number = max_ScoreArr![0]
-                let idArr = otherQuessArr.value(forKey: "id") as? [Int]
-                vc.rowId = idArr![indexPath!.row]
+                seq_Number = max_ScoreArr![0]
+                vc.seq_Number = seq_Number
+                
+                idArr = otherQuessArr.value(forKey: "id") as? [Int]
+                id = idArr![indexPath!.row]
+                vc.rowId = id
                 
                 commentArr = otherQuessArr.value(forKey: "comment") as? [String]
-                vc.commentStr = commentArr![indexPath!.row]
+                comment = commentArr![indexPath!.row]
+                vc.commentStr = comment
             }
-        } else {
+        }
+        
+        else{
             max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
-            vc.seq_Number = max_ScoreArr![0]
+            seq_Number = max_ScoreArr![0]
+            vc.seq_Number = seq_Number
             
-            let idArr = questionsArr.value(forKey: "id") as? [Int]
-            vc.rowId = idArr![indexPath!.row]
+            idArr = questionsArr.value(forKey: "id") as? [Int]
+            id = idArr![indexPath!.row]
+            vc.rowId = id
             
             commentArr = questionsArr.value(forKey: "comment") as? [String]
-            vc.commentStr = commentArr![indexPath!.row]
+            comment = commentArr![indexPath!.row]
+            vc.commentStr = comment
         }
         self.navigationController?.present(vc, animated: false, completion: nil)
     }
 }
 
 extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINavigationControllerDelegate{
-    
-    fileprivate func checkCamera(_ sender: UIButton) {
-        let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
-        let indexPath = self.tblView.indexPathForRow(at:buttonPosition)
-        if let cell = self.tblView.cellForRow(at: indexPath!) as? PVEVaccinationCrewSafetyCell {
-            
-            guard let imgCountText = cell.imgCountBtn.titleLabel?.text,
-                  let imgCount = Int(imgCountText),
-                  imgCount < 5 || cell.imgCountBtn.isHidden else {
-                postAlert("Reached maximum!", message: "Reached maximum limit of images for this question.")
-                return
-            }
-        }
-        
-        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
-            if UIImagePickerController.availableCaptureModes(for: .rear) != nil {
-                imagePicker.allowsEditing = false
-                imagePicker.sourceType = .camera
-                imagePicker.cameraCaptureMode = .photo
-                imagePicker.delegate = self
-                
-                imagePicker.view.tag = indexPath!.row
-                present(imagePicker, animated: true)
-            } else {
-                postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
-            }
-        }
-    }
     
     @IBAction func cameraBtnAction(_ sender: UIButton) {
         
@@ -543,7 +567,37 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
             let isCameraOn = valueArr[0] as! String
             if isCameraOn == "true"{
                 
-                checkCamera(sender)
+                let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
+                let indexPath = self.tblView.indexPathForRow(at:buttonPosition)
+                if  let cell = self.tblView.cellForRow(at: indexPath!) as? PVEVaccinationCrewSafetyCell
+                {
+                    
+                    let imgCount = Int(cell.imgCountBtn.titleLabel?.text ?? "0")
+                    if imgCount == 5 {
+                        if cell.imgCountBtn.isHidden == true{
+                        }else{
+                            postAlert("Reached maximum!", message: "Reached maximum limit of images for this question.")
+                            return
+                        }
+                    }else{
+                        
+                    }
+                }
+                
+                if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
+                    if UIImagePickerController.availableCaptureModes(for: .rear) != nil {
+                        imagePicker.allowsEditing = false
+                        imagePicker.sourceType = .camera
+                        imagePicker.cameraCaptureMode = .photo
+                        imagePicker.delegate = self
+                        
+                        imagePicker.view.tag = indexPath!.row
+                        present(imagePicker, animated: true, completion: {})
+                    } else {
+                        postAlert("Rear camera doesn't exist", message: "Application cannot access the camera.")
+                    }
+                }else{
+                }
             }
         }
     }
@@ -566,55 +620,78 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
         //
         if let pickedImage: UIImage = (info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)]) as? UIImage {
             let imageData: Data? = pickedImage.jpegData(compressionQuality: 0.1)
+            
+            
             questionsArr = CoreDataHandlerPVE().fetchAssessmentQuestion(currentSel_seq_Number) as NSArray
             
-            if currentSel_seq_Number == 2 {
+            if currentSel_seq_Number == 2
+            {
                 liveQuesArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).contains("Live")}) as NSArray
                 inactiveQuessArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).contains("Inactivated")}) as NSArray
                 otherQuessArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).isEmpty}) as NSArray
                 
-                if selectedIndex == 4 {
+                if selectedIndex == 4
+                {
                     
                     let max_ScoreArr = liveQuesArr.value(forKey: "seq_Number") as? [Int]
                     let seq_Number = max_ScoreArr![imagePicker.view.tag]
                     
                     let idArr = liveQuesArr.value(forKey: "id") as? [Int]
                     let id = idArr![imagePicker.view.tag]
-                    CoreDataHandlerPVE().updateImageDataInAssementDetails(seq_Number, rowId: id, imageData: imageData!)
                     
-                } else if selectedIndex == 5 {
+                    
+                    CoreDataHandlerPVE().updateImageDataInAssementDetails(seq_Number, rowId: id, imageData: imageData!)
+                }
+                
+                else if selectedIndex == 5
+                {
                     let max_ScoreArr = inactiveQuessArr.value(forKey: "seq_Number") as? [Int]
                     let seq_Number = max_ScoreArr![imagePicker.view.tag]
                     
                     let idArr = inactiveQuessArr.value(forKey: "id") as? [Int]
                     let id = idArr![imagePicker.view.tag]
-                    CoreDataHandlerPVE().updateImageDataInAssementDetails(seq_Number, rowId: id, imageData: imageData!)
                     
-                } else {
+                    
+                    CoreDataHandlerPVE().updateImageDataInAssementDetails(seq_Number, rowId: id, imageData: imageData!)
+                }
+                else
+                {
                     let max_ScoreArr = otherQuessArr.value(forKey: "seq_Number") as? [Int]
                     let seq_Number = max_ScoreArr![imagePicker.view.tag]
                     
                     let idArr = otherQuessArr.value(forKey: "id") as? [Int]
                     let id = idArr![imagePicker.view.tag]
+                    
                     CoreDataHandlerPVE().updateImageDataInAssementDetails(seq_Number, rowId: id, imageData: imageData!)
                 }
-            } else {
+            }
+            
+            else
+            {
                 let max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
                 let seq_Number = max_ScoreArr![imagePicker.view.tag]
+                
                 let idArr = questionsArr.value(forKey: "id") as? [Int]
                 let id = idArr![imagePicker.view.tag]
+                
                 CoreDataHandlerPVE().updateImageDataInAssementDetails(seq_Number, rowId: id, imageData: imageData!)
             }
+            
+            
+            
             imagePicker.dismiss(animated: true, completion: {
                 
                 self.tblView.reloadData()
                 
             })
         }
-        
-        func imagePickerControllerDidCancel(_ : UIImagePickerController) {
-            dismiss(animated: true)
+        /******************************************************************************************************/
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            
+            dismiss(animated: true, completion: {
+            })
         }
+        
     }
     
     @IBAction func btnImageCountAction(_ sender: UIButton) {
@@ -640,6 +717,8 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
         var idArr = questionsArr.value(forKey: "id") as? [Int]
         var id = idArr![currentSelectedBtnIndex]
         
+        var tempArr = NSArray()
+        
         if currentSel_seq_Number == 2 {
             
             liveQuesArr = questionsArr.filter({(($0 as! NSObject).value(forKey: "pVE_Vacc_Type") as! String).contains("Live")}) as NSArray
@@ -653,14 +732,16 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
                 
                 idArr = liveQuesArr.value(forKey: "id") as? [Int]
                 id = idArr![currentSelectedBtnIndex]
-            } else if selectedIndex == 5 {
+            }
+            else if selectedIndex == 5 {
                 
                 max_ScoreArr = inactiveQuessArr.value(forKey: "seq_Number") as? [Int]
                 seq_Number = max_ScoreArr![0]
                 
                 idArr = inactiveQuessArr.value(forKey: "id") as? [Int]
                 id = idArr![currentSelectedBtnIndex]
-            } else {
+            }
+            else {
                 max_ScoreArr = otherQuessArr.value(forKey: "seq_Number") as? [Int]
                 seq_Number = max_ScoreArr![0]
                 
@@ -668,7 +749,8 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
                 id = idArr![currentSelectedBtnIndex]
             }
             
-        } else {
+        }
+        else {
             max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
             seq_Number = max_ScoreArr![0]
             
@@ -676,7 +758,7 @@ extension PVEStartNewAssFinalizeAssement:  UIImagePickerControllerDelegate,UINav
             id = idArr![currentSelectedBtnIndex]
         }
         
-        let tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails("", seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntity")
+        tempArr = CoreDataHandlerPVE().getImageDataForCurrentAssementDetails("", seqNumber: NSNumber(value: seq_Number), rowId: id, entity: "PVE_ImageEntity")
         
         let imgDaraArr = tempArr.value(forKey: "imageData") as? [Data]
         return imgDaraArr!
@@ -748,14 +830,18 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorsPlusBtnDelegate,NoOfvaccina
         
         if noOfVaccinatorsArr.count > 0 {
             tblView.beginUpdates()
+            
             noOfVaccinatorsArr.remove(at: noOfVaccinatorsArr.count-1)
-            let indPathArr = [IndexPath(row: noOfVaccinatorsArr.count, section: 2) as NSIndexPath]
+            var indPathArr = [NSIndexPath]()
+            indPathArr = [IndexPath(row: noOfVaccinatorsArr.count, section: 2) as NSIndexPath]
             tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
             
             CoreDataHandlerPVE().updateSessionDetails(1, text: noOfVaccinatorsArr, forAttribute: "cat_NoOfVaccinatorsDetailsArr")
             let noOfVaccinatorsArr = sharedManager.getSessionValueForKeyFromDB(key: "cat_NoOfVaccinatorsDetailsArr") as? [[String : String]] ?? []
             
-            if let cell = self.tblView.headerView(forSection: 2) as? NoOfVaccinatorsHeader {
+            
+            if  let cell = self.tblView.headerView(forSection: 2) as? NoOfVaccinatorsHeader
+            {
                 cell.numberr = noOfVaccinatorsArr.count
                 cell.txtFeild.text = "\(cell.numberr)"
                 cell.bgBtn.layer.borderColor = UIColor.black.cgColor
@@ -766,47 +852,7 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorsPlusBtnDelegate,NoOfvaccina
             tblView.reloadData()
             view.endEditing(true)
         }
-    }
-    
-    fileprivate func updateVaccinatorDetails(_ count: Int) {
-        tblView.beginUpdates()
         
-        if count < noOfVaccinatorsArr.count && noOfVaccinatorsArr.count > 0 {
-            
-            let ddd = noOfVaccinatorsArr.count - count
-            var indPathArr = [NSIndexPath]()
-            for indx in 1...ddd {
-                noOfVaccinatorsArr.remove(at: noOfVaccinatorsArr.count-1)
-                indPathArr.append(IndexPath(row: indx, section: 2) as NSIndexPath)
-            }
-            tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
-            
-        }else{
-            
-            if noOfVaccinatorsArr.count > 0{
-                var indPathArr = [NSIndexPath]()
-                for indx in 1...noOfVaccinatorsArr.count {
-                    indPathArr.append(IndexPath(row: indx-1, section: 2) as NSIndexPath)
-                }
-                tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
-                noOfVaccinatorsArr.removeAll()
-            }
-            
-            var indPathArr = [NSIndexPath]()
-            
-            for indx in 1...count {
-                noOfVaccinatorsArr.append(["name" : "", "serology" : ""])
-                indPathArr.append(IndexPath(row: indx-1, section: 2) as NSIndexPath)
-            }
-            
-            tblView.insertRows(at: indPathArr as [IndexPath], with: .bottom)
-            
-        }
-        
-        CoreDataHandlerPVE().updateSessionDetails(1, text: noOfVaccinatorsArr, forAttribute: "cat_NoOfVaccinatorsDetailsArr")
-        noOfVaccinatorsArr = sharedManager.getSessionValueForKeyFromDB(key: "cat_NoOfVaccinatorsDetailsArr") as? [[String : String]] ?? []
-        tblView.endUpdates()
-        view.endEditing(true)
     }
     
     func vaccinatorPlusBtnTapped(count: Int) {
@@ -858,7 +904,44 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorsPlusBtnDelegate,NoOfvaccina
         
         if count != 0 {
             
-            updateVaccinatorDetails(count)
+            tblView.beginUpdates()
+            
+            if count < noOfVaccinatorsArr.count && noOfVaccinatorsArr.count > 0{
+                
+                let ddd = noOfVaccinatorsArr.count - count
+                var indPathArr = [NSIndexPath]()
+                for indx in 1...ddd {
+                    noOfVaccinatorsArr.remove(at: noOfVaccinatorsArr.count-1)
+                    indPathArr.append(IndexPath(row: indx, section: 2) as NSIndexPath)
+                }
+                tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
+                
+            }else{
+                
+                if noOfVaccinatorsArr.count > 0{
+                    var indPathArr = [NSIndexPath]()
+                    for indx in 1...noOfVaccinatorsArr.count {
+                        indPathArr.append(IndexPath(row: indx-1, section: 2) as NSIndexPath)
+                    }
+                    tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
+                    noOfVaccinatorsArr.removeAll()
+                }
+                
+                var indPathArr = [NSIndexPath]()
+                
+                for indx in 1...count {
+                    noOfVaccinatorsArr.append(["name" : "", "serology" : ""])
+                    indPathArr.append(IndexPath(row: indx-1, section: 2) as NSIndexPath)
+                }
+                
+                tblView.insertRows(at: indPathArr as [IndexPath], with: .bottom)
+                
+            }
+            
+            CoreDataHandlerPVE().updateSessionDetails(1, text: noOfVaccinatorsArr, forAttribute: "cat_NoOfVaccinatorsDetailsArr")
+            noOfVaccinatorsArr = sharedManager.getSessionValueForKeyFromDB(key: "cat_NoOfVaccinatorsDetailsArr") as? [[String : String]] ?? []
+            tblView.endUpdates()
+            view.endEditing(true)
             
         }
     }
@@ -891,7 +974,7 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorsPlusBtnDelegate,NoOfvaccina
 extension PVEStartNewAssFinalizeAssement: NoOfCatchersMinusDelegate,CatchersPlusBtnDelegate , AddedComment{
     
     func updatedComment(commentStr: String) {
-        print("")
+        
     }
     
     
@@ -924,66 +1007,27 @@ extension PVEStartNewAssFinalizeAssement: NoOfCatchersMinusDelegate,CatchersPlus
             tblView.beginUpdates()
             
             noOfCatcherArr.remove(at: noOfCatcherArr.count-1)
-            let indPathArr = [IndexPath(row: noOfCatcherArr.count, section: 1) as NSIndexPath]
+            var indPathArr = [NSIndexPath]()
+            indPathArr = [IndexPath(row: noOfCatcherArr.count, section: 1) as NSIndexPath]
             tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
             
             CoreDataHandlerPVE().updateSessionDetails(1, text: noOfCatcherArr, forAttribute: "cat_NoOfCatchersDetailsArr")
             let noOfCatcherArr = sharedManager.getSessionValueForKeyFromDB(key: "cat_NoOfCatchersDetailsArr") as? [[String : String]] ?? []
             
-            if let cell = self.tblView.headerView(forSection: 1) as? NoOfCatchersHeader {
+            if  let cell = self.tblView.headerView(forSection: 1) as? NoOfCatchersHeader
+            {
                 cell.numberr = noOfCatcherArr.count
                 cell.noOfCatchersTxtFeild.text = "\(cell.numberr)"
                 cell.bgBtn.layer.borderColor = UIColor.black.cgColor
                 cell.bgBtn.layer.borderWidth = 1.0
             }
             
+            
             tblView.endUpdates()
             tblView.reloadData()
             view.endEditing(true)
         }
         
-    }
-    
-    fileprivate func updateNoOfCatcherDetails(_ count: Int) {
-        tblView.beginUpdates()
-        
-        if count < noOfCatcherArr.count && noOfCatcherArr.count > 0{
-            
-            let ddd = noOfCatcherArr.count - count
-            var indPathArr = [NSIndexPath]()
-            for indx in 1...ddd {
-                noOfCatcherArr.remove(at: noOfCatcherArr.count-1)
-                indPathArr.append(IndexPath(row: indx, section: 1) as NSIndexPath)
-            }
-            tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
-            
-        }else{
-            
-            if noOfCatcherArr.count > 0{
-                var indPathArr = [NSIndexPath]()
-                for indx in 1...noOfCatcherArr.count {
-                    indPathArr.append(IndexPath(row: indx-1, section: 1) as NSIndexPath)
-                }
-                tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
-                noOfCatcherArr.removeAll()
-            }
-            
-            var indPathArr = [NSIndexPath]()
-            
-            for indx in 1...count {
-                //noOfCatcherArr.append("newCell")
-                noOfCatcherArr.append(["name" : "", "serology" : ""])
-                indPathArr.append(IndexPath(row: indx-1, section: 1) as NSIndexPath)
-            }
-            
-            tblView.insertRows(at: indPathArr as [IndexPath], with: .bottom)
-            
-        }
-        
-        CoreDataHandlerPVE().updateSessionDetails(1, text: noOfCatcherArr, forAttribute: "cat_NoOfCatchersDetailsArr")
-        
-        tblView.endUpdates()
-        view.endEditing(true)
     }
     
     func catchersbtnPlusBtnTapped(count: Int) {
@@ -1036,7 +1080,45 @@ extension PVEStartNewAssFinalizeAssement: NoOfCatchersMinusDelegate,CatchersPlus
         
         if count != 0 {
             
-            updateNoOfCatcherDetails(count)
+            tblView.beginUpdates()
+            
+            if count < noOfCatcherArr.count && noOfCatcherArr.count > 0{
+                
+                let ddd = noOfCatcherArr.count - count
+                var indPathArr = [NSIndexPath]()
+                for indx in 1...ddd {
+                    noOfCatcherArr.remove(at: noOfCatcherArr.count-1)
+                    indPathArr.append(IndexPath(row: indx, section: 1) as NSIndexPath)
+                }
+                tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
+                
+            }else{
+                
+                if noOfCatcherArr.count > 0{
+                    var indPathArr = [NSIndexPath]()
+                    for indx in 1...noOfCatcherArr.count {
+                        indPathArr.append(IndexPath(row: indx-1, section: 1) as NSIndexPath)
+                    }
+                    tblView.deleteRows(at: indPathArr as [IndexPath], with: .bottom)
+                    noOfCatcherArr.removeAll()
+                }
+                
+                var indPathArr = [NSIndexPath]()
+                
+                for indx in 1...count {
+                    //noOfCatcherArr.append("newCell")
+                    noOfCatcherArr.append(["name" : "", "serology" : ""])
+                    indPathArr.append(IndexPath(row: indx-1, section: 1) as NSIndexPath)
+                }
+                
+                tblView.insertRows(at: indPathArr as [IndexPath], with: .bottom)
+                
+            }
+            
+            CoreDataHandlerPVE().updateSessionDetails(1, text: noOfCatcherArr, forAttribute: "cat_NoOfCatchersDetailsArr")
+            
+            tblView.endUpdates()
+            view.endEditing(true)
             
         }
     }
@@ -1122,32 +1204,35 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
         tblView.reloadData()
     }
     
-    fileprivate func vaccineMixtureValidation(_ cell: PVEVaccineInfoDetailsCell) {
-        if cell.vacManTxtFld.text! == "" {
-            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacManBtn)
-        }
-        if cell.vacNameTxtFld.text! == "" {
-            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacNameBtn)
-        }
-        if cell.serotypeTxtFld.text! == "" {
-            self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serotypeBtn)
-        }
-    }
-    
     func vaccinatorInfoDetailPlusBtnTapped(clickedBtnIndPath: NSIndexPath) {
         
         for (indx, _) in vaccinInfoDetailArr.enumerated() {
+            
             let indexPath = IndexPath(row: indx, section: 6)
-            if  let cell = self.tblView.cellForRow(at: indexPath ) as? PVEVaccineInfoDetailsCell,
-                cell.vacManTxtFld.text! == "" || cell.vacNameTxtFld.text! == "" || cell.serotypeTxtFld.text! == "" {
-                vaccineMixtureValidation(cell)
+            
+            if  let cell = self.tblView.cellForRow(at: indexPath ) as? PVEVaccineInfoDetailsCell
+            {
+                if cell.vacManTxtFld.text! == "" || cell.vacNameTxtFld.text! == "" || cell.serotypeTxtFld.text! == "" {/*|| cell.serialTxtFld.text! == "" || cell.expiryTxtFld.text! == "" || cell.siteOfInjTxtFld.text! == ""{*/
+                    
+                    if cell.vacManTxtFld.text! == "" {
+                        self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacManBtn)
+                    }
+                    if cell.vacNameTxtFld.text! == "" {
+                        self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacNameBtn)
+                    }
+                    if cell.serotypeTxtFld.text! == "" {
+                        self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serotypeBtn)
+                    }
+                }
             }
+            
         }
         
         for (indx, _) in vaccinInfoDetailArr.enumerated() {
             
-            if vaccinInfoDetailArr[indx]["man"] as? String == "" || vaccinInfoDetailArr[indx]["name"] as? String == "" || vaccinInfoDetailArr[indx]["serotype"] as? String == "" {
-                showAlert(title: Constants.alertStr, message: "Please fill the mandatory fields.", owner: self)
+            if  vaccinInfoDetailArr[indx]["man"] as? String == "" || vaccinInfoDetailArr[indx]["name"] as? String == "" || vaccinInfoDetailArr[indx]["serotype"] as? String == "" /* vaccinInfoDetailArr[indx]["serial"] as? String == "" || vaccinInfoDetailArr[indx]["expDate"] as? String == "" || vaccinInfoDetailArr[indx]["siteOfInj"] as? String == "" */{
+                showAlert(title: "Alert", message: "Please fill the mandatory fields.", owner: self)
+                
                 return
             }
         }
@@ -1156,7 +1241,7 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
         
         vaccinInfoDetailArr = sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as? [[String : Any]] ?? []
         
-        vaccinInfoDetailArr.append(["man" : "", "man_id" : 0, "name" : "", "name_id" : 0, "serotype" : "", "serotype_id" : 0, "serial" : "", "expDate" : "", "siteOfInj" : "", "siteOfInj_id" : 0, "note" : "", "otherAntigen" :"" , "showMore" : Constants.noStr , "vaccine_id" : 0 ])
+        vaccinInfoDetailArr.append(["man" : "", "man_id" : 0, "name" : "", "name_id" : 0, "serotype" : "", "serotype_id" : 0, "serial" : "", "expDate" : "", "siteOfInj" : "", "siteOfInj_id" : 0, "note" : "", "otherAntigen" :"" , "showMore" : "No" , "vaccine_id" : 0 ])
         let indexPath = IndexPath(row: vaccinInfoDetailArr.count-1, section: 6)
         
         
@@ -1174,22 +1259,6 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
     }
     
     // MARK: Switch for Live & Inactivated Vaccine
-    fileprivate func updateLiveVaccineData(_ dataArr: [Int], _ seqArr: [Int]?, _ idArr: [Int]?) {
-        for index in 0..<dataArr.count
-        {
-            if isLiveVaccineOn {
-                CoreDataHandlerPVE().updateAssementDetails((seqArr!.first)!, id: idArr![index], isSel: !isLiveVaccineOn)
-                
-                CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], isLiveVaccineOn, forAttribute: "liveVaccineSwitch" , comment: "" , forComment : "liveComment")
-            }
-            else
-            {
-                CoreDataHandlerPVE().updateAssementDetails((seqArr!.first)!, id: idArr![index], isSel: !isLiveVaccineOn)
-                CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], isLiveVaccineOn, forAttribute: "liveVaccineSwitch", comment: Constants.liveComment,  forComment : "liveComment")
-            }
-        }
-    }
-    
     @objc func switchTapped(sender:UISwitch) {
         
         if sender.tag == 4 {
@@ -1199,7 +1268,19 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
             let switchStatus = ((sender as AnyObject).isOn)
             isLiveVaccineOn = switchStatus ?? true
             if let dataArr = idArr {
-                updateLiveVaccineData(dataArr, seqArr, idArr)
+                for index in 0..<dataArr.count
+                {
+                    if isLiveVaccineOn {
+                        CoreDataHandlerPVE().updateAssementDetails((seqArr!.first)!, id: idArr![index], isSel: !isLiveVaccineOn)
+                        
+                        CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], isLiveVaccineOn, forAttribute: "liveVaccineSwitch" , comment: "" , forComment : "liveComment")
+                    }
+                    else
+                    {
+                        CoreDataHandlerPVE().updateAssementDetails((seqArr!.first)!, id: idArr![index], isSel: !isLiveVaccineOn)
+                        CoreDataHandlerPVE().updateLiveVaccineSavedInDB(id: idArr![index], isLiveVaccineOn, forAttribute: "liveVaccineSwitch", comment: Constants.liveComment,  forComment : "liveComment")
+                    }
+                }
             }
         }
         else if sender.tag == 5 {
@@ -1231,12 +1312,12 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
         
         let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
         let currentIndPath = self.tblView.indexPathForRow(at:buttonPosition)
-        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
+        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "No"
         
         if let isShow = vaccinInfoDetailArr[currentIndPath!.row]["showMore"]  as? String
         {
             print(isShow)
-            if isShow == Constants.noStr
+            if isShow == "No"
             {
                 CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
                 
@@ -1246,8 +1327,8 @@ extension PVEStartNewAssFinalizeAssement: VaccinatorInfoDetailPlusBtnTapped,Vacc
             }
             else
             {
-                CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
+                CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "No", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "No"
             }
             
         }
@@ -1289,35 +1370,49 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
     
     
     @IBAction func vaccinatorsPlusBtnAction(_ sender: Any) {
-        print("")
+        
     }
     
-
-
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if currentSel_seq_Number == 2 {
+        if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
+            if section == 3 {
+                return otherQuessArr.count
+            }
+            if section == 1 {
+                return noOfCatcherArr.count
+            }
+            if section == 2 {
+                return noOfVaccinatorsArr.count
+            }
+            if section == 4 {
+                if isLiveVaccineOn == true {
+                    return liveQuesArr.count
+                }
+                else{
+                    return 1
+                }
+            }
+            if section == 5 {
+                if isInActiveVaccineOn == true {
+                    return inactiveQuessArr.count
+                }
+                else{
+                    return 1
+                }
+                
+            }
+            if section == 6 {
+                return vaccinInfoDetailArr.count
+            }
+            else{
+                return 1
+            }
+        }
+        else if currentSel_seq_Number == 6 { // Vaccine Evaluation Section
             
-            switch section {
-              case 1:
-                  return noOfCatcherArr.count
-              case 2:
-                  return noOfVaccinatorsArr.count
-              case 3:
-                  return otherQuessArr.count
-              case 4:
-                  return isLiveVaccineOn ? liveQuesArr.count : 1
-              case 5:
-                  return isInActiveVaccineOn ? inactiveQuessArr.count : 1
-              case 6:
-                  return vaccinInfoDetailArr.count
-              default:
-                  return 1
-              }
-            
-        } else if currentSel_seq_Number == 6 {
             return 1
-        } else {
+        }
+        else{
             return questionsArr.count
         }
     }
@@ -1326,93 +1421,43 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
         if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
             if indexPath.section == 0 {
                 return 200.0
-            } else if indexPath.section == 1 || indexPath.section == 2{
+            }
+            else if indexPath.section == 1 || indexPath.section == 2{
                 return 60.0 //\\\ ---Vaccine Info Detail Cell-----
-            } else if indexPath.section == 4 || indexPath.section == 5{
+            }
+            else if indexPath.section == 4 || indexPath.section == 5{
                 return 80.0 //\\\ ---Crew Safty Cell-----
-            } else if indexPath.section == 6 {
-                if let showMore = vaccinInfoDetailArr[indexPath.row]["showMore"] as? String, showMore == Constants.noStr {
-                    return 93
+            }
+            else if indexPath.section == 6{
+                
+                
+                if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore"){
+                    if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == "No"
+                    {
+                        return 93
+                    }
+                    else
+                    {
+                        return 300
+                    }
                 }
-                return 300
-            } else {
+                else
+                {
+                    return 300
+                }
+                
+                
+            }
+            else{
                 return 80.0
             }
-        } else if currentSel_seq_Number == 6 {
+        }
+        else if currentSel_seq_Number == 6 {
             return 1350.0
-        } else {
+        }else{
             return 80.0
         }
-    }
-    
-    fileprivate func setupTeamMemberCellUI(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemeberVaccinatorsCell", for: indexPath) as! PVETeamMemeberVaccinatorsCell
-        cell.currentIndPath = indexPath as NSIndexPath
-        cell.delegate = self
-        
-        cell.nameTxtField.text = ""
-        cell.mobileTxtField.text = ""
-        cell.emailTxtField.text = ""
-        
-        if noOfVaccinatorsArr.count > indexPath.row {
-            cell.nameTxtField.text = getName(sourceArray: noOfVaccinatorsArr, indexPath: indexPath.row, key: "name")
-            cell.emailTxtField.text = getName(sourceArray: noOfVaccinatorsArr, indexPath: indexPath.row, key: "email")
-            cell.mobileTxtField.text = getName(sourceArray: noOfVaccinatorsArr, indexPath: indexPath.row, key: "mobile")
-        }
-        cell.teamMemberTitleLbl.isHidden = cell.currentIndPath.row != 0
-        cell.serologySelUnSelectImg.image = noOfVaccinatorsArr[indexPath.row]["serology"] ?? "" == "" ? UIImage(named: "uncheckIconPE") : UIImage(named: "checkIconPE")
-        
-        cell.serologyView.isHidden = sharedManager.getSessionValueForKeyFromDB(key: "housing") as! String == "Floor"
-        return cell
-    }
-    
-    fileprivate func setupCatcherCellUI(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemberCatchersCell", for: indexPath) as? PVETeamMemberCatchersCell else {return UITableViewCell()}
-        cell.currentIndPath = indexPath as NSIndexPath
-        cell.delegate = self
-        
-        cell.nameTxtField.text = ""
-        cell.mobileTxtField.text = ""
-        cell.emailTxtField.text = ""
-
-        if noOfCatcherArr.count > indexPath.row {
-            cell.nameTxtField.text = getName(sourceArray: noOfCatcherArr, indexPath: indexPath.row, key: "name")
-            cell.emailTxtField.text = getName(sourceArray: noOfCatcherArr, indexPath: indexPath.row, key: "email")
-            cell.mobileTxtField.text = getName(sourceArray: noOfCatcherArr, indexPath: indexPath.row, key: "mobile")
-        }
-        
-        cell.teamMemberTitleLbl.isHidden = cell.currentIndPath.row != 0
-        return cell
-    }
-    
-    
-    func getName(sourceArray:[[String : String]],indexPath:Int, key:String) -> String {
-        if sourceArray[indexPath].keys.contains(key) {
-            return sourceArray[indexPath][key] ?? ""
-        }
-        return ""
-    }
-    
-    fileprivate func cameraSettings(_ cameraState: String, _ cell: PVEVaccinationCrewSafetyCell) {
-        cell.cameraIcon.alpha = cameraState == "true" ? 1.0 : 0.2
-        cell.cameraBtn.alpha = cameraState == "true" ? 1.0 : 0.2
-    }
-    
-    fileprivate func setupCrewSaftyCellUI(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
-        cell.setCellAndControllsNew(qArr:otherQuessArr, currentIndd: indexPath as NSIndexPath)
-        cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-        if let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as? String {
-            self.cameraSettings(cameraState, cell)
-            
-        }
-        if(indexPath.row % 2 == 0) {
-            cell.contentView.backgroundColor =  #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
-        } else {
-            cell.contentView.backgroundColor = #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
-        }
-        
-        return cell
+        //return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -1424,8 +1469,11 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                 cell.refreshFreeSerologyBtnState()
                 cell.refreshRadioButton()
                 
-                if let housingStr = sharedManager.getSessionValueForKeyFromDB(key: "housing") as? String {
-                    cell.serologyViewForFreeHousing.isHidden = housingStr != "Floor"
+                let housingStr = sharedManager.getSessionValueForKeyFromDB(key: "housing") as! String
+                if housingStr == "Floor" {
+                    cell.serologyViewForFreeHousing.isHidden = false
+                }else{
+                    cell.serologyViewForFreeHousing.isHidden = true
                 }
                 
                 cell.crewLeaderTxtField.text = sharedManager.getSessionValueForKeyFromDB(key: "cat_crewLeaderName") as? String
@@ -1439,13 +1487,110 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                 return cell
             }
             else if indexPath.section == 1 {
-                return setupCatcherCellUI(tableView, indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemberCatchersCell", for: indexPath) as! PVETeamMemberCatchersCell
+                cell.currentIndPath = indexPath as NSIndexPath
+                cell.delegate = self
+                if noOfCatcherArr.count > indexPath.row{
+                    
+                    if noOfCatcherArr[indexPath.row].keys.contains("name"){
+                        cell.nameTxtField.text = noOfCatcherArr[indexPath.row]["name"] ?? ""
+                    }else{
+                        cell.nameTxtField.text = ""
+                    }
+                    if noOfCatcherArr[indexPath.row].keys.contains("email"){
+                        cell.emailTxtField.text = noOfCatcherArr[indexPath.row]["email"] ?? ""
+                    }else{
+                        cell.emailTxtField.text = ""
+                    }
+                    if noOfCatcherArr[indexPath.row].keys.contains("mobile"){
+                        cell.mobileTxtField.text = noOfCatcherArr[indexPath.row]["mobile"] ?? ""
+                    }else{
+                        cell.mobileTxtField.text = ""
+                    }
+                }else{
+                    cell.nameTxtField.text = ""
+                    cell.mobileTxtField.text = ""
+                    cell.emailTxtField.text = ""
+                }
+                
+                if cell.currentIndPath.row == 0 {
+                    cell.teamMemberTitleLbl.isHidden = false
+                }else{
+                    cell.teamMemberTitleLbl.isHidden = true
+                }
+                
+                return cell
             }
             else if indexPath.section == 2 {
-                return setupTeamMemberCellUI(tableView, indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemeberVaccinatorsCell", for: indexPath) as! PVETeamMemeberVaccinatorsCell
+                cell.currentIndPath = indexPath as NSIndexPath
+                cell.delegate = self
+                
+                if noOfVaccinatorsArr.count > indexPath.row{
+                    
+                    if noOfVaccinatorsArr[indexPath.row].keys.contains("name"){
+                        cell.nameTxtField.text = noOfVaccinatorsArr[indexPath.row]["name"] ?? ""
+                        
+                    }else{
+                        cell.nameTxtField.text = ""
+                    }
+                    if noOfVaccinatorsArr[indexPath.row].keys.contains("email"){
+                        cell.emailTxtField.text = noOfVaccinatorsArr[indexPath.row]["email"] ?? ""
+                    }else{
+                        cell.emailTxtField.text = ""
+                    }
+                    if noOfVaccinatorsArr[indexPath.row].keys.contains("mobile"){
+                        cell.mobileTxtField.text = noOfVaccinatorsArr[indexPath.row]["mobile"] ?? ""
+                    }else{
+                        cell.mobileTxtField.text = ""
+                    }
+                }
+                else{
+                    cell.nameTxtField.text = ""
+                    cell.mobileTxtField.text = ""
+                    cell.emailTxtField.text = ""
+                }
+                
+                if cell.currentIndPath.row == 0 {
+                    cell.teamMemberTitleLbl.isHidden = false
+                }else{
+                    cell.teamMemberTitleLbl.isHidden = true
+                }
+                
+                if noOfVaccinatorsArr[indexPath.row]["serology"] ?? "" == "" {
+                    cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
+                }else{
+                    cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
+                }
+                
+                let housingStr = sharedManager.getSessionValueForKeyFromDB(key: "housing") as! String
+                if housingStr == "Floor" {
+                    cell.serologyView.isHidden = true
+                }else{
+                    cell.serologyView.isHidden = false
+                }
+                return cell
             }
             else if indexPath.section == 3 {
-                return setupCrewSaftyCellUI(tableView, indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
+                cell.setCellAndControllsNew(qArr:otherQuessArr, currentIndd: indexPath as NSIndexPath)
+                cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
+                let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
+                if cameraState == "true"{
+                    cell.cameraIcon.alpha = 1.0
+                    cell.cameraBtn.alpha = 1.0
+                }else{
+                    cell.cameraIcon.alpha = 0.2
+                    cell.cameraBtn.alpha = 0.2
+                }
+                
+                if(indexPath.row % 2 == 0) {
+                    cell.contentView.backgroundColor =  #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
+                } else {
+                    cell.contentView.backgroundColor = #colorLiteral(red: 0.9098039216, green: 0.937254902, blue: 0.9764705882, alpha: 1)
+                }
+                
+                return cell
             }
             else if indexPath.section == 4 {
                 
@@ -1453,8 +1598,13 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                     let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
                     cell.setCellAndControllsNew(qArr:liveQuesArr, currentIndd: indexPath as NSIndexPath)
                     cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-                    if let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as? String {
-                        cameraSettings(cameraState, cell)
+                    let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
+                    if cameraState == "true"{
+                        cell.cameraIcon.alpha = 1.0
+                        cell.cameraBtn.alpha = 1.0
+                    }else{
+                        cell.cameraIcon.alpha = 0.2
+                        cell.cameraBtn.alpha = 0.2
                     }
                     
                     //cell.saveDelegate = self
@@ -1486,8 +1636,13 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                     
                     cell.setCellAndControllsNew(qArr:liveQuesArr, currentIndd: indexPath as NSIndexPath)
                     cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-                    if let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as? String {
-                        self.cameraSettings(cameraState, cell)
+                    let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
+                    if cameraState == "true"{
+                        cell.cameraIcon.alpha = 1.0
+                        cell.cameraBtn.alpha = 1.0
+                    }else{
+                        cell.cameraIcon.alpha = 0.2
+                        cell.cameraBtn.alpha = 0.2
                     }
                     
                     if(indexPath.row % 2 == 0) {
@@ -1509,8 +1664,13 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                     
                     cell.setCellAndControllsNew(qArr:inactiveQuessArr, currentIndd: indexPath as NSIndexPath)
                     cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-                    if let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as? String {
-                        self.cameraSettings(cameraState, cell)
+                    let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
+                    if cameraState == "true"{
+                        cell.cameraIcon.alpha = 1.0
+                        cell.cameraBtn.alpha = 1.0
+                    }else{
+                        cell.cameraIcon.alpha = 0.2
+                        cell.cameraBtn.alpha = 0.2
                     }
                     
                     if(indexPath.row % 2 == 0) {
@@ -1540,8 +1700,13 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                     
                     cell.setCellAndControllsNew(qArr:inactiveQuessArr, currentIndd: indexPath as NSIndexPath)
                     cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-                    if let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as? String {
-                        cameraSettings(cameraState, cell)
+                    let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
+                    if cameraState == "true"{
+                        cell.cameraIcon.alpha = 1.0
+                        cell.cameraBtn.alpha = 1.0
+                    }else{
+                        cell.cameraIcon.alpha = 0.2
+                        cell.cameraBtn.alpha = 0.2
                     }
                     
                     if(indexPath.row % 2 == 0) {
@@ -1643,7 +1808,7 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                     
                     
                     if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore"){
-                        if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr
+                        if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == "No"
                         {
                             cell.showMoreBtn.setImage(UIImage(named: "up"), for: .normal)
                         }
@@ -1671,29 +1836,31 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                     self.sharedManager.setBorderBlue(btn: cell.vacManBtn)
                 }
                 
-                if vaccinInfoDetailArr[indexPath.row]["name"] as? String == "" {
+                if vaccinInfoDetailArr[indexPath.row]["name"] as? String == ""{
                     self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.vacNameBtn)
                 }else{
                     self.sharedManager.setBorderBlue(btn: cell.vacNameBtn)
                 }
                 
-                if vaccinInfoDetailArr[indexPath.row]["serotype"] as? String == "" {
+                if vaccinInfoDetailArr[indexPath.row]["serotype"] as? String == ""{
                     self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serotypeBtn)
                 }else{
                     self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
                 }
                 
-                if vaccinInfoDetailArr[indexPath.row]["serial"] as? String == "" {
+                if vaccinInfoDetailArr[indexPath.row]["serial"] as? String == ""{
                     // self.sharedManager.setBorderRedForMandatoryFiels(forBtn: cell.serialBtn)
                 }else{
                     self.sharedManager.setBorderBlue(btn: cell.serialBtn)
                 }
                 
-                if vaccinInfoDetailArr[indexPath.row]["expDate"] as? String != "" {
+                if vaccinInfoDetailArr[indexPath.row]["expDate"] as? String == ""{
+                }else{
                     self.sharedManager.setBorderBlue(btn: cell.expiryBtn)
                 }
                 
-                if (vaccinInfoDetailArr[indexPath.row]["siteOfInj"] as? String) == "" {
+                if (vaccinInfoDetailArr[indexPath.row]["siteOfInj"] as? String) == ""{
+                }else{
                     self.sharedManager.setBorderBlue(btn: cell.siteOfInjBtn)
                 }
                 
@@ -1703,9 +1870,10 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                 let searchString = "Other"
                 let result = otherAntgnStr?.contains(where: searchString.contains) as? Bool
                 
-                if result == true {
+                if result == true
+                {
                     cell.refreshAntigenView(str:"Other")
-                } else {
+                } else{
                     cell.refreshAntigenView(str:"nk")
                 }
                 return cell
@@ -1715,8 +1883,13 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
                 cell.setCellAndControllsNew(qArr:otherQuessArr, currentIndd: indexPath as NSIndexPath)
                 cell.tag = Int("\(indexPath.section)" + "\(indexPath.row)")!
-                if let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as? String {
-                    cameraSettings(cameraState, cell)
+                let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
+                if cameraState == "true"{
+                    cell.cameraIcon.alpha = 1.0
+                    cell.cameraBtn.alpha = 1.0
+                }else{
+                    cell.cameraIcon.alpha = 0.2
+                    cell.cameraBtn.alpha = 0.2
                 }
                 
                 if(indexPath.row % 2 == 0) {
@@ -1737,9 +1910,15 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
             cell.refreshVacEvalFields()
             setMarksLabel()
             
-            cell.yesBtnImg.image = sharedManager.getSessionValueForKeyFromDB(key: "vacEval_DyeAdded") as! Bool == true ? UIImage(named: "radioActive") : UIImage(named: "radioInactive")
-            cell.noBtnImg.image = sharedManager.getSessionValueForKeyFromDB(key: "vacEval_DyeAdded") as! Bool == true ? UIImage(named: "radioInactive") : UIImage(named: "radioActive")
-                        
+            let isDyeAdded = sharedManager.getSessionValueForKeyFromDB(key: "vacEval_DyeAdded") as! Bool
+            if isDyeAdded == true{
+                cell.yesBtnImg.image = UIImage(named: "radioActive")
+                cell.noBtnImg.image = UIImage(named: "radioInactive")
+            }else{
+                cell.yesBtnImg.image = UIImage(named: "radioInactive")
+                cell.noBtnImg.image = UIImage(named: "radioActive")
+            }
+            
             cell.notetxtView.textContainer.lineFragmentPadding = 12
             cell.selectionStyle = .none
             
@@ -1748,15 +1927,21 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
             
             return cell
             
-        } else {
+        }else{
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
             
             cell.setCellAndControllsNew(qArr:questionsArr, currentIndd: indexPath as NSIndexPath)
             cell.cameraBtn.tag = Int(truncating: currentSel_seq_Number)
-            if let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as? String {
-                cameraSettings(cameraState, cell)
+            let cameraState = sharedManager.getSessionValueForKeyFromDB(key: "cameraEnabled") as! String
+            if cameraState == "true"{
+                cell.cameraIcon.alpha = 1.0
+                cell.cameraBtn.alpha = 1.0
+            }else{
+                cell.cameraIcon.alpha = 0.2
+                cell.cameraBtn.alpha = 0.2
             }
+            
             
             if(indexPath.row % 2 == 0) {
                 cell.contentView.backgroundColor =  #colorLiteral(red: 0.9998950362, green: 1, blue: 0.9998714328, alpha: 1)
@@ -1770,56 +1955,58 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
     }
     
     
-    func antigenFunc (selectedRow : Int) {
+    func antigenFunc (selectedRow : Int)
+    {
         selectedAntigenArray.removeAll()
         
-        if vaccinInfoDetailArr[selectedRow]["serotype"] != nil, let items = vaccinInfoDetailArr[selectedRow]["serotype"] as? [String] {
-            let itemsIds = (vaccinInfoDetailArr[selectedRow]["serotype_id"] as? [String])!
-            for id in 0..<items.count {
-                let item = SelectedData(id:  Int(itemsIds[id])!, name: items[id])
-                selectedAntigenArray.append(item)
+        if vaccinInfoDetailArr[selectedRow]["serotype"] != nil
+        {
+            
+            if let items = vaccinInfoDetailArr[selectedRow]["serotype"] as? [String]
+            {
+                debugPrint(items)
+                let itemsIds = (vaccinInfoDetailArr[selectedRow]["serotype_id"] as? [String])!
+                
+                for id in 0..<items.count {
+                    let item = SelectedData(id:  Int(itemsIds[id] as? String ?? "")!, name: items[id])
+                    selectedAntigenArray.append(item)
+                }
+                debugPrint(selectedAntigenArray)
             }
         }
-    }
-    
-    fileprivate func catcherHeaderHeight() -> CGFloat {
-        if noOfCatcherArr.count > 0 {
-            return 85.0
-        } else {
-            return 73.0
-        }
-    }
-    
-    fileprivate func vaccinatorHeaderHeight() -> CGFloat {
-        if noOfVaccinatorsArr.count > 0 {
-            return 85.0
-        } else {
-            return 73.0
-        }
-    }
-    
-    fileprivate func vaccinationInfoHeaderHeight() -> CGFloat {
-        if vaccinInfoDetailArr.count > 0{
-            return 85.0
-        }else{
-            return 73.0
-        }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 5 || section == 1 || section == 2 || section == 3 || section == 4 || section == 6{
             if section == 1 {
-                return catcherHeaderHeight()
+                if noOfCatcherArr.count > 0{
+                    return 85.0
+                }else{
+                    return 73.0
+                }
             }
             if section == 2 {
-                return vaccinatorHeaderHeight()
+                if noOfVaccinatorsArr.count > 0{
+                    return 85.0
+                }else{
+                    return 73.0
+                }
             }
-            if section == 4 || section == 5 {
+            if section == 4  {
+                return 43.0
+            }
+            if section == 5
+            {
                 return 43.0
             }
             if section == 6 {
                 
-                return vaccinationInfoHeaderHeight()
+                if vaccinInfoDetailArr.count > 0{
+                    return 85.0
+                }else{
+                    return 73.0
+                }
             }
             if section == 3 {
                 return 73.0
@@ -1833,44 +2020,36 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
         }
     }
     
-    fileprivate func numberOfCatcherHeader(_ tableView: UITableView) -> UIView? {
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfCatchersHeader" ) as! NoOfCatchersHeader
-        headerView.delegate = self
-        if noOfCatcherArr.count > 0{
-            headerView.headerImg.image = UIImage(named: "footerNavigationExpand")
-        }else{
-            headerView.headerImg.image = UIImage(named: "footerNavigationRounded")
-        }
-        
-        if headerView.noOfCatchersTxtFeild.text == "0"{
-            headerView.noOfCatchersTxtFeild.text = ""
-        }else{
-        }
-        return headerView
-    }
-    
-    fileprivate func NumberOfVaccinatorHeader(_ tableView: UITableView) -> UIView? {
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfVaccinatorsHeader" ) as! NoOfVaccinatorsHeader
-        headerView.delegate = self
-        if noOfVaccinatorsArr.count > 0{
-            headerView.headerImg.image = UIImage(named: "footerNavigationExpand")
-        }else{
-            headerView.headerImg.image = UIImage(named: "footerNavigationRounded")
-        }
-        if headerView.txtFeild.text == "0"{
-            headerView.txtFeild.text = ""
-        }else{
-        }
-        return headerView
-    }
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 1 {
-            return numberOfCatcherHeader(tableView)
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfCatchersHeader" ) as! NoOfCatchersHeader
+            headerView.delegate = self
+            if noOfCatcherArr.count > 0{
+                headerView.headerImg.image = UIImage(named: "footerNavigationExpand")
+            }else{
+                headerView.headerImg.image = UIImage(named: "footerNavigationRounded")
+            }
+            
+            if headerView.noOfCatchersTxtFeild.text == "0"{
+                headerView.noOfCatchersTxtFeild.text = ""
+            }else{
+            }
+            return headerView
         }
         if section == 2 {
-            return NumberOfVaccinatorHeader(tableView)
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfVaccinatorsHeader" ) as! NoOfVaccinatorsHeader
+            headerView.delegate = self
+            if noOfVaccinatorsArr.count > 0{
+                headerView.headerImg.image = UIImage(named: "footerNavigationExpand")
+            }else{
+                headerView.headerImg.image = UIImage(named: "footerNavigationRounded")
+            }
+            if headerView.txtFeild.text == "0"{
+                headerView.txtFeild.text = ""
+            }else{
+            }
+            return headerView
         }
         
         if section == 4 {
@@ -1976,8 +2155,12 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
         let seq_NumberArrr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
         for (ind, _) in seq_NumberArrr.enumerated() {
             let seqNo = seq_NumberArrr[ind] as! NSNumber
-            if seqNo != 6 {
+            if seqNo == 6 {
+            }
+            else {
                 var sumvalue =  CoreDataHandlerPVE().fetchSumOfSelectedMarksModify(seqNo).0
+                print("printing sumvalue= ",sumvalue)
+                
                 if sumvalue == 0 {
                     allCategoryAttampted = true
                 }
@@ -1987,7 +2170,7 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
         if allCategoryAttampted == false {
             finishBtn.alpha = 1.0
             finishBtn.isUserInteractionEnabled = true
-        } else {
+        }else{
             finishBtn.alpha = 0.5
             finishBtn.isUserInteractionEnabled = false
         }
@@ -2033,7 +2216,8 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
             
             self.dropDownVIewNew(arrayData: vaccineNamesArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
                 
-                if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell {
+                if  let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell
+                {
                     if currentIndPath! == cell.currentIndPath as IndexPath {
                         cell.vacManTxtFld.text = selectedVal
                         self.sharedManager.setBorderBlue(btn: cell.vacManBtn)
@@ -2113,158 +2297,44 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
             
             self.dropDownVIewNew(arrayData: vaccineNamesArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
                 
-                if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell,currentIndPath! == cell.currentIndPath as IndexPath {
-                    cell.vacNameTxtFld.text = selectedVal
-                    cell.serotypeTxtFld.text = ""
-                    self.sharedManager.setBorderBlue(btn: cell.vacNameBtn)
+                if  let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell
+                {
+                    if currentIndPath! == cell.currentIndPath as IndexPath {
+                        cell.vacNameTxtFld.text = selectedVal
+                        cell.serotypeTxtFld.text = ""
+                        self.sharedManager.setBorderBlue(btn: cell.vacNameBtn)
+                        
+                        let id = vaccineNamesIdArr[index]
+                        
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "vaccine_id", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: 0, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "name", currentIndPath: currentIndPath! as NSIndexPath, text: selectedVal, id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "vaccine_id", currentIndPath: currentIndPath! as NSIndexPath, text: id as Any, id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "No", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "No"
+                        
+                        self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+                        self.tblView.reloadRows(at: [currentIndPath!], with: .none)
+                        print(vaccinInfoDetailArr)
+                        
+                    }
                     
-                    let id = vaccineNamesIdArr[index]
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "vaccine_id", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: 0, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "name", currentIndPath: currentIndPath! as NSIndexPath, text: selectedVal, id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "vaccine_id", currentIndPath: currentIndPath! as NSIndexPath, text: id as Any, id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
-                    self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
-                    self.tblView.reloadRows(at: [currentIndPath!], with: .none)
                 }
+                
             }
+            
             self.dropHiddenAndShow()
-        } else {
+        }else{
             showtoast(message: "Please select the manufacturer first.")
         }
+        
+        
     }
     
     // MARK: Serotype Button Action.
-    fileprivate func extractedFunc(_ vaccineNamesArr: NSArray, _ sender: UIButton, _ currentIndPath: IndexPath?, _ vaccineNamesIdArr: NSArray) {
-        let selectionMenu = RSSelectionMenu(selectionStyle: .multiple, dataSource: vaccineNamesArr as! [String]) { (cell, name, indexPath) in
-            cell.textLabel?.text = name
-        }
-        
-        selectionMenu.cellSelectionStyle = .tickmark
-        selectionMenu.show(style: .popover(sourceView: sender, size: CGSize(width: sender.frame.width, height: (sender.bounds.height) * CGFloat((vaccineNamesArr as! [String]).count) + 10)), from: self)
-        
-        selectionMenu.setSelectedItems(items: simpleSelectedArray) { [self] (name, index, selected, selectedItems) in
-            
-            antigenFunc(selectedRow: currentIndPath!.row)
-            
-            if let indexOfFirstSuchElement = self.selectedAntigenArray.firstIndex(where: { $0.name == name }) {
-                self.selectedAntigenArray.remove(at: indexOfFirstSuchElement)
-            } else {
-                let objData = SelectedData(id: vaccineNamesIdArr.object(at: index) as! Int, name: name ?? "")
-                self.selectedAntigenArray.append(objData)
-            }
-            
-            antigenNameArr = self.selectedAntigenArray.map { $0.name }
-            antigenIdArr =  self.selectedAntigenArray.map { String($0.id) }
-            
-            if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell {
-                
-                if currentIndPath! == cell.currentIndPath as IndexPath {
-                    cell.serotypeTxtFld.text = antigenNameArr.joined(separator: " , ")
-                    self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
-                }
-                let idArrnew =  self.selectedAntigenArray.map { ($0.id) }
-                
-                if idArrnew.contains(37) {
-                    
-                    cell.otherAntigenBtn.isUserInteractionEnabled = true
-                    cell.otherAntigenTxtFld.isUserInteractionEnabled = true
-                    cell.otherAntigenBtn.backgroundColor = .white
-                    cell.otherAntigenTxtFld.placeholder = "Enter"
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "37", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    
-                    vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: antigenNameArr, id: antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    // New Fix
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "serial", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "37", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    
-                    
-                    self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
-                    
-                    antigenNameArr.removeAll()
-                    antigenIdArr.removeAll()
-                    
-                }else{
-                    cell.otherAntigenBtn.isUserInteractionEnabled = false
-                    cell.otherAntigenTxtFld.isUserInteractionEnabled = false
-                    cell.otherAntigenBtn.backgroundColor = .lightGray
-                    cell.otherAntigenTxtFld.placeholder = ""
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: antigenNameArr, id: antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    
-                    
-                    vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
-                    self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
-                    
-                }
-            }
-        }
-        self.tblView.reloadRows(at: [currentIndPath!], with: .none)
-    }
-    
-    fileprivate func extractedFunc1(_ sender: UIButton, _ currentIndPath: IndexPath?) {
-        let vaccineId = 0
-        let vaccineManArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id:  vaccineId as! Int, keyStr: "vaccine_Id")
-        let vaccineNamesArr = vaccineManArr.value(forKey: "type") as? NSArray ?? NSArray()
-        let vaccineNamesIdArr = vaccineManArr.value(forKey: "id") as? NSArray ?? NSArray()
-        
-        
-        if  vaccineNamesArr.count > 0 {
-            
-            self.dropDownVIewNew(arrayData: vaccineNamesArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
-                
-                if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell,currentIndPath! == cell.currentIndPath as IndexPath {
-                    cell.serotypeTxtFld.text = selectedVal
-                    self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
-                    
-                    let id = vaccineNamesIdArr[index]
-                    
-                    var nameArray = [String]()
-                    nameArray.append("\(selectedVal)")
-                    
-                    var idArray = [String]()
-                    idArray.append("\(id)")
-                    
-                    antigenNameArr = nameArray
-                    antigenIdArr =  idArray
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: antigenNameArr, id: antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    
-                    vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
-                    
-                    if id as! Int == 37 {
-                        cell.otherAntigenBtn.isUserInteractionEnabled = true
-                        cell.otherAntigenTxtFld.isUserInteractionEnabled = true
-                        cell.otherAntigenBtn.backgroundColor = .white
-                        cell.otherAntigenTxtFld.placeholder = "Enter"
-                    } else {
-                        cell.otherAntigenBtn.isUserInteractionEnabled = false
-                        cell.otherAntigenTxtFld.isUserInteractionEnabled = false
-                        cell.otherAntigenBtn.backgroundColor = .lightGray
-                        cell.otherAntigenTxtFld.placeholder = ""
-                    }
-                    
-                    self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
-                }
-                self.tblView.reloadData()
-            }
-            
-            self.dropHiddenAndShow()
-        }
-    }
-    
     @IBAction func serotypeBtnAction(_ sender: UIButton) {
         
         antigenNameArr.removeAll()
@@ -2275,7 +2345,8 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
         let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
         let currentIndPath = self.tblView.indexPathForRow(at:buttonPosition)
         
-        if vaccinInfoDetailArr[currentIndPath!.row]["name"] as? String == "" {
+        if vaccinInfoDetailArr[currentIndPath!.row]["name"] as? String == ""
+        {
             showtoast(message: "Please select the vaccine first.")
             return
         }
@@ -2291,13 +2362,146 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
         
         simpleSelectedArray = (result["serotype"] as? [String] ?? [])
         
-        if vaccineNamesArr.count > 0 {
+        if  vaccineNamesArr.count > 0 {
             
-            extractedFunc(vaccineNamesArr, sender, currentIndPath, vaccineNamesIdArr)
+            let selectionMenu = RSSelectionMenu(selectionStyle: .multiple, dataSource: vaccineNamesArr as! [String]) { (cell, name, indexPath) in
+                cell.textLabel?.text = name
+            }
             
-        } else {
+            selectionMenu.cellSelectionStyle = .tickmark
+            selectionMenu.show(style: .popover(sourceView: sender, size: CGSize(width: sender.frame.width, height: (sender.bounds.height) * CGFloat(((vaccineNamesArr as! [String]).count)) + 10)), from: self)
             
-            extractedFunc1(sender, currentIndPath)
+            selectionMenu.setSelectedItems(items: simpleSelectedArray) { [self] (name, index, selected, selectedItems) in
+                
+                antigenFunc(selectedRow: currentIndPath!.row)
+                
+                if let indexOfFirstSuchElement = self.selectedAntigenArray.firstIndex(where: { $0.name == name })
+                {
+                    self.selectedAntigenArray.remove(at: indexOfFirstSuchElement)
+                }
+                else{
+                    let objData = SelectedData(id: vaccineNamesIdArr.object(at: index) as! Int, name: name ?? "")
+                    self.selectedAntigenArray.append(objData)
+                    
+                }
+                
+                antigenNameArr = self.selectedAntigenArray.map { $0.name }
+                antigenIdArr =  self.selectedAntigenArray.map { String($0.id) }
+                
+                if  let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell
+                {
+                    
+                    if currentIndPath! == cell.currentIndPath as IndexPath {
+                        cell.serotypeTxtFld.text = antigenNameArr.joined(separator: " , ")
+                        self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
+                    }
+                    let idArrnew =  self.selectedAntigenArray.map { ($0.id) }
+                    
+                    if idArrnew.contains(37){
+                        
+                        cell.otherAntigenBtn.isUserInteractionEnabled = true
+                        cell.otherAntigenTxtFld.isUserInteractionEnabled = true
+                        cell.otherAntigenBtn.backgroundColor = .white
+                        cell.otherAntigenTxtFld.placeholder = "Enter"
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "37", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        
+                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: antigenNameArr, id: antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        // New Fix
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "serial", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "37", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        
+                        
+                        self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+                        
+                        antigenNameArr.removeAll()
+                        antigenIdArr.removeAll()
+                        
+                    }else{
+                        cell.otherAntigenBtn.isUserInteractionEnabled = false
+                        cell.otherAntigenTxtFld.isUserInteractionEnabled = false
+                        cell.otherAntigenBtn.backgroundColor = .lightGray
+                        cell.otherAntigenTxtFld.placeholder = ""
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "No", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: antigenNameArr, id: antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        
+                        
+                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "No"
+                        self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+                        
+                    }
+                }
+                
+            }
+            self.tblView.reloadRows(at: [currentIndPath!], with: .none)
+            
+        }
+        
+        else{
+            
+            let vaccineId = 0
+            let vaccineManArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id:  vaccineId as! Int, keyStr: "vaccine_Id")
+            let vaccineNamesArr = vaccineManArr.value(forKey: "type") as? NSArray ?? NSArray()
+            let vaccineNamesIdArr = vaccineManArr.value(forKey: "id") as? NSArray ?? NSArray()
+            
+            
+            if  vaccineNamesArr.count > 0 {
+                
+                self.dropDownVIewNew(arrayData: vaccineNamesArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
+                    
+                    if  let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell
+                    {
+                        if currentIndPath! == cell.currentIndPath as IndexPath {
+                            cell.serotypeTxtFld.text = selectedVal
+                            self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
+                            
+                            let id = vaccineNamesIdArr[index]
+                            
+                            var nameArray = [String]()
+                            nameArray.append("\(selectedVal)")
+                            
+                            var idArray = [String]()
+                            idArray.append("\(id)")
+                            
+                            antigenNameArr = nameArray
+                            antigenIdArr =  idArray
+                            
+                            CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: antigenNameArr, id: antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                            
+                            CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                            
+                            CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                            
+                            vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
+                            
+                            if id as! Int == 37{
+                                cell.otherAntigenBtn.isUserInteractionEnabled = true
+                                cell.otherAntigenTxtFld.isUserInteractionEnabled = true
+                                cell.otherAntigenBtn.backgroundColor = .white
+                                cell.otherAntigenTxtFld.placeholder = "Enter"
+                            }else{
+                                cell.otherAntigenBtn.isUserInteractionEnabled = false
+                                cell.otherAntigenTxtFld.isUserInteractionEnabled = false
+                                cell.otherAntigenBtn.backgroundColor = .lightGray
+                                cell.otherAntigenTxtFld.placeholder = ""
+                            }
+                            
+                            self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+                        }
+                        
+                    }
+                    self.tblView.reloadData()
+                }
+                
+                self.dropHiddenAndShow()
+            }
         }
         
     }
@@ -2330,28 +2534,38 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
         if  vaccineNamesArr.count > 0 {
             
             self.dropDownVIewNew(arrayData: vaccineNamesArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
-                if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell,currentIndPath! == cell.currentIndPath as IndexPath {
-                    cell.siteOfInjTxtFld.text = selectedVal
-                    self.sharedManager.setBorderBlue(btn: cell.siteOfInjBtn)
-                    let id = vaccineNamesIdArr[index]
-                    CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "siteOfInj", currentIndPath: currentIndPath! as NSIndexPath, text: selectedVal, id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-                    self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+                
+                if  let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell
+                {
+                    if currentIndPath! == cell.currentIndPath as IndexPath {
+                        cell.siteOfInjTxtFld.text = selectedVal
+                        self.sharedManager.setBorderBlue(btn: cell.siteOfInjBtn)
+                        let id = vaccineNamesIdArr[index]
+                        CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "siteOfInj", currentIndPath: currentIndPath! as NSIndexPath, text: selectedVal, id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                        self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+                    }
+                    
                 }
+                
             }
+            
             self.dropHiddenAndShow()
         }
+        
     }
     
     @IBAction func serologySelectUnSelForFreeCellBtnAction(_ sender: UIButton) {
         let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
         let indexPath = self.tblView.indexPathForRow(at:buttonPosition)
         
-        if let cell = self.tblView.cellForRow(at: indexPath!) as? PVEVaccineInfoTypeCell {
-            let isFreeSerology = sharedManager.getSessionValueForKeyFromDB(key: "isFreeSerology") as! Bool
+        if  let cell = self.tblView.cellForRow(at: indexPath!) as? PVEVaccineInfoTypeCell
+        {
+            var isFreeSerology = Bool()
+            isFreeSerology = sharedManager.getSessionValueForKeyFromDB(key: "isFreeSerology") as! Bool
             if isFreeSerology == true{
                 cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
                 CoreDataHandlerPVE().updateSessionDetails(1, text: false, forAttribute: "isFreeSerology")
-            } else {
+            }else{
                 cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
                 CoreDataHandlerPVE().updateSessionDetails(1, text: true, forAttribute: "isFreeSerology")
             }
@@ -2393,18 +2607,23 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
     @IBAction func serologySelectUnSelCellBtnAction(_ sender: UIButton) {
         let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
         let currentIndPath = self.tblView.indexPathForRow(at:buttonPosition)
-        if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVETeamMemeberVaccinatorsCell,currentIndPath! == cell.currentIndPath as IndexPath {
-            var seroStr = String()
-            if noOfVaccinatorsArr[currentIndPath!.row]["serology"] ?? "" == "" {
-                cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
-                seroStr = "selected"
-            } else {
-                cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
-                seroStr = ""
-            }
+        if  let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVETeamMemeberVaccinatorsCell
+        {
             
-            CoreDataHandlerPVE().updateArrayForSerology("", currentIndPath: currentIndPath! as NSIndexPath, text:
-                                                            seroStr, forAttribute: "cat_NoOfVaccinatorsDetailsArr", entityName: "PVE_Session")
+            if currentIndPath! == cell.currentIndPath as IndexPath {
+                var seroStr = String()
+                if noOfVaccinatorsArr[currentIndPath!.row]["serology"] ?? "" == "" {
+                    cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
+                    seroStr = "selected"
+                }else{
+                    cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
+                    seroStr = ""
+                }
+                
+                CoreDataHandlerPVE().updateArrayForSerology("", currentIndPath: currentIndPath! as NSIndexPath, text:
+                                                                seroStr, forAttribute: "cat_NoOfVaccinatorsDetailsArr", entityName: "PVE_Session")
+                
+            }
         }
         
         noOfVaccinatorsArr = sharedManager.getSessionValueForKeyFromDB(key: "cat_NoOfVaccinatorsDetailsArr") as! [[String : String]]
@@ -2473,19 +2692,24 @@ extension PVEStartNewAssFinalizeAssement: UICollectionViewDelegate, UICollection
 }
 
 
-extension PVEStartNewAssFinalizeAssement: DatePickerPopupViewControllerProtocol {
+extension PVEStartNewAssFinalizeAssement: DatePickerPopupViewControllerProtocol{
     func doneButtonTappedWithDate(string: String, objDate: Date) {
-        if let cell = self.tblView.cellForRow(at: clickedDateIndpath as IndexPath) as? PVEVaccineInfoDetailsCell,
-           clickedDateIndpath as IndexPath == cell.currentIndPath as IndexPath {
-            cell.expiryTxtFld.text = string
-            self.sharedManager.setBorderBlue(btn: cell.expiryBtn)
-            CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "expDate", currentIndPath: clickedDateIndpath as NSIndexPath, text: string, id: 0, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
-            self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+        
+        
+        if  let cell = self.tblView.cellForRow(at: clickedDateIndpath as IndexPath) as? PVEVaccineInfoDetailsCell
+        {
+            if clickedDateIndpath as IndexPath == cell.currentIndPath as IndexPath {
+                cell.expiryTxtFld.text = string
+                self.sharedManager.setBorderBlue(btn: cell.expiryBtn)
+                CoreDataHandlerPVE().updateVacInfoArrFor("", currentField: "expDate", currentIndPath: clickedDateIndpath as NSIndexPath, text: string, id: 0, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Session")
+                self.vaccinInfoDetailArr = self.sharedManager.getSessionValueForKeyFromDB(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+            }
+            
         }
+        
     }
     
-    func doneButtonTapped(string:String) {
-        print("string:",string)
+    func doneButtonTapped(string:String){
     }
 }
 
@@ -2528,5 +2752,6 @@ struct SelectedData
     var id : Int
     var name: String
 }
+
 
 

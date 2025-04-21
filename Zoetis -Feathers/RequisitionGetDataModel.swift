@@ -24,14 +24,7 @@ struct RequisitionGetDataModel {
         requisitionArray = json["ResponseData"].arrayValue.map { RequisitionData($0) }
     }
     
-    
-//    func getAllLocationTypes(customerArray: [RequisitionData]) -> [String] {
-//        var locationTypeArray : [String] = []
-//        for obj in customerArray {
-//            locationTypeArray.append(obj.text ?? "")
-//        }
-//        return locationTypeArray
-//    }
+
 }
 
 
