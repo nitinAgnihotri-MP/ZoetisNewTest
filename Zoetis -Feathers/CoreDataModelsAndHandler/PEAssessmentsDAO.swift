@@ -94,8 +94,6 @@ class PEAssessmentsDAO{
             if certificationDTOArr.count > 0{
                 
                 deleteExisitingData(entityName: "PE_ScheduledAssessments", predicate: NSPredicate(format:"loginUserId = %@", loginUserId))
-                // If a user selects a future date and tries to submit the assessment, they receive an error message stating that the assessment cannot be submitted with a future date. After this, when the user returns to the Global Dashboard and reopens the same assessment, all the data is cleared, except for the EM data. FOR THIS WE HAVE ADDED THIS PIECE OFF CODE
-             //   deleteExisitingData(entityName: "PE_ExtendedPEAssessmentQuestions", predicate: NSPredicate(format:"userId = %@", loginUserId))
                 
                 for certificationDTOObj in certificationDTOArr{
                     
@@ -108,7 +106,7 @@ class PEAssessmentsDAO{
                         moObj.scheduledDate = draftObj.scheduledDate
                     }
                     let id = (String(describing: certificationDTOObj.id ?? 0))
-                    var completed =  CoreDataHandlerPE().getSessionForViewAssessmentArrayPEObject(ofCurrentAssessment:true) //as! [PE_AssessmentInOffline]
+                    var completed =  CoreDataHandlerPE().getSessionForViewAssessmentArrayPEObject(ofCurrentAssessment:true)
                     let filteredArr = completed.filter{
                         $0.serverAssessmentId ?? "" == id
                     }
