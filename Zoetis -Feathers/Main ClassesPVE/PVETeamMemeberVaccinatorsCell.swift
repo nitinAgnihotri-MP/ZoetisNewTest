@@ -89,9 +89,6 @@ extension PVETeamMemeberVaccinatorsCell: UITextFieldDelegate{
         if textField == mobileTxtField{
             delegate?.updateVaccinatorsArrInDB(currentIndPath: currentIndPath, nameStr: "", emailStr: "", mobileStr: newString)
         }
-        
-        let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
-
         return true
     }
 

@@ -36,15 +36,10 @@ class PVEVaccineInfoTypeCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        let btns = [ crewLeaderBtn]
-        for btn in btns{
-            
-            let superviewCurrent =  btn?.superview
-            for view in superviewCurrent!.subviews {
-                if view.isKind(of:UIButton.self) {
-                    if view == btn{
-                        view.setDropdownStartAsessmentView(imageName:"dd")
-                    }
+        if let crewLeaderBtn = crewLeaderBtn, let superview = crewLeaderBtn.superview {
+            for view in superview.subviews {
+                if view.isKind(of: UIButton.self), view == crewLeaderBtn {
+                    view.setDropdownStartAsessmentView(imageName: "dd")
                 }
             }
         }
@@ -171,80 +166,4 @@ extension PVEVaccineInfoTypeCell: UITextFieldDelegate{
         
         return true
     }
-
-    
-   /*
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        if textField == crewLeaderMobileTxtField || textField == companyRepMobileTxtField{
-            guard CharacterSet(charactersIn: "1234567890").isSuperset(of: CharacterSet(charactersIn: string)) else {
-                return false
-            }
-        }
-        
-        
-        let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
-        
-        if textField == crewLeaderMobileTxtField || textField == companyRepMobileTxtField{
-            if newString.count > 18{
-                return false
-            }
-        }
-        
-        if textField == crewLeaderTxtField || textField == crewLeaderEmailTxtField ||
-            textField == companyRepNameTxtField || textField == companyRepEmailTxtField{
-            if newString.count > 40{
-                return false
-            }
-        }
-        
-        if textField == crewLeaderTxtField{
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: "cat_crewLeaderName")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: "cat_crewLeaderName")
-            }
-        }
-        
-        if textField == crewLeaderEmailTxtField{
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: "cat_crewLeaderEmail")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: "cat_crewLeaderEmail")
-            }
-        }
-        
-        if textField == crewLeaderMobileTxtField{
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: "cat_crewLeaderMobile")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: "cat_crewLeaderMobile")
-            }
-        }
-        
-        if textField == companyRepNameTxtField{
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: "cat_companyRepName")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: "cat_companyRepName")
-            }
-        }
-        if textField == companyRepEmailTxtField{
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: "cat_companyRepEmail")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: "cat_companyRepEmail")
-            }
-        }
-        if textField == companyRepMobileTxtField{
-            if timeStampStr.count > 0 {
-                CoreDataHandlerPVE().updateDraftSNAFor(timeStampStr, syncedStatus: false, text: newString, forAttribute: "cat_companyRepMobile")
-            }else{
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: "cat_companyRepMobile")
-            }
-        }
-        
-        return true
-    }
-    */
 }

@@ -161,7 +161,7 @@ class RequisitionModel {
     var typeOfBirdId = Int()
     var environmentalLocationTypeArray = [Microbial_EnvironmentalLocationTypes]()
     var bacterialLocationTypeArray = [Microbial_BacterialLocationTypes]()
-    var locationTypeValuesArray = [Microbial_LocationValues]()
+    var microbiaLocationTypeValuesArray = [Microbial_LocationValues]()
     
     var possibleHeaders = [LocationTypeHeaderModel]()
     var actualCreatedHeaders = [LocationTypeHeaderModel]()
@@ -183,27 +183,17 @@ class RequisitionModel {
         requestor = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
         sampleCollectedBy = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
         
-//        if let reviewerArr = CoreDataHandlerMicro().fetchDetailsFor(entityName: "MicrobialSelectedUnselectedReviewer") as? [Micro_Reviewer]{
-//            if reviewerArr.count > 0{
-//                reviewer = reviewerArr[0].reviewerName ?? ""
-//            }
-//            reviewerId = self.getReviewerId()
-//        }
         
-        if let surveyConductedOnArr = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_AllConductType") as? [Micro_AllConductType]{
-            if surveyConductedOnArr.count > 0{
-                if surveyConductedOn == ""{
-                    surveyConductedOn = surveyConductedOnArr[0].text ?? ""
-                }
+        if let surveyConductedOnArr = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_AllConductType") as? [Micro_AllConductType] {
+            if surveyConductedOnArr.count > 0, surveyConductedOn == "" {
+                surveyConductedOn = surveyConductedOnArr[0].text ?? ""
             }
             surveyConductedOnId = self.getSurveyConductedOnId()
         }
         
-        if let purposeOfSurveyArr = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_AllSurveyPurpose") as? [Micro_AllSurveyPurpose]{
-            if purposeOfSurveyArr.count > 0{
-                if purposeOfSurvey == ""{
-                    purposeOfSurvey = purposeOfSurveyArr[0].text ?? ""
-                }
+        if let purposeOfSurveyArr = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_AllSurveyPurpose") as? [Micro_AllSurveyPurpose] {
+            if purposeOfSurveyArr.count > 0, purposeOfSurvey == "" {
+                purposeOfSurvey = purposeOfSurveyArr[0].text ?? ""
             }
             purposeOfSurveyId = self.getPurposeOfSurveyId()
         }
@@ -246,12 +236,9 @@ class RequisitionModel {
         for item in headers {
             if let headerObject = item as? Microbial_LocationTypeHeaders {
                 let header = LocationTypeHeaderModel(headerObject: headerObject)
-                if header.numberOfPlateIDCreated.count > 0 {
-                    if let locationTypeId = header.selectedLocationTypeId {
-                        selectedLocationTypes.append(locationTypeId)
-                    }
+                if header.numberOfPlateIDCreated.count > 0, let locationTypeId = header.selectedLocationTypeId {
+                    selectedLocationTypes.append(locationTypeId)
                 }
-                
                 self.actualCreatedHeaders.append(header)
             }
         }
@@ -354,14 +341,6 @@ class RequisitionModel {
         return purposeOfSurveyData.count > 0 ? (purposeOfSurveyData[0].id?.intValue ?? 0) : 0
     }
     
-//    func getSurveyConductedOnFromIds(id: Int) -> String {
-//        guard let surveyConductedOn = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_AllConductType") as? [Micro_AllConductType]  else {
-//            return ""
-//        }
-//        let surveyConductedOnData = surveyConductedOn.filter {$0.id?.intValue == id}
-//        return surveyConductedOnData.count > 0 ? (surveyConductedOnData[0].text ?? "") : ""
-//    }
-    
     func getSurveyConductedOnId() -> Int {
         guard let surveyConductedOn = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_AllConductType") as? [Micro_AllConductType]  else {
             return 0
@@ -447,13 +426,6 @@ class RequisitionModel {
     
     func getSamplingMethodTypeValues(selectedValue: String) -> Int {
         
-//        guard let locationValues = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Microbial_SamplingMethodTypes") as? [Microbial_SamplingMethodTypes]  else {
-//            return 0
-//        }
-//        
-//            let newLocationValues = locationValues.filter {$0.text == selectedValue}
-//            return newLocationValues.count > 0 ? Int(truncating: newLocationValues[0].id ?? 0) : 0
-        
         if selectedValue == "Swab" {
             return 1
         }
@@ -527,7 +499,7 @@ class RequisitionModel {
     func generateLocationType() {
         self.environmentalLocationTypeArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Microbial_EnvironmentalLocationTypes") as? [Microbial_EnvironmentalLocationTypes] ?? []
         self.bacterialLocationTypeArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Microbial_BacterialLocationTypes") as? [Microbial_BacterialLocationTypes] ?? []
-        self.locationTypeValuesArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Microbial_LocationValues") as? [Microbial_LocationValues] ?? []
+        self.microbiaLocationTypeValuesArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Microbial_LocationValues") as? [Microbial_LocationValues] ?? []
     }
     
     fileprivate func handleEnvLocationTypeArr(_ locationTypes: inout [String], _ locationTypeIds: inout [Int]) {
@@ -581,9 +553,7 @@ class RequisitionModel {
     
     func getMediaTypes() -> [String] {
         var mediaTypeArray = [String]()
-//        guard let mediaTypeValues = CoreDataHandlerMicro().fetchMediaTypesFor() as? [Microbial_AllMediaTypes]  else {
-//            return mediaTypeArray
-//        }
+
         if  let mediaTypeValues = CoreDataHandlerMicro().fetchAllData1("Microbial_AllMediaTypes") as? [NSManagedObject] {
 
         if mediaTypeValues.count > 0 {
@@ -592,7 +562,6 @@ class RequisitionModel {
                 mediaTypeArray.append(new)
             }
         }
-        //let newLocationValues = locationValues.filter {$0.id?.intValue == id}
         return mediaTypeArray
         }
         else {
@@ -665,7 +634,7 @@ class RequisitionModel {
             newArray.removeAll()
             
             populateNewArray(initialsZ, &newArray)
-            let first = initialsZ[0]
+         
             if let seconed = newArray[1] as? String{
                 
                 let arrayofstring  = seconed.map { String($0) }
@@ -893,7 +862,7 @@ class RequisitionModel {
     }
     
     
-    func appendNewPlate(data: LocationTypeCellModel, locationId: Int, numberOfPlates: Int){
+    func appendNewPlate(data: LocationTypeCellModel , numberOfPlates: Int){
         Microbial_LocationTypeHeaderPlatesSubmitted.saveSampleInfoPlateDataInToDB_Enviromental(currentdate: self.currentdate, customerId: "", requisitionType: self.requisitionType.rawValue, sessionStatus: self.sessionStatus.rawValue, isBacterialChecked: data.isBacterialChecked, isMicoscoreChecked: data.isMicoscoreChecked, locationTypeId: data.selectedLocationTypeId ?? 0, locationValue: data.selectedLocationValues, plateId: data.plateId, row: data.row ?? -1, sampleDescription: data.sampleDescription, section: data.section ?? -1, requisition_Id: self.barCode, timeStamp: self.timeStamp, locationValueId: data.selectedLocationValueId ?? 0, mediaTypeId: data.selectedMediaTypeId ?? 0, notes: data.notes, samplingMethodTypeId: data.samplingMethodTypeId ?? 0)
         let predicateToUpdateNumberOfPlates = NSPredicate(format: "timeStamp = %@ AND requisition_Id = %@ AND requisitionType = %i AND section = %i", argumentArray: [self.timeStamp, data.requisition_Id, data.requisitionType ?? 0, data.section ?? -1])
         CoreDataHandlerMicro().updateNumberOfPlates(predicate: predicateToUpdateNumberOfPlates, noOfPlates: numberOfPlates)
@@ -932,7 +901,7 @@ class RequisitionModel {
         for plate in totalHeaderPlates {
             if let locationTypeId = plate.selectedLocationTypeId {
                 let actualPlateId = "\(plate.plateId)"
-                //   print("-----------\(plate.row)=======\(plate.section)")
+               
                 Microbial_LocationTypeHeaderPlatesSubmitted.updateSampleInfoPlateDataInToDB_Enviromental(currentdate: self.currentdate,
                                                                                                          customerId: "",
                                                                                                          requisitionType: self.requisitionType.rawValue,
@@ -1015,33 +984,5 @@ class RequisitionModel {
         }
         CoreDataHandlerMicro().saveRequisitionalIDs_Enviromental(requisition_Id: self.barCode, requisitionType: self.requisitionType.rawValue, sessionStatus: self.sessionStatus.rawValue, totalHeader: self.actualCreatedHeaders.count, totalPlates: totalPlates.count, timeStamp: self.timeStamp)
     }
-    
-    
-//    func addNewRowToPlatesSubmitted(){
-//        CoreDataHandlerMicro().addNewRowToPlatesSubmitted(currentdate: self.currentdate,
-//                                                          customerId: "",
-//                                                          requisitionType: self.requisitionType.rawValue,
-//                                                          sessionStatus: self.sessionStatus.rawValue,
-//                                                          isBacterialChecked: plate.isBacterialChecked,
-//                                                          isMicoscoreChecked: plate.isMicoscoreChecked,
-//                                                          locationTypeId: locationTypeId,
-//                                                          locationValue: plate.selectedLocationValues,
-//                                                          plateId: actualPlateId,
-//                                                          row: plate.row ?? -1,
-//                                                          sampleDescription: plate.sampleDescription,
-//                                                          section: plate.section ?? -1,
-//                                                          requisition_Id: self.barCode,
-//                                                          timeStamp: self.timeStamp)
-//    }
+
 }
-
-
-//DisplayMessage = Success;
-//ExceptionMessage = "<null>";
-//IsSuccess = 1;
-//ResponseData =     {
-//    DataId = "<null>";
-//    Id = "-200";
-//};
-//StatusCode = 200;
-//ValidationResult = "<null>";

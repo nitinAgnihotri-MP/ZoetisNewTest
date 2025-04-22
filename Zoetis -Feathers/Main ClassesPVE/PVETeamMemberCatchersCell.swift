@@ -83,8 +83,7 @@ extension PVETeamMemberCatchersCell: UITextFieldDelegate{
             delegate?.updateCatchersArrInDB(currentIndPath: currentIndPath, nameStr: "", emailStr: "", mobileStr: newString)
         }
 
-        let dataSavedInDB =  CoreDataHandlerPVE().fetchCurrentSessionInDB()
-
+   
         return true
     }
 

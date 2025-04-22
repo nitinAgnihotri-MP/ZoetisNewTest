@@ -751,41 +751,6 @@ extension PVEStartNewAssessment {
         }
     }
     
-    func createRequest() {
-        let evalDate = "2019-12-24T09:41:06.152Z"
-        let json = [
-            "Id": 0,
-            "Evaluation_Date": evalDate,
-            "Evaluation_Type_Id": 8,
-            "Evaluation_For_Id": 4,
-            "Customer_Id": 3085,
-            "Survey_No": "Test",
-            "Site_Id": 2,
-            "Sale_Rep_Id": 28,
-            "Evaluator_Id": 28,
-            "Breed_Id": 1,
-            "Age_Id": 1,
-            "Housing_Id": 1,
-            "Camera": true,
-            "Notes": "ssss",
-            "CreatedAt": evalDate,
-            "CreatedBy": 1609,
-            "Survey_Type_Id": 1,
-            "Device_Id": "ffdsafds",
-            "Doc_Id": "string",
-            "FarmViewModelDetails": [
-                [
-                    "Id": 0,
-                    "Farm_Name": "fdsafdsaf",
-                    "House_No": 0,
-                    "Assessment_Detail_Id": 0,
-                    "CreatedAt": evalDate,
-                    "CreatedBy": 1609,
-                    "Device_Id": "fdsafds"
-                ]
-            ]
-        ] as Dictionary<String, AnyObject>
-    }
     
     func getTimeStamp() -> String {
         let postingId = UserDefaults.standard.integer(forKey: "postingId")

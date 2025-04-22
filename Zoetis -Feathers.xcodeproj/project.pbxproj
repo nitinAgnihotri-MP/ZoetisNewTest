@@ -771,7 +771,6 @@
 		B72961D024A7CC23003237C7 /* SummaryReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B729619324A7CC22003237C7 /* SummaryReportsViewController.swift */; };
 		B743C04824A91D2A00E7C0A8 /* Zoetis__Feathers.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B743C04224A91D2A00E7C0A8 /* Zoetis__Feathers.xcdatamodeld */; };
 		B77B27282429F525004D06C4 /* PEViewAssesmentFinalize.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B27272429F525004D06C4 /* PEViewAssesmentFinalize.swift */; };
-		B7969E4224B6475F008F9E2A /* PEAssessmentFinalizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7969E4124B6475F008F9E2A /* PEAssessmentFinalizeExtension.swift */; };
 		B7AEA26F242CC7BF00D4BAF0 /* PEDraftAssesmentFinalize.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AEA26E242CC7BE00D4BAF0 /* PEDraftAssesmentFinalize.swift */; };
 		B7AEA271242CC80200D4BAF0 /* PEDraftStartNewAssessment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AEA270242CC80200D4BAF0 /* PEDraftStartNewAssessment.swift */; };
 		B7B0A9EC2492E7C3002B1D48 /* PELandingPopViewControllerGetMasterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B0A9EB2492E7C3002B1D48 /* PELandingPopViewControllerGetMasterData.swift */; };
@@ -1701,7 +1700,6 @@
 		B743C04624A91D2A00E7C0A8 /* Turkey_Zoetis_Feathers 43.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Turkey_Zoetis_Feathers 43.xcdatamodel"; sourceTree = "<group>"; };
 		B743C04724A91D2A00E7C0A8 /* Turkey_Zoetis_Feathers.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Turkey_Zoetis_Feathers.xcdatamodel; sourceTree = "<group>"; };
 		B77B27272429F525004D06C4 /* PEViewAssesmentFinalize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PEViewAssesmentFinalize.swift; sourceTree = "<group>"; wrapsLines = 0; };
-		B7969E4124B6475F008F9E2A /* PEAssessmentFinalizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PEAssessmentFinalizeExtension.swift; sourceTree = "<group>"; };
 		B7AEA26E242CC7BE00D4BAF0 /* PEDraftAssesmentFinalize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PEDraftAssesmentFinalize.swift; sourceTree = "<group>"; };
 		B7AEA270242CC80200D4BAF0 /* PEDraftStartNewAssessment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PEDraftStartNewAssessment.swift; sourceTree = "<group>"; };
 		B7B0A9EB2492E7C3002B1D48 /* PELandingPopViewControllerGetMasterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PELandingPopViewControllerGetMasterData.swift; sourceTree = "<group>"; };
@@ -2209,7 +2207,6 @@
 				00CC26AC296C7426005E9205 /* PEStartNewAssesmentINT.swift */,
 				1005EFF623A305CC00505E71 /* PEAssesmentFinalize.swift */,
 				25034AAE2D9DA1BC004829BB /* PEViewStartNewAssessment.swift */,
-				B7969E4124B6475F008F9E2A /* PEAssessmentFinalizeExtension.swift */,
 				10C134622408A19A00767FF8 /* PESessionViewController.swift */,
 				00CC26AE296C76F8005E9205 /* PEViewStartNewAssesmentINT.swift */,
 				B77B27272429F525004D06C4 /* PEViewAssesmentFinalize.swift */,
@@ -4442,7 +4439,6 @@
 				B77B27282429F525004D06C4 /* PEViewAssesmentFinalize.swift in Sources */,
 				B72960B524A7C5BC003237C7 /* CommonTableView.swift in Sources */,
 				B72960AD24A7C5BC003237C7 /* SingleSyncData.swift in Sources */,
-				B7969E4224B6475F008F9E2A /* PEAssessmentFinalizeExtension.swift in Sources */,
 				B729612724A7C5BC003237C7 /* SessionsHistoryViewController.swift in Sources */,
 				214E0A99242E038F005F8653 /* PVE_BreedOfBirds+CoreDataClass.swift in Sources */,
 				00741303252DBD5C00B393BB /* PEAssessmentsDAO.swift in Sources */,
@@ -5542,7 +5538,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Zoetis -Feathers/UAT-PV360Debug.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1.0;
@@ -5572,7 +5568,7 @@
 				PRODUCT_NAME = "PoultryView 360";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "PV360-TestFlight";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PV360;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Zoetis-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
@@ -5588,7 +5584,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Zoetis -Feathers/UAT-PV360.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1.0;
@@ -5618,7 +5614,7 @@
 				PRODUCT_NAME = "PoultryView 360";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "PV360-TestFlight";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PV360;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Zoetis-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;

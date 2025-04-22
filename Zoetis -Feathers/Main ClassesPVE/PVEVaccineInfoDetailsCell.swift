@@ -74,30 +74,17 @@ class PVEVaccineInfoDetailsCell: UITableViewCell {
     }
     
     func refreshAntigenView(str:String){
-        if str == "OTHER" {
-            otherAntigenBtn.isUserInteractionEnabled = false
-            otherAntigenTxtFld.isUserInteractionEnabled = true
-            otherAntigenBtn.backgroundColor = .white
-            otherAntigenTxtFld.placeholder = "Enter"
-            
-        }
-        else if str == ""{
-            otherAntigenBtn.isUserInteractionEnabled = false
-            otherAntigenTxtFld.isUserInteractionEnabled = false
-            otherAntigenBtn.backgroundColor = .lightGray
-            otherAntigenTxtFld.placeholder = ""
-        }
-        else if str == "Other"{
-            otherAntigenBtn.isUserInteractionEnabled = false
-            otherAntigenTxtFld.isUserInteractionEnabled = true
-            otherAntigenBtn.backgroundColor = .white
-            otherAntigenTxtFld.placeholder = "Enter"
-        }else{
-            otherAntigenBtn.isUserInteractionEnabled = false
-            otherAntigenTxtFld.isUserInteractionEnabled = false
-            otherAntigenBtn.backgroundColor = .lightGray
-            otherAntigenTxtFld.placeholder = ""
-        }
+        if str.lowercased() == "other" {
+             otherAntigenBtn.isUserInteractionEnabled = false
+             otherAntigenTxtFld.isUserInteractionEnabled = true
+             otherAntigenBtn.backgroundColor = .white
+             otherAntigenTxtFld.placeholder = "Enter"
+         } else {
+             otherAntigenBtn.isUserInteractionEnabled = false
+             otherAntigenTxtFld.isUserInteractionEnabled = false
+             otherAntigenBtn.backgroundColor = .lightGray
+             otherAntigenTxtFld.placeholder = ""
+         }
     }
     
     func refreshVacNameField(){
@@ -152,10 +139,6 @@ class PVEVaccineInfoDetailsCell: UITableViewCell {
         // Configure the view for the selected state
         
     }
-    
-//    @IBAction func minusBtnAction(_ sender: Any) {
-//        
-//    }
     
 }
 

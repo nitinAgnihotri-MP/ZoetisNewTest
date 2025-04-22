@@ -22,22 +22,19 @@ class ViewRequisitionViewModel {
         var actualCreatedHeaders = [LocationTypeHeaderModel]()
         
         let allRequisitions = CoreDataHandlerMicro().fetchAllData("Microbial_Enviromental_RequisitionIDs")
-        
-        actualCreatedHeaders = []
+      
         for item in allRequisitions {
             if let requisition = item as? Microbial_Enviromental_RequisitionIDs,
                 let requisition_Id = requisition.requisition_Id,
                 let requisitionType = requisition.requisitionType {
                 
                 let caseInfoForrequistion = CoreDataHandlerMicro().fetchAllData("Microbial_EnviromentalSurveyFormSubmitted")
-                print(caseInfoForrequistion)
                 
                 let headersForRequisitionId =   CoreDataHandlerMicro().fetchEnviromentalHeadersWith(requisition_Id: requisition_Id, requisitionType: requisitionType)
-                print(headersForRequisitionId)
                 
                 for header in headersForRequisitionId {
-                   let header = LocationTypeHeaderModel(headerObject: header)
-                   actualCreatedHeaders.append(header)
+                   let headerIs = LocationTypeHeaderModel(headerObject: header)
+                   actualCreatedHeaders.append(headerIs)
                 }
             }
         }
@@ -56,7 +53,6 @@ class ViewRequisitionViewModel {
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .medium
             dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-          //  let sortedArray = arrViewRequisition.sorted { dateFormatter.date(from: $0.sampleCollectionDate ?? "")! > dateFormatter.date(from: $1.sampleCollectionDate ?? "") ?? Date() }
             
             var sortedArray = arrViewRequisition.sorted { dateFormatter.date(from: $0.sampleCollectionDate ?? "") ?? Date() > dateFormatter.date(from: $1.sampleCollectionDate ?? "") ?? Date() }
             sortedArray = sortedArray.filter({ $0.sampleCollectionDate != "" })

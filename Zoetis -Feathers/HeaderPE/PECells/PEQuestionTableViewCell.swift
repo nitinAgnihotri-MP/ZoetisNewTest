@@ -257,6 +257,9 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
         commentCompletion?(nil)
     }
     
+    @IBAction func cameraBtnCLicked(_ sender: Any) {
+    }
+    
     @IBAction func cameraClicked(_ sender: Any) {
         cameraCompletion?(nil)
     }

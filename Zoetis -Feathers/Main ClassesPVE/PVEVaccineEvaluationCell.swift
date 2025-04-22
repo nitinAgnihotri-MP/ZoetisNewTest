@@ -247,31 +247,26 @@ extension PVEVaccineEvaluationCell: UITextFieldDelegate{
             muscleLRTotalLbl.text = "\(sharedManager.musculLTxtFieldValue + sharedManager.musculRTxtFieldValue) "
             missedLRTotalLbl.text = "\(sharedManager.missedLTxtFieldValue + sharedManager.missedRTxtFieldValue) "
             
-            var percentCanterLTotal = Int()
-            var percentCanterRTotal = Int()
-            percentCanterLTotal = sharedManager.centerLTxtFieldValue * 100 / (totalSubQLeft ?? 0)
-            percentCanterRTotal = sharedManager.centerRTxtFieldValue * 100 / (totalSubQRight ?? 0)
+        
+            var percentCanterLTotal = sharedManager.centerLTxtFieldValue * 100 / (totalSubQLeft ?? 0)
+            var percentCanterRTotal = sharedManager.centerRTxtFieldValue * 100 / (totalSubQRight ?? 0)
             percentCenterLRTotalLbl.text = "\(percentCanterLTotal/2 + percentCanterRTotal/2)"
             
             // For Delegate
             centerTotalValue = percentCanterLTotal/2 + percentCanterRTotal/2
-            
-            var percentWingLTotal = Int()
-            percentWingLTotal = sharedManager.wingLTxtFieldValue * 100 / (totalSubQLeft ?? 0)
-            var percentWingRTotal = Int()
-            percentWingRTotal = sharedManager.wingRTxtFieldValue * 100 / (totalSubQRight ?? 0)
+           
+            var percentWingLTotal = sharedManager.wingLTxtFieldValue * 100 / (totalSubQLeft ?? 0)
+            var percentWingRTotal = sharedManager.wingRTxtFieldValue * 100 / (totalSubQRight ?? 0)
             percentWingLRTotalLbl.text = "\(percentWingLTotal/2 + percentWingRTotal/2)"
             
-            var percentMuscleLTotal = Int()
-            percentMuscleLTotal = sharedManager.musculLTxtFieldValue * 100 / (totalSubQLeft ?? 0)
-            var percentMuscleRTotal = Int()
-            percentMuscleRTotal = sharedManager.musculRTxtFieldValue * 100 / (totalSubQRight ?? 0)
+           
+            var percentMuscleLTotal = sharedManager.musculLTxtFieldValue * 100 / (totalSubQLeft ?? 0)
+            var percentMuscleRTotal = sharedManager.musculRTxtFieldValue * 100 / (totalSubQRight ?? 0)
             percentMuscleLRTotalLbl.text = "\(percentMuscleLTotal/2 + percentMuscleRTotal/2)"
             
-            var percenMissedLTotal = Int()
-            percenMissedLTotal = sharedManager.musculLTxtFieldValue * 100 / (totalSubQLeft ?? 0)
-            var percenMissedRTotal = Int()
-            percenMissedRTotal = sharedManager.musculRTxtFieldValue * 100 / (totalSubQRight ?? 0)
+           
+            var percenMissedLTotal = sharedManager.musculLTxtFieldValue * 100 / (totalSubQLeft ?? 0)
+            var percenMissedRTotal = sharedManager.musculRTxtFieldValue * 100 / (totalSubQRight ?? 0)
             percenMissedLRTotalLbl.text = "\(percenMissedLTotal/2 + percenMissedRTotal/2)"
             
         }
@@ -316,23 +311,15 @@ extension PVEVaccineEvaluationCell: UITextFieldDelegate{
             totalOfInstraAndSubcutanousMuscleHitLbl.text = "\(sharedManager.musculHitInstraLblValue + sharedManager.musculHitSubcutanousLblValue)"
             totalOfInstraAndSubcutanousMissedLbl.text = "\(sharedManager.missedInstraLblValue + sharedManager.missedSubcutanousLblValue)"
             
-            
-            var percentmusculHitInstraLblValue = Int()
-            var percentmusculHitSubcutanousLblValue = Int()
-            
-            percentmusculHitInstraLblValue = sharedManager.musculHitInstraLblValue * 100 / (totalOfInstra ?? 0)
-            percentmusculHitSubcutanousLblValue = sharedManager.musculHitSubcutanousLblValue * 100 / (totalOfSubcutanous ?? 0)
+            var percentmusculHitInstraLblValue = sharedManager.musculHitInstraLblValue * 100 / (totalOfInstra ?? 0)
+            var percentmusculHitSubcutanousLblValue = sharedManager.musculHitSubcutanousLblValue * 100 / (totalOfSubcutanous ?? 0)
             
             percentTotalOfInstraAndSubcutanousMuscleHitLbl.text = "\(percentmusculHitInstraLblValue/2 + percentmusculHitSubcutanousLblValue/2)"
             siteOfInjectTotalValue = percentmusculHitInstraLblValue/2 + percentmusculHitSubcutanousLblValue/2
-            
-            var percentmissedInstraLblValue = Int()
-            percentmissedInstraLblValue = sharedManager.missedInstraLblValue * 100 / (totalOfSubcutanous ?? 0)
-            var percentmissedSubcutanousLblValue = Int()
-            percentmissedSubcutanousLblValue = sharedManager.missedSubcutanousLblValue * 100 / (totalOfSubcutanous ?? 0)
-            
+           
+            var percentmissedInstraLblValue = sharedManager.missedInstraLblValue * 100 / (totalOfSubcutanous ?? 0)
+            var percentmissedSubcutanousLblValue = sharedManager.missedSubcutanousLblValue * 100 / (totalOfSubcutanous ?? 0)
             percentTotalOfInstraAndSubcutanousMissedLbl.text = "\(percentmissedInstraLblValue/2 + percentmissedSubcutanousLblValue/2)"
-            
         }
         
         delegate?.processEvaluationScore(percentCanterLRTotal:centerTotalValue ?? 0, siteOfInjectScored: siteOfInjectTotalValue ?? 0)

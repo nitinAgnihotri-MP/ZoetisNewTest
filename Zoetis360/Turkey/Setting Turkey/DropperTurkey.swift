@@ -94,14 +94,7 @@ class DropperTurkey: UIView {
             }
         }
     }
-    
-    /**
-     Dropdown border styling
-     
-     - (width: CGFloat) Border Width
-     - (color: UIColor) Color of Border
-     
-     */
+
     var border: (width: CGFloat, color: UIColor) {
         get { return (TableMenu.layer.borderWidth, UIColor(cgColor: TableMenu.layer.borderColor!)) }
         set {
@@ -161,7 +154,6 @@ class DropperTurkey: UIView {
             TableMenu.clipsToBounds = true
         }
         
-        //self.superview?.backgroundColor = UIColor.redColor()
     }
     
     // MARK: - Private Properties
@@ -193,22 +185,7 @@ class DropperTurkey: UIView {
     }
     
     // MARK: - API
-    
-    /**
-     Displays the dropdown
-     
-     - parameter options: Position of the dropdown corresponding of the button
-     - parameter button: Button to which the dropdown will be aligned to
-     
-     */
-    
-    /**
-     Displays the dropdown
-     
-     - parameter options:  Vertical alignment of the dropdown corresponding of the button
-     - parameter position: Horizontal alignment of the dropdown. Defaults to bottom.
-     - parameter button:   Button to which the dropdown will be aligned to
-     */
+
     func show(_ options: Alignment, position: Position = .bottom, button: UIButton) {
         refreshHeight()
         
@@ -321,14 +298,6 @@ class DropperTurkey: UIView {
         }
     }
     
-    /**
-     Find corresponding button to which the dropdown is aligned too
-     
-     - parameter subviews: All subviews of where the button is.
-     - parameter button: Button to find
-     
-     - returns: Found button or nil
-     */
     fileprivate func findButtonFromSubviews(_ subviews: [UIView], button: UIButton) -> UIView? {
         for subview in subviews {
             if (subview is UIButton && subview == button) {

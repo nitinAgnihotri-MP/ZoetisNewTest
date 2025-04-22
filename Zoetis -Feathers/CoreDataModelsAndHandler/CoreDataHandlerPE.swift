@@ -31,7 +31,7 @@ class CoreDataHandlerPE: NSObject {
     let catIdServerAssId2 = " catID == %d AND serverAssessmentId == %@"
     let vmID = "vmid == %d"
     
-    private var managedContext  = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType)
+    private var managedContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType)
     private var customerData = [NSManagedObject]()
     override init() {
         super.init()
@@ -592,29 +592,27 @@ class CoreDataHandlerPE: NSObject {
     func updateDraftInDoGInProgressInDB(newAssessment:PENewAssessment) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.returnsObjectsAsFaults = false
         do {
             let fetchResult = try appDelegate?.managedObjectContext.fetch(fetchRequest) as? [PE_AssessmentInProgress]
-            if let fetchedResult = fetchResult{
-                if fetchedResult.count > 0 {
-                    for i in 0..<fetchedResult.count {
-                        let assessmentObj: PE_AssessmentInProgress = (fetchedResult[i] )//as? PE_AssessmentInProgress)!
-                        let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
-                        assessmentObj.serverAssessmentId = newAssessment.serverAssessmentId
-                        assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
-                        assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
-                        assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
-                        assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
-                        assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
-                        assessmentObj.setValue(newAssessment.micro, forKey: "micro")
-                        assessmentObj.setValue(newAssessment.residue, forKey: "residue")
-                        assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
-                        assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
-                        do {
-                            try managedContext.save()
-                        } catch {
-                        }
+            if let fetchedResult = fetchResult,fetchedResult.count > 0 {
+                for i in 0..<fetchedResult.count {
+                    let assessmentObj: PE_AssessmentInProgress = (fetchedResult[i] )//as? PE_AssessmentInProgress)!
+                    let hatcheryAntibioticsInt = newAssessment.hatcheryAntibiotics ?? 0
+                    assessmentObj.serverAssessmentId = newAssessment.serverAssessmentId
+                    assessmentObj.setValue(NSNumber(value:hatcheryAntibioticsInt), forKey: "hatcheryAntibiotics")
+                    assessmentObj.setValue(newAssessment.iCS, forKey: "iCS")
+                    assessmentObj.setValue(newAssessment.iDT, forKey: "iDT")
+                    assessmentObj.setValue(newAssessment.dCS, forKey: "dCS")
+                    assessmentObj.setValue(newAssessment.dDT, forKey: "dDT")
+                    assessmentObj.setValue(newAssessment.micro, forKey: "micro")
+                    assessmentObj.setValue(newAssessment.residue, forKey: "residue")
+                    assessmentObj.setValue(newAssessment.isChlorineStrip, forKey: "isChlorineStrip")
+                    assessmentObj.setValue(newAssessment.isAutomaticFail, forKey: "isAutomaticFail")
+                    do {
+                        try managedContext.save()
+                    } catch {
                     }
                 }
             }
@@ -1854,10 +1852,8 @@ class CoreDataHandlerPE: NSObject {
     
     func getDraftAssessmentArrayPEObject(ofCurrentAssessment:Bool?=false,ofCurrentDate:Bool?=false) -> [PENewAssessment] {
         var peNewAssessmentArray : [PENewAssessment] = []
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        var fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInDraft")
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
         fetchRequest.predicate = NSPredicate(format: userIdStr, userID)
         if ofCurrentDate ?? false {
@@ -3369,33 +3365,29 @@ class CoreDataHandlerPE: NSObject {
     func fetchDraftCustomerWithCatID(_ catID: NSNumber,peNewAssessment:PENewAssessment) -> NSArray {
         var dataArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.returnsObjectsAsFaults = false
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: "sequenceNo == %@ AND userID == %d AND  draftNumber == %d AND  evaluationID == %d", argumentArray: [catID,userID,peNewAssessment.draftNumber,peNewAssessment.evaluationID]
         )
         
-        
         do {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
                 dataArray = results as NSArray
-            } else {
             }
         } catch {
         }
         return dataArray
     }
     
-    
     func fetchRejectedDraftCustomerWithCatID(assessmentId: String) -> NSArray {
         var dataArray = NSArray()
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         fetchRequest.predicate = NSPredicate(format: "userID == %d AND  serverAssessmentId == %d", argumentArray: [userID,assessmentId])
         
         do {
@@ -5255,7 +5247,7 @@ extension CoreDataHandlerPE {
     func getImagecountOfQuestion(assessment: PE_AssessmentInProgress,fromDraft:Bool?=false) -> Int {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
+        var fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
         if fromDraft ?? false {
             fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
         }
@@ -5320,12 +5312,10 @@ extension CoreDataHandlerPE {
             if results?.count != 0 { // Atleast one was returned
                 for result in results ?? []{
                     let imageData =  result.value(forKey: "imageData")  as? Data ?? Data()
-                    let imageDataToReturn = imageData
                     str = imageData.base64EncodedString(options: .lineLength64Characters)                  }
             }
             return str
         } catch {
-            //   print("Fetch Failed: \(error)")
             return str
         }
     }
@@ -7258,81 +7248,10 @@ extension CoreDataHandlerPE {
         do {
             try managedContext.save()
             return true
-        }
-        catch {
+        } catch {
             return false
         }
     }
-    
-//    func updateCertificateMinusCategortIsSelcted(assessment: PE_AssessmentInProgress, doaId: Int,fromDraft:Bool? = false) -> Bool {
-//        
-//        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-//        
-//        var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
-//        if fromDraft == true {
-//            fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
-//        }
-//        fetchRequest.returnsObjectsAsFaults = false
-//        let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
-//        
-//        fetchRequest.predicate = NSPredicate(format: catIdServerAssId, argumentArray: [assessment.catID,currentServerAssessmentId])
-//        
-//        do {
-//            let results = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
-//            if results?.count != 0 { // Atleast one was returned
-//                for result in results ?? []{
-//                    var imagesPreviousArray =  result.value(forKey: "inovoject")  as? [Int] ?? []
-//                    imagesPreviousArray.index(of: doaId).map { imagesPreviousArray.remove(at: $0) }
-//                    result.setValue(imagesPreviousArray, forKey: "inovoject")
-//                }
-//            }
-//        } catch {
-//            //   print("Fetch Failed: \(error)")
-//        }
-//        do {
-//            try managedContext.save()
-//            return true
-//        }
-//        catch {
-//            return false
-//        }
-//    }
-//    
-//    func updateVmixerMinusCategortIsSelcted(assessment: PE_AssessmentInProgress, doaId: Int,fromDraft:Bool? = false) -> Bool {
-//        
-//        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-//        
-//        var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInProgress")
-//        if fromDraft == true {
-//            fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentIDraftInProgress")
-//        }
-//        fetchRequest.returnsObjectsAsFaults = false
-//        let currentServerAssessmentId = UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? ""
-//        
-//        fetchRequest.predicate = NSPredicate(format: catIdServerAssId, argumentArray: [assessment.catID,currentServerAssessmentId])
-//        
-//        do {
-//            let results = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
-//            if results?.count != 0 { // Atleast one was returned
-//                for result in results ?? []{
-//                    var imagesPreviousArray =  result.value(forKey: "inovoject")  as? [Int] ?? []
-//                    imagesPreviousArray.index(of: doaId).map { imagesPreviousArray.remove(at: $0) }
-//                    result.setValue(imagesPreviousArray, forKey: "inovoject")
-//                }
-//            }
-//        } catch {
-//            //   print("Fetch Failed: \(error)")
-//        }
-//        do {
-//            try managedContext.save()
-//            return true
-//        }
-//        catch {
-//            return false
-//        }
-//        
-//    }
-    
     
     func updateInovojectMinusCategortIsSelcted(assessment: PE_AssessmentInProgress, doaId: Int,fromDraft:Bool? = false)  {
         
@@ -7366,9 +7285,7 @@ extension CoreDataHandlerPE {
             print(appDelegateObj.testFuntion())
         }
     }
-    
-    
-    
+        
     func getPEDOAData(doaId: Int) -> InovojectData? {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
         
@@ -7415,46 +7332,6 @@ extension CoreDataHandlerPE {
         
         return nil
     }
-
-//    func getPEDOAData(doaId:Int) -> InovojectData? {
-//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-//        
-//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_DayOfAge")
-//        fetchRequest.predicate = NSPredicate(format: "doaId == %d", doaId)
-//        
-//        fetchRequest.returnsObjectsAsFaults = false
-//        do {
-//            let fetchedResult = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
-//            if let results = fetchedResult {
-//                
-//                let result = results[0]
-//                
-//                for result in results {
-//                    let doaId = result.value(forKey: "doaId") as? Int ?? 0
-//                    let name = result.value(forKey: "doaName") as? String ?? ""
-//                    let vaccineMan = result.value(forKey: "doaVm") as? String ?? ""
-//                    let dosage = result.value(forKey: "doaDosage") as? String ?? ""
-//                    let dilute = result.value(forKey: "doaDiluentManufacturer") as? String ?? ""
-//                    let bagSizeType = result.value(forKey: "doaBagSize") as? String ?? ""
-//                    let ampuleSize = result.value(forKey: "doaAmpuleSize") as? String ?? ""
-//                    let ampulePerBag = result.value(forKey: "doaAmpulePerBag") as? String ?? ""
-//                    
-//                    
-//                    let invoHatchAntibiotic = result.value(forKey: "invoHatchAntibiotic") as? Int ?? 0
-//                    let invoHatchAntibioticText = result.value(forKey: "invoHatchAntibioticText") as? String ?? ""
-//                    let invoProgramName = result.value(forKey: "invoProgramName") as? String ?? ""
-//                    let doaDilManOther = result.value(forKey: "doaDilManOther") as? String ?? ""
-//                    let inovojectData = InovojectData(id:doaId,vaccineMan:vaccineMan,name:name,ampuleSize:ampuleSize,ampulePerBag:ampulePerBag,bagSizeType:bagSizeType,dosage:dosage,dilute:dilute,invoHatchAntibiotic:invoHatchAntibiotic,invoHatchAntibioticText:invoHatchAntibioticText,invoProgramName:invoProgramName,doaDilManOther:doaDilManOther)
-//                    
-//                    return inovojectData
-//                }
-//            }
-//        } catch {
-//            print(appDelegateObj.testFuntion())
-//        }
-//        return nil
-//    }
-    
     
     func getCertificateData(doaId:Int) -> PECertificateData? {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -7467,14 +7344,13 @@ extension CoreDataHandlerPE {
             
             let doaId = result.value(forKey: "vmid") as? Int ?? 0
             let name = result.value(forKey: "certificateName") as? String ?? ""
-            let regionId = UserDefaults.standard.integer(forKey: "Regionid")
             let certificateDate = result.value(forKey: "certificateDate") as? String ?? ""
             
             let isCertExpired = result.value(forKey: "isCertExpired") as? Bool ?? false
             let isReCert = result.value(forKey: "isReCert") as? Bool ?? false
             let signatureImg = result.value(forKey: "signatureImg") as? String ?? ""
             let vacOperatorId = result.value(forKey: "vacOperatorId") as? Int ?? 0
-            var fsrSign = result.value(forKey: "fsrSign") as? String ?? ""
+            let fsrSign = result.value(forKey: "fsrSign") as? String ?? ""
             let peCertificateData = PECertificateData(id:doaId,name: name, date: certificateDate,isCertExpired: isCertExpired,isReCert: isReCert,vacOperatorId: vacOperatorId, signatureImg: signatureImg, fsrSign: fsrSign)
             return peCertificateData
         } catch {
@@ -7516,7 +7392,6 @@ extension CoreDataHandlerPE {
     
     func updateVMixerInDB(peCertificateData:PECertificateData,id:Int) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_VMixer")
         fetchRequest.predicate = NSPredicate(format: vmID, id)
         fetchRequest.returnsObjectsAsFaults = false
@@ -7524,7 +7399,6 @@ extension CoreDataHandlerPE {
             let results = try appDelegate?.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             if results?.count != 0 { // Atleast one was returned
                 for result in results ?? [] {
-                    let assessmentObj: PE_DayOfAge = PE_DayOfAge()
                     result.setValue(id, forKey: "vmid")
                     result.setValue(peCertificateData.name, forKey: "certificateName")
                     result.setValue(peCertificateData.certificateDate, forKey: "certificateDate")

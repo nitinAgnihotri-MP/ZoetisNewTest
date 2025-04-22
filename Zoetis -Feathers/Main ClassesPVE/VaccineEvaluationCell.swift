@@ -335,11 +335,6 @@ class VaccineEvaluationCell: UITableViewCell {
         return dividedValue
     }
     
-    func getScoreForInactivatedVaccine(value:Int, total:Int) -> Double{
-        let dividedValue : Double = Double(value) / Double(total)
-        return dividedValue
-    }
-    
     func saveOtherValuesForServer() {
                 
         CoreDataHandlerPVE().updateSessionDetails(1, text: Double(injCenter_LeftWing_Percent.text!) ?? 0, forAttribute: "injCenter_LeftWing_Percent")

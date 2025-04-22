@@ -180,13 +180,12 @@ class PVEViewFinalizeAssement: BaseViewController {
                 
                 let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
                 
-                var scoreArr = [Any]()
-                scoreArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(currentTimeStamp, seqNoArr: seq_NumberArr).scoreArr as! [Any]
+                var scoreArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(currentTimeStamp, seqNoArr: seq_NumberArr).scoreArr as! [Any]
                 scoreArr.removeLast()
                 scoreArr.append(sharedManager.vaccineEvaluationScoreTotal)
                 
-                var max_MarksArr = [Int]()
-                max_MarksArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(currentTimeStamp, seqNoArr: seq_NumberArr).max_MarksArr as! [Int]
+               
+                var max_MarksArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(currentTimeStamp, seqNoArr: seq_NumberArr).max_MarksArr as! [Int]
                 
                 if currentSel_seq_Number == 6 {
                     let seq_NumberArr = assessmentArr.value(forKey: "max_Mark")  as? NSArray ?? NSArray()
@@ -200,18 +199,13 @@ class PVEViewFinalizeAssement: BaseViewController {
                 CoreDataHandlerPVE().updateDraftToSync(currentTimeStamp, type: "sync", maxScoreArray: max_MarksArr as NSArray, scoreArray: scoreArr as NSArray, categoryArray: catArray)
                 
                 let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_Sync")
-                let scoreArray = valuee.value(forKey: "scoreArray")  as? NSArray ?? NSArray()
                 
                 break
             }
         }
     }
     
-    private func getEvaluationDateFromDB(key:String) -> Date{
-        let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_Session")
-        let valueArr = valuee.value(forKey: key) as! NSArray
-        return valueArr[0] as! Date
-    }
+ 
     
     private func setInitialValues() {
         
@@ -250,7 +244,6 @@ class PVEViewFinalizeAssement: BaseViewController {
         assessmentArr = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: currentTimeStamp)
         
         tblView.reloadData()
-        let allCategorySelected = checkAllCategorySeledtedOneQuestion()
         setMarksLabel()
         
     }
@@ -389,7 +382,7 @@ class PVEViewFinalizeAssement: BaseViewController {
         
         questionsArr = CoreDataHandlerPVE().fetchDraftAssQuestion(currentSel_seq_Number, type: "sync", syncId: currentTimeStamp) as NSArray
         var max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
-        var seq_Number = max_ScoreArr![0]
+        
         
         var idArr = questionsArr.value(forKey: "id") as? [Int]
         var id = idArr![indexPath!.row]
@@ -412,8 +405,8 @@ class PVEViewFinalizeAssement: BaseViewController {
             if selectedIndex == 4
             {
                 max_ScoreArr = liveQuesArr.value(forKey: "seq_Number") as? [Int]
-                seq_Number = max_ScoreArr![0]
-                vc.seq_Number = seq_Number
+         
+                vc.seq_Number =  max_ScoreArr![0]
                 
                 idArr = liveQuesArr.value(forKey: "id") as? [Int]
                 id = idArr![indexPath!.row]
@@ -426,8 +419,7 @@ class PVEViewFinalizeAssement: BaseViewController {
             else if selectedIndex == 5
             {
                 max_ScoreArr = inactiveQuessArr.value(forKey: "seq_Number") as? [Int]
-                seq_Number = max_ScoreArr![0]
-                vc.seq_Number = seq_Number
+                vc.seq_Number = max_ScoreArr![0]
                 
                 idArr = inactiveQuessArr.value(forKey: "id") as? [Int]
                 id = idArr![indexPath!.row]
@@ -439,8 +431,7 @@ class PVEViewFinalizeAssement: BaseViewController {
             }
             else{
                 max_ScoreArr = otherQuessArr.value(forKey: "seq_Number") as? [Int]
-                seq_Number = max_ScoreArr![0]
-                vc.seq_Number = seq_Number
+                vc.seq_Number = max_ScoreArr![0]
                 idArr = otherQuessArr.value(forKey: "id") as? [Int]
                 id = idArr![indexPath!.row]
                 vc.rowId = id
@@ -452,8 +443,7 @@ class PVEViewFinalizeAssement: BaseViewController {
         
         else{
             max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
-            seq_Number = max_ScoreArr![0]
-            vc.seq_Number = seq_Number
+            vc.seq_Number = max_ScoreArr![0]
             idArr = questionsArr.value(forKey: "id") as? [Int]
             id = idArr![indexPath!.row]
             vc.rowId = id
@@ -541,7 +531,7 @@ extension PVEViewFinalizeAssement:  UIImagePickerControllerDelegate,UINavigation
             imagePicker.dismiss(animated: true)
         }
         /******************************************************************************************************/
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        func imagePickerControllerDidCancel(_ _: UIImagePickerController) {
             
             //   print("User canceled image")
             dismiss(animated: true)
@@ -695,45 +685,7 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
     @IBAction func vaccinatorsPlusBtnAction(_ sender: Any) {
         print(appDelegateObj.testFuntion())
     }
-    
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
-//            if section == 3 {
-//                return otherQuessArr.count
-//            }
-//            if section == 1 {
-//                return noOfCatcherArr.count
-//            }
-//            if section == 2 {
-//                return noOfVaccinatorsArr.count
-//            }
-//            if section == 4 {
-//                if isLiveVaccineOn == true {
-//                    return liveQuesArr.count
-//                }
-//                else{
-//                    return 1
-//                }
-//            }
-//            if section == 5 {
-//                if isInActiveVaccineOn == true {
-//                    return inactiveQuessArr.count
-//                } else {
-//                    return 1
-//                }
-//            }
-//            if section == 6 {
-//                return vaccinInfoDetailArr.count
-//            } else{
-//                return 1
-//            }
-//        } else if currentSel_seq_Number == 6 { // Vaccine Evaluation Section
-//            
-//            return 1
-//        } else {
-//            return questionsArr.count
-//        }
-//    }
+
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard currentSel_seq_Number == 2 else {
@@ -757,35 +709,6 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
             return 1
         }
     }
-    
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if currentSel_seq_Number == 2 {  //Vaccine Prepraion Section
-//            if indexPath.section == 0 {
-//                return 200.0
-//            } else if indexPath.section == 1 || indexPath.section == 2{
-//                return 60.0 //\\\ ---Vaccine Info Detail Cell-----
-//            } else if indexPath.section == 4 || indexPath.section == 5{
-//                return 80.0 //\\\ ---Crew Safty Cell-----
-//            } else if indexPath.section == 6{
-//                
-//                if vaccinInfoDetailArr[indexPath.row].keys.contains("showMore") {
-//                    if vaccinInfoDetailArr[indexPath.row]["showMore"] as! String == Constants.noStr {
-//                        return 93
-//                    } else {
-//                        return 300
-//                    }
-//                } else {
-//                    return 300
-//                }
-//            } else {
-//                return 80.0
-//            }
-//        } else if currentSel_seq_Number == 6 {
-//            return 1350.0
-//        } else {
-//            return 80.0
-//        }
-//    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch currentSel_seq_Number {
@@ -1258,46 +1181,6 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
             return 60.0
         }
     }
-
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        if section == 5 || section == 1 || section == 2 || section == 3 || section == 4  || section == 6{
-//            if section == 1 {
-//                if noOfCatcherArr.count > 0{
-//                    return 85.0
-//                }else{
-//                    return 73.0
-//                }
-//            }
-//            if section == 2 {
-//                if noOfVaccinatorsArr.count > 0{
-//                    return 85.0
-//                }else{
-//                    return 73.0
-//                }
-//            }
-//            if section == 4  {
-//                return 43.0
-//            }
-//            if section == 5{
-//                return 43.0
-//            }
-//            if section == 6 {
-//                if vaccinInfoDetailArr.count > 0{
-//                    return 85.0
-//                }else{
-//                    return 73.0
-//                }
-//            }
-//            if section == 3 {
-//                return 73.0
-//            }
-//            else{
-//                return 60.0
-//            }
-//        }else{
-//            return 0.0
-//        }
-//    }
     
     fileprivate func handleSection1(_ tableView: UITableView) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "NoOfCatchersHeader" ) as! NoOfCatchersHeader
@@ -1430,6 +1313,7 @@ extension PVEViewFinalizeAssement: UICollectionViewDelegate, UICollectionViewDat
         for (ind, _) in seq_NumberArrr.enumerated() {
             let seqNo = seq_NumberArrr[ind] as! NSNumber
             if seqNo == 6 {
+                print("SeqNo is 6, perform no action.")
             }else{
                 let marksTxt = CoreDataHandlerPVE().fetchDraftSumOfSelectedMarks(seqNo, type: "sync", syncId: currentTimeStamp)
                 //let marksTxt = CoreDataHandlerPVE().fetchSumOfSelectedMarks(seqNo)

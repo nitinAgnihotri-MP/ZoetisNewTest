@@ -67,10 +67,10 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     var langCultureArray : [String] = []
     var langIdArray : [NSNumber] = []
     var countryArray: [String] = []
-    var countryId: [NSNumber] = []
-    var apiKeyId: NSNumber?
-    var domainName : String?
-    var apiKey: String?
+    var countryIdIs: [NSNumber] = []
+    var apiKeyIdIs: NSNumber?
+    var domainsName : String?
+    var apiKeyIs: String?
     let gigya =  Gigya.sharedInstance(GigyaAccount.self)
     let selectCountryStr = "Select country"
     let selectLangStr = "Select language"
@@ -179,7 +179,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 mainQueue.addOperation{
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     self?.countryArray.removeAll()
-                    self?.countryId.removeAll()
+                    self?.countryIdIs.removeAll()
                     
                     let dataArray = json
                     for countries in dataArray {
@@ -187,7 +187,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         let country = countryName[Constants.countryNamStr]
                         let countryIds = countryName["CountryId"]
                         self?.countryArray.append(country.rawValue as! String)
-                        self?.countryId.append(countryIds.rawValue as! NSNumber)
+                        self?.countryIdIs.append(countryIds.rawValue as! NSNumber)
                     }
                 }
             })
@@ -248,6 +248,36 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 mainQueue.addOperation{
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                     let dataArray = json
+                    
+                    for apiKeyData in dataArray {
+                        let apiKeys = apiKeyData.1   // <- Rename the outer loop variable
+                         
+                        let countryApiKey = apiKeys["API_Keys"]
+                        debugPrint(countryApiKey)
+                        
+                        self?.apiKeyIs = countryApiKey.rawValue as? String
+                        let domainName = apiKeys["Data_Center"]
+                        self?.domainsName = domainName.rawValue as? String
+                        let apiKeyId = apiKeys["Id"]
+                        self?.apiKeyIdIs = apiKeyId.rawValue as? NSNumber
+                        
+                        let environmentIs = Constants.Api.versionUrl
+                        let environmentMap: [String: Int] = [
+                            "stageapi": 0,
+                            "devapi": 1,
+                            "supportapi": 2
+                        ]
+                        
+                        let liveAlbums = environmentMap.first { environmentIs.contains($0.key) }?.value ?? 3
+                        
+                        // Determine the correct API key
+                        let apiKey: String = (liveAlbums == 1 || liveAlbums == 2) ? "4_KkOJPb7zC89ubdZyo8pEWg" : (self?.apiKeyIs ?? "")
+                        
+                        // Initialize Gigya with the determined API key
+                        self?.gigya.initFor(apiKey: apiKey, apiDomain: self?.domainsName)
+                    }
+
+                    /*
                     for apiKeys in dataArray {
                         let apiKeys = apiKeys.1
                         
@@ -277,6 +307,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         self?.gigya.initFor(apiKey: apiKey, apiDomain: self?.domainName)
                         
                     }
+                    */
                 }
             })
         }
@@ -304,19 +335,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     let jsonTextValue: String = json["Text"].stringValue
                     
                     self?.loginMethod(Email: jsonTextValue ?? "", GUID: self?.guidIs ?? "", GUIDSignature: self?.guidSignatureIs ?? "", SignatureTimestamp: self?.signatureTimestampIs ?? "")
-//                    for languages in dataArray {
-//                        var language = languages.1
-//                        let langCulture = language["Language_Culture"]
-//                        
-//                        self?.langCultureArray.append(langCulture.rawValue as! String)
-//                        let langName = language["Language_Name"]
-//                        
-//                        self?.langNameArray.append(langName.rawValue as! String)
-//                        let langId = language["Id"]
-//                        
-//                        self?.langIdArray.append(langId.rawValue as! NSNumber)
-//                        
-//                    }
+
                 }
             })
         }
@@ -514,25 +533,23 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     
                     UserDefaults.standard.set(false, forKey: "hasAppMovedToBackground")
                     let jsonDecoder = JSONDecoder()
-                    let jsonData = try? JSONSerialization.data(withJSONObject: value, options: .prettyPrinted)
-                    if let data = jsonData{
-                        let userResponseObj = try? jsonDecoder.decode(UserResponseDTO.self, from: jsonData!)
-                        if userResponseObj != nil{
-                            if let lastFilledUserId =  UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace(){
-                                UserContext.sharedInstance.setUserDetails(userResponseObj!)
-                                if let newlyFilledUserId =  UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace(){
-                                    if newlyFilledUserId == lastFilledUserId{
+                    if let jsonData = try? JSONSerialization.data(withJSONObject: value, options: .prettyPrinted) {
+                        if let userResponseObj = try? jsonDecoder.decode(UserResponseDTO.self, from: jsonData) {
+                            if let lastFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace() {
+                                UserContext.sharedInstance.setUserDetails(userResponseObj)
+                                if let newlyFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace() {
+                                    if newlyFilledUserId == lastFilledUserId {
                                         UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
-                                    }else{
+                                    } else {
                                         UserDefaults.standard.set(true, forKey: "PENewUserLoginFlag")
                                     }
-                                    
                                 }
                             }
-                            UserContext.sharedInstance.setUserDetails(userResponseObj!)
+                            UserContext.sharedInstance.setUserDetails(userResponseObj)
                             UserDefaults.standard.set(true, forKey: "hasLoggedIn")
                         }
                     }
+
                     
                     let dict : NSDictionary = value as! NSDictionary
                     
@@ -567,17 +584,16 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     else{
                         let ModuleId = (dict.value(forKey: "ModuleId") as? String) ?? ""
                         let arrModuleIds = ModuleId.components(separatedBy: "~")
-                        if !(arrModuleIds.count > 1){
-                            if arrModuleIds[0] == "21"{
-                                let roleID = dict.value(forKey: "RoleIds") as? String ?? ""
-                                if roleID != "31" && roleID != "33"{
-                                    Helper.dismissGlobalHUD(self.view)
-                                    Helper.showAlertMessage(self, titleStr: "", messageStr: "Sorry you dont have access for this.")
-                                    return
-                                }
-                                
+
+                        if arrModuleIds.count <= 1 && arrModuleIds[0] == "21" {
+                            let roleID = dict.value(forKey: "RoleIds") as? String ?? ""
+                            if roleID != "31" && roleID != "33" {
+                                Helper.dismissGlobalHUD(self.view)
+                                Helper.showAlertMessage(self, titleStr: "", messageStr: "Sorry you don't have access for this.")
+                                return
                             }
                         }
+
                         let ModuleName = (dict.value(forKey: "ModuleName") as? String) ?? ""
                         
                         let moduleIdIs = ModuleId.replacingOccurrences(of: "~", with: "")
@@ -633,7 +649,6 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                             self.termsCond = 0
                         }
                         
-                        let userId = UserDefaults.standard.integer(forKey: "Id")
                         
                         UserDefaults.standard.set(terms, forKey: "Terms")
                         UserDefaults.standard.set(terms, forKey: "TermsChicken")
@@ -797,18 +812,20 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
-            allPostingSessionArr.add(sessionId)
+            if let postingId = pSession.postingId {
+                allPostingSessionArr.add(postingId)
+            }
         }
-        
+
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
-            allPostingSessionArr.add(sessionId)
+            if let necropsyId = nIdSession.necropsyId {
+                allPostingSessionArr.add(necropsyId)
+            }
         }
+
         return allPostingSessionArr
     }
     
@@ -833,17 +850,18 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
         
         let allPostingSessionArr = NSMutableArray()
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
-            allPostingSessionArr.add(sessionId)
+            if let postingId = pSession.postingId {
+                allPostingSessionArr.add(postingId)
+            }
         }
-        
+
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
-            allPostingSessionArr.add(sessionId)
+            if let necropsyId = nIdSession.necropsyId {
+                allPostingSessionArr.add(necropsyId)
+            }
         }
         return allPostingSessionArr
     }
@@ -901,8 +919,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     func logoutBtnAction(){
         
         self.ssologoutMethod()
-        let moduleID =   UserDefaults.standard.string(forKey:"ModuleId")
-        let moduleName =   UserDefaults.standard.string(forKey:"ModuleName")
+    
         let userType =   UserDefaults.standard.string(forKey:"userType")
         
         let errorMSg = Constants.areYouSureToLogoutStr
@@ -1123,7 +1140,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                 self.lblCountry.text = selectedVal
                 UserDefaults.standard.set(selectedVal, forKey: "Country")
                 self.lblCountry.textColor = .black
-                let countryID = countryId[index]
+                let countryID = countryIdIs[index]
                 let strCountryId = String(describing: countryID)
                 self.langNameArray.removeAll()
                 self.langIdArray.removeAll()
@@ -1203,7 +1220,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         if btnTag == 1
         {
             let str = countryArray[indexPath.row]
-            let id = countryId[indexPath.row]
+           
             lblCountry.text = str
             
             lblCountry.textColor = .black
@@ -1401,8 +1418,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         self.deleteAllData("MyCotoxinBindersFeed")
         
         if WebClass.sharedInstance.connected() {
-            var id = Int()
-            id = UserDefaults.standard.value(forKey: "Id") as! Int
+            
+            var id = UserDefaults.standard.value(forKey: "Id") as! Int
             let devType = Constants.deviceType
             let newUrl = ZoetisWebServices.EndPoint.getFlockFeedList.latestUrl + "\(id)&DeviceType=\(devType)"
             ZoetisWebServices.shared.getFlockFeedSessionResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
@@ -1496,8 +1513,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         self.deleteAllData("CaptureNecropsyViewData")
         if WebClass.sharedInstance.connected() {
             
-            var id = Int()
-            id =  UserDefaults.standard.value(forKey: "Id") as! Int
+            var id =  UserDefaults.standard.value(forKey: "Id") as! Int
             let lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
             let url = "PostingSession/GetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
@@ -1606,236 +1622,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
         
     }
-    
 
-    
-    // MARK: *********** ZoetisWebServices to  Get Necropsy data Acessing From Server **************/
- /*
-    func getPostingDataFromServerforNecorpsy(){
-        self.deleteAllData("CaptureNecropsyViewData")
-        if WebClass.sharedInstance.connected() {
-            
-            var id = Int()
-            id = UserDefaults.standard.value(forKey: "Id") as! Int
-            let lngId = UserDefaults.standard.integer(forKey: "lngId")
-            let countryId = UserDefaults.standard.integer(forKey: "countryId")
-            
-            let newUrl = ZoetisWebServices.EndPoint.getNecropsyListForChicken.latestUrl + "\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
-            ZoetisWebServices.shared.getNecropsyListResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
-                guard let self = self else { return }
-                
-                DispatchQueue.main.async {
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        for item in arr {
-                            guard
-                                let sessionId = item["SessionId"].int,
-                                let farms = item["Farms"].array
-                            else {
-                                continue
-                            }
-
-                            for farm in farms {
-                                guard
-                                    let farmName = farm["FarmName"].string,
-                                    let categories = farm["Category"].array
-                                else {
-                                    continue
-                                }
-
-                                for category in categories {
-                                    guard
-                                        let categoryName = category["Category"].string,
-                                        let observations = category["Observations"].array
-                                    else {
-                                        continue
-                                    }
-
-                                    for observation in observations {
-                                        let obsId = observation["ObservationId"].intValue
-                                        let refId = observation["ReferenceId"].numberValue
-                                        let languageId = observation["LanguageId"].numberValue
-                                        let obsName = observation["Observations"].stringValue
-                                        let measure = observation["Measure"].stringValue
-                                        let quickLink = observation["DefaultQLink"].stringValue  // It's a string, not number
-
-                                      //  print("✅ Observation found: \(obsId) - \(obsName)")
-
-                                        let birdsArray = observation["Birds"].arrayValue
-
-                                        // Make sure to check bird data within this block
-                                        if let birdDict = birdsArray.first?.dictionaryValue {
-                                            print("🐥 Bird Data:")
-                                            for i in 1...10 {
-                                                let key = "BirdNumber\(i)"
-                                                if let value = birdDict[key]?.string, value != "NA" {
-                                                    print(" - \(key): \(value)")
-
-                                                    // Handle the bird data and save it
-                                                    let categoryStr: String
-                                                    switch categoryName {
-                                                    case "Coccidiosis":
-                                                        categoryStr = "Coccidiosis"
-                                                    case "GI Tract":
-                                                        categoryStr = "GITract"
-                                                    case "Immune/Others":
-                                                        categoryStr = "Immune"
-                                                    case "Respiratory":
-                                                        categoryStr = "Resp"
-                                                    case "Skeletal/Muscular/Integumentary":
-                                                        categoryStr = "skeltaMuscular"
-                                                    default:
-                                                        categoryStr = categoryName
-                                                    }
-
-                                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(
-                                                        catName: categoryStr,
-                                                        obsName: obsName,
-                                                        formName: farmName,
-                                                        obsVisibility: birdDict[key]?.boolValue ?? false,
-                                                        birdNo: NSNumber(value: i), // Using 'i' for the bird number
-                                                        obsPoint: birdDict[key]?.intValue ?? 0,
-                                                        index: i - 1, // Since 'i' starts from 1, adjust it to match the index
-                                                        obsId: obsId,
-                                                        measure: measure,
-                                                        quickLink: NSNumber(value: Int(quickLink) ?? 0), // Convert quickLink to Int
-                                                        necId: NSNumber(value: sessionId),
-                                                        isSync: false,
-                                                        lngId: languageId,
-                                                        refId: refId,
-                                                        actualText: value // bird value
-                                                    )
-                                                } else {
-                                                    // Break the loop when 'NA' is found
-                                                    break
-                                                }
-                                            }
-                                        } else {
-                                            print("⚠️ No bird data found for observation \(obsId)")
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        self.getNotesFromServer()
-                    } else {
-                        self.getNotesFromServer()
-                    }
-                }
-
-                
-               /*
-                DispatchQueue.main.async {
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        for item in arr {
-                            guard
-                                let sessionId = item["SessionId"].int,
-                                let farms = item["Farms"].array
-                            else {
-                                continue
-                            }
-
-                            for farm in farms {
-                                guard
-                                    let farmName = farm["FarmName"].string,
-                                    let categories = farm["Category"].array
-                                else {
-                                    continue
-                                }
-
-                                for category in categories {
-                                    guard
-                                        let categoryName = category["Category"].string,
-                                        let observations = category["Observations"].array
-                                    else {
-                                        continue
-                                    }
-
-                                    for observation in observations {
-                                        let obsId = observation["ObservationId"].intValue
-                                                        let refId = observation["ReferenceId"].numberValue
-                                                        let languageId = observation["LanguageId"].numberValue
-                                                        let obsName = observation["Observations"].stringValue
-                                                        let measure = observation["Measure"].stringValue
-                                                        let quickLink = observation["DefaultQLink"].stringValue  // It's a string, not number
-
-                                                        print("✅ Observation found: \(obsId) - \(obsName)")
-
-                                                        let birdsArray = observation["Birds"].arrayValue
-
-                                                        if let birdDict = birdsArray.first?.dictionaryValue {
-                                                            print("🐥 Bird Data:")
-                                                            for i in 1...10 {
-                                                                let key = "BirdNumber\(i)"
-                                                                if let value = birdDict[key]?.string, value != "NA" {
-                                                                    print(" - \(key): \(value)")
-                                                                } else {
-                                                                    break
-                                                                }
-                                                            }
-                                                        } else {
-                                                            print("⚠️ No bird data found for observation \(obsId)")
-                                                        }
-
-                                        for m in 0..<10 {
-                                            let keyStr = "BirdNumber\(m + 1)"
-                                            if let birdValue = birdDict[keyStr]?.string {
-                                                if birdValue == "NA" {
-                                                    break
-                                                } else {
-                                                    let categoryStr: String
-                                                    switch categoryName {
-                                                    case "Coccidiosis":
-                                                        categoryStr = "Coccidiosis"
-                                                    case "GI Tract":
-                                                        categoryStr = "GITract"
-                                                    case "Immune/Others":
-                                                        categoryStr = "Immune"
-                                                    case "Respiratory":
-                                                        categoryStr = "Resp"
-                                                    case "Skeletal/Muscular/Integumentary":
-                                                        categoryStr = "skeltaMuscular"
-                                                    default:
-                                                        categoryStr = categoryName
-                                                    }
-
-                                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(
-                                                        catName: categoryStr,
-                                                        obsName: obsName,
-                                                        formName: farmName,
-                                                        obsVisibility: birdDict[keyStr]?.boolValue ?? false,
-                                                        birdNo: NSNumber(value: m + 1),
-                                                        obsPoint: birdDict[keyStr]?.intValue ?? 0,
-                                                        index: m,
-                                                        obsId: obsId,
-                                                        measure: measure,
-                                                        quickLink: NSNumber(value: quickLink.intValue),
-                                                        necId: NSNumber(value: sessionId),
-                                                        isSync: false,
-                                                        lngId: languageId,
-                                                        refId: refId,
-                                                        actualText: birdValue
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        self.getNotesFromServer()
-                    } else {
-                        self.getNotesFromServer()
-                    }
-                }
-                */
-            })
-        } 
-        else{
-            self.alerViewInternet()
-        }
-        
-    }
-    */
+ 
     // MARK: ************* ZoetisWebServices Calling to GetVaccination Data for Posted Session Data From Server  ***************************************/
     fileprivate func handlePosDictKeysValidations(_ posDict: [String : Any]) {
         for key in posDict.keys {
@@ -1935,8 +1723,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     func getNotesFromServer(){
         self.deleteAllData("NotesBird")
         if WebClass.sharedInstance.connected() {
-            var id = Int()
-            id =  UserDefaults.standard.integer(forKey: "Id")
+          
+            var id =  UserDefaults.standard.integer(forKey: "Id")
             let devType = Constants.deviceType
             let newUrl = ZoetisWebServices.EndPoint.getSubmittedNotesForChicken.latestUrl + "\(id)&DeviceType=\(devType)"
             
@@ -2406,8 +2194,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         self.deleteAllData("CaptureNecropsyViewDataTurkey")
         if WebClass.sharedInstance.connected() {
             
-            var id = Int()
-            id = UserDefaults.standard.value(forKey: "Id") as! Int
+          
+            var id = UserDefaults.standard.value(forKey: "Id") as! Int
             let lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
             let url = "PostingSession/TurkeyGetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
@@ -2587,10 +2375,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         self.deleteAllData("CoccidiosisControlFeedTurkey")
         self.deleteAllData("MyCotoxinBindersFeedTurkey")
         if WebClass.sharedInstance.connected() {
+       
             
-            var id = Int()
-            
-            id = UserDefaults.standard.value(forKey: "Id") as! Int
+            var id = UserDefaults.standard.value(forKey: "Id") as! Int
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
             print("AccessToken: ",accestoken)
            // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
@@ -2710,8 +2497,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     func getPostingDataFromServerforImageTurkey(){
         self.deleteAllData("BirdPhotoCaptureTurkey")
         if WebClass.sharedInstance.connected() {
-            var id = Int()
-            id = UserDefaults.standard.value(forKey: "Id") as! Int
+            
+            var id = UserDefaults.standard.value(forKey: "Id") as! Int
             let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedImages.latestUrl + "\(id)&DeviceType=\(Constants.deviceType)"
             
             ZoetisWebServices.shared.getTurkeyPostedImagesResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
@@ -2820,14 +2607,11 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     func getNotesFromServerTurkey() {
         self.deleteAllData("NotesBirdTurkey")
         if WebClass.sharedInstance.connected() {
-            var id = Int()
-            id =  UserDefaults.standard.integer(forKey: "Id")
+       
+            var id =  UserDefaults.standard.integer(forKey: "Id")
             let dev = "iOS"
-            // Old     let url = "PostingSession/T_GetBirdNotesListByUser?UserId=\(id)&DeviceType=\(dev)"
             let url = "PostingSession/TurkeyGetBirdNotesListByUser?UserId=\(id)&DeviceType=\(dev)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-            let headerDict: HTTPHeaders = [Constants.authorization: accestoken]
-            let urlString: String = WebClass.sharedInstance.webUrl + url
             
             let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedNotes.latestUrl + "\(id)&DeviceType=\(Constants.deviceType)"
             ZoetisWebServices.shared.getTurkeyPostedNotesResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
@@ -2859,10 +2643,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     }
 }
 
-// Helper function inserted by Swift 4.2 migrator.
-private func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
-    return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
-}
+
 // MARK:  Side Pannel Delegates Method
 extension ViewController:SidePanelViewControllerDelegate {
     
@@ -2901,13 +2682,7 @@ extension ViewController:SidePanelViewControllerDelegate {
                 delegate?.collapseSidePanels?()
                 return
             }
-            
-            else if selectedRow == 1 {
-                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboard"),object: nil))
-                self.navigationController?.popToViewController(ofClass: PEDashboardViewController.self)
-                delegate?.collapseSidePanels?()
-                return
-            }
+         
             else if selectedRow == 5 {
                 logoutBtnAction()
             }

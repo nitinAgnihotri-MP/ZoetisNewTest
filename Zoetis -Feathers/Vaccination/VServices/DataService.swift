@@ -92,7 +92,10 @@ class DataService{
     func getDropdownMasterData(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
         let url = ZoetisWebServices.EndPoint.getVaccinationMasterDropdowndata.latestUrl
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
@@ -123,7 +126,10 @@ class DataService{
     func getEmployeesById(loginuserId:String, viewController:UIViewController, customerId:String, siteId:String, completion: @escaping (String?, NSError?) -> Void){
         let url = ZoetisWebServices.EndPoint.getEmployessById.latestUrl + "?customerId=\(customerId)&siteId=\(siteId)"
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
@@ -552,7 +558,10 @@ class DataService{
         let url = ZoetisWebServices.EndPoint.getCustomersByUserId.latestUrl + loginuserId
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: {
             [weak self] (json, error) in
-            guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
@@ -587,7 +596,13 @@ class DataService{
         
         let url = ZoetisWebServices.EndPoint.getSiteByCustomerIds.latestUrl + customerIdsStr
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
+          
+            
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
+            
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
@@ -618,7 +633,10 @@ class DataService{
         let url = ZoetisWebServices.EndPoint.getFSMList.latestUrl + String(countryId)
         
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"] {
                     let jsonDecoder = JSONDecoder()
@@ -649,7 +667,10 @@ class DataService{
         let url = ZoetisWebServices.EndPoint.getStateList.latestUrl + String(countryId)
         
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
@@ -680,7 +701,10 @@ class DataService{
         let url = ZoetisWebServices.EndPoint.getPECountry.latestUrl
         
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
@@ -722,7 +746,10 @@ class DataService{
     func getSubmittedCertifications(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void) {
         let url = ZoetisWebServices.EndPoint.getSubmittedCertifications.latestUrl + loginuserId
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"] {
                     let jsonDecoder = JSONDecoder()
@@ -735,7 +762,7 @@ class DataService{
         })
     }
     
-    fileprivate func hsndleShippingDetailResponse(_ loginuserId:String,_ responseStr: String, _ jsonDecoder: JSONDecoder,_ SelectedFsmId:String, completion: @escaping (String?, NSError?) -> Void) {
+    fileprivate func hsndleShippingDetailResponse(_ responseStr: String, _ jsonDecoder: JSONDecoder,_ SelectedFsmId:String, completion: @escaping (String?, NSError?) -> Void) {
         if responseStr != "" {
             let jsonData = try? Data(responseStr.utf8)
             if let data = jsonData{
@@ -756,24 +783,23 @@ class DataService{
     }
     
     func getShippingDetails(loginuserId:String, SelectedFsmId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void) {
-        
-        let url = ZoetisWebServices.EndPoint.getShippingAddressDetails.latestUrl + SelectedFsmId        
+        let url = ZoetisWebServices.EndPoint.getShippingAddressDetails.latestUrl + SelectedFsmId
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else { completion(nil, error) ;return  ;}
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    if response == [] {
-                        return
-                    }
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.hsndleShippingDetailResponse(loginuserId,responseStr, jsonDecoder,SelectedFsmId) {(json2,error2) in
-                        completion(json2,error2)
-                    }
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
+            
+            if let responseJSONDict = json.dictionary, let response = responseJSONDict["Data"], response != [] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.hsndleShippingDetailResponse(responseStr, jsonDecoder, SelectedFsmId) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
         })
     }
+
 }
 
 

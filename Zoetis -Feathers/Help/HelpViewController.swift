@@ -35,7 +35,6 @@ class HelpViewController: UIViewController, userLogOut, UIScrollViewDelegate, sy
         print("<<<<",self)
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: true)
-        let terms =  UserDefaults.standard.bool(forKey: "termsAcceptedTrue")
         acceptButton.alpha = 1
         gifView.frame = CGRect(x: 0, y: 0, width: 1024, height: 768)
         objApiSync.delegeteSyncApi = self

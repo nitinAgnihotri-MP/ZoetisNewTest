@@ -57,7 +57,7 @@ class PEAssessmentsDAO{
                     
                     let moObj = getRejectedAssessmentObject()
                     
-                    if let rejectedObj = getRejectedAssessment(userId: loginUserId,result: certificationDTOObj){
+                    if let rejectedObj = getRejectedAssessment(result: certificationDTOObj){
                         moObj.assessmentStatus = "Rejected"
                         moObj.visitName = rejectedObj.visitName
                         moObj.visitID = rejectedObj.visitID as NSNumber?
@@ -254,82 +254,8 @@ class PEAssessmentsDAO{
         return formatter.date(from: dateString)
     }
     
-//    func convertDtotoMo(userId:String,dtoObj: ScheduledPEAssessmentsDTO, moObj:PE_ScheduledAssessments ){
-//        moObj.loginUserId = userId
-//        if let customerId = dtoObj.customerId {
-//            moObj.customerId = customerId as NSNumber
-//        }
-//        if let quarter = dtoObj.quarter {
-//            moObj.quarter = quarter
-//        }
-//        if let year = dtoObj.year {
-//            moObj.year = year as NSNumber
-//        }
-//        if let customerName = dtoObj.customerName {
-//            moObj.customerName = customerName
-//        }
-//        if let evaluationId = dtoObj.evaluationId {
-//            moObj.evaluationId = evaluationId as NSNumber
-//        }
-//        if let evaluationName = dtoObj.evaluationName {
-//            moObj.evaluationName = evaluationName
-//        }
-//        if let evaluationTypeId = dtoObj.evaluationTypeId {
-//            moObj.evaluationTypeId = evaluationTypeId as NSNumber
-//        }
-//        if let evaluationTypeName = dtoObj.evaluationTypeName {
-//            moObj.evaluationTypeName = evaluationTypeName
-//        }
-//        if let id = dtoObj.id {
-//            moObj.id = id as NSNumber
-//        }
-//        if let siteId = dtoObj.siteId {
-//            moObj.siteId = siteId as NSNumber
-//        }
-//        if let siteName = dtoObj.siteName {
-//            moObj.siteName = siteName
-//        }
-//        if let extendedMicro = dtoObj.sanitationEmbrex {
-//            moObj.sanitationEmbrex = extendedMicro == true ? 1 : 0
-//        }
-//        
-//        if let countryName = dtoObj.countryName {
-//            moObj.countryName = countryName
-//        }
-//        
-//        if let countryid = dtoObj.countryID {
-//            moObj.countryID = countryid as NSNumber
-//        }
-//        let dateFormatterObj = DateFormatter()
-//        dateFormatterObj.timeZone = Calendar.current.timeZone
-//        dateFormatterObj.locale = Calendar.current.locale
-//        dateFormatterObj.dateFormat =  Constants.yyyyMMddHHmmss
-//        if let scheduledDate = dtoObj.scheduleDate{
-//            moObj.scheduledDate = dateFormatterObj.date(from: scheduledDate)
-//        }
-//        
-//        if let updatedDate = dtoObj.updatedDate{
-//            let dateArr = updatedDate.components(separatedBy: ".")
-//            if dateArr.count > 0{
-//                moObj.updatedDate =  dateFormatterObj.date(from: dateArr[0])
-//            } else{
-//                moObj.updatedDate =  dateFormatterObj.date(from: updatedDate)
-//            }
-//            
-//        }
-//        moObj.assessmentStatus = dtoObj.statusName
-//        moObj.visitType = dtoObj.peVisitTypeName
-//        if let visitTypeId = dtoObj.peVisitTypeId{
-//            moObj.visitTypeId = Int64(visitTypeId) as NSNumber
-//        }
-//        if let approverId = dtoObj.approverId{
-//            moObj.approverId = approverId as NSNumber
-//        }
-//        moObj.approverName = dtoObj.approverName
-//        
-//    }
     // MARK: - Get Scheduled Assessments
-    func getAssesmentsMo(userId:String, customerId:Int64 , siteId:Int64 )->[PE_ScheduledAssessments] {
+    func getAssesmentsMo(userId:String)->[PE_ScheduledAssessments] {
         let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         var vaccinationCertificationArr = [PE_ScheduledAssessments]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_ScheduledAssessments")
@@ -337,7 +263,7 @@ class PEAssessmentsDAO{
         fetchRequest.predicate = NSPredicate(format:loginAssStatus, userId,"Schedule")
         do {
             vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [PE_ScheduledAssessments]
-        } catch{
+        } catch {
             print(message)
         }
         let dateFormatter = DateFormatter()
@@ -352,7 +278,7 @@ class PEAssessmentsDAO{
     }
     
     // MARK: - Get Rejected Assessments
-    func getRejectedAssesmentsMo(userId:String, customerId:Int64 , siteId:Int64 )->[PE_AssessmentRejected] {
+    func getRejectedAssesmentsMo(userId:String)->[PE_AssessmentRejected] {
         let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
         var vaccinationCertificationArr = [PE_AssessmentRejected]()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentRejected")
@@ -376,7 +302,7 @@ class PEAssessmentsDAO{
     
     func getVMObj(userId:String, customerId:Int64 = 0, siteId:Int64 = 0)->[PENewAssessment]{
         var assessmentVMArr = [PENewAssessment]()
-        let assessmentArr = getAssesmentsMo(userId:userId, customerId:customerId, siteId:siteId)
+        let assessmentArr = getAssesmentsMo(userId:userId)
         for assessment in assessmentArr{
             let vmObj = convertDtotoMo( moObj:assessment )
             assessmentVMArr.append(vmObj)
@@ -387,16 +313,16 @@ class PEAssessmentsDAO{
     
     func getVMRObj(userId:String, customerId:Int64 = 0, siteId:Int64 = 0)->[PENewAssessment]{
         var assessmentVMArr = [PENewAssessment]()
-        let assessmentArr = getRejectedAssesmentsMo(userId:userId, customerId:customerId, siteId:siteId)
-        for assessment in assessmentArr{
-            let vmObj = convertDtotoMoNew( moObj:assessment )
+        let assessmentArr = getRejectedAssesmentsMo(userId:userId)
+        for assessment in assessmentArr {
+            let vmObj = convertDtotoMoNew(moObj:assessment)
             assessmentVMArr.append(vmObj)
         }
         
         return assessmentVMArr
     }
     
-    func convertDtotoMo( moObj:PE_ScheduledAssessments )-> PENewAssessment{
+    func convertDtotoMo( moObj:PE_ScheduledAssessments )-> PENewAssessment {
         let peObj = PENewAssessment()
         if let userId = moObj.loginUserId{
             peObj.userID = Int(userId)
@@ -504,7 +430,7 @@ class PEAssessmentsDAO{
     }
     
     // MARK: - Get rejected Assessments
-    func getRejectedAssessment(userId: String, result: PE_AssessmentRejectedDTO)->PEAssessmentRejected? {
+    func getRejectedAssessment(result: PE_AssessmentRejectedDTO)->PEAssessmentRejected? {
         let peNewAssessment = PEAssessmentRejected()
         peNewAssessment.userID =  result.userID
         peNewAssessment.customerId = result.customerId

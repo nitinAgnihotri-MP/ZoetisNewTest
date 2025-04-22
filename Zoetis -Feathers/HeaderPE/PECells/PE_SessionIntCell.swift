@@ -140,8 +140,6 @@ class PE_SessionIntCell: UITableViewCell {
         } else {
             extendedMicroLbl.text = "No"
         }
-        
-        let sbId = peNewAssessment.dataToSubmitID ?? ""
         let countryName = peNewAssessment.countryName
         if !Constants.isFromRejected {
             lblCountryName.text = countryName

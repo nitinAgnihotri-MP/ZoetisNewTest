@@ -31,10 +31,7 @@ class VaccineInformationHeader: UITableViewHeaderFooterView {
     @IBOutlet weak var headerImg : UIImageView!
 
     func refreshFramess(frame:CGRect) {
-        
-        var btnsize = CGFloat()
-        btnsize = self.frame.size.width - 10*6
-        btnsize = btnsize / 6
+        var btnsize = (self.frame.size.width - 10 * 6) / 6
      }
 
     @IBAction func vaccinatorInfoDetailPlusBtnTapped(sender: AnyObject) {

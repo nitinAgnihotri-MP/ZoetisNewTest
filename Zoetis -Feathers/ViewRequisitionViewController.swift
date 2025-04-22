@@ -192,15 +192,6 @@ class ViewRequisitionViewController: BaseViewController {
                     navigator.pushViewController(viewController, animated: true)
                 }
             }
-            
-//        case RequisitionType.feathurePulp.rawValue:
-//            if let viewController = UIStoryboard(name: "Microbial", bundle: nil).instantiateViewController(withIdentifier: "FeatherPulpVC") as? FeatherPulpVC {
-//                viewController.featherPulpData = detailsOfRequistion
-//                viewController.requisitionSavedSessionType = .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY
-//                if let navigator = navigationController {
-//                    navigator.pushViewController(viewController, animated: true)
-//                }
-//            }
         
         default:
             break

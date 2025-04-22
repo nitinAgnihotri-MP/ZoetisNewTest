@@ -1020,7 +1020,7 @@ extension ZoetisWebServices {
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
-    func  getBirdsNotesDataByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+    func getBirdsNotesDataByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
         print(url)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
@@ -1064,10 +1064,7 @@ extension ZoetisWebServices {
         print(url)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
- 
-    
-    
-    
+
     func getTargetWeightResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getTargetWeightForTurkey.latestUrl
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
@@ -1259,7 +1256,7 @@ extension ZoetisWebServices {
     
     func getRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary,  headers: [String: Any], completion: @escaping CompletionBlock) {
         viewController = controller
-        ZoetisApiManager.GET(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, headers: headers, success: { (json) in
+        ZoetisApiManager.GET(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, success: { (json) in
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
             print("error in api 1",error, endPoint)
@@ -1269,7 +1266,7 @@ extension ZoetisWebServices {
     
     func deleteRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary, headers: JSONDictionary, completion: @escaping CompletionBlock) {
         viewController = controller
-        ZoetisApiManager.POST(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, headers: headers, success: { (json) in
+        ZoetisApiManager.POST(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, success: { (json) in
             print("response is ",json, endPoint)
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
@@ -1281,7 +1278,7 @@ extension ZoetisWebServices {
     func postRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, endPoint: String, controller: UIViewController, parameters: JSONDictionary, imageData: Data = Data(), imageKey: String = "", headers: JSONDictionary, completion: @escaping CompletionBlock) {
         viewController = controller
     
-        ZoetisApiManager.POST(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, imageData: imageData, imageKey: imageKey, headers: headers, success: { (json) in
+        ZoetisApiManager.POST(showHud: showHud, showHudText: showHudText, endPoint: endPoint, parameters: parameters, imageData: imageData, imageKey: imageKey, success: { (json) in
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
             print("error in api with End Point -- " , endPoint)

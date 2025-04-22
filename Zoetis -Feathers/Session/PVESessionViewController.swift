@@ -73,7 +73,6 @@ extension PVESessionViewController: UITableViewDelegate, UITableViewDataSource,S
     func viewClicked(clickedBtnIndPath: NSIndexPath, syncId:String) {
         
         let currentTimeStamp = syncId
-        let valuee = CoreDataHandlerPVE().fetchDraftForSyncId(type: "sync", syncId: currentTimeStamp)
         let storyBoard : UIStoryboard = UIStoryboard(name: Constants.Storyboard.pveStoryboard, bundle:nil)
         let vc = storyBoard.instantiateViewController(withIdentifier: "PVEViewSNASession") as! PVEViewSNASession
         vc.currentTimeStamp =  currentTimeStamp
@@ -87,10 +86,8 @@ extension PVESessionViewController: UITableViewDelegate, UITableViewDataSource,S
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-       
-        var height:CGFloat = CGFloat()
-        height = 70
-        return height
+      
+        return 70
         
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -107,9 +104,7 @@ extension PVESessionViewController: UITableViewDelegate, UITableViewDataSource,S
     }
     
     private func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-      showtoast(message: "In Dev")
-        
-        let dict = getSubmitToSyncArrFromDb()[indexPath.row] as! NSObject
+      showtoast(message: "Selected..")
 
     }
     

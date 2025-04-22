@@ -27,23 +27,21 @@ enum ZoetisApiManager {
                      parameters: JSONDictionary = [:],
                      imageData: Data = Data(),
                      imageKey: String = "",
-                     headers: JSONDictionary = [:],
                      success : @escaping SuccessBlock,
                      failure : @escaping ErrorBlock) {
         
-        request(showHud: showHud, showHudText: showHudText, URLString: endPoint, httpMethod: .post, parameters: parameters, imageData: imageData,
-                imageKey: imageKey, headers: apiHeaders, success: success, failure: failure)
+        request(URLString: endPoint, httpMethod: .post, parameters: parameters, imageData: imageData,
+                imageKey: imageKey, success: success, failure: failure)
     }
     
     static func GET(showHud: Bool,
                     showHudText: String,
                     endPoint: String,
                     parameters: JSONDictionary = [:],
-                    headers: JSONDictionary = [:],
                     success : @escaping SuccessBlock,
                     failure : @escaping ErrorBlock) {
         
-        request(showHud: showHud, showHudText: showHudText, URLString: endPoint, httpMethod: .get, parameters: parameters, headers: apiHeaders, success: success, failure: failure)
+        request(URLString: endPoint, httpMethod: .get, parameters: parameters, success: success, failure: failure)
     }
     
     static func PUT(showHud: Bool,
@@ -52,12 +50,11 @@ enum ZoetisApiManager {
                     parameters: JSONDictionary = [:],
                     imageData: Data = Data(),
                     imageKey: String = "",
-                    headers: JSONDictionary = [:],
                     success : @escaping SuccessBlock,
                     failure : @escaping ErrorBlock) {
         
-        request(showHud: showHud, showHudText: showHudText, URLString: endPoint, httpMethod: .put, parameters: parameters, imageData: imageData,
-                imageKey: imageKey, headers: apiHeaders, success: success, failure: failure)
+        request(URLString: endPoint, httpMethod: .put, parameters: parameters, imageData: imageData,
+                imageKey: imageKey, success: success, failure: failure)
     }
     
     static func PATCH(showHud: Bool,
@@ -66,12 +63,11 @@ enum ZoetisApiManager {
                       parameters: JSONDictionary = [:],
                       imageData: Data = Data(),
                       imageKey: String = "",
-                      headers: JSONDictionary = [:],
                       success : @escaping SuccessBlock,
                       failure : @escaping ErrorBlock) {
         
-        request(showHud: showHud, showHudText: showHudText, URLString: endPoint, httpMethod: .patch, parameters: parameters, imageData: imageData,
-                imageKey: imageKey, headers: apiHeaders, success: success, failure: failure)
+        request(URLString: endPoint, httpMethod: .patch, parameters: parameters, imageData: imageData,
+                imageKey: imageKey, success: success, failure: failure)
     }
     
     static func DELETE(showHud: Bool,
@@ -82,17 +78,14 @@ enum ZoetisApiManager {
                        success : @escaping SuccessBlock,
                        failure : @escaping ErrorBlock) {
         
-        request(showHud: showHud, showHudText: showHudText, URLString: endPoint, httpMethod: .delete, parameters: parameters, headers: apiHeaders, success: success, failure: failure)
+        request(URLString: endPoint, httpMethod: .delete, parameters: parameters, success: success, failure: failure)
     }
     
-    private static func request(showHud: Bool,
-                                showHudText: String,
-                                URLString: String,
+    private static func request(URLString: String,
                                 httpMethod: HTTPMethod,
                                 parameters: JSONDictionary = [:],
                                 imageData: Data = Data(),
                                 imageKey: String = "",
-                                headers: JSONDictionary = [:],
                                 success : @escaping SuccessBlock,
                                 failure : @escaping ErrorBlock) {
         
@@ -117,19 +110,14 @@ enum ZoetisApiManager {
             .responseJSON { resp in
                 switch resp.result {
                 case .success(let value):
-                    //value.responseJSON { (value: AFDataResponse<Data>) in
                     parseResponse(value as! AFDataResponse<Data>, success: success, failure: failure)
-                    //}
                 case .failure(let error):
                     print(error)
                     failure(error as NSError)
                 }
-                
             }
-            
         } else {
             print("*************\(URLString)***************")
-            
             AF.request(URLString, method: httpMethod,
                        parameters: parameters,
                        encoding: httpMethod == .post || httpMethod == .put || httpMethod == .patch ? JSONEncoding.default : URLEncoding.queryString,
@@ -138,7 +126,6 @@ enum ZoetisApiManager {
                 parseResponse(response, success: success, failure: failure)
             }
         }
-        
     }
     
     

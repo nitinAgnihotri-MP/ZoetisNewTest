@@ -1876,12 +1876,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                  
                     self?.handleVaccinationArray(json: json)
                 }
-                
-                
-                
             })
             
         } else {

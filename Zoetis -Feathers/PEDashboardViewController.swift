@@ -2897,11 +2897,9 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         handleSelectedTSRValidations(dict, visitNameArray, &TSRId, visitIDArray)
         
         let countryID = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        var fluid : Bool = false
-        var basicTransfr:Bool = false
         
-        fluid = dict.fluid!
-        basicTransfr = dict.basicTransfer!
+        let fluid = dict.fluid!
+        let basicTransfr = dict.basicTransfer!
         
         let HatchAnti = false
         var Camera = false

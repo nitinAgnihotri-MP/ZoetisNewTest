@@ -403,10 +403,10 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
         
         let task = session.downloadTask(with: request){(tempLocalUrl , responce , error) in
             if let tempLocalUrl = tempLocalUrl , error == nil {
-                if let statusCode = (responce as? HTTPURLResponse)?.statusCode{
+                if (responce as? HTTPURLResponse)?.statusCode != nil {
                     DispatchQueue.main.async {
-                        print("pdf successfully saved!")
-                        self.showtoast(message: "PDF Downloaded Sucessfully..")
+                        print("PDF successfully saved!")
+                        self.showtoast(message: "PDF Downloaded Successfully..")
                     }
                 }
                 do {
@@ -705,15 +705,6 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         }
     }
     
-    private func tempStatusUpdate(_ json: JSON, syncId: String){
-        
-        CoreDataHandlerPVE().updateStatusForSync(syncId, text: true, forAttribute: "syncedStatus")
-        let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
-        peHeaderViewController.labelSyncCount.text = "\(syncArr.count)"
-        showtoast(message: appDelegateObj.dataSynedSuccess)
-        
-    }
-    
     private func handleSyncResponse(_ json: JSON,  syncId:String, assessmentScoreDict: [[String: Any]], forImgArrJson:[[String: Any]]) {
         if json["StatusCode"] == 200 {
             let jsonDict = ["AssessmentScoresDataDetails" : assessmentScoreDict]
@@ -795,7 +786,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
                 extractedFunc2(tempImgArrDict, syncId)
                 dismissGlobalHUD(self.view)
                 
-                let jsonDict = ["AssessmentQuestionImages" : forImgArrJson]
+               
             } else {
                 CoreDataHandlerPVE().updateStatusForSync(syncId, text: true, forAttribute: "syncedStatus")
                 let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
@@ -971,7 +962,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         let farm = (dict).value(forKey: "farm")  as? String
         let evaluationForId = (dict).value(forKey: "evaluationForId")  as? Int
         let breedOfBirdsId = (dict).value(forKey: "breedOfBirdsId")  as? Int
-        let objEvaluationDate = (dict).value(forKey: "objEvaluationDate") as! Date
+       
         let ageOfBirds = (dict).value(forKey: "ageOfBirds")  as? Int
         let noOfBirds = (dict).value(forKey: "noOfBirds")  as? Int
         let housingId = (dict).value(forKey: "housingId")  as? Int
@@ -1591,7 +1582,7 @@ extension PVEDashboardViewController:URLSessionDownloadDelegate {
             print("File Downloaded Location- ",  destinationPath)
             DispatchQueue.main.async {
                 self.showtoast(message: "PDF Downloaded Sucessfully..")
-                let urlString: String = destinationPath.absoluteString
+               
             }
         }catch let error {
             print("Copy Error: \(error.localizedDescription)")

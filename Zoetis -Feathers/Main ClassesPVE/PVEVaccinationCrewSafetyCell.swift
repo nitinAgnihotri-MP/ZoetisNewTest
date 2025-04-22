@@ -146,15 +146,10 @@ class PVEVaccinationCrewSafetyCell: UITableViewCell {
         subHeaderLbl.layer.masksToBounds = true
         
     }
-    
-    
-//    func setCellforLiveVaccine(qArr:NSArray, currentIndd:NSIndexPath) {
-//        
-//    }
+
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
     }
     
     fileprivate func methodExtracted1(_ id: Int, _ btnStateBool: Bool, _ seq_Number: Int) {
@@ -176,7 +171,7 @@ class PVEVaccinationCrewSafetyCell: UITableViewCell {
     
     @IBAction func switchAction(_ sender: UISwitch) {
         
-        var btnStateBool = Bool()
+        var btnStateBool = true
         
         let isSelectedArr = qArrr.value(forKey: "isSelected") as? [Bool]
         let isSelected = isSelectedArr![currentInd.row]

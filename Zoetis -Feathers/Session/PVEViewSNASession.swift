@@ -437,35 +437,27 @@ extension PVEViewSNASession{
         let todaysDate = NSDate()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        var DateInFormat = dateFormatter.string(from: todaysDate as Date)
+        let DateInFormat = dateFormatter.string(from: todaysDate as Date)
         return DateInFormat
     }
     
     
     func setBorderBlueForCalender(btn:UIButton) {
-        
-        let superviewCurrent =  btn.superview
+        let superviewCurrent = btn.superview
         for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                if view == btn{
-                    view.setDropdownStartAsessmentView(imageName:"calendarIconPE")
-                }
+            if view.isKind(of: UIButton.self), view == btn {
+                view.setDropdownStartAsessmentView(imageName: "calendarIconPE")
             }
         }
-        
     }
     
-    func setBorderBlue(btn:UIButton) {
-        
-        let superviewCurrent =  btn.superview
+    func setBorderBlue(btn: UIButton) {
+        let superviewCurrent = btn.superview
         for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                if view == btn{
-                    view.setDropdownStartAsessmentView(imageName:"dd")
-                }
+            if view.isKind(of: UIButton.self), view == btn {
+                view.setDropdownStartAsessmentView(imageName: "dd")
             }
         }
-        
     }
     
     

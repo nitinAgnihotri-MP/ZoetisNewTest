@@ -285,7 +285,6 @@ class BaseViewController: UIViewController , SlideMenuDelegate{
             }
             
         } catch {
-            // // print("JSON serialization failed:  \(error)")
         }
     }
     
