@@ -3999,12 +3999,13 @@ class CoreDataHandlerPE: NSObject {
     
     func updateOfflineStatus(assessment: PENewAssessment) -> Bool {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
+        let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: "dataToSubmitNumber == %d", argumentArray: [assessment.dataToSubmitNumber!])
+        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        fetchRequest.predicate = NSPredicate(format: "dataToSubmitNumber == %d", argumentArray: [assessment.dataToSubmitNumber])
         do {
-            let results = try appDelegate.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject] ?? []
+            let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject] ?? []
             for  obj in results {
                 obj.setValue(1, forKey: "asyncStatus")
                 
@@ -4015,8 +4016,7 @@ class CoreDataHandlerPE: NSObject {
         do {
             try managedContext.save()
             
-        }
-        catch {
+        } catch {
             return false
         }
         return false

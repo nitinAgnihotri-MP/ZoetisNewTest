@@ -109,8 +109,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         self.navigationController?.navigationBar.isHidden = true
         
         regionID = UserDefaults.standard.integer(forKey: "Regionid")
-        let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        if( regionID != 3){
+        if( regionID != 3) {
             btn_Training.alpha = 0.3
             btn_Training.alpha = 0.3
             btn_Training.isUserInteractionEnabled = false
@@ -138,11 +137,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         
         registerTblVwCells()
         setUI()
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        if regionID == 3{
+        if regionID == 3 {
             extendedLbl.text = appDelegateObj.extendedMicrobialStr
             extendedLblDash.text = appDelegateObj.extendedMicrobialStr
-        }else{
+        } else {
             extendedLbl.text = "Country"
             extendedLblDash.text = "Country"
         }
@@ -228,7 +226,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     // MARK: - INITIAL UI METHODS
     
     
-    func registerTblVwCells(){
+    func registerTblVwCells() {
         popupTblVw.delegate = self
         popupTblVw.dataSource = self
         dashboardTblVw.delegate = self
@@ -238,11 +236,9 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         dashboardTblVw.register(VaccinationCertificationsTableViewCell.nib, forCellReuseIdentifier: VaccinationCertificationsTableViewCell.identifier)
     }
     
-    private func getPlateTypes(){
-        PEDataService.sharedInstance.getPlateTypes(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound, viewController: self, completion: { [weak self] (status, error) in
-            guard let _ = self, error == nil else { return }
-            if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
-            }
+    private func getPlateTypes() {
+        PEDataService.sharedInstance.getPlateTypes(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound, viewController: self, completion: { (status, error) in
+            guard error == nil else { return }
         })
     }
     // MARK: - Load Popup
@@ -284,17 +280,14 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             
         } else {
             peNewAssessment = PENewAssessment()
-            var pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(nil)
-            var jsonRe : JSON = JSON()
-            jsonRe = ((getJSON("QuestionAns") ?? nil) ?? JSON())
-            pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(jsonRe)
-            ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession.append(pECategoriesAssesmentsResponse)
+            var pECategoriesAssesmentsResponseObj = PECategoriesAssesmentsResponse(nil)
+            let jsonRe = ((getJSON("QuestionAns") ?? nil) ?? JSON())
+            pECategoriesAssesmentsResponseObj = PECategoriesAssesmentsResponse(jsonRe)
+            ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession.append(pECategoriesAssesmentsResponseObj)
         }
         
         let userDefaults = UserDefaults.standard
         let decoded  = userDefaults.data(forKey: "finalizeArray") ?? Data()
-        let finalizeArrayFromDefaults = NSKeyedUnarchiver.unarchiveObject(with: decoded) as? [PECategoriesAssesmentsResponse]
-        _ = finalizeArrayFromDefaults?.count ?? 0
         peHeaderViewController = PEHeaderViewController()
         peHeaderViewController.titleOfHeader = "Process Evaluation"
         peHeaderViewController.showSession = checkCurrentAssessmentData()
@@ -391,8 +384,8 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         
         barChart.noDataText = "You need to provide data for the chart."
         let chartData = BarChartDataSet()
-        for (i, val) in values.enumerated(){
-            _ = chartData.addEntry(BarChartDataEntry(x: Double(i), y: val))
+        for (key, value) in values.enumerated() {
+            _ = chartData.addEntry(BarChartDataEntry(x: Double(key), y: value))
         }
         chartData.label = "Assessments Result"
         let myBlueColor =   NSUIColor(red: 64/255.0, green: 126/255.0, blue: 201/255.0, alpha: 1.0)
@@ -538,8 +531,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         self.upcomingCertificationsArr =  PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , customerId: Int64(customerId), siteId: Int64(siteId))
         if anyCategoryContainCustomerOrNot(){
             let peNewAssessmentSurrentIs = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession[0].peNewAssessment
-            if let complexNameIs = peNewAssessmentSurrentIs?.customerName {
-            } else {
+            if peNewAssessmentSurrentIs?.customerName == nil {
                 peNewAssessment = PENewAssessment()
             }
         } else {
@@ -564,8 +556,6 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     // MARK: - Set Chart for Assessment Submitted Offline
     fileprivate func extractedFunc1() {
         let date = resultCatfirstAssessment[0].evaluationDate ?? ""
-        var text2 = date + ""  + "(" + (resultCatfirstAssessment[0].customerName ?? "") + ", "
-        text2 = text2  + (resultCatfirstAssessment[0].siteName ?? "") + ")"
         var resultInAssessment : [Double] = []
         date1Label.text = date
         date1Label.isHidden = false
@@ -579,8 +569,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
                 dataPoints.append(data )
             }
         }
-        let unitsSold = resultInAssessment
-        setChart(values: unitsSold,dataPoints:dataPoints,barChart: barChart1 )
+        setChart(values: resultInAssessment,dataPoints:dataPoints,barChart: barChart1 )
     }
     
     private func setChartForAssesmentSubmittedOffline(count:Int){
@@ -611,22 +600,20 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         }
     }
     
-    func changeStringToArrayLevel3(name:String) -> String{
-        var tempName = ""
-        tempName = name.replacingOccurrences(of: "&", with: "")
-        var fullNameArr : [String]? = []
-        fullNameArr = tempName.split{$0 == " "}.map(String.init)
+    func changeStringToArrayLevel3(name:String) -> String {
+        let tempName = name.replacingOccurrences(of: "&", with: "")
+        let fullNameArr = tempName.split{$0 == " "}.map(String.init)
         var fullName1 = ""
         var fullName3 = ""
         var fullName2 = ""
-        if 0 >= 0 && 0 < fullNameArr?.count ?? 0 {
-            fullName1 = fullNameArr?[0] ?? ""
+        if 0 < fullNameArr.count {
+            fullName1 = fullNameArr[0]
         }
-        if 1 >= 0 && 1 < fullNameArr?.count ?? 0{
-            fullName2 = fullNameArr?[1] ?? ""
+        if 1 < fullNameArr.count {
+            fullName2 = fullNameArr[1]
         }
-        if 2 >= 0 && 2 < fullNameArr?.count ?? 0{
-            fullName3 = fullNameArr?[2] ?? ""
+        if 2 < fullNameArr.count {
+            fullName3 = fullNameArr[2]
         }
         let data =  fullName1 + "\n" + fullName2 + "\n" + fullName3
         return data
@@ -718,11 +705,8 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             
             do {
                 let results = try managedContext.fetch(fetchRequestNew) as? [NSManagedObject]
-                if results?.count != 0 {
-                    if results?.count ?? 0 > 1 {
-                        resultCatfirstAssessment.append(results?[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                    }
-                    
+                if results?.count != 0,results?.count ?? 0 > 1 {
+                    resultCatfirstAssessment.append(results?[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
                 }
             } catch {
             }
@@ -754,7 +738,9 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         }
     }
     
-    fileprivate func handleDataToSubmitNumberValidations(_ managedContext: NSManagedObjectContext, _ fetchRequest: NSFetchRequest<any NSFetchRequestResult>, _ tempArr: inout NSArray, _ allAssesmentDraftArr: inout [PE_AssessmentInOffline], _ carColIdArrayDraftNumbers: inout NSArray, _ dataToSubmitNumberIdArray: inout [Int], _ catColIdArrayDraftNumbers: inout NSArray, _ submitIDArray: inout NSArray) {
+    fileprivate func handleDataToSubmitNumberValidations(_ managedContext: NSManagedObjectContext, _ fetchRequest: NSFetchRequest<any NSFetchRequestResult>, _ allAssesmentDraftArr: inout [PE_AssessmentInOffline], _ carColIdArrayDraftNumbers: inout NSArray, _ dataToSubmitNumberIdArray: inout [Int], _ catColIdArrayDraftNumbers: inout NSArray, _ submitIDArray: inout NSArray) {
+        
+        var tempArr = NSArray()
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if results?.count != 0 {
@@ -763,12 +749,12 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
                 carColIdArrayDraftNumbers  = tempArr.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
                 
                 for obj in carColIdArrayDraftNumbers {
-                    if (!dataToSubmitNumberIdArray.contains((obj as? Int) ?? 0) && dataToSubmitNumberIdArray.count < 2){
+                    if (!dataToSubmitNumberIdArray.contains((obj as? Int) ?? 0) && dataToSubmitNumberIdArray.count < 2) {
                         dataToSubmitNumberIdArray.append((obj as? Int) ?? 0)
                     }
                 }
-                catColIdArrayDraftNumbers  = tempArr.value(forKey: "catID") as? NSArray ?? []
-                submitIDArray  = tempArr.value(forKey: "dataToSubmitID") as? NSArray ?? []
+                catColIdArrayDraftNumbers = tempArr.value(forKey: "catID") as? NSArray ?? []
+                submitIDArray = tempArr.value(forKey: "dataToSubmitID") as? NSArray ?? []
             }
         } catch {
         }
@@ -813,13 +799,11 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         }
         
         if lastTwoAssessmentsDate.count > 0 {
-            var tempArr = NSArray()
-            let peNewAssessmentSurrentIs =  CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
             let appDelegate = UIApplication.shared.delegate as? AppDelegate
             let managedContext = appDelegate!.managedObjectContext
-            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
             fetchRequest.returnsObjectsAsFaults = false
-            let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+            let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
             let evaluationDateLatestSubmitId = lastTwoAssessmentsSubmitId[0] as? String ?? ""
             let evaluationDateLatestAssessment = lastTwoAssessmentsDate[0] as? String ?? ""
             
@@ -836,7 +820,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             var allAssesmentDraftArr : [PE_AssessmentInOffline] = []
             var dataToSubmitNumberIdArray : [Int] = []
             
-            handleDataToSubmitNumberValidations(managedContext, fetchRequest, &tempArr, &allAssesmentDraftArr, &carColIdArrayDraftNumbers, &dataToSubmitNumberIdArray, &catColIdArrayDraftNumbers, &submitIDArray)
+            handleDataToSubmitNumberValidations(managedContext, fetchRequest, &allAssesmentDraftArr, &carColIdArrayDraftNumbers, &dataToSubmitNumberIdArray, &catColIdArrayDraftNumbers, &submitIDArray)
             var dataSubmitIdArray : [String] = []
             for obj in submitIDArray {
                 if !dataSubmitIdArray.contains((obj as? String) ?? ""){
@@ -863,10 +847,8 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             
             do {
                 let results = try managedContext.fetch(fetchRequestNew) as? [NSManagedObject]
-                if results?.count != 0 {
-                    if results?.count ?? 0 > 1 {
-                        resultCatSecondAssessment.append(results?[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                    }
+                if results?.count != 0,results?.count ?? 0 > 1 {
+                    resultCatSecondAssessment.append(results?[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
                 }
             } catch {
             }
@@ -886,7 +868,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             if  resultCatSecondAssessment.count > 0 {
                 resultCatSecondAssessment.removeAll()
             }
-            let evaluationDateLatestSubmitId = lastTwoAssessmentsSubmitId[1] as? String ?? ""
+            let evaluationDateLatestSubmitId = lastTwoAssessmentsSubmitId[1]
             manageDataAtIdArray(&dataCatIDToSubmitNumberIdArray, fetchRequestNew, evaluationDateLatestAssessment, evaluationDateLatestSubmitId, managedContext)
             
             if resultCatSecondAssessment.count > 0 {
@@ -895,7 +877,8 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         }
     }
     
-    fileprivate func handleManagedContext(_ managedContext: NSManagedObjectContext, _ fetchRequest: NSFetchRequest<any NSFetchRequestResult>, _ tempArr: inout NSArray, _ allAssesmentDraftArr: inout [PE_AssessmentInOffline], _ carColIdArrayDraftNumbers: inout NSArray, _ dataToSubmitNumberIdArray: inout [Int], _ catColIdArrayDraftNumbers: inout NSArray, _ submitIDArray: inout NSArray) {
+    fileprivate func handleManagedContext(_ managedContext: NSManagedObjectContext, _ fetchRequest: NSFetchRequest<any NSFetchRequestResult>, _ allAssesmentDraftArr: inout [PE_AssessmentInOffline], _ carColIdArrayDraftNumbers: inout NSArray, _ dataToSubmitNumberIdArray: inout [Int], _ catColIdArrayDraftNumbers: inout NSArray, _ submitIDArray: inout NSArray) {
+        var tempArr = NSArray()
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if results?.count != 0 {
@@ -918,15 +901,13 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     func getAssessmentSecondFromDb() {
         
         if lastTwoAssessmentsDate.count > 1 {
-            var tempArr = NSArray()
-            let peNewAssessmentSurrentIs =  CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
             let appDelegate = UIApplication.shared.delegate as? AppDelegate
             let managedContext = appDelegate!.managedObjectContext
-            let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PE_AssessmentInOffline")
             fetchRequest.returnsObjectsAsFaults = false
-            let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-            let evaluationDateLatestSubmitId = lastTwoAssessmentsSubmitId[1] as? String ?? ""
-            let evaluationDateLatestAssessment = lastTwoAssessmentsDate[1] as? String ?? ""
+            let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+            let evaluationDateLatestSubmitId = lastTwoAssessmentsSubmitId[1]
+            let evaluationDateLatestAssessment = lastTwoAssessmentsDate[1]
             
             let customerId = UserDefaults.standard.integer(forKey: "PE_Selected_Customer_Id")
             let siteId = UserDefaults.standard.integer(forKey: "PE_Selected_Site_Id")
@@ -940,7 +921,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             
             var dataToSubmitNumberIdArray : [Int] = []
             
-            handleManagedContext(managedContext, fetchRequest, &tempArr, &allAssesmentDraftArr, &carColIdArrayDraftNumbers, &dataToSubmitNumberIdArray, &catColIdArrayDraftNumbers, &submitIDArray)
+            handleManagedContext(managedContext, fetchRequest, &allAssesmentDraftArr, &carColIdArrayDraftNumbers, &dataToSubmitNumberIdArray, &catColIdArrayDraftNumbers, &submitIDArray)
             var dataSubmitIdArray : [String] = []
             for obj in submitIDArray {
                 if !dataSubmitIdArray.contains((obj as? String) ?? ""){
@@ -1105,10 +1086,7 @@ extension PEDashboardViewController: IAxisValueFormatter{
         let sharedPEQueueArray = ZoetisDropdownShared.sharedInstance.sharedPEQueue
         let count = sharedPEQueueArray?.count ?? 0
         
-        if count  > 0 {
-            if count > 2 {
-                
-            }
+        if count > 0 {
             if count == 1 {
                 barChart1.delegate = self
                 barChart1.xAxis.valueFormatter = self
@@ -1122,11 +1100,9 @@ extension PEDashboardViewController: IAxisValueFormatter{
                         let name = obj.categoryName ?? ""
                         var data = changeStringToArrayLevel3(name:name)
                         data = data + "(" + String(obj.maxMark ?? 0) + ")"
-                        dataPoints.append(data ?? "")
-                        
+                        dataPoints.append(data)
                     }
                 }
-                let unitsSold = resultInAssessment
                 let maxMrk = categoriesArray?[ Int(value) % (categoriesArray?.count ?? 0)].maxMark ?? 0
                 return String(maxMrk)
             }
@@ -1295,9 +1271,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             var idArr : [Int] = []
             for objn in  obj.vMixer {
                 let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
-                if idArr.contains(data!.id ?? 0) {
-                    
-                } else {
+                if idArr.contains(data!.id ?? 0) == false {
                     idArr.append(data!.id ?? 0)
                     if data != nil {
                         self.certificateData.append(data!)
@@ -1315,8 +1289,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 self.assessID = Int(obj.serverAssessmentId ?? "")
                 self.objAssessment = obj
                 self.checkDataDuplicacy(obj: obj)
-                var arrIDs = [NSNumber]()
-                
                 self.certificateData.removeAll()
                 extractedFunc2(obj)
                 
@@ -1342,8 +1314,8 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             } else {
                 Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(Constants.offline, comment: ""))
             }
-        }else{
-            if self.deletedAssessmentIdArray.count > 0{
+        } else {
+            if self.deletedAssessmentIdArray.count > 0 {
                 let alertController = UIAlertController(title: Constants.alertStr, message: String(format: "%d assessment(s) has been removed from the web. App data will be updated.", self.deletedAssessmentIdArray.count), preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                     _ in
@@ -1371,9 +1343,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     // MARK: - Check Data Duplicacy
     func checkDataDuplicacy(obj: PENewAssessment) {
         self.dataDuplicacyCheck(assId: obj.serverAssessmentId!, customerId: obj.customerId!, siteId: obj.siteId!, evalDate: obj.evaluationDate!, evaulaterId: obj.evaluatorID!) { status in
-            if status{
-            }else{
-                
+            if !status {
                 let alertController = UIAlertController(title: "Duplicate Data", message: "Assessment already captured with same customer and site Id on same evaluation date for same evaluator", preferredStyle: .alert)
                 
                 let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
@@ -1388,7 +1358,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                         self.dismissGlobalHUD(self.view)
                     }
                 }
-                
             }
         }
     }
@@ -1475,44 +1444,38 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     }
     
     fileprivate func checkSyncArr() {
-        if ConnectionManager.shared.hasConnectivity() {
-            if self.callRequest4Int == 0 {
-                
-                ExtendedMicroApi(self)
-                
-                let syncArr = self.getAssessmentInOfflineFromDb()
-                if syncArr > 0 {
-                    self.isSync = false
-                    self.dismissGlobalHUD(self.view)
-                    self.syncBtnTapped(showHud: false)
-                    Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
-                } else {
-                    self.dismissGlobalHUD(self.view)
-                    Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
-                    for i in self.totalImageToSync {
-                        CoreDataHandlerPE().setImageStatusTrue(idArray: i)
-                    }
-                    self.showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
-                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                    self.dismissGlobalHUD(self.view)
+        if ConnectionManager.shared.hasConnectivity(),self.callRequest4Int == 0 {
+            ExtendedMicroApi(self)
+            let syncArr = self.getAssessmentInOfflineFromDb()
+            if syncArr > 0 {
+                self.isSync = false
+                self.dismissGlobalHUD(self.view)
+                self.syncBtnTapped(showHud: false)
+                Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
+            } else {
+                self.dismissGlobalHUD(self.view)
+                Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
+                for i in self.totalImageToSync {
+                    CoreDataHandlerPE().setImageStatusTrue(idArray: i)
                 }
+                self.showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
+                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
+                self.dismissGlobalHUD(self.view)
             }
         }
     }
     
     fileprivate func handleRegionId3(_ self: PEDashboardViewController) {
-        if self.regionID == 3 {
-            if HaveToCallExtendedMicro == true {
-                var saveType = Int()
-                
-                if Constants.isDraftAssessment == true {
-                    saveType = 0
-                } else {
-                    saveType = 1
-                }
-                
-                self.syncExtendedMicrobial(saveType: saveType, statusType: 0)
+        if self.regionID == 3,HaveToCallExtendedMicro == true {
+            var saveType = Int()
+            
+            if Constants.isDraftAssessment == true {
+                saveType = 0
+            } else {
+                saveType = 1
             }
+            
+            self.syncExtendedMicrobial(saveType: saveType, statusType: 0)
             
         }
     }
@@ -1786,10 +1749,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             let json = createSyncRequestForScore(dictArray: objCtIs)
             let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
             for i in objCtIs.images{
-                let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) as? Bool ?? false
-                if status {
-                    
-                } else {
+                if CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) == false {
                     let jsonIMages = createSyncRequestForImage(dictArray: objCtIs,img:i)
                     imgArray.append(jsonIMages)
                 }
@@ -1888,7 +1848,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             var imgArray : [JSONDictionary] = []
             
             handleCatAllRowArrayValidations(catAllRowArray, &imgArray, &tempArr, &comntArray)
-            let param = ["AssessmentCommentsData":comntArray,"AssessmentScoreData":tempArr] as JSONDictionary
             var arrayCount  = 0
             var imgDic :  [JSONDictionary] = []
             
@@ -1914,9 +1873,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                     getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:obj.draftNumber ?? 0)
                 }
                 callRequest4Int = 0
-                
                 totalImageToSync = []
-                
                 handleGetOfflineArrayValidations(getOfflineArray, obj)
                 
                 if getDraftArray.count > 0 {
@@ -1924,13 +1881,12 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                     var catArray : [PENewAssessment] = []
                     var catAllRowArray : [PENewAssessment] = []
                     handleGetDraftArrayCarColIdArrValidations(getDraftArray, &carColIdArray, &catArray, obj, &catAllRowArray)
-                    var tempArr : [JSONDictionary]  = []
-                    var comntArray : [JSONDictionary]  = []
-                    var imgArray : [JSONDictionary]  = []
+                    var tempArr : [JSONDictionary] = []
+                    var comntArray : [JSONDictionary] = []
+                    var imgArray : [JSONDictionary] = []
                     
                     handleCatAllRowArrayInGetDraftArrayValidations(catAllRowArray, &imgArray, &tempArr, &comntArray)
-                    let param = ["AssessmentScoreData":tempArr,"AssessmentCommentsData":comntArray] as JSONDictionary
-                    var arrayCount  = 0
+                    var arrayCount = 0
                     var imgDic : [JSONDictionary] = []
                     
                     handleImageCountArrGetDraftArrayValidations(imgArray, &arrayCount, &imgDic)
@@ -1951,11 +1907,10 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
             let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
             let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-            if dictArray.frequency?.count ?? 0 > 0 {
-                if visitNameArray.contains(dictArray.frequency ?? ""){
-                    let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
-                    FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
-                }
+            if dictArray.frequency?.count ?? 0 > 0,
+               visitNameArray.contains(dictArray.frequency ?? "") {
+                let indexOfe = visitNameArray.index(of: dictArray.frequency ?? "")
+                FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
             }
         }
     }
@@ -1979,28 +1934,24 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             AssessmentId = dictArray.draftNumber ?? 0
         }
         var score = 0
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        DisplayId = "C-" + UniID
+        let DisplayId = "C-" + UniID
         extractedFunc6(dictArray, &score)
         var TextAmPm = ""
         var PersonName = ""
         var FrequencyValue = 32
         var QCCount = ""
         var PPMValue = ""
-        let assID =  dictArray.assID ?? 0
-        
         extractedFunc5(dictArray, &QCCount, &TextAmPm, &PPMValue, &PersonName, &FrequencyValue)
         
         var serverAssessmentId:Int64 = 0
         if let id = dictArray.serverAssessmentId {
-            serverAssessmentId = Int64(id ?? "") ?? 0
+            serverAssessmentId = Int64(id) ?? 0
         }
         
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         if regionId == 3 {
             let json = [
-                "DisplayId":DisplayId?.prefix(22) ?? "",
+                "DisplayId":DisplayId.prefix(22),
                 "AppAssessmentId": String(AssessmentId),
                 "ModuleAssessmentId": dictArray.assID ??  0,
                 "AssessmentScore": score,
@@ -2019,7 +1970,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             return json
         } else {
             let json = [
-                "DisplayId":DisplayId?.prefix(22) ?? "",
+                "DisplayId":DisplayId.prefix(22),
                 "AppAssessmentId": String(AssessmentId),
                 "ModuleAssessmentId": dictArray.assID ??  0,
                 "AssessmentScore": score,
@@ -2038,7 +1989,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     // MARK: - Create Sync Request for Comment's
-    func createSyncRequestForComment(dictArray: PENewAssessment) -> JSONDictionary{
+    func createSyncRequestForComment(dictArray: PENewAssessment) -> JSONDictionary {
         
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
@@ -2052,30 +2003,16 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             AssessmentId = dictArray.draftNumber ?? 0
         }
         
-        let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
-        var score = 0
-        
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        var siteId = String(dictArray.siteId ?? 0)
-        var sID = dictArray.siteId ?? 0
-        sID = sID + 2701
-        var dID = AssessmentId ?? 0
-        dID = dID + 2903
-        DisplayId = "C-" + UniID
+        var dID = AssessmentId + 2903
+        let DisplayId = "C-" + UniID
         
         var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
-            serverAssessmentId = Int64(id ?? "") ?? 0
+        if let id = dictArray.serverAssessmentId {
+            serverAssessmentId = Int64(id) ?? 0
         }
         
         let json = [
-            "DisplayId":DisplayId?.prefix(22) ?? "",
+            "DisplayId":DisplayId.prefix(22),
             "AppAssessmentId":  String(AssessmentId),
             "ModuleAssessmentId": dictArray.assID ?? 0,
             "Comment": dictArray.note ?? "",
@@ -2104,36 +2041,20 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
         
         let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
-        var score = 0
         
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
         var siteId = String(dictArray.siteId ?? 0)
-        var sID = dictArray.siteId ?? 0
-        sID = sID + 2701
-        var dID = AssessmentId ?? 0
-        dID = dID + 2903
-        DisplayId = "C-" + UniID
+        let DisplayId = "C-" + UniID
         let base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:img)
         totalImageToSync.append(img)
-        let imageName = "ImgName-" + siteId + String(img ?? 0)
-        let unique = "\(deviceIDFORSERVER)_\(String(img ?? 0))_iOS_"
+        let imageName = "ImgName-" + siteId + String(img)
+        let unique = "\(deviceIDFORSERVER)_\(String(img))_iOS_"
         
-        var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
-            serverAssessmentId = Int64(id ?? "") ?? 0
-        }
         let json = [
-            "DisplayId":DisplayId?.prefix(22),
+            "DisplayId":DisplayId.prefix(22),
             "Id": AssessmentId,
             "AssessmentDetailId": AssessmentId,
             "ModuleAssessmentId": dictArray.assID ?? 0,
-            "Comment": dictArray.note,
+            "Comment": dictArray.note ?? "",
             "UserId": dictArray.userID ?? 0,
             "CreatedAt": "2020-05-08T13:51:26.02701Z",
             "ModuleId": 1,
@@ -2146,11 +2067,11 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             "AssessmentId":deviceIdForServer
         ] as JSONDictionary
         return json
-        
     }
+    
     // MARK: - Create Sync Request for Inovoject's Data
     fileprivate func extractedFunc7(_ vNameArrayIS: NSArray, _ inovojectData: InovojectData, _ VaccineId: inout Int, _ vNameIDArrayIS: NSArray, _ ManufacturerId: inout Int, _ vNameMfgIdArrayIS: NSArray, _ otherVaccine: inout String) {
-        if vNameArrayIS.contains(inovojectData.name){
+        if vNameArrayIS.contains(inovojectData.name) {
             let indexOfe = vNameArrayIS.index(of: inovojectData.name)
             VaccineId = vNameIDArrayIS[indexOfe] as? Int ?? 0
             ManufacturerId = vNameMfgIdArrayIS[indexOfe] as? Int ?? 0
@@ -2167,579 +2088,354 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     
-    func createSyncRequestForInvoject(dictArray: PENewAssessment,inovojectData :InovojectData) -> JSONDictionary{
+    func createSyncRequestForInvoject(dictArray: PENewAssessment, inovojectData: InovojectData) -> JSONDictionary {
+        let udid = UserDefaults.standard.string(forKey: "ApplicationIdentifier") ?? ""
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        var UniID = dictArray.dataToSubmitID ?? ""
+        // Unique IDs
+        let uniID = dictArray.dataToSubmitID?.isEmpty == false ? dictArray.dataToSubmitID! : (dictArray.draftID ?? "")
+        let assessmentId = dictArray.dataToSubmitNumber != 0 ? dictArray.dataToSubmitNumber! : (dictArray.draftNumber ?? 0)
+        let deviceIdForServer = "\(uniID)_\(assessmentId)_iOS_\(udid)"
+        let displayId = "C-\(uniID)"
         
-        if UniID == "" {
-            UniID = dictArray.draftID ?? ""
-        }
-        
-        var AssessmentId = dictArray.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            AssessmentId = dictArray.draftNumber ?? 0
-        }
-        
-        let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
         var score = 0
-        var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
-            serverAssessmentId = Int64(id ?? "") ?? 0
-        }
-        
         extractedFunc8(dictArray, &score)
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        var siteId = String(dictArray.siteId ?? 0)
-        var sID = dictArray.siteId ?? 0
-        sID = sID + 270101
-        var dID = AssessmentId ?? 0
-        dID = dID + 2903
-        DisplayId = "C-" + UniID
         
-        let  HatcheryAntibioticsInt = inovojectData.invoHatchAntibiotic
-        var HatcheryAntibiotics = false
-        if HatcheryAntibioticsInt == 1 {
-            HatcheryAntibiotics = true
+        // Server Assessment ID
+        let serverAssessmentId = Int64(dictArray.serverAssessmentId ?? "") ?? 0
+        
+        // Hatchery Antibiotics
+        let hatcheryAntibiotics = inovojectData.invoHatchAntibiotic == 1
+        let antibioticInformation = hatcheryAntibiotics ? (inovojectData.invoHatchAntibioticText ?? "") : ""
+        
+        // Ampule Size
+        let ampleSizes = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+        let ampleSizeNames = ampleSizes.value(forKey: "size") as? [String] ?? []
+        let ampleSizeIDs = ampleSizes.value(forKey: "id") as? [Int] ?? []
+        
+        var ampuleSizeId = 0
+        if let ampuleSize = inovojectData.ampuleSize?.replacingOccurrences(of: " ", with: ""),
+           let index = ampleSizeNames.firstIndex(of: ampuleSize) {
+            ampuleSizeId = ampleSizeIDs[safe: index] ?? 0
         }
         
-        var x = 0
-        var vvv = inovojectData.ampuleSize
-        var ampleSizeesNameArray = NSArray()
-        var ampleSizeIDArray = NSArray()
-        var ampleSizeDetailArray = NSArray()
-        ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-        ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-        ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if inovojectData.ampuleSize != "" {
-            let xx = inovojectData.ampuleSize?.replacingOccurrences(of: " ", with: "")
-            let indexOfe =  ampleSizeesNameArray.index(of: xx)
-            x = ampleSizeIDArray[indexOfe] as? Int  ?? 0
+        // Vaccine Info
+        let manufacturerData = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+        let manufacturerNames = manufacturerData.value(forKey: "mfgName") as? [String] ?? []
+        let manufacturerIDs = manufacturerData.value(forKey: "id") as? [Int] ?? []
+        
+        var vaccineId = 0
+        if let vaccineMan = inovojectData.vaccineMan, let index = manufacturerNames.firstIndex(of: vaccineMan) {
+            vaccineId = manufacturerIDs[safe: index] ?? 0
         }
         
+        let vaccineNameData = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
+        let vaccineNames = vaccineNameData.value(forKey: "name") as? [String] ?? []
+        let vaccineIDs = vaccineNameData.value(forKey: "id") as? [Int] ?? []
+        let vaccineMfgIDs = vaccineNameData.value(forKey: "mfgId") as? [Int] ?? []
+        
+        var manufacturerId = 0
         var otherVaccine = ""
-        var ManufacturerId = 0
-        var vNameArray = NSArray()
-        var vNameIDArray = NSArray()
-        var vNameDetailsArray = NSArray()
-        var VaccineId = 0
-        vNameDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-        vNameArray = vNameDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-        vNameIDArray = vNameDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if vNameArray.contains(inovojectData.vaccineMan){
-            let indexOfe = vNameArray.index(of: inovojectData.vaccineMan)
-            VaccineId = vNameIDArray[indexOfe] as? Int ?? 0
-        } else {
-            VaccineId = 0
-        }
         
-        var vNameDetailsArrayIS = NSArray()
-        var vNameArrayIS = NSArray()
-        var vNameIDArrayIS = NSArray()
-        var vNameMfgIdArrayIS = NSArray()
-        vNameDetailsArrayIS = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-        vNameArrayIS = vNameDetailsArrayIS.value(forKey: "name") as? NSArray ?? NSArray()
-        vNameIDArrayIS = vNameDetailsArrayIS.value(forKey: "id") as? NSArray ?? NSArray()
-        vNameMfgIdArrayIS = vNameDetailsArrayIS.value(forKey: "mfgId") as? NSArray ?? NSArray()
+        extractedFunc7(vaccineNames as NSArray, inovojectData, &vaccineId, vaccineIDs as NSArray, &manufacturerId, vaccineMfgIDs as NSArray, &otherVaccine)
         
-        extractedFunc7(vNameArrayIS, inovojectData, &VaccineId, vNameIDArrayIS, &ManufacturerId, vNameMfgIdArrayIS, &otherVaccine)
-        var y = 2
+        // Unique ID for this
+        let unique = "\(deviceIdForServer)_\(inovojectData.id ?? 0)_iOS_"
+        let ampulePerBag = Int(inovojectData.ampulePerBag ?? "0") ?? 0
         
-        let DManufacturerId = 0
-        var DNameArray = NSArray()
-        var DNameIDArray = NSArray()
-        var DNameDetailsArray = NSArray()
-        DNameDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_DManufacturer")
-
-        let indexOfg = DNameArray.index(of: inovojectData.vaccineMan)
-        var dManufacture = 0
-        let timestamp = Date().currentTimeMillis()
-        let uni = ManufacturerId + Int(timestamp) + x
-        let unique = "\(deviceIDFORSERVER)_\(inovojectData.id)_iOS_"
-        let ampulePerBag = Int(inovojectData.ampulePerBag ?? "0")
-        var AntibioticInformation  =  ""
-        if HatcheryAntibiotics {
-            AntibioticInformation =  inovojectData.invoHatchAntibioticText ?? ""
-        }
-        var json = [
-            "VaccineId":  VaccineId == 0 ? "" : VaccineId,
-            "AmpulePerbag":ampulePerBag == 0 ? "" : ampulePerBag,
-            "AmpuleSize":  x == 0 ? "" : x,
-            "AppAssessmentId": String(AssessmentId),
-            "BagSizeType":inovojectData.bagSizeType,
-            "Device_Id": deviceIDFORSERVER,
-            "DiluentMfg": inovojectData.vaccineMan,
-            "DisplayId": DisplayId?.prefix(22),
-            "HatcheryAntibiotics": HatcheryAntibiotics,
-            "ManufacturerId":  ManufacturerId == 0 ? "" : ManufacturerId,
-            "ModuleAssessmentCatId": dictArray.catID,
-            "Dosage": inovojectData.dosage,
-            "StrUniqueId":unique,
-            "OtherText":otherVaccine,
-            "SecquenceId":0,
-            "AntibioticInformation": AntibioticInformation,
-            "DiluentsMfgOtherName":inovojectData.doaDilManOther ?? "",
-            "ProgramName": inovojectData.invoProgramName,
-            "AssessmentId":serverAssessmentId
-            
-        ] as JSONDictionary
-        let doaDilManOther =  inovojectData.doaDilManOther ?? ""
+        // JSON Output
+        var json: JSONDictionary = [
+            "VaccineId": vaccineId == 0 ? "" : vaccineId,
+            "AmpulePerbag": ampulePerBag == 0 ? "" : ampulePerBag,
+            "AmpuleSize": ampuleSizeId == 0 ? "" : ampuleSizeId,
+            "AppAssessmentId": "\(assessmentId)",
+            "BagSizeType": inovojectData.bagSizeType ?? "",
+            "Device_Id": deviceIdForServer,
+            "DiluentMfg": inovojectData.vaccineMan ?? "",
+            "DisplayId": displayId.prefix(22),
+            "HatcheryAntibiotics": hatcheryAntibiotics,
+            "ManufacturerId": manufacturerId == 0 ? "" : manufacturerId,
+            "ModuleAssessmentCatId": dictArray.catID ?? 0,
+            "Dosage": inovojectData.dosage ?? "",
+            "StrUniqueId": unique,
+            "OtherText": otherVaccine,
+            "SecquenceId": 0,
+            "AntibioticInformation": antibioticInformation,
+            "DiluentsMfgOtherName": inovojectData.doaDilManOther ?? "",
+            "ProgramName": inovojectData.invoProgramName ?? "",
+            "AssessmentId": serverAssessmentId
+        ]
         
-        if doaDilManOther == "" {
+        // Remove empty fields
+        if (inovojectData.doaDilManOther ?? "").isEmpty {
             json.removeValue(forKey: "DiluentsMfgOtherName")
         }
-        if ManufacturerId == 0  {
-            json["ManufacturerId"] =  ManufacturerId == 0 ? "" : ManufacturerId
+        if manufacturerId == 0 {
             json.removeValue(forKey: "ManufacturerId")
         }
-        return json
         
+        return json
     }
+
     
     // MARK: - Create Sync Request for DOA's Data
-    func createSyncRequestForDOA(dictArray: PENewAssessment,dayOfAgeData :InovojectData) -> JSONDictionary{
+    func createSyncRequestForDOA(dictArray: PENewAssessment, dayOfAgeData: InovojectData) -> JSONDictionary {
+        let udid = UserDefaults.standard.string(forKey: "ApplicationIdentifier") ?? ""
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        var UniID = dictArray.dataToSubmitID ?? ""
+        // Unique IDs
+        let uniID = dictArray.dataToSubmitID?.isEmpty == false ? dictArray.dataToSubmitID! : (dictArray.draftID ?? "")
+        let assessmentId = dictArray.dataToSubmitNumber != 0 ? dictArray.dataToSubmitNumber! : (dictArray.draftNumber ?? 0)
+        let deviceIdForServer = "\(uniID)_\(assessmentId)_iOS_\(udid)"
         
-        if UniID == "" {
-            UniID = dictArray.draftID ?? ""
+        let displayId = "C-\(uniID)"
+        
+        // Hatchery Antibiotics
+        let hatcheryAntibiotics = dictArray.hatcheryAntibioticsDoa == 1
+        let antibioticInformation = hatcheryAntibiotics ? (dictArray.hatcheryAntibioticsDoaText ?? "") : ""
+        
+        // Ampule Size
+        let ampleSizes = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+        let ampleSizeNames = ampleSizes.value(forKey: "size") as? [String] ?? []
+        let ampleSizeIDs = ampleSizes.value(forKey: "id") as? [Int] ?? []
+        
+        var ampuleSizeId = 0
+        if let ampuleSize = dayOfAgeData.ampuleSize?.replacingOccurrences(of: " ", with: ""),
+           let index = ampleSizeNames.firstIndex(of: ampuleSize) {
+            ampuleSizeId = ampleSizeIDs[safe: index] ?? 0
         }
         
-        var AssessmentId = dictArray.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            AssessmentId = dictArray.draftNumber ?? 0
-        }
+        // Vaccine Info
+        let vaccineData = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
+        let vaccineNames = vaccineData.value(forKey: "name") as? [String] ?? []
+        let vaccineIDs = vaccineData.value(forKey: "id") as? [Int] ?? []
+        let vaccineMfgIDs = vaccineData.value(forKey: "mfgId") as? [Int] ?? []
         
-        let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
-        var score = 0
-        
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        DisplayId = "C-" + UniID
-        
-        let  HatcheryAntibioticsInt = dictArray.hatcheryAntibioticsDoa
-        var HatcheryAntibiotics = false
-        if HatcheryAntibioticsInt == 1  {
-            HatcheryAntibiotics = true
-        }
-        
-        var x = 0
-        var vvv = dayOfAgeData.ampuleSize
-        var ampleSizeesNameArray = NSArray()
-        var ampleSizeIDArray = NSArray()
-        var ampleSizeDetailArray = NSArray()
-        ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-        ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-        ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if dayOfAgeData.ampuleSize != "" {
-            let xx = dayOfAgeData.ampuleSize?.replacingOccurrences(of: " ", with: "")
-            let indexOfe =  ampleSizeesNameArray.index(of: xx)
-            x = ampleSizeIDArray[indexOfe] as? Int  ?? 0
-        }
-        
-        var VaccineId = 0
+        var vaccineId = 0
+        var manufacturerId = 0
         var otherVaccine = ""
-        var ManufacturerId = 0
-        var vNameArray = NSArray()
-        var vNameIDArray = NSArray()
-        var vNameDetailsArray = NSArray()
-        vNameDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
-        vNameArray = vNameDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-        vNameIDArray = vNameDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        var vNameMfgIdArray = vNameDetailsArray.value(forKey: "mfgId") as? NSArray ?? NSArray()
         
-        if vNameArray.contains(dayOfAgeData.name){
-            let indexOfe =  vNameArray.index(of: dayOfAgeData.name)
-            VaccineId = vNameIDArray[indexOfe] as? Int ?? 0
-            ManufacturerId = vNameMfgIdArray[indexOfe] as? Int ?? 0
-        } else if (dayOfAgeData.name != ""){
-            otherVaccine = dayOfAgeData.name ?? ""
+        if let name = dayOfAgeData.name, let index = vaccineNames.firstIndex(of: name) {
+            vaccineId = vaccineIDs[safe: index] ?? 0
+            manufacturerId = vaccineMfgIDs[safe: index] ?? 0
+        } else if let name = dayOfAgeData.name, !name.isEmpty {
+            otherVaccine = name
         }
         
-        var vManufacutrerNameArray = NSArray()
-        var vManufacutrerIDArray = NSArray()
-        var vManufacutrerDetailsArray = NSArray()
-        vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-        vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        // Manufacturer override (based on vaccine manufacturer field)
+        let manufacturerData = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+        let manufacturerNames = manufacturerData.value(forKey: "mfgName") as? [String] ?? []
+        let manufacturerIDs = manufacturerData.value(forKey: "id") as? [Int] ?? []
         
-        if vManufacutrerNameArray.contains(dayOfAgeData.vaccineMan){
-            let indexOfe =  vManufacutrerNameArray.index(of: dayOfAgeData.vaccineMan) //
-            ManufacturerId = vManufacutrerIDArray[indexOfe] as? Int ?? 0
+        if let vaccineMan = dayOfAgeData.vaccineMan, let index = manufacturerNames.firstIndex(of: vaccineMan) {
+            manufacturerId = manufacturerIDs[safe: index] ?? manufacturerId
         }
         
-        let timestamp = Date().currentTimeMillis()
-        let uni = ManufacturerId + Int(timestamp) + x
-        let unique = "\(deviceIDFORSERVER)_\(dayOfAgeData.id)_iOS_"
-        let ampulePerBag = Int(dayOfAgeData.ampulePerBag ?? "0")
-        var AntibioticInformation  =  ""
+        // Final ID
+        let uniqueId = "\(deviceIdForServer)_\(dayOfAgeData.id ?? 0)_iOS_"
         
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dictArray.serverAssessmentId ?? "")
-        if HatcheryAntibiotics {
-            AntibioticInformation =  dictArray.hatcheryAntibioticsDoaText ?? ""
-        }
-        var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
-            serverAssessmentId = Int64(id ?? "") ?? 0
-        }
+        // Assessment ID
+        let serverAssessmentId = Int64(dictArray.serverAssessmentId ?? "") ?? 0
         
-        let json = [
-            "AppAssessmentId": String(AssessmentId),
-            "DayOfAgeAmpulePerbag": ampulePerBag == 0 ? "" : ampulePerBag,
-            "DayOfAgeAmpuleSize":  x == 0 ? "" : x,
-            "DayOfAgeBagSizeType": dictArray.dDT,
-            "DayOfAgeMfgId":  ManufacturerId == 0 ? "" : ManufacturerId,
-            "DayOfAgeMfgNameId":  VaccineId == 0 ? "" : VaccineId,
-            "DayOfBagHatcheryAntibiotics": HatcheryAntibiotics,
-            "Device_Id": deviceIDFORSERVER,
-            "DiluentMfg": dictArray.dCS,
-            "DisplayId": DisplayId?.prefix(22),
-            "ModuleAssessmentCatId": dictArray.catID,
-            "DayOfAgeDosage": dayOfAgeData.dosage,
-            "StrUniqueId":unique,
-            "OtherText":otherVaccine,
-            "SecquenceId":0,
-            "AntibioticInformation":AntibioticInformation,
-            "AssessmentId":serverAssessmentId
-        ] as JSONDictionary
-        return json
-    }
-    
-    func createSyncRequestForDOAS(dictArray: PENewAssessment,dayOfAgeData :InovojectData) -> JSONDictionary{
-        
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        var UniID = dictArray.dataToSubmitID ?? ""
-        
-        if UniID == "" {
-            UniID = dictArray.draftID ?? ""
-        }
-        
-        var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
-            serverAssessmentId = Int64(id ?? "") ?? 0
-        }
-        
-        var AssessmentId = dictArray.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            AssessmentId = dictArray.draftNumber ?? 0
-        }
-        
-        let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
-        var score = 0
-        
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        DisplayId = "C-" + UniID
-        
-        let  HatcheryAntibioticsInt = dictArray.hatcheryAntibioticsDoaS
-        var HatcheryAntibiotics = false
-        if HatcheryAntibioticsInt == 1  {
-            HatcheryAntibiotics = true
-        }
-        var x = 0
-        
-        var vvv = dayOfAgeData.ampuleSize
-        var ampleSizeesNameArray = NSArray()
-        var ampleSizeIDArray = NSArray()
-        var ampleSizeDetailArray = NSArray()
-        ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-        ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-        ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if dayOfAgeData.ampuleSize != "" {
-            let xx = dayOfAgeData.ampuleSize?.replacingOccurrences(of: " ", with: "")
-            let indexOfe =  ampleSizeesNameArray.index(of: xx)
-            x = ampleSizeIDArray[indexOfe] as? Int  ?? 0
-        }
-        var VaccineId = 0
-        var otherVaccine = ""
-        var ManufacturerId = 0
-        var vNameArray = NSArray()
-        var vNameIDArray = NSArray()
-        var vNameDetailsArray = NSArray()
-        vNameDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
-        vNameArray = vNameDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-        vNameIDArray = vNameDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        var vNameMfgIdArray = vNameDetailsArray.value(forKey: "mfgId") as? NSArray ?? NSArray()
-        if vNameArray.contains(dayOfAgeData.name){
-            let indexOfe =  vNameArray.index(of: dayOfAgeData.name) //
-            VaccineId = vNameIDArray[indexOfe] as? Int ?? 0
-            ManufacturerId = vNameMfgIdArray[indexOfe] as? Int ?? 0
-        } else if (dayOfAgeData.name != ""){
-            otherVaccine = dayOfAgeData.name ?? ""
-        }
-        
-        var vManufacutrerNameArray = NSArray()
-        var vManufacutrerIDArray = NSArray()
-        var vManufacutrerDetailsArray = NSArray()
-        vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-        vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        
-        if vManufacutrerNameArray.contains(dayOfAgeData.vaccineMan){
-            let indexOfe =  vManufacutrerNameArray.index(of: dayOfAgeData.vaccineMan) //
-            ManufacturerId = vManufacutrerIDArray[indexOfe] as? Int ?? 0
-        }
-        let timestamp = Date().currentTimeMillis()
-        let unique = "\(deviceIDFORSERVER)_\(dayOfAgeData.id)_iOS_"
-        var AntibioticInformation  =  ""
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dictArray.serverAssessmentId ?? "")
-        
-        if HatcheryAntibiotics {
-            AntibioticInformation =  dictArray.hatcheryAntibioticsDoaSText ?? ""
-        }
-        let ampulePerBag = Int(dayOfAgeData.ampulePerBag ?? "0")
-        var json = [
-            
-            "DayAgeSubcutaneousBagSizeType": dictArray.dDDT,
-            "Device_Id": deviceIDFORSERVER,
-            "DisplayId": DisplayId?.prefix(22) ?? "",
-            "ModuleAssessmentCatId":  dictArray.catID ?? "",
-            "StrUniqueId":unique,
+        // JSON Output
+        let json: JSONDictionary = [
+            "AppAssessmentId": "\(assessmentId)",
+            "DayOfAgeAmpulePerbag": Int(dayOfAgeData.ampulePerBag ?? "0") ?? 0,
+            "DayOfAgeAmpuleSize": ampuleSizeId == 0 ? "" : ampuleSizeId,
+            "DayOfAgeBagSizeType": dictArray.dDT ?? "",
+            "DayOfAgeMfgId": manufacturerId == 0 ? "" : manufacturerId,
+            "DayOfAgeMfgNameId": vaccineId == 0 ? "" : vaccineId,
+            "DayOfBagHatcheryAntibiotics": hatcheryAntibiotics,
+            "Device_Id": deviceIdForServer,
+            "DiluentMfg": dictArray.dCS ?? "",
+            "DisplayId": displayId.prefix(22),
+            "ModuleAssessmentCatId": dictArray.catID ?? 0,
+            "DayOfAgeDosage": dayOfAgeData.dosage ?? "",
+            "StrUniqueId": uniqueId,
+            "OtherText": otherVaccine,
             "SecquenceId": 0,
-            "AppAssessmentId":  String(AssessmentId)] as JSONDictionary
+            "AntibioticInformation": antibioticInformation,
+            "AssessmentId": serverAssessmentId
+        ]
         
-        json["DayAgeSubcutaneousHatcheryAntibiotics"] = HatcheryAntibiotics
-        json["DayAgeSubcutaneousMfgId"] =  ManufacturerId == 0 ? "" : ManufacturerId
-        json["DayAgeSubcutaneousDosage"] = dayOfAgeData.dosage ?? ""
-        json["DayAgeSubcutaneousMfgNameId"] =  VaccineId == 0 ? "" : VaccineId;
-        json["OtherText"] =  otherVaccine
-        json["DayAgeSubcutaneousDiluentMfg"] =   dictArray.dDCS
-        json["DayAgeSubcutaneousAmpuleSize"] =   x == 0 ? "" : x
-        json["DayAgeSubcutaneousAmpulePerbag"] =  ampulePerBag == 0 ? "" : (ampulePerBag ?? 0)
-        json["AntibioticInformation"] =  AntibioticInformation
-        json["AssessmentId"] = serverAssessmentId
         return json
-        
     }
+
+    
+    func createSyncRequestForDOAS(dictArray: PENewAssessment, dayOfAgeData: InovojectData) -> JSONDictionary {
+        let udid = UserDefaults.standard.string(forKey: "ApplicationIdentifier") ?? ""
+        
+        // IDs
+        let uniID = dictArray.dataToSubmitID?.isEmpty == false ? dictArray.dataToSubmitID! : (dictArray.draftID ?? "")
+        let assessmentId = dictArray.dataToSubmitNumber != 0 ? dictArray.dataToSubmitNumber! : (dictArray.draftNumber ?? 0)
+        let serverAssessmentId = Int64(dictArray.serverAssessmentId ?? "") ?? 0
+        let deviceIdForServer = "\(uniID)_\(assessmentId)_iOS_\(udid)"
+        let displayId = "C-\(uniID)"
+        
+        // Hatchery Antibiotics
+        let hatcheryAntibiotics = dictArray.hatcheryAntibioticsDoaS == 1
+        let antibioticInformation = hatcheryAntibiotics ? (dictArray.hatcheryAntibioticsDoaSText ?? "") : ""
+        
+        // Ampule Size
+        let ampleSizes = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+        let ampleSizeNames = ampleSizes.value(forKey: "size") as? [String] ?? []
+        let ampleSizeIDs = ampleSizes.value(forKey: "id") as? [Int] ?? []
+        
+        var ampuleSizeId = 0
+        if let ampuleSize = dayOfAgeData.ampuleSize?.replacingOccurrences(of: " ", with: ""),
+           let index = ampleSizeNames.firstIndex(of: ampuleSize) {
+            ampuleSizeId = ampleSizeIDs[safe: index] ?? 0
+        }
+        
+        // Vaccine Info
+        let vaccineData = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
+        let vaccineNames = vaccineData.value(forKey: "name") as? [String] ?? []
+        let vaccineIDs = vaccineData.value(forKey: "id") as? [Int] ?? []
+        let vaccineMfgIDs = vaccineData.value(forKey: "mfgId") as? [Int] ?? []
+
+        var vaccineId = 0
+        var manufacturerId = 0
+        var otherVaccine = ""
+
+        if let name = dayOfAgeData.name, let index = vaccineNames.firstIndex(of: name) {
+            vaccineId = vaccineIDs[safe: index] ?? 0
+            manufacturerId = vaccineMfgIDs[safe: index] ?? 0
+        } else if let name = dayOfAgeData.name, !name.isEmpty {
+            otherVaccine = name
+        }
+
+        // Manufacturer override
+        let mfgData = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+        let mfgNames = mfgData.value(forKey: "mfgName") as? [String] ?? []
+        let mfgIDs = mfgData.value(forKey: "id") as? [Int] ?? []
+
+        if let vaccineMan = dayOfAgeData.vaccineMan, let index = mfgNames.firstIndex(of: vaccineMan) {
+            manufacturerId = mfgIDs[safe: index] ?? manufacturerId
+        }
+
+        // Ampule/bag
+        let ampulePerBag = Int(dayOfAgeData.ampulePerBag ?? "0") ?? 0
+        let unique = "\(deviceIdForServer)_\(dayOfAgeData.id ?? 0)_iOS_"
+        
+        // JSON Output
+        var json: JSONDictionary = [
+            "DayAgeSubcutaneousBagSizeType": dictArray.dDDT ?? "",
+            "Device_Id": deviceIdForServer,
+            "DisplayId": displayId.prefix(22),
+            "ModuleAssessmentCatId": dictArray.catID ?? "",
+            "StrUniqueId": unique,
+            "SecquenceId": 0,
+            "AppAssessmentId": "\(assessmentId)",
+            "DayAgeSubcutaneousHatcheryAntibiotics": hatcheryAntibiotics,
+            "DayAgeSubcutaneousMfgId": manufacturerId == 0 ? "" : manufacturerId,
+            "DayAgeSubcutaneousDosage": dayOfAgeData.dosage ?? "",
+            "DayAgeSubcutaneousMfgNameId": vaccineId == 0 ? "" : vaccineId,
+            "OtherText": otherVaccine,
+            "DayAgeSubcutaneousDiluentMfg": dictArray.dDCS ?? "",
+            "DayAgeSubcutaneousAmpuleSize": ampuleSizeId == 0 ? "" : ampuleSizeId,
+            "DayAgeSubcutaneousAmpulePerbag": ampulePerBag == 0 ? "" : ampulePerBag,
+            "AntibioticInformation": antibioticInformation,
+            "AssessmentId": serverAssessmentId
+        ]
+        
+        return json
+    }
+
     // MARK: - Create Sync Request for Certificate's
-    func createSyncRequestForCertificateData(dictArray: PENewAssessment,peCertificateData :PECertificateData) -> JSONDictionary{
+    func createSyncRequestForCertificateData(dictArray: PENewAssessment, peCertificateData: PECertificateData) -> JSONDictionary {
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        var UniID = dictArray.dataToSubmitID ?? ""
+        let udid = UserDefaults.standard.string(forKey: "ApplicationIdentifier") ?? ""
+        let uniID = dictArray.dataToSubmitID?.isEmpty == false ? dictArray.dataToSubmitID! : (dictArray.draftID ?? "")
+        let assessmentId = dictArray.dataToSubmitNumber != 0 ? dictArray.dataToSubmitNumber! : (dictArray.draftNumber ?? 0)
+        let serverAssessmentId = Int64(dictArray.serverAssessmentId ?? "") ?? 0
+        let deviceIdForServer = "\(uniID)_\(assessmentId)_iOS_\(udid)"
+        let displayId = "C-" + uniID
+        let unique = "\(deviceIdForServer)_\(peCertificateData.id)_iOS_"
         
-        if UniID == "" {
-            UniID = dictArray.draftID ?? ""
-        }
-        
-        var AssessmentId = dictArray.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            AssessmentId = dictArray.draftNumber ?? 0
-        }
-        var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
-            serverAssessmentId = Int64(id ?? "") ?? 0
-        }
-        
-        let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
-        
-        var score = 0
-        
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        var siteId = String(dictArray.siteId ?? 0)
-        var sID = dictArray.siteId ?? 0
-        sID = sID + 2701
-        var dID = AssessmentId ?? 0
-        dID = dID + 2903
-        DisplayId = "C-" + UniID
-        
-        let timestamp = Date().currentTimeMillis()
-        let uni = dictArray.userID ?? 433 + Int(timestamp)
-        let unique = "\(deviceIDFORSERVER)_\(peCertificateData.id)_iOS_"
-        
-        var resultString = String()
-        if(regionID != 3){
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-            let date = dateFormatter.date(from: peCertificateData.certificateDate ?? "")
-            dateFormatter.dateFormat = yyymmdd
-            if date != nil {
-                resultString = dateFormatter.string(from: date ?? Date())
-                
+        // Format certification date
+        let formattedDate: String = {
+            if regionID != 3 {
+                let formatter = DateFormatter()
+                formatter.dateFormat = appDelegateObj.ddMMyyyStr
+                if let rawDate = formatter.date(from: peCertificateData.certificateDate ?? "") {
+                    formatter.dateFormat = yyymmdd
+                    return formatter.string(from: rawDate)
+                }
+                return ""
             } else {
-                resultString =  ""
+                return peCertificateData.certificateDate ?? ""
             }
-        }
-        else{
-            resultString = peCertificateData.certificateDate ?? ""
+        }()
+        
+        // Common JSON fields
+        var json: JSONDictionary = [
+            "Id": assessmentId,
+            "AssessmentId": serverAssessmentId,
+            "AssessmentDetailId": assessmentId,
+            "ModuleAssessmentId": 0,
+            "Name": peCertificateData.name ?? "",
+            "CertificationDate": formattedDate,
+            "AlternateName": "string",
+            "CertificationDate2": appDelegateObj.date2020_05_23,
+            "ModuleAssessmentCatId": dictArray.catID ?? 0,
+            "userId": dictArray.userID ?? 0,
+            "DeviceId": deviceIdForServer,
+            "ResidueName": dictArray.residue ?? "",
+            "MicroSamplesName": dictArray.micro ?? "",
+            "EvaluationTypeId": 1,
+            "AppAssessmentId": "\(assessmentId)",
+            "DisplayId": displayId.prefix(22),
+            "StrUniqueId": unique,
+            "SignatureImg": peCertificateData.signatureImg ?? ""
+        ]
+        
+        // Add region-specific fields
+        if regionID == 3 {
+            json["IsCertiExpired"] = peCertificateData.isCertExpired
+            json["VacOperatorId"] = peCertificateData.vacOperatorId ?? 0
+            json["IsRecert"] = peCertificateData.isReCert
         }
         
-        if regionID == 3
-        {
-            
-            let json = [
-                "Id": AssessmentId,
-                "AssessmentId": serverAssessmentId,//AssessmentId,
-                "AssessmentDetailId": AssessmentId,
-                "ModuleAssessmentId": 0,
-                "Name": peCertificateData.name,
-                "CertificationDate": resultString,
-                "AlternateName": "string",
-                "CertificationDate2": appDelegateObj.date2020_05_23,
-                "ModuleAssessmentCatId":  dictArray.catID,
-                "userId": dictArray.userID,
-                "DeviceId": deviceIDFORSERVER,
-                "ResidueName": dictArray.residue,
-                "MicroSamplesName": dictArray.micro,
-                "EvaluationTypeId": 1,
-                "AppAssessmentId": String(AssessmentId),
-                "DisplayId": DisplayId?.prefix(22),
-                "StrUniqueId":unique,
-                "IsCertiExpired": peCertificateData.isCertExpired,
-                "VacOperatorId": peCertificateData.vacOperatorId ?? 0,
-                "IsRecert": peCertificateData.isReCert,
-                "SignatureImg": peCertificateData.signatureImg ?? ""
-            ] as JSONDictionary
-            return json
-        }
-        
-        else
-        {
-            
-            let json = [
-                "Id": AssessmentId,
-                "AssessmentId": serverAssessmentId,//AssessmentId,
-                "AssessmentDetailId": AssessmentId,
-                "ModuleAssessmentId": 0,
-                "Name": peCertificateData.name,
-                "CertificationDate": resultString,
-                "AlternateName": "string",
-                "CertificationDate2": appDelegateObj.date2020_05_23,
-                "ModuleAssessmentCatId":  dictArray.catID,
-                "userId": dictArray.userID,
-                "DeviceId": deviceIDFORSERVER,
-                "ResidueName": dictArray.residue,
-                "MicroSamplesName": dictArray.micro,
-                "EvaluationTypeId": 1,
-                "AppAssessmentId": String(AssessmentId),
-                "DisplayId": DisplayId?.prefix(22),
-                "StrUniqueId":unique,
-                "SignatureImg": peCertificateData.signatureImg ?? ""
-            ] as JSONDictionary
-            return json
-        }
-        
+        return json
     }
+
     // MARK: - Create Sync Request for Residue's
-    func createSyncRequestForResidueData(dictArray: PENewAssessment) -> JSONDictionary{
-        
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        var UniID = dictArray.dataToSubmitID ?? ""
-        
-        if UniID == "" {
-            UniID = dictArray.draftID ?? ""
-        }
-        
-        var AssessmentId = dictArray.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            AssessmentId = dictArray.draftNumber ?? 0
-        }
-        var serverAssessmentId: Int64 = 0
-        if let id = dictArray.serverAssessmentId{
-            serverAssessmentId = Int64(id ?? "") ?? 0
-        }
-        
-        let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
-        var score = 0
-        
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
-        
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        var siteId = String(dictArray.siteId ?? 0)
-        var sID = dictArray.siteId ?? 0
-        sID = sID + 2701
-        var dID = AssessmentId ?? 0
-        dID = dID + 2903
-        DisplayId = "C-" + UniID
-        
-        let timestamp = Date().currentTimeMillis()
-        let uni = dictArray.userID ?? 32 + Int(timestamp)
-        let unique = "\(deviceIDFORSERVER)_\(dictArray.residue)_iOS_"
-                
-        let json = [
+    func createSyncRequestForResidueData(dictArray: PENewAssessment) -> JSONDictionary {
+        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as! String
+        let uniID = dictArray.dataToSubmitID ?? dictArray.draftID ?? ""
+        let assessmentId = dictArray.dataToSubmitNumber ?? dictArray.draftNumber ?? 0
+        let serverAssessmentId = Int64(dictArray.serverAssessmentId ?? "") ?? 0
+        let deviceIdForServer = "\(uniID)_\(assessmentId)_iOS_\(udid)"
+        let displayId = "C-\(uniID)".prefix(22)
+        let unique = "\(deviceIdForServer)_\(dictArray.residue)_iOS_"
+
+        return [
             "AssessmentId": serverAssessmentId,
             "AssessmentDetailId": dictArray.assID ?? 0,
             "StrUniqueId": unique,
             "ModuleAssessmentId": dictArray.catID,
-            "ResidueName":dictArray.residue,
+            "ResidueName": dictArray.residue,
             "MicroSamplesName": dictArray.micro,
             "EvaluationTypeId": 1,
-            "AppAssessmentId": String(AssessmentId),
-            "DisplayId": DisplayId?.prefix(22),
+            "AppAssessmentId": String(assessmentId),
+            "DisplayId": displayId,
             "UserId": dictArray.userID,
             "CreatedAt": "2020-06-11T12:53:38.930Z",
-            "DeviceId": deviceIDFORSERVER,
+            "DeviceId": deviceIdForServer,
             "ModuleAssessmentCatId": dictArray.catID
-        ] as JSONDictionary
-        return json
-        
+        ]
     }
     
     // MARK: - Create Sync Request for Microbial's Data
-    func createSyncRequestForMicroData(dictArray: PENewAssessment) -> JSONDictionary{
+    func createSyncRequestForMicroData(dictArray: PENewAssessment) -> JSONDictionary {
+        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as! String
+        let uniID = dictArray.dataToSubmitID ?? dictArray.draftID ?? ""
+        let assessmentId = dictArray.dataToSubmitNumber ?? dictArray.draftNumber ?? 0
+        let serverAssessmentId = Int64(dictArray.serverAssessmentId ?? "") ?? 0
+        let deviceIdForServer = "\(uniID)_\(assessmentId)_iOS_\(udid)"
+        let displayId = "C-\(uniID)".prefix(22)
+        let unique = "\(deviceIdForServer)_\(dictArray.micro ?? "")_iOS_"
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        var UniID = dictArray.dataToSubmitID ?? ""
-        
-        if UniID == "" {
-            UniID = dictArray.draftID ?? ""
-        }
-        
-        var AssessmentId = dictArray.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            AssessmentId = dictArray.draftNumber ?? 0
-        }
-        
-        var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
-            serverAssessmentId = Int64(id ?? "") ?? 0
-        }
-        
-        let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
-        var score = 0
-        
-        if dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        var siteId = String(dictArray.siteId ?? 0)
-        var sID = dictArray.siteId ?? 0
-        sID = sID + 2701
-        var dID = AssessmentId ?? 0
-        dID = dID + 2903
-        DisplayId = "C-" + UniID
-        
-        let timestamp = Date().currentTimeMillis()
-        let uni = dictArray.userID ?? 32 + Int(timestamp)
-        let unique = "\(deviceIDFORSERVER)_\(dictArray.micro)_iOS_"
-        
-        let json = [
-            "Id": AssessmentId,
+        return [
+            "Id": assessmentId,
             "AssessmentId": serverAssessmentId,
             "AssessmentDetailId": dictArray.assID ?? 0,
             "ModuleAssessmentId": 0,
@@ -2747,18 +2443,16 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             "CertificationDate": "",
             "AlternateName": "string",
             "CertificationDate2": appDelegateObj.date2020_05_23,
-            "ModuleAssessmentCatId":  dictArray.catID,
+            "ModuleAssessmentCatId": dictArray.catID,
             "userId": dictArray.userID,
-            "DeviceId": deviceIDFORSERVER,
+            "DeviceId": deviceIdForServer,
             "ResidueName": dictArray.residue,
             "MicroSamplesName": dictArray.micro,
             "EvaluationTypeId": 1,
-            "AppAssessmentId": String(AssessmentId),
-            "DisplayId": DisplayId?.prefix(22),
-            "StrUniqueId":unique
-        ] as JSONDictionary
-        return json
-        
+            "AppAssessmentId": String(assessmentId),
+            "DisplayId": displayId,
+            "StrUniqueId": unique
+        ]
     }
     
     // MARK: - Create Sync Request for Assessment's
@@ -2776,23 +2470,19 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     }
     
     fileprivate func handleSelectedTSRValidations(_ dict: PENewAssessment, _ visitNameArray: NSArray, _ TSRId: inout Int?, _ visitIDArray: NSArray) {
-        if dict.selectedTSR?.count ?? 0 > 0 {
-            if visitNameArray.contains(dict.selectedTSR ?? ""){
-                let indexOfe =  visitNameArray.index(of: dict.selectedTSR ?? "") //
-                TSRId = visitIDArray[indexOfe] as? Int ?? 0
-            }
+        if dict.selectedTSR?.count ?? 0 > 0,visitNameArray.contains(dict.selectedTSR ?? "") {
+            let indexOfe =  visitNameArray.index(of: dict.selectedTSR ?? "") //
+            TSRId = visitIDArray[indexOfe] as? Int ?? 0
         }
     }
     
     fileprivate func handleManufacturerValidation(_ man: inout String, _ dict: PENewAssessment, _ manOther: inout String) {
-        if man != "" {
-            if let character = dict.manufacturer?.character(at:0) {
-                if character == "S"{
-                    let str =  man.replacingOccurrences(of: "S", with: "")
-                    manOther = str
-                    man = "Other"
-                }
-            }
+        if man != "",
+           let character = dict.manufacturer?.character(at:0),
+           character == "S" {
+            let str =  man.replacingOccurrences(of: "S", with: "")
+            manOther = str
+            man = "Other"
         }
     }
     
@@ -2810,28 +2500,12 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     }
     
     fileprivate func handleBreedOfBirdValidations(_ breeedd: inout String, _ breeeddOther: inout String) {
-        if breeedd != "" {
-            if let character = breeedd.character(at:0) {
-                if character == "S".character(at: 0){
-                    let str =  breeedd.replacingOccurrences(of: "S", with: "")
-                    breeeddOther = str
-                    breeedd = "Other"
-                    
-                }
-            }
-        }
-    }
-    
-    fileprivate func handleRegionidValidation3(_ regionId: Int, _ dateFormatter: DateFormatter, _ dict: PENewAssessment) {
-        if regionId != 3 {
-            dateFormatter.dateFormat = "dd/MM/YYYY HH:mm:ss Z"
-            let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.ddMMyyyStr)
-            let datastr = date?.toString(withFormat: "dd/MM/YYYY HH:mm:ss Z")
-        } else {
-            dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
-            
-            let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
-            let datastr = date?.toString(withFormat: appDelegateObj.MMddYYYYHHmmss)
+        if breeedd != "",
+           let character = breeedd.character(at:0),
+           character == "S".character(at: 0) {
+            let str =  breeedd.replacingOccurrences(of: "S", with: "")
+            breeeddOther = str
+            breeedd = "Other"
         }
     }
     
@@ -2848,508 +2522,157 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     
-    func createSyncRequest(dict: PENewAssessment ,certificationData : [PECertificateData]) -> JSONDictionary{
-        debugPrint("dict---\(dict)")
-       
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        var UniID = dict.dataToSubmitID ?? ""
-        
+    func createSyncRequest(dict: PENewAssessment, certificationData: [PECertificateData]) -> JSONDictionary {
+        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as! String
+        let uniID = dict.dataToSubmitID ?? dict.draftID ?? ""
         let evaluationDate = dict.evaluationDate ?? ""
-        if UniID == "" {
-            UniID = dict.draftID ?? ""
-        }
-        var Complete = 1
-        var Draft = 0
-        var SaveType = 1
-        saveTypeString.append(11)
-        var AssessmentId = dict.dataToSubmitNumber ?? 0
-        let deviceIdForServer = "\(UniID)_1_iOS_\(udid)"
-        deviceIDFORSERVER = deviceIdForServer
-        
-        handleAssessmentIdValidation(&AssessmentId, dict, &Draft, &Complete, &SaveType)
-        if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
-            deviceIDFORSERVER = dict.assDetail2 ?? ""
-        }
-        var serverAssessmentId:Int64 = 0
-        if dict.serverAssessmentId != nil{
-            serverAssessmentId = Int64( dict.serverAssessmentId ?? "") ?? 0
-        }
-        let DocId = ""
-        let VisitId = dict.visitID
-        let CustomerId = dict.customerId
-        let SiteId = dict.siteId
-        let IncubationStyle = dict.incubation
-        let EvaluationId = dict.evaluationID
-        let BreedBirds = dict.breedOfBird
-        var EvaluationDate = ""
-        let EvaulaterId = dict.evaluatorID
-        var hacheryAntibiotics:Bool = false
-        if dict.hatcheryAntibiotics == 1{
-            hacheryAntibiotics = true
-        }
-        
-        var TSRIdUser = dict.selectedTSR
-        var  TSRId  = dict.selectedTSRID
-        
-        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
-        let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray ()
-        let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray ()
-        handleSelectedTSRValidations(dict, visitNameArray, &TSRId, visitIDArray)
-        
-        let countryID = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        
-        let fluid = dict.fluid!
-        let basicTransfr = dict.basicTransfer!
-        
-        let HatchAnti = false
-        var Camera = false
-        if dict.camera == 1 {
-            Camera = true
-        }
-        
-        var man = dict.manufacturer  ?? ""
-        var manOther =  ""
-        handleManufacturerValidation(&man, dict, &manOther)
-        var eggg = ""
-        var egggOther =  ""
-        let xx = String(dict.noOfEggs ?? 000)
-        handleNoOfEggsValidation(xx, &egggOther, &eggg)
-        
-        var breeedd = dict.breedOfBird  ?? ""
-        var breeeddOther =  ""
-        handleBreedOfBirdValidations(&breeedd, &breeeddOther)
-        breeeddOther = dict.breedOfBirdOther ?? ""
-        
-        var ManufacturerId = 0
-        var EggID = 0
-        var breeddId = 0
-        var manufacutrerNameArray = NSArray()
-        var manufacutrerIDArray = NSArray()
-        var manufacutrerDetailsArray = NSArray()
-        manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
-        manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
-        manufacutrerIDArray = manufacutrerDetailsArray.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
-        if man != "" {
-            let indexOfd = manufacutrerNameArray.index(of: man) // 3
-            ManufacturerId = manufacutrerIDArray[indexOfd] as? Int ?? 0
-        }
-        
-        var BirdBreedIDArray = NSArray()
-        var BirdBreedNameArray = NSArray()
-        var BirdBreedDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
-        BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
-        BirdBreedIDArray = BirdBreedDetailsArray.value(forKey: "birdId") as? NSArray ?? NSArray()
-        if breeedd != "" {
-            let indexOfe = BirdBreedNameArray.index(of: breeedd) // 3
-            breeddId = BirdBreedIDArray[indexOfe] as? Int ?? 0
-        }
-        var EggsIDArray = NSArray()
-        var EggsNameArray = NSArray()
-        let EggsDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
-        EggsNameArray = EggsDetailsArray.value(forKey: "eggCount") as? NSArray ?? NSArray()
-        EggsIDArray = EggsDetailsArray.value(forKey: "eggId") as? NSArray ?? NSArray()
-        if eggg != "" {
-            let indexOfp = EggsNameArray.index(of: eggg) // 3
-            EggID = EggsIDArray[indexOfp] as? Int ?? 0
-        }
-        
-        let FlockAgeId = dict.isFlopSelected
-        let Status_Type = ""
-        let UserId = dict
-            .userID
-        let RepresentativeName = ""
-        let Notes = dict.notes
-        let dateFormatter = DateFormatter()
-        
+        var assessmentId = dict.dataToSubmitNumber ?? 0
+        let deviceIdForServer = dict.assDetail2?.lowercased().contains("_1_ios") ?? false ? dict.assDetail2 ?? "" : "\(uniID)_1_iOS_\(udid)"
+        let serverAssessmentId = Int64(dict.serverAssessmentId ?? "") ?? 0
+        let visitId = dict.visitID
+        let customerId = dict.customerId
+        let siteId = dict.siteId
+        let incubationStyle = dict.incubation
+        let evaluationId = dict.evaluationID
+        let evaluatorId = dict.evaluatorID
+        let hatcheryAntibiotics = dict.hatcheryAntibiotics == 1
+        var tsrId = dict.selectedTSRID
+        let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
+        let camera = dict.camera == 1
+        let fluid = dict.fluid ?? false
+        let basicTransfer = dict.basicTransfer ?? false
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
-        handleRegionidValidation3(regionId, dateFormatter, dict)
-        
-        let  sig_Datetext = dict.sig_Date
-        var dateSig = ""
-        let ddd = dict.sig_Date ?? ""
-        if ddd != "" {
-            dateSig = self.convertDateFormat(inputDate: ddd)
-        }
-        
-        let sig_Nametext2 = dict.sig_Name2
-        let sig_Nametext = dict.sig_Name
-        let sig_Phonetext = dict.sig_Phone
-        let sig_EmployeeIDtext = dict.sig_EmpID
-        let sig_EmployeeIDtext2 = dict.sig_EmpID2
-        let sigNumber = dict.sig ?? 0
-        let sigNumber2 = dict.sig2 ?? 0
-        let statusType = dict.statusType ?? 0
-        var base64Str = ""
-        var base64Str2 = ""
-        handleBase64ImageEncoding(sigNumber, &base64Str, dict, sigNumber2, &base64Str2)
-        
-        var DisplayId = dict.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        DisplayId = "C-" + UniID
-        var iStle = 0
-        var iStleIDArray = NSArray()
-        var iStleNameArray = NSArray()
-        let iStleDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
-        iStleNameArray = iStleDetailsArray.value(forKey: "incubationStylesName") as? NSArray ?? NSArray()
-        iStleIDArray = iStleDetailsArray.value(forKey: "incubationId") as? NSArray ?? NSArray()
-        if IncubationStyle?.count ?? 0 > 1 {
-            let indexOfe = iStleNameArray.index(of: IncubationStyle ?? "") // 3
-            iStle = iStleIDArray[indexOfe] as? Int ?? 0
-        }
-        var rollID = 0
-        var rollIDArray = NSArray()
-        var rollNameArray = NSArray()
-        let rollDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
-        rollNameArray = rollDetailsArray.value(forKey: "roleName") as? NSArray ?? NSArray()
-        rollIDArray = rollDetailsArray.value(forKey: "roleId") as? NSArray ?? NSArray()
-        if sig_EmployeeIDtext?.count ?? 0 > 1 {
-            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext ?? "") // 3
-            rollID = rollIDArray[indexOfe] as? Int ?? 0
-        }
-        
-        var rollID2 = 0
-        if sig_EmployeeIDtext2?.count ?? 0 > 1 {
-            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext2 ?? "") // 3
-            rollID2 = rollIDArray[indexOfe] as? Int ?? 0
-        }
-        
-        dict.evaluationDate = dateSig
-        
-        var json : JSONDictionary = JSONDictionary()
-        if dateSig != "" {
-            dict.evaluationDate = dateSig
-        } else {
-            let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = yyymmdd
-            convertDateFormatter.timeZone = Calendar.current.timeZone
-            convertDateFormatter.locale = Calendar.current.locale
-        }
-        let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
-
-        let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
-        if regionId == 3 {
-            dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
-        } else {
-            dateFormatterObj.dateFormat = appDelegateObj.ddMMyyyStr
-        }
-        
-        let evalDateObj = dateFormatterObj.date(from: evaluationDate ?? "")
-        dateFormatterObj.dateFormat = yyymmdd
-        let evalDateStr = dateFormatterObj.string(from: evalDateObj ?? Date())
-        dict.evaluationDate = evalDateStr
-        var FSRsign = ""
-        if certificationData.count > 0 {
-            FSRsign = certificateData[0].fsrSign
-        }
-        let inovoFluid : Bool
-        let basicTransfer : Bool
-        let countryName = dict.countryName
-        let countryIDSelc = dict.countryID
-        inovoFluid = dict.fluid!
-        basicTransfer = dict.basicTransfer!
         let isEMRequested = dict.IsEMRequested ?? false
-        let RegionalId = UserDefaults.standard.integer(forKey: "Regionid")
         let extndMicro = dict.extndMicro ?? false
         let isHandMix = dict.isHandMix ?? false
-        let ppmValue = dict.ppmValue ?? ""
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        if regionID == 3 {
-            if SaveType == 0 {
-                if statusType == 2 {
-                    
-                    json = [
-                        "AppAssessmentId":String(AssessmentId),
-                        "Camera": Camera,
-                        "CustomerId": CustomerId ?? 0,
-                        "AppCreationTime": UniID.prefix(22),
-                        "DeviceId": deviceIDFORSERVER,
-                        "DisplayId":DisplayId?.prefix(22),
-                        "EvaluationDate": evalDateStr,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "EvaluationTypeText": dict.evaluationName ?? "",
-                        "EvaulaterId": EvaulaterId ?? 0,
-                        "FlockAgeId": FlockAgeId == 0 ? "" : FlockAgeId,
-                        "IncubationStyle": iStle,
-                        "ManufacturerId": ManufacturerId == 0 ? "" : ManufacturerId,
-                        "SaveType":SaveType,
-                        "Status_Type":statusType,
-                        "RepresentativeName":sig_Nametext,
-                        "RepresentativeName2":sig_Nametext2,
-                        "RepresentativeNotes":sig_Phonetext,
-                        "SignatureImage": base64Str,
-                        "SignatureImage2": base64Str2,
-                        "SignatureDate":dateSig,
-                        "RoleId":rollID,
-                        "RoleId2":rollID2 == 0 ? "" : rollID2,
-                        "SiteId": SiteId,
-                        "TSRId": TSRId,
-                        "UserId": UserId,
-                        "VisitId": VisitId,
-                        "AssessmentId":serverAssessmentId,
-                        "BreedBirds": breeddId == 0 ? "" : breeddId,
-                        "EggsPerFlat": EggID == 0 ? "" : EggID,
-                        "ManufacturerOther": manOther,
-                        "BreedOfBirdsOther": breeeddOther,
-                        "EggsPerFlatOther": egggOther,
-                        "Notes": Notes,
-                        "DoubleSanitation":hacheryAntibiotics,
-                        "SanitationEmbrex":  dict.sanitationValue, //userInfo?.isExtendedPE ?? false,
-                        "HasChlorineStrips" :  dict.isChlorineStrip ?? false,
-                        "IsAutomaticFail" :  dict.isAutomaticFail ?? false,
-                        "FSTSignatureImage": FSRsign,
-                        "IsEMRequested" : isEMRequested,
-                        "RefrigeratorNote": dict.refrigeratorNote ?? "",
-                        "RegionId" : RegionalId,
-                        "IsInterMicrobial": extndMicro,
-                        "CountryId":countryID,
-                        "IsInovoFluids": false,
-                        "IsBasicTrfAssessment" :  false,
-                        "ChlorineId" :  "",
-                        "Handmix" : isHandMix ?? false
-                    ] as JSONDictionary
-                }else{
-                    json = [
-                        "AppAssessmentId":String(AssessmentId),
-                        "Camera": Camera,
-                        "CustomerId": CustomerId ?? 0,
-                        "AppCreationTime": UniID.prefix(22),
-                        "DeviceId": deviceIDFORSERVER,
-                        "DisplayId":DisplayId?.prefix(22),
-                        "EvaluationDate": evalDateStr,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "EvaluationTypeText": dict.evaluationName ?? "",
-                        "EvaulaterId": EvaulaterId ?? 0,
-                        "FlockAgeId": FlockAgeId == 0 ? "" : FlockAgeId,
-                        "IncubationStyle": iStle,
-                        "ManufacturerId": ManufacturerId == 0 ? "" : ManufacturerId,
-                        "SaveType":SaveType,
-                        "Status_Type":statusType,
-                        "SiteId": SiteId,
-                        "TSRId": TSRId,
-                        "UserId": UserId,
-                        "VisitId": VisitId,
-                        "AssessmentId":serverAssessmentId,
-                        "BreedBirds": breeddId == 0 ? "" : breeddId,
-                        "EggsPerFlat": EggID == 0 ? "" : EggID,
-                        "ManufacturerOther": manOther,
-                        "BreedOfBirdsOther": breeeddOther,
-                        "EggsPerFlatOther": egggOther,
-                        "Notes": Notes,
-                        "DoubleSanitation":hacheryAntibiotics,
-                        "SanitationEmbrex": dict.sanitationValue, //userInfo?.isExtendedPE ?? false,
-                        "HasChlorineStrips" :  dict.isChlorineStrip ?? false,
-                        "IsAutomaticFail" :  dict.isAutomaticFail ?? false,
-                        "FSTSignatureImage": FSRsign,
-                        "IsEMRequested" : isEMRequested,
-                        "RefrigeratorNote": dict.refrigeratorNote ?? "",
-                        "RegionId" : RegionalId,
-                        "IsInterMicrobial": extndMicro,
-                        "CountryId":countryID,
-                        "IsInovoFluids": false,
-                        "IsBasicTrfAssessment" :  false,
-                        "ChlorineId" :  "",
-                        "Handmix" :isHandMix ?? false
-                        
-                    ] as JSONDictionary
-                }
-            } else {
-                json = [
-                    "AppAssessmentId":String(AssessmentId),
-                    "DisplayId":DisplayId?.prefix(22),
-                    "VisitId": VisitId,
-                    "CustomerId": CustomerId,
-                    "SiteId": SiteId,
-                    "IncubationStyle": iStle,
-                    "EvaluationId": EvaluationId,
-                    "BreedBirds": breeddId == 0 ? "" : breeddId,
-                    "EvaluationDate": evalDateStr,
-                    "EvaulaterId": EvaulaterId ?? 0,
-                    "TSRId": TSRId,
-                    "Camera": Camera,
-                    "ManufacturerId": ManufacturerId == 0 ? "" : ManufacturerId,
-                    "EggsPerFlat": EggID == 0 ? "" : EggID,
-                    "Notes": Notes,
-                    "FlockAgeId": FlockAgeId == 0 ? "" : FlockAgeId,
-                    "SaveType":SaveType,
-                    "UserId": UserId,
-                    "DeviceId": deviceIDFORSERVER,
-                    "RepresentativeName":sig_Nametext,
-                    "RepresentativeName2":sig_Nametext2,
-                    "RepresentativeNotes":sig_Phonetext,
-                    "SignatureImage": base64Str,
-                    "SignatureImage2": base64Str2,
-                    "ManufacturerOther": manOther,
-                    "BreedOfBirdsOther": breeeddOther,
-                    "EggsPerFlatOther": egggOther,
-                    "RoleId":rollID,
-                    "RoleId2":rollID2 == 0 ? "" : rollID2,
-                    "EvaluationTypeText": dict.evaluationName,
-                    "AppCreationTime": UniID.prefix(22),
-                    "SignatureDate":dateSig,
-                    "AssessmentId": serverAssessmentId,
-                    "DoubleSanitation":hacheryAntibiotics,
-                    "SanitationEmbrex":  dict.sanitationValue,
-                    "HasChlorineStrips" :  dict.isChlorineStrip ?? false,
-                    "IsAutomaticFail" :  dict.isAutomaticFail ?? false,
-                    "FSTSignatureImage": FSRsign,
-                    "IsEMRequested" : isEMRequested,
-                    "RefrigeratorNote": dict.refrigeratorNote ?? "",
-                    "RegionId" : RegionalId,
-                    "IsInterMicrobial": extndMicro,
-                    "CountryId":countryID,
-                    "IsInovoFluids": false,
-                    "IsBasicTrfAssessment" :  false,
-                    "ChlorineId" :  "",
-                    "Handmix" : isHandMix ?? false
-                    
-                    
-                ] as JSONDictionary
-            }
-            return json
-        } else {
-            let re_note = UserDefaults.standard.value(forKey: "re_note")
-            if SaveType == 0 {
-                if statusType == 2 {
-                    json = [
-                        "AppAssessmentId":String(AssessmentId),
-                        "Camera": Camera,
-                        "CustomerId": CustomerId ?? 0,
-                        "AppCreationTime": UniID.prefix(22),
-                        "DeviceId": deviceIDFORSERVER,
-                        "DisplayId":DisplayId?.prefix(22),
-                        "EvaluationDate": evalDateStr,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "EvaluationTypeText": dict.evaluationName ?? "",
-                        "EvaulaterId": EvaulaterId ?? 0,
-                        "FlockAgeId": FlockAgeId == 0 ? "" : FlockAgeId,
-                        "IncubationStyle": iStle,
-                        "ManufacturerId": ManufacturerId == 0 ? "" : ManufacturerId,
-                        "SaveType":SaveType,
-                        "Status_Type":statusType,
-                        "RepresentativeName":sig_Nametext,
-                        "RepresentativeName2":sig_Nametext2,
-                        "RepresentativeNotes":sig_Phonetext,
-                        "SignatureImage": base64Str,
-                        "SignatureImage2": base64Str2,
-                        "SignatureDate":dateSig,
-                        "RoleId":rollID,
-                        "RoleId2":rollID2 == 0 ? "" : rollID2,
-                        "SiteId": SiteId,
-                        "TSRId": TSRId,
-                        "UserId": UserId,
-                        "VisitId": VisitId,
-                        "AssessmentId":serverAssessmentId,
-                        "BreedBirds": breeddId == 0 ? "" : breeddId,
-                        "EggsPerFlat": EggID == 0 ? "" : EggID,
-                        "ManufacturerOther": manOther,
-                        "BreedOfBirdsOther": breeeddOther,
-                        "EggsPerFlatOther": egggOther,
-                        "Notes": Notes,
-                        "DoubleSanitation":hacheryAntibiotics,
-                        "SanitationEmbrex": false,//userInfo?.isExtendedPE ?? false, for PE International this required to be false
-                        "IsAutomaticFail" :  dict.isAutomaticFail ?? 0, //userInfo?.isAutomaticFail ?? false,
-                        "FSTSignatureImage": FSRsign,
-                        "IsInterMicrobial" : extndMicro,
-                        "RefrigeratorNote": re_note,
-                        "RegionId" : RegionalId,
-                        "CountryId":countryIDSelc,
-                        "IsInovoFluids": inovoFluid,
-                        "IsBasicTrfAssessment" :  basicTransfer,
-                        "ChlorineId" : dict.clorineId
-                        
-                    ] as JSONDictionary
-                } else {
-                    json = [
-                        "AppAssessmentId":String(AssessmentId),
-                        "Camera": Camera,
-                        "CustomerId": CustomerId ?? 0,
-                        "AppCreationTime": UniID.prefix(22),
-                        "DeviceId": deviceIDFORSERVER,
-                        "DisplayId":DisplayId?.prefix(22),
-                        "EvaluationDate": evalDateStr,
-                        "EvaluationId": EvaluationId ?? 0,
-                        "EvaluationTypeText": dict.evaluationName ?? "",
-                        "EvaulaterId": EvaulaterId ?? 0,
-                        "FlockAgeId": FlockAgeId == 0 ? "" : FlockAgeId,
-                        "IncubationStyle": iStle,
-                        "ManufacturerId": ManufacturerId == 0 ? "" : ManufacturerId,
-                        "SaveType":SaveType,
-                        "Status_Type":statusType,
-                        "SiteId": SiteId,
-                        "TSRId": TSRId,
-                        "UserId": UserId,
-                        "VisitId": VisitId,
-                        "AssessmentId":serverAssessmentId,
-                        "BreedBirds": breeddId == 0 ? "" : breeddId,
-                        "EggsPerFlat": EggID == 0 ? "" : EggID,
-                        "ManufacturerOther": manOther,
-                        "BreedOfBirdsOther": breeeddOther,
-                        "EggsPerFlatOther": egggOther,
-                        "Notes": Notes,
-                        "DoubleSanitation":hacheryAntibiotics,
-                        "SanitationEmbrex": false,
-                        "IsAutomaticFail" :  dict.isAutomaticFail ?? 0 ,
-                        "FSTSignatureImage": FSRsign,
-                        "IsInterMicrobial" : extndMicro,
-                        "RefrigeratorNote": re_note,
-                        "RegionId" : RegionalId,
-                        "CountryId":countryIDSelc,
-                        "IsInovoFluids": inovoFluid,
-                        "IsBasicTrfAssessment" :  basicTransfer,
-                        "ChlorineId" : dict.clorineId
-                        
-                    ] as JSONDictionary
-                }
-            } else {
-                json = [
-                    "AppAssessmentId":String(AssessmentId),
-                    "DisplayId":DisplayId?.prefix(22),
-                    "VisitId": VisitId,
-                    "CustomerId": CustomerId,
-                    "SiteId": SiteId,
-                    "IncubationStyle": iStle,
-                    "EvaluationId": EvaluationId,
-                    "BreedBirds": breeddId == 0 ? "" : breeddId,
-                    "EvaluationDate": evalDateStr,
-                    "EvaulaterId": EvaulaterId ?? 0,
-                    "TSRId": TSRId,
-                    "Camera": Camera,
-                    "ManufacturerId": ManufacturerId == 0 ? "" : ManufacturerId,
-                    "EggsPerFlat": EggID == 0 ? "" : EggID,
-                    "Notes": Notes,
-                    "FlockAgeId": FlockAgeId == 0 ? "" : FlockAgeId,
-                    "SaveType":SaveType,
-                    "UserId": UserId,
-                    "DeviceId": deviceIDFORSERVER,
-                    "RepresentativeName":sig_Nametext,
-                    "RepresentativeName2":sig_Nametext2,
-                    "RepresentativeNotes":sig_Phonetext,
-                    "SignatureImage": base64Str,
-                    "SignatureImage2": base64Str2,
-                    "ManufacturerOther": manOther,
-                    "BreedOfBirdsOther": breeeddOther,
-                    "EggsPerFlatOther": egggOther,
-                    "RoleId":rollID,
-                    "RoleId2":rollID2 == 0 ? "" : rollID2,
-                    "EvaluationTypeText": dict.evaluationName,
-                    "AppCreationTime": UniID.prefix(22),
-                    "SignatureDate":dateSig,
-                    "AssessmentId":serverAssessmentId,
-                    "DoubleSanitation":hacheryAntibiotics,
-                    "SanitationEmbrex": false,
-                    "IsAutomaticFail" : dict.isAutomaticFail ?? 0,
-                    "FSTSignatureImage": FSRsign,
-                    "IsInterMicrobial" : extndMicro,
-                    "RefrigeratorNote": re_note ,
-                    "RegionId" : RegionalId,
-                    "CountryId":countryIDSelc,
-                    "IsInovoFluids": inovoFluid,
-                    "IsBasicTrfAssessment" :  basicTransfer,
-                    "ChlorineId" : dict.clorineId
-                ] as JSONDictionary
-            }
-            return json
+
+        // Handle TSR validation
+        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
+        let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
+        let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        handleSelectedTSRValidations(dict, visitNameArray, &tsrId, visitIDArray)
+
+        // Handle manufacturer, eggs, and breed
+        var manufacturer = dict.manufacturer ?? ""
+        var manufacturerOther = ""
+        handleManufacturerValidation(&manufacturer, dict, &manufacturerOther)
+
+        var eggs = ""
+        var eggsOther = ""
+        let noOfEggs = String(dict.noOfEggs ?? 000)
+        handleNoOfEggsValidation(noOfEggs, &eggsOther, &eggs)
+
+        var breed = dict.breedOfBird ?? ""
+        var breedOther = dict.breedOfBirdOther ?? ""
+        handleBreedOfBirdValidations(&breed, &breedOther)
+
+        // Fetch IDs for manufacturer, eggs, and breed
+        let manufacturerDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
+        let manufacturerNameArray = manufacturerDetails.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
+        let manufacturerIDArray = manufacturerDetails.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
+        let manufacturerId = manufacturer != "" ? manufacturerIDArray[manufacturerNameArray.index(of: manufacturer)] as? Int ?? 0 : 0
+
+        let birdBreedDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
+        let birdBreedNameArray = birdBreedDetails.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
+        let birdBreedIDArray = birdBreedDetails.value(forKey: "birdId") as? NSArray ?? NSArray()
+        let breedId = breed != "" ? birdBreedIDArray[birdBreedNameArray.index(of: breed)] as? Int ?? 0 : 0
+
+        let eggsDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
+        let eggsNameArray = eggsDetails.value(forKey: "eggCount") as? NSArray ?? NSArray()
+        let eggsIDArray = eggsDetails.value(forKey: "eggId") as? NSArray ?? NSArray()
+        let eggId = eggs != "" ? eggsIDArray[eggsNameArray.index(of: eggs)] as? Int ?? 0 : 0
+
+        // Handle assessment validation
+        var draft = 0
+        var complete = 1
+        var saveType = 1
+        handleAssessmentIdValidation(&assessmentId, dict, &draft, &complete, &saveType)
+
+        // Handle signature and date
+        let sigDate = dict.sig_Date != "" ? convertDateFormat(inputDate: dict.sig_Date ?? "") : ""
+        var base64Str = ""
+        var base64Str2 = ""
+        handleBase64ImageEncoding(dict.sig ?? 0, &base64Str, dict, dict.sig2 ?? 0, &base64Str2)
+
+        // Handle incubation style
+        let incubationDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
+        let incubationNameArray = incubationDetails.value(forKey: "incubationStylesName") as? NSArray ?? NSArray()
+        let incubationIDArray = incubationDetails.value(forKey: "incubationId") as? NSArray ?? NSArray()
+        let incubationId = incubationStyle != nil ? incubationIDArray[incubationNameArray.index(of: incubationStyle ?? "")] as? Int ?? 0 : 0
+
+        // Handle roles
+        let roleDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
+        let roleNameArray = roleDetails.value(forKey: "roleName") as? NSArray ?? NSArray()
+        let roleIDArray = roleDetails.value(forKey: "roleId") as? NSArray ?? NSArray()
+        let roleId = dict.sig_EmpID?.count ?? 0 > 1 ? roleIDArray[roleNameArray.index(of: dict.sig_EmpID ?? "")] as? Int ?? 0 : 0
+        let roleId2 = dict.sig_EmpID2?.count ?? 0 > 1 ? roleIDArray[roleNameArray.index(of: dict.sig_EmpID2 ?? "")] as? Int ?? 0 : 0
+
+        // Format evaluation date
+        let dateFormatter = CodeHelper.sharedInstance.getDateFormatterObj("")
+        dateFormatter.dateFormat = regionId == 3 ? appDelegateObj.MMddyyyStr : appDelegateObj.ddMMyyyStr
+        let evalDateObj = dateFormatter.date(from: evaluationDate)
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let evalDateStr = dateFormatter.string(from: evalDateObj ?? Date())
+
+        // Handle FSR signature
+        let fsrSign = certificationData.first?.fsrSign ?? ""
+
+        // Construct JSON
+        var json: JSONDictionary = [
+            "AppAssessmentId": String(assessmentId),
+            "DisplayId": "C-\(uniID)".prefix(22),
+            "VisitId": visitId,
+            "CustomerId": customerId,
+            "SiteId": siteId,
+            "IncubationStyle": incubationId,
+            "EvaluationId": evaluationId,
+            "BreedBirds": breedId == 0 ? "" : breedId,
+            "EvaluationDate": evalDateStr,
+            "EvaulaterId": evaluatorId ?? 0,
+            "TSRId": tsrId,
+            "Camera": camera,
+            "ManufacturerId": manufacturerId == 0 ? "" : manufacturerId,
+            "EggsPerFlat": eggId == 0 ? "" : eggId,
+            "Notes": dict.notes,
+            "FlockAgeId": dict.isFlopSelected == 0 ? "" : dict.isFlopSelected,
+            "SaveType": saveType,
+            "UserId": dict.userID,
+            "DeviceId": deviceIdForServer,
+            "RepresentativeName": dict.sig_Name,
+            "RepresentativeName2": dict.sig_Name2,
+            "RepresentativeNotes": dict.sig_Phone,
+            "SignatureImage": base64Str,
+            "SignatureImage2": base64Str2,
+            "ManufacturerOther": manufacturerOther,
+            "BreedOfBirdsOther": breedOther,
+            "EggsPerFlatOther": eggsOther,
+            "RoleId": roleId,
+            "RoleId2": roleId2 == 0 ? "" : roleId2,
+            "EvaluationTypeText": dict.evaluationName,
+            "AppCreationTime": uniID.prefix(22),
+            "SignatureDate": sigDate,
+            "AssessmentId": serverAssessmentId,
+            "DoubleSanitation": hatcheryAntibiotics,
+            "SanitationEmbrex": regionId == 3 ? dict.sanitationValue : false,
+            "HasChlorineStrips": dict.isChlorineStrip ?? false,
+            "IsAutomaticFail": dict.isAutomaticFail ?? false,
+            "FSTSignatureImage": fsrSign,
+            "IsEMRequested": isEMRequested,
+            "RefrigeratorNote": regionId == 3 ? dict.refrigeratorNote ?? "" : UserDefaults.standard.value(forKey: "re_note") as? String ?? "",
+            "RegionId": regionId,
+            "IsInterMicrobial": extndMicro,
+            "CountryId": countryId,
+            "IsInovoFluids": fluid,
+            "IsBasicTrfAssessment": basicTransfer,
+            "ChlorineId": dict.clorineId,
+            "Handmix": isHandMix
+        ]
+
+        if regionId == 3 && saveType == 0 && dict.statusType == 2 {
+            json["Status_Type"] = dict.statusType
         }
+
+        return json
     }
     
     // MARK: - Post Request for Extended Microbial's
@@ -5342,8 +4665,8 @@ extension PEDashboardViewController{
                 let infoImageDataResponse = InfoImageDataResponse(questionInfo)
                 let categoryCount = filterCategoryCount(peNewAssessmentOf: peNewAssessmentWas)
                 if categoryCount > 0 {
-                    for  cat in  pECategoriesAssesmentsResponse.peCategoryArray {
-                        for (index, ass) in cat.assessmentQuestions.enumerated(){
+                    for cat in  pECategoriesAssesmentsResponse.peCategoryArray {
+                        for (index, ass) in cat.assessmentQuestions.enumerated() {
                             var peNewAssessmentNew = PENewAssessment()
                             peNewAssessmentNew = peNewAssessmentWas
                             peNewAssessmentNew.serverAssessmentId = peNewAssessmentWas.serverAssessmentId
@@ -7198,5 +6521,10 @@ extension PEDashboardViewController{
             hideRejectedCount()
         }
         getScheduledAssessments()
+    }
+}
+extension Collection {
+    subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }

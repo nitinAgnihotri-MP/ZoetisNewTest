@@ -41,10 +41,6 @@ public class AddEmployeesDAO{
         }
     }
     
-    func saveEmployeesByCertification(loginUserId:String, certificationId:String, customerId:String, siteId:String, employeeObj: [VaccinationEmployeeVM]){
-        print(appDelegateObj.testFuntion())
-    }
-    
     func getEmployees(loginUserId:String, customerId:String, siteId:String)-> [VaccinationEmployeeVM]{
         var vaccinationEmployeeArr = [VaccinationHatcheryEmployees]()
         var vaccinationEmpoyeeVMArr = [VaccinationEmployeeVM]()
@@ -370,13 +366,13 @@ public class AddEmployeesDAO{
     }
     
     func removeEmployeeFromBridge(empId:String, userId:String, certificationId:String){
-        var vaccinationCertificationArr = [VaccinationQuestionEmpBridge]()
+      
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationQuestionEmpBridge")
         fetchRequest.returnsObjectsAsFaults = false
         
         fetchRequest.predicate = NSPredicate(format:"userId = %@ AND certificationId = %@  AND empId = %@ ", userId, certificationId, empId)
         do {
-            vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [VaccinationQuestionEmpBridge]
+            var vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [VaccinationQuestionEmpBridge]
             for empBridgeObj in vaccinationCertificationArr{
                 managedContext.delete(empBridgeObj)
             }
@@ -388,12 +384,11 @@ public class AddEmployeesDAO{
     }
     
     func deleteEmpByCategory(empId:String, userId:String, certificationId:String, catId:String, typeId:String){
-        var vaccinationCertificationArr = [VaccinationQuestionEmpBridge]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationQuestionEmpBridge")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format:"userId = %@ AND certificationId = %@  AND empId = %@ AND quesCategoryId = %@ AND quesTypeId = %@", userId, certificationId, empId,catId, typeId )
         do {
-            vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [VaccinationQuestionEmpBridge]
+           var vaccinationCertificationArr = try managedContext.fetch(fetchRequest) as! [VaccinationQuestionEmpBridge]
             for empBridgeObj in vaccinationCertificationArr{
                 managedContext.delete(empBridgeObj)
             }

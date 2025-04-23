@@ -471,32 +471,3 @@ extension PVEViewSNASession{
     }
     
 }
-
-// MARK: - Other Delegates -------------Date Picker Delegate------------------
-
-
-
-extension PVEViewSNASession {
-    
-    private func setBorderRedForMandatoryFiels(forBtn:UIButton) {
-        
-        let superviewCurrent =  forBtn.superview
-        for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                view.layer.borderColor = UIColor.red.cgColor
-                view.layer.borderWidth = 2.0
-            }
-        }
-    }
-    
-    private func setBorderBlackFiels(forBtn:UIButton) {
-        
-        let superviewCurrent =  forBtn.superview
-        for view in superviewCurrent!.subviews {
-            if view.isKind(of:UIButton.self) {
-                view.layer.borderColor = UIColor.black.cgColor
-                view.layer.borderWidth = 2.0
-            }
-        }
-    }
-}

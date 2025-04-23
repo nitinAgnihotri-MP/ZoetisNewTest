@@ -253,13 +253,15 @@ class RequisitionModel {
         }
         
         let headers = CoreDataHandlerMicro().fetchAllData("Microbial_LocationTypeHeaders")
-        print(headers)
+       
         if headers.count > 0 {
             self.actualCreatedHeaders = []
             self.selectedLocationTypes = []
             manageHeaders(headers)
         }
     }
+    
+    
     
     //MARK: - Set data saved in draft
     fileprivate func handleHeadersValidations(_ headers: [Microbial_LocationTypeHeadersSubmitted]) {

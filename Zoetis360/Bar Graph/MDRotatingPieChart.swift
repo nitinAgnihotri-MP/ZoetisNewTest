@@ -519,26 +519,15 @@ class MDRotatingPieChart: UIControl {
     - parameter displayType: an enum representing a display value type
     - returns: a formated text ready to be displayed
     */
-    func formatFromDisplayValueType(_ slice:Slice, displayType:DisplayValueType) -> String {
-    
-        var toRet = ""
-        
-        switch(displayType) {
-        case .value :
-            toRet = properties.nf.string(from: slice.value as NSNumber)!
-            break
-        case .percent :
-            toRet = ((properties.nf.string(from: slice.percent as NSNumber))! + "%")
-            break
-        case .label :
-            toRet = slice.label
-            break
-        default :
-            toRet = slice.label
-            break
+    func formatFromDisplayValueType(_ slice: Slice, displayType: DisplayValueType) -> String {
+        switch displayType {
+        case .value:
+            return properties.nf.string(from: slice.value as NSNumber) ?? ""
+        case .percent:
+            return (properties.nf.string(from: slice.percent as NSNumber) ?? "") + "%"
+        default:
+            return slice.label
         }
-
-        return toRet;
     }
     
     

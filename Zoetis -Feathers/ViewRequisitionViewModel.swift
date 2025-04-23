@@ -28,8 +28,6 @@ class ViewRequisitionViewModel {
                 let requisition_Id = requisition.requisition_Id,
                 let requisitionType = requisition.requisitionType {
                 
-                let caseInfoForrequistion = CoreDataHandlerMicro().fetchAllData("Microbial_EnviromentalSurveyFormSubmitted")
-                
                 let headersForRequisitionId =   CoreDataHandlerMicro().fetchEnviromentalHeadersWith(requisition_Id: requisition_Id, requisitionType: requisitionType)
                 
                 for header in headersForRequisitionId {

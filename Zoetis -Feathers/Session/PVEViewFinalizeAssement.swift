@@ -42,7 +42,7 @@ class PVEViewFinalizeAssement: BaseViewController {
     @IBOutlet weak var complexLbl : UITextField!
     @IBOutlet weak var currentCategoryScoreLbl : UILabel!
     @IBOutlet weak var syncToWebBtn: UIButton!
-    var assessmentArr = NSArray()
+    var assessmentArrIs = NSArray()
     var questionsArr = NSArray()
     var sumOfMaxMarks = Int()
     
@@ -178,7 +178,7 @@ class PVEViewFinalizeAssement: BaseViewController {
             if controller.isKind(of: PVEDashboardViewController.self) {
                 self.navigationController!.popToViewController(controller, animated: true)
                 
-                let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
+                let seq_NumberArr = assessmentArrIs.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
                 
                 var scoreArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(currentTimeStamp, seqNoArr: seq_NumberArr).scoreArr as! [Any]
                 scoreArr.removeLast()
@@ -188,17 +188,15 @@ class PVEViewFinalizeAssement: BaseViewController {
                 var max_MarksArr = CoreDataHandlerPVE().fetchScoredArrForSyncId(currentTimeStamp, seqNoArr: seq_NumberArr).max_MarksArr as! [Int]
                 
                 if currentSel_seq_Number == 6 {
-                    let seq_NumberArr = assessmentArr.value(forKey: "max_Mark")  as? NSArray ?? NSArray()
+                    let seq_NumberArr = assessmentArrIs.value(forKey: "max_Mark")  as? NSArray ?? NSArray()
                     // let marks = seq_NumberArr[Int(truncating: currentSel_seq_Number) - 1] as! Int
                     let marks = seq_NumberArr.lastObject as! Int
                     max_MarksArr.append(marks)
                 }
                 
-                let catArray = assessmentArr.value(forKey: "category_Name") as? NSArray ?? NSArray()
+                let catArray = assessmentArrIs.value(forKey: "category_Name") as? NSArray ?? NSArray()
                 
                 CoreDataHandlerPVE().updateDraftToSync(currentTimeStamp, type: "sync", maxScoreArray: max_MarksArr as NSArray, scoreArray: scoreArr as NSArray, categoryArray: catArray)
-                
-                let valuee = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_Sync")
                 
                 break
             }
@@ -217,12 +215,12 @@ class PVEViewFinalizeAssement: BaseViewController {
         assessmentDateLbl.text = getDraftValueForKey(key: "evaluationDate") as? String
         
         let selectedBirdTypeId = getDraftValueForKey(key: "selectedBirdTypeId") as? Int
-        assessmentArr = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: currentTimeStamp)
+        assessmentArrIs = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: currentTimeStamp)
         
         let selectedItem = IndexPath(row: Int(truncating: NSNumber(value: currentSel_CategoryIndex)), section: 0)
         collectionView.selectItem(at: selectedItem, animated: true, scrollPosition: .centeredVertically)
         
-        let seq_Number = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
+        let seq_Number = assessmentArrIs.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
         currentSel_seq_Number = seq_Number[self.currentSel_CategoryIndex] as! NSNumber
         fetchCurrentArrayForSeqNo(seq_Number: currentSel_seq_Number)
         
@@ -241,7 +239,7 @@ class PVEViewFinalizeAssement: BaseViewController {
         
         currentCategoryTotalScore = 0
         let selectedBirdTypeId = getDraftValueForKey(key: "selectedBirdTypeId") as? Int
-        assessmentArr = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: currentTimeStamp)
+        assessmentArrIs = CoreDataHandlerPVE().getSyncdAssementsArr(selectedBirdTypeId: selectedBirdTypeId!, type: "sync", syncId: currentTimeStamp)
         
         tblView.reloadData()
         setMarksLabel()
@@ -252,7 +250,7 @@ class PVEViewFinalizeAssement: BaseViewController {
         
         if currentSel_seq_Number == 6 {
             
-            let seq_NumberArr = assessmentArr.value(forKey: "max_Mark")  as? NSArray ?? NSArray()
+            let seq_NumberArr = assessmentArrIs.value(forKey: "max_Mark")  as? NSArray ?? NSArray()
             let marks = seq_NumberArr.lastObject as! Int
             currentCategoryScoreLbl.text = "\(String(format: "%.2f", sharedManager.vaccineEvaluationScoreTotal)) / \(String(describing: marks))"
             
@@ -381,15 +379,10 @@ class PVEViewFinalizeAssement: BaseViewController {
         selectedIndex = indexPath!.section as Int
         
         questionsArr = CoreDataHandlerPVE().fetchDraftAssQuestion(currentSel_seq_Number, type: "sync", syncId: currentTimeStamp) as NSArray
-        var max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
-        
-        
-        var idArr = questionsArr.value(forKey: "id") as? [Int]
-        var id = idArr![indexPath!.row]
-        
-        var commentArr = questionsArr.value(forKey: "comment") as? [String]
-        var comment = commentArr![indexPath!.row]
-        
+        var max_ScoreArr: [Int]?
+        var idArr: [Int]?
+        var commentArr: [String]?
+     
         let storyBoard : UIStoryboard = UIStoryboard(name: Constants.Storyboard.pveStoryboard, bundle:nil)
         let vc = storyBoard.instantiateViewController(withIdentifier: "PVECommentPopupViewController") as! PVECommentPopupViewController
         vc.delegate = self
@@ -409,12 +402,10 @@ class PVEViewFinalizeAssement: BaseViewController {
                 vc.seq_Number =  max_ScoreArr![0]
                 
                 idArr = liveQuesArr.value(forKey: "id") as? [Int]
-                id = idArr![indexPath!.row]
-                vc.rowId = id
+                vc.rowId = idArr![indexPath!.row]
                 
                 commentArr = liveQuesArr.value(forKey: "comment") as? [String]
-                comment = commentArr![indexPath!.row]
-                vc.commentStr = comment
+                vc.commentStr = commentArr![indexPath!.row]
             }
             else if selectedIndex == 5
             {
@@ -422,22 +413,18 @@ class PVEViewFinalizeAssement: BaseViewController {
                 vc.seq_Number = max_ScoreArr![0]
                 
                 idArr = inactiveQuessArr.value(forKey: "id") as? [Int]
-                id = idArr![indexPath!.row]
-                vc.rowId = id
+                vc.rowId = idArr![indexPath!.row]
                 
                 commentArr = inactiveQuessArr.value(forKey: "comment") as? [String]
-                comment = commentArr![indexPath!.row]
-                vc.commentStr = comment
+                vc.commentStr = commentArr![indexPath!.row]
             }
             else{
                 max_ScoreArr = otherQuessArr.value(forKey: "seq_Number") as? [Int]
                 vc.seq_Number = max_ScoreArr![0]
                 idArr = otherQuessArr.value(forKey: "id") as? [Int]
-                id = idArr![indexPath!.row]
-                vc.rowId = id
+                vc.rowId =  idArr![indexPath!.row]
                 commentArr = otherQuessArr.value(forKey: "comment") as? [String]
-                comment = commentArr![indexPath!.row]
-                vc.commentStr = comment
+                vc.commentStr = commentArr![indexPath!.row]
             }
         }
         
@@ -445,12 +432,10 @@ class PVEViewFinalizeAssement: BaseViewController {
             max_ScoreArr = questionsArr.value(forKey: "seq_Number") as? [Int]
             vc.seq_Number = max_ScoreArr![0]
             idArr = questionsArr.value(forKey: "id") as? [Int]
-            id = idArr![indexPath!.row]
-            vc.rowId = id
+            vc.rowId = idArr![indexPath!.row]
             
             commentArr = questionsArr.value(forKey: "comment") as? [String]
-            comment = commentArr![indexPath!.row]
-            vc.commentStr = comment
+            vc.commentStr = commentArr![indexPath!.row]
         }
         self.navigationController?.present(vc, animated: false, completion: nil)
     }
@@ -1268,12 +1253,12 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
 extension PVEViewFinalizeAssement: UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return assessmentArr.count
+        return assessmentArrIs.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewID", for: indexPath as IndexPath) as! CollectionViewCell
-        let categoryArr = assessmentArr.value(forKey: "category_Name") as? NSArray ?? NSArray()
+        let categoryArr = assessmentArrIs.value(forKey: "category_Name") as? NSArray ?? NSArray()
         cell.categoryName.text = categoryArr[indexPath.row] as? String
         return cell
     }
@@ -1301,7 +1286,7 @@ extension PVEViewFinalizeAssement: UICollectionViewDelegate, UICollectionViewDat
         
         self.currentSel_CategoryIndex = currentSel_CategoryIndex
         CoreDataHandlerPVE().updateDraftSNAFor(currentTimeStamp, syncedStatus: true, text: self.currentSel_CategoryIndex, forAttribute: "xSelectedCategoryIndex")
-        let seq_NumberArr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
+        let seq_NumberArr = assessmentArrIs.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
         currentSel_seq_Number = seq_NumberArr[self.currentSel_CategoryIndex] as! NSNumber
         fetchCurrentArrayForSeqNo(seq_Number: currentSel_seq_Number)
     }
@@ -1309,7 +1294,7 @@ extension PVEViewFinalizeAssement: UICollectionViewDelegate, UICollectionViewDat
     func checkAllCategorySeledtedOneQuestion() -> Bool {
         
         var allCategoryAttampted = Bool()
-        let seq_NumberArrr = assessmentArr.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
+        let seq_NumberArrr = assessmentArrIs.value(forKey: "seq_Number")  as? NSArray ?? NSArray()
         for (ind, _) in seq_NumberArrr.enumerated() {
             let seqNo = seq_NumberArrr[ind] as! NSNumber
             if seqNo == 6 {

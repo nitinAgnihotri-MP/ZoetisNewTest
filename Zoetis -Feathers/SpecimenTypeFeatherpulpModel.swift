@@ -14,13 +14,13 @@ class SpecimenTypeFeatherpulpModel {
     let statusCode: Int?
     let message: String?
     
-    var specimenTypeArray: [SpecimenType]?
+    var specimenTypeArrayIs: [SpecimenType]?
     
     init(_ json: JSON) {
         success = json["IsSuccess"].boolValue
         statusCode = json["StatusCode"].intValue
         message = json["DisplayMessage"].stringValue
-        specimenTypeArray = json["ResponseData"].arrayValue.map { SpecimenType($0) }
+        specimenTypeArrayIs = json["ResponseData"].arrayValue.map { SpecimenType($0) }
     }
     
     func getAllSpecimenTypes(array: [SpecimenType]) -> [SpecimenType] {

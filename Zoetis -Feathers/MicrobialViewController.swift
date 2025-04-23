@@ -817,7 +817,7 @@ extension MicrobialViewController {
             guard let self = self, error == nil else { return }
             let jsonObject = SpecimenTypeFeatherpulpModel(json)//LocationTypeValues(json)
             let dropdownManager = ZoetisDropdownShared.sharedInstance
-            dropdownManager.sharedAllSpecimenTypeValuesArray =  jsonObject.getAllSpecimenTypes(array: jsonObject.specimenTypeArray ?? [])
+            dropdownManager.sharedAllSpecimenTypeValuesArray =  jsonObject.getAllSpecimenTypes(array: jsonObject.specimenTypeArrayIs ?? [])
             self.fetchAllMicrobialBirdTypes()
         })
     }

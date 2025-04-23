@@ -37,40 +37,31 @@ class TroubleshootingSurveyVC:BaseViewController
     @IBOutlet weak var buttonMenu: UIButton!
     
     @IBAction func actionMenu(_ sender: Any) {
-        //self.onSlideMenuButtonPressed(self.buttonMenu)
         NotificationCenter.default.post(name: NSNotification.Name("LeftMenuBtnNoti"), object: nil, userInfo: nil)
     }
     
     
     @IBAction func siteBtnAction(_ sender: UIButton) {
         
-       if appDelegate.selectedCompany == "Training"
+        if appDelegate.selectedCompany == "Training"
         {
-        
-        setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.siteId , dropDownArr: dropdownManager.sharedHatcherySiteArrMicroabial ?? [])
+            setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.siteId , dropDownArr: dropdownManager.sharedHatcherySiteArrMicroabial ?? [])
         }
         else
         {
-          let alert = UIAlertController(title: "App Message", message: "No data.", preferredStyle: UIAlertController.Style.alert)
-
-                // add an action (button)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-
-                // show the alert
-                self.present(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "App Message", message: "No data.", preferredStyle: UIAlertController.Style.alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
     @IBAction func companyBtnAction(_ sender: UIButton) {
         
-          var customerNamesArray = NSArray()
-                        var customerDetailsArray = NSArray()
-                        customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer")
-                        customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray()
-             
-             //   print("company fearther pulp :\(customerNamesArray)")
-             
-             setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.company, dropDownArr: customerNamesArray as? [String] )
+        var customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer")
+        var customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray()
+        setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.company, dropDownArr: customerNamesArray as? [String] )
     }
     
     func setDropdrown(_ sender: UIButton, clickedField:String, dropDownArr:[String]?){
@@ -81,22 +72,14 @@ class TroubleshootingSurveyVC:BaseViewController
             }
             self.dropHiddenAndShow()
             
-        } else {
-            // fetchResponse(clickedField: clickedField)
         }
     }
     
     @IBAction func reviewerBtnAction(_ sender: UIButton) {
-        
-        var reviewerNamesArray = NSArray()
-                               var reviewerDetailsArray = NSArray()
-                               reviewerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer")
-                               reviewerNamesArray = reviewerDetailsArray.value(forKey: "reviewerName") as? NSArray ?? NSArray()
-                                
-                               //   print("reviewer Name---\(reviewerNamesArray)")
-              
-              setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.reviewer, dropDownArr: reviewerNamesArray as? [String])
-        
+  
+       var reviewerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer")
+       var reviewerNamesArray = reviewerDetailsArray.value(forKey: "reviewerName") as? NSArray ?? NSArray()
+        setDropdrown(sender, clickedField: Constants.ClickedFieldMicrobialSurvey.reviewer, dropDownArr: reviewerNamesArray as? [String])
     }
     
     
@@ -109,22 +92,17 @@ class TroubleshootingSurveyVC:BaseViewController
                 
             case Constants.ClickedFieldMicrobialSurvey.company:do {
                 appDelegate.selectedCompany = selectedValue
-                                             
-            //   print("selected Value :\(selectedValue)")
-
-            cell.selectedCompanyTxt.text = selectedValue
-        }
-        case Constants.ClickedFieldMicrobialSurvey.siteId:do {
-                //self.dropdownManager.selectedAgeOfBirdsPVE = selectedValue
+                cell.selectedCompanyTxt.text = selectedValue
+            }
+            case Constants.ClickedFieldMicrobialSurvey.siteId:do {
                 cell.siteTxt.text = selectedValue
-                }
+            }
                 
-        case Constants.ClickedFieldMicrobialSurvey.reviewer:do {
-                //self.dropdownManager.selectedBreedOfBirdsPVE = selectedValue
+            case Constants.ClickedFieldMicrobialSurvey.reviewer:do {
                 cell.reviewerTxt.text = selectedValue
-                }
+            }
                 
-        default:
+            default:
                 do {print(appDelegateObj.testFuntion())}
             }
         }
@@ -145,22 +123,18 @@ class TroubleshootingSurveyVC:BaseViewController
 }
 
 extension TroubleshootingSurveyVC: UITableViewDelegate,UITableViewDataSource,TroubleshootingSampleInfoCellDelegate{
- 
+    
     func noOfPlates(count: Int, clicked: Bool) {
         rowCount = count
         
         if (rowCount > 0)
         {
-        isPlusBtnClicked = clicked
+            isPlusBtnClicked = clicked
         }
         else{
             isPlusBtnClicked = false
         }
         TroubleshootingTableView.reloadData()
-        
-         //   print("####>>>>>>\(isPlusBtnClicked)")
-        
-        
         
     }
     
@@ -231,29 +205,29 @@ extension TroubleshootingSurveyVC: UITableViewDelegate,UITableViewDataSource,Tro
                 cell.barcodeTxt.textColor = UIColor.black
             }
             
-                barcodeForPlateId =  cell.barcodeTxt.text ?? " "
-
+            barcodeForPlateId =  cell.barcodeTxt.text ?? " "
+            
             
             TroubleshootingTableView.allowsSelection = false
             return cell
             
-            }
+        }
         case 1:do{
             let cell = tableView.dequeueReusableCell(withIdentifier: "TroubleshootingSampleInfoCell", for: indexPath) as! TroubleshootingSampleInfoCell
             cell.delegate = self
             return cell
             
-            }
+        }
         case 2:do{
             let cell = tableView.dequeueReusableCell(withIdentifier: "TroubleshootingTextFieldInfoCell", for: indexPath) as! TroubleshootingTextFieldInfoCell
             
             cell.PlateIdTxt.text = barcodeForPlateId + "-\(String(displayPlateIdCount))"
-                      
+            
             displayPlateIdCount = displayPlateIdCount + 1
             
             return cell
             
-            }
+        }
             
         default:
             return UITableViewCell()

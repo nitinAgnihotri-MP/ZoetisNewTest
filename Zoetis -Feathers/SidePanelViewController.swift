@@ -89,11 +89,7 @@ class SidePanelViewController: UIViewController {
         print("<<<<",self)
         super.viewDidLoad()
         
-        let moduleID = UserDefaults.standard.integer(forKey: "moduleID") as? Int
-        let userType =   UserDefaults.standard.string(forKey:"userType")
-        
-        let ModuleId =   UserDefaults.standard.string(forKey:"ModuleId")
-        
+        let userType =   UserDefaults.standard.string(forKey:"userType")        
         
         if userType == "PE" {// For PE
             updateArrayMenuOptions()

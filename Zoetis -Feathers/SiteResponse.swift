@@ -45,11 +45,11 @@ public struct Site {
         siteName = json["SiteName"].stringValue
         customerId =  json["CustomerId"].intValue
         complexId =  json["CustomerId"].intValue
-        var siteNametext = siteName ?? ""
-        var idN =  siteId ?? 0
-        var siteIdN = siteId
-        var complexIdN = complexId ?? 0
-        var customerIdN = customerId ?? 0
+        let siteNametext = siteName ?? ""
+        let idN =  siteId ?? 0
+      
+        let complexIdN = complexId ?? 0
+        let customerIdN = customerId ?? 0
         CoreDataHandlerPE().saveSitesInDB(NSNumber(value: idN), siteId:NSNumber(value: idN ?? 0), complexId: NSNumber(value: complexIdN), customerId: NSNumber(value: customerIdN), siteName: siteNametext)
         
     }
