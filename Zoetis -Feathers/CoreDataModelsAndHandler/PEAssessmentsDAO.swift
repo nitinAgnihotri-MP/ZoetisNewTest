@@ -298,7 +298,7 @@ class PEAssessmentsDAO{
         return vaccinationCertificationArr
     }
     
-    func getVMObj(userId:String, customerId:Int64 = 0, siteId:Int64 = 0)->[PENewAssessment]{
+    func getVMObj(userId:String)->[PENewAssessment]{
         var assessmentVMArr = [PENewAssessment]()
         let assessmentArr = getAssesmentsMo(userId:userId)
         for assessment in assessmentArr{
@@ -309,7 +309,7 @@ class PEAssessmentsDAO{
         return assessmentVMArr
     }
     
-    func getVMRObj(userId:String, customerId:Int64 = 0, siteId:Int64 = 0)->[PENewAssessment]{
+    func getVMRObj(userId:String)->[PENewAssessment] {
         var assessmentVMArr = [PENewAssessment]()
         let assessmentArr = getRejectedAssesmentsMo(userId:userId)
         for assessment in assessmentArr {

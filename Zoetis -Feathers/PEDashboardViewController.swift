@@ -174,7 +174,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         let customerId = userDefault.integer(forKey: "PE_Selected_Customer_Id")
         let siteId = userDefault.integer(forKey: "PE_Selected_Site_Id")
         self.checkDataForSyncViewDidAppear()
-        self.upcomingCertificationsArr =  PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , customerId: Int64(customerId), siteId: Int64(siteId))
+        self.upcomingCertificationsArr =  PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "")
         
         if upcomingCertificationsArr.count > 0
         {
@@ -280,20 +280,14 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
             
         } else {
             peNewAssessment = PENewAssessment()
-            var pECategoriesAssesmentsResponseObj = PECategoriesAssesmentsResponse(nil)
-            let jsonRe = ((getJSON("QuestionAns") ?? nil) ?? JSON())
-            pECategoriesAssesmentsResponseObj = PECategoriesAssesmentsResponse(jsonRe)
-            ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession.append(pECategoriesAssesmentsResponseObj)
+            ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession.append(PECategoriesAssesmentsResponse(jsonRe))
         }
-        
-        let userDefaults = UserDefaults.standard
-        let decoded  = userDefaults.data(forKey: "finalizeArray") ?? Data()
         peHeaderViewController = PEHeaderViewController()
         peHeaderViewController.titleOfHeader = "Process Evaluation"
         peHeaderViewController.showSession = checkCurrentAssessmentData()
         peHeaderViewController.delegatePE = self
         let assessmentInOfflineFromDb = getAssessmentInOfflineFromDb()
-        if  assessmentInOfflineFromDb  > 0 {
+        if assessmentInOfflineFromDb > 0 {
             peHeaderViewController.titleofSync = String(assessmentInOfflineFromDb)
         } else {
             peHeaderViewController.titleofSync = "0"
@@ -528,7 +522,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         let customerId = userDefault.integer(forKey: "PE_Selected_Customer_Id")
         let siteId = userDefault.integer(forKey: "PE_Selected_Site_Id")
         
-        self.upcomingCertificationsArr =  PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , customerId: Int64(customerId), siteId: Int64(siteId))
+        self.upcomingCertificationsArr =  PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "")
         if anyCategoryContainCustomerOrNot(){
             let peNewAssessmentSurrentIs = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession[0].peNewAssessment
             if peNewAssessmentSurrentIs?.customerName == nil {
@@ -576,8 +570,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         if count  > 0 {
             if count > 2 || count == 2 {
                 let date = resultCatSecondAssessment[0].evaluationDate ?? ""
-                var text2 = date + ""  + "(" + (resultCatSecondAssessment[0].customerName ?? "") + ", "
-                text2 = text2  + (resultCatSecondAssessment[0].siteName ?? "") + ")"
+                var text2 = date + ""  + "(" + (resultCatSecondAssessment[0].customerName ?? "") + ", " + (resultCatSecondAssessment[0].siteName ?? "") + ")"
                 date2Label.text = date
                 date2Label.isHidden = false
                 var resultInAssessment1 : [Double] = []
@@ -699,8 +692,8 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     }
     // MARK: - Get Last two Assessment from Data Base
     fileprivate func handleDataCatIDToSubmitNumberIdArray(_ dataCatIDToSubmitNumberIdArray: inout [Int], _ fetchRequestNew: NSFetchRequest<any NSFetchRequestResult>, _ evaluationDateLatestAssessment: String, _ evaluationDateLatestSubmitId: String, _ managedContext: NSManagedObjectContext) {
-        for i in 0...dataCatIDToSubmitNumberIdArray.count-1 {
-            fetchRequestNew.predicate = NSPredicate(format: "evaluationDate == %@ AND catID == %d AND dataToSubmitID == %@", argumentArray: [ evaluationDateLatestAssessment,dataCatIDToSubmitNumberIdArray[i],evaluationDateLatestSubmitId])
+        for index in 0...dataCatIDToSubmitNumberIdArray.count-1 {
+            fetchRequestNew.predicate = NSPredicate(format: "evaluationDate == %@ AND catID == %d AND dataToSubmitID == %@", argumentArray: [ evaluationDateLatestAssessment,dataCatIDToSubmitNumberIdArray[index],evaluationDateLatestSubmitId])
             fetchRequestNew.returnsObjectsAsFaults = false
             
             do {
@@ -740,11 +733,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     
     fileprivate func handleDataToSubmitNumberValidations(_ managedContext: NSManagedObjectContext, _ fetchRequest: NSFetchRequest<any NSFetchRequestResult>, _ allAssesmentDraftArr: inout [PE_AssessmentInOffline], _ carColIdArrayDraftNumbers: inout NSArray, _ dataToSubmitNumberIdArray: inout [Int], _ catColIdArrayDraftNumbers: inout NSArray, _ submitIDArray: inout NSArray) {
         
-        var tempArr = NSArray()
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if results?.count != 0 {
-                tempArr = results as NSArray? ?? []
+                let tempArr = results as NSArray? ?? []
                 allAssesmentDraftArr = results as? [PE_AssessmentInOffline] ?? []
                 carColIdArrayDraftNumbers  = tempArr.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
                 
@@ -841,8 +833,8 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     }
     
     fileprivate func manageDataAtIdArray(_ dataCatIDToSubmitNumberIdArray: inout [Int], _ fetchRequestNew: NSFetchRequest<any NSFetchRequestResult>, _ evaluationDateLatestAssessment: String, _ evaluationDateLatestSubmitId: String, _ managedContext: NSManagedObjectContext) {
-        for i in 0...dataCatIDToSubmitNumberIdArray.count-1 {
-            fetchRequestNew.predicate = NSPredicate(format: "evaluationDate == %@ AND catID == %d AND dataToSubmitID == %@", argumentArray: [ evaluationDateLatestAssessment,dataCatIDToSubmitNumberIdArray[i],evaluationDateLatestSubmitId])
+        for index in 0...dataCatIDToSubmitNumberIdArray.count-1 {
+            fetchRequestNew.predicate = NSPredicate(format: "evaluationDate == %@ AND catID == %d AND dataToSubmitID == %@", argumentArray: [ evaluationDateLatestAssessment,dataCatIDToSubmitNumberIdArray[index],evaluationDateLatestSubmitId])
             fetchRequestNew.returnsObjectsAsFaults = false
             
             do {
@@ -878,11 +870,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     }
     
     fileprivate func handleManagedContext(_ managedContext: NSManagedObjectContext, _ fetchRequest: NSFetchRequest<any NSFetchRequestResult>, _ allAssesmentDraftArr: inout [PE_AssessmentInOffline], _ carColIdArrayDraftNumbers: inout NSArray, _ dataToSubmitNumberIdArray: inout [Int], _ catColIdArrayDraftNumbers: inout NSArray, _ submitIDArray: inout NSArray) {
-        var tempArr = NSArray()
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if results?.count != 0 {
-                tempArr = results as NSArray? ?? []
+                let tempArr = results as NSArray? ?? []
                 allAssesmentDraftArr = results as? [PE_AssessmentInOffline] ?? []
                 carColIdArrayDraftNumbers  = tempArr.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
                 
@@ -1086,26 +1077,24 @@ extension PEDashboardViewController: IAxisValueFormatter{
         let sharedPEQueueArray = ZoetisDropdownShared.sharedInstance.sharedPEQueue
         let count = sharedPEQueueArray?.count ?? 0
         
-        if count > 0 {
-            if count == 1 {
-                barChart1.delegate = self
-                barChart1.xAxis.valueFormatter = self
-                let peCategoriesAssesmentsResponse = sharedPEQueueArray?[0]
-                let categoriesArray = peCategoriesAssesmentsResponse?.peCategoryArray as? [PECategory]
-                var resultInAssessment : [Double] = []
-                var dataPoints : [String] = []
-                if categoriesArray?.count ?? 0 > 0 {
-                    for obj in categoriesArray ?? [] {
-                        resultInAssessment.append(Double(obj.resultMark ?? 0))
-                        let name = obj.categoryName ?? ""
-                        var data = changeStringToArrayLevel3(name:name)
-                        data = data + "(" + String(obj.maxMark ?? 0) + ")"
-                        dataPoints.append(data)
-                    }
+        if count > 0,count == 1 {
+            barChart1.delegate = self
+            barChart1.xAxis.valueFormatter = self
+            let peCategoriesAssesmentsResponse = sharedPEQueueArray?[0]
+            let categoriesArray = peCategoriesAssesmentsResponse?.peCategoryArray as? [PECategory]
+            var resultInAssessment : [Double] = []
+            var dataPoints : [String] = []
+            if categoriesArray?.count ?? 0 > 0 {
+                for obj in categoriesArray ?? [] {
+                    resultInAssessment.append(Double(obj.resultMark ?? 0))
+                    let name = obj.categoryName ?? ""
+                    var data = changeStringToArrayLevel3(name:name)
+                    data = data + "(" + String(obj.maxMark ?? 0) + ")"
+                    dataPoints.append(data)
                 }
-                let maxMrk = categoriesArray?[ Int(value) % (categoriesArray?.count ?? 0)].maxMark ?? 0
-                return String(maxMrk)
             }
+            let maxMrk = categoriesArray?[ Int(value) % (categoriesArray?.count ?? 0)].maxMark ?? 0
+            return String(maxMrk)
         }
         return ""
     }
@@ -1245,7 +1234,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         var peAssessmentArray : [PENewAssessment] = []
         
         var drafts  = CoreDataHandlerPE().getSessionAssessmentArrayPEObject(ofCurrentAssessment:true)
-                
+        
         var carColIdArray : [Int] = []
         for obj in drafts {
             if !carColIdArray.contains(obj.dataToSubmitNumber ?? 0){
@@ -1424,22 +1413,16 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     
     // MARK: - Post Images to Server
     fileprivate func ExtendedMicroApi(_ self: PEDashboardViewController) {
-        if self.regionID == 3
-        {
-            if HaveToCallExtendedMicro == true
-            {
-                var saveType = Int()
-                
-                if Constants.isDraftAssessment == true {
-                    saveType = 0
-                }
-                else {
-                    saveType = 1
-                }
-                
-                self.syncExtendedMicrobial(saveType: saveType, statusType: 0)
+        if self.regionID == 3,HaveToCallExtendedMicro == true {
+            var saveType = Int()
+            
+            if Constants.isDraftAssessment == true {
+                saveType = 0
+            } else {
+                saveType = 1
             }
             
+            self.syncExtendedMicrobial(saveType: saveType, statusType: 0)
         }
     }
     
@@ -1455,8 +1438,8 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             } else {
                 self.dismissGlobalHUD(self.view)
                 Helper.showGlobalProgressHUDWithTitle(self.view, title: appDelegateObj.dataSyncInProgressStr + "\n" + noteStr)
-                for i in self.totalImageToSync {
-                    CoreDataHandlerPE().setImageStatusTrue(idArray: i)
+                for indec in self.totalImageToSync {
+                    CoreDataHandlerPE().setImageStatusTrue(idArray: indec)
                 }
                 self.showToastWithTimer(message: Constants.dataSyncCompleted, duration: 2.0)
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
@@ -1494,8 +1477,8 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             } else {
                 self.dismissGlobalHUD(self.view)
                 Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.dataSyncInProgress + "\n" + Constants.noMinimizeWhileSyncing)
-                for i in self.totalImageToSync{
-                    CoreDataHandlerPE().setImageStatusTrue(idArray: i)
+                for index in self.totalImageToSync{
+                    CoreDataHandlerPE().setImageStatusTrue(idArray: index)
                 }
                 self.showToastWithTimer(message: "Data Sync has been completed.", duration: 2.0)
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
@@ -1677,7 +1660,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 var tempArr : [JSONDictionary]  = []
                 var comntArray : [JSONDictionary]  = []
                 var imgArray : [JSONDictionary]  = []
-
+                
                 manageOfflineArrayIteration(getOfflineArray, &carColIdArray, &catArray)
                 handleCatArrSyncResponseValidations(catArray, obj, &catAllRowArray)
                 imgArray.removeAll()
@@ -1748,9 +1731,9 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         for objCtIs in catAllRowArray {
             let json = createSyncRequestForScore(dictArray: objCtIs)
             let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
-            for i in objCtIs.images{
-                if CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) == false {
-                    let jsonIMages = createSyncRequestForImage(dictArray: objCtIs,img:i)
+            for index in objCtIs.images {
+                if CoreDataHandlerPE().imageAlreadySyncStatus(imageId: index) == false {
+                    let jsonIMages = createSyncRequestForImage(dictArray: objCtIs,img:index)
                     imgArray.append(jsonIMages)
                 }
             }
@@ -1763,12 +1746,10 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         for objCtIs in catAllRowArray {
             let json = createSyncRequestForScore(dictArray: objCtIs)
             let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
-            for i in objCtIs.images{
-                let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) as? Bool ?? false
-                if status {
-                    
-                } else {
-                    let jsonIMages = createSyncRequestForImage(dictArray: objCtIs,img:i)
+            for index in objCtIs.images{
+                let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: index)
+                if status == false {
+                    let jsonIMages = createSyncRequestForImage(dictArray: objCtIs,img:index)
                     imgArray.append(jsonIMages)
                 }
             }
@@ -1991,7 +1972,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     // MARK: - Create Sync Request for Comment's
     func createSyncRequestForComment(dictArray: PENewAssessment) -> JSONDictionary {
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -2002,8 +1982,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         if AssessmentId == 0 {
             AssessmentId = dictArray.draftNumber ?? 0
         }
-        
-        var dID = AssessmentId + 2903
         let DisplayId = "C-" + UniID
         
         var serverAssessmentId:Int64 = 0
@@ -2175,7 +2153,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         
         return json
     }
-
+    
     
     // MARK: - Create Sync Request for DOA's Data
     func createSyncRequestForDOA(dictArray: PENewAssessment, dayOfAgeData: InovojectData) -> JSONDictionary {
@@ -2258,7 +2236,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         
         return json
     }
-
+    
     
     func createSyncRequestForDOAS(dictArray: PENewAssessment, dayOfAgeData: InovojectData) -> JSONDictionary {
         let udid = UserDefaults.standard.string(forKey: "ApplicationIdentifier") ?? ""
@@ -2290,27 +2268,27 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         let vaccineNames = vaccineData.value(forKey: "name") as? [String] ?? []
         let vaccineIDs = vaccineData.value(forKey: "id") as? [Int] ?? []
         let vaccineMfgIDs = vaccineData.value(forKey: "mfgId") as? [Int] ?? []
-
+        
         var vaccineId = 0
         var manufacturerId = 0
         var otherVaccine = ""
-
+        
         if let name = dayOfAgeData.name, let index = vaccineNames.firstIndex(of: name) {
             vaccineId = vaccineIDs[safe: index] ?? 0
             manufacturerId = vaccineMfgIDs[safe: index] ?? 0
         } else if let name = dayOfAgeData.name, !name.isEmpty {
             otherVaccine = name
         }
-
+        
         // Manufacturer override
         let mfgData = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
         let mfgNames = mfgData.value(forKey: "mfgName") as? [String] ?? []
         let mfgIDs = mfgData.value(forKey: "id") as? [Int] ?? []
-
+        
         if let vaccineMan = dayOfAgeData.vaccineMan, let index = mfgNames.firstIndex(of: vaccineMan) {
             manufacturerId = mfgIDs[safe: index] ?? manufacturerId
         }
-
+        
         // Ampule/bag
         let ampulePerBag = Int(dayOfAgeData.ampulePerBag ?? "0") ?? 0
         let unique = "\(deviceIdForServer)_\(dayOfAgeData.id ?? 0)_iOS_"
@@ -2338,7 +2316,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         
         return json
     }
-
+    
     // MARK: - Create Sync Request for Certificate's
     func createSyncRequestForCertificateData(dictArray: PENewAssessment, peCertificateData: PECertificateData) -> JSONDictionary {
         
@@ -2396,7 +2374,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         
         return json
     }
-
+    
     // MARK: - Create Sync Request for Residue's
     func createSyncRequestForResidueData(dictArray: PENewAssessment) -> JSONDictionary {
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as! String
@@ -2406,7 +2384,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         let deviceIdForServer = "\(uniID)_\(assessmentId)_iOS_\(udid)"
         let displayId = "C-\(uniID)".prefix(22)
         let unique = "\(deviceIdForServer)_\(dictArray.residue)_iOS_"
-
+        
         return [
             "AssessmentId": serverAssessmentId,
             "AssessmentDetailId": dictArray.assID ?? 0,
@@ -2545,78 +2523,78 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         let isEMRequested = dict.IsEMRequested ?? false
         let extndMicro = dict.extndMicro ?? false
         let isHandMix = dict.isHandMix ?? false
-
+        
         // Handle TSR validation
         let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
         let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
         let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
         handleSelectedTSRValidations(dict, visitNameArray, &tsrId, visitIDArray)
-
+        
         // Handle manufacturer, eggs, and breed
         var manufacturer = dict.manufacturer ?? ""
         var manufacturerOther = ""
         handleManufacturerValidation(&manufacturer, dict, &manufacturerOther)
-
+        
         var eggs = ""
         var eggsOther = ""
         let noOfEggs = String(dict.noOfEggs ?? 000)
         handleNoOfEggsValidation(noOfEggs, &eggsOther, &eggs)
-
+        
         var breed = dict.breedOfBird ?? ""
         var breedOther = dict.breedOfBirdOther ?? ""
         handleBreedOfBirdValidations(&breed, &breedOther)
-
+        
         // Fetch IDs for manufacturer, eggs, and breed
         let manufacturerDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
         let manufacturerNameArray = manufacturerDetails.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
         let manufacturerIDArray = manufacturerDetails.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
         let manufacturerId = manufacturer != "" ? manufacturerIDArray[manufacturerNameArray.index(of: manufacturer)] as? Int ?? 0 : 0
-
+        
         let birdBreedDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
         let birdBreedNameArray = birdBreedDetails.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
         let birdBreedIDArray = birdBreedDetails.value(forKey: "birdId") as? NSArray ?? NSArray()
         let breedId = breed != "" ? birdBreedIDArray[birdBreedNameArray.index(of: breed)] as? Int ?? 0 : 0
-
+        
         let eggsDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
         let eggsNameArray = eggsDetails.value(forKey: "eggCount") as? NSArray ?? NSArray()
         let eggsIDArray = eggsDetails.value(forKey: "eggId") as? NSArray ?? NSArray()
         let eggId = eggs != "" ? eggsIDArray[eggsNameArray.index(of: eggs)] as? Int ?? 0 : 0
-
+        
         // Handle assessment validation
         var draft = 0
         var complete = 1
         var saveType = 1
         handleAssessmentIdValidation(&assessmentId, dict, &draft, &complete, &saveType)
-
+        
         // Handle signature and date
         let sigDate = dict.sig_Date != "" ? convertDateFormat(inputDate: dict.sig_Date ?? "") : ""
         var base64Str = ""
         var base64Str2 = ""
         handleBase64ImageEncoding(dict.sig ?? 0, &base64Str, dict, dict.sig2 ?? 0, &base64Str2)
-
+        
         // Handle incubation style
         let incubationDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
         let incubationNameArray = incubationDetails.value(forKey: "incubationStylesName") as? NSArray ?? NSArray()
         let incubationIDArray = incubationDetails.value(forKey: "incubationId") as? NSArray ?? NSArray()
         let incubationId = incubationStyle != nil ? incubationIDArray[incubationNameArray.index(of: incubationStyle ?? "")] as? Int ?? 0 : 0
-
+        
         // Handle roles
         let roleDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
         let roleNameArray = roleDetails.value(forKey: "roleName") as? NSArray ?? NSArray()
         let roleIDArray = roleDetails.value(forKey: "roleId") as? NSArray ?? NSArray()
         let roleId = dict.sig_EmpID?.count ?? 0 > 1 ? roleIDArray[roleNameArray.index(of: dict.sig_EmpID ?? "")] as? Int ?? 0 : 0
         let roleId2 = dict.sig_EmpID2?.count ?? 0 > 1 ? roleIDArray[roleNameArray.index(of: dict.sig_EmpID2 ?? "")] as? Int ?? 0 : 0
-
+        
         // Format evaluation date
         let dateFormatter = CodeHelper.sharedInstance.getDateFormatterObj("")
         dateFormatter.dateFormat = regionId == 3 ? appDelegateObj.MMddyyyStr : appDelegateObj.ddMMyyyStr
         let evalDateObj = dateFormatter.date(from: evaluationDate)
         dateFormatter.dateFormat = "yyyyMMdd"
         let evalDateStr = dateFormatter.string(from: evalDateObj ?? Date())
-
+        
         // Handle FSR signature
         let fsrSign = certificationData.first?.fsrSign ?? ""
-
+        
         // Construct JSON
         var json: JSONDictionary = [
             "AppAssessmentId": String(assessmentId),
@@ -2667,11 +2645,11 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             "ChlorineId": dict.clorineId,
             "Handmix": isHandMix
         ]
-
+        
         if regionId == 3 && saveType == 0 && dict.statusType == 2 {
             json["Status_Type"] = dict.statusType
         }
-
+        
         return json
     }
     
@@ -2849,7 +2827,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         let UserId = dict.userID
         var statusType = dict.statusType ?? 0
         var json : JSONDictionary = JSONDictionary()
-        let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
         
         let isEMRequested = dict.IsEMRequested ?? false
         let appVersion = "\(Bundle.main.versionNumber)"
@@ -2906,89 +2883,25 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             }
         }
     }
-        
-//    // MARK: - Date Formatter
+    
+    //    // MARK: - Date Formatter
     
     
     
-// MARK: - Date Formatter
-func convertDateFormat(inputDate: String) -> String {
-    let olDateFormatter = DateFormatter()
-    olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
-    let oldDate = olDateFormatter.date(from: inputDate)
-    let convertDateFormatter = DateFormatter()
-    convertDateFormatter.dateFormat = yyymmdd
-    
-    let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-    if regionID == 3
-    {convertDateFormatter.dateFormat = yyymmdd
-    }
-    else{
+    // MARK: - Date Formatter
+    func convertDateFormat(inputDate: String) -> String {
+        let olDateFormatter = DateFormatter()
+        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
+        let oldDate = olDateFormatter.date(from: inputDate)
+        let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = yyymmdd
+        
+        if oldDate != nil {
+            return convertDateFormatter.string(from: oldDate!)
+        }
+        return ""
     }
     
-    if oldDate != nil{
-        return convertDateFormatter.string(from: oldDate!)
-    }
-    return ""
-}
-    
-//    func convertDateFormat(inputDate: String) -> String {
-//
-//        let olDateFormatter = DateFormatter()
-//        olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
-//        let oldDate = olDateFormatter.date(from: inputDate)
-//        let convertDateFormatter = DateFormatter()
-//        convertDateFormatter.dateFormat = yyymmdd
-//
-//        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-//        if regionID == 3
-//        {convertDateFormatter.dateFormat = yyymmdd
-//        }
-//        else{
-//            convertDateFormatter.dateFormat = yyymmdd
-//        }
-//
-//        if oldDate != nil{
-//            return convertDateFormatter.string(from: oldDate!)
-//        }
-//        return ""
-//
-////
-////        let olDateFormatter = DateFormatter()
-//////        olDateFormatter.calendar = Calendar(identifier: .gregorian)
-//////        olDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-////
-////        olDateFormatter.dateFormat = Constants.yyyyMMddHHmmss
-////        let oldDate = olDateFormatter.date(from: inputDate)
-////        let convertDateFormatter = DateFormatter()
-//////        convertDateFormatter.calendar = Calendar(identifier: .gregorian)
-//////        convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-////        convertDateFormatter.dateFormat = yyymmdd
-////
-////        if regionID == 3
-////        {
-////            let inputFormatter = DateFormatter()
-////            inputFormatter.dateFormat = appDelegateObj.mmddyyStr // for date like Sept 6, 2024
-////
-////            if let date = inputFormatter.date(from: inputDate) {
-////                convertDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-////                return convertDateFormatter.string(from: date)
-////            } else {
-////                print(appDelegateObj.invalidDateStr)
-////            }
-////            convertDateFormatter.dateFormat = yyymmdd
-////
-////        }
-////        else{
-////            convertDateFormatter.dateFormat = "MM-dd-yyyy"
-////        }
-////
-////        if oldDate != nil{
-////            return convertDateFormatter.string(from: oldDate!)
-////        }
-////        return ""
-//    }
     
     // MARK: - Date Formatter
     func convertSign_DateFormat(inputDate: String) -> String {
@@ -3003,18 +2916,15 @@ func convertDateFormat(inputDate: String) -> String {
             convertDateFormatter.calendar = Calendar(identifier: .gregorian)
             convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             convertDateFormatter.dateFormat = yyymmdd
-        }
-        else{
+        } else {
             convertDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         }
         
-        if oldDate != nil{
+        if oldDate != nil {
             return convertDateFormatter.string(from: oldDate!)
         }
         return ""
     }
-    
-    
 }
 
 // MARK: - EXTENSION FOR STRING TO DATE
@@ -3030,17 +2940,6 @@ extension String {
         let date = dateFormatter.date(from: self)
         return date
     }
-    
-    func toDateWithFormat(withFormat format: String = appDelegateObj.MMddYYYYHHmmss)-> Date?{
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: appDelegateObj.asiaTehran)
-        dateFormatter.locale = Locale(identifier: "fa-IR")
-      //  dateFormatter.calendar = Calendar(identifier: .gregorian)
-        dateFormatter.dateFormat = format
-        let date = dateFormatter.date(from: self)
-        return date
-    }
-    
 }
 
 // MARK: - EXTENSION FOR DATE TO STRING
@@ -3124,7 +3023,6 @@ extension PEDashboardViewController: UITableViewDataSource,UITableViewDelegate{
     }
     
     fileprivate func extractedFunc14(_ indexPath: IndexPath) {
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID == 3 {
             let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
             let vc = storyBoard.instantiateViewController(withIdentifier: "PEStartNewAssessment") as! PEStartNewAssessment
@@ -3150,9 +3048,9 @@ extension PEDashboardViewController: UITableViewDataSource,UITableViewDelegate{
         Constants.isPPmValueChanged = false
         Constants.switchCount = 0
         
-        if upcomingCertificationsArr.count > 0 && upcomingCertificationsArr.count > indexPath.row{
-            if let assessmentId = upcomingCertificationsArr[indexPath.row].serverAssessmentId{
-                
+        if upcomingCertificationsArr.count > 0 && upcomingCertificationsArr.count > indexPath.row,
+           let assessmentId = upcomingCertificationsArr[indexPath.row].serverAssessmentId {
+            
                 UserDefaults.standard.set(assessmentId , forKey: "currentServerAssessmentId")
                 let userDefault = UserDefaults.standard
                 userDefault.set(upcomingCertificationsArr[indexPath.row].customerId, forKey: "PE_Selected_Customer_Id")
@@ -3182,7 +3080,6 @@ extension PEDashboardViewController: UITableViewDataSource,UITableViewDelegate{
                         extractedFunc14(indexPath)
                     }
                 }
-            }
         }
     }
 }
@@ -3377,15 +3274,13 @@ extension PEDashboardViewController{
     
     fileprivate func handleResponseJSONDict(_ json: JSON) {
         let mainQueue = OperationQueue.main
-        mainQueue.addOperation{
-            if let responseJSONDict = json.dictionary {
-                if let response = responseJSONDict["Data"] {
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    if responseStr != "" {
-                        let jsonData = try? Data(responseStr.utf8)
-                        self.handleVaccineCertificate(jsonData, jsonDecoder)
-                    }
+        mainQueue.addOperation {
+            if let responseJSONDict = json.dictionary,let response = responseJSONDict["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                if responseStr != "" {
+                    let jsonData = try? Data(responseStr.utf8)
+                    self.handleVaccineCertificate(jsonData, jsonDecoder)
                 }
             }
             self.handleAssessmentCategoriesResponse(json)
@@ -3542,23 +3437,6 @@ extension PEDashboardViewController{
         }
     }
     
-    private func getDiluentManufacturer(){
-        if ConnectionManager.shared.hasConnectivity() {
-            ZoetisWebServices.shared.getDiluentManufacturerList(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-                guard let _ = self, error == nil else {
-                    self?.dismissGlobalHUD(self?.view ?? UIView())
-                    return
-                }
-                let mainQueue = OperationQueue.main
-                mainQueue.addOperation{
-                    self?.handleGetDiluentManufacturer(json)
-                }
-            })
-        }else{
-            self.showToastWithTimer(message: "Failed to get Diluent Manufacture list", duration: 3.0)
-            self.dismissGlobalHUD(self.view ?? UIView())
-        }
-    }
     // MARK: - Get All Bag' Sizes List
     private func fetchBagSizes(){
         if ConnectionManager.shared.hasConnectivity() {
@@ -3842,7 +3720,7 @@ extension PEDashboardViewController{
                 let customerId = userDefault.integer(forKey: "PE_Selected_Customer_Id")
                 let siteId = userDefault.integer(forKey: "PE_Selected_Site_Id")
                 
-                self.upcomingCertificationsArr = PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "" , customerId: Int64(customerId), siteId: Int64(siteId))
+                self.upcomingCertificationsArr = PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "")
                 if self.upcomingCertificationsArr.count > 0 {
                     self.alertLbl.isHidden = true
                 } else {
@@ -3887,19 +3765,11 @@ extension PEDashboardViewController{
             var idArr : [Int] = []
             for objn in  obj.doaS {
                 let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                if data != nil {
-                    if !idArr.contains(data!.id ?? 0) {
-                        idArr.append(data!.id ?? 0)
-                        if data != nil {
-                            self.dayOfAgeSData.append(data!)
-                        }
+                if data != nil,!idArr.contains(data!.id ?? 0) {
+                    idArr.append(data!.id ?? 0)
+                    if data != nil {
+                        self.dayOfAgeSData.append(data!)
                     }
-//                    else {
-//                        idArr.append(data!.id ?? 0)
-//                        if data != nil {
-//                            self.dayOfAgeSData.append(data!)
-//                        }
-//                    }
                 }
             }
         }
@@ -3911,19 +3781,11 @@ extension PEDashboardViewController{
             var idArr : [Int] = []
             for objn in  obj.doa {
                 let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                if data != nil {
-                    if !idArr.contains(data!.id ?? 0){
-                        idArr.append(data!.id ?? 0)
-                        if data != nil{
-                            self.dayOfAgeData.append(data!)
-                        }
+                if data != nil,!idArr.contains(data!.id ?? 0) {
+                    idArr.append(data!.id ?? 0)
+                    if data != nil {
+                        self.dayOfAgeData.append(data!)
                     }
-//                    else {
-//                        idArr.append(data!.id ?? 0)
-//                        if data != nil{
-//                            self.dayOfAgeData.append(data!)
-//                        }
-//                    }
                 }
             }
         }
@@ -3953,19 +3815,11 @@ extension PEDashboardViewController{
             var idArr : [Int] = []
             for objn in  obj.inovoject {
                 let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                if data != nil {
-                    if !idArr.contains(data!.id ?? 0) {
-                        idArr.append(data!.id ?? 0)
-                        if data != nil{
-                            self.inovojectData.append(data!)
-                        }
+                if data != nil,!idArr.contains(data!.id ?? 0) {
+                    idArr.append(data!.id ?? 0)
+                    if data != nil{
+                        self.inovojectData.append(data!)
                     }
-//                    else{
-//                        idArr.append(data!.id ?? 0)
-//                        if data != nil{
-//                            self.inovojectData.append(data!)
-//                        }
-//                    }
                 }
             }
         }
@@ -3983,12 +3837,6 @@ extension PEDashboardViewController{
                         self.certificateData.append(data!)
                     }
                 }
-                //                    else {
-                //                        idArr.append(data!.id ?? 0)
-                //                        if data != nil {
-                //                            self.certificateData.append(data!)
-                //                        }
-                //                    }
             }
         }
     }
@@ -4109,7 +3957,6 @@ extension PEDashboardViewController{
     
     func accessPEArrayObjects(){
         
-        var extendedMicroArr : [JSONDictionary]  = []
         var inovojectDataArr : [JSONDictionary]  = []
         var dayOfAgeDataArr : [JSONDictionary]  = []
         var dayOfAgeSDataArr : [JSONDictionary]  = []
@@ -4137,7 +3984,6 @@ extension PEDashboardViewController{
         let s = NSString(format: "%.2f", f ?? "")
         let nf = NumberFormatter()
         nf.numberStyle = .decimal
-        let s2 = nf.string(from: f as? NSNumber ?? 0)
         let value = Double((s ) as Substring) as? NSNumber
         let json = [
             "Id": 0,
@@ -4209,32 +4055,26 @@ extension PEDashboardViewController{
         let id = UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound
         let url = ZoetisWebServices.EndPoint.getPEScheduledCertifications.latestUrl + "\(id)?customerId=null&siteId=null"
         
-        
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: self, url: url, completion: { [weak self] (json, error) in
             guard let _ = self, error == nil else{return;}
             var dataDic : [String:Any] = [:]
-            var dataArray : [Any] = []
             if let string = json.rawString() {
                 dataDic = string.convertToDictionary() ?? [:]
             }
-            dataArray = dataDic["Data"] as? [Any] ?? []
+            var dataArray = dataDic["Data"] as? [Any] ?? []
             let myTask = DispatchGroup()
             self?.scheduleAssessmentIdArray = []
-            while dataArray.count != 0{
+            while dataArray.count != 0 {
                 myTask.enter()
-                var objDic : [String:Any] = [:]
-                objDic =  dataArray[0] as? [String:Any] ?? [:]
+                let objDic = dataArray[0] as? [String:Any] ?? [:]
                 dataArray.remove(at: 0)
-                let statusName = objDic["StatusName"] as? String
-                
                 if !(self?.scheduleAssessmentIdArray.contains(String(objDic["Id"]! as! Int)) ?? true){
                     self?.scheduleAssessmentIdArray.append(String(objDic["Id"]! as! Int))
                     myTask.leave()
                 }
             }
-            var peAssessmentArray : [PENewAssessment] = []
             self?.deletedAssessmentIdArray = []
-            peAssessmentArray = self?.getAllDateArrayStoredNew() ?? []
+            var peAssessmentArray = self?.getAllDateArrayStoredNew() ?? []
             let peAssessmentNewArray = self?.getAllDateArrayStored() ?? []
             self?.handlePEAssessmentArray(&peAssessmentArray)
             self?.handlePEAssrray(peAssessmentNewArray, peAssessmentArray,showHud)
@@ -4247,7 +4087,6 @@ extension PEDashboardViewController{
     
     private func handlefetchAllCustomerResponse(_ json: JSON, isEverytime:Bool = false) {
         self.deleteAllData("PE_Customer")
-        let jsonObject = CustomerResponse(json)
         if isEverytime{
             fetchSites(isEverytime)
             dismissGlobalHUD(self.view)
@@ -4258,20 +4097,17 @@ extension PEDashboardViewController{
     // MARK: - HANDLE ALL Doses API RESPONSES
     private func handlefetchAllDosesResponse(_ json: JSON) {
         self.deleteAllData("PE_Dose")
-        let jsonObject = PEDoseResponse(json)
         fetchAllCountries()
     }
     // MARK: - HANDLE ALL Countries API RESPONSES
     private func handlefetchAllCountriesResponse(_ json: JSON) {
         
         self.deleteAllData("AllCountriesPE")
-        let jsonObject = PECountryResponse(json)
         fetchChlorinStripsList()
     }
     // MARK: - HANDLE ALL Blank Assessment API RESPONSES
     private func handleBlankAssessmentResponse(_ json: JSON) {
         self.deleteAllData("BlankAssessmentFiles")
-        let jsonObject = PEBlankAssessmentResponse(json)
     }
     // MARK: - Get Chlorine Strips List API
     private func fetchChlorinStripsList(){
@@ -4290,37 +4126,31 @@ extension PEDashboardViewController{
     // MARK: - HANDLE Chlorine Strips List API RESPONSES
     private func handleAllClorineResponse(_ json: JSON) {
         self.deleteAllData("AllClorinePE")
-        let jsonObject = PEClorineResponse(json)
         fetchEvaluator()
     }
     // MARK: - HANDLE Evaluator's List API RESPONSES
     private func handleFetchEvaluatorResponse(_ json: JSON) {
         self.deleteAllData("PE_Evaluator")
-        let jsonObject = EvaluatorResponse(json)
         fetchApprovers()
     }
     // MARK: - HANDLE Approvers List API RESPONSES
     private func handleFetchApproversResponse(_ json: JSON) {
         self.deleteAllData("PE_Approvers")
-        let jsonObject = ApproverResponse(json)
         fetchVisitTypes()
     }
     // MARK: - HANDLE Visit List API RESPONSES
     private func handleFetchVisitTypesResponse(_ json: JSON) {
         self.deleteAllData("PE_VisitTypes")
-        let jsonObject = VisitTypesResponse(json)
         fetchEvaluationTypes()
     }
     // MARK: - HANDLE Evaluation type's  API RESPONSES
     private func handleFetchEvaluationTypesResponse(_ json: JSON) {
         self.deleteAllData("PE_EvaluationType")
-        let jsonObject = EvaluationTypeResponse(json)
         fetchSites()
     }
     // MARK: - HANDLE Site List API RESPONSES
     private func handleFetchSitesResponse(_ json: JSON,_ isEverytime:Bool = false) {
         self.deleteAllData("PE_Sites")
-        let jsonObject = SiteResponse(json)
         if isEverytime{
             dismissGlobalHUD(self.view)
         } else{
@@ -4331,14 +4161,12 @@ extension PEDashboardViewController{
     private func handleAssessmentCategoriesResponse(_ json: JSON) {
         DispatchQueue.main.async {
             UserDefaults.standard.setValue(nil, forKey:"QuestionAns")
-            let jsonObject = PECategoriesAssesmentsResponse(json)
             self.saveJSON(json: json, key: "QuestionAns")
             self.fetchtQuestionInfo()
         }
     }
     // MARK: - HANDLE Assessment Categories Question Info API RESPONSES
     private func handlefetchtQuestionInfo(_ json: JSON) {
-        let jsonObject = InfoImageDataResponse(json)
         saveJSON(json: json, key: "QuestionAnsInfo")
         fetchManufacturer()
     }
@@ -4346,89 +4174,76 @@ extension PEDashboardViewController{
     // MARK: - HANDLE PE Manufacturer Lisi API RESPONSES
     private func handlefetchManufacturerResponse(_ json: JSON) {
         self.deleteAllData("PE_Manufacturer")
-        let jsonObject = ManufacturerResponse(json)
         fetchBirdBreed()
     }
     
     // MARK: - HANDLE PE Bird Breed List API RESPONSES
     private func handlefetchBirdBreedResponse(_ json: JSON) {
         self.deleteAllData("PE_BirdBreed")
-        let jsonObject = BreedBirdResponse(json)
         self.fetchEggs()
     }
     
     // MARK: - HANDLE Eggs List API RESPONSES
     private func handlefetchEggsResponse(_ json: JSON) {
         self.deleteAllData("PE_Eggs")
-        let jsonObject = EggsResponse(json)
         fetchVManufacturer()
     }
     
     // MARK: - HANDLE PE Vaccine Manufacture List API RESPONSES
     private func handlefetchVManufacturerResponse(_ json: JSON) {
         self.deleteAllData("PE_VManufacturer")
-        let jsonObject = VManufacturerResponse(json)
         fetchVaccineNames()
     }
     
     // MARK: - HANDLE Vaccine Name List API RESPONSES
     private func handlefetchVaccineNamesResponse(_ json: JSON) {
         self.deleteAllData("PE_VNames")
-        let jsonObject = VNamesResponse(json)
         self.fetchDiluentManufacturer()
     }
     
     // MARK: -  Get PE Diluent Manufacturer  List API RESPONSES
     private func handlefetchDiluentManufacturer(_ json: JSON) {
         self.deleteAllData("PE_DManufacturer")
-        let jsonObject = DManufacturerResponse(json)
         fetchBagSizes()
     }
     
     // MARK: -   HANDLE Diluent Manufacturer  List API RESPONSES
     private func handleGetDiluentManufacturer(_ json: JSON) {
         self.deleteAllData("PE_DManufacturer")
-        let jsonObject = DManufacturerResponse(json)
     }
     
     // MARK: - Get PE BAg Size List API RESPONSES
     private func handlefetchBagSizes(_ json: JSON) {
         self.deleteAllData("PE_BagSizes")
-        let jsonObject = BagSizeResponse(json)
         fetchAmplePerBag()
     }
     
     // MARK: - HANDLE PE BAg Size List API RESPONSES
     private func handleGetBagSizes(_ json: JSON) {
         self.deleteAllData("PE_BagSizes")
-        let jsonObject = BagSizeResponse(json)
     }
     
     // MARK: - Get PE Ample Per Bag Size List API RESPONSES
     private func handlefetchAmplePerBag(_ json: JSON) {
         self.deleteAllData("PE_AmplePerBag")
-        let jsonObject = AmplePerBagResponse(json)
         fetchAmpleSizes()
     }
     
     // MARK: - Handle PE Ample Per Bag Size List API RESPONSES
     private func handleGetAmplePerBag(_ json: JSON) {
         self.deleteAllData("PE_AmplePerBag")
-        let jsonObject = AmplePerBagResponse(json)
         self.getPostingAssessmentListByUser()
     }
     
     // MARK: - Get PE Roles List API
     private func handlefetchAmpleSizes(_ json: JSON) {
         self.deleteAllData("PE_AmpleSizes")
-        let jsonObject = AmpleSizeResponse(json)
         fetchRoles()
     }
     
     // MARK: - Handle PE Ample Size List API RESPONSES
     private func handlegettingfetchAmpleSizes(_ json: JSON) {
         self.deleteAllData("PE_AmpleSizes")
-        let jsonObject = AmpleSizeResponse(json)
     }
     
     // MARK: - Handle PE Roles List API
@@ -4448,7 +4263,6 @@ extension PEDashboardViewController{
     // MARK: - Handle PE Sub Vaccine List API Responce
     private func handlefetchSubVaccineNamesResponse(_ json: JSON) {
         self.deleteAllData("PE_VSubNames")
-        let jsonObject = VSubNamesResponse(json)
         fetchPEFrequency()
     }
     
@@ -4471,13 +4285,6 @@ extension PEDashboardViewController{
         self.deleteAllData("PE_DOASizes")
         PEDOASizesResponse(json)
         UserDefaults.standard.set(true, forKey: "hasPEDataLoaded")
-        getPostingAssessmentListByUser()
-    }
-    
-    // MARK: - Handle Countries List API Responce
-    private func handlefetchedCountries(_ json: JSON) {
-        self.deleteAllData("PE_IncubationStyle")
-        PEIncubationStyleResponse(json)
         getPostingAssessmentListByUser()
     }
     
@@ -4508,20 +4315,17 @@ extension PEDashboardViewController{
     
     private func handlGetPostingAssessmentListByUser(_ json: JSON) {
         var dataDic : [String:Any] = [:]
-        var dataArray : [Any] = []
         if let string = json.rawString() {
             dataDic = string.convertToDictionary() ?? [:]
         }
-        dataArray = dataDic["Data"] as? [Any] ?? []
-        if  dataArray.count  > 0 {
+        let dataArray = dataDic["Data"] as? [Any] ?? []
+        if dataArray.count  > 0 {
             self.deleteAllDataWithUserID("PE_AssessmentInOffline")
             self.deleteAllDataWithUserID("PE_AssessmentInDraft")
         }
         for obj in dataArray {
-            var objDic : [String:Any] = [:]
-            objDic =  obj as? [String:Any] ?? [:]
+            let objDic = obj as? [String:Any] ?? [:]
             let SaveType = objDic["SaveType"] as? Int ?? 0
-            let status_Type = objDic["Status_Type"] as? Int ?? 0
             UserDefaults.standard.set(true, forKey: "hasPELoadedPrevData")
             
             if SaveType != 0 {
@@ -4556,7 +4360,6 @@ extension PEDashboardViewController{
                     }
                 }
                 
-                let currentServerAssessmentId = UserDefaults.standard.set(String(serverAssessmentId), forKey: "currentServerAssessmentId")
                 peNewAssessmentWas.serverAssessmentId = String(serverAssessmentId)
                 let AppCreationTime = objDic["AppCreationTime"] as? String ?? ""
                 peNewAssessmentWas.siteId = objDic["SiteId"] as? Int ?? 0
@@ -4568,10 +4371,8 @@ extension PEDashboardViewController{
                 peNewAssessmentWas.extndMicro = objDic["IsInterMicrobial"] as? Bool ?? false
                 peNewAssessmentWas.IsEMRequested = objDic["IsEMRequested"] as? Bool ?? false
                 peNewAssessmentWas.sanitationValue = objDic["SanitationEmbrex"] as? Bool ?? false
-                if let doubleSanitation =  objDic["DoubleSanitation"] as? Bool{
-                    if doubleSanitation {
-                        peNewAssessmentWas.hatcheryAntibiotics = 1
-                    }
+                if let doubleSanitation =  objDic["DoubleSanitation"] as? Bool,doubleSanitation{
+                    peNewAssessmentWas.hatcheryAntibiotics = 1
                 }
                 peNewAssessmentWas.isHandMix = objDic["Handmix"] as? Bool ?? false
                 peNewAssessmentWas.isEMRejected = objDic["IsEMRejected"] as? Bool ?? false
@@ -4585,12 +4386,11 @@ extension PEDashboardViewController{
                 let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
                 let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
                 let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                if  peNewAssessmentWas.selectedTSRID != 0 {
-                    if visitIDArray.contains( peNewAssessmentWas.selectedTSRID){
-                        let indexOfe =  visitIDArray.index(of: peNewAssessmentWas.selectedTSRID)
-                        let TSRName = visitNameArray[indexOfe] as? String ?? ""
-                        peNewAssessmentWas.selectedTSR =  TSRName
-                    }
+                if peNewAssessmentWas.selectedTSRID != 0,
+                   visitIDArray.contains(peNewAssessmentWas.selectedTSRID ?? 0) {
+                    let indexOfe = visitIDArray.index(of: peNewAssessmentWas.selectedTSRID ?? 0)
+                    let TSRName = visitNameArray[indexOfe] as? String ?? ""
+                    peNewAssessmentWas.selectedTSR = TSRName
                 }
                 peNewAssessmentWas.evaluatorName = objDic["UserName"] as? String ?? ""
                 peNewAssessmentWas.evaluatorID =  objDic["UserId"] as? Int ?? 0
@@ -4644,7 +4444,6 @@ extension PEDashboardViewController{
                 let strBase64Signatture2 =  objDic["SignatureImage2"] as? String ?? ""
                 let representaiveName2 =  objDic["RepresentativeName2"] as? String ?? ""
                 let RoleName2 =  objDic["RoleName2"] as? String ?? ""
-                let fsrSignature = objDic["RepresentativeName2"] as? String ?? ""
                 let imageData2 : Data = Data(base64Encoded: strBase64Signatture2, options: .ignoreUnknownCharacters) ?? Data()
                 let representaiveNotes =  objDic["RepresentativeNotes"] as? String ?? ""
                 let SignatureDate =  objDic["SignatureDate"] as? String ?? ""
@@ -4665,10 +4464,9 @@ extension PEDashboardViewController{
                 let infoImageDataResponse = InfoImageDataResponse(questionInfo)
                 let categoryCount = filterCategoryCount(peNewAssessmentOf: peNewAssessmentWas)
                 if categoryCount > 0 {
-                    for cat in  pECategoriesAssesmentsResponse.peCategoryArray {
+                    for cat in pECategoriesAssesmentsResponse.peCategoryArray {
                         for (index, ass) in cat.assessmentQuestions.enumerated() {
-                            var peNewAssessmentNew = PENewAssessment()
-                            peNewAssessmentNew = peNewAssessmentWas
+                            let peNewAssessmentNew = peNewAssessmentWas
                             peNewAssessmentNew.serverAssessmentId = peNewAssessmentWas.serverAssessmentId
                             peNewAssessmentNew.cID = index
                             peNewAssessmentNew.catID = cat.id
@@ -4711,11 +4509,9 @@ extension PEDashboardViewController{
                         let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
                         let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
                         let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-                        if FrequencyValue != 32 {
-                            if visitIDArray.contains(FrequencyValue){
-                                let indexOfe =  visitIDArray.index(of: FrequencyValue) //
-                                FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
-                            }
+                        if FrequencyValue != 32,visitIDArray.contains(FrequencyValue) {
+                            let indexOfe =  visitIDArray.index(of: FrequencyValue) //
+                            FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
                         }
                         let TextAmPm = questionMark["TextAmPm"] as? String ?? ""
                         let PersonName = questionMark["PersonName"] as? String ?? ""
@@ -4780,10 +4576,8 @@ extension PEDashboardViewController{
                     for qMark in allAssesmentArr {
                         let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
                         for assID in assNAArray {
-                            let assIsNA = assID["IsNA"] as? Bool ?? false
                             let AssessmentId = assID["ModuleAssessmentId"] as? Int ?? 0
-                            
-                            if ( Int(truncating: objMark.assID ?? 0) == AssessmentId ) {
+                            if (Int(truncating: objMark.assID ?? 0) == AssessmentId) {
                                 CoreDataHandlerPE().update_isNAInAssessmentInProgress(isNA: true, assID: Int(objMark.assID ?? 0))
                             }
                         }
@@ -4809,7 +4603,6 @@ extension PEDashboardViewController{
                         }
                     }
                     //comment ends
-                    let EvaluationId = objDic["EvaluationId"] as? Int ?? 0
                     let InovojectPostingData = objDic["InovojectPostingData"] as? [Any] ?? []
                     let VaccineMixerObservedPostingData = objDic["VaccineMixerObservedPostingData"] as? [Any] ?? []
                     
@@ -4822,13 +4615,10 @@ extension PEDashboardViewController{
                         let VaccineId = inoDicIS["VaccineId"] as? Int ?? 0
                         let AmpuleSize = inoDicIS["AmpuleSize"] as? Int ?? 0
                         var AmpuleSizeStr = ""
-                        let AntibioticInformation =  inoDicIS["AntibioticInformation"] as? String ?? ""
-                        var ampleSizeesNameArray = NSArray()
-                        var ampleSizeIDArray = NSArray()
-                        var ampleSizeDetailArray = NSArray()
-                        ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let AntibioticInformation = inoDicIS["AntibioticInformation"] as? String ?? ""
+                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
                         if AmpuleSize != 0 {
                             let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
                             AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
@@ -4836,7 +4626,6 @@ extension PEDashboardViewController{
                         
                         let AmpulePerbag = inoDicIS["AmpulePerbag"] as? Int ?? 0
                         let HatcheryAntibiotics =  inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
-                        let ManufacturerId = inoDicIS["ManufacturerId"] as? Int ?? 0
                         let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
                         let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
                         var VManufacturerName = ""
@@ -4844,19 +4633,13 @@ extension PEDashboardViewController{
                         let ProgramName = inoDicIS["ProgramName"] as? String ?? ""
                         let DiluentsMfgOtherName = inoDicIS["DiluentsMfgOtherName"] as? String ?? ""
 
-                        var vManufacutrerNameArray = NSArray()
-                        var vManufacutrerIDArray = NSArray()
-                        var vManufacutrerDetailsArray = NSArray()
-                        vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                         
-                        var vNameArray = NSArray()
-                        var vIDArray = NSArray()
-                        var vDetailsArray = NSArray()
-                        vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                        vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
+                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                         let xxxx =    VaccineId
                         if xxxx != 0 {
                             if vIDArray.contains(xxxx){
@@ -4903,12 +4686,9 @@ extension PEDashboardViewController{
                         let AmpuleSize = DayOfAgeIS["DayOfAgeAmpuleSize"] as? Int ?? 0
                         var AmpuleSizeStr = ""
                         
-                        var ampleSizeesNameArray = NSArray()
-                        var ampleSizeIDArray = NSArray()
-                        var ampleSizeDetailArray = NSArray()
-                        ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
                         if AmpuleSize != 0 {
                             let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
                             AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
@@ -4922,13 +4702,10 @@ extension PEDashboardViewController{
                         let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
                         var VManufacturerName = ""
                         var VName = ""
-                        var vManufacutrerNameArray = NSArray()
-                        var vManufacutrerIDArray = NSArray()
-                        var vManufacutrerDetailsArray = NSArray()
-                        vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxx =    ManufacturerId
+                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let xxx = ManufacturerId
                         
                         if xxx != 0 {
                             let indexOfd = vManufacutrerIDArray.index(of: xxx)
@@ -4937,20 +4714,16 @@ extension PEDashboardViewController{
                             }
                         }
                         
-                        var vNameArray = NSArray()
-                        var vIDArray = NSArray()
-                        var vDetailsArray = NSArray()
-                        vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                        vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
-                        vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxxx =    VaccineId
+                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
+                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let xxxx = VaccineId
                         if xxxx != 0 {
                             if vIDArray.contains(xxxx){
                                 let indexOfd = vIDArray.index(of: xxxx)
                                 VName = vNameArray[indexOfd] as? String ?? ""
                             }
-                        }else {
+                        } else {
                             if VManufacturerName.lowercased().contains("other"){
                                 VName  = otherText
                                 
@@ -4960,7 +4733,7 @@ extension PEDashboardViewController{
                             VName = otherText
                         }
                         
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
                         
                         let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
                         peNewAssessmentInProgress.dCS  = DiluentMfg
@@ -4986,13 +4759,11 @@ extension PEDashboardViewController{
                     let refriPostingData = objDic["RefrigeratorPostingData"] as? [Any] ?? []
                     for refriDic in refriPostingData {
                         let RefriData = refriDic as? [String:Any] ?? [:]
-                        let id = RefriData["Id"] as? Int ?? 0
                         let assessmentId = RefriData["AssessmentId"] as? Int ?? 0
                         let assessmentDetailId = RefriData["AssessmentDetailId"] as? Int ?? 0
                         let refValue = RefriData["RefValue"] as? Double ?? 0.0
                         let isNa = RefriData["IsNa"] as? Bool ?? false
                         let isCheck = RefriData["IsCheck"] as? Bool ?? false
-                        let userId = RefriData["UserId"] as? Int ?? 0
                         let refUnit = RefriData["RefUnit"] as? String ?? ""
                         CoreDataHandlerPE().saveOfflineRefrigatorInDB((assessmentId ?? 0) as NSNumber,  labelText: "", rollOut: "Y", unit:  refUnit ?? "", value: refValue ?? 0.0,catID: 11 ,isCheck: isCheck ?? false,isNA: isNa ?? false,schAssmentId: assessmentDetailId ?? 0)
                     }
@@ -5007,12 +4778,9 @@ extension PEDashboardViewController{
                         let VaccineId = DayOfAgeIS["DayAgeSubcutaneousMfgNameId"] as? Int ?? 0
                         let AmpuleSize = DayOfAgeIS["DayAgeSubcutaneousAmpuleSize"] as? Int ?? 0
                         var AmpuleSizeStr = ""
-                        var ampleSizeesNameArray = NSArray()
-                        var ampleSizeIDArray = NSArray()
-                        var ampleSizeDetailArray = NSArray()
-                        ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
                         if AmpuleSize != 0 {
                             let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
                             AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
@@ -5024,26 +4792,20 @@ extension PEDashboardViewController{
                         let DiluentMfg = DayOfAgeIS["DayAgeSubcutaneousDiluentMfg"] as? String ?? ""
                         var VManufacturerName = ""
                         var VName = ""
-                        var vManufacutrerNameArray = NSArray()
-                        var vManufacutrerIDArray = NSArray()
-                        var vManufacutrerDetailsArray = NSArray()
-                        vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxx =    ManufacturerId
+                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let xxx = ManufacturerId
                         if xxx != 0 {
                             let indexOfd = vManufacutrerIDArray.index(of: xxx)
                             if vManufacutrerNameArray.count > indexOfd{
                                 VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
                             }
                         }
-                        var vNameArray = NSArray()
-                        var vIDArray = NSArray()
-                        var vDetailsArray = NSArray()
-                        vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
-                        vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxxx =    VaccineId
+                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
+                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let xxxx = VaccineId
                         if xxxx != 0 {
                             if vIDArray.contains(xxxx){
                                 let indexOfd = vIDArray.index(of: xxxx)
@@ -5058,7 +4820,7 @@ extension PEDashboardViewController{
                             VName = otherText
                         }
                         
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
                         let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
                         
                         peNewAssessmentInProgress.dDCS  = DiluentMfg
@@ -5195,20 +4957,17 @@ extension PEDashboardViewController{
                 peNewAssessmentWas.isPERejected = objDic["IsPERejected"] as? Bool ?? false
                 peNewAssessmentWas.emRejectedComment = objDic["EMRejectedComment"] as? String ?? ""
                 
-                if let doubleSanitation =  objDic["DoubleSanitation"] as? Bool{
-                    if doubleSanitation {
-                        peNewAssessmentWas.hatcheryAntibiotics = 1
-                    }
+                if let doubleSanitation =  objDic["DoubleSanitation"] as? Bool, doubleSanitation {
+                    peNewAssessmentWas.hatcheryAntibiotics = 1
                 }
                 let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
                 let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
                 let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                if  peNewAssessmentWas.selectedTSRID != 0 {
-                    if visitIDArray.contains( peNewAssessmentWas.selectedTSRID){
-                        let indexOfe =  visitIDArray.index(of: peNewAssessmentWas.selectedTSRID)
-                        let TSRName = visitNameArray[indexOfe] as? String ?? ""
-                        peNewAssessmentWas.selectedTSR =  TSRName
-                    }
+                if peNewAssessmentWas.selectedTSRID != 0,
+                   visitIDArray.contains(peNewAssessmentWas.selectedTSRID ?? 0) {
+                    let indexOfe = visitIDArray.index(of: peNewAssessmentWas.selectedTSRID ?? 0)
+                    let TSRName = visitNameArray[indexOfe] as? String ?? ""
+                    peNewAssessmentWas.selectedTSR =  TSRName
                 }
                 
                 peNewAssessmentWas.evaluatorName = objDic["UserName"] as? String ?? ""
@@ -5336,11 +5095,9 @@ extension PEDashboardViewController{
                         let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
                         let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
                         let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-                        if FrequencyValue != 32 {
-                            if visitIDArray.contains(FrequencyValue){
-                                let indexOfe =  visitIDArray.index(of: FrequencyValue) //
-                                FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
-                            }
+                        if FrequencyValue != 32,visitIDArray.contains(FrequencyValue) {
+                            let indexOfe =  visitIDArray.index(of: FrequencyValue) //
+                            FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
                         }
                         
                         let isNAValue = questionMark["IsNA"] as? Bool ?? false
@@ -5426,13 +5183,11 @@ extension PEDashboardViewController{
                     for qMark in allAssesmentArr {
                         let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
                         for assID in assNAArray {
-                            let assIsNA = assID["IsNA"] as? Bool ?? false
                             let AssessmentId = assID["ModuleAssessmentId"] as? Int ?? 0
                             
-                            if ( Int(truncating: objMark.assID ?? 0) == AssessmentId ) {
+                            if Int(truncating: objMark.assID ?? 0) == AssessmentId {
                                 CoreDataHandlerPE().update_isNAInAssessmentInProgress(isNA: true, assID: Int(objMark.assID ?? 0))
                             }
-                            
                         }
                     }
                     
@@ -5470,12 +5225,9 @@ extension PEDashboardViewController{
                         let AmpuleSize = inoDicIS["AmpuleSize"] as? Int ?? 0
                         var AmpuleSizeStr = ""
                         let AntibioticInformation =  inoDicIS["AntibioticInformation"] as? String ?? ""
-                        var ampleSizeesNameArray = NSArray()
-                        var ampleSizeIDArray = NSArray()
-                        var ampleSizeDetailArray = NSArray()
-                        ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
                         if AmpuleSize != 0 {
                             let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
                             AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
@@ -5483,20 +5235,15 @@ extension PEDashboardViewController{
                         
                         let AmpulePerbag = inoDicIS["AmpulePerbag"] as? Int ?? 0
                         let HatcheryAntibiotics =  inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
-                        let ManufacturerId = inoDicIS["ManufacturerId"] as? Int ?? 0
                         let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
                         let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
                         var VName = ""
                         let ProgramName = inoDicIS["ProgramName"] as? String ?? ""
                         let DiluentsMfgOtherName = inoDicIS["DiluentsMfgOtherName"] as? String ?? ""
                         
-                        
-                        var vNameArray = NSArray()
-                        var vIDArray = NSArray()
-                        var vDetailsArray = NSArray()
-                        vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                        vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
+                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                         let xxxx =    VaccineId
                         if xxxx != 0 {
                             if vIDArray.contains(xxxx){
@@ -5542,12 +5289,9 @@ extension PEDashboardViewController{
                         let VaccineId = DayOfAgeIS["DayOfAgeMfgNameId"] as? Int ?? 0
                         let AmpuleSize = DayOfAgeIS["DayOfAgeAmpuleSize"] as? Int ?? 0
                         var AmpuleSizeStr = ""
-                        var ampleSizeesNameArray = NSArray()
-                        var ampleSizeIDArray = NSArray()
-                        var ampleSizeDetailArray = NSArray()
-                        ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
                         if AmpuleSize != 0 {
                             let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
                             AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
@@ -5560,12 +5304,9 @@ extension PEDashboardViewController{
                         let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
                         var VManufacturerName = ""
                         var VName = ""
-                        var vManufacutrerNameArray = NSArray()
-                        var vManufacutrerIDArray = NSArray()
-                        var vManufacutrerDetailsArray = NSArray()
-                        vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                         let xxx =    ManufacturerId
                         if xxx != 0 {
                             let indexOfd = vManufacutrerIDArray.index(of: xxx)
@@ -5573,20 +5314,16 @@ extension PEDashboardViewController{
                                 VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
                             }
                         }
-                        var vNameArray = NSArray()
-                        var vIDArray = NSArray()
-                        var vDetailsArray = NSArray()
-                        vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                        vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
-                        vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxxx =    VaccineId
+                        var vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
+                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let xxxx = VaccineId
                         if xxxx != 0 {
-                            if vIDArray.contains(xxxx){
+                            if vIDArray.contains(xxxx) {
                                 let indexOfd = vIDArray.index(of: xxxx)
                                 VName = vNameArray[indexOfd] as? String ?? ""
                             }
-                        }else {
+                        } else {
                             if VManufacturerName.lowercased().contains("other"){
                                 VName  = otherText
                                 
@@ -5596,7 +5333,7 @@ extension PEDashboardViewController{
                             VName = otherText
                         }
                         
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
                         let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
                         
                         peNewAssessmentInProgress.dCS  = DiluentMfg
@@ -5623,13 +5360,11 @@ extension PEDashboardViewController{
                     for refriDic in refriPostingData {
                         
                         let RefriData = refriDic as? [String:Any] ?? [:]
-                        let id = RefriData["Id"] as? Int ?? 0
                         let assessmentId = RefriData["AssessmentId"] as? Int ?? 0
                         let assessmentDetailId = RefriData["AssessmentDetailId"] as? Int ?? 0
                         let refValue = RefriData["RefValue"] as? Double ?? 0.0
                         let isNa = RefriData["IsNa"] as? Bool ?? false
                         let isCheck = RefriData["IsCheck"] as? Bool ?? false
-                        let userId = RefriData["UserId"] as? Int ?? 0
                         let refUnit = RefriData["RefUnit"] as? String ?? ""
                         CoreDataHandlerPE().saveDraftRefrigatorInDB((assessmentId ?? 0) as NSNumber,  labelText: "", rollOut: "Y", unit:  refUnit ?? "", value: refValue ?? 0.0,catID: 11 ,isCheck: isCheck ?? false,isNA: isNa ?? false,schAssmentId: assessmentDetailId ?? 0)
                         
@@ -5645,12 +5380,9 @@ extension PEDashboardViewController{
                         let VaccineId = DayOfAgeIS["DayAgeSubcutaneousMfgNameId"] as? Int ?? 0
                         let AmpuleSize = DayOfAgeIS["DayAgeSubcutaneousAmpuleSize"] as? Int ?? 0
                         var AmpuleSizeStr = ""
-                        var ampleSizeesNameArray = NSArray()
-                        var ampleSizeIDArray = NSArray()
-                        var ampleSizeDetailArray = NSArray()
-                        ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
                         if AmpuleSize != 0 {
                             let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
                             AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
@@ -5662,25 +5394,19 @@ extension PEDashboardViewController{
                         let DiluentMfg = DayOfAgeIS["DayAgeSubcutaneousDiluentMfg"] as? String ?? ""
                         var VManufacturerName = ""
                         var VName = ""
-                        var vManufacutrerNameArray = NSArray()
-                        var vManufacutrerIDArray = NSArray()
-                        var vManufacutrerDetailsArray = NSArray()
-                        vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxx =    ManufacturerId
+                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let xxx = ManufacturerId
                         if xxx != 0 {
                             let indexOfd = vManufacutrerIDArray.index(of: xxx)
                             if vManufacutrerNameArray.count > indexOfd{
                                 VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
                             }
                         }
-                        var vNameArray = NSArray()
-                        var vIDArray = NSArray()
-                        var vDetailsArray = NSArray()
-                        vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
-                        vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
+                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                         let xxxx =    VaccineId
                         if xxxx != 0 {
                             if vIDArray.contains(xxxx){
@@ -5696,7 +5422,7 @@ extension PEDashboardViewController{
                             VName = otherText
                         }
                         
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
                         let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
                         
                         peNewAssessmentInProgress.dDCS  = DiluentMfg
@@ -5705,7 +5431,7 @@ extension PEDashboardViewController{
                         peNewAssessmentInProgress.residue = ""
                         if HatcheryAntibiotics == true{
                             peNewAssessmentInProgress.hatcheryAntibioticsDoaS = 1
-                        } else{
+                        } else {
                             peNewAssessmentInProgress.hatcheryAntibioticsDoaS = 0
                         }
                         let AntibioticInformation = DayOfAgeIS["AntibioticInformation"] as? String ?? ""
@@ -5740,7 +5466,7 @@ extension PEDashboardViewController{
                         let imageCount = getVMixerCountInPEModule()
                         let certificateData =  PECertificateData(id:imageCount + 1,name:Name,date:CertificationDateIS,isCertExpired: isCertExpired,isReCert: isReCert,vacOperatorId: vacOperatorId, signatureImg: signatureImg, fsrSign: fsrSignatureImage)
                         
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
                         
                         CoreDataHandlerPE().saveVMixerPEModuleGet(peCertificateData: certificateData,evalutionID:peNewAssessmentInProgress.evaluationID , CategoryID: catId)
                     }
@@ -5784,15 +5510,13 @@ extension PEDashboardViewController{
     // MARK: - Handle PE Posting Assessment images List API Responce
     private func handlGetPostingAssessmentImagesListByUser(_ json: JSON) {
         var dataDic : [String:Any] = [:]
-        var dataArray : [Any] = []
         if let string = json.rawString() {
             dataDic = string.convertToDictionary() ?? [:]
         }
-        dataArray = dataDic["Data"] as? [Any] ?? []
+        let dataArray = dataDic["Data"] as? [Any] ?? []
         for obj in dataArray {
             DispatchQueue.main.async {
-                var objDic : [String:Any] = [:]
-                objDic =  obj as? [String:Any] ?? [:]
+                let objDic = obj as? [String:Any] ?? [:]
                 let base64Encoded = objDic["ImageBase64"] as? String ?? ""
                 let DisplayId = objDic["DisplayId"] as? String ?? ""
                 let DeviceId = objDic["Device_Id"] as? String ?? ""
@@ -5834,22 +5558,17 @@ extension PEDashboardViewController{
     // MARK: - Handle PE Rejected Assessment List API Responce
     private func handlGetRejectedAssessmentListByUser(_ json: JSON) {
         var dataDic : [String:Any] = [:]
-        var dataArray : [Any] = []
         if let string = json.rawString() {
             dataDic = string.convertToDictionary() ?? [:]
         }
         var count = 0
-        dataArray = dataDic["Data"] as? [Any] ?? []
+        let dataArray = dataDic["Data"] as? [Any] ?? []
         if  dataArray.count  > 0 {
             self.deleteAllDataWithUserID("PE_AssessmentRejected")
         }
         for obj in dataArray {
             
-            var objDic : [String:Any] = [:]
-            objDic =  obj as? [String:Any] ?? [:]
-            
-            let SaveType = objDic["SaveType"] as? Int ?? 0
-            
+            let objDic = obj as? [String:Any] ?? [:]
             count += 1
             UserDefaults.standard.setValue(count, forKey: "rejectedCountIS")
             
@@ -5903,10 +5622,8 @@ extension PEDashboardViewController{
             peNewAssessmentWas.evaluationID  = EvaluationId
             peNewAssessmentWas.isHandMix = objDic["Handmix"] as? Bool ?? false
             
-            if let doubleSanitation =  objDic["DoubleSanitation"] as? Bool{
-                if doubleSanitation {
-                    peNewAssessmentWas.hatcheryAntibiotics = 1
-                }
+            if let doubleSanitation = objDic["DoubleSanitation"] as? Bool, doubleSanitation {
+                peNewAssessmentWas.hatcheryAntibiotics = 1
             }
             
             peNewAssessmentWas.userID = objDic["UserId"] as? Int ?? 0
@@ -5942,12 +5659,11 @@ extension PEDashboardViewController{
             let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
             let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
             let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-            if  peNewAssessmentWas.selectedTSRID != 0 {
-                if visitIDArray.contains( peNewAssessmentWas.selectedTSRID as Any){
-                    let indexOfe =  visitIDArray.index(of: peNewAssessmentWas.selectedTSRID as Any)
-                    let TSRName = visitNameArray[indexOfe] as? String ?? ""
-                    peNewAssessmentWas.selectedTSR =  TSRName
-                }
+            if peNewAssessmentWas.selectedTSRID != 0,
+               visitIDArray.contains( peNewAssessmentWas.selectedTSRID as Any) {
+                let indexOfe =  visitIDArray.index(of: peNewAssessmentWas.selectedTSRID as Any)
+                let TSRName = visitNameArray[indexOfe] as? String ?? ""
+                peNewAssessmentWas.selectedTSR =  TSRName
             }
             
             let manuOthers = objDic["ManufacturerOther"] as? String ?? ""
@@ -6001,17 +5717,14 @@ extension PEDashboardViewController{
             pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(jsonRe)
             
             var peCategoryFilteredArray: [PECategory] =  []
-            for object in pECategoriesAssesmentsResponse.peCategoryArray{
-                if peNewAssessmentWas.evaluationID == object.evaluationID{
-                    if object.id != 36{
-                        peCategoryFilteredArray.append(object)
-                    }
+            for object in pECategoriesAssesmentsResponse.peCategoryArray {
+                if peNewAssessmentWas.evaluationID == object.evaluationID, object.id != 36 {
+                    peCategoryFilteredArray.append(object)
                 }
             }
             
             let questionInfo = (getJSON("QuestionAnsInfo") ?? JSON())
             let infoImageDataResponse = InfoImageDataResponse(questionInfo)
-            let categoryCount = filterCategoryCount(peNewAssessmentOf: peNewAssessmentWas)
             var peNewAssessmentNew = PENewAssessment()
             if peCategoryFilteredArray.count > 0 {
                 for  cat in  peCategoryFilteredArray {
@@ -6064,11 +5777,10 @@ extension PEDashboardViewController{
                     let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
                     let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
                     let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-                    if FrequencyValue != 32 {
-                        if visitIDArray.contains(FrequencyValue){
-                            let indexOfe =  visitIDArray.index(of: FrequencyValue) //
-                            FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
-                        }
+                    if FrequencyValue != 32,visitIDArray.contains(FrequencyValue) {
+                        let indexOfe =  visitIDArray.index(of: FrequencyValue) //
+                        FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
+                        
                     }
                     let isNAValue = questionMark["IsNA"] as? Bool ?? false
                     let TextAmPm = questionMark["TextAmPm"] as? String ?? ""
@@ -6150,7 +5862,6 @@ extension PEDashboardViewController{
                 for qMark in allAssesmentArr {
                     let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
                     for assID in assNAArray {
-                        let assIsNA = assID["IsNA"] as? Bool ?? false
                         let AssessmentId = assID["ModuleAssessmentId"] as? Int ?? 0
                         
                         if ( Int(truncating: objMark.assID ?? 0) == AssessmentId ) {
@@ -6179,7 +5890,6 @@ extension PEDashboardViewController{
                     }
                 }
                 //comment ends
-                let EvaluationId = objDic["EvaluationId"] as? Int ?? 0
                 let InovojectPostingData = objDic["InovojectPostingData"] as? [Any] ?? []
                 let VaccineMixerObservedPostingData = objDic["VaccineMixerObservedPostingData"] as? [Any] ?? []
                 
@@ -6193,40 +5903,29 @@ extension PEDashboardViewController{
                     let AmpuleSize = inoDicIS["AmpuleSize"] as? Int ?? 0
                     var AmpuleSizeStr = ""
                     let AntibioticInformation =  inoDicIS["AntibioticInformation"] as? String ?? ""
-                    var ampleSizeesNameArray = NSArray()
-                    var ampleSizeIDArray = NSArray()
-                    var ampleSizeDetailArray = NSArray()
-                    ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                    ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                    ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+                    let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+                    let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+                    let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
                     if AmpuleSize != 0 {
                         let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
                         AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
                     }
                     let AmpulePerbag = inoDicIS["AmpulePerbag"] as? Int ?? 0
                     let HatcheryAntibiotics =  inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
-                    let ManufacturerId = inoDicIS["ManufacturerId"] as? Int ?? 0
                     let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
                     let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
                     var VManufacturerName = ""
                     var VName = ""
                     let ProgramName = inoDicIS["ProgramName"] as? String ?? ""
                     let DiluentsMfgOtherName = inoDicIS["DiluentsMfgOtherName"] as? String ?? ""
+                    let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+                    let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+                    let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                     
-                    var vManufacutrerNameArray = NSArray()
-                    var vManufacutrerIDArray = NSArray()
-                    var vManufacutrerDetailsArray = NSArray()
-                    vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                    vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                    vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    
-                    var vNameArray = NSArray()
-                    var vIDArray = NSArray()
-                    var vDetailsArray = NSArray()
-                    vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                    vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                    vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    let xxxx =    VaccineId
+                    let vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
+                    let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+                    let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                    let xxxx = VaccineId
                     if xxxx != 0 {
                         if vIDArray.contains(xxxx){
                             let indexOfd = vIDArray.index(of: xxxx)
@@ -6240,7 +5939,7 @@ extension PEDashboardViewController{
                         VName = otherString
                     }
                     
-                    let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+                    let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
                     
                     var HatcheryAntibioticsIntVal = 0
                     if HatcheryAntibiotics == true{
@@ -6271,12 +5970,9 @@ extension PEDashboardViewController{
                     let VaccineId = DayOfAgeIS["DayOfAgeMfgNameId"] as? Int ?? 0
                     let AmpuleSize = DayOfAgeIS["DayOfAgeAmpuleSize"] as? Int ?? 0
                     var AmpuleSizeStr = ""
-                    var ampleSizeesNameArray = NSArray()
-                    var ampleSizeIDArray = NSArray()
-                    var ampleSizeDetailArray = NSArray()
-                    ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                    ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                    ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+                    let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+                    let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+                    let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
                     if AmpuleSize != 0 {
                         let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
                         AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
@@ -6289,12 +5985,9 @@ extension PEDashboardViewController{
                     let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
                     var VManufacturerName = ""
                     var VName = ""
-                    var vManufacutrerNameArray = NSArray()
-                    var vManufacutrerIDArray = NSArray()
-                    var vManufacutrerDetailsArray = NSArray()
-                    vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                    vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                    vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                    let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+                    let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+                    let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                     let xxx =    ManufacturerId
                     if xxx != 0 {
                         
@@ -6303,13 +5996,9 @@ extension PEDashboardViewController{
                             VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
                         }
                     }
-                    var vNameArray = NSArray()
-                    var vIDArray = NSArray()
-                    var vDetailsArray = NSArray()
-                    vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                    vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
-                    vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                    vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                    let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
+                    let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+                    let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                     let xxxx =    VaccineId
                     if xxxx != 0 {
                         if vIDArray.contains(xxxx){
@@ -6358,12 +6047,9 @@ extension PEDashboardViewController{
                     let VaccineId = DayOfAgeIS["DayAgeSubcutaneousMfgNameId"] as? Int ?? 0
                     let AmpuleSize = DayOfAgeIS["DayAgeSubcutaneousAmpuleSize"] as? Int ?? 0
                     var AmpuleSizeStr = ""
-                    var ampleSizeesNameArray = NSArray()
-                    var ampleSizeIDArray = NSArray()
-                    var ampleSizeDetailArray = NSArray()
-                    ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                    ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                    ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+                    let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+                    let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+                    let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
                     if AmpuleSize != 0 {
                         let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
                         AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
@@ -6375,25 +6061,19 @@ extension PEDashboardViewController{
                     let DiluentMfg = DayOfAgeIS["DayAgeSubcutaneousDiluentMfg"] as? String ?? ""
                     var VManufacturerName = ""
                     var VName = ""
-                    var vManufacutrerNameArray = NSArray()
-                    var vManufacutrerIDArray = NSArray()
-                    var vManufacutrerDetailsArray = NSArray()
-                    vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                    vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                    vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    let xxx =    ManufacturerId
+                    let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+                    let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+                    let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                    let xxx = ManufacturerId
                     if xxx != 0 {
                         let indexOfd = vManufacutrerIDArray.index(of: xxx)
                         if vManufacutrerNameArray.count > indexOfd{
                             VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
                         }
                     }
-                    var vNameArray = NSArray()
-                    var vIDArray = NSArray()
-                    var vDetailsArray = NSArray()
-                    vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
-                    vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                    vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+                    let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
+                    let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+                    let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                     let xxxx =    VaccineId
                     if xxxx != 0 {
                         if vIDArray.contains(xxxx){
@@ -6492,13 +6172,11 @@ extension PEDashboardViewController{
                 let refriPostingData = objDic["RefrigeratorPostingData"] as? [Any] ?? []
                 for refriDic in refriPostingData {
                     let RefriData = refriDic as? [String:Any] ?? [:]
-                    let id = RefriData["Id"] as? Int ?? 0
                     let assessmentId = RefriData["AssessmentId"] as? Int ?? 0
                     let assessmentDetailId = RefriData["AssessmentDetailId"] as? Int ?? 0
                     let refValue = RefriData["RefValue"] as? Double ?? 0.0
                     let isNa = RefriData["IsNa"] as? Bool ?? false
                     let isCheck = RefriData["IsCheck"] as? Bool ?? false
-                    let userId = RefriData["UserId"] as? Int ?? 0
                     let refUnit = RefriData["RefUnit"] as? String ?? ""
                     CoreDataHandlerPE().saveRejectRefrigatorInDB((assessmentId ?? 0) as NSNumber,  labelText: "", rollOut: "Y", unit:  refUnit ?? "", value: refValue ?? 0.0,catID: 11 ,isCheck: isCheck ?? false,isNA: isNa ?? false,schAssmentId: assessmentDetailId ?? 0)
                 }
