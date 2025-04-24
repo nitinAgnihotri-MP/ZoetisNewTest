@@ -163,15 +163,13 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
         
         txtBreedOfBird.text = self.peNewAssessment.breedOfBird
-        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
-            if character == constantToSave.character(at: 0){
-                showBreedOthers()
-                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-                txtBreedOfBirdsOthers.text = str
-                txtBreedOfBird.text = "Other"
-            }
+        if let character = peNewAssessment.breedOfBird?.character(at: 1),character == constantToSave.character(at: 0) {
+            showBreedOthers()
+            let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
+            txtBreedOfBirdsOthers.text = str
+            txtBreedOfBird.text = "Other"
         }
-        txtBreedOfBirdsOthers.text =    self.peNewAssessment.breedOfBirdOther
+        txtBreedOfBirdsOthers.text = self.peNewAssessment.breedOfBirdOther
         txtIncubation.text =  self.peNewAssessment.incubation
         txtIncubationOthers.text =   self.peNewAssessment.incubationOthers
         
@@ -223,18 +221,16 @@ class PEDraftStartNewAssessment: BaseViewController {
         hideManufacturerOthers()
         hideEggsOthers()
         txtManufacturer.text = self.peNewAssessment.manufacturer ?? ""
-        if  txtManufacturer.text != "" {
-            if let character = peNewAssessment.manufacturer?.character(at:0) {
-                if txtManufacturer.text == "Other"{
-                    showManufacturerOthers()
-                }
-                if character == constantToSave.character(at: 0){
-                    showManufacturerOthers()
-                    let str =  peNewAssessment.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
-                    manfacturerOtherTxt.text = str
-                    txtManufacturer.text = "Other"
-                    showManufacturerOthers()
-                }
+        if txtManufacturer.text != "",let character = peNewAssessment.manufacturer?.character(at:0) {
+            if txtManufacturer.text == "Other"{
+                showManufacturerOthers()
+            }
+            if character == constantToSave.character(at: 0) {
+                showManufacturerOthers()
+                let str =  peNewAssessment.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
+                manfacturerOtherTxt.text = str
+                txtManufacturer.text = "Other"
+                showManufacturerOthers()
             }
         }
         let xx = String(self.peNewAssessment.noOfEggs ?? 000)
@@ -248,12 +244,12 @@ class PEDraftStartNewAssessment: BaseViewController {
             }
         }
         
-        if peNewAssessment.isFlopSelected == 1 ||  peNewAssessment.isFlopSelected == 3 ||  peNewAssessment.isFlopSelected == 4 {
+        if peNewAssessment.isFlopSelected == 1 || peNewAssessment.isFlopSelected == 3 || peNewAssessment.isFlopSelected == 4 {
             isFlockAgeGreaterTheAllProd = true
             btnFlockAgeGreater.setImage(UIImage(named: "checkIconPE"), for: .normal)
             isFlockAgeGreaterThen50Weeks = false
             btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-        } else  if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5  {
+        } else if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5 {
             isFlockAgeGreaterTheAllProd = false
             btnFlockAgeGreater.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
             isFlockAgeGreaterThen50Weeks = true
@@ -338,17 +334,17 @@ class PEDraftStartNewAssessment: BaseViewController {
     fileprivate func handleCase0(_ rightConst: Int, _ leftConst: Int) {
         switch rightConst {
         case 1:
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 30))
+            if heightNumberOfEggsView.constant == 94 {
+                notesTop.constant = CGFloat((leftConst * 55 ) + 30)
             }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
+                notesTop.constant = CGFloat((leftConst * 55 ) + 40 )
             }
         case 2:
-            notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            notesTop.constant = CGFloat((leftConst * 55 ) + 20)
         default:
-            notesTop.constant = CGFloat(((leftConst * 55 ) + 100))
+            notesTop.constant = CGFloat((leftConst * 55 ) + 100)
             if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+                notesTop.constant = CGFloat((leftConst * 55 ) + 40)
             }
         }
     }
@@ -358,21 +354,21 @@ class PEDraftStartNewAssessment: BaseViewController {
         case 1:
             if heightNumberOfEggsView.constant == 94{
                 if heightManufacturerView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 )) - 20)
+                    notesTop.constant = CGFloat((leftConst * 55 ) - 20)
                 }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 )) + 20)
+                    notesTop.constant = CGFloat((leftConst * 55 ) + 20)
                 }
             }else{
-                notesTop.constant = CGFloat(((leftConst * 55 )) + 20)
+                notesTop.constant = CGFloat((leftConst * 55 ) + 20)
             }
         case 2:
-            notesTop.constant = CGFloat(((leftConst * 55 ) - 20))
+            notesTop.constant = CGFloat((leftConst * 55 ) - 20)
         default:
             
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+            if heightNumberOfEggsView.constant == 94 {
+                notesTop.constant = CGFloat((leftConst * 55 ) + 20)
             }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 75))
+                notesTop.constant = CGFloat((leftConst * 55 ) + 75)
             }
         }
     }
@@ -381,24 +377,24 @@ class PEDraftStartNewAssessment: BaseViewController {
         switch rightConst {
             
         case 1:
-            if heightNumberOfEggsView.constant == 94{
-                if heightManufacturerView.constant == 94{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
+            if heightNumberOfEggsView.constant == 94 {
+                if heightManufacturerView.constant == 94 {
+                    notesTop.constant = CGFloat((leftConst * 55 ) - 75)
                 }else{
-                    notesTop.constant = CGFloat(((leftConst * 55 ) - 35))
+                    notesTop.constant = CGFloat((leftConst * 55 ) - 35)
                 }
             }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
+                notesTop.constant = CGFloat((leftConst * 55 ) - 30)
             }
         case 2:
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 85))
+            if heightNumberOfEggsView.constant == 94 {
+                notesTop.constant = CGFloat((leftConst * 55 ) - 85)
             }
         default:
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) ) - 30)
+            if heightNumberOfEggsView.constant == 94 {
+                notesTop.constant = CGFloat((leftConst * 55 ) - 30)
             }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+                notesTop.constant = CGFloat((leftConst * 55 ) + 20)
             }
         }
     }
@@ -436,9 +432,7 @@ class PEDraftStartNewAssessment: BaseViewController {
     func rightConstraint()-> Int{
         var otherCount = 0
         
-        if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-            otherCount += 1
-        } else if self.txtManufacturer.text?.contains("S") ?? false {
+        if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false),self.txtManufacturer.text?.contains("S") ?? false {
             otherCount += 1
         }
         
@@ -515,7 +509,6 @@ class PEDraftStartNewAssessment: BaseViewController {
     }
     
     func setupUI(){
-        var regionID = Int()
         btnNext.setNextButtonUI()
         viewForGradient.setGradientThreeColors(topGradientColor: UIColor.getGradientUpperColorStartAssessment(),midGradientColor:UIColor.getGradientUpperColorStartAssessmentMid(), bottomGradientColor: UIColor.getGradientUpperColorStartAssessmentLast())
         containerView.setCornerRadiusFloat(radius: 23)
@@ -543,7 +536,7 @@ class PEDraftStartNewAssessment: BaseViewController {
             self.selectedEvaluationDateText.alpha = 0.6
         }
         
-        for btn in btns{
+        for btn in btns {
             setBtnBackground(btn)
         }
         notesTextView.layer.cornerRadius = 12
@@ -551,38 +544,36 @@ class PEDraftStartNewAssessment: BaseViewController {
         notesTextView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
         notesTextView.layer.borderWidth = 2.0
         
-        if self.regionID == 3 {
-            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
-            {
-                self.evaluationTypeButton.isUserInteractionEnabled = false
-                self.evaluationDateButton.isUserInteractionEnabled = false
-                self.notesTextView.isUserInteractionEnabled = false
-                self.handmixSwitch.isUserInteractionEnabled = false
-                self.hatcherySwitch.isUserInteractionEnabled = false
-                self.cameraSwitch.isUserInteractionEnabled = false
-                self.eggsOtherBtn.isUserInteractionEnabled = false
-                self.txtNumberOfEggs.isUserInteractionEnabled = false
-                self.eggsOtherTxt.isUserInteractionEnabled = false
-                self.txtManufacturer.isUserInteractionEnabled = false
-                self.manufacturerButton.isUserInteractionEnabled = false
-                self.btnIncubation.isUserInteractionEnabled = false
-                self.btnIncubationOthers.isUserInteractionEnabled = false
-                self.txtIncubationOthers.isUserInteractionEnabled = false
-                self.manfacturerOtherBtn.isUserInteractionEnabled = false
-                self.manfacturerOtherTxt.isUserInteractionEnabled = false
-                self.chlorineStripsSwitch.isUserInteractionEnabled = false
-                self.extendedPESwitch.isUserInteractionEnabled = false
-                self.isAutomaticSwitch.isUserInteractionEnabled = false
-                self.btnBreed.isUserInteractionEnabled = false
-                self.txtBreedOfBird.isUserInteractionEnabled = false
-                self.txtBreedOfBirdsOthers.isUserInteractionEnabled = false
-                self.btnBreedOthers.isUserInteractionEnabled = false
-                self.numberOfEggsButton.isUserInteractionEnabled = false
-                self.btnFlockImageLower.isUserInteractionEnabled = false
-                self.btnFlockAgeGreater.isUserInteractionEnabled = false
-            }
+        if self.regionID == 3,
+           (peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true) {
+            
+            self.evaluationTypeButton.isUserInteractionEnabled = false
+            self.evaluationDateButton.isUserInteractionEnabled = false
+            self.notesTextView.isUserInteractionEnabled = false
+            self.handmixSwitch.isUserInteractionEnabled = false
+            self.hatcherySwitch.isUserInteractionEnabled = false
+            self.cameraSwitch.isUserInteractionEnabled = false
+            self.eggsOtherBtn.isUserInteractionEnabled = false
+            self.txtNumberOfEggs.isUserInteractionEnabled = false
+            self.eggsOtherTxt.isUserInteractionEnabled = false
+            self.txtManufacturer.isUserInteractionEnabled = false
+            self.manufacturerButton.isUserInteractionEnabled = false
+            self.btnIncubation.isUserInteractionEnabled = false
+            self.btnIncubationOthers.isUserInteractionEnabled = false
+            self.txtIncubationOthers.isUserInteractionEnabled = false
+            self.manfacturerOtherBtn.isUserInteractionEnabled = false
+            self.manfacturerOtherTxt.isUserInteractionEnabled = false
+            self.chlorineStripsSwitch.isUserInteractionEnabled = false
+            self.extendedPESwitch.isUserInteractionEnabled = false
+            self.isAutomaticSwitch.isUserInteractionEnabled = false
+            self.btnBreed.isUserInteractionEnabled = false
+            self.txtBreedOfBird.isUserInteractionEnabled = false
+            self.txtBreedOfBirdsOthers.isUserInteractionEnabled = false
+            self.btnBreedOthers.isUserInteractionEnabled = false
+            self.numberOfEggsButton.isUserInteractionEnabled = false
+            self.btnFlockImageLower.isUserInteractionEnabled = false
+            self.btnFlockAgeGreater.isUserInteractionEnabled = false
         }
-        
     }
     
     fileprivate func loadManufacturerOtherUI() {
@@ -629,13 +620,11 @@ class PEDraftStartNewAssessment: BaseViewController {
             selectedTSR.alpha = 0.6
         }
         
-        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
-            if character == constantToSave.character(at: 0){
-                showBreedOthers()
-                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-                txtBreedOfBirdsOthers.text = str
-                txtBreedOfBird.text = "Other"
-            }
+        if let character = peNewAssessment.breedOfBird?.character(at: 1),character == constantToSave.character(at: 0) {
+            showBreedOthers()
+            let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
+            txtBreedOfBirdsOthers.text = str
+            txtBreedOfBird.text = "Other"
         }
         if peNewAssessment.breedOfBird == "Other"{
             showBreedOthers()
@@ -644,13 +633,11 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
         
         txtBreedOfBird.text = self.peNewAssessment.breedOfBird
-        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
-            if character == constantToSave.character(at: 0){
-                showBreedOthers()
-                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-                txtBreedOfBirdsOthers.text = str
-                txtBreedOfBird.text = "Other"
-            }
+        if let character = peNewAssessment.breedOfBird?.character(at: 1),character == constantToSave.character(at: 0) {
+            showBreedOthers()
+            let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
+            txtBreedOfBirdsOthers.text = str
+            txtBreedOfBird.text = "Other"
         }
         txtBreedOfBirdsOthers.text =    self.peNewAssessment.breedOfBirdOther
         
@@ -658,7 +645,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         hideEggsOthers()
         
         txtManufacturer.text = self.peNewAssessment.manufacturer ?? ""
-        if  txtManufacturer.text != "" {
+        if txtManufacturer.text != "" {
             loadManufacturerOtherUI()
         }
         let xx = String(self.peNewAssessment.noOfEggs ?? 000)
@@ -733,7 +720,7 @@ class PEDraftStartNewAssessment: BaseViewController {
     // MARK: Manufacturer Button Action
     @IBAction func manufacutrerClicked(_ sender: Any) {
         
-        let superviewCurrent =  manufacturerButton.superview
+        let superviewCurrent = manufacturerButton.superview
         if superviewCurrent != nil {
             for view in superviewCurrent!.subviews {
                 if view.isKind(of:UIButton.self) {
@@ -743,23 +730,19 @@ class PEDraftStartNewAssessment: BaseViewController {
             }
         }
         
-        var manufacutrerNameArray = NSArray()
-        var manufacutrerIDArray = NSArray()
-        var manufacutrerDetailsArray = NSArray()
-        manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
-        manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
-        manufacutrerIDArray = manufacutrerDetailsArray.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
-        if  manufacutrerNameArray.count > 0 {
+        let manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
+        let manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
+        if manufacutrerNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: manufacutrerNameArray as? [String] ?? [String](), kWidth: btnIncubation.frame.width, kAnchor: btnIncubation, yheight: btnIncubation.bounds.height) { [unowned self] selectedVal, index  in
                 self.txtManufacturer.text = selectedVal
                 self.peNewAssessment.manufacturer = self.txtManufacturer.text ?? ""
                 self.checkBackAndSave()
-                if self.peNewAssessment.manufacturer == "Other"{
+                if self.peNewAssessment.manufacturer == "Other" {
                     self.showManufacturerOthers()
                 } else {
                     self.hideManufacturerOthers()
                 }
-                if selectedVal == "Other"{
+                if selectedVal == "Other" {
                     
                     self.txtManufacturer.text = selectedVal
                     self.manfacturerOtherTxt.text = ""
@@ -783,13 +766,9 @@ class PEDraftStartNewAssessment: BaseViewController {
             }
         }
         
-        var EggsIDArray = NSArray()
-        var EggsNameArray = NSArray()
-        var EggsDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
-        EggsNameArray = EggsDetailsArray.value(forKey: "eggCount") as? NSArray ?? NSArray()
-        EggsIDArray = EggsDetailsArray.value(forKey: "eggId") as? NSArray ?? NSArray()
-        
-        if  EggsNameArray.count > 0 {
+        let EggsDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
+        let EggsNameArray = EggsDetailsArray.value(forKey: "eggCount") as? NSArray ?? NSArray()
+        if EggsNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: EggsNameArray as? [String] ??  [String](), kWidth: txtNumberOfEggs.frame.width, kAnchor: txtNumberOfEggs, yheight: txtNumberOfEggs.bounds.height) { [unowned self] selectedVal, index  in
                 self.txtNumberOfEggs.text = selectedVal
                 if selectedVal == "Other"{
@@ -1022,8 +1001,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         
     }
     
-    func checkManufactrIncubationNumberOfEggsValidation ()
-    {
+    func checkManufactrIncubationNumberOfEggsValidation() {
         if self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
             manufacturerOtherValidation()
         } else {
@@ -1031,9 +1009,7 @@ class PEDraftStartNewAssessment: BaseViewController {
             return
         }
         
-        if peNewAssessment.incubation != nil && peNewAssessment.incubation != "" {
-            
-        } else {
+        if (peNewAssessment.incubation != nil && peNewAssessment.incubation != "") == false{
             changeMandatorySuperviewToRed()
             return
         }
@@ -1073,9 +1049,8 @@ class PEDraftStartNewAssessment: BaseViewController {
         if let notesTxt = notesTextView.text , notesTxt.count > 0 {
             peNewAssessment.notes =   notesTxt
         }
-        let firstNameIs =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
-        var FirstName =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
-        var LastName =  UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
+        var FirstName = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
+        let LastName = UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
         FirstName = FirstName + LastName
         self.peNewAssessment.username = FirstName
         self.peNewAssessment.firstname = FirstName
@@ -1113,9 +1088,8 @@ class PEDraftStartNewAssessment: BaseViewController {
         if let notesTxt = notesTextView.text , notesTxt.count > 0 {
             peNewAssessment.notes =   notesTxt
         }
-        let firstNameIs =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
-        var FirstName =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
-        var LastName =  UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
+        var FirstName = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
+        let LastName = UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
         FirstName = FirstName + LastName
         self.peNewAssessment.username = FirstName
         self.peNewAssessment.firstname = FirstName
@@ -1129,72 +1103,54 @@ class PEDraftStartNewAssessment: BaseViewController {
         
     }
     
-    private func saveDraftData(){
-        var allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentIDraftInProgress") as? [PE_AssessmentIDraftInProgress]
-        var count = 0
-        finishSession()
-    }
-    
     func finishSession()  {
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
     }
     
     // MARK: Check Mendatory Fields
     fileprivate func setBorderBreedOtherField() {
+        let superviewCurrent = btnBreedOthers.superview
         if ((peNewAssessment.breedOfBird?.lowercased().contains("other")) ?? false) {
-            if peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "" {
-                
-            }else{
-                let superviewCurrent =  btnBreedOthers.superview
-                if superviewCurrent != nil {
-                    for view in superviewCurrent!.subviews {
-                        if view.isKind(of:UIButton.self) {
-                            view.layer.borderColor = UIColor.red.cgColor
-                            view.layer.borderWidth = 2.0
-                        }
+            if (peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "") == false,superviewCurrent != nil {
+                for view in superviewCurrent!.subviews {
+                    if view.isKind(of:UIButton.self) {
+                        view.layer.borderColor = UIColor.red.cgColor
+                        view.layer.borderWidth = 2.0
                     }
                 }
             }
         }
     }
     
-    fileprivate func             setBorderManufctrerOtherField() {
+    fileprivate func setBorderManufctrerOtherField() {
+        let superviewCurrent = manfacturerOtherBtn.superview
         if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-            if manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "" {
-                
-            }else{
-                let superviewCurrent =  manfacturerOtherBtn.superview
-                if superviewCurrent != nil {
-                    for view in superviewCurrent!.subviews {
-                        if view.isKind(of:UIButton.self) {
-                            view.layer.borderColor = UIColor.red.cgColor
-                            view.layer.borderWidth = 2.0
-                        }
+            if (manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "") == false,superviewCurrent != nil {
+                for view in superviewCurrent!.subviews {
+                    if view.isKind(of:UIButton.self) {
+                        view.layer.borderColor = UIColor.red.cgColor
+                        view.layer.borderWidth = 2.0
                     }
                 }
             }
         }
     }
     
-    fileprivate func             setBorderForNmbrOfEggsField() {
+    fileprivate func setBorderForNmbrOfEggsField() {
+        let superviewCurrent = eggsOtherBtn.superview
         if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false) {
-            if eggsOtherTxt.text != nil && eggsOtherTxt.text != "" {
-                
-            }else{
-                let superviewCurrent =  eggsOtherBtn.superview
-                if superviewCurrent != nil {
-                    for view in superviewCurrent!.subviews {
-                        if view.isKind(of:UIButton.self) {
-                            view.layer.borderColor = UIColor.red.cgColor
-                            view.layer.borderWidth = 2.0
-                        }
+            if (eggsOtherTxt.text != nil && eggsOtherTxt.text != "") == false,superviewCurrent != nil {
+                for view in superviewCurrent!.subviews {
+                    if view.isKind(of:UIButton.self) {
+                        view.layer.borderColor = UIColor.red.cgColor
+                        view.layer.borderWidth = 2.0
                     }
                 }
             }
         }
     }
     
-    fileprivate func             setBorderEvaluationDateField() {
+    fileprivate func setBorderEvaluationDateField() {
         let superviewCurrent =  evaluationDateButton.superview
         if superviewCurrent != nil{
             for view in superviewCurrent!.subviews {
@@ -1206,7 +1162,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
     }
     
-    fileprivate func             setBorderForCustomerBtn() {
+    fileprivate func setBorderForCustomerBtn() {
         let superviewCurrent =  customerButton.superview
         if superviewCurrent != nil{
             for view in superviewCurrent!.subviews {
@@ -1218,7 +1174,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
     }
     
-    fileprivate func             setBorderForSiteBtn() {
+    fileprivate func setBorderForSiteBtn() {
         let superviewCurrent =  siteButton.superview
         if superviewCurrent != nil{
             for view in superviewCurrent!.subviews {
@@ -1230,7 +1186,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
     }
     
-    fileprivate func             setBorderForEvaluationName() {
+    fileprivate func setBorderForEvaluationName() {
         let superviewCurrent =  evaluationTypeButton.superview
         if superviewCurrent != nil{
             for view in superviewCurrent!.subviews {
@@ -1242,7 +1198,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
     }
     
-    fileprivate func             setEvaluatorBorderField() {
+    fileprivate func setEvaluatorBorderField() {
         let superviewCurrent =  evaluatorButton.superview
         if superviewCurrent != nil{
             for view in superviewCurrent!.subviews {
@@ -1254,7 +1210,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         }
     }
     
-    fileprivate func             setBorderForVisitType() {
+    fileprivate func setBorderForVisitType() {
         let superviewCurrent =  visitButton.superview
         if superviewCurrent != nil{
             for view in superviewCurrent!.subviews {
@@ -1303,19 +1259,19 @@ class PEDraftStartNewAssessment: BaseViewController {
     }
     
     fileprivate func handleParams(_ date: String, _ customer: String, _ site: String, _ evaluationName: String, _ evaluator: String) {
-        if (date.count > 0){} else  {
+        if date.isEmpty {
             setBorderEvaluationDateField()
         }
-        if (customer.count > 0 ){} else  {
+        if customer.isEmpty {
             setBorderForCustomerBtn()
         }
-        if (site.count > 0){} else  {
+        if site.isEmpty {
             setBorderForSiteBtn()
         }
-        if (evaluationName.count > 0){} else  {
+        if evaluationName.isEmpty {
             setBorderForEvaluationName()
         }
-        if (evaluator.count  > 0){} else  {
+        if evaluator.isEmpty {
             setEvaluatorBorderField()
         }
     }
@@ -1342,31 +1298,29 @@ class PEDraftStartNewAssessment: BaseViewController {
         
         if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != ""{
             setBorderBreedOtherField()
-        }else{
+        } else {
             handleBtnBreed()
         }
         
         if self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
             setBorderManufctrerOtherField()
-        }else{
+        } else {
             handleManufacturerButton()
         }
         
-        if peNewAssessment.incubation != nil && peNewAssessment.incubation != ""{
-            
-        }else{
+        if (peNewAssessment.incubation != nil && peNewAssessment.incubation != "") == false {
             handleBtnIncubation()
         }
         
         if txtNumberOfEggs.text != nil && txtNumberOfEggs.text != ""{
             setBorderForNmbrOfEggsField()
-        }else{
+        } else {
             handleNumberOfEggsButton()
         }
         
         handleParams(date, customer, site, evaluationName, evaluator)
         
-        if (reasonForVisit.count > 0){} else  {
+        if (reasonForVisit.count <= 0) {
             setBorderForVisitType()
         }
         
@@ -1409,22 +1363,17 @@ class PEDraftStartNewAssessment: BaseViewController {
             }
         }
         
-        var customerNamesArray = NSArray()
-        var customerIDArray = NSArray()
-        var customerDetailsArray = NSArray()
-        customerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Customer")
-        customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray()
-        customerIDArray = customerDetailsArray.value(forKey: "customerID") as? NSArray ?? NSArray()
-        if  customerNamesArray.count > 0 {
+        let customerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Customer")
+        let customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray()
+        let customerIDArray = customerDetailsArray.value(forKey: "customerID") as? NSArray ?? NSArray()
+        if customerNamesArray.count > 0 {
             self.dropDownVIewNew(arrayData: customerNamesArray as? [String] ?? [String](), kWidth: customerButton.frame.width, kAnchor: customerButton, yheight: customerButton.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectedCustomerText.text = selectedVal
                 self.selectedSiteText.text = ""
                 let indexOfItem = customerNamesArray.index(of: selectedVal)
                 self.peNewAssessment.customerName = selectedVal
                 self.peNewAssessment.siteName = ""
-                self.peNewAssessment.customerId = customerIDArray[indexOfItem] as? Int
-                let cusId = self.peNewAssessment.customerId ?? 0
-                
+                self.peNewAssessment.customerId = customerIDArray[indexOfItem] as? Int                
             }
             self.dropHiddenAndShow()
         }
@@ -1446,14 +1395,11 @@ class PEDraftStartNewAssessment: BaseViewController {
         guard let customer = self.peNewAssessment.customerName, customer.count > 0 else {
             return
         }
-        var complexNamesArray = NSArray()
-        var complexDetailsArray = NSArray()
-        var complexIDArray = NSArray()
-        complexDetailsArray = CoreDataHandlerPE().fetchSitesWithCustId( self.peNewAssessment.customerId as NSNumber? ?? 0)
-        complexNamesArray = complexDetailsArray.value(forKey: "siteName") as? NSArray ?? NSArray()
-        complexIDArray = complexDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        let complexDetailsArray = CoreDataHandlerPE().fetchSitesWithCustId( self.peNewAssessment.customerId as NSNumber? ?? 0)
+        let complexNamesArray = complexDetailsArray.value(forKey: "siteName") as? NSArray ?? NSArray()
+        let complexIDArray = complexDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
         
-        if  complexNamesArray.count > 0 {
+        if complexNamesArray.count > 0 {
             self.dropDownVIewNew(arrayData: complexNamesArray as? [String] ?? [String](), kWidth: siteButton.frame.width, kAnchor: siteButton, yheight: siteButton.bounds.height) { [unowned self] selectedVal, index in
                 self.selectedSiteText.text = selectedVal
                 self.peNewAssessment.siteName = selectedVal
@@ -1477,13 +1423,10 @@ class PEDraftStartNewAssessment: BaseViewController {
             }
         }
         
-        var customerNamesArray = NSArray()
-        var evaluatorIDArray = NSArray()
-        var evaluatorNameArray = NSArray()
-        var evaluatorDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Evaluator")
-        evaluatorNameArray = evaluatorDetailsArray.value(forKey: "evaluatorName") as?  NSArray ?? NSArray()
-        evaluatorIDArray = evaluatorDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if  evaluatorNameArray.count > 0 {
+        let evaluatorDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Evaluator")
+        let evaluatorNameArray = evaluatorDetailsArray.value(forKey: "evaluatorName") as?  NSArray ?? NSArray()
+        let evaluatorIDArray = evaluatorDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        if evaluatorNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: evaluatorNameArray as? [String] ?? [String](), kWidth: evaluatorButton.frame.width, kAnchor: evaluatorButton, yheight: evaluatorButton.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectedEvaluatorText.text = selectedVal
                 self.peNewAssessment.evaluatorName = selectedVal
@@ -1506,12 +1449,10 @@ class PEDraftStartNewAssessment: BaseViewController {
                 }
             }
         }
-        var visitIDArray = NSArray()
-        var visitNameArray = NSArray()
-        var visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VisitTypes")
-        visitNameArray = visitDetailsArray.value(forKey: "visitName") as? NSArray ?? NSArray()
-        visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if  visitNameArray.count > 0 {
+        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VisitTypes")
+        let visitNameArray = visitDetailsArray.value(forKey: "visitName") as? NSArray ?? NSArray()
+        let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        if visitNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: visitNameArray as? [String] ?? [String](), kWidth: visitButton.frame.width, kAnchor: visitButton, yheight: visitButton.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectedVisitText.text = selectedVal
                 self.peNewAssessment.visitName = selectedVal
@@ -1536,12 +1477,10 @@ class PEDraftStartNewAssessment: BaseViewController {
                 }
             }
         }
-        var evaluationIDArray = NSArray()
-        var evaluationNameArray = NSArray()
-        var evaluationDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_EvaluationType")
-        evaluationNameArray = evaluationDetailsArray.value(forKey: "evaluationName") as? NSArray ?? NSArray()
-        evaluationIDArray = evaluationDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if  evaluationNameArray.count > 0 {
+        let evaluationDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_EvaluationType")
+        let evaluationNameArray = evaluationDetailsArray.value(forKey: "evaluationName") as? NSArray ?? NSArray()
+        let evaluationIDArray = evaluationDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        if evaluationNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: evaluationNameArray as? [String] ?? [String](), kWidth: evaluationTypeButton.frame.width, kAnchor: evaluationTypeButton, yheight: evaluationTypeButton.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectedEvaluationType.text = selectedVal
                 self.isFlockAgeGreaterTheAllProd = false
@@ -1583,21 +1522,21 @@ class PEDraftStartNewAssessment: BaseViewController {
             isFlockAgeGreaterThen50Weeks = false
             btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
         }
-        if  self.peNewAssessment.evaluationID == 1 {
+        if self.peNewAssessment.evaluationID == 1 {
             if isFlockAgeGreaterTheAllProd {
                 self.peNewAssessment.isFlopSelected = 1
             } else {
                 self.peNewAssessment.isFlopSelected = 2
             }
         }
-        if  self.peNewAssessment.evaluationID == 2 {
+        if self.peNewAssessment.evaluationID == 2 {
             if isFlockAgeGreaterTheAllProd {
                 self.peNewAssessment.isFlopSelected = 3
             } else {
                 self.peNewAssessment.isFlopSelected = 0
             }
         }
-        if  self.peNewAssessment.evaluationID == 3 {
+        if self.peNewAssessment.evaluationID == 3 {
             if isFlockAgeGreaterTheAllProd {
                 self.peNewAssessment.isFlopSelected = 4
             } else {
@@ -1632,14 +1571,14 @@ class PEDraftStartNewAssessment: BaseViewController {
             isFlockAgeGreaterThen50Weeks = true
             btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
         }
-        if  self.peNewAssessment.evaluationID == 1 {
+        if self.peNewAssessment.evaluationID == 1 {
             if isFlockAgeGreaterThen50Weeks {
                 self.peNewAssessment.isFlopSelected = 2
             } else {
                 self.peNewAssessment.isFlopSelected = 1
             }
         }
-        if  self.peNewAssessment.evaluationID == 2 {
+        if self.peNewAssessment.evaluationID == 2 {
             if isFlockAgeGreaterThen50Weeks {
                 self.peNewAssessment.isFlopSelected = 3
             } else {
@@ -1647,7 +1586,7 @@ class PEDraftStartNewAssessment: BaseViewController {
             }
         }
         
-        if  self.peNewAssessment.evaluationID == 3 {
+        if self.peNewAssessment.evaluationID == 3 {
             if isFlockAgeGreaterThen50Weeks {
                 self.peNewAssessment.isFlopSelected = 5
             } else {
@@ -1668,12 +1607,10 @@ class PEDraftStartNewAssessment: BaseViewController {
                 }
             }
         }
-        var visitIDArray = NSArray()
-        var visitNameArray = NSArray()
         let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
-        visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
-        visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-        if  visitNameArray.count > 0 {
+        let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
+        let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        if visitNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: visitNameArray as? [String] ?? [String](), kWidth: tsrButton.frame.width, kAnchor: tsrButton, yheight: tsrButton.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectedTSR.text = selectedVal
                 self.peNewAssessment.selectedTSR = selectedVal
@@ -1754,12 +1691,9 @@ class PEDraftStartNewAssessment: BaseViewController {
                 }
             }
         }
-        var BirdBreedIDArray = NSArray()
-        var BirdBreedNameArray = NSArray()
-        var BirdBreedDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed") as? NSArray ?? NSArray()
-        BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
-        BirdBreedIDArray = BirdBreedDetailsArray.value(forKey: "birdId") as? NSArray ?? NSArray()
-        if  BirdBreedNameArray.count > 0 {
+        let BirdBreedDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
+        let BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
+        if BirdBreedNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: BirdBreedNameArray as? [String] ?? [String](), kWidth: btnBreed.frame.width, kAnchor: btnBreed, yheight: btnBreed.bounds.height) { [unowned self] selectedVal, index  in
                 self.txtBreedOfBird.text = selectedVal
                 if selectedVal == "Other"{
@@ -1792,11 +1726,10 @@ class PEDraftStartNewAssessment: BaseViewController {
             }
         }
         
-        var BirdBreedNameArray = NSArray()
         let BirdBreedDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
-        BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "incubationStylesName") as? NSArray ?? NSArray()
+        let BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "incubationStylesName") as? NSArray ?? NSArray()
         
-        if  BirdBreedNameArray.count > 0 {
+        if BirdBreedNameArray.count > 0 {
             
             self.dropDownVIewNew(arrayData: BirdBreedNameArray as? [String] ?? [String](), kWidth: btnIncubation.frame.width, kAnchor: btnIncubation, yheight: btnIncubation.bounds.height) { [unowned self] selectedVal, index  in
                 

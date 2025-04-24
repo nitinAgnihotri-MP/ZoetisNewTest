@@ -2514,8 +2514,6 @@ extension PEViewAssesmentFinalize: UIImagePickerControllerDelegate , UINavigatio
     }
     // MARK:  Save vaccine Mixture in PE Module
     private func saveVMixerInPEModule(peCertificateData:PECertificateData) -> Int{
-        
-        var allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VMixer")
         let imageCount = getVMixerCountInPEModule()
         var assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
         CoreDataHandlerPE().saveVMixerPEModule(assessment: assessment!, id: imageCount+1, peCertificateData: peCertificateData)

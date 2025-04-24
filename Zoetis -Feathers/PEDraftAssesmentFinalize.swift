@@ -2353,7 +2353,6 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     
                     self.reloadTableViewWithoutAnimation()
                 } else {
-                    let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
                     let vNameDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
                     let vNameArray = vNameDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
                     let vNameFilterArray = vNameArray as? [String] ?? [String]()
@@ -2871,18 +2870,10 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     self.dayOfAgeSData[indexPath.row].name = text
                     CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeSData[indexPath.row])
                     self.reloadTableViewWithoutAnimation()
-                    
                 } else {
-                    var ManufacturerId = 0
-                    let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                    let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                    let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    var vNameFilterArray : [String] = []
                     let vNameDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
                     let vNameArray = vNameDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                    let vNameMfgIdArray = vNameDetailsArray.value(forKey: "mfgId") as? NSArray ?? NSArray()
-                    
-                    vNameFilterArray = vNameArray as? [String] ?? [String]()
+                    let vNameFilterArray = vNameArray as? [String] ?? [String]()
                     if vNameFilterArray.count > 0 {
                         self.dropDownVIewNew(arrayData: vNameFilterArray as? [String] ?? [String](), kWidth: cell.tfName.frame.width, kAnchor: cell.tfName, yheight: cell.tfName.bounds.height) { [unowned self] selectedVal, index  in
                             self.dayOfAgeSData[indexPath.row].name = selectedVal
@@ -4224,13 +4215,11 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 self.peNewAssessment.hatcheryAntibioticsText = txtAntiBioTic
                 CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromInvo: true,fromDraft: true)
             }
-            headerView.addCompletion =
-            {[unowned self] ( error) in
-                let c = Double(self.peNewAssessment.iCS ?? "0") ?? 0
+            headerView.addCompletion = {[unowned self] ( error) in
                 let inVoData = InovojectData(id: 0,vaccineMan:"",name:"",ampuleSize:"",ampulePerBag:"",bagSizeType:"",dosage:"", dilute: "")
                 let id = self.saveInovojectInPEModule(inovojectData: inVoData)
                 inVoData.id = id
-                if self.inovojectData.count > 0{
+                if self.inovojectData.count > 0 {
                     let inovoObj = self.inovojectData[self.inovojectData.count - 1]
                     
                     inVoData.vaccineMan = inovoObj.vaccineMan
@@ -4563,10 +4552,9 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     func updateDosageDayOfAgeDataS(section:Int) {
         if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
             self.ml = 0.0
-        }
-        else if self.peNewAssessment.dDDT?.lowercased().contains("1 gallon") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains("1 gallon") ?? false {
             self.ml = 3785.41
-        }else if self.peNewAssessment.dDDT?.lowercased().contains("2 gallon") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains("2 gallon") ?? false {
             self.ml = 7570.82
         } else if self.peNewAssessment.dDDT?.lowercased().contains("5 gallon") ?? false {
             self.ml = 18927.05
@@ -4576,8 +4564,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             self.ml = 2400.00
         } else if self.peNewAssessment.dDDT?.lowercased().contains("2.8 litre") ?? false {
             self.ml = 2800.00
-        }
-        else if self.peNewAssessment.dDDT?.lowercased().contains("200 ml") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains("200 ml") ?? false {
             self.ml = 200.00
         } else if self.peNewAssessment.dDDT?.lowercased().contains("300 ml") ?? false {
             self.ml = 300.00
@@ -4585,17 +4572,14 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             self.ml = 400.00
         } else if self.peNewAssessment.dDDT?.lowercased().contains("500 ml") ?? false {
             self.ml = 500.00
-        }else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
+        } else if self.peNewAssessment.dDDT?.lowercased().contains("800 ml") ?? false {
             self.ml = 800.00
         }
         let c = self.ml
-        if c == 0.0 {
-            
-        }
-        for obj in self.dayOfAgeSData{
+        for obj in self.dayOfAgeSData {
             let a = Double(obj.ampulePerBag ?? "0") ?? 0
             let b = Double(obj.ampuleSize ?? "0") ?? 0
-            if a != 0 && b != 0 && c != 0{
+            if a != 0 && b != 0 && c != 0 {
                 let x = a * b
                 let y = c/0.2
                 let z = x/y
@@ -4613,8 +4597,6 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             } else {
                 obj.dosage = ""
             }
-            
-            
             CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment,fromDoaS: true,fromDraft: true)
             self.reloadTableViewWithoutAnimation()
         }
@@ -4751,14 +4733,11 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewIDPE", for: indexPath as IndexPath) as! PECategoryCell
         cell.imageview.image = UIImage(named: "tabUnselect")!
         let category = catArrayForCollectionIs[indexPath.row]
-        if let isSelected = selectedCategory?.catISSelected {
-            if selectedCategory?.sequenceNo == category.sequenceNo{
-                
-                if isSelected == 1{
-                    cell.imageview.image =  UIImage(named: "tabSelect")!
-                }
+        if let isSelected = selectedCategory?.catISSelected,
+           selectedCategory?.sequenceNo == category.sequenceNo {
+            if isSelected == 1 {
+                cell.imageview.image =  UIImage(named: "tabSelect")!
             }
-            
         }
         
         cell.categoryLabel.text = category.catName ?? ""
@@ -4865,25 +4844,19 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
     
     func checkNoteForEveryQuestion() -> Bool{
         self.refreshArray()
-        for  obj in catArrayForTableIs {
+        for obj in catArrayForTableIs {
             let assessment = obj as? PE_AssessmentInProgress
-            if assessment?.assStatus == 0 && assessment?.isNA == false{
-                if assessment?.note?.count ?? 0 < 1 {
-                    if regionID == 3
-                    {
-                        self.showAlertForNoNote()
-                        return false
-                    }
-                    else
-                    {
-                        return true
-                    }
+            if assessment?.assStatus == 0 && assessment?.isNA == false, assessment?.note?.count ?? 0 < 1 {
+                if regionID == 3 {
+                    self.showAlertForNoNote()
+                    return false
+                } else {
+                    return true
                 }
             }
         }
         
-        if finishingAssessment == true
-        {
+        if finishingAssessment == true {
             catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((2) as NSNumber,peNewAssessment: self.peNewAssessment)
             
             for  obj in catArrayForTableIs {
@@ -4903,63 +4876,37 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                         {
                             return true
                         }
-                    }
-                    else
-                    {
-                        if regionID == 3 {
-                            
-                            if strings.contains("Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application")
-                            {
-                                strings = strings.filter { $0 != "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application" }
+                    } else {
+                        if regionID == 3,strings.contains("Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application") {
+                            strings = strings.filter { $0 != "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccine Application"
                             }
                         }
-                        
                     }
                 }
                 
                 else if assessment?.assStatus == 1 && assessment?.assID == 9 {
                     if assessment?.note?.count ?? 0 < 1 {
                         
-                        if strings.contains("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application")
-                        {
+                        if strings.contains("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application") {
                             strings = strings.filter { $0 != "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application" }
                         }
                         if regionID == 3 {
-                            
                             strings.append("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application")
-                            
-                        }
-                        else
-                        {
+                        } else {
                             return true
                         }
-                        
-                    }
-                    else
-                    {
-                        if regionID == 3 {
-                            if strings.contains("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application")
-                            {
-                                strings = strings.filter { $0 != "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application" }
+                    } else {
+                        if regionID == 3,strings.contains("Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application") {
+                            strings = strings.filter { $0 != "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application"
                             }
                         }
                     }
                 }
-                
             }
-            
         }
         
-        if forInovo == true
-        {
+        if forInovo == true {
             catArrayForTableIs = CoreDataHandlerPE().fetchDraftCustomerWithCatID((5) as NSNumber,peNewAssessment: self.peNewAssessment)
-            
-            for  obj in catArrayForTableIs {
-                let assessment = obj as? PE_AssessmentInProgress
-                
-            }
-            
-            
         }
         
         return true
@@ -5167,20 +5114,14 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
 // MARK: - Extension PE Draft Assesment Finalize
 extension PEDraftAssesmentFinalize{
     
-    func anyCategoryContainValueOrNot() -> Bool{
-        let peNewAssessmentSurrentIs = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession[0]
-        for obj in peNewAssessmentSurrentIs.peCategoryArray{
-            if obj.resultMark ?? 0 > 0 {
-                return true
-            }
-            return false
-        }
-        return false
+    func anyCategoryContainValueOrNot() -> Bool {
+        let peNewAssessmentCurrentIs = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession.first
+        return peNewAssessmentCurrentIs?.peCategoryArray.contains(where: { ($0.resultMark ?? 0) > 0 }) ?? false
     }
     
-    func getCategoryAlreadyDone() -> PECategory{
+    func getCategoryAlreadyDone() -> PECategory {
         let peNewAssessmentSurrentIs = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession[0]
-        for obj in peNewAssessmentSurrentIs.peCategoryArray{
+        for obj in peNewAssessmentSurrentIs.peCategoryArray {
             if obj.isSelected {
                 return obj
             }
@@ -5210,25 +5151,6 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
             postAlert("Camera inaccessable", message: "Application cannot access the camera.")
         }
         /****************************************************************************************/
-        //  }
-        
-        // Gallery
-        //                if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
-        //                    //                        imagePicker.allowsEditing = false
-        //                    //                        imagePicker.sourceType = .savedPhotosAlbum
-        //                    //                        imagePicker.cameraCaptureMode = .photo
-        //                    //                        imagePicker.delegate = self
-        //
-        //
-        //                    imagePicker.delegate = self
-        //                    imagePicker.sourceType = .savedPhotosAlbum
-        //                    imagePicker.allowsEditing = false
-        //                    imagePicker.delegate = self
-        //                    present(imagePicker, animated: true, completion: {})
-        //
-        //
-        //                }
-        
     }
     
     /************* Alert View Methods ***********************************/
@@ -5342,38 +5264,12 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
     
     // MARK: - Save Vaccine Mixture In PE Module
     private func saveVMixerInPEModule(peCertificateData:PECertificateData) -> Int {
-        
-        var allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VMixer")
         let imageCount = getVMixerCountInPEModule()
-        var assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
+        let assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
         if assessment != nil {
             CoreDataHandlerPE().saveDraftVMixerPEModule(assessment: assessment!, id: imageCount+1, peCertificateData: peCertificateData)
         }
         return imageCount+1
-    }
-    
-    private func saveMinusVMixerInPEModule(peCertificateData:PECertificateData) -> Int {
-        
-        var allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VMixer")
-        let imageCount = getVMixerCountInPEModule()
-        var assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
-        if assessment != nil {
-            CoreDataHandlerPE().saveVMixerPEModule(assessment: assessment!, id: imageCount+1, peCertificateData: peCertificateData)
-        }
-        return imageCount+1
-    }
-    
-    // MARK: - Save Draft Vaccine Mixture in PE Module
-    private func savedraftVMixerInPEModule(peCertificateData:PECertificateData) -> Int {
-        
-        var allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VMixer")
-        let imageCount = getVMixerCountInPEModule()
-        var assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
-        if assessment != nil {
-            CoreDataHandlerPE().saveDraftVMixerPEModule(assessment: assessment!, id: imageCount+1, peCertificateData: peCertificateData)
-        }
-        return imageCount+1
-        
     }
     
     // MARK: - Get DOA Count In PE Module
@@ -5407,7 +5303,7 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
     private func deleteDOAInPEModule(id:Int,fromDoaS:Bool? = false) {
         
         let assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
-        if assessment != nil{
+        if assessment != nil {
             CoreDataHandlerPE().updateDOAMinusCategortIsSelcted(assessment: assessment!, doaId: id,fromDraft:true, fromDoaS : fromDoaS)
         }
     }
@@ -5416,17 +5312,10 @@ extension PEDraftAssesmentFinalize: UIImagePickerControllerDelegate , UINavigati
     private func deleteInovojectInPEModule(id:Int) {
         
         let assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
-        if assessment != nil{
+        if assessment != nil {
             CoreDataHandlerPE().updateInovojectMinusCategortIsSelcted(assessment: assessment!, doaId:
                                                                         id,fromDraft: true)
         }
-        
-    }
-    // MARK: - Delete Vaccine Mixture in PE Module
-    private func deleteDraftVMixerInPEModule(id:Int) {
-        
-        var assessment = catArrayForTableIs[tableviewIndexPath.row] as? PE_AssessmentInProgress
-        _ = CoreDataHandlerPE().updateDraftVMixerMinusCategortIsSelcted(assessment: assessment ?? PE_AssessmentInProgress(), doaId: id)
     }
 }
 
@@ -5507,17 +5396,6 @@ extension PEDraftAssesmentFinalize: UIPickerViewDataSource, UIPickerViewDelegate
         let cell = tableview.viewWithTag(pickerView.tag) as? VaccineMixerCell
         cell?.vaccNameField.text = self.dataArray[row]
     }
-    
-//    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-//        if (selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen") {
-//            self.tableview.isScrollEnabled = false
-//            return true
-//        } else {
-//            let cell = textField.superview?.superview?.superview?.superview as! VaccineMixerCell
-//            self.setDropdrown(cell.vaccSelectBtn, certBtn: cell.certDateSelectBtn, clickedField: cell.vaccNameField, dropDownArr: dataArray, cell: cell)
-//            return false
-//        }
-//    }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
