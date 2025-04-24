@@ -323,7 +323,7 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
         hatcStrain = CoreDataHandler().fetchStrainWithlanguage(entityName: "HatcheryStrain", lngID: lngId)
         fieldStrain = CoreDataHandler().fetchStrainWithlanguage(entityName: "GetFieldStrain", lngID: lngId)
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+         lngId = UserDefaults.standard.integer(forKey: "lngId")
         refactorViewDidLoad1(lngId)
         
         isClickOnAnyField = false
@@ -782,7 +782,7 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
         coccidiosisControl.text = trimmedString
         if trimmedString == ""{
             if btnTag == 1 {
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+               
                 appDelegate.isDoneClick = true
                 self.navigationController?.popViewController(animated: true)
             } else {
@@ -799,7 +799,7 @@ class AddVaccinationViewController: UIViewController,DropperDelegate,UITextField
                 UserDefaults.standard.synchronize()
             }
             
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+          
             appDelegate.isDoneClick = true
             self.navigationController?.popViewController(animated: true)
         }
@@ -1203,83 +1203,4 @@ extension AddVaccinationViewController{
         }
     }
 
-    /*
-    func showHatcheryRouteDropdown(sender: UIButton){
-        let vaccInfoDict = CoreDataHandler().fetchRouteLngId(lngId:lngId as NSNumber)
-        let routeNameArray = vaccInfoDict.value(forKeyPath: "routeName")
-        let routeIDArray = vaccInfoDict.value(forKeyPath: "routeId") as! [Int]
-        routeDrop.dataSource = routeNameArray as! [AnyObject]
-        
-        routeDrop.anchorView = sender
-        routeDrop.bottomOffset = CGPoint(x: 0, y: sender.frame.size.height)
-        routeDrop.show()
-        routeDrop.selectionAction = { [weak self] (index: Int, item: String) in
-            guard let _ = self else { return }
-            if sender.tag == 40 {
-                self?.markLabel.text = item
-                self?.markLabel.tag = routeIDArray[index]
-            } else if sender.tag == 41 {
-                self?.ibdvLabel.text = item
-                self?.ibdvLabel.tag = routeIDArray[index]
-            }else if sender.tag == 42 {
-                self?.ibvRouteTextField.text = item
-                self?.ibvRouteTextField.tag = routeIDArray[index]
-            } else if sender.tag == 43 {
-                self?.trtLabel.text = item
-                self?.trtLabel.tag = routeIDArray[index]
-            } else if sender.tag == 44 {
-                self?.ndvLabel.text = item
-                self?.ndvLabel.tag = routeIDArray[index]
-            } else if sender.tag == 45 {
-                self?.poxLbL.text = item
-                self?.poxLbL.tag = routeIDArray[index]
-            }else if sender.tag == 46 {
-                self?.reoLabel.text = item
-                self?.reoLabel.tag = routeIDArray[index]
-            } else if sender.tag == 47 {
-                self?.hatcheryStRouteLbl.text = item
-                self?.hatcheryStRouteLbl.tag = routeIDArray[index]
-            }else if sender.tag == 48 {
-                self?.HatcheryEcoliRouteLbl.text = item
-                self?.HatcheryEcoliRouteLbl.tag = routeIDArray[index]
-            }else if sender.tag == 49 {
-                self?.othesLabel.text = item
-                self?.othesLabel.tag = routeIDArray[index]
-            }else if sender.tag == 51 {
-                self?.routeLabel1.text = item
-                self?.routeLabel1.tag = routeIDArray[index]
-            } else if sender.tag == 52 {
-                self?.routeLabel2.text = item
-                self?.routeLabel2.tag = routeIDArray[index]
-            }else if sender.tag == 53 {
-                self?.routeLabel3.text = item
-                self?.routeLabel3.tag = routeIDArray[index]
-            }else if sender.tag == 54 {
-                self?.routeLabel4.text = item
-                self?.routeLabel4.tag = routeIDArray[index]
-            }else if sender.tag == 55 {
-                self?.routeLabel5.text = item
-                self?.routeLabel5.tag = routeIDArray[index]
-            }else if sender.tag == 56 {
-                self?.routeLabel6.text = item
-                self?.routeLabel6.tag = routeIDArray[index]
-            }else if sender.tag == 57 {
-                self?.routeLabel7.text = item
-                self?.routeLabel7.tag = routeIDArray[index]
-            }else if sender.tag == 58 {
-                self?.ndv2DisplayLabel.text = item
-                self?.ndv2DisplayLabel.tag = routeIDArray[index]
-            }else if sender.tag == 59 {
-                self?.stRouteFieldDisplayLbl.text = item
-                self?.stRouteFieldDisplayLbl.tag = routeIDArray[index]
-            }else if sender.tag == 60 {
-                self?.eColiRouteFieldDisplayLbl.text = item
-                self?.eColiRouteFieldDisplayLbl.tag = routeIDArray[index]
-            }else if sender.tag == 61 {
-                self?.otherDisplayLabel.text = item
-                self?.otherDisplayLabel.tag = routeIDArray[index]
-            }
-        }
-    }
-    */
 }

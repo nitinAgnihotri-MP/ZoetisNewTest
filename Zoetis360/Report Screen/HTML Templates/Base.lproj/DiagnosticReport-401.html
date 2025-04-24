@@ -19,15 +19,12 @@
                     color:#000;
                     font-weight:500;
                     margin left: -20px;
+                    transform: scale(0.6);
+                    transform-origin: 0 0;
 
                 }
                 .no-margin{
                     margin: 0px;
-                }
-                .report-box{
-                zoom: 0.6;
-                -moz-transform: scale(0.6);
-                -moz-transform-origin: 0 0;
                 }
                 .report-text-right{
                     text-align: right;
@@ -138,11 +135,12 @@
             </head>
     <body>
         <div class="report-box">
-            <table class="table-container" cellpadding="0" cellspacing="0" >
+            <table class="table-container">
                 <tbody>
                     <tr class="top">
                         <td colspan="7" style="vertical-align:top;">
                             <table>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr height="48px">
                                         <td style="vertical-align:top;"> <h3 class="no-margin">#reportTitle# </h3> </td>
@@ -158,6 +156,7 @@
                         </td>
                         <td colspan="8">
                             <table>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr height="48px">
                                         <td> <br/> </td>
@@ -174,6 +173,7 @@
                         </td>
                         <td colspan="8">
                             <table>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr rowspan="2">
                                         <td class="report-text-right"> <img width="100px" src="logo.png" title="Zoetis Logo" alt="Zoetis Logo" /> </td>
@@ -200,11 +200,12 @@
                     <tr class="font-bold header-td" height="250px">
                         <td colspan="3" >
                             <table class="child-table">
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr >
                                         <td style="visibility:hidden;"> <div class="rotate"> Sick Flock? </div> </td>
 
-                                        <td colspan="" width="150px"> #Farm# </td>
+                                        <td style="width:150px;">  #Farm# </td>
                                         <td> <div class="rotate1" > # of Birds </div> </td>
                                         <td> <div class="rotate1" > Mean Age </div> </td>
                                     </tr>

@@ -17,16 +17,15 @@
                     font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
                     color:#000;
                     font-weight:500;
+                    zoom: 0.6;
+                    -moz-transform: scale(0.6);
+                    -moz-transform-origin: 0 0;
 
                 }
                 .no-margin{
                     margin: 0px;
                 }
-                .report-box{
-                zoom: 0.6;
-                -moz-transform: scale(0.6);
-                -moz-transform-origin: 0 0;
-                }
+              
                 .report-text-right{
                     text-align: right;
                 }
@@ -121,11 +120,13 @@
             </head>
     <body>
         <div class="report-box">
-            <table class="table-container" cellpadding="0" cellspacing="0" >
+            <table class="table-container">
+                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                 <tbody>
                     <tr class="top">
                         <td colspan="7">
                             <table>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr height="48px">
                                         <td> <h3 class="no-margin">#reportTitle# </h3> </td>
@@ -141,6 +142,7 @@
                         </td>
                         <td colspan="8">
                             <table>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr height="48px">
                                         <td> <br/> </td>
@@ -157,6 +159,7 @@
                         </td>
                         <td colspan="8">
                             <table>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr rowspan="2">
                                         <td class="report-text-right"> <img width="100px" src="logo.png" title="Zoetis Logo" alt="Zoetis Logo" /> </td>
@@ -183,10 +186,11 @@
                     <tr class="font-bold header-td" height="250px"> 
                         <td colspan="3" >
                             <table class="child-table">
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr >
 										
-                                        <td colspan="" width="150px"> #Fazenda# </td>
+                                        <td style="width:150px;">  #Fazenda# </td>
 										<td> <div class="rotate" > # De pájaros </div> </td>
 										<td> <div class="rotate" > Edad Media </div> </td>
                                     </tr>
@@ -252,6 +256,7 @@
                     <tr class="font-bold header-td" height="250px">
                         <td colspan="3">
                             <table class="child-table">
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr>
                                         <td>  </td>
@@ -296,6 +301,7 @@
                     <tr style="#display#; background:#DCDCDC;" >
                         <td colspan="3">
                             <table class="child-table">
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr>
                                      <td style="display:none;"> </td>

@@ -130,8 +130,8 @@ class BarChartViewController: UIViewController,IAxisValueFormatter, ChartViewDel
         self.subjectString = NSLocalizedString("\(String(describing: self.headerTitle!)) Last Session", comment: "") as NSString
         chartNameLable.text = self.subjectString as String
         let barData : ChartDataSet = dataSet.currentSet
-        var chartData = BarChartData()
-        chartData = BarChartData(dataSets: [barData])
+   
+        var chartData = BarChartData(dataSets: [barData])
         
         var singleColorBlue = Bool()
         var singleColorRed = Bool()
@@ -407,8 +407,8 @@ class BarChartViewController: UIViewController,IAxisValueFormatter, ChartViewDel
         self.subjectString = NSLocalizedString("\(String(describing: self.headerTitle!)) Last Session", comment: "") as NSString
         chartNameLable.text = self.subjectString as String
         let barData : ChartDataSet = dataSet.currentSet
-        var chartData = BarChartData()
-        chartData = BarChartData(dataSets: [barData])
+       
+        var  chartData = BarChartData(dataSets: [barData])
         
         var singleColorBlue = Bool()
         var singleColorRed = Bool()
