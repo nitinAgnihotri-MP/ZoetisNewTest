@@ -2824,10 +2824,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                         self.peNewAssessment.ampmValue  = "NA"
                                         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment)
                                     }
-                                    
                                     self.catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(self.selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                                    var assessment = self.catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-
                                     self.updateScore(isAllNA: false)
                                     self.chechForLastCategory()
                                 }

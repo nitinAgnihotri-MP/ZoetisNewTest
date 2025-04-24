@@ -505,7 +505,6 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     @objc private func dashboardRefresh(notification: NSNotification) {
         date1Label.isHidden = true
         date2Label.isHidden = true
-        let userDefault = UserDefaults.standard
         self.upcomingCertificationsArr =  PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "")
         if anyCategoryContainCustomerOrNot() {
             let peNewAssessmentSurrentIs = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession[0].peNewAssessment
