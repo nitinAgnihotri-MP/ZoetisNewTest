@@ -334,7 +334,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     // MARK: 🟠 - Get all Session array for Turkey.
     func allSessionArrTurkey() ->NSMutableArray{
         
-        let postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
+        let postedSessionArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
         let cNecArr = CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncTurkey(true)
         let necArrWithoutPosting = NSMutableArray()
         
@@ -353,16 +353,15 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         }
         
         let allPostingSessionArr = NSMutableArray()
-        var sessionId = NSNumber()
         
-        for i in 0..<postingArrWithAllData.count {
-            let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+        for i in 0..<postedSessionArrWithAllData.count {
+            let pSession = postedSessionArrWithAllData.object(at: i) as! PostingSessionTurkey
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -388,18 +387,12 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             if selectedVal == "English(Default)" {
                 UserDefaults.standard.set(1, forKey: "lngId")
                 LanguageUtility.setAppleLAnguageTo(lang: "en")
-                UserDefaults.standard.synchronize()
-            }
-            else if selectedVal == "Spanish" {
+            } else {
                 UserDefaults.standard.set(3, forKey: "lngId")
                 LanguageUtility.setAppleLAnguageTo(lang: "fr")
-                UserDefaults.standard.synchronize()
             }
-            else {
-                UserDefaults.standard.set(3, forKey: "lngId")
-                LanguageUtility.setAppleLAnguageTo(lang: "fr")
-                UserDefaults.standard.synchronize()
-            }
+            UserDefaults.standard.synchronize()
+           
             self.loadView()
             self.viewWillAppear(true)
             self.viewDidLoad()
@@ -636,8 +629,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         
         btnTag = 1
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
-            var _temp = ServiceDataHolder()
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+           
+            var _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = _temp.ObservaionDetailsArr
         }
         dataCocoiiArray = CoreDataHandler().fetchAllCocoiiData()
@@ -651,8 +644,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     func skelta (_ tag: Int) {
         btnTag = 0
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
-            var _temp = ServiceDataHolder()
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+            
+            var  _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = _temp.ObservaionDetailsArr
         }
         
@@ -668,8 +661,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         
         btnTag = 2
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
-            var _temp = ServiceDataHolder()
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+           
+            var  _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = _temp.ObservaionDetailsArr
         }
         
@@ -685,8 +678,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         btnTag = 3
         
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
-            var _temp = ServiceDataHolder()
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+          
+            var  _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = _temp.ObservaionDetailsArr
         }
         
@@ -703,8 +696,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         btnTag = 4
         
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
-            var _temp = ServiceDataHolder()
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+          
+            var _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = _temp.ObservaionDetailsArr
         }
         
@@ -776,7 +769,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -832,9 +824,9 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         
         for i in 0..<routeArr.count {
             let routeId = (routeArr.object(at: i) as AnyObject).value(forKey: "RouteId") as! Int
-            let lngId = (routeArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
+            let languageId = (routeArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
             let routeName = (routeArr.object(at: i) as AnyObject).value(forKey: "RouteName") as! String
-            CoreDataHandler().saveRouteDatabase(routeId, routeName: routeName,lngId:lngId, dbArray: self.RouteArray, index: i)
+            CoreDataHandler().saveRouteDatabase(routeId, routeName: routeName,lngId:languageId, dbArray: self.RouteArray, index: i)
         }
     }
     // MARK: 🟢 Get Customer's List
@@ -854,7 +846,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -1007,7 +998,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -1070,9 +1060,9 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         
         for i in 0..<cocoiArr.count {
             let cocoiiId = (cocoiArr.object(at: i) as AnyObject).value(forKey: "CocciProgramId") as! Int
-            let lngId = (cocoiArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
+            let selectdLngId = (cocoiArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
             let cocoiiIdName = (cocoiArr.object(at: i) as AnyObject).value(forKey: "CocciProgramName") as! String
-            CoreDataHandler().CocoiiProgramDatabase(cocoiiId, cocoiProgram: cocoiiIdName,lngId:lngId,dbArray: self.cocoiiProgramArr, index: i)
+            CoreDataHandler().CocoiiProgramDatabase(cocoiiId, cocoiProgram: cocoiiIdName,lngId:selectdLngId,dbArray: self.cocoiiProgramArr, index: i)
         }
     }
     // MARK: 🟢 Get Session's Type
@@ -1091,7 +1081,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -1154,8 +1143,8 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         for i in 0..<seessionTypeArr.count {
             let SessionId = (seessionTypeArr.object(at: i) as AnyObject).value(forKey: "SessionTypeId") as! Int
             let sessionName = (seessionTypeArr.object(at: i) as AnyObject).value(forKey: "SessionTypeName") as! String
-            let lngId = (seessionTypeArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
-            CoreDataHandler().SessionTypeDatabase(SessionId, sesionType: sessionName, lngId: lngId as NSNumber, dbArray: self.sessiontypeArr, index: i)
+            let lngIdIs = (seessionTypeArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
+            CoreDataHandler().SessionTypeDatabase(SessionId, sesionType: sessionName, lngId: lngIdIs as NSNumber, dbArray: self.sessiontypeArr, index: i)
         }
     }
     
@@ -1175,7 +1164,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -1465,7 +1453,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -1479,54 +1466,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             self.failWithInternetConnection()
         }
     }
-    
-
-    /*
-    func FeedProgramMoleculeService() {
-        
-        if WebClass.sharedInstance.connected() {
-            accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-            let headerDict: HTTPHeaders = [
-                authorization: accestoken,
-                cacheControl: "Constants.noStoreNoCache
-            ]
-            
-            let Url = WebClass.sharedInstance.webUrl + "PostingSession/GetFeedProgramCatagoryAndMoleculeDetails"
-            let urlString = URL(string: Url)
-            
-           
-            sessionManager.request(urlString!, method: .get, headers: headerDict).responseJSON { response in
-                switch response.result {
-                case let .success(value):
-                    
-                    if (value is NSArray)
-                    {
-                        let arr : NSArray = value as! NSArray
-                        for  i in 0..<arr.count {
-                            let _tempDict = arr.object(at: i) as AnyObject
-                            
-                            _tempDict.value(forKey: "FeedProgramCategoryDescription") as! String
-                            _tempDict.value(forKey: "FeedProgramCategoryId") as! Int
-                            self.FeedProgramArray.add(_tempDict)
-                        }
-                        UserDefaults.standard.set(self.FeedProgramArray, forKey: "Molucule")
-                        
-                        self.callGetCocciVaccine()
-                    }
-                    else{
-                        self.callGetCocciVaccine()
-                    }
-                    break
-                case let .failure(error):
-                    debugPrint(error.localizedDescription)
-                    break
-                }
-            }
-        } else{
-            print(appDelegateObj.testFuntion())
-        }
-    }
-    */
+ 
     // MARK: 🟢 Get Cocci Vaccine List
     func callGetCocciVaccine() {
         if WebClass.sharedInstance.connected() {
@@ -1541,7 +1481,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                          let jsonResponse = JSON(json)
                          // Check for the "errorResult" key and handle errors
                          if let errorResult = jsonResponse["errorResult"].dictionary {
-                             let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                              let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                              
                              self?.callLoginMethod(errorCode)
@@ -1609,7 +1548,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -1745,7 +1683,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -1819,7 +1756,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -1886,7 +1822,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -1951,7 +1886,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -2015,7 +1949,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                     
                     self?.callLoginMethod(errorCode)
@@ -2081,7 +2014,6 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? self?.unknownCodeStr
                      
                    

@@ -77,7 +77,6 @@ class MicrobialViewController: BaseViewController {
         if CodeHelper.sharedInstance.reachability?.connection == .unavailable {
                 return
         }
-        var customerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Customer")
         if (UserDefaults.standard.value(forKey: "isFreshLaunched") as? Bool) ?? true {
             fetchCustomerList()
         }else{
@@ -347,7 +346,7 @@ class MicrobialViewController: BaseViewController {
         
         let enviromentalSessionInProgress = CoreDataHandlerMicro().fetchAllData("Microbial_EnviromentalSessionInProgress")
         let bacterialSessionInProgress = CoreDataHandlerMicro().fetchAllData("ProgressSessionMicrobial")
-        let featherPulpSessionInProgress = CoreDataHandlerMicro().fetchAllData("Microbial_FeatherPulpCurrentSession")
+      
         
         if enviromentalSessionInProgress.count > 0 || bacterialSessionInProgress.count > 0 {
             self.sessionBtn.isHidden = false
@@ -444,43 +443,6 @@ extension MicrobialViewController {
         }
     }
     
-    private func createStructureJsonForEnvAndBacterial(data: Microbial_EnviromentalSurveyFormSubmitted, reqType: RequisitionType, sessionType: SessionStatus) -> [String: Any]{
-        let objMicrobial_LocationTypeHeaderPlatesSubmitted = Microbial_LocationTypeHeaderPlatesSubmitted.fetchEnviromentalPlatesWith(timeStamp: data.timeStamp ?? "")
-        var objPlates = [Dictionary<String, Any>]()
-        var temIndex = 1
-        for plates in objMicrobial_LocationTypeHeaderPlatesSubmitted {
-            if plates.mediaTypeValue == "TSA" {
-                plates.mediaTypeId = 1
-            }
-            else if plates.mediaTypeValue == "SabDex" {
-                plates.mediaTypeId = 2
-            }
-            else if plates.mediaTypeValue == "MacConkey" {
-                plates.mediaTypeId = 3
-
-            }
-            else if plates.mediaTypeValue == "Other"  {
-                plates.mediaTypeId = 4
-            }
-            let section = plates.section?.intValue ?? -1
-            let plateId = (data.isPlateIdGenerated?.boolValue ?? false) ? (plates.plateId ?? "") : ""
-            
-            objPlates.append(MicrobialBacterialSampleDetailsList(Plate_Id: plateId, Location_Type: plates.locationTypeId?.intValue ?? 0, Location_Value: plates.locationValueId?.intValue ?? 0, Sample_Desc: plates.sampleDescription ?? "", Add_Test: plates.isMicoscoreChecked?.boolValue ?? true, Add_Bact: plates.isBacterialChecked?.boolValue ?? false, ParentId: section - 1, ChildId: plates.row?.intValue ?? -1, MediaType: plates.mediaTypeId as? Int, Notes: plates.notes, SamplingMethod: plates.samplingMethodTypeId?.intValue).dictionary ?? [:])
-            temIndex = temIndex + 1
-        }//data.email
-        let requestor_Id = UserDefaults.standard.value(forKey: "Id") as? Int ?? 0
-        let prediacate = NSPredicate(format: "timeStamp == %@ AND isSelected == %d", argumentArray: [data.timeStamp ?? "", true])
-        let reviewerIds = MicrobialSelectedUnselectedReviewer.fetchDetailsForReviewer(predicate: prediacate).map{ $0.reviewerId?.intValue }
-        let objBacterial = EnvironmentalRequestModel(Requestor_Id: requestor_Id, Customer_Id: data.companyId?.intValue ?? 0, Site_Id: data.siteId?.intValue ?? 0, ReviewerIds: reviewerIds as? [Int], Barcode: data.barcode ?? "", Conducted_Type: data.surveyConductedOnId?.intValue ?? 0, Purpose_Type: data.purposeOfSurveyId?.intValue ?? 0, Transfer_Type: 0, Sample_Date: data.sampleCollectionDate ?? "", Ack: true, Device_Id: data.syncDeviceId ?? "", RequisitionId: data.timeStamp ?? "", RequisitionType: data.sessionStatus?.intValue ?? 1, Notes: data.notes ?? "", VisitReason: (data.reasonForVisitId?.intValue == 0) ? 3 : data.reasonForVisitId?.intValue, RequisitionNo: data.reqNo ?? "")
-        var dict = objBacterial.dictionary ?? [:]
-        if reqType == .bacterial{
-            dict["MicrobialBacterialSampleDetailsList"] = objPlates
-        }else if reqType == .enviromental{
-            dict["MicrobialEnvironmentalSampleDetailsList"] = objPlates
-        }
-        return dict
-    }
-    
     
     private func syncData(data: Microbial_EnviromentalSurveyFormSubmitted, reqType: RequisitionType, sessionType: SessionStatus){
         self.showGlobalProgressHUDWithTitle(self.view, title: "Syncing")
@@ -489,9 +451,6 @@ extension MicrobialViewController {
         if let theJSONData = try? JSONSerialization.data(
             withJSONObject: dict,
             options: []) {
-            let theJSONText = String(data: theJSONData,
-                                       encoding: .ascii)
-           
         }
      
         ZoetisWebServices.shared.syncEnvironmentalData(reqType: reqType, controller: self, parameters: dict, completion: { [weak self] (json, error) in
@@ -932,12 +891,6 @@ extension MicrobialViewController {
         } else {
             self.setUpPieChart(pieChartView: piechartViewEnviromental, data: [], count: Int(enviromentalSubmittedRequisitionCount), requisitionType: "Environmental")
         }
-        
-//        if totalSubmittedRequisition > 0 && Int(featherPulpSubmittedRequisitions) > 0 {
-//            self.setUpPieChart(pieChartView: piechartViewFeathurePulp, data: [releasedFeatherpulpCount, (featherPulpSubmittedRequisitions - releasedFeatherpulpCount)], count: Int(featherPulpSubmittedRequisitions), requisitionType: "Feather")
-//        } else {
-//            self.setUpPieChart(pieChartView: piechartViewFeathurePulp, data: [], count: Int(featherPulpSubmittedRequisitions), requisitionType: "Feather")
-//        }
         
     }
     

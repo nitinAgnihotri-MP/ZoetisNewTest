@@ -51,8 +51,7 @@ class RefrigatorQuesCell: UITableViewCell {
     }
     
     @IBAction func action_Switch(_ sender: UISwitch) {
-        let green = ZoetisArt.ColorCode.green
-        let red = UIColor(hexString: ZoetisArt.ColorCode.orange)
+ 
         if sender.isOn{
             completion?(true,nil)
         } else{

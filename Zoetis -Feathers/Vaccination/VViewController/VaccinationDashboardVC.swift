@@ -238,95 +238,6 @@ class VaccinationDashboardVC: BaseViewController{
         }
     
 
-/*
- // We can try this case.
-    @objc func submitCertifications() {
-        submitOperationQueue.maxConcurrentOperationCount = 1
-        let certifications = VaccinationDashboardDAO.sharedInstance.getStartedCertificationsByStatusVM(
-            userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
-            status: .submitted,
-            syncStatus: .synced
-        )
-
-        guard !certifications.isEmpty else {
-            let errorMsg = "Data not available for sync"
-            let alertController = UIAlertController(title: "No data available", message: errorMsg, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: .default))
-            self.present(alertController, animated: true)
-            return
-        }
-
-        self.showGlobalProgressHUDWithTitle(self.view, title: "Data syncing..")
-
-        // Start processing the first certification
-        processCertificationsSequentially(certifications, index: 0)
-    }
-
-    func processCertificationsSequentially(_ certifications: [VaccinationCertificationVM], index: Int) {
-        guard index < certifications.count else {
-            // All certifications processed
-            self.dismissGlobalHUD(self.view ?? UIView())
-            self.showtoast(message: "Data Synced.")
-            UserDefaults.standard.set(false, forKey: "hasVaccinationDataLoaded")
-            self.getSubmittedCertifications()
-            self.setupHeaderView()
-            return
-        }
-
-        let certification = certifications[index]
-        let param = DataService.sharedInstance.getFilledCertObj(
-            certificationId: certification.certificationId ?? "",
-            userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
-            siteId: certification.siteId ?? "",
-            customerId: certification.customerId ?? "",
-            fssId: Int(certification.selectedFsmId ?? "") ?? 0,
-            FsrId: certification.fsrId ?? ""
-        )
-
-        let completionHandler: (String?, Error?) -> Void = { [weak self] (status, error) in
-            guard let self = self else { return }
-
-            if let error = error {
-                print("Sync failed for certification \(certification.certificationId ?? "Unknown") - Error: \(error)")
-            } else if status == "SUCCESS" {
-                var certObj = certification
-                certObj.syncStatus = VaccinationCertificationSyncStatus.synced.rawValue
-                VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(
-                    userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
-                    lastModuleName: .VaccinationDashboardVC,
-                    certificationId: certObj.certificationId ?? UUID().uuidString,
-                    subModule: "",
-                    certificationCategoryId: certObj.certificationCategoryId ?? "",
-                    certObj: certObj
-                )
-            }
-
-            // Add delay before processing the next certification
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                self.processCertificationsSequentially(certifications, index: index + 1)
-            }
-        }
-
-        if certification.certificationCategoryId == "0" {
-            DataService.sharedInstance.postNewCertifications(
-                loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
-                viewController: self,
-                param: param ?? [:],
-                completion: completionHandler
-            )
-        } else {
-            DataService.sharedInstance.postCertifications(
-                loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
-                viewController: self,
-                param: param ?? [:],
-                completion: completionHandler
-            )
-        }
-    }
-
-    */
- 
-  
     @objc func refreshCertifications(_ notification: NSNotification){
         self.upcomingCertificationsArr =  VaccinationDashboardDAO.sharedInstance.getScheduledCertifications(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "")
         certificationsTblVw.reloadData()
@@ -460,13 +371,12 @@ class VaccinationDashboardVC: BaseViewController{
     }
     
     
-    func showPopup(){
-        let certifications = VaccinationDashboardDAO.sharedInstance.getStartedCertificationsByStatusVM(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", status: .submitted, syncStatus: .synced)
-        if certifications.count > 0{
-            if hasDataLoaded{
-                DispatchQueue.main.async {
-                    self.syncDataPopup()
-                }
+    func showPopup() {
+        let certifications = VaccinationDashboardDAO.sharedInstance.getStartedCertificationsByStatusVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", status: .submitted, syncStatus: .synced)
+        
+        if certifications.count > 0, hasDataLoaded {
+            DispatchQueue.main.async {
+                self.syncDataPopup()
             }
         }
     }
@@ -620,14 +530,6 @@ class VaccinationDashboardVC: BaseViewController{
         
     }
     
-    private func loadPopupVw(){
-        popupBackgroundVw.isHidden = false
-        popupSectionHeaderVw.isHidden = false
-        popupHeightConstraint.constant = 360
-        titleVw.isHidden = false
-        sectonHeaderVw.isHidden = false
-    }
-    
     fileprivate func handleSavedStatus(_ status: String?) {
         let mainQueue = OperationQueue.main
         mainQueue.addOperation {
@@ -645,12 +547,12 @@ class VaccinationDashboardVC: BaseViewController{
                 self.showPopup()
                 self.dismissGlobalHUD(self.view ?? UIView())
             }
+            
             let hasLoadedVaccinations = UserDefaults.standard.bool(forKey: "hasVaccinationDataLoaded")
-            if !hasLoadedVaccinations {
-                
-            } else {
+            if hasLoadedVaccinations {
                 self.dismissGlobalHUD(self.view ?? UIView())
             }
+         
         }
     }
     
@@ -660,9 +562,7 @@ class VaccinationDashboardVC: BaseViewController{
                 self?.hasDataLoaded = true
                 self?.showPopup()
                 let hasLoadedVaccinations = UserDefaults.standard.bool(forKey: "hasVaccinationDataLoaded")
-                if !hasLoadedVaccinations {
-                    
-                } else {
+                if hasLoadedVaccinations {
                     self?.dismissGlobalHUD(self?.view ?? UIView());
                 }
                 return
@@ -769,7 +669,10 @@ class VaccinationDashboardVC: BaseViewController{
         }
         
         DataService.sharedInstance.getSubmittedCertifications(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr, viewController: self, completion: { [weak self] (status, error) in
-            guard let _ = self, error == nil else { self?.dismissGlobalHUD(self?.view ?? UIView()); return }
+            guard let _ = self, error == nil else {
+                self?.dismissGlobalHUD(self?.view ?? UIView())
+                return
+            }
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
                 mainQueue.addOperation{
@@ -943,7 +846,6 @@ extension VaccinationDashboardVC: UITableViewDelegate, UITableViewDataSource{
         let vc = UIStoryboard.init(name: Constants.Storyboard.VACCINATIONCERTIFICATION, bundle: Bundle.main).instantiateViewController(withIdentifier: "QuestionnaireVC") as? QuestionnaireVC
         vc?.subModule = subModule
         if index != nil && index! > -1{
-            let certificationId = upcomingCertificationsArr[index!].certificationId
             vc?.curentCertification =  upcomingCertificationsArr[index!]
             let startedObj = VaccinationDashboardDAO.sharedInstance.onlyScheduledCertStatusVM(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: vc?.curentCertification?.certificationId ?? "")
             if startedObj != nil{

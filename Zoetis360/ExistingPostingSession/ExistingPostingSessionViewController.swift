@@ -22,7 +22,7 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
     var toDate   = Date()
     var fromString = String()
     var toString = String()
-    var dateFormatter = DateFormatter()
+    var dateFormatterIs = DateFormatter()
     let objApiSync = ApiSync()
     
     var customPopView1 :UserListView!
@@ -186,9 +186,9 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         if lngId == 3{
             fromLblDate.alpha = 0
             fromLblDateFrench.alpha = 1
-            dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-            let strdate = dateFormatter.string(from: datePicker.date) as String
+            dateFormatterIs = DateFormatter()
+            dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
+            let strdate = dateFormatterIs.string(from: datePicker.date) as String
             fromLblDateFrench.text = strdate
         }
         else{
@@ -196,11 +196,11 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             fromLblDateFrench.alpha = 0
         }
         
-        dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        fromString = dateFormatter.string(from: datePicker.date)
+        dateFormatterIs = DateFormatter()
+        dateFormatterIs.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatterIs = DateFormatter()
+        dateFormatterIs.dateFormat = appDelegateObj.MMddyyyStr
+        fromString = dateFormatterIs.string(from: datePicker.date)
         fromDate = datePicker.date
         
         if fromString == toString{
@@ -208,16 +208,16 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             if lngId == 3{
                 fromLblDate.alpha = 0
                 fromLblDateFrench.alpha = 1
-                dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-                let strdate = dateFormatter.string(from: datePicker.date) as String
+                dateFormatterIs = DateFormatter()
+                dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
+                let strdate = dateFormatterIs.string(from: datePicker.date) as String
                 fromLblDateFrench.text = strdate
             }
             else{
                 fromLblDate.alpha = 1
                 fromLblDateFrench.alpha = 0
             }
-            let strdate = dateFormatter.string(from: datePicker.date) as String
+            let strdate = dateFormatterIs.string(from: datePicker.date) as String
             fromLblDate.text = strdate
             UserDefaults.standard.set( fromLblDate.text, forKey: "date")
             buttonBg.removeFromSuperview()
@@ -228,16 +228,16 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             if lngId == 3{
                 fromLblDate.alpha = 0
                 fromLblDateFrench.alpha = 1
-                dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-                let strdate = dateFormatter.string(from: datePicker.date) as String
+                dateFormatterIs = DateFormatter()
+                dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
+                let strdate = dateFormatterIs.string(from: datePicker.date) as String
                 fromLblDateFrench.text = strdate
             }
             else{
                 fromLblDate.alpha = 1
                 fromLblDateFrench.alpha = 0
             }
-            let strdate = dateFormatter.string(from: datePicker.date) as String
+            let strdate = dateFormatterIs.string(from: datePicker.date) as String
             fromLblDate.text = strdate
             UserDefaults.standard.set( fromLblDate.text, forKey: "date")
             buttonBg.removeFromSuperview()
@@ -287,9 +287,9 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         if lngId == 3{
             toLblDate.alpha = 0
             toLblDateFrench.alpha = 1
-            dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-            let strdate = dateFormatter.string(from: datePicker.date) as String
+            dateFormatterIs = DateFormatter()
+            dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
+            let strdate = dateFormatterIs.string(from: datePicker.date) as String
             toLblDateFrench.text = strdate
         }
         else{
@@ -309,9 +309,9 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             
             if lngId == 3{
                 toLblDate.alpha = 0
-                dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-                let strdate = dateFormatter.string(from: datePicker.date) as String
+                dateFormatterIs = DateFormatter()
+                dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
+                let strdate = dateFormatterIs.string(from: datePicker.date) as String
                 toLblDateFrench.text = strdate
             }
             else{
@@ -329,9 +329,9 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             
             if lngId == 3{
                 toLblDate.alpha = 0
-                dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-                let strdate = dateFormatter.string(from: datePicker.date) as String
+                dateFormatterIs = DateFormatter()
+                dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
+                let strdate = dateFormatterIs.string(from: datePicker.date) as String
                 toLblDateFrench.text = strdate
             }
             else{
@@ -412,25 +412,22 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
                 self.navigationController?.pushViewController(postingSessionDetails!, animated: true)
             }
             else{
-                var lanStr  = String()
                 let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
                 if lngId == 1{
-                    lanStr = "English"
+                   
                     Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("This session has been created in English language Please logout and select English as a language to edit /proceed this session", comment: ""))
                     
                 }else  if lngId == 3{
-                    lanStr = "French"
+                   
                     Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("Cette session a été créée en langue anglaise déconnectez-vous et sélectionnez anglais pour modifier.", comment: ""))
                     
                 }
                 else  if lngId == 4{
-                    lanStr = "Portuguese"
+                   
                     Helper.showAlertMessage(self,titleStr:NSLocalizedString(NSLocalizedString(Constants.alertStr, comment: ""), comment: "") , messageStr:NSLocalizedString("Esta sessão foi criada no idioma Português, faça logout e selecione o inglês como um idioma para editar /prosseguir nesta sessão", comment: ""))
                     
                 }
-                else{
-                    lanStr = "Spanish"
-                }
+               
                 
             }
         }
@@ -494,13 +491,13 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             cell.sessionTypeLabel.text  = posting.sessionTypeName
             cell.complexLabel.text  = posting.complexName
             cell.veterinartionLabel.text  = posting.vetanatrionName
-            let lngId =  posting.lngId
-            if lngId == 1{
+            let selectedLanguageIs =  posting.lngId
+            if selectedLanguageIs == 1{
                 cell.lblLng.text = "(En)"
-            }else if lngId == 3{
+            }else if selectedLanguageIs == 3{
                 cell.lblLng.text = "(Fr)"
             }
-            else if lngId == 4{
+            else if selectedLanguageIs == 4{
                 cell.lblLng.text = "(pt-BR)"
             }
             else{
@@ -674,19 +671,18 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             }
         }
         let allPostingSessionArr = NSMutableArray()
-        
-        var sessionId = NSNumber()
+       
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         

@@ -41,49 +41,7 @@ class PEDataService{
             completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
         }
     }
-
-
-    // MARK: Code not used so it is commented
-    /*
-    func getRejectedAssessments(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
-        var id = loginuserId
-        let url = ZoetisWebServices.EndPoint.getPERejectedAssessment.latestUrl + "\(id)"
-        
-        ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else{ completion(nil, error) ;return  ;}
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationCertificationObj = try? jsonDecoder.decode([PE_AssessmentRejectedDTO].self, from: data)
-                           
-                            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                PEAssessmentsDAO.sharedInstance.saveRejectedAssessments(certificationDTOArr: vaccinationCertificationObj ?? [PE_AssessmentRejectedDTO](), loginUserId: loginuserId)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }else{
-                                completion(appDelegateObj.noDataFoundStr, nil)
-                            }
-                            
-                        }else{
-                            completion(appDelegateObj.noDataFoundStr, nil)
-                        }
-                        
-                    }else{
-                        completion(appDelegateObj.noDataFoundStr, nil)
-                    }
-                    
-                }else{
-                    completion(appDelegateObj.noDataFoundStr, nil)
-                }
-            }else{
-                completion(appDelegateObj.noDataFoundStr, nil)
-            }
-        })
-    }
-  */
+    
     // MARK: Delete Deleted Assessment ......
     func deleteDeletedAssessments(loginuserId: String, viewController: UIViewController, completion: @escaping (String?, NSError?) -> Void) {
         let userId = loginuserId
@@ -93,9 +51,9 @@ class PEDataService{
         // Delete existing data for this user
         PEDeletedDraftsDAO.sharedInstance.deleteExisitingData("PE_DeletedAssessments", predicate: NSPredicate(format: "userId = %@", userId))
 
-        if deletedAssessments.count > 0{
+        if deletedAssessments.count > 0 {
             url = url + deletedAssessments + "&userId=" + loginuserId + "&appVersion=" + Bundle.main.versionNumber
-        }else{
+        } else {
             url = url + "&userId=" + loginuserId + "&appVersion=" + Bundle.main.versionNumber
         }
 
@@ -143,61 +101,6 @@ class PEDataService{
 
 
 
-    /*
-    func deleteDeletedAssessments(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
-        let userId = loginuserId
-        var url = ZoetisWebServices.EndPoint.deleteDrafts.latestUrl
-        let deletedAssessments = PEDeletedDraftsDAO.sharedInstance.fetchDeletedAssessments(userId:  loginuserId)
-        PEDeletedDraftsDAO.sharedInstance.deleteExisitingData("PE_DeletedAssessments", predicate: NSPredicate(format:"userId = %@", userId))
-        if deletedAssessments.count > 0{
-            url = url + deletedAssessments + "&userId=" + loginuserId + "&appVersion=" + Bundle.main.versionNumber
-        }else{
-            url = url + "&userId=" + loginuserId + "&appVersion=" + Bundle.main.versionNumber
-        }
-        ZoetisWebServices.shared.deleteDeletedDrafts(controller:viewController , parameters: [String:Any](),  url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else{ completion(nil, error) ;return  ;}
-            
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        do {
-                            // make sure this JSON is in the format we expect
-                            if let jsonNew = try JSONSerialization.jsonObject(with: jsonData ?? Data(), options: []) as? [String: NSArray] {
-                                // try to read out a string array
-                                let deletedIdArray = jsonNew["AssesssmentId"]
-                               
-                                PEDeletedDraftsDAO.sharedInstance.deleteExisitingData(predicate: nil)
-                                if deletedIdArray?.count ?? 0 > 0{
-                                    for assessmentId in deletedIdArray ?? []{
-                                        self?.getAllDateArrayStored(assessmentId: assessmentId as? Int ?? 0)
-                                    }
-                                    completion(responseStr, nil)
-                                }else{
-                                    completion(appDelegateObj.noDataFoundStr, nil)
-                                }
-                            }else{
-                                completion(appDelegateObj.noDataFoundStr, nil)
-                            }
-                        } catch let error as NSError {
-                            print("Failed to load: \(error.localizedDescription)")
-                            completion(appDelegateObj.noDataFoundStr, nil)
-                        }
-                    }else{
-                        completion(appDelegateObj.noDataFoundStr, nil)
-                    }
-                }else{
-                    completion(appDelegateObj.noDataFoundStr, nil)
-                }
-            }else{
-                completion(appDelegateObj.noDataFoundStr, nil)
-            }
-            
-        })
-    }
-    
-    */
     func getAllDateArrayStored(assessmentId: Int){
         let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         let drafts  = CoreDataHandlerPE().getDraftAssessmentArrayPEObject(ofCurrentAssessment:true)
@@ -248,45 +151,4 @@ class PEDataService{
             completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
         }
     }
-
-    /*
-    func getPlateTypes(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
-        var id = loginuserId
-        let url = ZoetisWebServices.EndPoint.getPlateTypes.latestUrl
-        
-        ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else{ completion(nil, error) ;return  ;}
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    if responseStr != ""{
-                        let jsonData = try? Data(responseStr.utf8 )
-                        if let data = jsonData{
-                            let vaccinationCertificationObj = try? jsonDecoder.decode([PlateTypesDTO].self, from: data)
-                            if  vaccinationCertificationObj != nil && vaccinationCertificationObj?.count ?? 0 > 0{
-                                PlateTypesDAO.sharedInstance.savePlateTypes(userId: loginuserId, plateTypeDTO: vaccinationCertificationObj!)
-                                completion(VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY, nil)
-                            }else{
-                                completion(appDelegateObj.noDataFoundStr, nil)
-                            }
-                            
-                        }else{
-                            completion(appDelegateObj.noDataFoundStr, nil)
-                        }
-                        
-                    }else{
-                        completion(appDelegateObj.noDataFoundStr, nil)
-                    }
-                    
-                }else{
-                    completion(appDelegateObj.noDataFoundStr, nil)
-                }
-            }else{
-                completion(appDelegateObj.noDataFoundStr, nil)
-            }
-            
-        })
-    }
-    */
 }

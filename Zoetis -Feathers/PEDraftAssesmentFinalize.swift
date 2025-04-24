@@ -110,7 +110,6 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo else {return}
         guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {return}
-        let keyboardFrame = keyboardSize.cgRectValue
         
         if self.view.bounds.origin.y == 0{
             self.view.bounds.origin.y += 200
@@ -173,11 +172,8 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         
     }
     // MARK: - Clean Session
-    private func cleanSessionAndMoveTOStart(){
-        
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        if regionID == 3
-        {
+    private func cleanSessionAndMoveTOStart() {
+        if regionID == 3 {
             let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
             let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssessment") as? PEDraftStartNewAssessment
             vc?.isFromBack = true
@@ -186,9 +182,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             if vc != nil{
                 navigationController?.pushViewController(vc!, animated: false)
             }
-        }
-        else
-        {
+        } else {
             let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
             let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftStartNewAssesmentINT") as? PEDraftStartNewAssesmentINT
             vc?.isFromBack = true
@@ -221,7 +215,6 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         peHeaderViewController.assId = "C-\(peNewAssessment.draftID!)"
         self.headerView.addSubview(peHeaderViewController.view)
         self.topviewConstraint(vwTop: peHeaderViewController.view)
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
         showExtendedPE = peNewAssessment.sanitationValue ?? false
         let peNewAssessmentArray = CoreDataHandlerPE().getOnGoingDraftAssessmentArrayPEObject()
         var carColIdArray : [Int] = []
@@ -239,7 +232,6 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 
             }
         }
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID != 3
         {
             btn_NA.isHidden = false
@@ -256,12 +248,9 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 var idArr : [Int] = []
                 for obj in  cat.doa {
                     let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            dayOfAgeData.append(data!)
-                        }
+                    if data != nil, idArr.contains(data!.id ?? 0) == false {
+                        idArr.append(data!.id ?? 0)
+                        dayOfAgeData.append(data!)
                     }
                 }
             }
@@ -272,12 +261,9 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 var idArr : [Int] = []
                 for obj in  cat.doaS {
                     let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            dayOfAgeSData.append(data!)
-                        }
+                    if data != nil,idArr.contains(data!.id ?? 0) == false  {
+                        idArr.append(data!.id ?? 0)
+                        dayOfAgeSData.append(data!)
                     }
                 }
             }
@@ -288,12 +274,9 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 var idArr : [Int] = []
                 for obj in  cat.inovoject {
                     let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if data != nil{
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            inovojectData.append(data!)
-                        }
+                    if data != nil, idArr.contains(data!.id ?? 0) == false {
+                        idArr.append(data!.id ?? 0)
+                        inovojectData.append(data!)
                     }
                 }
             }
@@ -304,13 +287,9 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 var idArr : [Int] = []
                 for obj in  cat.vMixer {
                     let data = CoreDataHandlerPE().getCertificateData(doaId: obj)
-                    if data != nil{
-                        if idArr.contains(data!.id ?? 0){
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            
-                            certificateData.append(data!)
-                        }
+                    if data != nil, idArr.contains(data!.id ?? 0) == false {
+                        idArr.append(data!.id ?? 0)
+                        certificateData.append(data!)
                     }
                 }
             }
@@ -331,11 +310,9 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 selectedCategory = cat
             }
         }
-        if  selectedCategory?.evaluationDate?.count == nil {
+        if selectedCategory?.evaluationDate?.count == nil {
             selectedCategory = catArrayForCollectionIs.first
-            let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-            if regionID != 3
-            {
+            if regionID != 3 {
                 refriCategory = catArrayForCollectionIs.last
             }
         }
@@ -359,7 +336,6 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         row = 0
         selectedCategory = catArrayForCollectionIs[0]
         
-        let NewcountryId1 = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID != 3
         {
             refriCategory = catArrayForCollectionIs.last
@@ -378,10 +354,8 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             
         }
         self.collectionView.selectItem(at: self.collectionviewIndexPath, animated: false, scrollPosition: .left)
-        if regionID == 3
-        {
+        if regionID == 3 {
             if showExtendedPE {
-                let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
                 if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
                     catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
                 }
@@ -393,20 +367,18 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 catArrayForCollectionIs.append(catObjectPE)
                 btn_NA.isHidden = true
                 lbl_NA.isHidden = true
-                let plateInfoCell = UINib(nibName: "PlateInfoCell", bundle: nil)
                 tableview.register(UINib(nibName: "PlateInfoCell", bundle: nil), forCellReuseIdentifier: "PlateInfoCell")
                 
                 let nibPlateInfoHeader = UINib(nibName: "PlateInfoHeader", bundle: nil)
                 tableview.register(nibPlateInfoHeader, forHeaderFooterViewReuseIdentifier: "PlateInfoHeader")
                 
-                let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
+                let sanitationQuesArrEmbrex = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
                 
-                if sanitationQuesArr.count == 0{
+                if sanitationQuesArrEmbrex.count == 0{
                     SanitationEmbrexQuestionMasterDAO.sharedInstance.saveAssessmentQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
                 }
                 
-            }
-            else{
+            } else {
                 if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
                     catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
                 }
@@ -424,18 +396,16 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         isCertExpiredArray.removeAll()
         signatureImgArray.removeAll()
         vacOperatorIdArray.removeAll()
-        if let vaccineMixers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "PE_VaccineMixerDetail") as? [PE_VaccineMixerDetail] {
-            if vaccineMixers.count > 0{
-                for mixer in vaccineMixers{
-                    dataArray.append(mixer.name ?? "")
-                    certDateArray.append(mixer.certificationDate ?? "")
-                    mixerIdArray.append(Int(mixer.id ?? 0))
-                    isCertExpiredArray.append(mixer.isCertExpired as? Bool ?? false)
-                    signatureImgArray.append(mixer.signatureImage ?? "")
-                }
+        if let vaccineMixers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "PE_VaccineMixerDetail") as? [PE_VaccineMixerDetail],
+           vaccineMixers.count > 0 {
+            for mixer in vaccineMixers {
+                dataArray.append(mixer.name ?? "")
+                certDateArray.append(mixer.certificationDate ?? "")
+                mixerIdArray.append(Int(mixer.id ?? 0))
+                isCertExpiredArray.append(mixer.isCertExpired as? Bool ?? false)
+                signatureImgArray.append(mixer.signatureImage ?? "")
             }
         }
-        
     }
     // MARK: - Extended Micro Switch
     @IBAction func extendedMicroSwitch(_ sender: UISwitch) {
@@ -458,9 +428,9 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             "countryId": "\(countryId)"
         ] as JSONDictionary
         ZoetisWebServices.shared.getMixerList(controller: self, parameters: parameter) { [weak self] (json, error) in
-            guard let `self` = self, error == nil else { return }
-            self.deleteAllData("PE_VaccineMixerDetail")
-            VaccineMixerResponse(json)
+            guard error == nil else { return }
+            self?.deleteAllData("PE_VaccineMixerDetail")
+            _ = VaccineMixerResponse(json)
             completion(true)
         }
     }
@@ -479,11 +449,6 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         
         resultScoreLabel.text = "\(score)"
         totalScoreLabel.text = "100"
-        
-        
-        if sanitationIndex > -1{
-            
-        }
     }
     // MARK: - Setup UI
     func setupUI(){
@@ -544,22 +509,14 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     }
     
     // MARK: - Update Score
-    private func updateScore(isAllNA:Bool?)  {
-        if(isAllNA ?? false){
-            let totalMark = selectedCategory?.catMaxMark ?? 0
-            
+    private func updateScore(isAllNA:Bool?) {
+        if(isAllNA ?? false) {
             resultScoreLabel.text = "0"
             totalScoreLabel.text = "0"
-            
-        }else{
-            let totalMark = selectedCategory?.catMaxMark ?? 0
-            
+        } else {
             resultScoreLabel.text = String(selectedCategory?.catResultMark ?? 0)
             totalScoreLabel.text = String(selectedCategory?.catMaxMark ?? 0)
-            
-            
         }
-        
     }
     
     private func selectinitialCell() {
@@ -577,17 +534,13 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                     hasEmptyPlateType =  hasEmptyPlateType && false
                 }
                 if question.questionDescription == "Control (Non Exposed) Plate"{
-                    if question.bacteriaCount ?? 0 >= Int32(5){
-                        if question.userComments == "" || question.userComments == nil{
-                            showAlertForCommentMandatory()
-                        }
-                    }else if question.blueGreenMoldCount ?? 0 >= Int32(1){
-                        if question.userComments == "" || question.userComments == nil{
+                    if question.bacteriaCount ?? 0 >= Int32(5) || question.blueGreenMoldCount ?? 0 >= Int32(1) {
+                        if question.userComments == "" || question.userComments == nil {
                             showAlertForCommentMandatory()
                         }
                     }
                 }
-                if !hasEmptyPlateType{
+                if !hasEmptyPlateType {
                     showAlertForAddingPlateType()
                     return false
                 }
@@ -596,25 +549,16 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         if !(self.peNewAssessment.evaluationName?.contains("Non") ?? false) {
             if self.inovojectData.count > 0 {
                 let countt = self.inovojectData[0].name?.count ?? 0
-                let programName = self.inovojectData[0].invoProgramName
                 if countt < 1 {
-                    if regionID == 3
-                    {
+                    if regionID == 3 {
                         showAlertForNoValid()
-                    }
-                    else
-                    {
+                    } else {
                         showAlertForNoValid()
                         return false
                     }
-                }
-                else
-                {
-                    if regionID == 3
-                    {
-                        if strings.contains("Please enter vaccine details in the Vaccine Preparation & Sterility.")
-                        {
-                            strings = strings.filter { $0 != "Please enter vaccine details in the Vaccine Preparation & Sterility." }
+                } else {
+                    if regionID == 3,strings.contains("Please enter vaccine details in the Vaccine Preparation & Sterility.") {
+                        strings = strings.filter { $0 != "Please enter vaccine details in the Vaccine Preparation & Sterility."
                         }
                     }
                 }
@@ -622,41 +566,32 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                 for inovo in self.inovojectData{
                     let switchAnti = inovo.invoHatchAntibiotic
                     let txtAnti = inovo.invoHatchAntibioticText
-                    if (switchAnti == 1) && (txtAnti == ""){
+                    if (switchAnti == 1) && (txtAnti == "") {
                         showAlertForAntibiotic()
                         return false
                     }
                 }
-                if (self.peNewAssessment.hatcheryAntibioticsDoa == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaText == ""){
-                    if regionID == 3
-                    {
+                if (self.peNewAssessment.hatcheryAntibioticsDoa == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaText == "") {
+                    if regionID == 3 {
                         showAlertForAntibiotic()
-                    }
-                    else
-                    {
+                    } else {
                         showAlertForAntibiotic()
                         return false
                     }
                 }
-                if (self.peNewAssessment.hatcheryAntibioticsDoaS == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaSText == ""){
-                    if regionID == 3
-                    {
+                if (self.peNewAssessment.hatcheryAntibioticsDoaS == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaSText == "") {
+                    if regionID == 3 {
                         showAlertForAntibiotic()
-                    }
-                    else
-                    {
+                    } else {
                         showAlertForAntibiotic()
                         return false
                     }
                 }
                 
             } else {
-                if regionID == 3
-                {
+                if regionID == 3 {
                     showAlertForNoValid()
-                }
-                else
-                {
+                } else {
                     showAlertForNoValid()
                     return false
                 }
@@ -691,80 +626,52 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             }
         }
         if self.checkForTraning()  {
-            let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-            if regionID == 3
-            {
-                if(self.peNewAssessment.frequency?.count ?? 0 < 1){
-                    if(self.peNewAssessment.evaluationID == 1){
-                        if regionID == 3
-                        {
-                            showAlertForNoFrequency()
-                        }
-                        else{
-                            showAlertForNoFrequency()
-                            return false
-                        }
-                        
+            if regionID == 3 {
+                if(self.peNewAssessment.frequency?.count ?? 0 < 1),(self.peNewAssessment.evaluationID == 1) {
+                    if regionID == 3 {
+                        showAlertForNoFrequency()
+                    } else {
+                        showAlertForNoFrequency()
+                        return false
                     }
                 }
-                if(self.peNewAssessment.personName?.count ?? 0 < 1){
-                    if(self.peNewAssessment.evaluationID == 1){
-                        if regionID == 3
-                        {
-                            showAlertForNoPersonName()
-                        }else
-                        {
-                            showAlertForNoPersonName()
-                            return false
-                        }
-                    }
-                    
-                }
-            }
-            
-            if self.peNewAssessment.qcCount?.count ?? 0 < 1 {
-                if(self.peNewAssessment.evaluationID == 1){
-                    if regionID == 3
-                    {
-                        showAlertForNoQCCount()
-                    }else
-                    {
-                        showAlertForNoQCCount()
+                if (self.peNewAssessment.personName?.count ?? 0 < 1),(self.peNewAssessment.evaluationID == 1) {
+                    if regionID == 3 {
+                        showAlertForNoPersonName()
+                    } else {
+                        showAlertForNoPersonName()
                         return false
                     }
                 }
             }
             
-            if regionID == 3
-            {
-                if self.peNewAssessment.ppmValue?.count ?? 0 < 1 {
-                    
-                    if(self.peNewAssessment.evaluationID == 1){
-                        
-                        if regionID == 3
-                        {
-                            showAlertForPPMValue()
-                        }
-                        else
-                        {
-                            showAlertForPPMValue()
-                            return false
-                        }
+            if self.peNewAssessment.qcCount?.count ?? 0 < 1,(self.peNewAssessment.evaluationID == 1) {
+                if regionID == 3 {
+                    showAlertForNoQCCount()
+                } else {
+                    showAlertForNoQCCount()
+                    return false
+                }
+            }
+            
+            if regionID == 3 {
+                if self.peNewAssessment.ppmValue?.count ?? 0 < 1,(self.peNewAssessment.evaluationID == 1) {
+                    if regionID == 3 {
+                        showAlertForPPMValue()
+                    } else {
+                        showAlertForPPMValue()
+                        return false
                     }
                 }
             }
             
             if self.peNewAssessment.ampmValue?.count ?? 0 < 1 {
-                
-                if regionID == 3
-                {
+                if regionID == 3 {
                     showAlertForNoAMPMValue()
-                }
-                else{
+                } else {
                     showAlertForNoAMPMValue()
                     return false
                 }
-                
             }
         }
         
@@ -772,12 +679,8 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         let formatter = CodeHelper.sharedInstance.getDateFormatterObj("")
         if(regionID == 3){
             formatter.dateFormat = "MM/dd/yyyy"
-//            formatter.calendar = Calendar(identifier: .gregorian)
-//            formatter.timeZone = TimeZone(secondsFromGMT: 0)
         }else{
             formatter.dateFormat = "dd/MM/yyyy"
-//            formatter.calendar = Calendar(identifier: .gregorian)
-//            formatter.timeZone = TimeZone(secondsFromGMT: 0)
         }
         
         let firstDate = formatter.date(from:peNewAssessment.evaluationDate ?? "")
@@ -806,7 +709,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         else
         {
             let errorMSg = "Please enter program name in the Vaccine Preparation Tab."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
                 
@@ -844,7 +747,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         else
         {
             let errorMSg = "Please enter vaccine details in the Vaccine Preparation Tab."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
             }
@@ -868,7 +771,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             
             strings.append("Please enter Antibiotic in the Vaccine Preparation & Sterility.")
             let errorMSg = "Please enter Antibiotic in the Vaccine Preparation & Sterility."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
                 
@@ -883,7 +786,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         else
         {
             let errorMSg = "Please enter Antibiotic in the Vaccine Preparation Tab."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
                 
@@ -901,7 +804,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     // MARK: - Alert for Mandatory Comment
     func showAlertForCommentMandatory(){
         let errorMSg = "Please enter the Comment before submitting the assessment in Extended Microbial."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
             _ in
             
@@ -916,13 +819,10 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     // MARK: - Alert for Plates Type
     func showAlertForAddingPlateType(){
         let errorMSg = "Please select all plate types in Sanitation And Embrex Evaluation Tab"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
             _ in
             
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
         }
         alertController.addAction(okAction)
         self.present(alertController, animated: true, completion: nil)
@@ -930,7 +830,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     // MARK: - Alert for Vaccine Mixture
     func showAlertForNoValidTraining(){
         let errorMSg = "Please enter vaccine mixture Data in Vaccine Preparation & Sterility to submit this assessment."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
             _ in
             
@@ -945,7 +845,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     // MARK: - Alert for Images Capture Maximum Limit
     func showAlertForNoCamera(){
         let errorMSg = "Reached maximum limit of images for this question."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) {
             _ in
@@ -956,10 +856,8 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     // MARK: - Finalized Button Clicked
     @IBAction func finalizeButtonClicked(_ sender: Any) {
         
-        if regionID == 3
-        {
-            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
-            {
+        if regionID == 3 {
+            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true {
                 if extendedMicroSwitch.isOn {
                     var extendedMicroArr : [JSONDictionary]  = []
                     let allAssesmentArr = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(isFromDraft: true,serverAssessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
@@ -967,19 +865,16 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                     let dataToSubmitNumber = self.getAssessmentInOfflineFromDb()
                     PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:"completed",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
                     
-                    var param = [String:String]()
+                    let param = ["sig":String(peNewAssessment.sig!),"sig2":String(peNewAssessment.sig2!),"sig_EmpID": String(peNewAssessment.sig_EmpID!),"sig_EmpID2":String(peNewAssessment.sig_EmpID2!),"sig_Name":String(peNewAssessment.sig_Name!),"sig_Name2":String(peNewAssessment.sig_Name2!),"sig_Phone":String(peNewAssessment.sig_Phone!),"sig_Date":Date().stringFormat(format: "MMM d, yyyy") ]
                     
-                    param = ["sig":String(peNewAssessment.sig!),"sig2":String(peNewAssessment.sig2!),"sig_EmpID": String(peNewAssessment.sig_EmpID!),"sig_EmpID2":String(peNewAssessment.sig_EmpID2!),"sig_Name":String(peNewAssessment.sig_Name!),"sig_Name2":String(peNewAssessment.sig_Name2!),"sig_Phone":String(peNewAssessment.sig_Phone!),"sig_Date":Date().stringFormat(format: "MMM d, yyyy") ]
-                    
-                    let savedDataIs =  CoreDataHandlerPE().saveDataToSyncPEInDBArray(newAssessmentArray: allAssesmentArr as? [PENewAssessment] ?? [], dataToSubmitNumber: dataToSubmitNumber + 1,param:param,fromDraft: true)
                     
                     let jsonExtendedMicro = self.createSyncRequestForExtendedMicro(dict: peNewAssessment , certificationData : self.certificateData )
                     extendedMicroArr.append(jsonExtendedMicro)
                     
-                    var ExtendedMicroparam = ["ExtendedMicrobialData":extendedMicroArr] as JSONDictionary
+                    let ExtendedMicroparam = ["ExtendedMicrobialData":extendedMicroArr] as JSONDictionary
                     self.convertDictToJson(dict: ExtendedMicroparam,apiName: "AddEMAssessment")
                     let errorMSg = "Are you sure you want to finish the Extended PE."
-                    let alertController = UIAlertController(title: "Alert!", message: errorMSg as? String, preferredStyle: .alert)
+                    let alertController = UIAlertController(title: "Alert!", message: errorMSg, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                         _ in
                         self.showGlobalProgressHUDWithTitle(self.view, title: "Data sync is in progress, please do not close the app." + "\n" + "*Note - Please don't minimize App while syncing.")
@@ -998,89 +893,24 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                     let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                         _ in
                     }
-                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                        _ in
-                    }
                     alertController.addAction(okAction)
                     self.present(alertController, animated: true, completion: nil)
                 }
-            }
-            
-            else
-            {
+            } else {
                 finishingAssessment = true
                 forInovo = true
                 self.strings.removeAll()
-                if  checkNoteForEveryQuestion(){
-                    
-                    if validateForm() {
-                        
-                        if regionID == 3
-                        {
-                            if strings.count > 0
-                            {
-                                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                                let vc = storyBoard.instantiateViewController(withIdentifier: "customAlertView") as! customAlertView
-                                vc.AllMessages = strings
-                                vc.viewHeight = 200 * strings.count
-                                self.navigationController?.present(vc, animated: false, completion: nil)
-                            }
-                            else
-                            {
-                                let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
-                                let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-                                let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
-                                    _ in
-                                    self.saveFinalizedData()
-                                }
-                                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                                    _ in
-                                }
-                                alertController.addAction(okAction)
-                                alertController.addAction(cancelAction)
-                                self.present(alertController, animated: true, completion: nil)
-                            }
-                        }
-                        else
-                        {
-                            let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
-                            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
-                            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                                _ in
-                                self.saveFinalizedData()
-                            }
-                            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                                _ in
-                            }
-                            alertController.addAction(okAction)
-                            alertController.addAction(cancelAction)
-                            self.present(alertController, animated: true, completion: nil)
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            finishingAssessment = true
-            forInovo = true
-            self.strings.removeAll()
-            if  checkNoteForEveryQuestion(){
-                if validateForm() {
-                    if regionID == 3
-                    {
-                        if strings.count > 0
-                        {
+                if checkNoteForEveryQuestion(),validateForm() {
+                    if regionID == 3 {
+                        if strings.count > 0 {
                             let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
                             let vc = storyBoard.instantiateViewController(withIdentifier: "customAlertView") as! customAlertView
                             vc.AllMessages = strings
                             vc.viewHeight = 200 * strings.count
                             self.navigationController?.present(vc, animated: false, completion: nil)
-                        }
-                        else
-                        {
+                        } else {
                             let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
-                            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+                            let alertController = UIAlertController(title: "Alert", message: errorMSg , preferredStyle: .alert)
                             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                                 _ in
                                 self.saveFinalizedData()
@@ -1092,10 +922,50 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                             alertController.addAction(cancelAction)
                             self.present(alertController, animated: true, completion: nil)
                         }
+                    } else {
+                        let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
+                        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+                        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                            _ in
+                            self.saveFinalizedData()
+                        }
+                        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+                            _ in
+                        }
+                        alertController.addAction(okAction)
+                        alertController.addAction(cancelAction)
+                        self.present(alertController, animated: true, completion: nil)
                     }
-                    
-                    else
-                    {
+                }
+            }
+        } else {
+            finishingAssessment = true
+            forInovo = true
+            self.strings.removeAll()
+            if checkNoteForEveryQuestion() {
+                if validateForm() {
+                    if regionID == 3 {
+                        if strings.count > 0 {
+                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+                            let vc = storyBoard.instantiateViewController(withIdentifier: "customAlertView") as! customAlertView
+                            vc.AllMessages = strings
+                            vc.viewHeight = 200 * strings.count
+                            self.navigationController?.present(vc, animated: false, completion: nil)
+                        } else {
+                            let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
+                            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
+                                _ in
+                                self.saveFinalizedData()
+                            }
+                            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+                                _ in
+                            }
+                            alertController.addAction(okAction)
+                            alertController.addAction(cancelAction)
+                            self.present(alertController, animated: true, completion: nil)
+                        }
+                    } else {
                         let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
                         let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
                         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
@@ -1110,10 +980,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                         self.present(alertController, animated: true, completion: nil)
                     }
                     
-                }
-                
-                else
-                {
+                } else {
                     let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
                     let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
@@ -1127,11 +994,10 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                     alertController.addAction(cancelAction)
                     self.present(alertController, animated: true, completion: nil)
                 }
-                
             }
         }
-        
     }
+    
     // MARK: - Alert for AM/PM Value
     func showAlertForNoAMPMValue(){
         if regionID == 3
@@ -1145,7 +1011,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         else
         {
             let errorMSg = "Please enter AM/PM Value in Miscellaneous."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
                 
@@ -1161,7 +1027,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     // MARK: - Alert for QC Count
     func showAlertForNoAMPMValueNoQCCount(){
         let errorMSg = "Please enter am/pm  or the qc counts."
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
             _ in
             
@@ -1187,7 +1053,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         {
             
             let errorMSg = "Please enter frequency detail in Customer Quality Control Program."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
                 
@@ -1212,7 +1078,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         }
         else{
             let errorMSg = "Please enter person name in Customer Quality Control Program."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
                 
@@ -1241,7 +1107,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         else
         {
             let errorMSg = "Please enter QC count in Customer Quality Control Program."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
                 
@@ -1268,7 +1134,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         else
         {
             let errorMSg = "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
                 
@@ -1296,7 +1162,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         else
         {
             let errorMSg = "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."
-            let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 _ in
                 
@@ -1327,25 +1193,16 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
     
     // MARK: - Draft Button Action
     @IBAction func draftBtnClicked(_ sender: Any) {
-        let errorMSg = "Are you sure you want to save assessment in Draft?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
-            _ in
-            self.saveDraftData()
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            _ in
-            
-        }
-        alertController.addAction(okAction)
-        alertController.addAction(cancelAction)
-        self.present(alertController, animated: true, completion: nil)
-        
+        self.draftButtonClicked()
     }
     
     @IBAction func draftButtonClickedInitial(_ sender: Any) {
+        self.draftButtonClicked()
+    }
+    
+    private func draftButtonClicked() {
         let errorMSg = "Are you sure you want to save assessment in Draft?"
-        let alertController = UIAlertController(title: "Alert", message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.saveDraftData()
@@ -1357,8 +1214,8 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
-        
     }
+    
     // MARK: - Save Finalized Data
     private func saveFinalizedData(){
         
@@ -1381,21 +1238,18 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             }
         }
         
-        var refrigtorArray  : [PE_Refrigators] = []
-        refrigtorArray =   CoreDataHandlerPE().getDraftREfriData(id: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-        if(refrigtorArray.count > 0){
-            for refrii in refrigtorArray{
-                if(CoreDataHandlerPE().someEntityExists(id: Int(refrii.id ?? 0))){
+        let refrigtorArray = CoreDataHandlerPE().getDraftREfriData(id: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+        if(refrigtorArray.count > 0) {
+            for refrii in refrigtorArray {
+                if(CoreDataHandlerPE().someEntityExists(id: Int(refrii.id ?? 0))) {
                     CoreDataHandlerPE().updateRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                }
-                else{
+                } else {
                     CoreDataHandlerPE().saveRefrigatorInDB(refrii.id ?? 0,  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,schAssmentId: refrii.schAssmentId ?? 0)
                 }
             }
         }
         
-        refrigtorArray =   CoreDataHandlerPE().getDraftREfriData(id: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-        if(refrigtorArray.count > 0){
+        if(refrigtorArray.count > 0) {
             for refrii in refrigtorArray{
                 if(CoreDataHandlerPE().checkOfflineSameAssesmentEntityExists(id: Int(refrii.id ?? 0),serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)){
                     CoreDataHandlerPE().updateOfflineRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
@@ -1503,10 +1357,9 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         }
         PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(status:"draft",userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
         
-        var refrigtorArray  : [PE_Refrigators] = []
-        refrigtorArray =   CoreDataHandlerPE().getDraftREfriData(id: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-        if(refrigtorArray.count > 0){
-            for refrii in refrigtorArray{
+        let refrigtorArray = CoreDataHandlerPE().getDraftREfriData(id: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+        if(refrigtorArray.count > 0) {
+            for refrii in refrigtorArray {
                 if(CoreDataHandlerPE().someEntityExists(id: Int(refrii.id ?? 0))){
                     CoreDataHandlerPE().updateRefrigatorInDB(Int(refrii.id ?? 0),  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
                 }
@@ -1564,16 +1417,7 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = "yyyy-MM-dd"
         
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        if regionID == 3
-        {convertDateFormatter.dateFormat = "yyyy-MM-dd"
-        }
-        else{
-            convertDateFormatter.dateFormat = "yyyy-MM-dd"
-        }
-        
-        
-        if oldDate != nil{
+        if oldDate != nil {
             return convertDateFormatter.string(from: oldDate!)
         }
         return ""
@@ -1618,10 +1462,8 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         if UniID == "" {
             UniID = dict.draftID ?? ""
         }
-        var Complete = 1
-        var Draft = 0
         var SaveType = 1
-        var AssessmentId = dict.dataToSubmitNumber ?? 0
+        let AssessmentId = dict.dataToSubmitNumber ?? 0
         
         let deviceIdForServer = "\(UniID)_1_iOS_\(udid)"
         deviceIDFORSERVER = deviceIdForServer
@@ -1630,9 +1472,6 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
                 deviceIDFORSERVER = dict.assDetail2 ?? ""
             }
-            AssessmentId = dict.draftNumber ?? 0
-            Draft = 1
-            Complete = 0
             SaveType = 0
         }
         if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
@@ -1643,43 +1482,22 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
             serverAssessmentId = Int64( dict.serverAssessmentId ?? "") ?? 0
         }
         let DocId = ""
-        let VisitId = dict.visitID
-        let CustomerId = dict.customerId
-        let SiteId = dict.siteId
         let IncubationStyle = dict.incubation
         let EvaluationId = dict.evaluationID
-        let BreedBirds = dict.breedOfBird
         var EvaluationDate = ""
-        let EvaulaterId = dict.evaluatorID
-        var hacheryAntibiotics:Bool = false
-        if dict.hatcheryAntibiotics == 1{
-            hacheryAntibiotics = true
-        }
-        
-        let countryID = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        
-        let FlockAgeId = dict.isFlopSelected
         let Status_Type = ""
         let UserId = dict
             .userID
         let RepresentativeName = ""
-        let Notes = dict.notes
         let dateFormatter = DateFormatter()
         
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         if regionId != 3 {
             dateFormatter.dateFormat = "dd/MM/YYYY HH:mm:ss Z"
-            let date = dict.evaluationDate?.toDate(withFormat: "dd/MM/YYYY")
-            let datastr = date?.toString(withFormat: "dd/MM/YYYY HH:mm:ss Z")
-        }
-        else{
+        } else {
             dateFormatter.dateFormat="MM/dd/YYYY"
-            
-            let date = dict.evaluationDate?.toDate(withFormat: "MM/dd/YYYY")
-            let datastr = date?.toString(withFormat: "MM/dd/YYYY HH:mm:ss Z")
         }
         
-        let  sig_Datetext = dict.sig_Date
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
         if ddd != "" {
@@ -1687,40 +1505,24 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         }
         
         let statusType = dict.statusType ?? 0
-        var DisplayId = dict.evaluationDate
-        DisplayId = DisplayId?.replacingOccurrences(of: "/", with: "")
-        
-        DisplayId = "C-" + UniID
-        var iStle = 0
-        var iStleIDArray = NSArray()
-        var iStleNameArray = NSArray()
+        let DisplayId = "C-" + UniID
         let iStleDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
-        iStleNameArray = iStleDetailsArray.value(forKey: "incubationStylesName") as? NSArray ?? NSArray()
-        iStleIDArray = iStleDetailsArray.value(forKey: "incubationId") as? NSArray ?? NSArray()
-        if IncubationStyle?.count ?? 0 > 1 {
-            let indexOfe = iStleNameArray.index(of: IncubationStyle ?? "")
-            iStle = iStleIDArray[indexOfe] as? Int ?? 0
-        }
-        
         dict.evaluationDate = dateSig
         
         var json : JSONDictionary = JSONDictionary()
         if dateSig != ""{
             dict.evaluationDate = dateSig
-        }else{
+        } else {
             let convertDateFormatter = DateFormatter()
             convertDateFormatter.dateFormat = "yyyy-MM-dd"
             
             convertDateFormatter.timeZone = Calendar.current.timeZone
             convertDateFormatter.locale = Calendar.current.locale
         }
-        let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
         let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
         if regionId == 3 {
             dateFormatterObj.dateFormat = "MM/dd/yyyy"
-        }
-        else
-        {
+        } else {
             dateFormatterObj.dateFormat = "dd/MM/yyyy"
         }
         
@@ -1729,100 +1531,53 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
         let evalDateStr = dateFormatterObj.string(from: evalDateObj ?? Date())
         dict.evaluationDate = evalDateStr
         var isEMRequested = dict.IsEMRequested ?? false
-        
-        let RegionalId = UserDefaults.standard.integer(forKey: "Regionid")
-        let extndMicro = dict.extndMicro ?? false
-        
         let appVersion = "\(Bundle.main.versionNumber)"
-        
         tempArr.removeAll()
         
-        
-        if SaveType == 0 {
-            if statusType == 2 {
-                
-                json = [
-                    
-                    "AssessmentId":serverAssessmentId,
-                    "DeviceId": deviceIDFORSERVER,
-                    "UserId": UserId,
-                    "EvaluationId": EvaluationId ?? 0,
-                    "SaveType":1,
-                    "Status_Type":0,
-                    "IsEMRequested" : isEMRequested,
-                    "IsSendEmail": true,
-                    "appVersion": appVersion,
-                    "SanitationEmbrexScoresDataModel":extendedData
-                ] as JSONDictionary
-            }else{
-                json = [
-                    "AssessmentId":serverAssessmentId,
-                    "DeviceId": deviceIDFORSERVER,
-                    "UserId": UserId,
-                    "EvaluationId": EvaluationId ?? 0,
-                    "SaveType":1,
-                    "Status_Type":0,
-                    "IsEMRequested" : isEMRequested,
-                    "IsSendEmail": true,
-                    "appVersion": appVersion,
-                    "SanitationEmbrexScoresDataModel":extendedData
-                ] as JSONDictionary
-            }
-        } else {
-            json = [
-                
-                "AssessmentId":serverAssessmentId,
-                "DeviceId": deviceIDFORSERVER,
-                "UserId": UserId,
-                "EvaluationId": EvaluationId ?? 0,
-                "SaveType":1,
-                "Status_Type":0,
-                "IsEMRequested" : isEMRequested,
-                "IsSendEmail": true,
-                "appVersion": appVersion,
-                "SanitationEmbrexScoresDataModel":extendedData
-            ] as JSONDictionary
-        }
+        json = [
+            "AssessmentId":serverAssessmentId,
+            "DeviceId": deviceIDFORSERVER,
+            "UserId": UserId ?? 0,
+            "EvaluationId": EvaluationId ?? 0,
+            "SaveType":1,
+            "Status_Type":0,
+            "IsEMRequested" : isEMRequested,
+            "IsSendEmail": true,
+            "appVersion": appVersion,
+            "SanitationEmbrexScoresDataModel":extendedData
+        ] as JSONDictionary
         return json
-        
     }
     
     // MARK:
     // MARK: ------------ Call Extended Micro Sync Request --------------
     // MARK:
     
-    func callExtendedMicro(param:JSONDictionary){
+    func callExtendedMicro(param:JSONDictionary) {
         
         ZoetisWebServices.shared.sendExtendedMicroToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
             if error != nil {
                 self?.dismissGlobalHUD(self?.view ?? UIView())
             }
-            guard let `self` = self, error == nil else { return }
-            if json["StatusCode"]  == 200{
-                cleanSession()
-                self.showtoast(message: "Data synced successfully.")
-                self.dismissGlobalHUD(self.view)
-                
+            guard let selfObj = self, error == nil else { return }
+            if json["StatusCode"] == 200 {
+                selfObj.cleanSession()
+                selfObj.showtoast(message: "Data synced successfully.")
+                selfObj.dismissGlobalHUD(selfObj.view)
             } else {
-                self.dismissGlobalHUD(self.view)
-                self.showAlert(title: "Error", message: "Error in Extended Microbial data sync", owner: self)
+                selfObj.dismissGlobalHUD(selfObj.view)
+                selfObj.showAlert(title: "Error", message: "Error in Extended Microbial data sync", owner: selfObj)
             }
         })
     }
-    
 }
+
 // MARK: - PE Draft Assessment Finalize & table View Delegates
 extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
-    func checkForTraning()-> Bool{
-        var currentAssessmentIs = CoreDataHandlerPE().getSavedDraftOnGoingAssessmentPEObject()
-        if currentAssessmentIs.visitName == "Training"{
-            return true
-        } else{
-            return true
-        }
+    func checkForTraning()-> Bool {
+        return true
     }
-    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         if catArrayForTableIs.count > 0 {
@@ -1834,29 +1589,22 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     return 4
                 }
             } else if assessment?.sequenceNoo == 3 {
-                if regionID != 3{
+                if regionID != 3 {
                     return 1
-                }
-                else{
-                    if peNewAssessment.evaluationID == 1{
+                } else {
+                    if peNewAssessment.evaluationID == 1 {
                         return 1
-                    }
-                    else{
+                    } else {
                         return 2
                     }
                 }
-                
-            }
-            else if assessment?.sequenceNoo == 1 {
-                return 5
             }
             if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
                 return 1
             }
             if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
                 return 3
-            }
-            else {
+            } else {
                 return 1
             }
         }
@@ -1918,58 +1666,37 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if checkForTraning(){
-            if(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
-                if indexPath.section == 1 {
-                    var height:CGFloat = CGFloat()
-                    height = 160
-                    return height
-                }
-                
-                if indexPath.section == 2 {
-                    return 200
-                }
+        if checkForTraning(),(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen") {
+            if indexPath.section == 1 {
+                return 160
+            }
+            
+            if indexPath.section == 2 {
+                return 200
             }
         }
         if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
-            var height:CGFloat = CGFloat()
-            height = 70
-            return height
+            return 70
         }
         let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
         if selectedCategory?.sequenceNoo == 3 {
-            if (indexPath.section == 0){
+            if (indexPath.section == 0) {
                 if selectedCategory?.sequenceNoo == 3 && assessment?.rollOut == "Y" && assessment?.qSeqNo == 1{
-                    var height:CGFloat = CGFloat()
-                    height = 120
-                    return height
+                    return 120
+                } else {
+                    return 70
                 }
-                else {
-                    var height:CGFloat = CGFloat()
-                    height = 70
-                    return height
-                }
-            }
-            else {
-                var height:CGFloat = CGFloat()
-                height = 0
-                return height
+            } else {
+                return 0
             }
         }
         
-        
-        if selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"{
-            var height:CGFloat = CGFloat()
-            height = 80
-            return height
-            
+        if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen" {
+            return 80
         }
-        if(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
-            if indexPath.section > 0 {
-                var height:CGFloat = CGFloat()
-                height = 130
-                return height
-            }
+        
+        if(selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen"),indexPath.section > 0 {
+            return 130
         }
         
         var height:CGFloat = CGFloat()
@@ -2068,15 +1795,12 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 cell.assessmentId = peNewAssessment?.serverAssessmentId
                 return cell
             }
-            if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){
-                
-                return  setUpRerigatorQuesCell(tableView, cellForRowAt: indexPath)
-            }
             
-            else {
-                
-                if indexPath.section == 1 {
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: VaccineMixerCell.identifier) as? VaccineMixerCell{
+            if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen") {
+                return  setUpRerigatorQuesCell(tableView, cellForRowAt: indexPath)
+            } else {
+                if indexPath.section == 1,
+                   let cell = tableView.dequeueReusableCell(withIdentifier: VaccineMixerCell.identifier) as? VaccineMixerCell {
                         cell.certDateSelectBtn.tag = indexPath.row
                         
                         cell.vaccNameField.tag = indexPath.row
@@ -2085,18 +1809,14 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         cell.config(data:certificateData[indexPath.row])
                         cell.vaccNameField.delegate = self
                         
-                        if regionID == 3
-                        {
-                            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
-                            {
+                        if regionID == 3 {
+                            if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true {
                                 cell.toggleBtn.isUserInteractionEnabled = false
                                 cell.vaccNameField.isUserInteractionEnabled = false
                                 cell.vaccSelectBtn.isUserInteractionEnabled = false
                                 cell.certDateSelectBtn.isUserInteractionEnabled = false
                                 cell.calenderBtn.isUserInteractionEnabled = false
-                            }
-                            else
-                            {
+                            } else {
                                 cell.toggleBtn.isUserInteractionEnabled = true
                                 cell.vaccNameField.isUserInteractionEnabled = true
                                 cell.vaccSelectBtn.isUserInteractionEnabled = true
@@ -2113,40 +1833,32 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                 if isCertExpiredArray[count!] {
                                     cell.certDateSelectBtn.setTitle(certDateArray[count!], for: .normal)
                                     cell.certDateSelectBtn.layer.borderColor = UIColor.red.cgColor
-                                }
-                                else {
+                                } else {
                                     cell.certDateSelectBtn.setTitle(certDateArray[count!], for: .normal)
                                     cell.certDateSelectBtn.layer.borderColor = UIColor(red: 0.0, green: 200.0, blue: 226.0, alpha: 1.0).cgColor
                                 }
-                            }
-                            else {
+                            } else {
                                 
                                 if let title = cell.certDateSelectBtn.title(for: .normal), !title.isEmpty {
                                     cell.certDateSelectBtn.layer.borderColor = UIColor(red: 0.0, green: 200.0, blue: 226.0, alpha: 1.0).cgColor
                                 } else {
-                                    if regionID == 3
-                                    {
+                                    if regionID == 3 {
                                         cell.certDateSelectBtn.layer.borderColor = UIColor.red.cgColor
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         cell.certDateSelectBtn.layer.borderColor = UIColor(red: 0.0, green: 200.0, blue: 226.0, alpha: 1.0).cgColor
                                     }
                                 }
                                 
-                                if let title = cell.vaccNameField.text , !title.isEmpty
-                                {
+                                if let title = cell.vaccNameField.text , !title.isEmpty {
                                     cell.vaccNameField.layer.borderColor = UIColor(red: 0.0, green: 200.0, blue: 226.0, alpha: 1.0).cgColor
-                                }else {
+                                } else {
                                     if regionID == 3{
                                         cell.vaccNameField.layer.borderColor = UIColor.red.cgColor
-                                    }
-                                    else{
+                                    } else {
                                         cell.vaccNameField.layer.borderColor = UIColor(red: 0.0, green: 200.0, blue: 226.0, alpha: 1.0).cgColor
                                     }
                                 }
                             }
-                            
                         }
                         
                         cell.certDateCompletion = { [unowned self] (count) in
@@ -2288,10 +2000,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             cell.vaccNameField.resignFirstResponder()
                             cell.vaccNameField.endEditing(true)
                         }
-                        
-                        
                         return cell
-                    }
                 }
                 if indexPath.section == 2 {
                     return self.setupInovojectCell(tableView, cellForRowAt: indexPath)
@@ -5045,9 +4754,6 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             
             
             let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
-            if infoObj?.dayOfAgeTxtAntibiotic != ""{
-            }
-            
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn1)
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn2)
             headerView.setGraddientAndLayerAntibioticTextView()
@@ -5164,10 +4870,8 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             headerView.txtDType.text = peNewAssessment.dDCS
             headerView.txtAntiBiotic.text = peNewAssessment.hatcheryAntibioticsDoaSText
             
-            if regionID == 3
-            {
-                if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true
-                {
+            if regionID == 3 {
+                if peNewAssessment.isPERejected == false && peNewAssessment.isEMRejected == true {
                     headerView.btn1.isUserInteractionEnabled = false
                     headerView.switchHatchery.isUserInteractionEnabled = false
                     headerView.btn2.isUserInteractionEnabled = false
@@ -5176,8 +4880,7 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     headerView.txtDType.isUserInteractionEnabled = false
                     headerView.txtCSize.isUserInteractionEnabled = false
                     headerView.txtAntiBiotic.isUserInteractionEnabled = false
-                }
-                else{
+                } else {
                     headerView.btn1.isUserInteractionEnabled = true
                     headerView.switchHatchery.isUserInteractionEnabled = true
                     headerView.btn2.isUserInteractionEnabled = true
@@ -5192,9 +4895,6 @@ extension PEDraftAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             
             
             let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
-            if infoObj?.subcutaneousAntibioticTxt != ""{
-            }
-            
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn1)
             headerView.setDropdownStartAsessmentBtn(imageName: "dd",btn:headerView.btn2)
             headerView.setGraddientAndLayerAntibioticTextView()
@@ -5616,8 +5316,6 @@ extension PEDraftAssesmentFinalize : UICollectionViewDelegate, UICollectionViewD
                 }
                 
                 tableview.reloadData()
-                
-                let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
                 if regionID != 3
                 {
                     if(selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen"){

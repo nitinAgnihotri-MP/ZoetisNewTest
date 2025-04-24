@@ -54,8 +54,8 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
         self.navigationItem.setHidesBackButton(true, animated: true)
         
         NotificationCenter.default.addObserver(self, selector: #selector(ExistingPostingSessionTurkey.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifierTurkey"), object: nil)
+       
         var dateFormatter = DateFormatter()
-        dateFormatter = DateFormatter()
         dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         dateFormatter = DateFormatter()
         dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
@@ -130,7 +130,7 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
         toString = dateFormatter1.string(from: datePicker.date)
         toDate = datePicker.date
         
-        if fromString == toString {
+        if fromString == toString || toDate.isGreaterThanDate(fromDate){
             
             let strdate = dateFormatter2.string(from: datePicker.date) as String
             selectDateToLbl.text = strdate
@@ -138,21 +138,13 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
             buttonBg.removeFromSuperview()
             tableView.reloadData()
             
-        } else if toDate.isGreaterThanDate(fromDate) {
-            let strdate = dateFormatter2.string(from: datePicker.date) as String
-            selectDateToLbl.text = strdate
-            UserDefaults.standard.set( selectDateToLbl.text, forKey: "date")
-            buttonBg.removeFromSuperview()
-            tableView.reloadData()
-        } else {
+        }  else {
             self.cancelClick()
             
             fromString = selectDateToLbl.text!
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-            //            dateFormatter.calendar = Calendar(identifier: .gregorian)
-            //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            toDate = dateFormatter.date(from: fromString)!
+            let dateFormatterIs = DateFormatter()
+            dateFormatterIs.dateFormat = appDelegateObj.MMddyyyStr
+            toDate = dateFormatterIs.date(from: fromString)!
             Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"To date must be greater than from date.")
             
         }
@@ -174,30 +166,20 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
         fromString = dateFormatter.string(from: datePicker.date)
         fromDate = datePicker.date
         
-        if fromString == toString{
+        if fromString == toString || fromDate.isLessThanDate(toDate){
             
             let strdate = dateFormatter.string(from: datePicker.date) as String
             selectDateFromLbl.text = strdate
             UserDefaults.standard.set( selectDateFromLbl.text, forKey: "date")
             buttonBg.removeFromSuperview()
             tableView.reloadData()
-        } else if fromDate.isLessThanDate(toDate) {
-            
-            let strdate = dateFormatter.string(from: datePicker.date) as String
-            selectDateFromLbl.text = strdate
-            UserDefaults.standard.set( selectDateFromLbl.text, forKey: "date")
-            buttonBg.removeFromSuperview()
-            tableView.reloadData()
-            
-        } else {
+        }  else {
             self.cancelClick()
             
             fromString = selectDateFromLbl.text!
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-            //            dateFormatter.calendar = Calendar(identifier: .gregorian)
-            //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            fromDate = dateFormatter.date(from: fromString)!
+            let fromDateFormatter = DateFormatter()
+            fromDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            fromDate = fromDateFormatter.date(from: fromString)!
             Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"From date must be smaller than to date.")
         }
     }
@@ -228,18 +210,18 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
         }
         
         let allPostingSessionArr = NSMutableArray()
-        var sessionId = NSNumber()
+       
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         return allPostingSessionArr
@@ -455,12 +437,7 @@ extension ExistingPostingSessionTurkey : UITableViewDataSource,UITableViewDelega
             cell.complexLbl.text  = posting.complexName
             cell.veterinarianLbl.text  = posting.vetanatrionName
             let lngId =  posting.lngId
-            if lngId == 1{
-                cell.lblLng.text = "(En)"
-            }
-            else{
-                cell.lblLng.text = "(En)"
-            }
+            cell.lblLng.text = "(En)"
             cell.infoButton.addTarget(self, action: #selector(ExistingPostingSessionTurkey.infoButton), for: .touchUpInside)
             
             finializeB = posting.finalizeExit!

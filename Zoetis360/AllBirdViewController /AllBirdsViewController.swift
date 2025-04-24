@@ -70,8 +70,8 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
         }
         
         var dict = [String: AnyObject]()
-        var i = Int()
-        i = -1
+       
+        var i = -1
         
         let arr =  CoreDataHandler().fetchCaptureWithFormNameNecSkeltonData(farmName: formName, necID : necId as NSNumber)
         

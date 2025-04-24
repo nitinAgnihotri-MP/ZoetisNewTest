@@ -43,8 +43,8 @@ class ImageViewController: UIViewController,UITableViewDelegate,UITableViewDataS
             existingArray  = CoreDataHandler().fecthPhotoWithFormName(farmname,necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
         else{
-            let necId = self.imageDict.value(forKey: "necId") as! Int
-            existingArray  = CoreDataHandler().fecthPhotoWithCatnameWithBirdAndObservationID((self.imageDict.value(forKey: "birdNo") as! Int) as NSNumber, farmname: self.imageDict.value(forKey: "formName") as! String, catName: self.imageDict.value(forKey: "catName") as! String, Obsid: (self.imageDict.value(forKey: "obsid") as! Int) as NSNumber, obsName:  self.imageDict.value(forKey: "obsName") as! String,necId: necId as NSNumber) .mutableCopy() as! NSMutableArray
+            let necroId = self.imageDict.value(forKey: "necId") as! Int
+            existingArray  = CoreDataHandler().fecthPhotoWithCatnameWithBirdAndObservationID((self.imageDict.value(forKey: "birdNo") as! Int) as NSNumber, farmname: self.imageDict.value(forKey: "formName") as! String, catName: self.imageDict.value(forKey: "catName") as! String, Obsid: (self.imageDict.value(forKey: "obsid") as! Int) as NSNumber, obsName:  self.imageDict.value(forKey: "obsName") as! String,necId: necroId as NSNumber) .mutableCopy() as! NSMutableArray
         }
     }
     

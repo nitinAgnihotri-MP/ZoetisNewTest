@@ -25,7 +25,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     let buttonbg1 = UIButton ()
     var feedProgramArray = NSArray ()
     var count = Int()
-    var necId = Int()
+    var ncropsyId = Int()
     var feeId = Int()
     var lngId = NSInteger()
     var hideDropDwnB = true
@@ -55,7 +55,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     var asb = Bool()
     var targetWeigh = UserDefaults.standard.integer(forKey: "targetWeightSelection")
     var captureNecropsy = [NSManagedObject]()
-    var pickerIndex = Int()
+    var pickerIndexIs = Int()
     var custmerIdFarm = NSNumber() //Raman's Code
     var editfeed = String()
     
@@ -290,9 +290,14 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         
         buttonDroper .addSubview(autoSerchTable)
         buttonDroper.alpha = 0
-        if   self.captureNecropsy.count<0 {
+        
+        if self.captureNecropsy.isEmpty {
             count = 0
         }
+        
+//        if   self.captureNecropsy.count<0 {
+//            count = 0
+//        }
         tableView.reloadData()
         
         let allBireType = CoreDataHandler().fetchBirdSize()
@@ -311,13 +316,13 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         var encountered = Set<String>()
         let result = NSMutableArray()
         for value in array {
-            if encountered.contains(value as! String) {
-            }
-            else {
-                encountered.insert(value as! String)
-                result.add(value as! String)
+            if let stringValue = value as? String, !encountered.contains(stringValue) {
+                encountered.insert(stringValue)
+                result.add(stringValue)
             }
         }
+        
+
         return result
     }
     
@@ -332,9 +337,8 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 result.add(value as! String)
             }
         }
-        
-        var arra = NSArray()
-        arra = result.mutableCopy()  as! NSArray
+       
+        var arra = result.mutableCopy()  as! NSArray
         return arra
     }
     
@@ -363,11 +367,11 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             
             for i in 0..<HouseNo.count{
                 if (lblHouse.text! == HouseNo[i] as! String){
-                    pickerIndex = i
+                    pickerIndexIs = i
                     break
                 }
             }
-            myPickerView.selectRow(pickerIndex, inComponent: 0, animated: true)
+            myPickerView.selectRow(pickerIndexIs, inComponent: 0, animated: true)
         }
         myPickerView.reloadInputViews()
     }
@@ -383,14 +387,14 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             myPickerView.selectRow(0, inComponent: 0, animated: true)
         }
         else{
-            var pickerIndex = Int()
+            var setPickerIndex = Int()
             for i in 0..<AgeOp.count{
                 if (lblAge.text! == AgeOp[i] as! String){
-                    pickerIndex = i
+                    setPickerIndex = i
                     break
                 }
             }
-            myPickerView.selectRow(pickerIndex, inComponent: 0, animated: true)
+            myPickerView.selectRow(setPickerIndex, inComponent: 0, animated: true)
         }
         myPickerView.reloadInputViews()
         ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: .normal)
@@ -402,15 +406,15 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         btnTag = 2
         myPickerView.frame = CGRect(x: 881,y: 237,width: 100,height: 120)
         pickerView()
-        var pickerIndex = Int()
+        var birdsPickerIndex = Int()
         for i in 0..<NoOFbirds.count{
             
             if (lblNoBirds.text! == NoOFbirds[i] as! String){
-                pickerIndex = i
+                birdsPickerIndex = i
                 break
             }
         }
-        myPickerView.selectRow(pickerIndex, inComponent: 0, animated: true)
+        myPickerView.selectRow(birdsPickerIndex, inComponent: 0, animated: true)
         myPickerView.reloadInputViews()
     }
     
@@ -422,12 +426,10 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             flockIdTextField.resignFirstResponder()
             feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
             
-            if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
+            if !UserDefaults.standard.bool(forKey: "Unlinked") {
+                self.ncropsyId = UserDefaults.standard.integer(forKey: "postingId")
             }
-            else
-            {
-                self.necId = UserDefaults.standard.integer(forKey: "postingId")
-            }
+           
             feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
             
             self.tableViewpop()
@@ -495,11 +497,11 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         
         for i in 0..<NoOFbirds.count{
             if (lblNoBirds.text! == NoOFbirds[i] as! String){
-                pickerIndex = i
+                pickerIndexIs = i
                 break
             }
         }
-        myPickerView.selectRow(pickerIndex, inComponent: 0, animated: true)
+        myPickerView.selectRow(pickerIndexIs, inComponent: 0, animated: true)
         myPickerView.reloadInputViews()
     }
     
@@ -603,8 +605,8 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                                 as! AppDelegate).managedObjectContext
     
     fileprivate func saveUnlinkedStep1Data() {
-        CoreDataHandler().updateFinalizeDataWithNec( self.necId as NSNumber, finalizeNec: 1)
-        self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(self.necId as NSNumber) as! [NSManagedObject]
+        CoreDataHandler().updateFinalizeDataWithNec( self.ncropsyId as NSNumber, finalizeNec: 1)
+        self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(self.ncropsyId as NSNumber) as! [NSManagedObject]
         if  self.captureNecropsy.count == 0{
             
             if UserDefaults.standard.bool(forKey:"Unlinked") == true{
@@ -618,14 +620,9 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         farmNameTextField.layer.borderColor = UIColor.black.cgColor
         
         countFarmId = UserDefaults.standard.integer(forKey: "farmId")
-        if countFarmId == 0{
-            countFarmId = countFarmId+1
-            UserDefaults.standard.set(countFarmId, forKey: "farmId")
-        }
-        else{
-            countFarmId = countFarmId+1
-            UserDefaults.standard.set(countFarmId, forKey: "farmId")
-        }
+        countFarmId = countFarmId+1
+        UserDefaults.standard.set(countFarmId, forKey: "farmId") // done this because in both if else case doing the same thing.
+
         CoreDataHandler().FarmsDataDatabase("", stateId: 0, farmName: trimmedString, farmId: 0, countryName: "", countryId: 0, city: "")
         
         let postingArr = CoreDataHandler().fetchAllPostingSessionWithNumber()
@@ -636,7 +633,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             {
                 CoreDataHandler().autoIncrementidtable()
                 let autoD  = CoreDataHandler().fetchFromAutoIncrement()
-                self.necId = autoD
+                self.ncropsyId = autoD
                 if nec == true {
                     self.saveDataforposting()
                 }
@@ -648,7 +645,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 {
                     CoreDataHandler().autoIncrementidtable()
                     let autoD  = CoreDataHandler().fetchFromAutoIncrement()
-                    self.necId = autoD
+                    self.ncropsyId = autoD
                     
                     if nec == true {
                         self.saveDataforposting()
@@ -656,10 +653,10 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                     saveStep1Data()
                 }
                 else{
-                    self.necId = UserDefaults.standard.integer(forKey:"postingId")
+                    self.ncropsyId = UserDefaults.standard.integer(forKey:"postingId")
                     saveStep1Data()
-                    CoreDataHandler().updateFinalizeDataWithNec( self.necId as NSNumber, finalizeNec: 1)
-                    CoreDataHandler().updateisSyncTrueOnPostingSession(self.necId as NSNumber)
+                    CoreDataHandler().updateFinalizeDataWithNec( self.ncropsyId as NSNumber, finalizeNec: 1)
+                    CoreDataHandler().updateisSyncTrueOnPostingSession(self.ncropsyId as NSNumber)
                 }
             }
         }
@@ -672,39 +669,27 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         let complexId = UserDefaults.standard.integer(forKey:"UnlinkComplex")
         let custMid = UserDefaults.standard.integer(forKey:"unCustId")
         self.timeStampString  = self.timeStamp()
-        CoreDataHandler().PostingSessionDb("", birdBreesId: 0, birdbreedName: "", birdBreedType: "", birdSize:"", birdSizeId: 0, cocciProgramId: 0, cociiProgramName: "", complexId: complexId as NSNumber, complexName: lblComplex.text!, convential:"", customerId: custMid as NSNumber, customerName:"", customerRepId: 0, customerRepName: "", imperial: "", metric: "", notes: "", salesRepId: 0, salesRepName: "", sessiondate:strDateEn, sessionTypeId: 0, sessionTypeName: "", vetanatrionName: "", veterinarianId: 0 , loginSessionId: 1, postingId: self.necId as NSNumber,mail: "",female: "",finilize:0, isSync : true,timeStamp:timeStampString,lngId:lngId as NSNumber,productionTypName: "" , productionTypId: 0 ,avgAge: "" , avgWeight: "" , outTime: "" , FCR: "" , Livability: "" , mortality: "")
+        CoreDataHandler().PostingSessionDb("", birdBreesId: 0, birdbreedName: "", birdBreedType: "", birdSize:"", birdSizeId: 0, cocciProgramId: 0, cociiProgramName: "", complexId: complexId as NSNumber, complexName: lblComplex.text!, convential:"", customerId: custMid as NSNumber, customerName:"", customerRepId: 0, customerRepName: "", imperial: "", metric: "", notes: "", salesRepId: 0, salesRepName: "", sessiondate:strDateEn, sessionTypeId: 0, sessionTypeName: "", vetanatrionName: "", veterinarianId: 0 , loginSessionId: 1, postingId: self.ncropsyId as NSNumber,mail: "",female: "",finilize:0, isSync : true,timeStamp:timeStampString,lngId:lngId as NSNumber,productionTypName: "" , productionTypId: 0 ,avgAge: "" , avgWeight: "" , outTime: "" , FCR: "" , Livability: "" , mortality: "")
         
-        let _ = CoreDataHandler().fetchAllPostingSession(self.necId as NSNumber)
+        let _ = CoreDataHandler().fetchAllPostingSession(self.ncropsyId as NSNumber)
         
-        CoreDataHandler().updateFinalizeDataWithNec(self.necId as NSNumber, finalizeNec: 2)
+        CoreDataHandler().updateFinalizeDataWithNec(self.ncropsyId as NSNumber, finalizeNec: 2)
     }
     
     func saveStep1Data(){
-        UserDefaults.standard.set(self.necId, forKey: "necId")
-        UserDefaults.standard.set(self.necId, forKey: "postingId")
+        UserDefaults.standard.set(self.ncropsyId, forKey: "necId")
+        UserDefaults.standard.set(self.ncropsyId, forKey: "postingId")
         UserDefaults.standard.synchronize()
         let neciIdStep = UserDefaults.standard.integer(forKey:"necId")
         let complexId = UserDefaults.standard.integer(forKey:"UnlinkComplex")
         let custMid = UserDefaults.standard.integer(forKey:"unCustId")
         let _ = CoreDataHandler().FetchNecropsystep1NecId(neciIdStep as NSNumber)
         count =  UserDefaults.standard.integer(forKey: "count")
-        if count == 0{
-            count = count+1
-        }
-        else{
-            count = count+1
-        }
+        count = count+1
         
-        var imageAutoIncrementId = Int()
-        imageAutoIncrementId = UserDefaults.standard.integer(forKey: "imageAutoIncrementId")
-        
-        if imageAutoIncrementId == 0 {
-            
-            imageAutoIncrementId = imageAutoIncrementId + 1
-        } else {
-            
-            imageAutoIncrementId = imageAutoIncrementId + 1
-        }
+        var  imageAutoIncrementId = UserDefaults.standard.integer(forKey: "imageAutoIncrementId")
+        imageAutoIncrementId = imageAutoIncrementId + 1
+      
         
         UserDefaults.standard.set(imageAutoIncrementId, forKey: "imageAutoIncrementId")
         UserDefaults.standard.set(count, forKey: "count")
@@ -725,16 +710,13 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         UserDefaults.standard.set(false, forKey: "nec")
         UserDefaults.standard.synchronize()
         
-        if UserDefaults.standard.bool(forKey:"Unlinked") == true
-        {
-        }
-        else{
-            postingId = UserDefaults.standard.integer(forKey:"postingId")
+        if !UserDefaults.standard.bool(forKey: "Unlinked") {
+            postingId = UserDefaults.standard.integer(forKey: "postingId")
         }
         
         UserDefaults.standard.set(timeStampString, forKey: "timestamp")
         UserDefaults.standard.synchronize()
-        CoreDataHandler().updateFinalizeDataActualNec(necId as NSNumber, deviceToken: actualTimestamp)
+        CoreDataHandler().updateFinalizeDataActualNec(ncropsyId as NSNumber, deviceToken: actualTimestamp)
         lblAge.text = ""
         farmNameTextField.text = ""
         if UserDefaults.standard.bool(forKey:"Unlinked") == true{
@@ -785,10 +767,10 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             let character: Character = "i"
             
             if (string.contains(character)) {
-                
+                debugPrint("no time stamp updated or added")
             } else {
                 let  udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
-                let sessionGUID1 =   timeStampString + "_" + String(describing: self.necId as NSNumber)
+                let sessionGUID1 =   timeStampString + "_" + String(describing: self.ncropsyId as NSNumber)
                 timeStampString = sessionGUID1 + "_" + "iOS" + "_" + String(udid)
             }
         }
@@ -810,7 +792,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                         CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necropsyId as NSNumber, farmName: farmWithoutAge, { (success) in
                             if success == true{
                                 
-                                self.deleteSessionWithPostingId(necropsyId:necId as NSNumber)
+                                self.deleteSessionWithPostingId(necropsyId:ncropsyId as NSNumber)
                             }
                         })
                     }})
@@ -887,7 +869,6 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         
         print("edit button clicked")
         let person = captureNecropsy[sender.tag]
-        let indexpath = NSIndexPath(row:sender.tag, section: 0)
         
         buttonEdit.setTitleColor(UIColor.blue, for: UIControl.State())
         buttonEdit.frame = CGRect(x: 0, y:1500, width: 1024, height: 768)
@@ -1028,21 +1009,19 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         self.myPickerView.frame = CGRect(x:420,y: 363,width: 100,height: 120)
         pickerView()
         editfeed = "yes"
-        let lblAge = ageButton.titleLabel?.text
-        if(lblAge == ""){
+        if(ageButton.titleLabel?.text == ""){
             myPickerView.selectRow(0, inComponent: 0, animated: true)
         }
         else {
-            let lblAge = ageButton.titleLabel?.text
             
-            var pickerIndex = Int()
+            var agePickerIndex = Int()
             for i in 0..<AgeOp.count{
                 if (ageButton.titleLabel?.text! == AgeOp[i] as? String){
-                    pickerIndex = i
+                    agePickerIndex = i
                     break
                 }
             }
-            myPickerView.selectRow(pickerIndex, inComponent: 0, animated: true)
+            myPickerView.selectRow(agePickerIndex, inComponent: 0, animated: true)
             
         }
         myPickerView.reloadInputViews()
@@ -1061,13 +1040,11 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             farmNameTextField.resignFirstResponder()
             flockIdTextField.resignFirstResponder()
             feedProgramOutlet.layer.borderColor = UIColor.black.cgColor
-            
-            if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
-            }
-            else
+            if !UserDefaults.standard.bool(forKey: "Unlinked")
             {
-                self.necId = UserDefaults.standard.integer(forKey: "postingId")
+                        self.ncropsyId = UserDefaults.standard.integer(forKey: "postingId")
             }
+
             feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
             editfeed = "yes"
             self.tableViewpop()
@@ -1103,8 +1080,8 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         Constants.isFromPsoting = true
         UserDefaults.standard.set(false, forKey: "postingSession")
         UserDefaults.standard.synchronize()
-        var trimmedString = nameText.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        trimmedString = trimmedString.replacingOccurrences(of: ".", with: "", options:
+        var trimmedFarmString = nameText.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        trimmedFarmString = trimmedFarmString.replacingOccurrences(of: ".", with: "", options:
                                                             NSString.CompareOptions.literal, range: nil)
         
         if houseNoTxtFld.text == ""
@@ -1115,20 +1092,18 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             
         }
         
-        if strFeddCheck == "" && strFeddUpdate == "" && trimmedString == "" {
+        if strFeddCheck == "" && strFeddUpdate == "" && trimmedFarmString == "" {
             
             feedButton.layer.borderColor = UIColor.red.cgColor
             nameText.layer.borderColor = UIColor.red.cgColor
         }
-        if strFarmNameFeedId == ""{
-            if strFeddUpdate == "" {
-                feedButton.layer.borderColor = UIColor.red.cgColor
-                Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMessage, comment: ""))
-            }
+        if strFarmNameFeedId == "" && strFeddUpdate == "" {
+            feedButton.layer.borderColor = UIColor.red.cgColor
+            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString(mendatoryFieldsMessage, comment: ""))
         }
         if strFeddCheck == "" && strFeddUpdate == "" && strFarmNameFeedId == ""{
             
-            if trimmedString == "" {
+            if trimmedFarmString == "" {
                 nameText.layer.borderColor = UIColor.red.cgColor
             }
             else {
@@ -1140,7 +1115,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         
         else {
             
-            if trimmedString == "" {
+            if trimmedFarmString == "" {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(mendatoryFieldsMessage, comment: ""))
                 nameText.layer.borderColor = UIColor.red.cgColor
                 feedButton.layer.borderColor = UIColor.black.cgColor
@@ -1148,7 +1123,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             else{
                 
                 let str = strfarmNameArray[0] as! String
-                let strNewFarm = str+". "+trimmedString
+                let strNewFarm = str+". "+trimmedFarmString
                 if strFeddUpdate == ""{
                     CoreDataHandler().updateFeddProgramInStep1UsingFarmName(self.postingId as NSNumber, feedname: strFeddCheck, feedId: feeId as NSNumber , formName: strfarmName)
                 }
@@ -1206,11 +1181,8 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             
             do {
                 let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell")!
-                if indexPath.row  < autocompleteUrls.count
-                {
-                    if let value = autocompleteUrls.object(at:indexPath.row) as? String{
-                        cell.textLabel?.text = value
-                    }
+                if indexPath.row < autocompleteUrls.count, let value = autocompleteUrls.object(at: indexPath.row) as? String {
+                    cell.textLabel?.text = value
                 }
                 return cell
             }
@@ -1331,7 +1303,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
-            
+            debugPrint("too much backspace entered.")
         }
         else if ((textField.text?.count)! > 49  ){
             return false
@@ -1341,7 +1313,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         
         if (textField.tag == 101){
             
-            let farm =  CoreDataHandler().fetchFarmsDataDatabase()
+         
             let bPredicate: NSPredicate = NSPredicate(format: "farmName contains[cd] %@", newString)
             let complexId = UserDefaults.standard.integer(forKey:"UnlinkComplex")
             
@@ -1386,21 +1358,11 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
                 currentString.replacingCharacters(in: range, with: string) as NSString
                 return string == numberFiltered && newString.length <= maxLength
                 
-            case 18 :
+            case 18 , 11:
               
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
                 
-                let maxLength = 6
-                let currentString: NSString = textField.text! as NSString
-                let newString: NSString =
-                currentString.replacingCharacters(in: range, with: string) as NSString
-                return string == numberFiltered && newString.length <= maxLength
-                
-            case 11 :
-                
-                let compSepByCharInSet = string.components(separatedBy: aSet)
-                let numberFiltered = compSepByCharInSet.joined(separator: "")
                 let maxLength = 6
                 let currentString: NSString = textField.text! as NSString
                 let newString: NSString =
@@ -1558,8 +1520,8 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
           
           // Loop through each text field and apply the padding
           for textField in textFields {
-              let paddingView = UIView(frame: CGRect(x: 15, y: 0, width: 10, height: 20))
-              textField.leftView = paddingView
+              let paddedView = UIView(frame: CGRect(x: 15, y: 0, width: 10, height: 20))
+              textField.leftView = paddedView
               textField.leftViewMode = .always
           }
       }
@@ -1586,16 +1548,16 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             }
         }
         let allPostingSessionArr = NSMutableArray()
-        var sessionId = NSNumber()
+      
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at:i) as! PostingSession
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at:i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -1605,13 +1567,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     @IBAction func targetWeightBtnAction(_ sender: UIButton) {
         view.endEditing(true)
         btnTag = 6
-        if targetWeigh == 0 {
-            
-            tableViewpop()
-            droperTableView.frame = CGRect( x: 162, y: 385, width: 200, height: 200)
-            droperTableView.reloadData()
-            
-        } else if targetWeigh == 1{
+        if targetWeigh == 0 || targetWeigh == 1 {
             
             tableViewpop()
             droperTableView.frame = CGRect( x: 162, y: 385, width: 200, height: 200)

@@ -194,7 +194,6 @@ class CommonClass: NSObject {
         
         let buttonBg: UIButton = UIButton()
         var xFrame = Int()
-        var widthFrame = Int()
         
         if #available(iOS 13.4, *) {
             xFrame = 350
@@ -206,16 +205,15 @@ class CommonClass: NSObject {
         buttonBg.setTitleColor(UIColor.blue, for: UIControl.State())
         buttonBg.frame = CGRect(x: 0, y: 0, width: 1024, height: 768) // X, Y, width, height
         buttonBg.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.8)
-        var datePicker: UIDatePicker = UIDatePicker()
+       
         // DatePicker
-        datePicker = UIDatePicker(frame:CGRect(x: xFrame, y: 200, width: 600, height: 300))
+        let  datePicker = UIDatePicker(frame:CGRect(x: xFrame, y: 200, width: 600, height: 300))
         datePicker.backgroundColor = UIColor.white
         datePicker.datePickerMode = UIDatePicker.Mode.date
         datePicker.layer.borderWidth = 1
         datePicker.layer.cornerRadius = 3
         datePicker.layer.borderColor = UIColor.white.cgColor
-        //        datePicker.calendar = Calendar(identifier: .gregorian)
-        //        datePicker.timeZone = TimeZone(secondsFromGMT: 0)
+   
         
         if #available(iOS 13.4, *) {
             datePicker.preferredDatePickerStyle = .wheels
@@ -235,9 +233,7 @@ class CommonClass: NSObject {
             xToolBar = 200
             widthToolBar = 600
         }
-        // components.month = -12
-        let minDate: NSDate = gregorian.date(byAdding: components as DateComponents, to: currentDate as Date, options: NSCalendar.Options(rawValue: 0))! as NSDate as NSDate
-        //  datePicker.minimumDate = minDate as Date
+
         buttonBg.addSubview(datePicker)
         
         // ToolBar

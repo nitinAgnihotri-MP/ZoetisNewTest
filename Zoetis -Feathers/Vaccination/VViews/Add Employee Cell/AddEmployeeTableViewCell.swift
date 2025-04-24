@@ -289,7 +289,9 @@ extension AddEmployeeTableViewCell: UITextFieldDelegate{
             return false
         }
 
-        if string == " " { return true }
+        if string == " " {
+            return true
+        }
 
         if string.rangeOfCharacter(from: CharacterSet.letters.inverted) != nil {
             return false

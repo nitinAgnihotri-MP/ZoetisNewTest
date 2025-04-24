@@ -277,37 +277,6 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                         self?.gigya.initFor(apiKey: apiKey, apiDomain: self?.domainsName)
                     }
 
-                    /*
-                    for apiKeys in dataArray {
-                        let apiKeys = apiKeys.1
-                        
-                        let countryApiKey = apiKeys["API_Keys"]
-                        debugPrint(countryApiKey)
-                        
-                        self?.apiKey = countryApiKey.rawValue as? String
-                        let domainName = apiKeys["Data_Center"]
-                        self?.domainName = domainName.rawValue as? String
-                        let apiKeyId = apiKeys["Id"]
-                        self?.apiKeyId = apiKeyId.rawValue as? NSNumber
-                        
-                        let environmentIs = Constants.Api.versionUrl
-                        let environmentMap: [String: Int] = [
-                            "stageapi": 0,
-                            "devapi": 1,
-                            "supportapi": 2
-                        ]
-
-                        let liveAlbums = environmentMap.first { environmentIs.contains($0.key) }?.value ?? 3
-
-
-                        // Determine the correct API key
-                        let apiKey: String = (liveAlbums == 1 || liveAlbums == 2) ? "4_KkOJPb7zC89ubdZyo8pEWg" : (self?.apiKey ?? "")
-
-                        // Initialize Gigya with the determined API key
-                        self?.gigya.initFor(apiKey: apiKey, apiDomain: self?.domainName)
-                        
-                    }
-                    */
                 }
             })
         }
@@ -532,23 +501,27 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     PasswordService.shared.setUsername(password: Email)
                     
                     UserDefaults.standard.set(false, forKey: "hasAppMovedToBackground")
+                    
                     let jsonDecoder = JSONDecoder()
-                    if let jsonData = try? JSONSerialization.data(withJSONObject: value, options: .prettyPrinted) {
-                        if let userResponseObj = try? jsonDecoder.decode(UserResponseDTO.self, from: jsonData) {
-                            if let lastFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace() {
-                                UserContext.sharedInstance.setUserDetails(userResponseObj)
-                                if let newlyFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace() {
-                                    if newlyFilledUserId == lastFilledUserId {
-                                        UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
-                                    } else {
-                                        UserDefaults.standard.set(true, forKey: "PENewUserLoginFlag")
-                                    }
-                                }
-                            }
+                    if let jsonData = try? JSONSerialization.data(withJSONObject: value, options: .prettyPrinted),
+                       let userResponseObj = try? jsonDecoder.decode(UserResponseDTO.self, from: jsonData) {
+                        
+                        if let lastFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace(),
+                           let newlyFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace() {
+                            
                             UserContext.sharedInstance.setUserDetails(userResponseObj)
-                            UserDefaults.standard.set(true, forKey: "hasLoggedIn")
+                            
+                            if newlyFilledUserId == lastFilledUserId {
+                                UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
+                            } else {
+                                UserDefaults.standard.set(true, forKey: "PENewUserLoginFlag")
+                            }
                         }
+                        
+                        UserContext.sharedInstance.setUserDetails(userResponseObj)
+                        UserDefaults.standard.set(true, forKey: "hasLoggedIn")
                     }
+
 
                     
                     let dict : NSDictionary = value as! NSDictionary
@@ -2200,7 +2173,6 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
             let url = "PostingSession/TurkeyGetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
             
-      // Old      let url = "PostingSession/T_GetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
                                                         //(UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             let headerDict: HTTPHeaders = [Constants.authorization: accestoken]
@@ -2413,7 +2385,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                                         
                                         
                                         for  i in 0..<(feedDictArr! as AnyObject).count {
-                                            var feedId = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey: "feedId") as! Int
+                                            let feedId = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey: "feedId") as! Int
                                             let nsFeedid = UserDefaults.standard.integer(forKey: "feedId")
                                             if feedId > nsFeedid{
                                                 UserDefaults.standard.set(feedId, forKey: "feedId")
@@ -2422,7 +2394,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                                             let startDate  = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"startDate")
                                             DispatchQueue.main.async {
                                                 
-                                                CoreDataHandlerTurkey().getFeedNameFromGetApiTurkey((seesionId) as NSNumber, sessionId: seesionId as NSNumber, feedProgrameName: feedName as! String, feedId: feedId as NSNumber,startDate:startDate as? String ?? "")
+                                                self.callGetFeedNameFromTurkey(seesionId: seesionId as NSNumber, feedName: feedName as! String, feedId: feedId as NSNumber, startDate: startDate)
                                             }
                                             let feedDetailArr = ((feedDictArr! as AnyObject).object(at: i) as AnyObject).value(forKey: "feedCategoryDetails")
                                             
@@ -2493,6 +2465,19 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             
         }
     }
+    
+    
+    private func callGetFeedNameFromTurkey(seesionId: NSNumber, feedName: String, feedId: NSNumber, startDate: Any?) {
+        CoreDataHandlerTurkey().getFeedNameFromGetApiTurkey(
+            (seesionId) as NSNumber,
+            sessionId: seesionId as NSNumber,
+            feedProgrameName: feedName,
+            feedId: feedId as NSNumber,
+            startDate: startDate as? String ?? ""
+        )
+    }
+    
+    
     // MARK: Get Posting Data from Server for Images Turkey
     func getPostingDataFromServerforImageTurkey(){
         self.deleteAllData("BirdPhotoCaptureTurkey")
@@ -2608,9 +2593,9 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         self.deleteAllData("NotesBirdTurkey")
         if WebClass.sharedInstance.connected() {
        
-            var id =  UserDefaults.standard.integer(forKey: "Id")
+            let id =  UserDefaults.standard.integer(forKey: "Id")
             let dev = "iOS"
-            let url = "PostingSession/TurkeyGetBirdNotesListByUser?UserId=\(id)&DeviceType=\(dev)"
+   
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
             
             let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedNotes.latestUrl + "\(id)&DeviceType=\(Constants.deviceType)"

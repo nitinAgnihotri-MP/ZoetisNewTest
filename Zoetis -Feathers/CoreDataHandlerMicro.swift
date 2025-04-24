@@ -12,8 +12,7 @@ import UIKit
 
 class CoreDataHandlerMicro: NSObject {
     
-    private var managedContext  = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType) //: NSManagedObjectContext! = nil
-    
+    private var managedContext  = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType) 
     
     private var CustData = [NSManagedObject]()
     var CustData1 = [NSManagedObject]()

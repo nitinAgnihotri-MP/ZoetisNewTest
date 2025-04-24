@@ -7,26 +7,23 @@
                 body{
                     margin: 0 auto;
                 }
-                .report-box{
-                    max-width:100%;
-                    min-width:100%;
-                    margin:auto;
-                    padding:0px;
-                    font-size:13px;
-                    line-height:20px;
-                    font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-                    color:#000;
-                    font-weight:500;
-
-                }
+                .report-box {
+                    max-width: 100%;
+                    min-width: 100%;
+                    margin: auto;
+                    padding: 0px;
+                    font-size: 13px;
+                    line-height: 20px;
+                    font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+                    color: #000;
+                    font-weight: 500;
+                    transform: scale(0.6);
+                    transform-origin: 0 0;
+                }                
                 .no-margin{
                     margin: 0px;
                 }
-                .report-box{
-                zoom: 0.6;
-                -moz-transform: scale(0.6);
-                -moz-transform-origin: 0 0;
-                }
+              
                 .report-text-right{
                     text-align: right;
                 }
@@ -98,7 +95,6 @@
                 }
 				.rotate{
 					width: 130px;
-					text-align:center;
 					/* Rotate div */
 					-ms-transform: rotate(90deg); /* IE 9 */
 					-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
@@ -123,6 +119,7 @@
     <body>
         <div class="report-box">
             <table class="table-container" cellpadding="0" cellspacing="0" >
+                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                 <tbody>
                     <tr class="top">
                         <td colspan="7">
@@ -142,6 +139,7 @@
                         </td>
                         <td colspan="8">
                             <table>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr height="48px">
                                         <td> <br/> </td>
@@ -158,6 +156,7 @@
                         </td>
                         <td colspan="8">
                             <table>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr rowspan="2">
                                         <td class="report-text-right"> <img width="100px" src="logo.png" title="Zoetis Logo" alt="Zoetis Logo" /> </td>
@@ -184,10 +183,10 @@
                     <tr class="font-bold header-td" height="250px"> 
                         <td colspan="3" >
                             <table class="child-table">
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr >
-										
-                                        <td colspan="" width="150px"> #Data# </td>
+                                        <td style="width:150px"> #Data# </td>
 										<td> <div class="rotate" > # de pássaros </div> </td>
 										<td> <div class="rotate" > Idade Média </div> </td>
                                     </tr>
@@ -195,61 +194,61 @@
                             </table>
                         </td>
                         <!-- GI Tract --->
-                        <td colspan="" > <div class="rotate" > ferimentos na boca </div></td>
-                        <td colspan="" style="min-width: 75px;max-width:75px;"><div class="rotate" > proventriculite </div></td>
-                        <td colspan="" style="min-width: 75px;max-width:75px;"><div class="rotate" > erosões da moela </td>
-                        <td colspan="" > <div class="rotate" > Lixo </div></td>
-                        <td colspan=""> <div class="rotate" > etapa de alimentação </div> </td>
-                        <td colspan=""> <div class="rotate" > você tinha</div> </td>
-                        <td colspan=""> <div class="rotate" > lombrigas</div> </td>
-                        <td colspan="" style="min-width: 75px;max-width:75px;"><div class="rotate" >
+                        <td> <div class="rotate" > ferimentos na boca </div></td>
+                        <tdstyle="min-width: 75px;max-width:75px;"><div class="rotate" > proventriculite </div></td>
+                        <tdstyle="min-width: 75px;max-width:75px;"><div class="rotate" > erosões da moela </td>
+                        <td> <div class="rotate" > Lixo </div></td>
+                        <td> <div class="rotate" > etapa de alimentação </div> </td>
+                        <td> <div class="rotate" > você tinha</div> </td>
+                        <td> <div class="rotate" > lombrigas</div> </td>
+                        <tdstyle="min-width: 75px;max-width:75px;"><div class="rotate" >
                             Enterite </td>
                         
                         
                         <!-- Skeletal/Muscular/Integumentary --->
-                        <td colspan="" style="min-width: 75px;max-width:75px;"><div class="rotate" > almofada do pé <br/> lesões </td>
-                         <td colspan="" > <div class="rotate" > Necrose da cabeça femoral </div></td>
-                         <td colspan="" style="min-width: 80px;max-width:80px;"> <div class="rotate" style="position:relative; left:18px;"> discondroplasia tibial </div></td>
-                         <td colspan="" > <div class="rotate" > Raquitismo </div></td>
-                         <td colspan="" style="min-width: 80px;max-width:80px;"><div class="rotate" > Força Óssea </td>
-                         <td colspan="" > <div class="rotate" > sinovite </div></td>
-                         <td colspan="" > <div class="rotate" > processo infeccioso </div></td>
-                         <td colspan="" > <div class="rotate" > úlceras de córnea </div> </td>
+                        <tdstyle="min-width: 75px;max-width:75px;"><div class="rotate" > almofada do pé <br/> lesões </td>
+                         <td> <div class="rotate" > Necrose da cabeça femoral </div></td>
+                         <tdstyle="min-width: 80px;max-width:80px;"> <div class="rotate" style="position:relative; left:18px;"> discondroplasia tibial </div></td>
+                         <td> <div class="rotate" > Raquitismo </div></td>
+                         <tdstyle="min-width: 80px;max-width:80px;"><div class="rotate" > Força Óssea </td>
+                         <td> <div class="rotate" > sinovite </div></td>
+                         <td> <div class="rotate" > processo infeccioso </div></td>
+                         <td> <div class="rotate" > úlceras de córnea </div> </td>
                          
                          <!-- Respiratory Tract --->
-                         <td colspan="" > <div class="rotate" style="position:relative; left:10px;" > traqueíte </div></td>
-                         <td colspan="" style="min-width: 75px;max-width:75px;"><div class="rotate" > bolsa de ar </div></td>
+                         <td> <div class="rotate" style="position:relative; left:10px;" > traqueíte </div></td>
+                         <tdstyle="min-width: 75px;max-width:75px;"><div class="rotate" > bolsa de ar </div></td>
 						
                         
                         <!-- Immune/Others --->
                         
-                       <td colspan="" > <div class="rotate" > A gema retida</div> </td>
-						<td colspan="" > <div class="rotate" > Tamanho da bolsa </div></td>
+                       <td> <div class="rotate" > A gema retida</div> </td>
+						<td> <div class="rotate" > Tamanho da bolsa </div></td>
                         
                         
                     </tr>
                     <tr>
                         <td colspan="3"> </td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan="">  <span class="push-left"> significar % </span></td>
-                        <td colspan="">  <span class="push-left"> significar % </span></td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan="">  <span class="push-left"> significar % </span></td>
-                        <td colspan="">  <span class="push-left"> significar % </span></td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan="">  <span class="push-left"> significar % </span></td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan="">  <span class="push-left"> significar % </span></td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan="">  <span class="push-left"> significar % </span></td>
-                        <td colspan="">  <span class="push-left"> significar % </span></td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan=""> <span> significar </span> </td>
+                        <td> <span> % </span> </td>
+                        <td>  <span class="push-left"> significar % </span></td>
+                        <td>  <span class="push-left"> significar % </span></td>
+                        <td> <span> % </span> </td>
+                        <td> <span> % </span> </td>
+                        <td> <span> % </span> </td>
+                        <td> <span> % </span> </td>
+                        <td>  <span class="push-left"> significar % </span></td>
+                        <td>  <span class="push-left"> significar % </span></td>
+                        <td> <span> % </span> </td>
+                        <td>  <span class="push-left"> significar % </span></td>
+                        <td> <span> % </span> </td>
+                        <td>  <span class="push-left"> significar % </span></td>
+                        <td> <span> % </span> </td>
+                        <td> <span> % </span> </td>
+                        <td> <span> % </span> </td>
+                        <td>  <span class="push-left"> significar % </span></td>
+                        <td>  <span class="push-left"> significar % </span></td>
+                        <td> <span> % </span> </td>
+                        <td> <span> significar </span> </td>
                     </tr>
                     #ITEMS#
                 </tbody>

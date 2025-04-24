@@ -35,14 +35,6 @@ class imageTableViewCell: UITableViewCell {
             obsnameDum.text = "Lesão observada:"
             birdNoDum.text  = "Nº da ave:"
         }
-        
-       else if lngId == 1 {
-   
-           frmnamrDum.text = "Farm name:"
-           catNameDum.text = "Category name:"
-           obsnameDum.text = "Observation name:"
-           birdNoDum.text  = "Bird no:"
-        }
         else
         {
             frmnamrDum.text = "Farm name:"

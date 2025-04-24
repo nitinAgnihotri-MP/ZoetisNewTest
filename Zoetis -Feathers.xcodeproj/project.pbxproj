@@ -347,7 +347,6 @@
 		25B15F9A2D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B15F992D9B0C0000744595 /* PVEDraftSNAFinalizeAssement.swift */; };
 		27276A791D5C867800C134BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276A781D5C867800C134BA /* AppDelegate.swift */; };
 		27276A861D5C867800C134BA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27276A841D5C867800C134BA /* LaunchScreen.storyboard */; };
-		27276A911D5C867900C134BA /* Zoetis__FeathersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276A901D5C867900C134BA /* Zoetis__FeathersTests.swift */; };
 		27276A9C1D5C867900C134BA /* Zoetis__FeathersUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276A9B1D5C867900C134BA /* Zoetis__FeathersUITests.swift */; };
 		272CF6361EDF15650048E74D /*  Pdf1.png in Resources */ = {isa = PBXBuildFile; fileRef = 272CF6351EDF15650048E74D /*  Pdf1.png */; };
 		447090C227C67A0A009B9553 /* MediaTypeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447090C127C67A0A009B9553 /* MediaTypeResponse.swift */; };
@@ -440,7 +439,6 @@
 		7889E237242E263400CA5139 /* ViewRequisitionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E236242E263400CA5139 /* ViewRequisitionViewModel.swift */; };
 		7889E23C242E265800CA5139 /* ViewRequisitionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E238242E265000CA5139 /* ViewRequisitionVC.swift */; };
 		7889E23D242E265800CA5139 /* ViewRequisitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E239242E265200CA5139 /* ViewRequisitionViewController.swift */; };
-		7889E23E242E265800CA5139 /* requisitionDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E23A242E265600CA5139 /* requisitionDataCell.swift */; };
 		7889E23F242E265800CA5139 /* ViewRequisition.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7889E23B242E265800CA5139 /* ViewRequisition.storyboard */; };
 		7889E242242E269300CA5139 /* DraftVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E240242E269000CA5139 /* DraftVC.swift */; };
 		7889E243242E269300CA5139 /* DraftInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889E241242E269300CA5139 /* DraftInfoCell.swift */; };
@@ -1260,7 +1258,6 @@
 		27276A851D5C867800C134BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27276A871D5C867800C134BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27276A8C1D5C867900C134BA /* Zoetis -FeathersTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Zoetis -FeathersTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		27276A901D5C867900C134BA /* Zoetis__FeathersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zoetis__FeathersTests.swift; sourceTree = "<group>"; };
 		27276A921D5C867900C134BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27276A971D5C867900C134BA /* Zoetis -FeathersUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Zoetis -FeathersUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27276A9B1D5C867900C134BA /* Zoetis__FeathersUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zoetis__FeathersUITests.swift; sourceTree = "<group>"; };
@@ -1350,7 +1347,6 @@
 		7889E236242E263400CA5139 /* ViewRequisitionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewRequisitionViewModel.swift; sourceTree = "<group>"; };
 		7889E238242E265000CA5139 /* ViewRequisitionVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewRequisitionVC.swift; sourceTree = "<group>"; };
 		7889E239242E265200CA5139 /* ViewRequisitionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewRequisitionViewController.swift; sourceTree = "<group>"; };
-		7889E23A242E265600CA5139 /* requisitionDataCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = requisitionDataCell.swift; sourceTree = "<group>"; };
 		7889E23B242E265800CA5139 /* ViewRequisition.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ViewRequisition.storyboard; sourceTree = "<group>"; };
 		7889E240242E269000CA5139 /* DraftVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraftVC.swift; sourceTree = "<group>"; };
 		7889E241242E269300CA5139 /* DraftInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraftInfoCell.swift; sourceTree = "<group>"; };
@@ -2430,7 +2426,6 @@
 		27276A8F1D5C867900C134BA /* Zoetis -FeathersTests */ = {
 			isa = PBXGroup;
 			children = (
-				27276A901D5C867900C134BA /* Zoetis__FeathersTests.swift */,
 				27276A921D5C867900C134BA /* Info.plist */,
 			);
 			path = "Zoetis -FeathersTests";
@@ -3638,7 +3633,6 @@
 		C4402E0423C626990019CE03 /* ViewRequisition */ = {
 			isa = PBXGroup;
 			children = (
-				7889E23A242E265600CA5139 /* requisitionDataCell.swift */,
 				7889E23B242E265800CA5139 /* ViewRequisition.storyboard */,
 				7889E238242E265000CA5139 /* ViewRequisitionVC.swift */,
 				7889E239242E265200CA5139 /* ViewRequisitionViewController.swift */,
@@ -4963,7 +4957,6 @@
 				0049CA3F296ECDA500822825 /* PE_SessionIntCell.swift in Sources */,
 				B72960DB24A7C5BC003237C7 /* Login.swift in Sources */,
 				108A2C9A23DF77BF003E45BE /* PulletSelectionViewController.swift in Sources */,
-				7889E23E242E265800CA5139 /* requisitionDataCell.swift in Sources */,
 				107B30F023A97BDF008C566B /* VisitTypesResponse.swift in Sources */,
 				B729605924A7C5BC003237C7 /* CocciProgramPosting+CoreDataClass.swift in Sources */,
 				B72960E424A7C5BC003237C7 /* Veteration.swift in Sources */,
@@ -5005,7 +4998,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E5AD0429007BD10002DE76 /* ExampleTableViewCell.swift in Sources */,
-				27276A911D5C867900C134BA /* Zoetis__FeathersTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5538,7 +5530,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Zoetis -Feathers/UAT-PV360Debug.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1.0;
@@ -5568,7 +5560,7 @@
 				PRODUCT_NAME = "PoultryView 360";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "PV360-TestFlight";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PV360;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Zoetis-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
@@ -5584,7 +5576,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Zoetis -Feathers/UAT-PV360.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1.0;
@@ -5614,7 +5606,7 @@
 				PRODUCT_NAME = "PoultryView 360";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "PV360-TestFlight";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PV360;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Zoetis-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;

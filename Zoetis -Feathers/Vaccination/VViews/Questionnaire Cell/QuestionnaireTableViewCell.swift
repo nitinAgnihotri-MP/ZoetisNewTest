@@ -56,14 +56,14 @@ class QuestionnaireTableViewCell: UITableViewCell, UITextFieldDelegate {
     }
     
     @IBAction func changeStateAction(_ sender: UISwitch) {
-        if let quesObj = questionObj{
-            
-            questionObj?.selectedResponse = segmentControl.isOn
-            UserFilledQuestionnaireDAO.sharedInstance.updateQuestionUserResponse(vmObj: questionObj!)
-            
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateQuestionnaireObj"), object: nil, userInfo: ["sectionIndex":sectionIndex, "rowIndex":rowIndex, "questionObj":questionObj])
-            
-        }
+        
+        if questionObj != nil {
+              questionObj?.selectedResponse = segmentControl.isOn
+              UserFilledQuestionnaireDAO.sharedInstance.updateQuestionUserResponse(vmObj: questionObj!)
+              
+              NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateQuestionnaireObj"), object: nil, userInfo: ["sectionIndex": sectionIndex, "rowIndex": rowIndex, "questionObj": questionObj])
+          }
+   
     }
     
     // MARK: - METHODS

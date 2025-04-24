@@ -24,7 +24,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     var postingId = Int()
     var feedId = Int()
     var btnTag = Int()
-    var lngId = NSInteger()
+    var lngIdIs = NSInteger()
     let images  = [UIImage(named: "turkey_dashboard@1908x.jpg")!,
                    UIImage(named: "embrex_banner_graphic_1786x432.jpg")!,
                    UIImage(named: "PoulvacEcoli_banner_graphic_1908x802.jpg")!,
@@ -112,9 +112,9 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         print("<<<<",self)
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: true)
-        lngId = UserDefaults.standard.integer(forKey: "lngId")
+        lngIdIs = UserDefaults.standard.integer(forKey: "lngId")
         
-        if lngId == 3{
+        if lngIdIs == 3{
             callLoginView()
             return
         }
@@ -174,7 +174,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        lngId = UserDefaults.standard.integer(forKey: "lngId")
+        lngIdIs = UserDefaults.standard.integer(forKey: "lngId")
         NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierLeftMenu"), object: nil)
         UserDefaults.standard.set(2, forKey: "LastScreenRef")
         userNameLbl.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
@@ -219,7 +219,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         
         for i in 0..<totalExustingArr.count {
             let posting : PostingSessionTurkey = totalExustingArr.object(at: i) as! PostingSessionTurkey
-            let finializeB = posting.finalizeExit as! Int
             arr.add(posting)
         }
         
@@ -552,14 +551,14 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
     func callSyncApi() {
         self.isSync = false
         let arr = self.allSessionArr()
-        for postingId in arr {
+        for postingAssessmentId in arr {
             if isSync == false{
                 isSync = true
                 if (UserDefaults.standard.value(forKey: "postingTurkey") != nil){
                     Constants.isFromPsotingTurkey = UserDefaults.standard.value(forKey: "postingTurkey") as? Bool ?? false
                     if Constants.isFromPsotingTurkey
                     {
-                        objApiSyncOneSetTurkey.feedprogram(postingId: NSNumber(value: postingId as! Int))
+                        objApiSyncOneSetTurkey.feedprogram(postingId: NSNumber(value: postingAssessmentId as! Int))
                     }
                     else
                     {
@@ -581,13 +580,13 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"There are problem in data syncing please try again.(NA))")
         } else {
             
-            if lngId == 1 {
+            if lngIdIs == 1 {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
                 
-            } else if lngId == 3 {
+            } else if lngIdIs == 3 {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
                 
-            } else if lngId == 1000 {
+            } else if lngIdIs == 1000 {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Há problemas na sincronização de dados, tente novamente. \n(\(statusCode))")
             }
         }
@@ -753,16 +752,16 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
+       
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -847,8 +846,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             
             let SessionId = (seessionTypeArr.object(at: i) as AnyObject).value(forKey: "SessionTypeId") as! Int
             let sessionName = (seessionTypeArr.object(at: i) as AnyObject).value(forKey: "SessionTypeName") as! String
-            let lngId = (seessionTypeArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
-            CoreDataHandlerTurkey().SessionTypeDatabaseTurkey(SessionId, sesionType: sessionName, lngId: lngId, dbArray: self.sessiontypeArr, index: i)
+            let langId = (seessionTypeArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
+            CoreDataHandlerTurkey().SessionTypeDatabaseTurkey(SessionId, sesionType: sessionName, lngId: langId, dbArray: self.sessiontypeArr, index: i)
         }
     }
     
@@ -881,20 +880,21 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         
         for i in 0..<routeArr.count {
             let routeId = (routeArr.object(at: i) as AnyObject).value(forKey: "RouteId") as! Int
-            let lngId = (routeArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
+            let languageId = (routeArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
             let routeName = (routeArr.object(at: i) as AnyObject).value(forKey: "RouteName") as! String
             
-            CoreDataHandlerTurkey().saveRouteDatabaseTurkey(routeId, routeName: routeName,lngId:lngId, dbArray: self.RouteArray, index: i)
+            CoreDataHandlerTurkey().saveRouteDatabaseTurkey(routeId, routeName: routeName,lngId:languageId, dbArray: self.RouteArray, index: i)
         }
     }
     
     func skelta (_ tag: Int) {
         btnTag = 0
-        if WebClass.sharedInstance.connected() || dataArray.count > 0{
-            var _temp = ServiceDataHolder()
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+        
+        if WebClass.sharedInstance.connected() || dataArray.count > 0 {
+            let _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = _temp.ObservaionDetailsArr
         }
+        
         
         dataSkeletaArray = CoreDataHandlerTurkey().fetchAllSeettingdataTurkey()
         if dataSkeletaArray.count == 0 {
@@ -945,9 +945,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
             
-            var _temp = ServiceDataHolder()
-            
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+            var _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = _temp.ObservaionDetailsArr
         }
         
@@ -964,9 +962,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
             
-            var _temp = ServiceDataHolder()
-            
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+            var _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = _temp.ObservaionDetailsArr
         }
         
@@ -984,9 +980,7 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
             
-            var _temp = ServiceDataHolder()
-            
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+            var _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = _temp.ObservaionDetailsArr
         }
         
@@ -1091,9 +1085,9 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         
         for i in 0..<cocoiArr.count {
             let cocoiiId = (cocoiArr.object(at: i) as AnyObject).value(forKey: "CocciProgramId") as! Int
-            let lngId = (cocoiArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
+            let languageId = (cocoiArr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! Int
             let cocoiiIdName = (cocoiArr.object(at: i) as AnyObject).value(forKey: "CocciProgramName") as! String
-            CoreDataHandlerTurkey().CocoiiProgramDatabaseTurkey(cocoiiId, cocoiProgram: cocoiiIdName, lngId: lngId, dbArray: self.cocoiiProgramArr, index: i)
+            CoreDataHandlerTurkey().CocoiiProgramDatabaseTurkey(cocoiiId, cocoiProgram: cocoiiIdName, lngId: languageId, dbArray: self.cocoiiProgramArr, index: i)
             
         }
     }
@@ -1352,7 +1346,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     self?.callLoginMethod(errorCode)
@@ -1501,7 +1494,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     self?.callLoginMethod(errorCode)
@@ -1572,10 +1564,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
                         self!.loginMethod()
                     }
@@ -1642,10 +1632,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
-                    print("Error from get Route list API : \(errorMsg) (Code: \(errorCode))")
                     if errorCode == "401" || errorCode == "404"{
                         self!.loginMethod()
                     }
@@ -1869,7 +1857,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     self?.callLoginMethod(errorCode)
@@ -1925,17 +1912,16 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         }
         
         let allPostingSessionArr = NSMutableArray()
-        
-        var sessionId = NSNumber()
+      
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         return allPostingSessionArr
@@ -2047,7 +2033,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     self?.callLoginMethod(errorCode)
@@ -2117,7 +2102,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     self?.callLoginMethod(errorCode)
@@ -2200,7 +2184,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     self?.callLoginMethod(errorCode)
@@ -2257,7 +2240,6 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
                 let jsonResponse = JSON(json)
                 // Check for the "errorResult" key and handle errors
                 if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
                     let errorCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
                     
                     self?.callLoginMethod(errorCode)
@@ -2365,13 +2347,13 @@ extension DashViewControllerTurkey :userlistProtocol,userLogOut {
         }
         else{
             
-            if lngId == 1 {
+            if lngIdIs == 1 {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"There are problem in data syncing please try again. \n(\(statusCode))")
             }
-            if lngId == 1000 {
+            if lngIdIs == 1000 {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("There are problem in data syncing please try again(NA))", comment: ""))
             }
-            else if lngId == 3 {
+            else if lngIdIs == 3 {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"Problème de synchronisation des données, veuillez réessayer à nouveau. \n(\(statusCode))")
             }
         }

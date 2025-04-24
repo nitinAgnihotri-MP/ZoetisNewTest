@@ -45,11 +45,6 @@ class VaccinationConstants{
         public static let VACCINE_MIXING_TYPE_ID = "12"
         
     }
-        
-    
-//    struct TestData{
-//        
-//    }
     
     struct VaccinationStatus{
         public static let COREDATA_SAVED_SUCCESSFULLY = "Saved Successfuly in Core Data"

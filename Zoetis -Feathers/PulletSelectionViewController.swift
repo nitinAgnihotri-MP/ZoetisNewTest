@@ -27,13 +27,11 @@ class PulletSelectionViewController: BaseViewController {
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: true)
         setupHeader()
-        let RoleId =  UserDefaults.standard.string(forKey: "RoleId")
         processEvalBtn.alpha = 0.3
         pveLabel.alpha = 0.3
         processEvalBtn.isUserInteractionEnabled = false
         
-        let ModuleId =   UserDefaults.standard.string(forKey:"ModuleId")
-        let ModuleName =   UserDefaults.standard.string(forKey:"ModuleName")
+      
         let ModuleIdsArray =   UserDefaults.standard.string(forKey:"ModuleIdsArray")
         let arr = ModuleIdsArray?.components(separatedBy: "~")
         
@@ -87,14 +85,7 @@ class PulletSelectionViewController: BaseViewController {
         self.footerView.addSubview(bottomViewController.view)
         self.topviewConstraint(vwTop: bottomViewController.view)
     }
-    
-    // MARK: Navigate to Hatchery View Controller
-    private func navigateToHatcheryViewController(isModule: String){
-        let vc = UIStoryboard.init(name: Constants.Storyboard.selection, bundle: Bundle.main).instantiateViewController(withIdentifier: "HatcheryLandingViewController") as? HatcheryLandingViewController
-        vc?.selectedBtnStr = isModule
-        self.navigationController?.pushViewController(vc!, animated: false)
-    }
-    
+
     // MARK: Breeder Button Action
     @IBAction func clickedBreeder(_ sender: Any) {
         transitionAnimationPVE(view: breederButton, animationOptions: .transitionCrossDissolve, isReset: true)
@@ -159,19 +150,7 @@ class PulletSelectionViewController: BaseViewController {
     private func navigateToModuleSelectionPVE(){
         print(appDelegateObj.testFuntion())
     }
-    // MARK:  ********** Navigate to Microbial Module **************************************/
-    private func navigateToMicrobial(){
-        
-        let vc = UIStoryboard.init(name: Constants.Storyboard.microbialStoryboard, bundle: Bundle.main).instantiateViewController(withIdentifier: "Microbial") as? MicrobialViewController
-        self.navigationController?.pushViewController(vc!, animated: false)
-    }
-    
-    // MARK:  ********** Navigate to Flock Health **************************************/
-    private func navigateToGrownOutSelectionPVE(){
-        
-        let vc = UIStoryboard.init(name: Constants.Storyboard.selection, bundle: Bundle.main).instantiateViewController(withIdentifier: "GrownoutSelectionViewController") as? GrownoutSelectionViewController
-        self.navigationController?.pushViewController(vc!, animated: true)
-    }
+
     // MARK:  ********** Download PDF file **************************************/
     @IBAction func injectionSheetPDFDownloadBtnAction(_ sender: Any) {
         

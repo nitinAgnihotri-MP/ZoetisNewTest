@@ -8,8 +8,7 @@
 
 import UIKit
 import QuartzCore
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -584,22 +583,18 @@ class MDRotatingPieChart: UIControl {
         let bottomLeftPoint = CGPoint(x: frame.origin.x, y: frame.origin.y + frame.height)
         let bottomRightPoint = CGPoint(x: frame.origin.x + frame.width, y: frame.origin.y + frame.height)
         
-        if(inside) {
-            if(!path.contains(topLeftPoint)
-                || !path.contains(topRightPoint)
-                || !path.contains(bottomLeftPoint)
-                || !path.contains(bottomRightPoint)) {
-                    return false
-            }
+        if (inside && (!path.contains(topLeftPoint)
+                        || !path.contains(topRightPoint)
+                        || !path.contains(bottomLeftPoint)
+                        || !path.contains(bottomRightPoint))) {
+            return false
         }
-        
-        if(!inside) {
-            if(path.contains(topLeftPoint)
-                || path.contains(topRightPoint)
-                || path.contains(bottomLeftPoint)
-                || path.contains(bottomRightPoint)) {
-                    return false
-            }
+
+        if (!inside && (path.contains(topLeftPoint)
+                        || path.contains(topRightPoint)
+                        || path.contains(bottomLeftPoint)
+                        || path.contains(bottomRightPoint))) {
+            return false
         }
         
         return true

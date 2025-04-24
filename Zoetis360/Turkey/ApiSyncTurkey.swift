@@ -596,7 +596,7 @@ class ApiSyncTurkey: NSObject {
                     let pSession = FieldVacinationAll.object(at: i) as! HatcheryVacTurkey
                     var strain = String()
                     let routeName = pSession.route
-                    var fieldStrain1 = String()
+                
                     var routeId = NSNumber()
                     if routeName == Constants.drinkingWater {
                         routeId = 2
@@ -623,7 +623,6 @@ class ApiSyncTurkey: NSObject {
                         routeId = 0
                     }
                     let age = pSession.age
-                    fieldStrain1 = pSession.route!
                     strain = pSession.strain!
                     let fieldStrainKey = "fieldStrain\(i + 1)"
                     let fieldrouteKey = "fieldRoute\(i+1)Id"
@@ -645,8 +644,8 @@ class ApiSyncTurkey: NSObject {
                     mainDict.setValue(pId, forKey: "vaccinationId")
                     mainDict.setValue(vaccinationName, forKey: "vaccinationName")
                     let acttimeStamp = tempArrTime.object(at: i)
-                    var  fullData  = String()
-                    fullData = acttimeStamp as! String
+                  
+                    var fullData = acttimeStamp as! String
                     mainDict.setValue(fullData, forKey: "deviceSessionId")
                     sessionArr.add(mainDict)
                 }
@@ -658,10 +657,7 @@ class ApiSyncTurkey: NSObject {
         do {
             
             guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            
-//            if let jsonString = String(data: jsonData, encoding: .utf8) {
-//                print(jsonString)
-//            }
+
             
             var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
             jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)

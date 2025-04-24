@@ -305,12 +305,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
             
             necId = UserDefaults.standard.integer(forKey: "necId") as Int
             count =  UserDefaults.standard.integer(forKey: "count")
-            if count == 0{
-                count = count+1
-            }
-            else{
-                count = count+1
-            }
+            count = count+1
         }
         UserDefaults.standard.set(self.count, forKey: "count")
         
@@ -341,15 +336,10 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
             UserDefaults.standard.set(countFarmId, forKey: "farmId")
         }
         
-        var imageAutoIncrementId = Int()
-        imageAutoIncrementId = UserDefaults.standard.integer(forKey: "imageAutoIncrementId")
-        if imageAutoIncrementId == 0 {
-            
-            imageAutoIncrementId = imageAutoIncrementId + 1
-        } else {
-            
-            imageAutoIncrementId = imageAutoIncrementId + 1
-        }
+        
+        var  imageAutoIncrementId = UserDefaults.standard.integer(forKey: "imageAutoIncrementId")
+        imageAutoIncrementId = imageAutoIncrementId + 1
+       
         
         UserDefaults.standard.set(imageAutoIncrementId, forKey: "imageAutoIncrementId")
         
@@ -357,7 +347,6 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
             .text!, farmName: appendfeedProgramwithCount, feedProgram: feedProgramDisplayLabel.text!, flockId: flockIdTextField.text!, houseNo: houseNoTextFld.text!, noOfBirds: noOfBirdsLbl.text!, sick: asb as NSNumber,necId: necId as NSNumber,compexName:complexName! ,complexDate:complexDate! ,complexId:complexId as NSNumber,custmerId:custMid as NSNumber,feedId: feedId as NSNumber,isSync:true,timeStamp:timeStamp1,actualTimeStamp:timeStamp1 ,lngId:1, farmId: countFarmId as NSNumber, imageId: NSNumber(value: imageAutoIncrementId), count: count as NSNumber)
         
         let numberofbirds = Int(noOfBirdsLbl.text!)
-        let data =  CoreDataHandler().FetchNecropsystep1neccId(necId as NSNumber)
         
         self.saveSkeletonCat(appendfeedProgramwithCount, numberofBirds: numberofbirds!)
         self.saveCocoiCat(appendfeedProgramwithCount, numberofBirds: numberofbirds!)
@@ -391,21 +380,15 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                     
                     let skleta : Skeleta = skeletenArr.object(at: i) as! Skeleta
                     
-                    if skleta.measure! == "Y,N" {
+                    if skleta.measure! == "Y,N" || skleta.measure == "Actual"{
                         let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: skleta.observationId ?? 0),measure: trimmed,quickLink: skleta.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!,actualText: skleta.measure ?? "")
-                    }
-                    else if ( skleta.measure! == "Actual"){
-                        let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:skleta.observationId ?? 0),measure: trimmed,quickLink: skleta.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!,actualText: skleta.measure ?? "")
                     }
                     else
                     {
                         let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
-                        let neciIdStep = UserDefaults.standard.integer(forKey: "necId")
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(truncating:skleta.observationId ?? 0),measure: trimmed,quickLink: skleta.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId!,actualText: skleta.measure ?? "")
                         
@@ -434,16 +417,10 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                 if ((cocoii.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                     let cocoiDis : Coccidiosis = cocoii.object(at: i) as! Coccidiosis
                     
-                    if cocoiDis.measure! == "Y,N" {
+                    if cocoiDis.measure! == "Y,N" || cocoiDis.measure == "Actual" {
                         
                         let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName, obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: cocoiDis.observationId ?? 0),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId!,actualText: cocoiDis.measure ?? "")
-                    }
-                    else if ( cocoiDis.measure! == "Actual"){
-                        
-                        let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName, obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: cocoiDis.observationId ?? 0),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true ,lngId:lngId as NSNumber,refId:cocoiDis.refId!,actualText: cocoiDis.measure ?? "")
                     }
                     else
                     {
@@ -479,17 +456,12 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                 if ((gitract.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                     let gitract : GITract = gitract.object(at: i) as! GITract
                     
-                    if gitract.measure! == "Y,N" {
+                    if gitract.measure! == "Y,N" || gitract.measure == "Actual"{
                         let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: gitract.observationId ?? 0),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId!,actualText: gitract.measure ?? "")
                     }
-                    else if ( gitract.measure! == "Actual"){
-                        
-                        let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "GITract", obsName: gitract.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:gitract.observationId ?? 0),measure: trimmed,quickLink: gitract.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:gitract.refId!,actualText: gitract.measure ?? "")
-                    }
+                  
                     else
                     {
                         let trimmed = gitract.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -525,18 +497,13 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                 if ((resp.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                     let resp : Respiratory = resp.object(at: i) as! Respiratory
                     
-                    if resp.measure! == "Y,N" {
+                    if resp.measure! == "Y,N" || resp.measure! == "Actual" {
                         
                         let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
                         CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating: resp.observationId ?? 0),measure: trimmed,quickLink: resp.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId!,actualText: resp.measure ?? "")
                     }
-                    else if ( resp.measure! == "Actual"){
-                        
-                        let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        
-                        CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: "Resp", obsName: resp.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(truncating:resp.observationId ?? 0),measure: trimmed,quickLink: resp.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId!,actualText: resp.measure ?? "")
-                    }
+                   
                     else
                     {
                         
@@ -618,15 +585,15 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
             myPickerView.selectRow(0, inComponent: 0, animated: true)
         }
         else{
-            var pickerIndex = Int()
+            var ageOPickerIndex = Int()
             for i in 0..<AgeOp.count{
                 if (lblAge.text! == AgeOp[i] as! String){
-                    pickerIndex = i
+                    ageOPickerIndex = i
                     break
                 }
             }
             
-            myPickerView.selectRow(pickerIndex, inComponent: 0, animated: true)
+            myPickerView.selectRow(ageOPickerIndex, inComponent: 0, animated: true)
         }
         myPickerView.reloadInputViews()
         ageUperBtnOutlet1.setImage(UIImage(named: "dialer01"), for: UIControl.State())
@@ -679,6 +646,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         let result = NSMutableArray()
         for value in array {
             if encountered.contains(value as! String) {
+                debugPrint("no task.")
             }
             else {
                 encountered.insert(value as! String)
@@ -694,6 +662,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         let result = NSMutableArray()
         for value in array {
             if encountered.contains(value as! String) {
+                debugPrint("no task to preform.")
             }
             else {
                 encountered.insert(value as! String)
@@ -701,9 +670,8 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
             }
         }
         
-        var arra = NSArray()
-        arra = result.mutableCopy()  as! NSArray
         
+        var arra = result.mutableCopy()  as! NSArray
         return arra
     }
     // MARK: 🟠 -Draw custome View .
@@ -996,7 +964,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
-            
+            debugPrint("backspace pressed.")
         }
         
         else if ((textField.text?.count)! > 50  ){
@@ -1035,7 +1003,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         }
         else{
             switch textField.tag {
-            case 18 :
+            case 18 , 11 :
                 let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
@@ -1044,16 +1012,7 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
                 let newString: NSString =
                 currentString.replacingCharacters(in: range, with: string) as NSString
                 return string == numberFiltered && newString.length <= maxLength
-                
-            case 11 :
-                let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
-                let compSepByCharInSet = string.components(separatedBy: aSet)
-                let numberFiltered = compSepByCharInSet.joined(separator: "")
-                let maxLength = 6
-                let currentString: NSString = textField.text! as NSString
-                let newString: NSString =
-                currentString.replacingCharacters(in: range, with: string) as NSString
-                return string == numberFiltered && newString.length <= maxLength
+     
                 
             case 1 : break
                 

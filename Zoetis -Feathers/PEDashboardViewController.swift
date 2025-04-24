@@ -171,20 +171,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         setupHeader()
         hidePopup()
         let userDefault = UserDefaults.standard
-        let customerId = userDefault.integer(forKey: "PE_Selected_Customer_Id")
-        let siteId = userDefault.integer(forKey: "PE_Selected_Site_Id")
         self.checkDataForSyncViewDidAppear()
         self.upcomingCertificationsArr =  PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "")
         
-        if upcomingCertificationsArr.count > 0
-        {
-            alertLbl.isHidden = true
-        }
-        else
-        {
-            alertLbl.isHidden = false
-        }
-        
+        alertLbl.isHidden = upcomingCertificationsArr.count > 0
         self.popupTblVw.reloadData()
         self.dashboardTblVw.reloadData()
         
@@ -203,7 +193,6 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         } else {
             labelDraftCount.text  = "0"
             hideDraftCount()
-            
         }
         
         let rejectedCountIS =  UserDefaults.standard.value(forKey: "rejectedCountIS") as? Int ?? 0
@@ -224,8 +213,6 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     }
     
     // MARK: - INITIAL UI METHODS
-    
-    
     func registerTblVwCells() {
         popupTblVw.delegate = self
         popupTblVw.dataSource = self
@@ -515,15 +502,12 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     }
     
     // MARK: - Refresh DashBoard
-    @objc private func dashboardRefresh(notification: NSNotification){
+    @objc private func dashboardRefresh(notification: NSNotification) {
         date1Label.isHidden = true
         date2Label.isHidden = true
         let userDefault = UserDefaults.standard
-        let customerId = userDefault.integer(forKey: "PE_Selected_Customer_Id")
-        let siteId = userDefault.integer(forKey: "PE_Selected_Site_Id")
-        
         self.upcomingCertificationsArr =  PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "")
-        if anyCategoryContainCustomerOrNot(){
+        if anyCategoryContainCustomerOrNot() {
             let peNewAssessmentSurrentIs = ZoetisDropdownShared.sharedInstance.sharedPEOnGoingSession[0].peNewAssessment
             if peNewAssessmentSurrentIs?.customerName == nil {
                 peNewAssessment = PENewAssessment()
@@ -570,7 +554,6 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         if count  > 0 {
             if count > 2 || count == 2 {
                 let date = resultCatSecondAssessment[0].evaluationDate ?? ""
-                var text2 = date + ""  + "(" + (resultCatSecondAssessment[0].customerName ?? "") + ", " + (resultCatSecondAssessment[0].siteName ?? "") + ")"
                 date2Label.text = date
                 date2Label.isHidden = false
                 var resultInAssessment1 : [Double] = []
@@ -736,17 +719,17 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if results?.count != 0 {
-                let tempArr = results as NSArray? ?? []
+                let tempArrResultsPEOffline = results as NSArray? ?? []
                 allAssesmentDraftArr = results as? [PE_AssessmentInOffline] ?? []
-                carColIdArrayDraftNumbers  = tempArr.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
+                carColIdArrayDraftNumbers = tempArrResultsPEOffline.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
                 
                 for obj in carColIdArrayDraftNumbers {
                     if (!dataToSubmitNumberIdArray.contains((obj as? Int) ?? 0) && dataToSubmitNumberIdArray.count < 2) {
                         dataToSubmitNumberIdArray.append((obj as? Int) ?? 0)
                     }
                 }
-                catColIdArrayDraftNumbers = tempArr.value(forKey: "catID") as? NSArray ?? []
-                submitIDArray = tempArr.value(forKey: "dataToSubmitID") as? NSArray ?? []
+                catColIdArrayDraftNumbers = tempArrResultsPEOffline.value(forKey: "catID") as? NSArray ?? []
+                submitIDArray = tempArrResultsPEOffline.value(forKey: "dataToSubmitID") as? NSArray ?? []
             }
         } catch {
         }
@@ -873,17 +856,17 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         do {
             let results = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if results?.count != 0 {
-                let tempArr = results as NSArray? ?? []
+                let tempArrDataToSubmitOffline = results as NSArray? ?? []
                 allAssesmentDraftArr = results as? [PE_AssessmentInOffline] ?? []
-                carColIdArrayDraftNumbers  = tempArr.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
+                carColIdArrayDraftNumbers  = tempArrDataToSubmitOffline.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
                 
                 for obj in carColIdArrayDraftNumbers {
                     if (!dataToSubmitNumberIdArray.contains((obj as? Int) ?? 0) && dataToSubmitNumberIdArray.count < 2){
                         dataToSubmitNumberIdArray.append((obj as? Int) ?? 0)
                     }
                 }
-                catColIdArrayDraftNumbers  = tempArr.value(forKey: "catID") as? NSArray ?? []
-                submitIDArray  = tempArr.value(forKey: "dataToSubmitID") as? NSArray ?? []
+                catColIdArrayDraftNumbers  = tempArrDataToSubmitOffline.value(forKey: "catID") as? NSArray ?? []
+                submitIDArray  = tempArrDataToSubmitOffline.value(forKey: "dataToSubmitID") as? NSArray ?? []
             }
         } catch {
         }
@@ -2655,127 +2638,85 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
     
     // MARK: - Post Request for Extended Microbial's
     fileprivate func extractedFunc9(_ statusType: inout Int, _ dict: PENewAssessment, _ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ saveType: Int, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
+        
+        json = [
+            "AssessmentId":serverAssessmentId,
+            "DeviceId": deviceIDFORSERVER,
+            "UserId": UserId,
+            "EvaluationId": EvaluationId ?? 0,
+            "SaveType":saveType,
+            "Status_Type":statusType,
+            "IsEMRequested" : isEMRequested,
+            "IsSendEmail": true,
+            "appVersion": appVersion,
+            "SanitationEmbrexScoresDataModel":extendedData
+        ] as JSONDictionary
+        
         if statusType == 2 {
-            
             if dict.isEMRejected == true  || dict.isPERejected == true {
                 statusType = 0
             }
-            json = [
-                "AssessmentId":serverAssessmentId,
-                "DeviceId": deviceIDFORSERVER,
-                "UserId": UserId,
-                "EvaluationId": EvaluationId ?? 0,
-                "SaveType":saveType,
-                "Status_Type":statusType,
-                "IsEMRequested" : isEMRequested,
-                "IsSendEmail": true,
-                "appVersion": appVersion,
-                "SanitationEmbrexScoresDataModel":extendedData
-            ] as JSONDictionary
-        }else{
-            json = [
-                "AssessmentId":serverAssessmentId,
-                "DeviceId": deviceIDFORSERVER,
-                "UserId": UserId,
-                "EvaluationId": EvaluationId ?? 0,
-                "SaveType":saveType,
-                "Status_Type":statusType,
-                "IsEMRequested" : isEMRequested,
-                "IsSendEmail": true,
-                "appVersion": appVersion,
-                "SanitationEmbrexScoresDataModel":extendedData
-            ] as JSONDictionary
+            json["Status_Type"] = statusType
         }
     }
     
     fileprivate func extractedFunc10(_ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
+        
+        json = [
+            "AssessmentId":serverAssessmentId,
+            "DeviceId": deviceIDFORSERVER,
+            "UserId": UserId ?? 0,
+            "EvaluationId": EvaluationId ?? 0,
+            "SaveType":0,
+            "Status_Type":0,
+            "IsEMRequested" : isEMRequested,
+            "IsSendEmail": true,
+            "appVersion": appVersion,
+            "SanitationEmbrexScoresDataModel":extendedData
+        ] as JSONDictionary
+        
         if Constants.isAssessmentRejected == true {
-            json = [
-                "AssessmentId":serverAssessmentId,
-                "DeviceId": deviceIDFORSERVER,
-                "UserId": UserId,
-                "EvaluationId": EvaluationId ?? 0,
-                "SaveType":0,
-                "Status_Type":0,
-                "IsEMRequested" : isEMRequested,
-                "IsSendEmail": true,
-                "appVersion": appVersion,
-                "SanitationEmbrexScoresDataModel":extendedData
-            ] as JSONDictionary
+            json["SaveType"] = 0
         } else {
-            json = [
-                "AssessmentId":serverAssessmentId,
-                "DeviceId": deviceIDFORSERVER,
-                "UserId": UserId,
-                "EvaluationId": EvaluationId ?? 0,
-                "SaveType":1,
-                "Status_Type":0,
-                "IsEMRequested" : isEMRequested,
-                "IsSendEmail": true,
-                "appVersion": appVersion,
-                "SanitationEmbrexScoresDataModel":extendedData
-            ] as JSONDictionary
+            json["SaveType"] = 1
         }
     }
     
     fileprivate func extractedFunc11(_ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
+        
+        json = [
+            "AssessmentId":serverAssessmentId,
+            "DeviceId": deviceIDFORSERVER,
+            "UserId": UserId,
+            "EvaluationId": EvaluationId ?? 0,
+            "SaveType":0,
+            "Status_Type":0,
+            "IsEMRequested" : isEMRequested,
+            "IsSendEmail": true,
+            "appVersion": appVersion,
+            "SanitationEmbrexScoresDataModel":extendedData
+        ] as JSONDictionary
+        
         if Constants.isAssessmentRejected == true {
-            json = [
-                "AssessmentId":serverAssessmentId,
-                "DeviceId": deviceIDFORSERVER,
-                "UserId": UserId,
-                "EvaluationId": EvaluationId ?? 0,
-                "SaveType":0,
-                "Status_Type":0,
-                "IsEMRequested" : isEMRequested,
-                "IsSendEmail": true,
-                "appVersion": appVersion,
-                "SanitationEmbrexScoresDataModel":extendedData
-            ] as JSONDictionary
+            json["SaveType"] = 0
         } else {
-            json = [
-                "AssessmentId":serverAssessmentId,
-                "DeviceId": deviceIDFORSERVER,
-                "UserId": UserId,
-                "EvaluationId": EvaluationId ?? 0,
-                "SaveType":1,
-                "Status_Type":0,
-                "IsEMRequested" : isEMRequested,
-                "IsSendEmail": true,
-                "appVersion": appVersion,
-                "SanitationEmbrexScoresDataModel":extendedData
-            ] as JSONDictionary
+            json["SaveType"] = 1
         }
     }
     
     fileprivate func extractedFunc12(_ json: inout [String : Any], _ serverAssessmentId: Int64, _ UserId: Int?, _ EvaluationId: Int?, _ isEMRequested: Bool, _ appVersion: String, _ extendedData: [[String : Any]]?) {
-        if Constants.isAssessmentRejected == true {
-            json = [
-                "AssessmentId":serverAssessmentId,
-                "DeviceId": deviceIDFORSERVER,
-                "UserId": UserId,
-                "EvaluationId": EvaluationId ?? 0,
-                "SaveType":1,
-                "Status_Type":0,
-                "IsEMRequested" : isEMRequested,
-                "IsSendEmail": true,
-                "appVersion": appVersion,
-                "SanitationEmbrexScoresDataModel":extendedData
-            ] as JSONDictionary
-        } else {
-            json = [
-                "AssessmentId":serverAssessmentId,
-                "DeviceId": deviceIDFORSERVER,
-                "UserId": UserId,
-                "EvaluationId": EvaluationId ?? 0,
-                "SaveType":1,
-                "Status_Type":0,
-                "IsEMRequested" : isEMRequested,
-                "IsSendEmail": true,
-                "appVersion": appVersion,
-                "SanitationEmbrexScoresDataModel":extendedData
-            ] as JSONDictionary
-        }
+        json = [
+            "AssessmentId":serverAssessmentId,
+            "DeviceId": deviceIDFORSERVER,
+            "UserId": UserId ?? 0,
+            "EvaluationId": EvaluationId ?? 0,
+            "SaveType":1,
+            "Status_Type":0,
+            "IsEMRequested" : isEMRequested,
+            "IsSendEmail": true,
+            "appVersion": appVersion,
+            "SanitationEmbrexScoresDataModel":extendedData
+        ] as JSONDictionary
     }
     
     fileprivate func assesmentIdCOnfigure(_ AssessmentId: inout Int, _ dict: PENewAssessment, _ Draft: inout Int, _ Complete: inout Int) {
@@ -2823,7 +2764,6 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             serverAssessmentId = Int64( dict.serverAssessmentId ?? "") ?? 0
         }
         let EvaluationId = dict.evaluationID
-        let Status_Type = ""
         let UserId = dict.userID
         var statusType = dict.statusType ?? 0
         var json : JSONDictionary = JSONDictionary()
@@ -2845,7 +2785,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 json = [
                     "AssessmentId":serverAssessmentId,
                     "DeviceId": deviceIDFORSERVER,
-                    "UserId": UserId,
+                    "UserId": UserId ?? 0,
                     "EvaluationId": EvaluationId ?? 0,
                     "SaveType":saveType,
                     "Status_Type":statusType,
@@ -3715,11 +3655,7 @@ extension PEDashboardViewController{
     fileprivate func extractedFunc15(_ status: String?) {
         let mainQueue = OperationQueue.main
         mainQueue.addOperation{
-            if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
-                let userDefault = UserDefaults.standard
-                let customerId = userDefault.integer(forKey: "PE_Selected_Customer_Id")
-                let siteId = userDefault.integer(forKey: "PE_Selected_Site_Id")
-                
+            if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY {
                 self.upcomingCertificationsArr = PEAssessmentsDAO.sharedInstance.getVMObj(userId:UserContext.sharedInstance.userDetailsObj?.userId ?? "")
                 if self.upcomingCertificationsArr.count > 0 {
                     self.alertLbl.isHidden = true
@@ -3732,7 +3668,7 @@ extension PEDashboardViewController{
         }
     }
     
-    private func getScheduledAssessments(){
+    private func getScheduledAssessments() {
         if ConnectionManager.shared.hasConnectivity() {
             PEDataService.sharedInstance.getScheduledAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? noIdFound, viewController: self, completion: { [weak self] (status, error) in
                 guard let _ = self, error == nil else {
@@ -4207,11 +4143,6 @@ extension PEDashboardViewController{
         fetchBagSizes()
     }
     
-    // MARK: -   HANDLE Diluent Manufacturer  List API RESPONSES
-    private func handleGetDiluentManufacturer(_ json: JSON) {
-        self.deleteAllData("PE_DManufacturer")
-    }
-    
     // MARK: - Get PE BAg Size List API RESPONSES
     private func handlefetchBagSizes(_ json: JSON) {
         self.deleteAllData("PE_BagSizes")
@@ -4628,14 +4559,9 @@ extension PEDashboardViewController{
                         let HatcheryAntibiotics =  inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
                         let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
                         let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
-                        var VManufacturerName = ""
                         var VName = ""
                         let ProgramName = inoDicIS["ProgramName"] as? String ?? ""
                         let DiluentsMfgOtherName = inoDicIS["DiluentsMfgOtherName"] as? String ?? ""
-
-                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                         
                         let vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
                         let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
@@ -5048,9 +4974,8 @@ extension PEDashboardViewController{
                 let categoryCount = filterCategoryCount(peNewAssessmentOf: peNewAssessmentWas)
                 if categoryCount > 0 {
                     for  cat in  pECategoriesAssesmentsResponse.peCategoryArray {
-                        for (index, ass) in cat.assessmentQuestions.enumerated(){
-                            var peNewAssessmentNew = PENewAssessment()
-                            peNewAssessmentNew = peNewAssessmentWas
+                        for (index, ass) in cat.assessmentQuestions.enumerated() {
+                            let peNewAssessmentNew = peNewAssessmentWas
                             peNewAssessmentNew.cID = index
                             peNewAssessmentNew.catID = cat.id
                             peNewAssessmentNew.catName = cat.categoryName
@@ -5307,7 +5232,7 @@ extension PEDashboardViewController{
                         let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
                         let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
                         let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxx =    ManufacturerId
+                        let xxx = ManufacturerId
                         if xxx != 0 {
                             let indexOfd = vManufacutrerIDArray.index(of: xxx)
                             if vManufacutrerNameArray.count > indexOfd{
@@ -5914,13 +5839,9 @@ extension PEDashboardViewController{
                     let HatcheryAntibiotics =  inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
                     let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
                     let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
-                    var VManufacturerName = ""
                     var VName = ""
                     let ProgramName = inoDicIS["ProgramName"] as? String ?? ""
                     let DiluentsMfgOtherName = inoDicIS["DiluentsMfgOtherName"] as? String ?? ""
-                    let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                    let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                    let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
                     
                     let vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
                     let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
@@ -5988,7 +5909,7 @@ extension PEDashboardViewController{
                     let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
                     let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
                     let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    let xxx =    ManufacturerId
+                    let xxx = ManufacturerId
                     if xxx != 0 {
                         
                         let indexOfd = vManufacutrerIDArray.index(of: xxx)

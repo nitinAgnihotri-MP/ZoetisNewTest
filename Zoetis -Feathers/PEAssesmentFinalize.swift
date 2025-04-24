@@ -372,21 +372,17 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
                 selectedCategory = cat
             }
         }
-        if  selectedCategory?.evaluationDate?.count == nil {
+        if selectedCategory?.evaluationDate?.count == nil {
             selectedCategory = catArrayForCollectionIs.first
-            if regionID != 3
-            {
+            if regionID != 3 {
                 refriCategory = catArrayForCollectionIs.last
             }
         }
-        if(selectedCategory?.catName == refridFreezerNitro){
+        if(selectedCategory?.catName == refridFreezerNitro) {
             catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-            
             let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
             refrigtorProbeArray = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-            
-        }
-        else{
+        } else {
             catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
         }
         super.viewDidLoad()
@@ -2256,7 +2252,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         }
                     }
                     
-                    catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
+                    self.catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(self.selectedCategory?.sequenceNo as? NSNumber ?? 0)
                     self.refreshTableView()
                     self.chechForLastCategory()
                     self.tableview.isUserInteractionEnabled = true
@@ -2293,6 +2289,20 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     // MARK: - Setup PE Question Tableview Cell
+    fileprivate func handleDispatchQueueTotalResultText(_ totalresult: Int, _ result: Int) {
+        DispatchQueue.main.async {
+            self.totalScoreLabel.text = String(totalresult)
+            self.resultScoreLabel.text = String(result)
+        }
+    }
+    
+    fileprivate func handleDispatchQueueTotalScoreLbl(_ totalresult: Int, _ result: Int) {
+        DispatchQueue.main.async {
+            self.totalScoreLabel.text = String(totalresult)
+            self.resultScoreLabel.text = String(result)
+        }
+    }
+    
     func setupPEQuestionTableViewCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> PEQuestionTableViewCell {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: PEQuestionTableViewCell.identifier) as? PEQuestionTableViewCell{
@@ -2568,29 +2578,20 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                         self.update_isNA(assessment: newAssment!)
                                         self.updateAssessmentInDb(assessment : newAssment!)
                                     }
-                                    
-                                    
                                 }
                                 self.refreshTableView()
-                            }
-                            else{
-                                // new Code
-                                
+                            } else {
                                 DispatchQueue.main.async {
                                     self.tableviewIndexPath = indexPath
                                     var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
                                     let maxMarks =  assessment?.assMaxScore ?? 0
                                     var totalresult = Int(self.totalScoreLabel.text ?? "0") ?? 0
-                                    if(assessment?.assStatus != 1){
-                                        
-                                        
-                                        if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13)  {
+                                    if(assessment?.assStatus != 1) {
+                                        if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
                                             self.totalScoreLabel.text = String(totalresult)
-                                            
                                         } else {
                                             totalresult = totalresult + Int(truncating: maxMarks)
                                             self.totalScoreLabel.text = String(totalresult)
-                                            
                                         }
                                         self.selectedCategory?.catMaxMark = totalresult
                                         assessment?.catMaxMark = totalresult as NSNumber
@@ -2612,8 +2613,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                         self.update_isNA(assessment: assessment!)
                                         self.updateAssessmentInDb(assessment : assessment!)
                                         
-                                    }
-                                    else{
+                                    } else {
                                         
                                         if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
                                             self.totalScoreLabel.text = String(totalresult)
@@ -2640,43 +2640,30 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                         cell.txtQCCount.isUserInteractionEnabled = true
                                         self.update_isNA(assessment: assessment!)
                                         self.updateAssessmentInDb(assessment : assessment!)
-                                        DispatchQueue.main.async {
-                                            self.totalScoreLabel.text = String(totalresult)
-                                            self.resultScoreLabel.text = String(result)
-                                        }
-                                        
+                                        self.handleDispatchQueueTotalResultText(totalresult, result)
                                     }
                                     
-                                    if assessment?.sequenceNoo == 3 && assessment?.rollOut == "Y"{
+                                    if assessment?.sequenceNoo == 3 && assessment?.rollOut == "Y" {
                                         cell.txtQCCount.text =  ""
                                         cell.txtQCCount.isUserInteractionEnabled = true
                                         self.peNewAssessment.qcCount  = ""
                                         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment)
                                     }
-                                    if  assessment?.catName == "Miscellaneous" && assessment?.rollOut == "Y" {
+                                    if assessment?.catName == "Miscellaneous" && assessment?.rollOut == "Y" {
                                         cell.txtQCCount.text =  ""
                                         cell.txtQCCount.isUserInteractionEnabled = true
                                         self.peNewAssessment.ampmValue  = ""
                                         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment)
                                     }
                                     
-                                    
-                                    if(selectedCategory?.catName == refridFreezerNitro){
-                                        catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                                    }
-                                    else{
-                                        catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                                    }
-                                    
-                                    updateScore(isAllNA: false)
+                                    self.catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(self.selectedCategory?.sequenceNo as? NSNumber ?? 0)
+                                    self.updateScore(isAllNA: false)
                                     self.chechForLastCategory()
                                 }
                             }
-                        }
-                        else{
-                            
-                            if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13){
-                                for i in 0..<3{
+                        } else {
+                            if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
+                                for i in 0..<3 {
                                     let newAssment = catArrayForTableIs[indexPath.row + i] as? PE_AssessmentInProgress
                                     var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
                                     let maxMarks =  newAssment?.assMaxScore ?? 0
@@ -2793,14 +2780,9 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                         cell.switchBtn.isUserInteractionEnabled = false
                                         cell.btnInfo.isUserInteractionEnabled = false
                                         cell.txtQCCount.isUserInteractionEnabled = false
-                                        //
                                         self.update_isNA(assessment: assessment!)
                                         self.updateAssessmentInDb(assessment : assessment!)
-                                        
-                                    }
-                                    else{
-                                        
-                                        
+                                    } else {
                                         if(assessment?.sequenceNoo == 2 && assessment?.qSeqNo == 13) {
                                             self.totalScoreLabel.text = String(totalresult)
                                             self.resultScoreLabel.text = String(result)
@@ -2827,47 +2809,30 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                                         //
                                         self.update_isNA(assessment: assessment!)
                                         self.updateAssessmentInDb(assessment : assessment!)
-                                        DispatchQueue.main.async {
-                                            self.totalScoreLabel.text = String(totalresult)
-                                            self.resultScoreLabel.text = String(result)
-                                        }
+                                        self.handleDispatchQueueTotalScoreLbl(totalresult, result)
                                         
                                     }
-                                    if assessment?.sequenceNoo == 3 && assessment?.rollOut == "Y"{
+                                    if assessment?.sequenceNoo == 3 && assessment?.rollOut == "Y" {
                                         cell.txtQCCount.text =  "NA"
                                         cell.txtQCCount.isUserInteractionEnabled = false
                                         self.peNewAssessment.qcCount  = "NA"
                                         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment)
                                     }
-                                    if  assessment?.catName == "Miscellaneous" && assessment?.rollOut == "Y"{
+                                    if assessment?.catName == "Miscellaneous" && assessment?.rollOut == "Y" {
                                         cell.txtQCCount.text =  "NA"
                                         cell.txtQCCount.isUserInteractionEnabled = false
                                         self.peNewAssessment.ampmValue  = "NA"
                                         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment)
                                     }
                                     
-                                    if(selectedCategory?.catName == refridFreezerNitro){
-                                        catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                                        var assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-                                        
-                                    }
-                                    else{
-                                        catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                                        var assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-                                        
-                                    }
-                                    updateScore(isAllNA: false)
+                                    self.catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(self.selectedCategory?.sequenceNo as? NSNumber ?? 0)
+                                    var assessment = self.catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
+
+                                    self.updateScore(isAllNA: false)
                                     self.chechForLastCategory()
-                                    
-                                    
                                 }
                             }
-                            
-                            
-                            
-                            
                         }
-                        
                     }
                     cell.commentCompletion = {[unowned self] ( error) in
                         self.tableviewIndexPath = indexPath
@@ -3285,6 +3250,14 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     
+    fileprivate func handleDispatchQueueMainReloadTableView() {
+        DispatchQueue.main.async {
+            UIView.performWithoutAnimation {
+                self.tableview.reloadData()
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if selectedCategory?.sequenceNoo == 12 && section == 0 {
             
@@ -3386,30 +3359,16 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                             
                             let lastItem = self.certificateData.last
                             
-                            if (lastItem == nil)
-                            {
+                            if (lastItem == nil) || (lastItem?.name != "") {
                                 let certificateData =  PECertificateData(id:0,name:"",date:"",isCertExpired: false,isReCert: false,vacOperatorId: 0, signatureImg: "", fsrSign: "")
                                 let id = self.saveVMixerInPEModule(peCertificateData: certificateData)
                                 certificateData.id = id
                                 self.certificateData.append(certificateData)
-                            }
-                            else  if (lastItem?.name != "")
-                            {
-                                let certificateData =  PECertificateData(id:0,name:"",date:"",isCertExpired: false,isReCert: false,vacOperatorId: 0, signatureImg: "", fsrSign: "")
-                                let id = self.saveVMixerInPEModule(peCertificateData: certificateData)
-                                certificateData.id = id
-                                self.certificateData.append(certificateData)
-                            }
-                            else
-                            {
+                            } else {
                                 self.showtoast(message: "Please add Vaccine Mixer & Certification Date")
                             }
                             
-                            DispatchQueue.main.async {
-                                UIView.performWithoutAnimation {
-                                    self.tableview.reloadData()
-                                }
-                            }
+                            handleDispatchQueueMainReloadTableView()
                         }
                         headerView.minusCompletion = {[unowned self] ( error) in
                             
@@ -3588,13 +3547,9 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
             
             headerView.dTypeCompletion = {[unowned self] ( error) in
-                
-                var vManufacutrerIDArray = NSArray()
-                
                 let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_DManufacturer")
                 let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "diluentMfgName")  as? NSArray ?? NSArray()
-                vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "diluentMfgId")  as? NSArray ?? NSArray()
-                if  vManufacutrerNameArray.count > 0 {
+                if vManufacutrerNameArray.count > 0 {
                     self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: headerView.txtDType.frame.width, kAnchor: headerView.txtDType, yheight: headerView.txtDType.bounds.height) { [unowned self] selectedVal, index  in
                         headerView.txtDType.text = selectedVal
                         self.peNewAssessment.iDT = selectedVal
@@ -4252,10 +4207,8 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                             return true
                         }
                     } else {
-                        if regionID == 3 {
-                            if strings.contains(pleaseEnterMessageVac) {
-                                strings = strings.filter { $0 != pleaseEnterMessageVac
-                                }
+                        if regionID == 3,strings.contains(pleaseEnterMessageVac) {
+                            strings = strings.filter { $0 != pleaseEnterMessageVac
                             }
                         }
                     }
