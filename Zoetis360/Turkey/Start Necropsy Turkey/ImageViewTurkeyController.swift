@@ -41,8 +41,8 @@ class ImageViewTurkeyController: UIViewController {
             print(existingArray)
         }
         else{
-            let necId = self.imageDict.value(forKey: "necId") as! Int
-            existingArray  = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey((self.imageDict.value(forKey: "birdNo") as! Int) as NSNumber, farmname: self.imageDict.value(forKey: "formName") as! String, catName: self.imageDict.value(forKey: "catName") as! String, Obsid: (self.imageDict.value(forKey: "obsid") as! Int) as NSNumber, obsName:  self.imageDict.value(forKey: "obsName") as! String,necId: necId as NSNumber) .mutableCopy() as! NSMutableArray
+            let existingNecId = self.imageDict.value(forKey: "necId") as! Int
+            existingArray  = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey((self.imageDict.value(forKey: "birdNo") as! Int) as NSNumber, farmname: self.imageDict.value(forKey: "formName") as! String, catName: self.imageDict.value(forKey: "catName") as! String, Obsid: (self.imageDict.value(forKey: "obsid") as! Int) as NSNumber, obsName:  self.imageDict.value(forKey: "obsName") as! String,necId: existingNecId as NSNumber) .mutableCopy() as! NSMutableArray
         }
     }
     
@@ -111,18 +111,17 @@ class ImageViewTurkeyController: UIViewController {
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         

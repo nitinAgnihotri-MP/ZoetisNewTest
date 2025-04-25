@@ -49,9 +49,7 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
     }
     
     override func draw(_ rect: CGRect) {
-        
-        self.logOutApi()
-        
+                
         array_List = [NSLocalizedString("Log Out", comment: ""),NSLocalizedString("Full Site", comment: "")]
         array_ListImage = ["Log Out","full_site"]
         tabelview_UserList.layer.cornerRadius = 8
@@ -232,16 +230,16 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
+      
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            var  sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            var  sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         return allPostingSessionArr
@@ -310,37 +308,7 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
         appDelegateObj.testFuntion()
     }
     
-    // MARK: 🟠Logout API
-    func logOutApi() {
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        /*
-        if WebClass.sharedInstance.connected() {
-            var Id = Int()
-            Id =  UserDefaults.standard.value(forKey: "Id") as! Int
-            let Url = "Login/UpdateUserLog"
-            accesTokn = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-            let parameters = ["UserID" :Id,"DeviceId":udid as! String,"LoginType":"iOS"] as [String : Any]
-            let urlString: String = WebClass.sharedInstance.webUrl + Url
-            
-            
-            AF.request(urlString, method: .get, parameters: parameters).responseJSON { response in
-                switch response.result {
-                case let .success(value):
-                    
-                    let statusCode = response.response?.statusCode
-                    if statusCode == 400{
-                    }
-                    break
-                case let .failure(error):
-                    debugPrint(error.localizedDescription)
-                    break
-                }
-            }
-        } else{
-            
-        }
-        */
-    }
+  
     
     // MARK: 🟠 All Session Array Turkey.
     func allSessionArrTurkey() ->NSMutableArray{
@@ -363,15 +331,15 @@ class UserListView: UIView,syncApi,syncApiTurkey,UITableViewDelegate,UITableView
         }
         
         let allPostingSessionArr = NSMutableArray()
-        var sessionId = NSNumber()
+      
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var  sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         return allPostingSessionArr

@@ -66,9 +66,6 @@ class UnlinkedNecropsySessionViewController: UIViewController,UITableViewDataSou
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let row = indexPath.row
-        //print(swiftBlogs[row])
     }
     // MARK: - IBACTIONS
     @IBAction func sliderButton(_ sender: AnyObject) {

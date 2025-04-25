@@ -108,7 +108,6 @@ class PEFinishPopupViewController: BaseViewController {
         super.viewDidLoad()
         regionID = UserDefaults.standard.integer(forKey: "Regionid")
         let assessmentId = UserDefaults.standard.value(forKey: "currentServerAssessmentId") as? String ?? ""
-        let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         self.signatureView.delegate = self
         self.doneButton.setNextButtonUI()
         self.clearSignature.setNextButtonUI()
@@ -159,13 +158,13 @@ class PEFinishPopupViewController: BaseViewController {
             
         }
         
-        if scheduledAssessment?.isAutomaticFail == 1{
+        if scheduledAssessment?.isAutomaticFail == 1 {
             self.failChlorineStripLbl.isHidden = false
-        }else{
+        } else {
             self.failChlorineStripLbl.isHidden = true
         }
-        let isFromDraft = UserDefaults.standard.value(forKey: "isFromDraft") as? Bool
-        if isFromDraft ?? false{
+        let isFromDraftRejectedAssessment = UserDefaults.standard.value(forKey: "isFromDraft") as? Bool
+        if isFromDraftRejectedAssessment ?? false {
             rejectedAssessments = CoreDataHandlerPE().fetchRejectedDraftCustomerWithCatID(assessmentId: assessmentId) as? [PE_AssessmentInProgress] ?? []
             if rejectedAssessments.count > 0 {
                 
@@ -175,7 +174,7 @@ class PEFinishPopupViewController: BaseViewController {
                 if empID1 != "" {
                     setsignaturesDetails()
                 }
-                if rejectedAssessments[0].statusType == 2{
+                if rejectedAssessments[0].statusType == 2 {
                     self.clearSignature.isHidden = true
                     self.clearSignature2.isHidden = true
                     self.txtManagerName.isUserInteractionEnabled = false
@@ -342,25 +341,23 @@ class PEFinishPopupViewController: BaseViewController {
     }
     
     func filterCategory() {
-        var  peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(isFromDraft:false, serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
-        if isFromDraft{
-            peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(isFromDraft:true, serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
+        var peNewAssessmentArrayFilterCategory = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(isFromDraft:false, serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
+        if isFromDraft {
+            peNewAssessmentArrayFilterCategory = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(isFromDraft:true, serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
         }
         var carColIdArray : [Int] = []
-        var carTabIdArray : [Int] = []
         
-        var row = 0
-        if peNewAssessmentArray[0].evaluationID != 2{
-            var pe = PENewAssessment()
+        if peNewAssessmentArrayFilterCategory[0].evaluationID != 2 {
+            let pe = PENewAssessment()
             pe.catID = 10
             pe.isOpened = true
             catArrayForCollectionIs.append(pe)
         }
         
-        for cat in peNewAssessmentArray {
-            if !carColIdArray.contains(cat.catID ?? 0){
+        for cat in peNewAssessmentArrayFilterCategory {
+            if !carColIdArray.contains(cat.catID ?? 0) {
                 carColIdArray.append(cat.catID ?? 0)
-                if(cat.sequenceNoo != 12 ){
+                if(cat.sequenceNoo != 12) {
                     catArrayForCollectionIs.append(cat)
                 }
             }
@@ -425,11 +422,9 @@ class PEFinishPopupViewController: BaseViewController {
     }
     
     @IBAction func titleAction2(_ sender: Any) {
-        var vManufacutrerNameArray = NSArray()
-        var vManufacutrerDetailsArray = NSArray()
-        vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
-        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "roleName") as? NSArray ?? NSArray()
-        if  vManufacutrerNameArray.count > 0 {
+        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
+        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "roleName") as? NSArray ?? NSArray()
+        if vManufacutrerNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: txtEmployeeID2.frame.width, kAnchor: txtEmployeeID2, yheight: txtEmployeeID2.bounds.height) { [unowned self] selectedVal, index  in
                 self.txtEmployeeID2.text = selectedVal
             }
@@ -439,11 +434,9 @@ class PEFinishPopupViewController: BaseViewController {
     
     
     @IBAction func titleAction(_ sender: Any) {
-        var vManufacutrerNameArray = NSArray()
-        var vManufacutrerDetailsArray = NSArray()
-        vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
-        vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "roleName") as? NSArray ?? NSArray()
-        if  vManufacutrerNameArray.count > 0 {
+        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
+        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "roleName") as? NSArray ?? NSArray()
+        if vManufacutrerNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: txtEmployeeID.frame.width, kAnchor: txtEmployeeID, yheight: txtEmployeeID.bounds.height) { [unowned self] selectedVal, index  in
                 self.txtEmployeeID.text = selectedVal
             }
@@ -476,7 +469,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
         if catArrayForCollectionIs[section].isOpened {
             if section == 0 {
                 if golbalEvaluationID != 2 {
-                    if  catArrayForCollectionIs[section].isOpened {
+                    if catArrayForCollectionIs[section].isOpened {
                         return 2
                     } else {
                         return 1
@@ -494,15 +487,13 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
     
     fileprivate func peNewAssessmentManage(_ peNewAssessmentArray: [PENewAssessment], _ catID: Int?, _ section: Int, _ peNewAssessmentArrayForCatQuest: inout [PENewAssessment]) {
         for cat in peNewAssessmentArray {
-            if catID == cat.catID{
+            if catID == cat.catID {
                 golbalEvaluationID = (cat.evaluationID)!
-                if (cat.evaluationID)! != 2 {
-                    if firstTime {
-                        cat.titleName = "Signature"
-                        catArrayForCollectionIs[section].isOpened = true
-                        peNewAssessmentArrayForCatQuest1.append(cat)
-                        firstTime = false
-                    }
+                if (cat.evaluationID)! != 2, firstTime {
+                    cat.titleName = "Signature"
+                    catArrayForCollectionIs[section].isOpened = true
+                    peNewAssessmentArrayForCatQuest1.append(cat)
+                    firstTime = false
                 }
                 peNewAssessmentArrayForCatQuest1.append(cat)
                 peNewAssessmentArrayForCatQuest.append(cat)
@@ -528,7 +519,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if indexPath.section == 0 {
-            if  catArrayForCollectionIs[indexPath.section].isOpened {
+            if catArrayForCollectionIs[indexPath.section].isOpened {
                 if golbalEvaluationID != 2 {
                     if indexPath.row == 1 {
                         return 220
@@ -568,7 +559,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
         
         
         if indexPath.row == 0 {
-            if   let headerView = tableView.dequeueReusableCell(withIdentifier: "PEFinializeHeaderTableViewCell") as? PEFinializeHeaderTableViewCell {
+            if let headerView = tableView.dequeueReusableCell(withIdentifier: "PEFinializeHeaderTableViewCell") as? PEFinializeHeaderTableViewCell {
                 headerView.contentView.backgroundColor =  UIColor.cellAlternateBlueCOlor()
                 
                 if golbalEvaluationID != 2 {
@@ -638,7 +629,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
             
             let catID = catArrayForCollectionIs[indexPath.section].catID
             for cat in peNewAssessmentArray {
-                if  catID == cat.catID{
+                if catID == cat.catID{
                     peNewAssessmentArrayForCatQuest.append(cat)
                 }
             }
@@ -646,7 +637,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
             if golbalEvaluationID != 2 {
                 if indexPath.section == 0 {
                     
-                    if   let cell = tableView.dequeueReusableCell(withIdentifier: "signatureTableViewCell") as? SignatureTableViewCell {
+                    if let cell = tableView.dequeueReusableCell(withIdentifier: "signatureTableViewCell") as? SignatureTableViewCell {
                         cell.certificateData = certificateData
                         cell.fromScreen = "PEFinishPopUpScreen"
                         cell.prevController = self.prevController
@@ -655,8 +646,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
                         
                         cell.shipToLbl.isHidden = true
                         cell.shippindAddressBtn.isHidden = true
-                        if regionID != 3
-                        {
+                        if regionID != 3 {
                             var fullName = ""
                             let firstname = certificateData[0].name
                             fullName = firstname ?? ""
@@ -670,26 +660,16 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
                                 cell.nextBtn.isUserInteractionEnabled = true
                                 
                             }
-                            if !(certificateData[0].isCertExpired)!  && (prevController == "Rejected"){
+                            if !(certificateData[0].isCertExpired)! && (prevController == "Rejected") {
                                 cell.hideShowImgVw(false)
                                 cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
-                            }
-                            else if !(certificateData[0].isCertExpired)!  && (prevController == "Draft"){
+                            } else {
                                 cell.showImgVw(true)
                                 cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
                             }
-                            else
-                            {
-                                cell.showImgVw(true)
-                                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
-                                
-                            }
-                        }
-                        else
-                        {
+                        } else {
                             if indexPath.row == 1 {
                                 var fullName = ""
-                                //         if indexPath.row == 1 {
                                 let firstname = certificateData[0].name
                                 fullName = firstname ?? ""
                                 cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
@@ -704,16 +684,10 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
                                     
                                 }
                                 
-                                if !(certificateData[0].isCertExpired)!  && (prevController == "Rejected"){
+                                if !(certificateData[0].isCertExpired)! && (prevController == "Rejected") {
                                     cell.hideShowImgVw(false)
                                     cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
-                                }
-                                else if !(certificateData[0].isCertExpired)!  && (prevController == "Draft"){
-                                    cell.showImgVw(true)
-                                    cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
-                                }
-                                else
-                                {
+                                } else {
                                     cell.showImgVw(true)
                                     cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
                                 }
@@ -724,23 +698,19 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
                             certificateData = data
                             var i = 0
                             for item in certificateData {
-                                if  item.signatureImg.isEmpty {
+                                if item.signatureImg.isEmpty {
                                     print("your signature is empty \(i)")
-                                }
-                                else {
+                                } else {
                                     print("your signature is having \(i)")
                                 }
                                 i = i + 1
                             }
                         }
-                        
-                        
                         return cell
                     }
                     
-                }
-                else {
-                    if   let cell = tableView.dequeueReusableCell(withIdentifier: PE_FinalizeCell.identifier) as? PE_FinalizeCell {
+                } else {
+                    if let cell = tableView.dequeueReusableCell(withIdentifier: PE_FinalizeCell.identifier) as? PE_FinalizeCell {
                         
                         if peNewAssessmentArrayForCatQuest.count > indexPath.row {
                             cell.lblQuestion.text = peNewAssessmentArrayForCatQuest[indexPath.row].assDetail1
@@ -766,9 +736,8 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
                     }
                     
                 }
-            }
-            else {
-                if   let cell = tableView.dequeueReusableCell(withIdentifier: PE_FinalizeCell.identifier) as? PE_FinalizeCell {
+            } else {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: PE_FinalizeCell.identifier) as? PE_FinalizeCell {
                     
                     if peNewAssessmentArrayForCatQuest.count > indexPath.row {
                         cell.lblQuestion.text = peNewAssessmentArrayForCatQuest[indexPath.row].assDetail1
@@ -812,10 +781,7 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == catArrayForCollectionIs.count-1{
-            
-            let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-            
+        if section == catArrayForCollectionIs.count-1 {
             if regionID != 3 {
                 if showExtendedPE{
                     let footerView = UIView(frame: CGRect(x: 20, y: 10, width: tableView.frame.size.width, height: 40))
@@ -1005,13 +971,6 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
             return
         }
     }
-
-    private func saveImageInPEModule(imageData:Data)->Int{
-        let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_ImageEntity")
-        let imageCount = getImageCountInPEModule()
-        CoreDataHandlerPE().saveImageInPEFinishModule(imageId: imageCount+1, imageData: imageData)
-        return imageCount+1
-    }
     
     func getImageCountInPEModule() -> Int {
         let allAssesmentDraftArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_ImageEntity")
@@ -1027,8 +986,8 @@ extension PEFinishPopupViewController: YPSignatureDelegate {
     
     
     func getAssessmentInOfflineFromDb() -> Int {
-        var allAssesmentDraftArr = CoreDataHandlerPE().fetchDetailsWithUserIDFor(entityName: "PE_AssessmentInOffline")
-        var carColIdArrayDraftNumbers  = allAssesmentDraftArr.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
+        let allAssesmentDraftArr = CoreDataHandlerPE().fetchDetailsWithUserIDFor(entityName: "PE_AssessmentInOffline")
+        let carColIdArrayDraftNumbers  = allAssesmentDraftArr.value(forKey: "dataToSubmitNumber") as? NSArray ?? []
         var carColIdArray : [Int] = []
         for obj in carColIdArrayDraftNumbers {
             if !carColIdArray.contains(obj as? Int ?? 0){
@@ -1118,11 +1077,7 @@ extension PEFinishPopupViewController: UITextFieldDelegate ,  UITextViewDelegate
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-      //  guard let text = textField.text else { return true }
-        //  let newLength = text.count + string.count - range.length
-       // return text.count <= 25
         return string.isEmpty || (textField.text?.count ?? 0) < 25
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

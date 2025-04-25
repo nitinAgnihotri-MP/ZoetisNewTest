@@ -11,7 +11,7 @@ import WebKit
 class View: UIView , WKNavigationDelegate {
     
     // MARK: - Outlets
-    @IBOutlet weak var view: UIView!
+    @IBOutlet weak var viewForWeb: UIView!
     @IBOutlet weak var viewWeb: WKWebView!
     
     // MARK: - Variables

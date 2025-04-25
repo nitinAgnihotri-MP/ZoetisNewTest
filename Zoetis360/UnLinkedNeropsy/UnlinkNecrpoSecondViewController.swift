@@ -205,15 +205,6 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
 
             return cell
         }
-//        if tableView == autoSerchTable {
-//            let cell:UITableViewCell = (tableView.dequeueReusableCell(withIdentifier: "cell") as? UITableViewCell)!
-//            let cuatomerep : ComplexPosting = autocompleteUrls.object(at: indexPath.row) as! ComplexPosting
-//            
-//            cell.textLabel?.text = cuatomerep.complexName
-//            cell.textLabel?.font = searchWidComplexName.font
-//            return cell
-//            
-//        } 
         else {
             
             let cell:ExistingPostingTableViewCell = self.tblSession.dequeueReusableCell(withIdentifier: "cell") as! ExistingPostingTableViewCell
@@ -231,12 +222,12 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
             cell.complexLabel.text  = posting.complexName
             cell.veterinartionLabel.text  = posting.vetanatrionName
             
-            let lngId = posting.lngId!
-            if lngId == 1{
+            let selectdlngId = posting.lngId!
+            if selectdlngId == 1{
                 cell.languageLbl.text = "(En)"
-            }else if lngId == 3{
+            }else if selectdlngId == 3{
                 cell.languageLbl.text = "(Fr)"
-            }else if lngId == 4{
+            }else if selectdlngId == 4{
                 cell.languageLbl.text = "(pt-BR)"
             }
             return cell
@@ -280,13 +271,12 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
         } else {
             let posting : PostingSession = existingArray.object(at: indexPath.row) as! PostingSession
             
-            let lngId = UserDefaults.standard.integer(forKey: "lngId")
+             lngId = UserDefaults.standard.integer(forKey: "lngId")
             
             if Int(posting.lngId!) == lngId {
                 
                 let navigateToAnother = self.storyboard?.instantiateViewController(withIdentifier: "Step1") as? captureNecropsyStep1Data
-                var postingId = Int()
-                postingId = posting.postingId as! Int
+                var postingId = posting.postingId as! Int
                 UserDefaults.standard.set(true, forKey: "nec")
                 UserDefaults.standard.set(postingId, forKey: "postingId")
                 UserDefaults.standard.synchronize()
@@ -434,9 +424,9 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
                 existingArray = fetchcustRep.mutableCopy() as! NSMutableArray
                 if existingArray.count != 0 {
                     let posting : PostingSession = existingArray.object(at: 0) as! PostingSession
-                    let lngId = UserDefaults.standard.integer(forKey: "lngId")
+                    let exlngId = UserDefaults.standard.integer(forKey: "lngId")
                     existingArray.removeAllObjects()
-                    posting.lngId = lngId as NSNumber
+                    posting.lngId = exlngId as NSNumber
                     existingArray.add(posting)
                 }
                 
@@ -560,7 +550,7 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
     }
     // MARK: 🟠 Date Picker Done Button Action
     @objc func doneClick() {
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+         lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3 {
             let dateFormatter1 = DateFormatter()
             dateFormatter1.dateFormat=appDelegateObj.ddMMyyyStr
@@ -661,19 +651,18 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
         }
         
         let allPostingSessionArr = NSMutableArray()
-        
-        var sessionId = NSNumber()
+    
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         

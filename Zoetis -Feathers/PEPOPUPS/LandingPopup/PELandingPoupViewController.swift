@@ -43,42 +43,23 @@ class PELandingPoupViewController: BaseViewController {
         nextButton.setNextButtonUI()
         let customerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Customer")
         let customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray()
-        //let customerIDArray = customerDetailsArray.value(forKey: "customerID") as! NSArray
-        //let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
-        //let peNewAssessmentCurrentIs =  CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-        //PEDataService.sharedInstance.getScheduledAssessments(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", viewController: self, completion: <#T##(String?, NSError?) -> Void#>)
-        let newUserLogin = UserDefaults.standard.bool(forKey: "PENewUserLoginFlag") as? Bool ?? true
-        // set(true, forKey: "PENewUserLoginFlag")
-        if newUserLogin{
-            
-        }
-        if fromSyncDel {
+        let newUserLogin = UserDefaults.standard.bool(forKey: "PENewUserLoginFlag")
+        let cleanSession = UserDefaults.standard.bool(forKey: "PECleanSession")
+        let customerId = UserDefaults.standard.integer(forKey: "PE_Selected_Customer_Id")
         
-        } else {
-        if  customerNamesArray.count > 0 {
-            _ = UserDefaults.standard
-            let customerId = UserDefaults.standard.integer(forKey: "PE_Selected_Customer_Id") as? Int ?? 0
-            //userDefault.set(nil, forKey: "PE_Selected_Customer_Id")
-            
-            if customerId != 0 {
-                
-            } else {
-                let cleanSession =  UserDefaults.standard.bool(forKey: "PECleanSession")
-                if newUserLogin{
-                    DispatchQueue.main.async{
-                        self.showAlertDifferentLogin()
+        if fromSyncDel == false {
+            if customerNamesArray.count > 0 {
+                if customerId == 0 {
+                    if newUserLogin {
+                        DispatchQueue.main.async {
+                            self.showAlertDifferentLogin()
+                        }
+                    } else {
+                        self.fetchCustomersEveryTime()
                     }
-                }else{
-                    self.fetchCustomersEveryTime()
                 }
-//                if cleanSession {
-//
-//                } else {
-//                self.showAlertDifferentLogin()
-//                }
-            }
-        } else {
-            startMasterDataUpdate()
+            } else {
+                startMasterDataUpdate()
             }
         }
         customerView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
@@ -101,15 +82,13 @@ class PELandingPoupViewController: BaseViewController {
         Notification.Name(rawValue: "MoveToDashBoard"),object: nil))
         self.dismiss(animated: true, completion: nil)
     }
-    
-    
-    
-    func startMasterDataUpdate(){
+
+    func startMasterDataUpdate() {
         if ConnectionManager.shared.hasConnectivity() {
             fetchAllCustomer()
         } else {
             let errorMSg = "Internet not available , Please connect and then try."
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
                 self.fetchAllCustomer()
@@ -121,9 +100,9 @@ class PELandingPoupViewController: BaseViewController {
         }
     }
     
-    func showAlertDifferentLogin(){
+    func showAlertDifferentLogin() {
           let errorMSg = "Seems you are login with different user or you do not have selected customer and site. Please allow app to fetch data for you."
-          let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+          let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
           let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
               _ in
             self.fetchAllCustomer()
@@ -154,22 +133,12 @@ class PELandingPoupViewController: BaseViewController {
             siteView.layer.borderWidth = 2.0
             return
         }
-       // CoreDataHandler().deleteAllData("PE_AssessmentInProgress")
+        
         UserDefaults.standard.set(false, forKey:"PECleanSession")
-                
-        
-        var pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(nil)
-        var jsonRe : JSON = JSON()
-        jsonRe = (getJSON("QuestionAns") ?? JSON())
-        pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(jsonRe)
-        
-        let userDefault = UserDefaults.standard
-        userDefault.set(self.peNewAssessment.customerId, forKey: "PE_Selected_Customer_Id")
-        userDefault.set(self.peNewAssessment.customerName, forKey: "PE_Selected_Customer_Name")
-        userDefault.set(self.peNewAssessment.siteId, forKey: "PE_Selected_Site_Id")
-        userDefault.set(self.peNewAssessment.siteName, forKey: "PE_Selected_Site_Name")
-        
-        
+        UserDefaults.standard.set(self.peNewAssessment.customerId, forKey: "PE_Selected_Customer_Id")
+        UserDefaults.standard.set(self.peNewAssessment.customerName, forKey: "PE_Selected_Customer_Name")
+        UserDefaults.standard.set(self.peNewAssessment.siteId, forKey: "PE_Selected_Site_Id")
+        UserDefaults.standard.set(self.peNewAssessment.siteName, forKey: "PE_Selected_Site_Name")
         saveAssessmentInProgressDataInDB()
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
         
@@ -179,8 +148,6 @@ class PELandingPoupViewController: BaseViewController {
     
     
     func saveAssessmentInProgressDataInDB()  {
-        
-       // self.deleteAllData("PE_AssessmentInProgress")
         let firstNameIs =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
         let LastName =  UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
             
@@ -191,20 +158,15 @@ class PELandingPoupViewController: BaseViewController {
         self.peNewAssessment.userID = userID
         self.peNewAssessment.evaluatorID = userID
         peNewAssessment.evaluatorName = firstNameIs + " " + LastName
-      //  CoreDataHandlerPE().updateAssessmentInProgressInDB(newAssessment: self.peNewAssessment)
-        
     }
     
     @IBAction func customerBtnAction(_ sender: UIButton) {
         customerView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
         customerView.layer.borderWidth = 2.0
-        var customerNamesArray = NSArray()
-        var customerIDArray = NSArray()
-        var customerDetailsArray = NSArray()
-        customerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Customer")
-        customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray();
-        customerIDArray = customerDetailsArray.value(forKey: "customerID")  as? NSArray ?? NSArray();
-        if  customerNamesArray.count > 0 {
+        let customerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Customer")
+        let customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray();
+        let customerIDArray = customerDetailsArray.value(forKey: "customerID")  as? NSArray ?? NSArray();
+        if customerNamesArray.count > 0 {
             self.dropDownVIewNew(arrayData: customerNamesArray as? [String] ?? [String]() , kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectCustomerText.text = selectedVal
                 self.selectSiteText.text = ""
@@ -212,7 +174,6 @@ class PELandingPoupViewController: BaseViewController {
                 self.peNewAssessment.customerName = selectedVal
                 self.peNewAssessment.siteName = ""
                 self.peNewAssessment.customerId = customerIDArray[indexOfItem] as? Int
-                
             }
             self.dropHiddenAndShow()
         }
@@ -222,19 +183,14 @@ class PELandingPoupViewController: BaseViewController {
         siteView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
         siteView.layer.borderWidth = 2.0
         guard let customer = self.peNewAssessment.customerName, customer.count > 0 else {
-            //   showtoast(message: "Select Customer")
             return
         }
-        var siteNamesArray = NSArray()
-        var siteDetailsArray = NSArray()
-        var siteIDArray = NSArray()
-       // siteDetailsArray =  CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Sites")
-        siteDetailsArray =  CoreDataHandlerPE().fetchSitesForCoustomerDetailsFor(entityName: "PE_Sites", customerId: self.peNewAssessment.customerId ?? 0)
-      
-        siteNamesArray = siteDetailsArray.value(forKey: "siteName") as? NSArray ?? NSArray()
-        siteIDArray = siteDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
         
-        if  siteNamesArray.count > 0 {
+        let siteDetailsArray = CoreDataHandlerPE().fetchSitesForCoustomerDetailsFor(entityName: "PE_Sites", customerId: self.peNewAssessment.customerId ?? 0)
+        let siteNamesArray = siteDetailsArray.value(forKey: "siteName") as? NSArray ?? NSArray()
+        let siteIDArray = siteDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        
+        if siteNamesArray.count > 0 {
             self.dropDownVIewNew(arrayData: siteNamesArray as? [String] ?? [String]() , kWidth: selectSiteButton.frame.width, kAnchor: selectSiteButton, yheight: selectSiteButton.bounds.height) { [unowned self] selectedVal, index in
                 self.selectSiteText.text = selectedVal
                 let indexOfItem = siteNamesArray.index(of: selectedVal)
@@ -242,25 +198,20 @@ class PELandingPoupViewController: BaseViewController {
                 self.peNewAssessment.siteId = siteIDArray[indexOfItem] as? Int
             }
             self.dropHiddenAndShow()
-        } else{
+        } else {
             showAlert(title: Constants.alertStr, message: "No Site available this customer", owner: self)
         }
-    }     
-    
+    }
     
     //MARKS: DROP DOWN HIDDEN AND SHOW
-    func dropHiddenAndShow(){
-        if dropDown.isHidden{
+    func dropHiddenAndShow() {
+        if dropDown.isHidden {
             let _ = dropDown.show()
         } else {
             dropDown.hide()
         }
     }
-    
 }
-
-
-
 
 extension String {
     func convertToDictionary() -> [String: Any]? {

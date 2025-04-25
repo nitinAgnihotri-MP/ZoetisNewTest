@@ -81,8 +81,7 @@ class CommentPopupViewController: BaseViewController {
     @IBAction func copyInfo(_ sender: Any) {
         let pasteboard = UIPasteboard.general
         pasteboard.string =  infoText
-        if let string = pasteboard.string {
-            print(pasteboard.string)
+        if let _ = pasteboard.string {
             self.txtView.text = pasteboard.string
         }
     }
@@ -110,9 +109,4 @@ extension CommentPopupViewController:UITextViewDelegate{
     func textViewShouldBeginEditing(_ _textView: UITextView) -> Bool {
         return true
     }
-    
-//    func textViewDidEndEditing(_ textView: UITextView) {
-//        if (textView == txtView ) {
-//        }
-//    }
 }

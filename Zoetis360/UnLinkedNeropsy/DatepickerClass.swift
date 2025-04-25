@@ -24,7 +24,7 @@ class DatepickerClass: NSObject {
         buttonBg.setTitleColor(UIColor.blue, for: UIControl.State())
         buttonBg.frame = CGRect(x: 0, y: 0, width: 1024, height: 768) // X, Y, width, height
         buttonBg.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.8)
-        var datePicker: UIDatePicker = UIDatePicker()
+      
         var xFrame = Int()
         var widthFrame = Int()
         
@@ -36,7 +36,7 @@ class DatepickerClass: NSObject {
             widthFrame = 600
         }
         // DatePicker
-        datePicker = UIDatePicker(frame:CGRect(x: xFrame, y: 200, width: widthFrame, height: 300))
+        var  datePicker = UIDatePicker(frame:CGRect(x: xFrame, y: 200, width: widthFrame, height: 300))
         datePicker.backgroundColor = UIColor.white
         datePicker.datePickerMode = UIDatePicker.Mode.date
         datePicker.layer.borderWidth = 1
@@ -80,9 +80,9 @@ class DatepickerClass: NSObject {
         buttonBg.setTitleColor(UIColor.blue, for: UIControl.State())
         buttonBg.frame = CGRect(x: 0, y: 0, width: 1024, height: 768) // X, Y, width, height
         buttonBg.backgroundColor = UIColor(red: 45/255, green:45/255, blue:45/255, alpha:0.8)
-        var datePicker: UIDatePicker = UIDatePicker()
+       
         
-        datePicker = UIDatePicker(frame:CGRect(x: 200, y: 200, width: 600, height: 300))
+        var datePicker = UIDatePicker(frame:CGRect(x: 200, y: 200, width: 600, height: 300))
         datePicker.backgroundColor = UIColor.white
         datePicker.datePickerMode = UIDatePicker.Mode.date
         datePicker.layer.borderWidth = 1

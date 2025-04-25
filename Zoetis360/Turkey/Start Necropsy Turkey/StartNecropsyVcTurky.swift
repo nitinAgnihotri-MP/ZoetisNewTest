@@ -104,7 +104,6 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
         self.autoSerchTable.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         buttonDroper .addSubview(autoSerchTable)
         buttonDroper.alpha = 0
-        let postingArrWithAllData1 = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
     }
     
     
@@ -238,15 +237,14 @@ class StartNecropsyVcTurky: UIViewController,necropsyPop, UITextFieldDelegate {
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         return allPostingSessionArr
@@ -430,18 +428,7 @@ extension StartNecropsyVcTurky: UITableViewDataSource,UITableViewDelegate {
                 cell.backgroundColor = UIColor(red: 238/255.0, green: 238/255.0, blue: 238/255.0, alpha: 1.0)
             }
             let posting : PostingSessionTurkey = existingArray.object(at: indexPath.row) as! PostingSessionTurkey
-            
-            
-            let lngId =  posting.lngId
-            if lngId == 1{
-                
-                cell.langLbl.text = "(En)"
-            }
-            else{
-                cell.langLbl.text = "(En)"
-                
-                // cell.langLbl.text = "(En)"
-            }
+            cell.langLbl.text = "(En)"
             
             cell.sessionDateLbl.text  = posting.sessiondate
             cell.sessionType.text  = posting.sessionTypeName
@@ -494,8 +481,7 @@ extension StartNecropsyVcTurky: UITableViewDataSource,UITableViewDelegate {
             let navigateToAnother = self.storyboard?.instantiateViewController(withIdentifier: "Step1Turkey") as? CaptureNecropsyStep1Turkey
             
             let posting : PostingSessionTurkey = existingArray.object(at: indexPath.row) as! PostingSessionTurkey
-            var postingId = Int()
-            postingId = posting.postingId as! Int
+            var postingId = posting.postingId as! Int
             
             UserDefaults.standard.set(true, forKey: "nec")
             UserDefaults.standard.set(postingId, forKey: "postingId")

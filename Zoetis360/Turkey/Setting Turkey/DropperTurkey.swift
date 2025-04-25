@@ -344,10 +344,8 @@ extension DropperTurkey: UITableViewDelegate, UITableViewDataSource, DropperExte
                 item = skeletaObjectStrain.strainName!
             }
             
-        }else if tagValue == 20{
-            if let skeletaObjectStrain = items[indexPath.row] as? GetFieldStrain{
-                item = skeletaObjectStrain.strainName!
-            }
+        }else if tagValue == 20, let skeletaObjectStrain = items[indexPath.row] as? GetFieldStrain {
+            item = skeletaObjectStrain.strainName!
         }
         
         if let color = cellBackgroundColor {

@@ -97,11 +97,7 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        var height:CGFloat = CGFloat()
-        height = 70
-        return height
-        
+        return 70
     }
     
     
@@ -124,19 +120,13 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     fileprivate func deleteCompletion(_ cell: PE_DraftCell, _ indexPath: IndexPath) {
-        cell.deleteCompletion  = {[unowned self] ( error) in
+        cell.deleteCompletion = {[unowned self] ( error) in
             let assessment = self.peAssessmentDraftArray[indexPath.row]
-            var date = assessment.evaluationDate
-            date = date?.replacingOccurrences(of: "/", with: "")
-            
-            var siteId = String(assessment.siteId ?? 0)
-            
             let draftID = assessment.draftID ?? ""
-            date = "C-" + draftID.prefix(20)
+            let date = "C-" + draftID.prefix(20)
             
-            
-            let errorMSg = "Are you sure you want to delete the assessment" + (date ?? "") + "?"
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let errorMSg = "Are you sure you want to delete the assessment" + date + "?"
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                 _ in
                 CoreDataHandlerPE().deleteDraftByDrafyNumber(assessment.draftID ?? "")
@@ -262,7 +252,6 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID == 3 {
             if let cell = tableView.dequeueReusableCell(withIdentifier: PE_DraftCell.identifier) as? PE_DraftCell {
                 cell.selectionStyle = .none
@@ -294,7 +283,6 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         if regionID == 3 {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEDraftHeader" ) as! PEDraftHeader
             return headerView

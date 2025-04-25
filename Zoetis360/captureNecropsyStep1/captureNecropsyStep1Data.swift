@@ -294,10 +294,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         if self.captureNecropsy.isEmpty {
             count = 0
         }
-        
-//        if   self.captureNecropsy.count<0 {
-//            count = 0
-//        }
+
         tableView.reloadData()
         
         let allBireType = CoreDataHandler().fetchBirdSize()
@@ -331,6 +328,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         let result = NSMutableArray()
         for value in array {
             if encountered.contains(value as! String) {
+                debugPrint("check duplicacy")
             }
             else {
                 encountered.insert(value as! String)
@@ -338,7 +336,7 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
             }
         }
        
-        var arra = result.mutableCopy()  as! NSArray
+        let arra = result.mutableCopy()  as! NSArray
         return arra
     }
     
@@ -607,11 +605,8 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
     fileprivate func saveUnlinkedStep1Data() {
         CoreDataHandler().updateFinalizeDataWithNec( self.ncropsyId as NSNumber, finalizeNec: 1)
         self.captureNecropsy =  CoreDataHandler().FetchNecropsystep1neccId(self.ncropsyId as NSNumber) as! [NSManagedObject]
-        if  self.captureNecropsy.count == 0{
-            
-            if UserDefaults.standard.bool(forKey:"Unlinked") == true{
-                self.saveDataforposting()
-            }
+        if self.captureNecropsy.count == 0 && UserDefaults.standard.bool(forKey: "Unlinked") {
+            self.saveDataforposting()
         }
         saveStep1Data()
     }
@@ -1345,20 +1340,9 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         
         else{
             let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
-            switch textField.tag {
+            switch textField.tag { 
                 
-            case 40 :
-               
-                let compSepByCharInSet = string.components(separatedBy: aSet)
-                let numberFiltered = compSepByCharInSet.joined(separator: "")
-                
-                let maxLength = 6
-                let currentString: NSString = textField.text! as NSString
-                let newString: NSString =
-                currentString.replacingCharacters(in: range, with: string) as NSString
-                return string == numberFiltered && newString.length <= maxLength
-                
-            case 18 , 11:
+            case 18 , 11 , 40 :
               
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")

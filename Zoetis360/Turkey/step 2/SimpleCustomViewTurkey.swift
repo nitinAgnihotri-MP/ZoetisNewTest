@@ -58,10 +58,10 @@ protocol infoLinkkTurkey: class {
         
         let bundle = Bundle(for: type(of: self))
         let nib = UINib(nibName: "SimpleCustomViewTurkey", bundle: bundle)
-        let view = nib.instantiate(withOwner: self, options: nil)[0] as! UIView
-        view.frame = bounds
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.addSubview(view)
+        let simpleCustomeview = nib.instantiate(withOwner: self, options: nil)[0] as! UIView
+        simpleCustomeview.frame = bounds
+        simpleCustomeview.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.addSubview(simpleCustomeview)
         
         self.infoCollectionView.delegate = self
         self.infoCollectionView.dataSource = self
@@ -158,9 +158,7 @@ protocol infoLinkkTurkey: class {
                 self.infoLinkkDelegateT!.cancelBtnActionTurkey(btnIndex, data: obsData)
                 
             }
-            else if obsData.measure ==  "Actual" {
-                
-            } else {
+             else {
                 if  obsData.refId == 58{
                     
                     if indexPath.row == 0 {

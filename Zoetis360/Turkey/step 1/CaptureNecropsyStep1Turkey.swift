@@ -302,7 +302,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         
         buttonDroper .addSubview(autoSerchTable)
         buttonDroper.alpha = 0
-        if self.captureNecropsy.count<0 {
+        if self.captureNecropsy.isEmpty {
             count = 0
         }
         tblView.reloadData()
@@ -345,6 +345,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         let result = NSMutableArray()
         for value in array {
             if encountered.contains(value as! String) {
+                debugPrint("print values")
             }
             else {
                 // Add value to the set.
@@ -361,14 +362,15 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         let result = NSMutableArray()
         for value in array {
             if encountered.contains(value as! String) {
+                debugPrint("refresed duplicate values")
             }
             else {
                 encountered.insert(value as! String)
                 result.add(value as! String)
             }
         }
-        var arra = NSArray()
-        arra = result.mutableCopy()  as! NSArray
+        
+        var arra = result.mutableCopy()  as! NSArray
         return arra
     }
     
@@ -412,7 +414,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             flockIdTextField.resignFirstResponder()
             feedProgramBtn.layer.borderColor = UIColor.black.cgColor
             if UserDefaults.standard.bool(forKey: "Unlinked") == true   {
-                
+                debugPrint("no id required to check or change")
             } else {
                 self.necId = UserDefaults.standard.integer(forKey: "postingId")
             }
@@ -526,16 +528,16 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             myPickerView.selectRow(0, inComponent: 0, animated: true)
             
         } else {
-            var pickerIndex = Int()
+            var agePickerIndex = Int()
             
             for i in 0..<AgeOp.count{
                 
                 if (ageLbl.text! == AgeOp[i] as! String){
-                    pickerIndex = i
+                    agePickerIndex = i
                     break
                 }
             }
-            myPickerView.selectRow(pickerIndex, inComponent: 0, animated: true)
+            myPickerView.selectRow(agePickerIndex, inComponent: 0, animated: true)
         }
         myPickerView.reloadInputViews()
         
@@ -596,18 +598,12 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         
         countFarm =  (farmNameTextfield.text?.count)!
         
-        if farmWeightTextField.text?.count == 1 && farmWeightTextField.text == "."  {
+        if farmWeightTextField.text?.count == 1 && farmWeightTextField.text == "." || farmWeightTextField.text == "" {
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldMsg)
             farmWeightTextField.layer.borderColor = UIColor.red.cgColor
             farmWeightTextField.text = nil
         }
-        else if farmWeightTextField.text == ""
-        {
-            Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldMsg)
-            farmWeightTextField.layer.borderColor = UIColor.red.cgColor
-            farmWeightTextField.text = nil
-        }
-        
+       
         else  {
            trimmedString = farmNameTextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             
@@ -656,14 +652,10 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         farmNameTextfield.layer.borderColor = UIColor.black.cgColor
         
         countFarmId = UserDefaults.standard.integer(forKey: "farmIdTurkey")
-        if countFarmId == 0{
-            countFarmId = countFarmId+1
-            UserDefaults.standard.set(countFarmId, forKey: "farmIdTurkey")
-        }
-        else{
-            countFarmId = countFarmId+1
-            UserDefaults.standard.set(countFarmId, forKey: "farmIdTurkey")
-        }
+        countFarmId = countFarmId+1
+        UserDefaults.standard.set(countFarmId, forKey: "farmIdTurkey")
+        
+       
         CoreDataHandlerTurkey().FarmsDataDatabaseTurkey("", stateId: 0, farmName: trimmedString, farmId: 0, countryName: "", countryId: 0, city: "")
         
         let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionWithNumberTurkey()
@@ -695,11 +687,9 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         else{
             CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey( self.necId as NSNumber, finalizeNec: 1)
             self.captureNecropsy =  CoreDataHandlerTurkey().FetchNecropsystep1neccIdTurkey(self.necId as NSNumber) as! [NSManagedObject]
-            if  self.captureNecropsy.count == 0{
-                if UserDefaults.standard.bool(forKey:"Unlinked") == true {
-                    self.saveDataforposting()
-                }
-                
+            
+            if self.captureNecropsy.count == 0 && UserDefaults.standard.bool(forKey: "Unlinked") == true {
+                self.saveDataforposting()
             }
             
             saveStep1Data()
@@ -723,15 +713,9 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         let custMid = UserDefaults.standard.integer(forKey:"unCustId")
         
         count =  UserDefaults.standard.integer(forKey: "count")
-        if count == 0{
-            count = count+1
-        }
-        else{
-            count = count+1
-        }
-        
-        var imageAutoIncrementId = Int()
-        imageAutoIncrementId = UserDefaults.standard.integer(forKey: "imageAutoIncrementIdTurkey")
+        count = count+1
+       
+        var imageAutoIncrementId = UserDefaults.standard.integer(forKey: "imageAutoIncrementIdTurkey")
         if imageAutoIncrementId == 0 {
             imageAutoIncrementId = imageAutoIncrementId + 1
         } else {
@@ -753,7 +737,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         UserDefaults.standard.set(false, forKey: "nec")
         UserDefaults.standard.synchronize()
         if UserDefaults.standard.bool(forKey:"Unlinked") == true {
-            
+            debugPrint("no unlinked id")
         } else {
             
             postingId = UserDefaults.standard.integer(forKey:"postingId")
@@ -836,7 +820,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             let character: Character = "i"
             
             if string.contains(character) {
-                
+                debugPrint("print", character)
             } else {
                 let  udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
                 
@@ -909,7 +893,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
-            
+            debugPrint("back space")
         } else if ((textField.text?.count)! > 49  ){
             return false
         }
@@ -921,7 +905,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
             let aSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
             switch textField.tag {
                 
-            case 40 :
+            case 40 , 18 , 11:
                
                 let compSepByCharInSet = string.components(separatedBy: aSet)
                 let numberFiltered = compSepByCharInSet.joined(separator: "")
@@ -932,30 +916,7 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
                 currentString.replacingCharacters(in: range, with: string) as NSString
                 
                 return string == numberFiltered && newString.length <= maxLength
-                
-            case 18 :
-                
-                let compSepByCharInSet = string.components(separatedBy: aSet)
-                let numberFiltered = compSepByCharInSet.joined(separator: "")
-                
-                let maxLength = 6
-                let currentString: NSString = textField.text! as NSString
-                let newString: NSString =
-                currentString.replacingCharacters(in: range, with: string) as NSString
-                
-                return string == numberFiltered && newString.length <= maxLength
-                
-            case 11 :
         
-                let compSepByCharInSet = string.components(separatedBy: aSet)
-                let numberFiltered = compSepByCharInSet.joined(separator: "")
-                
-                let maxLength = 6
-                let currentString: NSString = textField.text! as NSString
-                let newString: NSString =
-                currentString.replacingCharacters(in: range, with: string) as NSString
-                
-                return string == numberFiltered && newString.length <= maxLength
             case 12 :
                 let maxLength = 6
                 let currentString: NSString = textField.text! as NSString
@@ -1007,13 +968,10 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         
         if (textField == farmNameTextfield ) {
             farmNameTextfield.returnKeyType = UIReturnKeyType.done
-        } else {
+        } else if (textField == flockIdTextField ) {
             flockIdTextField.returnKeyType = UIReturnKeyType.done
         }
-        
-        if (textField == farmWeightTextField ) {
-            farmWeightTextField.returnKeyType = UIReturnKeyType.done
-        } else {
+         else {
             farmWeightTextField.returnKeyType = UIReturnKeyType.done
         }
         
@@ -1169,8 +1127,8 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
           
           // Loop through each text field and apply the padding
           for textField in textFields {
-              let paddingView = UIView(frame: CGRect(x: 15, y: 0, width: 10, height: 20))
-              textField.leftView = paddingView
+              let paddedView = UIView(frame: CGRect(x: 15, y: 0, width: 10, height: 20))
+              textField.leftView = paddedView
               textField.leftViewMode = .always
           }
       }
@@ -1194,15 +1152,15 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         }
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
+      
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at:i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at:i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         return allPostingSessionArr
@@ -1401,7 +1359,6 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
     @objc func ClickEditBtton(_ sender: UIButton){
         
         let person = captureNecropsy[sender.tag]
-        let indexpath = NSIndexPath(row:sender.tag, section: 0)
         editfeed = "yes"
         buttonEdit.setTitleColor(UIColor.blue, for: UIControl.State())
         buttonEdit.frame = CGRect(x: 0, y:1460, width: 1024, height: 768)
@@ -1590,9 +1547,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
             myPickerView.selectRow(0, inComponent: 0, animated: true)
         }
         else{
-            let lblAge = ageButton.titleLabel?.text
             var pickerIndex = Int()
-            
             for i in 0..<AgeOp.count{
                 
                 if (ageLbl.text! == AgeOp[i] as! String){
@@ -1644,7 +1599,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
         Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:mendatoryFieldMsg)
     }
     
-    fileprivate func farmOtherValidation() {
+    fileprivate func OthersFarmNameValidation() {
         nameText.layer.borderColor = UIColor.red.cgColor
         let abc = feedButton.currentTitle!
         
@@ -1664,13 +1619,12 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
         trimmedString = trimmedString.replacingOccurrences(of: ".", with: "", options:
                                                             NSString.CompareOptions.literal, range: nil)
         
-        let farmWeightTrim = farmWeightText.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         trimmedString = trimmedString.replacingOccurrences(of: ".", with: "", options:
                                                             NSString.CompareOptions.literal, range: nil)
         
         if trimmedString == "" && strFeddUpdate == "" {
             
-            farmOtherValidation()
+            OthersFarmNameValidation()
         }
         else if trimmedString == ""  {
             
@@ -1797,14 +1751,14 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
         if indexPath.row == 0 {
             butttnTag1 = 0
             if valueStore == true {
-                
                 let sdds = metricArray[indexOfSelectedPerson]
+                debugPrint(sdds)
             }
         } else if indexPath.row == 1 {
             butttnTag1 = 1
             if valueStore == true {
-                
                 let sdds = birdArray[indexOfSelectedPerson]
+                debugPrint(sdds)
             }
         }
         buttonPreddDroper()
@@ -1846,10 +1800,8 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
                 buttonPreddDroper()
                 
                 if butttnTag1 == 0 {
-                    let objMedtricarray = metricArray[indexPath.row]
                     indexOfSelectedPerson = indexPath.row
                 }  else {
-                    let objstr = birdArray[indexPath.row]
                     indexOfSelectedPerson = indexPath.row
                     
                 }

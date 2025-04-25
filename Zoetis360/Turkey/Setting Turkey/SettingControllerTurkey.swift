@@ -55,10 +55,10 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
         gitractBtnOutlet.setImage(UIImage(named: "gi_tract_unselect"), for: .normal)
         immuneOtherBtnOutlet.setImage(UIImage(named: "immune_unselect"), for: .normal)
         respiratoryBtnOutlet.setImage(UIImage(named: "respiratory_unselect"), for: .normal)
-        if WebClass.sharedInstance.connected() {
-            if (appDelegate.globalDataArrTurkey.count) > 0 {
+        if WebClass.sharedInstance.connected(), appDelegate.globalDataArrTurkey.count > 0 {
+         
                 dataArray = appDelegate.globalDataArrTurkey
-            }
+            
         }
         self.skeletalMusclarAction(sender: "0" as AnyObject)
     }
@@ -242,13 +242,12 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             sender.setImage(nil, for: .normal)
             sender.setImage(UIImage(named: "Uncheck_")!, for: .normal)
         }
-        var observationId = NSInteger()
         var  vsibilityValue = Bool()
         
         if btnTag == 0 {
             let skeletaObject : SkeletaTurkey = dataSkeletaArray.object(at: sender.tag) as! SkeletaTurkey
             vsibilityValue = skeletaObject.visibilityCheck as! Bool
-            observationId = skeletaObject.observationId as! NSInteger
+            var  observationId = skeletaObject.observationId as! NSInteger
             let measure = skeletaObject.measure
             let lngIdValue = skeletaObject.lngId
             let refId = skeletaObject.refId
@@ -257,7 +256,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             
             let cocoii : CoccidiosisTurkey = dataCocoiiArray.object(at: sender.tag) as! CoccidiosisTurkey
             vsibilityValue = cocoii.visibilityCheck as! Bool
-            observationId = cocoii.observationId as! NSInteger
+            var observationId = cocoii.observationId as! NSInteger
             let measure = cocoii.measure
             let lngIdValue = cocoii.lngId
             let refId = cocoii.refId
@@ -266,7 +265,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
         } else if  btnTag == 2 {
             let skeletaObject : GITractTurkey = dataGiTractArray.object(at: sender.tag) as! GITractTurkey
             vsibilityValue = skeletaObject.visibilityCheck as! Bool
-            observationId = skeletaObject.observationId as! NSInteger
+            var  observationId = skeletaObject.observationId as! NSInteger
             let measure = skeletaObject.measure
             let lngIdValue = skeletaObject.lngId
             let refId = skeletaObject.refId
@@ -278,7 +277,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let cocoii : RespiratoryTurkey = dataRespiratoryArray.object(at: sender.tag) as! RespiratoryTurkey
             vsibilityValue =
             cocoii.visibilityCheck as! Bool
-            observationId = cocoii.observationId as! NSInteger
+            var observationId = cocoii.observationId as! NSInteger
             let measure = cocoii.measure
             let lngIdValue = cocoii.lngId
             let refId = cocoii.refId
@@ -289,7 +288,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             
             let cocoii : ImmuneTurkey = dataImmuneArray.object(at: sender.tag) as! ImmuneTurkey
             vsibilityValue = cocoii.visibilityCheck as! Bool
-            observationId = cocoii.observationId as! NSInteger
+            var observationId = cocoii.observationId as! NSInteger
             let measure = cocoii.measure
             let lngIdValue = cocoii.lngId
             let refId = cocoii.refId

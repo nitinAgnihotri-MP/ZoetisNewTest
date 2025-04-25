@@ -78,7 +78,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: true)
         self.navigationController?.navigationBar.isHidden = true
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+         lngId = UserDefaults.standard.integer(forKey: "lngId")
         NotificationCenter.default.addObserver(self, selector: #selector(UnlinkedNecropsiesViewController.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
         
         postingTableView.estimatedRowHeight = 50
@@ -90,7 +90,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             selectDateLabel.alpha = 0
             toDateLabel.alpha = 0
             var dateFormatter = DateFormatter()
-            dateFormatter = DateFormatter()
+          
             dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             dateFormatter = DateFormatter()
             dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
@@ -101,7 +101,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             selectDateLabel.alpha = 0
             toDateLabel.alpha = 0
             var dateFormatter = DateFormatter()
-            dateFormatter = DateFormatter()
+          
             dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
             dateFormatter = DateFormatter()
             dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
@@ -115,7 +115,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             toDateLabel.alpha = 1
         }
         var dateFormatter = DateFormatter()
-        dateFormatter = DateFormatter()
+       
         dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         dateFormatter = DateFormatter()
         dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
@@ -130,8 +130,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         
         for i in 0..<arr.count{
             let pId = arr.object(at: i)
-            var unlinkarr = NSMutableArray()
-            unlinkarr = CoreDataHandler().FetchNecropsystep1UpdateFromUnlinked(pId as! NSNumber).mutableCopy() as! NSMutableArray
+           
+            var unlinkarr = CoreDataHandler().FetchNecropsystep1UpdateFromUnlinked(pId as! NSNumber).mutableCopy() as! NSMutableArray
             
             if unlinkarr.count > 0
             {
@@ -139,8 +139,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             }
         }
         
-        var reversedArray = NSArray()
-        reversedArray =  NSMutableArray(array:NecropsiesPostingSess.reverseObjectEnumerator().allObjects).mutableCopy() as! NSMutableArray
+       
+        var reversedArray =  NSMutableArray(array:NecropsiesPostingSess.reverseObjectEnumerator().allObjects).mutableCopy() as! NSMutableArray
         
         NecropsiesPostingSess.removeAllObjects()
         NecropsiesPostingSess = reversedArray.mutableCopy() as! NSMutableArray
@@ -188,8 +188,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             for i in 0..<arr.count{
                 
                 let pId = arr.object(at: i)
-                var unlinkarr = NSMutableArray()
-                unlinkarr = CoreDataHandler().FetchNecropsystep1UpdateFromUnlinked(pId as! NSNumber).mutableCopy() as! NSMutableArray
+              
+                var unlinkarr = CoreDataHandler().FetchNecropsystep1UpdateFromUnlinked(pId as! NSNumber).mutableCopy() as! NSMutableArray
                 
                 if unlinkarr.count > 0
                 {
@@ -197,8 +197,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 }
             }
             
-            var reversedArray = NSArray()
-            reversedArray =  NSMutableArray(array:NecropsiesPostingSess.reverseObjectEnumerator().allObjects).mutableCopy() as! NSMutableArray
+          
+            var reversedArray =  NSMutableArray(array:NecropsiesPostingSess.reverseObjectEnumerator().allObjects).mutableCopy() as! NSMutableArray
             NecropsiesPostingSess.removeAllObjects()
             NecropsiesPostingSess = reversedArray.mutableCopy() as! NSMutableArray
             necropsyTableView.isHidden = false
@@ -285,7 +285,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 let lngIdFr = UserDefaults.standard.integer(forKey: "lngId")
                 
                 let dateString = comlexDate
-                let dateFormatter = DateFormatter()
+              
                 dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                 let dateObj = dateFormatter.date(from: dateString)
                 dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
@@ -294,7 +294,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 
                 cell.complexLbl.text = complexName
                 
-                let lngId = (arr1 as AnyObject).value(forKey: "lngId") as! NSNumber
+                let sessionLngId = (arr1 as AnyObject).value(forKey: "lngId") as! NSNumber
 
                 let languageMap: [NSNumber: String] = [
                     1: "(En)",
@@ -302,7 +302,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                     4: "(pt-BR)"
                 ]
 
-                cell.lblLng.text = languageMap[lngId] ?? ""
+                cell.lblLng.text = languageMap[sessionLngId] ?? ""
             }
             return cell
         }
@@ -326,7 +326,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             let lngIdFr = UserDefaults.standard.integer(forKey: "lngId")
             if lngIdFr == 3{
                 let dateString = posting.value(forKey: "sessiondate") as! String
-                let dateFormatter = DateFormatter()
+              
                 dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                 let dateObj = dateFormatter.date(from: dateString)
                 dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
@@ -334,7 +334,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             }
             if lngIdFr == 4{
                 let dateString = posting.value(forKey: "sessiondate") as! String
-                let dateFormatter = DateFormatter()
+               
                 dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                 let dateObj = dateFormatter.date(from: dateString)
                 dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
@@ -346,10 +346,10 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             
             cell.sessionLblPostingSesson.text = posting.value(forKey: "sessionTypeName") as? String
             cell.veterinarianLblPostingSession.text = posting.value(forKey: "vetanatrionName") as? String
-            let lngId =  posting.lngId
-            if lngId == 1{
+            let selectdLngId =  posting.lngId
+            if selectdLngId == 1{
                 cell.lblLng.text = "(En)"
-            }else if lngId == 3{
+            }else if selectdLngId == 3{
                 cell.lblLng.text = "(Fr)"
             }
             return cell
@@ -370,7 +370,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
     
     fileprivate func dateFormatterFrench(_ sessiondate: String) {
         let dateString = sessiondate
-        let dateFormatter = DateFormatter()
+        
         dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         let dateObj = dateFormatter.date(from: dateString)
         if dateObj == nil{
@@ -435,9 +435,9 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 appDelegate.sendFeedVariable = ""
                 
                 let necId = (arr1 as AnyObject).value(forKey: "necropsyId") as! Int
-                let postingId = (arr1 as AnyObject).value(forKey: "postingId") as! Int
+                let postingIdIs = (arr1 as AnyObject).value(forKey: "postingId") as! Int
                 mapViewControllerObj!.necId = necId
-                mapViewControllerObj!.postingIdnavigate =  postingId
+                mapViewControllerObj!.postingIdnavigate =  postingIdIs
                 UserDefaults.standard.set(true, forKey: "nec")
                 UserDefaults.standard.set(false, forKey: "isUpadteFeedFromUnlinked")
                 UserDefaults.standard.set(necId, forKey: "necUnLinked")
@@ -452,10 +452,10 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         else{
             let navigateToAnother = self.storyboard?.instantiateViewController(withIdentifier: "Step1") as? captureNecropsyStep1Data
             let posting : PostingSession = unlinkedNecropsies.object(at: indexPath.row) as! PostingSession
-            let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
-            if lngId == posting.lngId{
-                var postingId = Int()
-                postingId = posting.postingId as! Int
+            lngId = UserDefaults.standard.integer(forKey: "lngId")
+            if lngId == posting.lngId as! Int{
+               
+                var newPostingId = posting.postingId as! Int
                 navigateToAnother!.isComesFromUnlikedWithPostind = true
                 posting.actualTimeStamp = posting.actualTimeStamp ?? ""
                 navigateToAnother?.actualTimestamp = posting.actualTimeStamp ?? ""
@@ -464,7 +464,6 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 let lngId = UserDefaults.standard.integer(forKey: "lngId")
                 if lngId == 3{
                     let dateString = posting.sessiondate
-                    let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
                     let dateObj = dateFormatter.date(from: dateString!)
                     dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
@@ -475,12 +474,12 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 UserDefaults.standard.setValue(posting.sessiondate, forKey: "date")
                 UserDefaults.standard.setValue(posting.complexName, forKey: "complex")
                 UserDefaults.standard.setValue(posting.customerName, forKey: "custmer")
-                UserDefaults.standard.set(postingId, forKey: "postingId")
+                UserDefaults.standard.set(newPostingId, forKey: "postingId")
                 UserDefaults.standard.synchronize()
                 self.navigationController?.pushViewController(navigateToAnother!, animated: false)
             }
             else{
-                alertMessageLanguageBasis(lngId: lngId)
+                alertMessageLanguageBasis(lngId: lngId as NSNumber)
             }
         }
     }
@@ -610,16 +609,16 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         self.NecropsiesPostingSess.removeAllObjects()
         for i in 0..<arr.count{
             let pId = arr.object(at: i)
-            var unlinkarr = NSMutableArray()
-            unlinkarr = CoreDataHandler().FetchNecropsystep1UpdateFromUnlinked(pId as! NSNumber).mutableCopy() as! NSMutableArray
+           
+            var unlinkarr = CoreDataHandler().FetchNecropsystep1UpdateFromUnlinked(pId as! NSNumber).mutableCopy() as! NSMutableArray
             if unlinkarr.count > 0
             {
                 self.NecropsiesPostingSess.add(unlinkarr)
             }
         }
         
-        var reversedArray = NSArray()
-        reversedArray =  NSMutableArray(array:NecropsiesPostingSess.reverseObjectEnumerator().allObjects).mutableCopy() as! NSMutableArray
+      
+        var reversedArray =  NSMutableArray(array:NecropsiesPostingSess.reverseObjectEnumerator().allObjects).mutableCopy() as! NSMutableArray
         NecropsiesPostingSess.removeAllObjects()
         NecropsiesPostingSess = reversedArray.mutableCopy() as! NSMutableArray
         
@@ -708,7 +707,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         datePicker.locale = Locale(identifier: "en_US")
         dateFormatter = DateFormatter()
 
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3{
             selectDateLabel.alpha = 0
             dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
@@ -747,7 +746,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         {
             self.cancelClick1()
             fromString = selectDateLabel.text!
-            let dateFormatter = DateFormatter()
+           
             dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             fromDate = dateFormatter.date(from: fromString)!
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("From date must be smaller than to date.", comment: ""))
@@ -782,15 +781,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         toString = dateFormatter.string(from: datePicker.date)
         toDate = datePicker.date
         
-        if fromString == toString {
-            let strdate = dateFormatter.string(from: datePicker.date) as String
-            toDateLabel.text = strdate
-            UserDefaults.standard.set( toDateLabel.text, forKey: "date")
-            buttonBg.removeFromSuperview()
-            postingTableView.reloadData()
-            necropsyTableView.reloadData()
-            
-        } else if toDate.isGreaterThanDate(fromDate) {
+        if fromString == toString || toDate.isGreaterThanDate(fromDate){
             let strdate = dateFormatter.string(from: datePicker.date) as String
             toDateLabel.text = strdate
             UserDefaults.standard.set( toDateLabel.text, forKey: "date")
@@ -801,7 +792,6 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         } else {
             self.cancelClick1()
             fromString = toDateLabel.text!
-            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             toDate = dateFormatter.date(from: fromString)!
             Helper.showAlertMessage(self,titleStr: NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString("To date must be greater than from date.", comment: "") )

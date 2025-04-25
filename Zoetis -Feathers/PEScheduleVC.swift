@@ -72,15 +72,10 @@ extension PEScheduleVC: UITableViewDelegate, UITableViewDataSource{
                 if scheduledAssessmentsArr.count - 1 == indexPath.row{
                     cell.layer.masksToBounds = true
                     cell.contentView.roundVsCorners(corners: [.bottomLeft, .bottomRight], radius: 18.5)
-                } else{
+                } else {
                     cell.contentView.roundVsCorners(corners: [.bottomLeft, .bottomRight], radius: 0)
                 }
-            }else{
             }
-            
-            if tableView == scheduleTblVw{
-            }
-            
             return cell
         }
         return UITableViewCell()
@@ -119,50 +114,41 @@ extension PEScheduleVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if scheduledAssessmentsArr.count > 0 && scheduledAssessmentsArr.count > indexPath.row{
-            if let assessmentId = scheduledAssessmentsArr[indexPath.row].serverAssessmentId{
+        if scheduledAssessmentsArr.count > 0 && scheduledAssessmentsArr.count > indexPath.row, let assessmentId = scheduledAssessmentsArr[indexPath.row].serverAssessmentId {
+            UserDefaults.standard.set(assessmentId , forKey: "currentServerAssessmentId")
+            let userDefault = UserDefaults.standard
+            userDefault.set(scheduledAssessmentsArr[indexPath.row].customerId, forKey: "PE_Selected_Customer_Id")
+            userDefault.set(scheduledAssessmentsArr[indexPath.row].customerName, forKey: "PE_Selected_Customer_Name")
+            userDefault.set(scheduledAssessmentsArr[indexPath.row].siteId, forKey: "PE_Selected_Site_Id")
+            userDefault.set(scheduledAssessmentsArr[indexPath.row].siteName, forKey: "PE_Selected_Site_Name")
+            
+            if let assessment = PEAssessmentsDAO.sharedInstance.getDraftAssessment(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessmentId){
                 
-                UserDefaults.standard.set(assessmentId , forKey: "currentServerAssessmentId")
-                let userDefault = UserDefaults.standard
-                userDefault.set(scheduledAssessmentsArr[indexPath.row].customerId, forKey: "PE_Selected_Customer_Id")
-                userDefault.set(scheduledAssessmentsArr[indexPath.row].customerName, forKey: "PE_Selected_Customer_Name")
-                userDefault.set(scheduledAssessmentsArr[indexPath.row].siteId, forKey: "PE_Selected_Site_Id")
-                userDefault.set(scheduledAssessmentsArr[indexPath.row].siteName, forKey: "PE_Selected_Site_Name")
+                navigateToDraftAssessmentFinalize(assessment, assessmentId)
+            } else {
                 
-                if let assessment = PEAssessmentsDAO.sharedInstance.getDraftAssessment(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: assessmentId){
+                if anyCategoryContainValueOrNot(serverAssessmentId: assessmentId){
+                    let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+                    let vc = storyBoard.instantiateViewController(withIdentifier: "PEAssesmentFinalize") as! PEAssesmentFinalize
+                    vc.scheduledAssessment = scheduledAssessmentsArr[indexPath.row]
+                    vc.scheduledAssessment?.scheduledDate = Date()
                     
-                    navigateToDraftAssessmentFinalize(assessment, assessmentId)
-                }
-                
-                else{
-                    
-                    if anyCategoryContainValueOrNot(serverAssessmentId: assessmentId){
+                    self.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    let regionID = UserDefaults.standard.integer(forKey: "Regionid")
+                    if regionID == 3 {
                         let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                        let vc = storyBoard.instantiateViewController(withIdentifier: "PEAssesmentFinalize") as! PEAssesmentFinalize
+                        let vc = storyBoard.instantiateViewController(withIdentifier: "PEStartNewAssessment") as! PEStartNewAssessment
                         vc.scheduledAssessment = scheduledAssessmentsArr[indexPath.row]
                         vc.scheduledAssessment?.scheduledDate = Date()
-                        
-                        self.navigationController?.pushViewController(vc, animated: true)
+                        navigationController?.pushViewController(vc, animated: true)
                     } else {
                         
-                        
-                        let regionID = UserDefaults.standard.integer(forKey: "Regionid")
-                        if regionID == 3
-                        {
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEStartNewAssessment") as! PEStartNewAssessment
-                            vc.scheduledAssessment = scheduledAssessmentsArr[indexPath.row]
-                            vc.scheduledAssessment?.scheduledDate = Date()
-                            navigationController?.pushViewController(vc, animated: true)
-                        }
-                        else{
-                            
-                            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                            let vc = storyBoard.instantiateViewController(withIdentifier: "PEStartNewAssessmentINT") as! PEStartNewAssessmentINT
-                            vc.scheduledAssessment = scheduledAssessmentsArr[indexPath.row]
-                            vc.scheduledAssessment?.scheduledDate = Date()
-                            navigationController?.pushViewController(vc, animated: true)
-                        }
+                        let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+                        let vc = storyBoard.instantiateViewController(withIdentifier: "PEStartNewAssessmentINT") as! PEStartNewAssessmentINT
+                        vc.scheduledAssessment = scheduledAssessmentsArr[indexPath.row]
+                        vc.scheduledAssessment?.scheduledDate = Date()
+                        navigationController?.pushViewController(vc, animated: true)
                     }
                 }
             }

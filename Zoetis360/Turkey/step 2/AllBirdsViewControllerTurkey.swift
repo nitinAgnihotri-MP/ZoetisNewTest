@@ -59,15 +59,15 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
         var farmName2 = String()
         let range = farmName.range(of: ".")
         if range != nil{
-            var abc = String(farmName[range!.upperBound...]) as NSString
+            let abc = String(farmName[range!.upperBound...]) as NSString
             farmName2 = String(index+1) + "." + " " + String(describing:abc)
         }
         
         lblForm.text = farmName2
         
         var dict = [String: AnyObject]()
-        var i = Int()
-        i = -1
+       
+        var i = -1
         let farmWeight =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkeyWithFarmName(formName ,necropsyId:necId as NSNumber)
         if farmWeight.count > 0{
             let hNo = farmWeight.object(at: 0) as! CaptureNecropsyDataTurkey
@@ -220,17 +220,18 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
     
     fileprivate func minusBtnTurkeyObsUpdate(_ c: CaptureNecropsyViewDataTurkey, _ array: ([String]), _ cell: obsFieldCollectionViewCell, _ obsName: Any, _ formNameValue: String, _ noOfBird: Int, _ captureNec: CaptureNecropsyViewDataTurkey) {
         if c.obsPoint == 0 {
-            
+            debugPrint("skeletan obs point.")
         } else {
             for i in 0..<array.count {
                 if Int(array[i]) == 1 {
+                    debugPrint("array count.")
                 } else {
-                    if c.obsPoint == 1 {
-                        if Int(array[i]) == 0 {
-                            cell.displayLabel.text = array[0]
-                            CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
-                            break
-                        }
+                    if c.obsPoint == 1, Int(array[i]) == 0 {
+                        
+                        cell.displayLabel.text = array[0]
+                        CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnStepperTurkey(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
+                        break
+                        
                     }
                     let value = Int(array[i])
                     if ((value! as NSNumber) == c.obsPoint) {
@@ -613,7 +614,7 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
     
     func textFieldDidEndEditing(_ textField: UITextField){
         
-        let rowIndex :Int = textField.tag
+        
         let cell = textField.superview!.superview as! obsFieldCollectionViewCell
         let pointInTable: CGPoint = textField.convert(textField.bounds.origin, to: self.bgTableView)
         let cellIndexPath = self.bgTableView.indexPathForRow(at: pointInTable)
@@ -635,7 +636,6 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
         
         let fethchArr = CoreDataHandlerTurkey().fecthFrmWithBirdAndObservationTurkey(noOfBird! as NSNumber, farmname: formNameValue, obsId: captureNec.obsID!, necId: necId as NSNumber)
         
-        let c = fethchArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
         
         CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnActualTurkey(formName , formName: formNameValue, birdNo: noOfBird! as NSNumber, obsId: captureNec.obsID!, actualName: textField.text!, necId: necId as NSNumber)
         
@@ -714,12 +714,11 @@ extension AllBirdsViewControllerTurkey {
         for (index, bird) in savedBirdNameArray.enumerated() {
             for (birdIndex, object) in obsArr.enumerated() {
                 let obsName = ((object as! NSDictionary).allValues[0] as! CaptureNecropsyViewDataTurkey).obsName
-                if obsName == bird as? String {
-                    if index < self.obsArr.count {
+                if obsName == bird as? String, index < self.obsArr.count {
                         let movedOBS = self.obsArr[birdIndex]
                         self.obsArr.removeObject(at: birdIndex)
                         self.obsArr.insert(movedOBS, at: index)
-                    }
+                    
                 }
             }
         }
@@ -729,12 +728,11 @@ extension AllBirdsViewControllerTurkey {
         for (index, bird) in savedBirdNameArray.enumerated() {
             for (birdIndex, obsBird) in obsNameArray.enumerated() {
                 if let obsName = obsBird as? String {
-                    if obsName == bird as? String {
-                        if index < self.obsNameArray.count {
+                    if obsName == bird as? String, index < self.obsNameArray.count {
                             let movedOBSBird = self.obsNameArray[birdIndex]
                             self.obsNameArray.removeObject(at: birdIndex)
                             self.obsNameArray.insert(movedOBSBird, at: index)
-                        }
+                        
                     }
                 }
                 
@@ -757,24 +755,22 @@ extension AllBirdsViewControllerTurkey {
     }
     
     fileprivate func handleCatNameValidationCaseSkletaTurkey(_ fetchdata: NSArray, _ obsName: String?, _ arrOfIndex: inout [QuickIndexObject]) {
-        let objTable  = fetchdata.object(at: 0) as! SkeletaTurkey //: Skeleta = (fetchdata as? Skeleta)!
+        let objTable  = fetchdata.object(at: 0) as! SkeletaTurkey
         
-        if let quickIndex = objTable.quicklinkIndex as? Int {
-            if quickIndex > 0 {
+        if let quickIndex = objTable.quicklinkIndex as? Int, quickIndex > 0 {
                 let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
                 arrOfIndex.append(quickIndexObject)
-            }
+            
         }
     }
     
     fileprivate func handleCatNameValidationCaseCoccidiosisTurkey(_ fetchdata: NSArray, _ obsName: String?, _ arrOfIndex: inout [QuickIndexObject]) {
         let objTable  = fetchdata.object(at: 0) as! CoccidiosisTurkey //: Skeleta = (fetchdata as? Skeleta)!
         
-        if let quickIndex = objTable.quicklinkIndex as? Int {
-            if quickIndex > 0 {
+        if let quickIndex = objTable.quicklinkIndex as? Int , quickIndex > 0 {
                 let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
                 arrOfIndex.append(quickIndexObject)
-            }
+            
         }
     }
     
@@ -801,20 +797,20 @@ extension AllBirdsViewControllerTurkey {
         case "RespiratoryTurkey":
             let objTable  = fetchdata.object(at: 0) as! RespiratoryTurkey //: Skeleta = (fetchdata as? Skeleta)!
             
-            if let quickIndex = objTable.quicklinkIndex as? Int {
-                if quickIndex > 0 {
+            if let quickIndex = objTable.quicklinkIndex as? Int, quickIndex > 0 {
+               
                     let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
                     arrOfIndex.append(quickIndexObject)
-                }
+                
             }
         case "ImmuneTurkey":
             let objTable  = fetchdata.object(at: 0) as! ImmuneTurkey //: Skeleta = (fetchdata as? Skeleta)!
             
-            if let quickIndex = objTable.quicklinkIndex as? Int {
-                if quickIndex > 0 {
+            if let quickIndex = objTable.quicklinkIndex as? Int , quickIndex > 0 {
+               
                     let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
                     arrOfIndex.append(quickIndexObject)
-                }
+                
             }
             
         default:
@@ -837,12 +833,12 @@ extension AllBirdsViewControllerTurkey {
         for (_, quickIndexObject) in arrOfIndex.enumerated() {
             for (birdIndex, object) in obsArr.enumerated() {
                 let obsName = ((object as! NSDictionary).allValues[0] as! CaptureNecropsyViewDataTurkey).obsName
-                if quickIndexObject.quickIndex < self.obsArr.count {
-                    if obsName == quickIndexObject.obsName {
+                if quickIndexObject.quickIndex < self.obsArr.count, obsName == quickIndexObject.obsName {
+                   
                         let movedOBS = self.obsArr[birdIndex]
                         self.obsArr.removeObject(at: birdIndex)
                         self.obsArr.insert(movedOBS, at: quickIndexObject.quickIndex)
-                    }
+                    
                 }
             }
         }
@@ -852,12 +848,11 @@ extension AllBirdsViewControllerTurkey {
         for (_, object) in arrOfIndex.enumerated() {
             for (birdIndex, obsBird) in obsNameArray.enumerated() {
                 if let obsName = obsBird as? String {
-                    if object.quickIndex < self.obsNameArray.count {
-                        if obsName == object.obsName {
+                    if object.quickIndex < self.obsNameArray.count, obsName == object.obsName {
                             let movedOBSBird = self.obsNameArray[birdIndex]
                             self.obsNameArray.removeObject(at: birdIndex)
                             self.obsNameArray.insert(movedOBSBird, at: object.quickIndex)
-                        }
+                        
                     }
                 }
             }

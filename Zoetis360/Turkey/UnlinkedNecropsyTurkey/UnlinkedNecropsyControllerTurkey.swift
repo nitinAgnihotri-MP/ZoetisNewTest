@@ -82,11 +82,9 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
         necroWithoutTable.isHidden = false
         postingWithoutNecroTable.isHidden = true
         necroWithOutPostingSessionOutlet.setImage(UIImage(named: "Radio_Btn")!, for: UIControl.State())
-        let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionWithNumberTurkey()        
         buttnTag = 1
-        
-        var dateFormatter = DateFormatter()
-        dateFormatter = DateFormatter()
+     
+     
         dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         //        dateFormatter.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
@@ -105,8 +103,8 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
         
         for i in 0..<arr.count{
             let pId = arr.object(at: i)
-            var arr = NSMutableArray()
-            arr = CoreDataHandlerTurkey().FetchNecropsystep1UpdateFromUnlinkedTurkey(pId as! NSNumber).mutableCopy() as! NSMutableArray
+          
+            var arr = CoreDataHandlerTurkey().FetchNecropsystep1UpdateFromUnlinkedTurkey(pId as! NSNumber).mutableCopy() as! NSMutableArray
             if arr.count > 0
             {
                 self.NecropsiesPostingSess.add(arr)
@@ -151,8 +149,7 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
             for i in 0..<arr.count{
                 
                 let pId = arr.object(at: i)
-                var arr = NSMutableArray()
-                arr = CoreDataHandlerTurkey().FetchNecropsystep1UpdateFromUnlinkedTurkey(pId as! NSNumber).mutableCopy() as! NSMutableArray
+                var arr = CoreDataHandlerTurkey().FetchNecropsystep1UpdateFromUnlinkedTurkey(pId as! NSNumber).mutableCopy() as! NSMutableArray
                 if arr.count > 0
                 {
                     self.NecropsiesPostingSess.add(arr)
@@ -302,8 +299,8 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
         
         for i in 0..<arr.count{
             let pId = arr.object(at: i)
-            var arr = NSMutableArray()
-            arr = CoreDataHandlerTurkey().FetchNecropsystep1UpdateFromUnlinkedTurkey(pId as! NSNumber).mutableCopy() as! NSMutableArray
+          
+            var arr = CoreDataHandlerTurkey().FetchNecropsystep1UpdateFromUnlinkedTurkey(pId as! NSNumber).mutableCopy() as! NSMutableArray
             if arr.count > 0
             {
                 self.NecropsiesPostingSess.add(arr)
@@ -387,7 +384,7 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
         } else {
             self.cancelClick1()
             fromString = sessionFromDate.text!
-            let dateFormatter = DateFormatter()
+             dateFormatter = DateFormatter()
             dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             //            dateFormatter.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
@@ -414,7 +411,7 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
         toString = dateFormatter.string(from: datePicker.date)
         toDate = datePicker.date
         
-        if fromString == toString{
+        if fromString == toString || toDate.isGreaterThanDate(fromDate) {
             
             let strdate = dateFormatter.string(from: datePicker.date) as String
             sessionToDate.text = strdate
@@ -423,19 +420,11 @@ class UnlinkedNecropsyControllerTurkey: UIViewController {
             necroWithoutTable.reloadData()
             postingWithoutNecroTable.reloadData()
             
-        } else if toDate.isGreaterThanDate(fromDate) {
-            let strdate = dateFormatter.string(from: datePicker.date) as String
-            sessionToDate.text = strdate
-            UserDefaults.standard.set(sessionToDate.text, forKey: "date")
-            buttonBg.removeFromSuperview()
-            necroWithoutTable.reloadData()
-            postingWithoutNecroTable.reloadData()
-            
-        } else {
+        }  else {
             self.cancelClick1()
             
             fromString = sessionToDate.text!
-            let dateFormatter = DateFormatter()
+             dateFormatter = DateFormatter()
             dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
             toDate = dateFormatter.date(from: fromString)!
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"To date must be greater than from date.")
@@ -520,14 +509,8 @@ extension UnlinkedNecropsyControllerTurkey : UITableViewDataSource,UITableViewDe
                 let comlexDate = (arr1 as AnyObject).value(forKey: "complexDate") as! String
                 cell.necroWithoutDateLabel.text = comlexDate
                 cell.necroWithoutComplexLbl.text = complexName
-                let lngId =  (arr1 as AnyObject).value(forKey: "lngId") as! NSNumber
-                if lngId == 1{
-                    
-                    cell.necroLblLng.text = "(En)"
-                }
-                else{
-                    cell.necroLblLng.text = "(En)"
-                }
+                cell.necroLblLng.text = "(En)"
+                
             }
             return cell
             
@@ -552,13 +535,8 @@ extension UnlinkedNecropsyControllerTurkey : UITableViewDataSource,UITableViewDe
             cell.postingDateLbl?.text = posting.value(forKey: "sessiondate") as? String
             cell.postingSessionTypeLbl?.text = posting.value(forKey: "sessionTypeName") as? String
             cell.postingVeteranarianLbl?.text = posting.value(forKey: "vetanatrionName") as? String
-            let lngId =  posting.lngId
-            if lngId == 1{
-                cell.lblLng.text = "(En)"
-            }
-            else{
-                cell.lblLng.text = "(En)"
-            }
+            cell.lblLng.text = "(En)"
+            
             
             return cell
         }
@@ -637,8 +615,8 @@ extension UnlinkedNecropsyControllerTurkey : UITableViewDataSource,UITableViewDe
             let posting : PostingSessionTurkey = unlinkedNecropsies.object(at: indexPath.row) as! PostingSessionTurkey
             let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
             if lngId == posting.lngId{
-                var postingId = Int()
-                postingId = posting.postingId as! Int
+            
+                var postingId = posting.postingId as! Int
                 navigateToAnother!.isComesFromUnlikedWithPostind = true
                 if posting.actualTimeStamp == nil || posting.actualTimeStamp == ""{
                     posting.actualTimeStamp = ""

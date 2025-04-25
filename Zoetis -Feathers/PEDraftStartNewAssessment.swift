@@ -119,15 +119,14 @@ class PEDraftStartNewAssessment: BaseViewController {
         notesTextView.textContainer.lineFragmentPadding = 12
         notesTextView.text = ""
         peNewAssessment = CoreDataHandlerPE().getSavedDraftOnGoingAssessmentPEObject()
-        notesTextView.text =  peNewAssessment.notes
+        notesTextView.text = peNewAssessment.notes
         selectedCustomerText.text = peNewAssessment.customerName
-        selectedSiteText.text =  peNewAssessment.siteName
+        selectedSiteText.text = peNewAssessment.siteName
         peHeaderViewController = PEHeaderViewController()
         peHeaderViewController.titleOfHeader = "Draft Assessment"
         peHeaderViewController.assId = "C-\(peNewAssessment.draftID!)"
         self.headerView.addSubview(peHeaderViewController.view)
         self.topviewConstraint(vwTop: peHeaderViewController.view)
-        let defautUsername =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
         if peNewAssessment.evaluationDate == "" {
             selectedEvaluationDateText.text = strdate1
             self.peNewAssessment.evaluationDate = strdate1
@@ -138,24 +137,22 @@ class PEDraftStartNewAssessment: BaseViewController {
         var FirstName =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
         var LastName =  UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
         FirstName = FirstName + LastName
-        selectedEvaluatorText.text =  peNewAssessment.evaluatorName ?? FirstName
+        selectedEvaluatorText.text = peNewAssessment.evaluatorName ?? FirstName
         selectedEvaluationType.text = peNewAssessment.evaluationName ?? ""
         
-        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
-            if character == constantToSave.character(at: 0){
-                showBreedOthers()
-                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-                txtBreedOfBirdsOthers.text = str
-                txtBreedOfBird.text = "Other"
-            }
+        if let character = peNewAssessment.breedOfBird?.character(at: 1),character == constantToSave.character(at: 0) {
+            showBreedOthers()
+            let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
+            txtBreedOfBirdsOthers.text = str
+            txtBreedOfBird.text = "Other"
         }
-        if peNewAssessment.breedOfBird == "Other"{
+        if peNewAssessment.breedOfBird == "Other" {
             showBreedOthers()
         } else {
             hideBreedOthers()
         }
         
-        if peNewAssessment.isHandMix == true{
+        if peNewAssessment.isHandMix == true {
             handmixSwitch.setOn(true, animated: false)
             
         } else {
@@ -1097,7 +1094,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         self.peNewAssessment.breedOfBirdOther = txtBreedOfBirdsOthers.text
         self.peNewAssessment.incubation = txtIncubation.text
         self.peNewAssessment.incubationOthers = txtIncubationOthers.text
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+        let userID = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         self.peNewAssessment.userID = userID
         CoreDataHandlerPE().updateDraftAlreadyInProgressInDB(newAssessment: self.peNewAssessment)
         
@@ -1110,13 +1107,14 @@ class PEDraftStartNewAssessment: BaseViewController {
     // MARK: Check Mendatory Fields
     fileprivate func setBorderBreedOtherField() {
         let superviewCurrent = btnBreedOthers.superview
-        if ((peNewAssessment.breedOfBird?.lowercased().contains("other")) ?? false) {
-            if (peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "") == false,superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
+        if ((peNewAssessment.breedOfBird?.lowercased().contains("other")) ?? false),
+           (peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "") == false,
+           superviewCurrent != nil {
+            
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
                 }
             }
         }
@@ -1124,13 +1122,14 @@ class PEDraftStartNewAssessment: BaseViewController {
     
     fileprivate func setBorderManufctrerOtherField() {
         let superviewCurrent = manfacturerOtherBtn.superview
-        if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-            if (manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "") == false,superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
+        if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false),
+           (manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "") == false,
+           superviewCurrent != nil {
+            
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
                 }
             }
         }
@@ -1138,21 +1137,22 @@ class PEDraftStartNewAssessment: BaseViewController {
     
     fileprivate func setBorderForNmbrOfEggsField() {
         let superviewCurrent = eggsOtherBtn.superview
-        if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false) {
-            if (eggsOtherTxt.text != nil && eggsOtherTxt.text != "") == false,superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
+        if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false),
+           (eggsOtherTxt.text != nil && eggsOtherTxt.text != "") == false,
+           superviewCurrent != nil {
+            
+            for view in superviewCurrent!.subviews {
+                if view.isKind(of:UIButton.self) {
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderWidth = 2.0
                 }
             }
         }
     }
     
     fileprivate func setBorderEvaluationDateField() {
-        let superviewCurrent =  evaluationDateButton.superview
-        if superviewCurrent != nil{
+        let superviewCurrent = evaluationDateButton.superview
+        if superviewCurrent != nil {
             for view in superviewCurrent!.subviews {
                 if view.isKind(of:UIButton.self) {
                     view.layer.borderColor = UIColor.red.cgColor
@@ -1163,14 +1163,15 @@ class PEDraftStartNewAssessment: BaseViewController {
     }
     
     fileprivate func setBorderForCustomerBtn() {
-        let superviewCurrent =  customerButton.superview
-        if superviewCurrent != nil{
+        let superviewCurrent = customerButton.superview
+        if superviewCurrent != nil {
             for view in superviewCurrent!.subviews {
                 if view.isKind(of:UIButton.self) {
                     view.layer.borderColor = UIColor.red.cgColor
                     view.layer.borderWidth = 2.0
                     
-                }}
+                }
+            }
         }
     }
     
@@ -1382,8 +1383,8 @@ class PEDraftStartNewAssessment: BaseViewController {
     // MARK: Site Button Action
     @IBAction func siteClicked(_ sender: Any) {
         
-        let superviewCurrent =  siteButton.superview
-        if superviewCurrent != nil{
+        let superviewCurrent = siteButton.superview
+        if superviewCurrent != nil {
             for view in superviewCurrent!.subviews {
                 if view.isKind(of:UIButton.self) {
                     view.layer.borderColor = UIColor.lightGray.cgColor
@@ -1459,7 +1460,9 @@ class PEDraftStartNewAssessment: BaseViewController {
                 let indexOfItem = visitNameArray.index(of: selectedVal)
                 self.peNewAssessment.visitID = visitIDArray[indexOfItem] as? Int
                 self.checkBackAndSave()
-                PEAssessmentsDAO.sharedInstance.updateAssessmentStatus( userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId: self.peNewAssessment.serverAssessmentId ?? "", assessmentobj: self.peNewAssessment)
+                PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                                                                       serverAssessmentId: self.peNewAssessment.serverAssessmentId ?? "",
+                                                                       assessmentobj: self.peNewAssessment)
             }
             self.dropHiddenAndShow()
         }
@@ -1618,7 +1621,9 @@ class PEDraftStartNewAssessment: BaseViewController {
                 self.peNewAssessment.selectedTSRID = visitIDArray[indexOfItem] as? Int
                 self.checkBackAndSave()
                 
-                PEAssessmentsDAO.sharedInstance.updateAssessmentStatus( userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", serverAssessmentId:  self.peNewAssessment.serverAssessmentId ?? "", assessmentobj: self.peNewAssessment ?? self.peNewAssessment)
+                PEAssessmentsDAO.sharedInstance.updateAssessmentStatus(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                                                                       serverAssessmentId: self.peNewAssessment.serverAssessmentId ?? "",
+                                                                       assessmentobj: self.peNewAssessment)
                 
             }
             self.dropHiddenAndShow()
@@ -1814,43 +1819,39 @@ extension PEDraftStartNewAssessment{
         }
         
         if categoryCount > 0 {
-            var peNewAssessmentWas = PENewAssessment()
-            peNewAssessmentWas = self.peNewAssessment
-            
-            CoreDataHandler().deleteAllData("PE_AssessmentInProgress",predicate: NSPredicate(format: "userID == %d AND serverAssessmentId = %@", peNewAssessmentWas.userID ?? 0, peNewAssessmentWas.serverAssessmentId ?? ""))
+            CoreDataHandler().deleteAllData("PE_AssessmentInProgress",predicate: NSPredicate(format: "userID == %d AND serverAssessmentId = %@", self.peNewAssessment.userID ?? 0, self.peNewAssessment.serverAssessmentId ?? ""))
             CoreDataHandler().deleteAllData("PE_Refrigator")
             
-            
-            for  cat in  pECategoriesAssesmentsResponse.peCategoryArray {
-                for (index, ass) in cat.assessmentQuestions.enumerated(){
-                    var peNewAssessmentNew = PENewAssessment()
-                    peNewAssessmentNew = peNewAssessmentWas
-                    peNewAssessmentNew.cID = index
-                    peNewAssessmentNew.catID = cat.id
-                    peNewAssessmentNew.catName = cat.categoryName
-                    peNewAssessmentNew.catMaxMark = cat.maxMark
-                    peNewAssessmentNew.sequenceNo = cat.id
-                    peNewAssessmentNew.sequenceNoo = cat.sequenceNo
-                    peNewAssessmentNew.catResultMark = cat.maxMark
-                    peNewAssessmentNew.catEvaluationID = cat.evaluationID
-                    peNewAssessmentNew.catISSelected = cat.isSelected ? 1:0
-                    peNewAssessmentNew.assID = ass.id
-                    peNewAssessmentNew.assDetail1 = ass.assessment
-                    peNewAssessmentNew.evaluationID = cat.evaluationID
-                    peNewAssessmentNew.assDetail2 = ass.assessment2
-                    peNewAssessmentNew.assMinScore = ass.minScore
-                    peNewAssessmentNew.assMaxScore = ass.maxScore
-                    peNewAssessmentNew.assCatType = ass.cateType
-                    peNewAssessmentNew.assModuleCatID = ass.moduleCatId
-                    peNewAssessmentNew.assModuleCatName = ass.moduleCatName
-                    peNewAssessmentNew.assStatus = 1
-                    peNewAssessmentNew.informationImage = ass.informationImage
-                    peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
-                    peNewAssessmentNew.isAllowNA = ass.isAllowNA
-                    peNewAssessmentNew.rollOut = ass.rollOut
-                    peNewAssessmentNew.isNA = ass.isNA
-                    peNewAssessmentNew.qSeqNo = ass.qSeqNo
-                    CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:peNewAssessmentNew)
+            for cat in pECategoriesAssesmentsResponse.peCategoryArray {
+                for (index, ass) in cat.assessmentQuestions.enumerated() {
+                    if let peNewAssessmentNew = self.peNewAssessment {
+                        peNewAssessmentNew.cID = index
+                        peNewAssessmentNew.catID = cat.id
+                        peNewAssessmentNew.catName = cat.categoryName
+                        peNewAssessmentNew.catMaxMark = cat.maxMark
+                        peNewAssessmentNew.sequenceNo = cat.id
+                        peNewAssessmentNew.sequenceNoo = cat.sequenceNo
+                        peNewAssessmentNew.catResultMark = cat.maxMark
+                        peNewAssessmentNew.catEvaluationID = cat.evaluationID
+                        peNewAssessmentNew.catISSelected = cat.isSelected ? 1:0
+                        peNewAssessmentNew.assID = ass.id
+                        peNewAssessmentNew.assDetail1 = ass.assessment
+                        peNewAssessmentNew.evaluationID = cat.evaluationID
+                        peNewAssessmentNew.assDetail2 = ass.assessment2
+                        peNewAssessmentNew.assMinScore = ass.minScore
+                        peNewAssessmentNew.assMaxScore = ass.maxScore
+                        peNewAssessmentNew.assCatType = ass.cateType
+                        peNewAssessmentNew.assModuleCatID = ass.moduleCatId
+                        peNewAssessmentNew.assModuleCatName = ass.moduleCatName
+                        peNewAssessmentNew.assStatus = 1
+                        peNewAssessmentNew.informationImage = ass.informationImage
+                        peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
+                        peNewAssessmentNew.isAllowNA = ass.isAllowNA
+                        peNewAssessmentNew.rollOut = ass.rollOut
+                        peNewAssessmentNew.isNA = ass.isNA
+                        peNewAssessmentNew.qSeqNo = ass.qSeqNo
+                        CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:peNewAssessmentNew)
+                    }
                 }
             }
             let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
@@ -1889,42 +1890,6 @@ extension PEDraftStartNewAssessment{
         pECategoriesAssesmentsResponse.peCategoryArray = peCategoryFilteredArray
         return pECategoriesAssesmentsResponse.peCategoryArray.count ?? 0
     }
-    
-    // MARK: Check Data Duplicacy
-    private func dataDuplicacyCheck(assId: String, customerId: Int, siteId: Int, evalDate: String, evaulaterId: Int, _ completion: @escaping (_ status: Bool) -> Void){
-        let parameter = [
-            "AssessmentId":assId,
-            "SiteId": siteId,
-            "CustomerId": customerId,
-            "EvaulaterId": evaulaterId,
-            "EvaluationDate": evalDate
-        ] as JSONDictionary
-        ZoetisWebServices.shared.getDuplicacyCheck(controller: self, parameters: parameter, completion: { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
-            if json["Data"].boolValue == true{
-                completion(false)
-            }else{
-                completion(true)
-            }
-        })
-    }
-    
-    // MARK: Clean Session
-    private func cleanSession(){
-        
-        let peNewAssessmentSurrentIs =   PENewAssessment()
-        let peNewAssessmentNew = PENewAssessment()
-        peNewAssessmentNew.siteId = peNewAssessmentSurrentIs.siteId
-        peNewAssessmentNew.customerId = peNewAssessmentSurrentIs.customerId
-        peNewAssessmentNew.complexId = peNewAssessmentSurrentIs.complexId
-        peNewAssessmentNew.siteName = peNewAssessmentSurrentIs.siteName
-        peNewAssessmentNew.userID = peNewAssessmentSurrentIs.userID
-        peNewAssessmentNew.customerName = peNewAssessmentSurrentIs.customerName
-        peNewAssessmentNew.firstname = peNewAssessmentSurrentIs.firstname
-        peNewAssessmentNew.username = peNewAssessmentSurrentIs.username
-        peNewAssessmentNew.evaluatorName = peNewAssessmentSurrentIs.evaluatorName
-        
-    }
 }
 
 // MARK: Extension & Textview Delegates
@@ -1944,7 +1909,7 @@ extension PEDraftStartNewAssessment:UITextViewDelegate{
 // MARK: - WebServices
 extension PEDraftStartNewAssessment {
     
-    internal func fetchtAssessmentCategoriesResponse(){
+    internal func fetchtAssessmentCategoriesResponse() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
         let vc = storyBoard.instantiateViewController(withIdentifier: "PEDraftAssesmentFinalize") as? PEDraftAssesmentFinalize
         
@@ -1952,17 +1917,10 @@ extension PEDraftStartNewAssessment {
         UserDefaults.standard.setValue(self.peNewAssessment.isChlorineStrip, forKey: "isChlorineStrip")
         UserDefaults.standard.setValue(self.peNewAssessment.isAutomaticFail, forKey: "isAutomaticFail")
         UserDefaults.standard.synchronize()
-        if vc != nil{
+        if vc != nil {
             self.navigationController?.pushViewController(vc!, animated: true)
         }
-        
     }
-    
-    private func handleAssessmentCategoriesResponse(_ json: JSON) {
-        print(appDelegateObj.testFuntion())
-    }
-    
-    
 }
 // MARK: Extension & Textfield Delegates
 extension PEDraftStartNewAssessment : UITextFieldDelegate{
@@ -1995,12 +1953,11 @@ extension PEDraftStartNewAssessment : UITextFieldDelegate{
             }
             checkBackAndSave()
         }
-        
         return true;
     }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == self.eggsOtherTxt {
-            // return true if the string only contains numeric characters
             if string == "" {
                 return true
             }
@@ -2012,12 +1969,8 @@ extension PEDraftStartNewAssessment : UITextFieldDelegate{
             let currentString: NSString = textField.text! as NSString
             let newString: NSString =
             currentString.replacingCharacters(in: range, with: string) as NSString
-            
             return string == numberFiltered && newString.length <= maxLength
-            
-            return isValid
         }
-        
         
         return true;
     }

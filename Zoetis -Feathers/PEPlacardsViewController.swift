@@ -68,15 +68,13 @@ class PEPlacardsViewController: BaseViewController {
         
         tableview.tableFooterView = UIView()
         tableview.reloadData()
-        let peNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-        
     }
     
     
     // MARK: - Get Drafted Assessment's Count
     func getDraftCountFromDb() -> Int {
-        var allAssesmentDraftArr = CoreDataHandlerPE().fetchDetailsWithUserIDForAny(entityName: "PE_AssessmentInDraft")
-        var carColIdArrayDraftNumbers  = allAssesmentDraftArr.value(forKey: "draftNumber") as? NSArray ?? []
+        let allAssesmentDraftArr = CoreDataHandlerPE().fetchDetailsWithUserIDForAny(entityName: "PE_AssessmentInDraft")
+        let carColIdArrayDraftNumbers  = allAssesmentDraftArr.value(forKey: "draftNumber") as? NSArray ?? []
         var carColIdArray : [Int] = []
         
         for obj in carColIdArrayDraftNumbers {
@@ -84,25 +82,10 @@ class PEPlacardsViewController: BaseViewController {
                 carColIdArray.append(obj as? Int ?? 0)
             }
         }
-        return carColIdArray.count ?? 0
+        return carColIdArray.count
     }
-    
-    // MARK: - Get Drafted Assessment's
-    private func getAllDateArrayStored() -> [PENewAssessment]{
-        var peAssessmentArray : [PENewAssessment] = []
-        let drafts  = CoreDataHandlerPE().getSessionForViewAssessmentArrayPEObject(ofCurrentAssessment:true)
-        var carColIdArray : [Int] = []
-        for obj in drafts {
-            if !carColIdArray.contains(obj.dataToSubmitNumber as? Int ?? 0){
-                carColIdArray.append(obj.dataToSubmitNumber as? Int ?? 0)
-                peAssessmentArray.append(obj)
-            }
-        }
-        return peAssessmentArray
-    }
-    
-    
 }
+
 // MARK: - Extension of PE Placards View Controller & TableView Delegates
 extension PEPlacardsViewController: UITableViewDelegate, UITableViewDataSource{
     
@@ -111,9 +94,7 @@ extension PEPlacardsViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var height:CGFloat = CGFloat()
-        height = 70
-        return height
+        return 70
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -146,9 +127,7 @@ extension PEPlacardsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PEPlacardsHeaderCell" ) as! PEPlacardsHeaderCell
-        return headerView
-        return UIView()
-        
+        return headerView        
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
