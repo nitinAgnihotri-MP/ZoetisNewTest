@@ -41,7 +41,7 @@ extension Date {
     ///Identical implementation of function: getCurrentDateNow()
     static func getCurrentDate() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         return dateFormatter.string(from: Date())
     }
 }

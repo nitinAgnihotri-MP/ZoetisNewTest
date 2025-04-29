@@ -85,7 +85,7 @@ class PESessionViewController: BaseViewController {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         let sortedArray = peAssessmentDraftArray.sorted {
             let evalDate1 = $0.evaluationDate ?? ""
             let evalDate2 = $1.evaluationDate ?? ""
@@ -451,7 +451,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
         let oldDate = olDateFormatter.date(from: inputDate)
         
         let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+        convertDateFormatter.dateFormat = Constants.yyyyMMddStr
         
         if oldDate != nil{
             return convertDateFormatter.string(from: oldDate!)
@@ -531,7 +531,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
             return ""
         }
         
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr///this is what you want to convert format
+        dateFormatter.dateFormat = Constants.MMddyyyyStr///this is what you want to convert format
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC") //NSTimeZone(name: "UTC") as TimeZone!
         let timeStamp = dateFormatter.string(from: convertedDate ?? Date())
         

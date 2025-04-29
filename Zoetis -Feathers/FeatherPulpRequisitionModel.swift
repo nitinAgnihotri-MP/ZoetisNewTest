@@ -23,7 +23,7 @@ class FeatherPulpRequisitionModel {
       var surveyConductedOn = ""
       var sampleCollectionDate: String = {
           let formatter = DateFormatter()
-          formatter.dateFormat = appDelegateObj.MMddyyyStr
+          formatter.dateFormat = Constants.MMddyyyyStr
           let dateString = formatter.string(from: Date())
           return dateString
       }()

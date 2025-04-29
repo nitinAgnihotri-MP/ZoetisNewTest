@@ -28,7 +28,7 @@ class UtilityClass: NSObject {
         for i in 0..<sessionDataArray.count {
             let date = (sessionDataArray.object(at: i) as AnyObject).value(forKey: "sessiondate")
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
             let date1 = dateFormatter.date(from: date as! String)
             let date2 = dateFormatter.date(from: AllValidSessions.sharedInstance.complexDate as String)
@@ -77,9 +77,9 @@ class UtilityClass: NSObject {
     class func convertDateFormater(_ date: String) -> String{
         if date != "" && Regions.languageID == 3{
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             let date = dateFormatter.date(from: date)
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             return  dateFormatter.string(from: date!)
         }
         else {

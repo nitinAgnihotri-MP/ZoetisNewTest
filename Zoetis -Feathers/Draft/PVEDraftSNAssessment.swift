@@ -85,7 +85,7 @@ class PVEDraftSNAssessment: BaseViewController {
     
     func generateSeveyNumber(dateStr:String) -> String {
         let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        inputFormatter.dateFormat = Constants.MMddyyyyStr
         let siteId = sharedManager.getSessionValueForKeyFromDB(key: "siteId") as? Int ?? 0
         let evaluationDateStr = sharedManager.getSessionValueForKeyFromDB(key: "evaluationDate") as? String
         let savedDateString = evaluationDateStr?.replacingOccurrences(of: "/", with: "", options: .literal, range: nil)
@@ -583,7 +583,7 @@ extension PVEDraftSNAssessment{
     func getTodayDateSring() -> String {
         let todaysDate = NSDate()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         var DateInFormat = dateFormatter.string(from: todaysDate as Date)
         return DateInFormat
     }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad10_9rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -158,6 +158,7 @@
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
             <connections>
+                <outlet property="Details" destination="I8Y-7Y-fln" id="CbT-Td-RsZ"/>
                 <outlet property="agrlbl" destination="Qmc-h3-IsQ" id="qWG-u3-NXR"/>
                 <outlet property="avgAgeTxtField" destination="pdM-fZ-nLJ" id="XYx-Yh-JcQ"/>
                 <outlet property="avgWeightTxtFld" destination="gwu-9p-OXY" id="sZK-uk-r3d"/>
@@ -168,7 +169,6 @@
                 <outlet property="livablityLbl" destination="eaB-CZ-f25" id="vCy-QK-qA4"/>
                 <outlet property="liveTxtFld" destination="78y-I5-XSz" id="B3W-qm-OHj"/>
                 <outlet property="mortalityTxtFld" destination="bUP-nZ-Ws0" id="xlE-gt-ITp"/>
-                <outlet property="otherDetails" destination="I8Y-7Y-fln" id="W9o-Go-9or"/>
                 <outlet property="outTimeTxtFld" destination="O2n-XH-ca2" id="Khu-fm-ihl"/>
                 <outlet property="sevenDaylbl" destination="UiZ-Y6-bz1" id="rW1-AU-aEu"/>
                 <outlet property="timeOutlbl" destination="7h9-JC-lS6" id="SwV-9t-y92"/>

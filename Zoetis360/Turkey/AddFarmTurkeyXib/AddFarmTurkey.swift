@@ -274,6 +274,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         let result = NSMutableArray()
         for value in array {
             if encountered.contains(value as! String) {
+                debugPrint("value not found.")
             } else {
                 encountered.insert(value as! String)
                 result.add(value as! String)
@@ -294,9 +295,8 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                 result.add(value as! String)
             }
         }
-        
-        var arra = NSArray()
-        arra = result.mutableCopy()  as! NSArray
+    
+        var arra = result.mutableCopy()  as! NSArray
         
         return arra
     }
@@ -331,19 +331,13 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                 if ((resp.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                     let resp : RespiratoryTurkey = resp.object(at: i) as! RespiratoryTurkey
                     
-                    if resp.measure! == "Y,N" {
+                    if resp.measure! == "Y,N" || resp.measure! == "Actual" {
                         
                         let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
                         CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Resp", obsName: resp.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(resp.observationId!),measure: trimmed,quickLink: resp.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId! ,actualText: resp.measure ?? "")
                         
-                    } else if ( resp.measure! == "Actual"){
-                        
-                        let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Resp", obsName: resp.observationField!, formName:formName , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(resp.observationId!),measure: trimmed,quickLink: resp.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:resp.refId!,actualText: resp.measure ?? "")
-                        
-                    } else {
+                    }  else {
                         
                         let trimmed = resp.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
@@ -459,20 +453,15 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                     
                     let skleta : SkeletaTurkey = skeletenArr.object(at: i) as! SkeletaTurkey
                     
-                    if skleta.measure! == "Y,N" {
+                    if skleta.measure! == "Y,N" ||  skleta.measure! == "Actual" {
                         let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         
                         CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(skleta.observationId!),measure: trimmed,quickLink: skleta.quicklinks!,necId:necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId! ,actualText: skleta.measure ?? "")
                     }
-                    else if ( skleta.measure! == "Actual"){
-                        let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(skleta.observationId!),measure: trimmed,quickLink: skleta.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId! ,actualText: skleta.measure ?? "")
-                    }
+                    
                     else {
                         let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
-                        let neciIdStep = UserDefaults.standard.integer(forKey: "necId")
                         
                         CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "skeltaMuscular", obsName: skleta.observationField!, formName:formName  , obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: Int(array[0])! , index: j, obsId: Int(skleta.observationId!),measure: trimmed,quickLink: skleta.quicklinks!,necId:necId as NSNumber ,isSync:true,lngId:lngId as NSNumber,refId:skleta.refId! ,actualText: skleta.measure ?? "")
                         
@@ -501,16 +490,12 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
                 if ((cocoii.object(at: i) as AnyObject).value(forKey: "visibilityCheck") as AnyObject).int32Value == 1 {
                     let cocoiDis : CoccidiosisTurkey = cocoii.object(at: i) as! CoccidiosisTurkey
                     
-                    if cocoiDis.measure! == "Y,N" {
+                    if cocoiDis.measure! == "Y,N" || cocoiDis.measure! == "Actual"  {
                         
                         let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName, obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(cocoiDis.observationId!),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId: necId as NSNumber,isSync:true,lngId:lngId as NSNumber,refId:cocoiDis.refId! ,actualText: cocoiDis.measure ?? "")
                     }
-                    else if ( cocoiDis.measure! == "Actual"){
-                        
-                        let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: "Coccidiosis", obsName: cocoiDis.observationField!, formName:formName, obsVisibility: false, birdNo: j + 1 as NSNumber,  obsPoint: 0 , index: j, obsId: Int(cocoiDis.observationId!),measure: trimmed,quickLink: cocoiDis.quicklinks!,necId:necId as NSNumber,isSync:true ,lngId:lngId as NSNumber,refId:cocoiDis.refId! ,actualText: cocoiDis.measure ?? "")
-                    } else {
+                     else {
                         
                         let trimmed = cocoiDis.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                         let array = (trimmed.components(separatedBy: ",") as [String])
@@ -792,12 +777,8 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         } else {
             necId = UserDefaults.standard.integer(forKey: "necId") as Int
             count =  UserDefaults.standard.integer(forKey: "count")
-            if count == 0{
-                count = count+1
-            }
-            else{
-                count = count+1
-            }
+            count = count+1
+            
         }
         
         UserDefaults.standard.set(self.count, forKey: "count")
@@ -833,13 +814,11 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
             farmWeightTextField.text = ""
         }
         
-        var imageAutoIncrementId = Int()
-        imageAutoIncrementId = UserDefaults.standard.integer(forKey: "imageAutoIncrementIdTurkey")
-        if imageAutoIncrementId == 0 {
-            imageAutoIncrementId = imageAutoIncrementId + 1
-        } else {
-            imageAutoIncrementId = imageAutoIncrementId + 1
-        }
+      
+        var imageAutoIncrementId = UserDefaults.standard.integer(forKey: "imageAutoIncrementIdTurkey")
+       
+        imageAutoIncrementId = imageAutoIncrementId + 1
+        
         UserDefaults.standard.set(imageAutoIncrementId, forKey: "imageAutoIncrementIdTurkey")
         
         CoreDataHandlerTurkey().SaveNecropsystep1Turkey(necId as NSNumber, age: self.ageLbl
@@ -1081,16 +1060,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         return string == numberFiltered && newString.length <= maxLength
     }
     
-    fileprivate func handleTag11(_ string: String, _ aSet: CharacterSet, _ textField: UITextField, _ range: NSRange) -> Bool {
-        let compSepByCharInSet = string.components(separatedBy: aSet)
-        let numberFiltered = compSepByCharInSet.joined(separator: "")
-        
-        let maxLength = 6
-        let currentString: NSString = textField.text! as NSString
-        let newString: NSString =
-        currentString.replacingCharacters(in: range, with: string) as NSString
-        return string == numberFiltered && newString.length <= maxLength
-    }
+  
     
     fileprivate func handleValidations(_ string: String, _ textField: UITextField, _ newString: inout NSString) -> Bool {
         if string == "." {
@@ -1141,7 +1111,7 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
-            
+            debugPrint("back space is long pressed.")
         }  else if ((textField.text?.count)! > 50  ){
             return false
         }
@@ -1153,13 +1123,9 @@ class AddFarmTurkey: UIView,UITextFieldDelegate{
         } else {
             let aSet = NSCharacterSet(charactersIn: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£").inverted
             switch textField.tag {
-            case 18 :
+            case 18 , 11 :
                
                 return handleTag18(string, aSet, textField, range)
-                
-            case 11 :
-              
-                return handleTag11(string, aSet, textField, range)
                 
             case 12 :
                 return handleValidation12(textField, range, string)
@@ -1407,12 +1373,10 @@ extension AddFarmTurkey :UITableViewDataSource,UITableViewDelegate {
             else if arrayTag == 4 {
                 
                 if butttnTag1 == 0 {
-                    let objMedtricarray = metricArray[indexPath.row]
                     indexOfSelectedPerson = indexPath.row
                     
                     
                 } else {
-                    let objstr = birdArray[indexPath.row]
                     indexOfSelectedPerson = indexPath.row
                     
                 }

@@ -232,8 +232,7 @@ class TurkeyBarChartViewController: UIViewController,IAxisValueFormatter,ChartVi
         barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:verticalValues)
         
         let barData : ChartDataSet = dataSet.currentSet
-        var chartData = BarChartData()
-        chartData = BarChartData(dataSets: [barData])
+        var chartData = BarChartData(dataSets: [barData])
         
         var singleColorBlue = Bool()
         var singleColorRed = Bool()

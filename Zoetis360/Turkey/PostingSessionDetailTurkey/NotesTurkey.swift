@@ -100,7 +100,7 @@ class NotesTurkey: UIView {
             
             let str =  UserDefaults.standard.value(forKey: "postingSessionNotes") as! String
             if str.isEmpty {
-                
+                debugPrint("textview is empty.")
             } else {
                 textView.text = str
             }

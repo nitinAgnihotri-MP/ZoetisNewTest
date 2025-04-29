@@ -98,7 +98,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
     var fileDetailArray = NSArray()
     // MARK: - VIEW LIFE CYCLE
     let noIdFound = Constants.noIdFoundStr
-    let yyymmdd = appDelegateObj.yyyyMMddStr
+    let yyymmdd = Constants.yyyyMMddStr
     let userIdStr = " userID == %d AND serverAssessmentId == %@"
     let noteStr = Constants.noMinimizeWhileSyncing
     override func viewDidLoad() {
@@ -138,8 +138,8 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         registerTblVwCells()
         setUI()
         if regionID == 3 {
-            extendedLbl.text = appDelegateObj.extendedMicrobialStr
-            extendedLblDash.text = appDelegateObj.extendedMicrobialStr
+            extendedLbl.text = Constants.extendedMicrobialStr
+            extendedLblDash.text = Constants.extendedMicrobialStr
         } else {
             extendedLbl.text = "Country"
             extendedLblDash.text = "Country"
@@ -431,10 +431,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         
         if regionID == 3
         {
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
         }
         else{
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
         }
         
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC")
@@ -744,10 +744,10 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         var peAssessmentDraftArray = getAllDateArrayStoredOffline()
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+        dateFormatter.dateFormat = Constants.ddMMyyyStr
 
         if(regionID == 3) {
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
         }
         
         let sortedArray = peAssessmentDraftArray.sorted {
@@ -2314,7 +2314,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         let formattedDate: String = {
             if regionID != 3 {
                 let formatter = DateFormatter()
-                formatter.dateFormat = appDelegateObj.ddMMyyyStr
+                formatter.dateFormat = Constants.ddMMyyyStr
                 if let rawDate = formatter.date(from: peCertificateData.certificateDate ?? "") {
                     formatter.dateFormat = yyymmdd
                     return formatter.string(from: rawDate)
@@ -2569,7 +2569,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         
         // Format evaluation date
         let dateFormatter = CodeHelper.sharedInstance.getDateFormatterObj("")
-        dateFormatter.dateFormat = regionId == 3 ? appDelegateObj.MMddyyyStr : appDelegateObj.ddMMyyyStr
+        dateFormatter.dateFormat = regionId == 3 ? Constants.MMddyyyyStr : Constants.ddMMyyyStr
         let evalDateObj = dateFormatter.date(from: evaluationDate)
         dateFormatter.dateFormat = "yyyyMMdd"
         let evalDateStr = dateFormatter.string(from: evalDateObj ?? Date())
@@ -2856,7 +2856,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             convertDateFormatter.dateFormat = yyymmdd
         } else {
-            convertDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            convertDateFormatter.dateFormat = Constants.MMddyyyyStr
         }
         
         if oldDate != nil {
@@ -2870,7 +2870,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
 
 extension String {
     
-    func toDate(withFormat format: String = appDelegateObj.MMddYYYYHHmmss)-> Date?{
+    func toDate(withFormat format: String = Constants.MMddYYYYHHmmss)-> Date?{
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone(identifier: appDelegateObj.asiaTehran)
         dateFormatter.locale = Locale(identifier: "fa-IR")
@@ -2889,7 +2889,7 @@ extension Date {
         return Int64(self.timeIntervalSince1970 * 1000)
     }
     
-    func toString(withFormat format: String = appDelegateObj.MMddYYYYHHmmss) -> String {
+    func toString(withFormat format: String = Constants.MMddYYYYHHmmss) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "fa-IR")
         dateFormatter.timeZone = TimeZone(identifier: appDelegateObj.asiaTehran)

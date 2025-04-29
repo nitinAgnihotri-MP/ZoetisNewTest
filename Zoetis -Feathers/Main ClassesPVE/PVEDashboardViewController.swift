@@ -1348,7 +1348,7 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
         }
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat=appDelegateObj.MMddYYYYHHmmss
+        dateFormatter.dateFormat=Constants.MMddYYYYHHmmss
         let evaluationDate = (dict).value(forKey: "evaluationDate")  as? String
         
         var tempBreedOfBirdsId = ""

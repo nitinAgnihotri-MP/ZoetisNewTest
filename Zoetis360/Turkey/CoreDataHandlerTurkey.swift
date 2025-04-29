@@ -122,7 +122,7 @@ class CoreDataHandlerTurkey: NSObject {
             assert(false, "no date from string")
             return ""
         }
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         let timeStamp = dateFormatter.string(from: date)
         
         return timeStamp
@@ -188,7 +188,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "HatcheryVacTurkey")
         
@@ -218,7 +218,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAddvacinationDataTurkey(_ postnigId : NSNumber) -> NSArray {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "HatcheryVacTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postnigId)
@@ -243,7 +243,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     func fetchAddvacinationDataWithisSyncTurkey(_ postnigId : NSNumber , isSync : Bool) -> NSArray {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "HatcheryVacTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postnigId)
@@ -271,7 +271,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "vetanatrionName == %@", _VetName)
@@ -367,7 +367,7 @@ class CoreDataHandlerTurkey: NSObject {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate
         else { return }
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let vaccinationFields = [
             "fieldStrain1": ("IBDV", "fieldRoute1Id", "fieldAge1"),
             "fieldStrain2": ("IBDV", "fieldRoute2Id", "fieldAge2"),
@@ -501,292 +501,6 @@ class CoreDataHandlerTurkey: NSObject {
             return " "
         }
     }
-
-//    func getFieldDataFromServerTurkey(_ dict : NSDictionary) {
-//        let entity = NSEntityDescription.entity(forEntityName: "FieldVaccinationTurkey", in: managedContext)
-//        
-//        var allkeyArr = dict.allKeys as NSArray
-//        allkeyArr = allkeyArr.sorted(by: {($0 as! String).localizedStandardCompare($1 as! String) == .orderedAscending}) as NSArray
-//        for  j in 0..<allkeyArr.count{
-//            
-//            let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-//            let stringValidate = allkeyArr.object(at: j) as! String
-//            
-//            if (stringValidate == "hatcheryStrain1") {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain1"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//                
-//            }
-//            else if(stringValidate == "hatcheryStrain2")   {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain2"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute2Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//                
-//            }
-//            else if (stringValidate == "hatcheryStrain3")  {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain3"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute3Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//            }
-//            else if (stringValidate == "hatcheryStrain4")  {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain4"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute4Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//            }
-//            else if (stringValidate == "hatcheryStrain5")  {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain5"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute5Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//            }
-//            else if (stringValidate == "hatcheryStrain6")  {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain6"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute6Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//            }
-//            else if (stringValidate == "hatcheryStrain7")  {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain7"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute7Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//            }
-//            else if (stringValidate == "hatcheryStrain8") {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain8"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute8Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//                
-//            }
-//            else if (stringValidate == "hatcheryStrain9") {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain9"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute9Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//            }
-//            else if (stringValidate == "hatcheryStrain10") {
-//                person.setValue("", forKey:"type")
-//                person.setValue(dict.value(forKey: "hatcheryStrain10"), forKey:"strain")
-//                switch dict.value(forKey: "hatcheryRoute10Id") as! Int {
-//                case 1:
-//                    person.setValue(Constants.wingWeb, forKey:"route")
-//                case 2:
-//                    person.setValue(Constants.drinkingWater, forKey:"route")
-//                case 3:
-//                    person.setValue(Constants.spray, forKey:"route")
-//                case 4:
-//                    person.setValue(Constants.inovo, forKey:"route")
-//                case 5:
-//                    person.setValue("Subcutaneous", forKey:"route")
-//                case 6:
-//                    person.setValue("Intramuscular", forKey:"route")
-//                case 7:
-//                    person.setValue(Constants.eyeDrop, forKey:"route")
-//                default:
-//                    person.setValue(" ", forKey:"route")
-//                }
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"postingId")
-//                person.setValue(dict.value(forKey: "vaccinationName"), forKey:"vaciNationProgram")
-//                person.setValue(dict.value(forKey: "sessionId"), forKey:"loginSessionId")
-//                person.setValue(false, forKey:"isSync")
-//                
-//            }
-//            do
-//            {
-//                try managedContext.save()
-//            }
-//            catch
-//            {
-//                print(appDelegateObj.testFuntion())
-//            }
-//            hatcheryVaccinationObject.append(person)
-//        }
-//    }
     
     fileprivate func handleHatcheryRoute1IdValidation(_ dict: NSDictionary, _ person: NSManagedObject) {
         switch dict.value(forKey: "hatcheryRoute1Id") as! Int {
@@ -1229,7 +943,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchFieldAddvacinationDataAllTurkey() -> NSArray {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "FieldVaccinationTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -1264,7 +978,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "FieldVaccinationTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -1300,7 +1014,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "FieldVaccinationTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -1340,7 +1054,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "FieldVaccinationTurkey")
         
@@ -1433,7 +1147,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateSettingDataSkeltaTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "SkeletaTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
@@ -1477,7 +1191,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllSeettingdataTurkey() -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "SkeletaTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         do
@@ -1505,7 +1219,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "SkeletaTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -1598,7 +1312,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateSettingDataCocoiiTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
@@ -1644,7 +1358,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -1675,7 +1389,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -1767,7 +1481,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateSettingDataGitractTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITractTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
@@ -1808,7 +1522,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllGITractDataTurkey() -> NSArray {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITractTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -1836,7 +1550,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllGITractDataUsingLngIdTurkey(lngId:NSNumber) -> NSArray {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITractTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -1927,7 +1641,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateSettingDataRespTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "RespiratoryTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
@@ -1963,7 +1677,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllRespiratoryTurkey() -> NSArray {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "RespiratoryTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -1990,7 +1704,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "RespiratoryTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -2082,7 +1796,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateSettingDataImmuneTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "ImmuneTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
@@ -2128,7 +1842,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "ImmuneTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -2163,7 +1877,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "ImmuneTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -2197,7 +1911,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateSettingDataQuickIndex(_ strObservationField: String, obsId: NSNumber, quicklinkIndex: Int, entityName: String) {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  entityName)
         fetchRequest.returnsObjectsAsFaults = false
@@ -2297,7 +2011,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "RouteTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -2327,7 +2041,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "RouteTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -2403,7 +2117,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CustmerTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         do
@@ -2431,7 +2145,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchCustomerWithComplexIdTurkey(_ complexId: NSNumber) -> NSArray {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CustmerTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.complexIdPredicate, complexId)
         fetchRequest.returnsObjectsAsFaults = false
@@ -2460,7 +2174,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchCustomerWithCustIdTurkey(_ custId: NSNumber) -> NSArray {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CustmerTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "custId == %@", custId)
@@ -2529,7 +2243,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "SalesrepTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         do
@@ -2604,7 +2318,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "VeterationTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -2638,7 +2352,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "VeterationTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.complexIdPredicate, complexId)
@@ -2721,7 +2435,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocciProgramPostingTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -2752,7 +2466,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocciProgramPostingTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -2830,7 +2544,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdSizePostingTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -2902,7 +2616,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "SessiontypeTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -2930,7 +2644,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "SessiontypeTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -2987,7 +2701,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MoleculeFeeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -3070,7 +2784,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "BreedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         do
@@ -3150,7 +2864,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
@@ -3169,7 +2883,7 @@ class CoreDataHandlerTurkey: NSObject {
                 
                 let dateFormatter = DateFormatter()
                 
-                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatter.dateFormat = Constants.MMddyyyyStr
                 
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     
@@ -3200,7 +2914,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
@@ -3234,7 +2948,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchCompexTypeTurkey() -> NSArray{
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "ComplexPostingTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -3263,7 +2977,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  entity)
         fetchRequest.returnsObjectsAsFaults = false
         do
@@ -3287,7 +3001,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "ComplexPostingTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "customerId == %@", CustomerId)
@@ -3370,7 +3084,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "LoginTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         do
@@ -3399,7 +3113,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "LoginTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "username == %@", email)
@@ -3459,7 +3173,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fectCustomerRepresenttiveWithCustomernameTurkey ( _ customername : String) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CustomerReprestativeTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "customername == %@ ",  customername)
@@ -3490,7 +3204,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fectCustomerRepWithCustomernameTurkey ( _ usrid : Int) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CustomerReprestativeTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "userid == %d ",  usrid)
@@ -3646,19 +3360,18 @@ class CoreDataHandlerTurkey: NSObject {
         fetchUsers.predicate                = fetchPredicate
         
         do
-            
         {
             let results = try managedContext.fetch(fetchUsers)
+            debugPrint(results)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
                 managedContext.delete(managedObjectData)
             }
-            
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            debugPrint(appDelegateObj.testFuntion())
         }
         
     }
@@ -3671,6 +3384,7 @@ class CoreDataHandlerTurkey: NSObject {
         do
         {
             let results = try managedContext.fetch(fetchUsers)
+            debugPrint(results)
             for managedObject in results
             {
                 let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
@@ -3679,7 +3393,7 @@ class CoreDataHandlerTurkey: NSObject {
         }
         catch
         {
-            print(appDelegateObj.testFuntion())
+            debugPrint(appDelegateObj.testFuntion())
         }
         
     }
@@ -3937,7 +3651,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchFromAutoIncrementTurkey() -> Int
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "IdTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         var auto: Int?
@@ -4031,7 +3745,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -4099,7 +3813,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -4228,7 +3942,6 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
-        let postingId = dict.value(forKey: "SessionId") as! Int
         self.deleteDataWithDeviceSessionIdTurkey(postingId : postinngId)
         let entity = NSEntityDescription.entity(forEntityName: "PostingSessionTurkey", in: managedContext)
         
@@ -4314,7 +4027,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -4343,7 +4056,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateFinalizeDataActualNecTurkey(_ necId : NSNumber,deviceToken : String){
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
@@ -4372,7 +4085,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateFeddProgramInStep1Turkey(_ necId : NSNumber,feedname:String,feedId:NSNumber)
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -4403,7 +4116,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateFeddProgramInStep1UsingFarmNameTurkey(_ necId : NSNumber,feedname:String,feedId:NSNumber,formName:String) {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.necFarmNamePredicate, necId,formName)
@@ -4437,7 +4150,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -4466,7 +4179,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -4495,7 +4208,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -4523,7 +4236,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "timeStamp == %@", timeStampId)
@@ -4531,7 +4244,6 @@ class CoreDataHandlerTurkey: NSObject {
         { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if fetchedResult!.count > 0
             {
-                let objTable: PostingSessionTurkey = (fetchedResult![0] as? PostingSessionTurkey)!
                do
                 {
                     try managedContext.save()
@@ -4551,7 +4263,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -4582,7 +4294,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateFinalizeDataWithNecTurkey(_ postingId : NSNumber,finalizeNec : NSNumber) {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -4614,7 +4326,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateFinalizeDataWithNecNotesTurkey(_ postingId : NSNumber,notes : String)
     
     { let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -4645,7 +4357,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
@@ -4692,7 +4404,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
@@ -4742,7 +4454,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
@@ -4788,7 +4500,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
@@ -4798,17 +4510,10 @@ class CoreDataHandlerTurkey: NSObject {
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            
             if let results = fetchedResult
             {
-                
                 postingArray  = results as NSArray
-                
-            }
-            else
-            {
-                
-                
+                debugPrint(postingArray)
             }
         }
         catch
@@ -4826,7 +4531,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
@@ -4867,7 +4572,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
@@ -4904,7 +4609,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -4937,7 +4642,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "catptureNec == %@", session)
@@ -4950,7 +4655,7 @@ class CoreDataHandlerTurkey: NSObject {
                 postingArray  = results as NSArray
                 
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatter.dateFormat = Constants.MMddyyyyStr
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     return dateFormatter.date(from:one.sessiondate!)! > dateFormatter.date(from: two.sessiondate!)! }
                 postingArray = sortedArray as NSArray
@@ -4970,7 +4675,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllPostingExistingSessionwithFullSessionTurkey(_ session : NSNumber,birdTypeId:NSNumber) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "catptureNec == %@ AND birdBreedId == %@", session,birdTypeId)
@@ -4997,7 +4702,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "catptureNec == %@ AND birdBreedId == %@", capNec,birdTypeId)
@@ -5023,7 +4728,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllPostingExistingSessionwithFullSessionSessionDateTurkey(_ session : NSNumber,birdTypeId:NSNumber,todate:String,lasatdate:String) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         let datePredicate = NSPredicate(format: "catptureNec == %@ AND birdBreedId == %@ AND sessiondate >=  %@ AND sessiondate  <=  %@", session,birdTypeId,todate , lasatdate )
@@ -5059,7 +4764,7 @@ class CoreDataHandlerTurkey: NSObject {
         if cocciControlArray.count > 0 {
             
             let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
+            self.managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
@@ -5244,7 +4949,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllCocciControlTurkey(_ feedId :NSNumber) -> NSArray{
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
@@ -5270,7 +4975,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllCocciControlAllDataTurkey() -> NSArray {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         do
@@ -5298,7 +5003,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllCocciControlviaPostingidTurkey(_ postingId :NSNumber) -> NSArray    {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -5324,7 +5029,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAllCocciControlviaIsyncTurkey(_ isSync :NSNumber , postinID : NSNumber) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, isSync,postinID)
@@ -5353,7 +5058,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND feedId == %@", postingId,feedId)
@@ -5386,7 +5091,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateisSyncOnAllCocciControlviaPostingidTurkey(_ postingId :NSNumber , isSync : Bool,_ completion: (_ status: Bool) -> Void)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisControlFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -5423,7 +5128,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateisSyncOnAntiboticViaPostingIdTurkey(_ postingId :NSNumber , isSync : Bool,_ completion: (_ status: Bool) -> Void)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -5459,7 +5164,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateisSyncOnAntiboticViaFeedProgramTurkey(postingId :NSNumber , feedId : NSNumber,feedProgram:String)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
@@ -5490,7 +5195,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     func fetchAntiboticViaIsSyncTurkey(_ isSync:Bool, postingID : NSNumber) -> NSArray    {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
@@ -5516,7 +5221,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAntiboticViaPostingIdTurkey(_ postingId:NSNumber) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -5546,7 +5251,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -5584,7 +5289,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateisSyncOnAlterNativeViaFeedProgramTurkey(postingId :NSNumber , feedId : NSNumber,feedProgram:String)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
@@ -5618,7 +5323,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAlternativeFeedWithIsSyncTurkey(_ isSync : Bool,postingID:NSNumber) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
@@ -5647,7 +5352,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAlternativeFeedPostingidTurkey(_ postingId : NSNumber) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -5673,7 +5378,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -5711,7 +5416,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateisSyncOnMyCotxinViaFeedProgramTurkey(postingId :NSNumber , feedId : NSNumber,feedProgram:String)
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postingIdFeedPredicate, postingId,feedId)
@@ -5744,7 +5449,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchMyBindersViaPostingIdTurkey(_ postingId : NSNumber) -> NSArray {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -5771,7 +5476,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchMyBindersViaIsSyncTurkey(_ isSync : Bool , postingID : NSNumber) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.statusPostingIdPredicate, NSNumber(booleanLiteral: isSync),postingID)
@@ -5807,7 +5512,7 @@ class CoreDataHandlerTurkey: NSObject {
         if AntiboticArray.count > 0 {
             
             let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
+            self.managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
@@ -5835,15 +5540,7 @@ class CoreDataHandlerTurkey: NSObject {
                         person.setValue(lngId, forKey:"lngId")
                         person.setValue(lbldate, forKey:"feedDate")
                         try? managedContext.save()
-                        
-//                        do
-//                        {
-//                            try managedContext.save()
-//                        }
-//                        catch
-//                        {
-//                        }
-                        
+
                         cocciAntibotic.append(person)
                     }
                     
@@ -6001,7 +5698,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAntiboticTurkey(_ feedId:NSNumber) -> NSArray {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
@@ -6028,7 +5725,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAntiboticPostingIdTurkey(_ postingId:NSNumber) -> NSArray {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -6038,6 +5735,7 @@ class CoreDataHandlerTurkey: NSObject {
             if let results = fetchedResult
             {
                 AntiboticArray = results as NSArray
+                debugPrint(AntiboticArray)
             }
             else
             {
@@ -6054,7 +5752,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAntiboticAlldataTurkey() -> NSArray {
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "AntiboticFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         
@@ -6085,7 +5783,7 @@ class CoreDataHandlerTurkey: NSObject {
         if AlternativeArray.count > 0 {
             
             let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-            let managedContext = appDelegate.managedObjectContext
+            self.managedContext = appDelegate.managedObjectContext
             let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
             fetchRequest.returnsObjectsAsFaults = false
             fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
@@ -6113,13 +5811,6 @@ class CoreDataHandlerTurkey: NSObject {
                         person.setValue(lbldate, forKey:"feedDate")
                         try? managedContext.save()
 
-//                        do
-//                        {
-//                            try managedContext.save()
-//                        }
-//                        catch
-//                        {
-//                        }
                         cocciAlternative.append(person)
                     }
                     else{
@@ -6141,12 +5832,6 @@ class CoreDataHandlerTurkey: NSObject {
                         objTable.setValue(lbldate, forKey:"feedDate")
                         try? managedContext.save()
 
-//                        do
-//                        {
-//                            try managedContext.save()
-//                        }
-//                        catch{
-//                        }
                     }
                 }
                 else{
@@ -6167,13 +5852,6 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(lbldate, forKey:"feedDate")
                     try? managedContext.save()
 
-//                    do
-//                    {
-//                        try managedContext.save()
-//                    }
-//                    catch
-//                    {
-//                    }
                     cocciAlternative.append(person)
                 }
             }
@@ -6200,14 +5878,6 @@ class CoreDataHandlerTurkey: NSObject {
             person.setValue(lbldate, forKey:"feedDate")
             try? managedContext.save()
 
-//            do
-//            {
-//                try managedContext.save()
-//            }
-//            catch
-//            {
-//                print(appDelegateObj.testFuntion())
-//            }
             cocciAlternative.append(person)
         }
     }
@@ -6236,7 +5906,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchCociVacTurkeyLngId(lngId:NSNumber) -> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CocoiVaccineTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.langIdPredicate, lngId)
@@ -6324,7 +5994,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchAlternativeTurkey(_ feedId : NSNumber) -> NSArray{
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.feedIdPredicate, feedId)
@@ -6355,7 +6025,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         
@@ -6394,7 +6064,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "AlternativeFeedTurkey")
         
@@ -6487,7 +6157,7 @@ class CoreDataHandlerTurkey: NSObject {
     fileprivate func handleCoxinVal(_ feedId: NSNumber, _ index: Int, _ loginSessionId: NSNumber, _ postingId: NSNumber, _ molecule: String, _ dosage: String, _ fromDays: String, _ toDays: String, _ feedProgram: String, _ isSync: Bool, _ feedType: String, _ cocoVacId: NSNumber, _ lngId: NSNumber, _ lbldate: String, _ formName: String) {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         
@@ -6648,7 +6318,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         
@@ -6685,7 +6355,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "MyCotoxinBindersFeedTurkey")
         
@@ -6836,7 +6506,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "FeedProgramTurkey")
         
@@ -6879,7 +6549,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "FeedProgramTurkey")
         
@@ -6920,7 +6590,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "FeedProgramTurkey")
         
@@ -7073,7 +6743,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7114,7 +6784,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7150,42 +6820,27 @@ class CoreDataHandlerTurkey: NSObject {
     
     
     func FetchNecropsystep1AllTurkey() -> NSArray
-    
     {
-        
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        
-        let managedContext = appDelegate.managedObjectContext
-        
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
-        
         fetchRequest.returnsObjectsAsFaults = false
-        
         
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            
             if let results = fetchedResult
             {
-                
                 necropsyStep1Array = results as NSArray
-                
-            }
-            else
-            {
-                
-                
+                debugPrint(necropsyStep1Array)
             }
         }
         catch
         {
             print(appDelegateObj.testFuntion())
         }
-        
         return necropsyStep1Array
-        
     }
     
     
@@ -7195,7 +6850,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7234,7 +6889,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7274,7 +6929,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necropsyId)
@@ -7312,7 +6967,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         // let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
@@ -7345,7 +7000,7 @@ class CoreDataHandlerTurkey: NSObject {
     func FetchNecropsystep1UpdateFromUnlinkedTurkey(_ postingId : NSNumber) -> NSMutableArray {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -7387,7 +7042,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7430,7 +7085,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND feedProgram == %@ " , necId, "")
@@ -7467,7 +7122,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7509,7 +7164,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7550,7 +7205,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7592,7 +7247,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7647,7 +7302,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateisSyncNecropsystep1WithneccIdTurkey(_ necId : NSNumber, isSync : Bool) {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -7677,7 +7332,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updatComplexIdandComplexIDInNecropsystep1neccIdTurkey(_ necId : NSNumber , complexName : String , complexId : NSNumber) {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -7714,7 +7369,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7766,7 +7421,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7788,6 +7443,7 @@ class CoreDataHandlerTurkey: NSObject {
                     do
                     {
                         try managedContext.save()
+                        debugPrint("posting session updated with Posting Id.")
                     }
                     catch{
                     }
@@ -7806,7 +7462,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7855,7 +7511,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7899,7 +7555,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7945,7 +7601,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -7960,7 +7616,7 @@ class CoreDataHandlerTurkey: NSObject {
             {
                 
                 necropsyStep1Array = results as NSArray
-                
+                debugPrint("necropsy data fecthec" ,  necropsyStep1Array)
             }
             else
             {
@@ -7983,7 +7639,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "complexDate == %@ AND complexName == %@", sessiondate,newString)
@@ -8022,7 +7678,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -8087,7 +7743,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -8134,7 +7790,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -8180,7 +7836,7 @@ class CoreDataHandlerTurkey: NSObject {
     func reduceBirdNumberInNecropsystep1Turkey(_ postingId : NSNumber , index : Int) ->Bool
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
@@ -8229,7 +7885,7 @@ class CoreDataHandlerTurkey: NSObject {
     func reduceBirdNumberInNecropsystep1WithNecIdTurkey(_ necId : NSNumber , index : Int) ->Bool
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
@@ -8276,7 +7932,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND obsID == %@ AND formName == %@ AND necropsyId == %@", birdnumber,obsId,farmname , necId)
@@ -8316,7 +7972,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fecthFrmWithBirdAndObservationAllTurkey()-> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -8351,7 +8007,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
         
@@ -8372,8 +8028,10 @@ class CoreDataHandlerTurkey: NSObject {
                 
                 let descriptor: NSSortDescriptor = NSSortDescriptor(key: "obsName", ascending: true)
                 let sortedResults = captureNecSkeltetonArray.sortedArray(using: [descriptor])
-                
+                debugPrint(sortedResults)
                 return sortedResults as  NSArray
+                
+               
                 
             }
             else
@@ -8394,7 +8052,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
         
@@ -8438,7 +8096,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "catName == %@ AND formName == %@ AND birdNo == %@ AND necropsyId == %@ ", catName,farmname,birdNo,necId)
@@ -8480,7 +8138,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         
@@ -8528,7 +8186,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND obsID ==%@ AND necropsyId == %@", birdnumber,catName,farmname,Obsid,necId)
@@ -8569,7 +8227,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdnumber,catName,farmname,necId)
@@ -8588,7 +8246,7 @@ class CoreDataHandlerTurkey: NSObject {
                 
                 let descriptor: NSSortDescriptor = NSSortDescriptor(key: "obsName", ascending: true)
                 let sortedResults = captureNecSkeltetonArray.sortedArray(using: [descriptor])
-                
+                debugPrint("sortedObs Name")
                 return sortedResults as NSArray
                 
             }
@@ -8610,11 +8268,7 @@ class CoreDataHandlerTurkey: NSObject {
             if captureNecropsyViewData.objsVisibilty != nil{
                 d.setValue(captureNecropsyViewData.objsVisibilty!, forKey: trimmedString)
             }
-        } else if captureNecropsyViewData.measure == "Actual" {
-            if captureNecropsyViewData.actualText?.isEmpty == false {
-                d.setValue(captureNecropsyViewData.actualText!, forKey: trimmedString)
-            }
-        } else if captureNecropsyViewData.measure == "F,M" {
+        } else if captureNecropsyViewData.measure == "Actual" || captureNecropsyViewData.measure == "F,M" {
             if captureNecropsyViewData.actualText?.isEmpty == false {
                 d.setValue(captureNecropsyViewData.actualText!, forKey: trimmedString)
             }
@@ -8675,7 +8329,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchObsWithBirdandFarmNameTurkey(_ formName : String , birdNo : NSNumber , necId : NSNumber)-> NSMutableDictionary {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchPredicate = NSPredicate(format: "birdNo == %@  AND formName == %@ AND necropsyId == %@", birdNo, formName,necId)
         
@@ -8692,10 +8346,8 @@ class CoreDataHandlerTurkey: NSObject {
                 let c = results as NSArray
                 for i in 0..<c.count {
                     let captureNecropsyViewData = c.object(at: i) as! CaptureNecropsyViewDataTurkey
-                    var trimmedString =
-                    captureNecropsyViewData.obsName!.replacingOccurrences(of: "/", with: "")
-                    trimmedString =
-                    captureNecropsyViewData.obsName!.replacingOccurrences(of: " ", with: "")
+                    var trimmedString = captureNecropsyViewData.obsName!.replacingOccurrences(of: "/", with: "")
+                    trimmedString = captureNecropsyViewData.obsName!.replacingOccurrences(of: " ", with: "")
                     handleTrimmedStringAndValidations(&trimmedString)
                     
                     handleCaptureNecropsyViewDataValidation(captureNecropsyViewData, d, trimmedString)
@@ -9508,7 +9160,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fecthPhotoWithFormNameTurkey(_ farmname : String,necId:NSNumber)-> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "BirdPhotoCaptureTurkey")
         fetchRequest.predicate = NSPredicate(format: "farmName == %@ AND necropsyId == %@", farmname,necId)
         
@@ -9539,7 +9191,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fecthPhotoWithiSynsTrueTurkey(_ isSync : Bool)-> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.predicateStatus, NSNumber(booleanLiteral: isSync))
         fetchRequest.returnsObjectsAsFaults = false
@@ -9567,7 +9219,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(_ birdnumber: NSNumber,farmname : String, catName : String , Obsid : NSNumber , obsName : String,necId :NSNumber)-> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "BirdPhotoCaptureTurkey")
         fetchRequest.predicate = NSPredicate(format: "birdNum == %@ AND catName == %@ AND farmName == %@ AND obsId ==%@ AND obsName ==%@  AND necropsyId ==%@", birdnumber,catName,farmname,Obsid,obsName, necId)
         fetchRequest.returnsObjectsAsFaults = false
@@ -9598,7 +9250,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fecthPhotoWithCatnameWithBirdAndObservationIDandIsyncTurkey(_ birdnumber: NSNumber,farmname : String, catName : String , Obsid : NSNumber , isSync : Bool,necId :NSNumber)-> NSArray
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "BirdPhotoCaptureTurkey")
         fetchRequest.predicate = NSPredicate(format: "birdNum == %@ AND catName == %@ AND farmName == %@ AND obsId ==%@ AND isSync ==%@  AND necropsyId ==%@", birdnumber,catName,farmname,Obsid,NSNumber(booleanLiteral: isSync), necId)
         fetchRequest.returnsObjectsAsFaults = false
@@ -9781,7 +9433,7 @@ class CoreDataHandlerTurkey: NSObject {
     func stTurkey(_ catName : String,formName : String,   birdNo : NSNumber ,necId : NSNumber)-> NSArray {
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
@@ -9815,7 +9467,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "NotesBirdTurkey")
         fetchRequest.predicate = NSPredicate(format: "catName == %@ AND formName == %@ AND necropsyId = %@",catName,formName, necId)
         
@@ -9846,7 +9498,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchRequest.predicate = NSPredicate(format: "formName == %@ AND noofBirds == %@ AND necropsyId == %@",formName,birdNo, necId)
         fetchRequest.returnsObjectsAsFaults = false
@@ -9880,7 +9532,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "NotesBirdTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
@@ -9963,7 +9615,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         
@@ -9996,7 +9648,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         
@@ -10033,7 +9685,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         
@@ -10046,6 +9698,7 @@ class CoreDataHandlerTurkey: NSObject {
             if let results = fetchedResult
             {
                 captureNecSkeltetonArray = results as NSArray
+                debugPrint(captureNecSkeltetonArray)
             }
             else
             {
@@ -10180,7 +9833,7 @@ class CoreDataHandlerTurkey: NSObject {
     func fetchLastSessionDetailsTurkey(_ postingId : NSNumber) -> NSArray {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
@@ -10217,7 +9870,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
         
@@ -10283,7 +9936,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "FarmsListTurkey")
         fetchRequest.returnsDistinctResults = true
         fetchRequest.returnsObjectsAsFaults = false
@@ -10316,7 +9969,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "FarmsListTurkey")
         fetchRequest.returnsDistinctResults = true
         fetchRequest.returnsObjectsAsFaults = false
@@ -10366,17 +10019,17 @@ class CoreDataHandlerTurkey: NSObject {
     func checkPostingSessionHasiSyncTrueTurkey(_ postingID : NSNumber,isSync: NSNumber)-> Bool
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "PostingSessionTurkey")
         fetchRequest.predicate = NSPredicate(format: "postingId == %@ AND isSync == %@", postingID , NSNumber(booleanLiteral: isSync as! Bool))
         fetchRequest.returnsObjectsAsFaults = false
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult{
-                if results.count>0{
+            if let results = fetchedResult, results.count > 0 {
+               
                     return true
-                }
+                
             }
         }
         catch
@@ -10389,17 +10042,17 @@ class CoreDataHandlerTurkey: NSObject {
     func checkNecropcySessionHasiSyncTrueTurkey(_ postingID : NSNumber,isSync: NSNumber)-> Bool
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND isSync == %@", postingID , NSNumber(booleanLiteral: isSync as! Bool))
         fetchRequest.returnsObjectsAsFaults = false
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult{
-                if results.count>0{
+            if let results = fetchedResult ,  results.count>0{
+               
                     return true
-                }
+                
             }
         }
         catch {
@@ -10412,7 +10065,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateNecropsystep1WithNecIdAndFarmNameTurkey(_ necropsyId : NSNumber , farmName : NSString , newFarmName : NSString , age : String,isSync:Bool,farmWeight : String , newHouseNoTurkey : NSString){
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -10451,7 +10104,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateNecropsyFarmWeightstep1WithNecIdTurkey(_ necropsyId : NSNumber,isSync:Bool,farmWeight : String ,farmName : NSString){
         
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         
         fetchRequest.returnsObjectsAsFaults = false
@@ -10604,14 +10257,10 @@ class CoreDataHandlerTurkey: NSObject {
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 
-                
-                if let results = fetchedResult
-                {
-                    if results.count > 0{
+                if let results = fetchedResult, results.count > 0 {
                         
                         let ob: GITractTurkey = results.last as! GITractTurkey
                         nameArray.append(ob.observationField!)
-                    }
                 }
             }
             catch
@@ -10635,14 +10284,10 @@ class CoreDataHandlerTurkey: NSObject {
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 
-                
-                if let results = fetchedResult
-                {
-                    if results.count > 0{
-                        
-                        let ob: SkeletaTurkey = results.last as! SkeletaTurkey
-                        nameArray.append(ob.observationField!)
-                    }
+                if let results = fetchedResult, results.count > 0 {
+                    let ob: SkeletaTurkey = results.last as! SkeletaTurkey
+                    nameArray.append(ob.observationField!)
+                    
                 }
             }
             catch
@@ -10665,12 +10310,12 @@ class CoreDataHandlerTurkey: NSObject {
             do
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                if let results = fetchedResult
+                if let results = fetchedResult , results.count > 0
                 {
-                    if results.count > 0{
+                   
                         let ob: ImmuneTurkey = results.last as! ImmuneTurkey
                         nameArray.append(ob.observationField!)
-                    }
+                    
                 }
             }
             catch
@@ -10693,12 +10338,12 @@ class CoreDataHandlerTurkey: NSObject {
             do
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                if let results = fetchedResult
+                if let results = fetchedResult , results.count > 0
                 {
-                    if results.count > 0{
+                    
                         let ob: CoccidiosisTurkey = results.last as! CoccidiosisTurkey
                         nameArray.append(ob.observationField!)
-                    }
+                    
                 }
             }
             catch
@@ -10723,13 +10368,11 @@ class CoreDataHandlerTurkey: NSObject {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 
                 
-                if let results = fetchedResult
+                if let results = fetchedResult ,  results.count > 0
                 {
-                    if results.count > 0{
-                        
-                        let ob: RespiratoryTurkey = results.last as! RespiratoryTurkey
-                        nameArray.append(ob.observationField!)
-                    }
+                    let ob: RespiratoryTurkey = results.last as! RespiratoryTurkey
+                    nameArray.append(ob.observationField!)
+                    
                 }
             }
             catch
@@ -10769,7 +10412,7 @@ class CoreDataHandlerTurkey: NSObject {
     }
     func fetchAllPostingExistingSessionWithId(sessionDate: String,newString:String) -> NSArray    {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         
         fetchRequest.predicate = NSPredicate(format: "sessiondate == %@ AND complexName == %@", sessionDate,newString)
@@ -10895,7 +10538,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "refId != 58 AND necropsyId == %@ AND formName == %@",necId,farmname)
@@ -10930,7 +10573,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext
+        self.managedContext = appDelegate.managedObjectContext
         
         let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "PostingSessionTurkey")
         

@@ -13006,7 +13006,7 @@
                                     <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="declinetButton1:" destination="YXL-eD-GW7" eventType="touchUpInside" id="v98-4H-Qkl"/>
+                                    <action selector="acceptButton1:" destination="YXL-eD-GW7" eventType="touchUpInside" id="870-ky-U0n"/>
                                 </connections>
                             </button>
                         </subviews>

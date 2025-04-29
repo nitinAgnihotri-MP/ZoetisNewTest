@@ -329,6 +329,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
                 let lastElement = (Int(array.last!)! as Int)
                 if lastElement == Int(array[i])!
                 {
+                    debugPrint("last element is not there.")
                 }
                 else
                 {
@@ -353,6 +354,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
     fileprivate func updateObservationDataOnMinusBtnClick(_ c: CaptureNecropsyViewData, _ array: ([String]), _ cell: obsFieldCollectionViewCell, _ obsName: Any, _ formNameValue: String, _ noOfBird: Int, _ captureNec: CaptureNecropsyViewData) {
         if c.obsPoint == 0
         {
+            debugPrint("minus button obs check")
         }
         else
         {
@@ -360,17 +362,16 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
             {
                 if Int(array[i]) == 1
                 {
+                    debugPrint("minus aray check")
                 }
                 else
                 {
-                    if c.obsPoint == 1
-                    {
-                        if Int(array[i]) == 0
-                        {
+                    if c.obsPoint == 1 && Int(array[i]) == 0 {
+                        
                             cell.displayLabel.text = array[0]
                             CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnStepper(obsName as! String, formName: formNameValue, birdNo: noOfBird as NSNumber, obsId: captureNec.obsID!, index: Int(array[0])!, necId :necId as NSNumber)
                             break
-                        }
+                        
                     }
                     let value = Int(array[i])
                     if ((value! as NSNumber) == c.obsPoint)
@@ -553,7 +554,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
     // MARK: 🟠 - TEXTFIELD DELEGATES
     func textFieldDidEndEditing(_ textField: UITextField){
         
-        let rowIndex :Int = textField.tag
+       
         let cell = textField.superview!.superview as! obsFieldCollectionViewCell
         let pointInTable: CGPoint = textField.convert(textField.bounds.origin, to: self.bgTableView)
         let cellIndexPath = self.bgTableView.indexPathForRow(at: pointInTable)
@@ -573,7 +574,7 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
         }
         let captureNec :  CaptureNecropsyViewData = (d.object(forKey: noofBirdArrOnObs.object(at: cell.incrementBtnOutlet.tag - 1)) as? CaptureNecropsyViewData)!
         let fethchArr = CoreDataHandler().fecthFrmWithBirdAndObservation(noOfBird! as NSNumber, farmname: formNameValue, obsId: captureNec.obsID!, necId: necId as NSNumber)
-        let c = fethchArr.object(at: 0) as! CaptureNecropsyViewData
+       
         
         CoreDataHandler().updateObsDataInCaptureSkeletaInDatabaseOnActual(formName , formName: formNameValue, birdNo: noOfBird! as NSNumber, obsId: captureNec.obsID!, actualName: textField.text!, necId: necId as NSNumber)
         
@@ -655,25 +656,22 @@ extension AllBirdsViewController {
             for (index, bird) in savedBirdNameArray.enumerated() {
                 for (birdIndex, object) in obsArr.enumerated() {
                     let obsName = ((object as! NSDictionary).allValues[0] as! CaptureNecropsyViewData).obsName
-                    if obsName == bird as? String {
-                        if index < self.obsArr.count {
+                    if obsName == bird as? String && index < self.obsArr.count {
                             let movedOBS = self.obsArr[birdIndex]
                             self.obsArr.removeObject(at: birdIndex)
                             self.obsArr.insert(movedOBS, at: index)
-                        }
+                        
                     }
                 }
             }
             for (index, bird) in savedBirdNameArray.enumerated() {
                 for (birdIndex, obsBird) in obsNameArray.enumerated() {
-                    if let obsName = obsBird as? String {
-                        if obsName == bird as? String {
-                            if index < self.obsNameArray.count {
-                                let movedOBSBird = self.obsNameArray[birdIndex]
-                                self.obsNameArray.removeObject(at: birdIndex)
-                                self.obsNameArray.insert(movedOBSBird, at: index)
-                            }
-                        }
+                    if let obsName = obsBird as? String, obsName == bird as? String, index < self.obsNameArray.count {
+                        
+                        let movedOBSBird = self.obsNameArray[birdIndex]
+                        self.obsNameArray.removeObject(at: birdIndex)
+                        self.obsNameArray.insert(movedOBSBird, at: index)
+                        
                     }
                 }
             }
@@ -702,47 +700,47 @@ extension AllBirdsViewController {
                 case "Skeleta":
                     let objTable  = fetchdata.object(at: 0) as! Skeleta
                     
-                    if let quickIndex = objTable.quicklinkIndex as? Int {
-                        if quickIndex > 0 {
-                            let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
-                            arrOfIndex.append(quickIndexObject)
-                        }
+                    if let quickIndex = objTable.quicklinkIndex as? Int, quickIndex > 0 {
+                        
+                        let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
+                        arrOfIndex.append(quickIndexObject)
+                        
                     }
                 case "Coccidiosis":
                     let objTable  = fetchdata.object(at: 0) as! Coccidiosis
                     
-                    if let quickIndex = objTable.quicklinkIndex as? Int {
-                        if quickIndex > 0 {
+                    if let quickIndex = objTable.quicklinkIndex as? Int , quickIndex > 0 {
+                        
                             let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
                             arrOfIndex.append(quickIndexObject)
-                        }
+                        
                     }
                 case "GITract":
                     let objTable  = fetchdata.object(at: 0) as! GITract //: Skeleta = (fetchdata as? Skeleta)!
                     
-                    if let quickIndex = objTable.quicklinkIndex as? Int {
-                        if quickIndex > 0 {
+                    if let quickIndex = objTable.quicklinkIndex as? Int ,  quickIndex > 0 {
+                        
                             let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
                             arrOfIndex.append(quickIndexObject)
-                        }
+                        
                     }
                 case "Respiratory":
                     let objTable  = fetchdata.object(at: 0) as! Respiratory //: Skeleta = (fetchdata as? Skeleta)!
                     
-                    if let quickIndex = objTable.quicklinkIndex as? Int {
-                        if quickIndex > 0 {
+                    if let quickIndex = objTable.quicklinkIndex as? Int , quickIndex > 0{
+                 
                             let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
                             arrOfIndex.append(quickIndexObject)
-                        }
+                        
                     }
                 case "Immune":
                     let objTable  = fetchdata.object(at: 0) as! Immune //: Skeleta = (fetchdata as? Skeleta)!
                     
-                    if let quickIndex = objTable.quicklinkIndex as? Int {
-                        if quickIndex > 0 {
+                    if let quickIndex = objTable.quicklinkIndex as? Int , quickIndex > 0  {
+                      
                             let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
                             arrOfIndex.append(quickIndexObject)
-                        }
+                        
                     }
                 default:
                     break
@@ -752,24 +750,24 @@ extension AllBirdsViewController {
             for (_, quickIndexObject) in arrOfIndex.enumerated() {
                 for (birdIndex, object) in obsArr.enumerated() {
                     let obsName = ((object as! NSDictionary).allValues[0] as! CaptureNecropsyViewData).obsName
-                    if quickIndexObject.quickIndex < self.obsArr.count {
-                        if obsName == quickIndexObject.obsName {
+                    if quickIndexObject.quickIndex < self.obsArr.count, obsName == quickIndexObject.obsName {
+                      
                             let movedOBS = self.obsArr[birdIndex]
                             self.obsArr.removeObject(at: birdIndex)
                             self.obsArr.insert(movedOBS, at: quickIndexObject.quickIndex)
-                        }
+                        
                     }
                 }
             }
             for (_, object) in arrOfIndex.enumerated() {
                 for (birdIndex, obsBird) in obsNameArray.enumerated() {
                     if let obsName = obsBird as? String {
-                        if object.quickIndex < self.obsNameArray.count {
-                            if obsName == object.obsName {
+                        if object.quickIndex < self.obsNameArray.count ,  obsName == object.obsName  {
+                            
                                 let movedOBSBird = self.obsNameArray[birdIndex]
                                 self.obsNameArray.removeObject(at: birdIndex)
                                 self.obsNameArray.insert(movedOBSBird, at: object.quickIndex)
-                            }
+                            
                         }
                     }
                 }

@@ -526,7 +526,7 @@ class PEStartNewAssessment: BaseViewController {
         self.txtBreedOfBirdsOthers.delegate = self
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat=Constants.MMddyyyyStr
 //        dateFormatter.calendar = Calendar(identifier: .gregorian)
 //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         let currentDate: NSDate = NSDate()

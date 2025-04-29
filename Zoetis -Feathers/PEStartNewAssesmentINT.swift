@@ -385,10 +385,10 @@ class PEStartNewAssessmentINT: BaseViewController {
         let dateFormatter = DateFormatter()
 
         if regionID != 3 {
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
         }
         else{
-            dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat=Constants.MMddyyyyStr
         }
         
         let strdate1 = dateFormatter.string(from: scheduledAssessment?.scheduledDate ?? Date()) as String

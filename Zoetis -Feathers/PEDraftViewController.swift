@@ -52,7 +52,7 @@ class PEDraftViewController: BaseViewController {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         
         deleteDeletedAssessments()
         

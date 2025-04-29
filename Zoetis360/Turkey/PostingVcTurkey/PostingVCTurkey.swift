@@ -520,7 +520,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         
         notesTextView.textContainer.lineFragmentPadding = 12
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
         isClickOnAnyField = false
         userNameLabel.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
         viewUpdate()
@@ -637,9 +637,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         
         butttnTag  = 1
         dropImageView.isHidden = true
-        
-        let arrayAllBreed = CoreDataHandlerTurkey().fetchBreedTypeTurkey()
-        
+                
         let allBireType = CoreDataHandlerTurkey().fetchBirdSizeTurkey()
         if(birdArray.count == 0){
             
@@ -696,7 +694,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     @objc func doneClick() {
         
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter2.dateFormat=Constants.MMddyyyyStr
         //        dateFormatter2.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
         let strdate = dateFormatter2.string(from: datePicker.date) as String
@@ -711,7 +709,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         lblTimeStamp = strdate1
         
         if  lblComplex.text! == NSLocalizedString(appDelegateObj.selectStr, comment: ""){
-            
+            debugPrint("are not equal")
         }
         else {
             if checkComplexNameandDate(lblDate.text!, complexName: lblComplex.text!) == true {
@@ -756,9 +754,9 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         {
             let pSession = postingSessionArray.object(at: i) as! PostingSessionTurkey
             let sessionDate = pSession.sessiondate! as String
-            let postingId = pSession.postingId! as! Int
+            let sessionPostingId = pSession.postingId! as! Int
             let sessioncomplexName = pSession.complexName! as String
-            if postingId == UserDefaults.standard.integer(forKey: "postingId"){
+            if sessionPostingId == UserDefaults.standard.integer(forKey: "postingId"){
                 break
             }
             else {
@@ -865,10 +863,6 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         
         CoreDataHandlerTurkey().PostingSessionDbTurkey("", birdBreesId:breedIdDb, birdbreedName: "", birdBreedType: "", birdSize:"", birdSizeId: birdSizeIdDb, cocciProgramId: cocciProgramIdDb, cociiProgramName: lblCocieeProgram.text!, complexId: complexIdDb, complexName: lblComplex.text!, convential:"", customerId: custmetIdDb, customerName:lblCustmer.text!, customerRepId: cusmerRepIdDb, customerRepName: CustRepTextField.text!, imperial: "", metric: "", notes: notesTextView.text, salesRepId: salesRepIdDb, salesRepName: lblSelesRep.text!, sessiondate:  lblDate.text!, sessionTypeId: sessionTypeIdDb, sessionTypeName: lblSessionType.text!, vetanatrionName: lblVeteration.text!, veterinarianId:veterinartionIdDb , loginSessionId: 1, postingId:  self.postingId as NSNumber,mail: "",female: "",finilize:0,isSync : true,timeStamp:lblTimeStamp,lngId:lngId as NSNumber,birdType:"Aync",birdTypeId:2,birdbreedId:0,capNec:0 , avgAge: avgAgeTxtFld.text! , avgWeight: avgWeightTxtFld.text! , outTime: outTimeTxtFld.text! , FCR: fcrTxtFld.text! , Livability: txtFldLivability.text! , mortality: txtFldMortality.text!)
         
-        let postinSeesion =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(self.postingId  as NSNumber)
-        
-        let totalExustingArr = CoreDataHandler().fetchAllPostingExistingSessionwithFullSession(1, birdTypeId: 1).mutableCopy() as! NSMutableArray
-        
         
         if UserDefaults.standard.bool(forKey: "Unlinked") == true{
             CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(self.postingId as NSNumber, finalizeNec: 1)
@@ -886,7 +880,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         let string = lblTimeStamp as String?
         let character: Character = "i"
         if ((string)?.contains(character))! {
-            
+            debugPrint("sting not contain characters.")
         } else {
             let  udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
             
@@ -967,12 +961,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                     feedId = feedId+1
                 }
             } else {
-                if feedId == 0 {
                     feedId = feedId+1
-                }
-                else{
-                    feedId = feedId+1
-                }
             }
         } else {
             
@@ -1106,11 +1095,6 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                     cell.selectionStyle = UITableViewCell.SelectionStyle.none
                     cell.textLabel!.text = birdArray[indexPath.row].birdSize
                 }
-                
-            } else if btnTag == 6 {
-                
-            } else if btnTag == 7 {
-                
                 
             } else if btnTag == 8 {
                 let vet : VeterationTurkey = VetrationArr.object(at: indexPath.row) as! VeterationTurkey
@@ -1285,12 +1269,8 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     // MARK: - TEXT FIELD DELEGATES
     func textFieldDidEndEditing(_ textField: UITextField) {
         
-        if (textField == notesTextView ) {
             isClickOnAnyField = true
-            
-        } else {
-            isClickOnAnyField = true
-        }
+        
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if (textField == notesTextView ) {
@@ -1438,8 +1418,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             if lblComplex.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
                 btnComplex.layer.borderColor = UIColor.black.cgColor
             }
-            if birdSize.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
-            }
+            
             if lblVeteration.text != NSLocalizedString(appDelegateObj.selectStr, comment: "") {
                 btnVetration.layer.borderColor = UIColor.black.cgColor
             }
@@ -1458,7 +1437,6 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
     
     @IBAction func sideMenuButtonPress(_ sender: AnyObject) {
         
-        let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
         let value  = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
         
         if value.count>0{
@@ -1506,6 +1484,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
             }
         } else {
             if UserDefaults.standard.bool(forKey: "Unlinked") == true{
+                debugPrint("session is unlinked.")
             } else {
                 lblVeteration.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
                 lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
@@ -1605,7 +1584,7 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 btnVetration.layer.borderColor = UIColor.black.cgColor
             }
             
-            let lngId = UserDefaults.standard.integer(forKey: "lngId")
+            lngId = UserDefaults.standard.integer(forKey: "lngId")
             if lngId == 1{
                 if lblDate.text != NSLocalizedString(selectDateText, comment: "") {
                     btnDate.layer.borderColor = UIColor.black.cgColor
@@ -1785,12 +1764,9 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
                 feedId = feedId+1
             }
         }  else {
-            if feedId == 0 {
-                feedId = feedId+1
-            }
-            else{
-                feedId = feedId+1
-            }
+            
+            feedId = feedId+1
+            
         }
     }
     
@@ -1885,18 +1861,12 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         
         view.endEditing(true)
         btnTag = 5
+       
+            tableViewpop()
+            
+            droperTableView.frame = CGRect( x: 715, y: 413, width: 276, height: 200)
+            droperTableView.reloadData()
         
-        if butttnTag == 0 {
-            
-            tableViewpop()
-            droperTableView.frame = CGRect( x: 715, y: 413, width: 276, height: 200)
-            droperTableView.reloadData()
-        } else {
-            tableViewpop()
-            
-            droperTableView.frame = CGRect( x: 715, y: 413, width: 276, height: 200)
-            droperTableView.reloadData()
-        }
     }
     
     
@@ -1952,16 +1922,15 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         return allPostingSessionArr
@@ -1980,12 +1949,10 @@ class PostingVCTurkey: UIViewController,DropperDelegateTurkey,UITextViewDelegate
         
     }
     func noPopUpPosting() {
-        if exitPopUP.tag == 40{
-            
+        if exitPopUP.tag == 40 || exitPopUP.tag == 50 {
+            debugPrint("no action required.")
         }
-        else if exitPopUP.tag == 50{
-            
-        }  else {
+         else {
             if UserDefaults.standard.bool(forKey: "Unlinked") == true{
                 // Update posting session
                 feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)

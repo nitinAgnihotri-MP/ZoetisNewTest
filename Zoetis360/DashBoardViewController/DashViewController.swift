@@ -2219,13 +2219,13 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     // MARK: 🟠 Get All Session's List
     func allSessionArr() ->NSMutableArray{
         
-        let postingArrWithAllData = CoreDataHandler().fetchPostingSessionWithisSyncisTrue(true).mutableCopy() as! NSMutableArray
+        let allPostingArrWithData = CoreDataHandler().fetchPostingSessionWithisSyncisTrue(true).mutableCopy() as! NSMutableArray
         let cNecArr = CoreDataHandler().FetchNecropsystep1WithisSync(true)
         let necArrWithoutPosting = NSMutableArray()
         
-        for i in 0..<postingArrWithAllData.count
+        for i in 0..<allPostingArrWithData.count
         {
-            let pSession =  postingArrWithAllData.object(at: i) as! PostingSession
+            let pSession =  allPostingArrWithData.object(at: i) as! PostingSession
             let farmSync = pSession.isfarmSync
             if farmSync != nil{
                 Constants.isFromPsoting = true
@@ -2250,17 +2250,16 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
         }
         
         let allPostingSessionArr = NSMutableArray()
-        var sessionId = NSNumber()
-        for i in 0..<postingArrWithAllData.count
+        for i in 0..<allPostingArrWithData.count
         {
-            let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            let pSession = allPostingArrWithData.object(at: i) as! PostingSession
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         return allPostingSessionArr
@@ -2278,7 +2277,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
             }
         }
         else{
-            let  lngId = UserDefaults.standard.integer(forKey: "lngId")
+            lngId = UserDefaults.standard.integer(forKey: "lngId")
             var strMsg = String()
             if lngId == 5 {
                 strMsg = "Datos no disponibles para la sincronización."
@@ -2295,7 +2294,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
     {
         self.isSync = false
         let arr = self.allSessionArr()
-        for postingId in arr {
+        for postingIdIs in arr {
             if isSync == false {
                 isSync = true
                 if (UserDefaults.standard.value(forKey: "postingSession") != nil){
@@ -2303,7 +2302,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                     if Constants.isFromPsoting
                     {
                         UserDefaults.standard.removeObject(forKey: "postingSession") // We added this here
-                        objApiSyncOneSet.feedprogram(postingId: NSNumber(value: postingId as! Int))
+                        objApiSyncOneSet.feedprogram(postingId: NSNumber(value: postingIdIs as! Int))
                     }
                     else{
                         objApiSync.feedprogram()
@@ -2375,14 +2374,14 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 }
             }
             else{
-                let  lngId = UserDefaults.standard.integer(forKey: "lngId")
+                self.lngId = UserDefaults.standard.integer(forKey: "lngId")
                 var strMsg = String()
-                if lngId == 5 {
+                if self.lngId == 5 {
                     strMsg = "Datos no disponibles para la sincronización."
-                } else if lngId == 3 {
+                } else if self.lngId == 3 {
                     strMsg = "Aucune données disponible pour la synchronisation."
                 }
-                else if lngId == 1{
+                else if self.lngId == 1{
                     strMsg = "Data not available for syncing."
                 }
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:strMsg)
@@ -2438,11 +2437,7 @@ class DashViewController: UIViewController,MDRotatingPieChartDataSource,userlist
                 case let .success(value):
                     let statusCode = response.response?.statusCode
                     let dict : NSDictionary = value as! NSDictionary
-                    if statusCode == 400{
-                        _ = dict["error_description"]
-                        self.callLoginView()
-                    }
-                    else if statusCode == 401{
+                    if statusCode == 400 || statusCode == 401{
                         _ = dict["error_description"]
                         self.callLoginView()
                     }

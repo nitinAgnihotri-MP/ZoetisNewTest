@@ -50,6 +50,7 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
     func callWebApiforTutorial(_ completion: @escaping (_ status: Bool) -> Void)  {
         
         if WebClass.sharedInstance.connected() {
+            debugPrint("intewrnet is connected.")
         }
     }
     func makeBodyBackgroundTransparent() {
@@ -128,6 +129,7 @@ class PdfReader2ViewController: UIViewController, UIWebViewDelegate , URLSession
                     
                     if status == true
                     {
+                        debugPrint(status)
                     }
                 })
             }

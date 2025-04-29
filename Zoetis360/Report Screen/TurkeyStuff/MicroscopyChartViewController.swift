@@ -417,11 +417,11 @@ class MicroscopyChartViewController: UIViewController,MicroscopyCalculationsDele
             barData  = (self.preparedArray[0] as? ChartDataSet)!
             barData.colors = [UIColor(red: 50/255, green: 91/255, blue: 157/255, alpha: 1)]
             
-            let chartData = BarChartData(dataSets: [barData])
+            let chartDataIs = BarChartData(dataSets: [barData])
             barData.notifyDataSetChanged()
-            chartData.notifyDataChanged()
+            chartDataIs.notifyDataChanged()
             barChartView.notifyDataSetChanged()
-            barChartView.data = chartData
+            barChartView.data = chartDataIs
         }
         if barData.yMax <= 0.0 {
             barChartView.clear()

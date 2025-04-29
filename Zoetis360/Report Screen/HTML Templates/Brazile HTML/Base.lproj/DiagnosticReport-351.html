@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta content="text/html; charset=utf-8" http-equiv="content-type">
-            <title> Informes Zoetis </title>
+            <title> Zoetis Reports </title>
             <style>
                 body{
                     margin: 0 auto;
@@ -14,17 +14,19 @@
                     padding:0px;
                     font-size:13px;
                     line-height:20px;
-                    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
                     color:#000;
                     font-weight:500;
-                    zoom: 0.6;
-                    -moz-transform: scale(0.6);
-                    -moz-transform-origin: 0 0;
+
                 }
                 .no-margin{
                     margin: 0px;
                 }
-             
+                .report-box{
+                zoom: 0.6;
+                -moz-transform: scale(0.6);
+                -moz-transform-origin: 0 0;
+                }
                 .report-text-right{
                     text-align: right;
                 }
@@ -38,6 +40,7 @@
                 }
                 .font-bold{
                     font-weight: 600;
+                    
                 }
                 
                 .font-size-16{
@@ -65,7 +68,6 @@
                     width:100%;
                     line-height:inherit;
                     text-align:left;
-                    
                 }
 
                 .report-box table td{
@@ -85,24 +87,37 @@
                     text-align: center;
                 }
                 .child-table tbody > tr > td{
-                    min-width: 50px;
                     text-align: center;
+                }
+                .child-table tbody > tr > td{
+                    min-width: 50px;
                 }
                 .child-table tbody > tr > td:nth-child(2){
                     width: 100px;
                     font-weight: 600;
                 }
-				.rotate{
-					width: 130px;
-					/* Rotate div */
-					-ms-transform: rotate(90deg); /* IE 9 */
-					-webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
-					transform: rotate(90deg);
-					text-align:center;
-					margin-left:-40px;
-				}
+            .rotate{
+                width: 130px;
+                text-align:center;
+                /* Rotate div */
+                -ms-transform: rotate(90deg); /* IE 9 */
+                -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+                transform: rotate(90deg);
+                text-align:center;
+                margin-left:-40px;
+            }
+            .rotate1{
+                width: 130px;
+                text-align:center;
+                /* Rotate div */
+                -ms-transform: rotate(90deg); /* IE 9 */
+                -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+                transform: rotate(90deg);
+                text-align:center;
+                #digHisMargn#;
+            }
 				.header-td td{
-					height: 200px;
+					height: 50px;
     				max-width: 50px;
 				}
                 @media print {
@@ -121,35 +136,34 @@
                 <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                 <tbody>
                     <tr class="top">
-                        <td colspan="7">
-                            
-                                <table>
+                        <td colspan="7" style="vertical-align:top;">
+                            <table>
                                 <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr height="48px">
-                                        <td> <h3 class="no-margin">#reportTitle# </h3> </td>
+                                        <td style="vertical-align:top;"> <h3 class="no-margin">#reportTitle# </h3> </td>
                                     </tr>
                                     <tr>
-                                        <td> <span class="font-bold"> Nombre del cliente - </span> #CustomerName#  </td>
+                                        <td> <span class="font-bold"> Customer Name - </span> #CustomerName#  </td>
                                     </tr>
                                     <tr>
-                                        <td><span class="font-bold"> Nombre complejo - </span>  #complexName#  </td>
+                                        <td><span class="font-bold"> Complex Name - </span>  #complexName#  </td>
                                     </tr>
                                 </tbody>
                             </table>                        
                         </td>
                         <td colspan="8">
                             <table>
-                            <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr height="48px">
                                         <td> <br/> </td>
                                     </tr>
                                     <tr>
-                                        <td> <span class="font-bold">  Veterinario - </span> #vetanatrionName# </td>
+                                        <td> <span class="font-bold">  Veterinarian - </span> #vetanatrionName# </td>
                                     </tr>
                                     <tr>
-                                        <td> <span class="font-bold">  Gerente de cuenta de Zoetis - </span>  #salesRepName# </td>
+                                        <td> <span class="font-bold">  Zoetis Account Manager - </span>  #salesRepName# </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -157,16 +171,16 @@
                         </td>
                         <td colspan="8">
                             <table>
-                            <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
+                                <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
                                     <tr rowspan="2">
                                         <td class="report-text-right"> <img width="100px" src="logo.png" title="Zoetis Logo" alt="Zoetis Logo" /> </td>
                                     </tr>
                                     <tr>
-                                        <td> <span class="font-bold">  Fecha / tipo de sesión - </span> #typeDate# </td>
+                                        <td> <span class="font-bold">  Session Date/Type - </span> #typeDate# </td>
                                     </tr>
                                     <tr>
-                                        <td> <span class="font-bold">  Contacto de cuenta - </span> #customerRepName# </td>
+                                        <td> <span class="font-bold">  Account Contact - </span> <span style="word-break:break-all;display: inline-flex;width: 230px;">#customerRepName#</span> </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -174,11 +188,11 @@
                         </td>
                     </tr>
                     <tr class="objCategory">
-                        <td colspan="3">   </td>
-                        <td colspan="8"> <span class="font-bold">  Tracto gastrointestinal </span> </td>
-                        <td colspan="8"> <span class="font-bold"> Esquelético / Muscular / Integumental </span> </td>
-                        <td colspan="2"> <span class="font-bold"> Tracto respiratorio </span> </td>
-                        <td colspan="2"> <span class="font-bold"> Inmune / Otros </span> </td>
+                        <td colspan="3">  </td>
+                        <td colspan="8"> <span class="font-bold">  GI Tract </span> </td>
+                        <td colspan="4"> <span class="font-bold"> Skeletal/Muscular/Integumentary </span> </td>
+                        <td colspan="2"> <span class="font-bold"> Respiratory Tract </span> </td>
+                        <td colspan="3"> <span class="font-bold"> Immune/Others </span> </td>
                     </tr>
                     
                     <tr class="font-bold header-td" height="250px"> 
@@ -186,45 +200,47 @@
                             <table class="child-table">
                                 <thead><tr style="display:none;"><th scope="col"></th></tr></thead>
                                 <tbody>
-                                    <tr >                                        
-                                        <td style="width:150px;">  #Fazenda# </td>
-										<td> <div class="rotate" > # De pájaros </div> </td>
-										<td> <div class="rotate" > Edad Media </div> </td>
+                                    <tr >
+										<td style="#display:none#" > <div class="rotate" > Sick  Flock? </div> </td>
+                                        <td style="width:150px;">   #Farm# </td>
+										<td> <div class="rotate1" > # of Birds </div> </td>
+										<td> <div class="rotate1" > Mean Age </div> </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </td>
                         <!-- GI Tract --->
-                        <td colspan="" > <div class="rotate" > Lesiones en la boca </div></td>
-                        <td colspan="" style="min-width: 75px;max-width:75px;"><div class="rotate" > proventriculitis </div></td>
-                        <td colspan="" style="min-width: 75px;max-width:75px;"> Erosiones de molleja </td>
-                        <td colspan="" > <div class="rotate" > Camada </div></td>
-                        <td colspan=""> <div class="rotate" > Paso de alimentación </div> </td>
-                        <td colspan=""> <div class="rotate" > Tenias</div> </td>
-                        <td colspan=""> <div class="rotate" > Gusanos redondos</div> </td>
+
+                        <td colspan="" > <div class="rotate" > Mouth Lesions </div></td>
+                        <td colspan="" style="min-width: 75px;max-width:75px;"><div class="rotate push-center" style="padding-left:25px;" > Proventriculitis </div></td>
+                        <td colspan="" style="min-width: 75px;max-width:75px;"> Gizzard Erosions </td>
+                        <td colspan="" > <div class="rotate" > Litter Eater </div></td>
+                        <td colspan=""> <div class="rotate" > Feed Passage </div> </td>
+                        <td colspan=""> <div class="rotate" > Intestinal Content</div> </td>
+                        <td colspan=""> <div class="rotate" > Thin Intestine</div> </td>
                         <td colspan="" style="min-width: 75px;max-width:75px;"> Enteritis </td>
                         
                         
                         <!-- Skeletal/Muscular/Integumentary --->
-                        <td colspan="" style="min-width: 75px;max-width:75px;"> Almohadilla de pie <br/> Lesiones </td>
-                         <td colspan="" > <div class="rotate" > Necrosis de la cabeza femoral </div></td>
-                         <td colspan="" style="min-width: 80px;max-width:80px;"> <div class="rotate" style="position:relative; left:18px;"> Discondroplasia tibial </div></td>
-                         <td colspan="" > <div class="rotate" > Raquitismo </div></td>
-                         <td colspan="" style="min-width: 80px;max-width:80px;"> Fuerza ósea </td>
-                         <td colspan="" > <div class="rotate" > Sinovitis </div></td>
-                         <td colspan="" > <div class="rotate" > Proceso infeccioso </div></td>
-                         <td colspan="" > <div class="rotate" > Úlceras corneales </div> </td>
+                        <td colspan="" style="min-width: 75px;max-width:75px;"> Foot Pad <br/> Lesions </td>
+                         <td colspan="" > <div class="rotate" > Femoral Head Necrosis </div></td>
+                         
+                         <td colspan="" > <div class="rotate" > Muscular Hemorrhages </div></td>
+                         <td colspan="" style="min-width: 80px;max-width:80px;"> Bone Strength </td>
+                         
                          
                          <!-- Respiratory Tract --->
-                         <td colspan="" > <div class="rotate" style="position:relative; left:10px;" > Traqueítis </div></td>
-                         <td colspan="" style="min-width: 75px;max-width:75px;"> <div class="" > Saco de aire </div></td>
+                         <td colspan="" > <div class="rotate" style="position:relative; left:10px;" > Tracheitis </div></td>
+                         <td colspan="" style="min-width: 75px;max-width:75px;"> <div class="" > Airsac </div></td>
 						
                         
                         <!-- Immune/Others --->
                         
-                       <td colspan="" > <div class="rotate" > La yema retenida</div> </td>
-						<td colspan="" > <div class="rotate" > Tamaño de Bursa </div></td>
-                        
+                        <td colspan="" > <div class="rotate" > Retained Yolk </div></td>
+                        <td colspan="" style="min-width: 80px;max-width:80px;"> Bursa Size </td>
+                    
+                       <td colspan="" > <div class="rotate push-center" style="padding-left:25px;" > Bursa Lesion Size </div> </td>
+						
                         
                     </tr>
                     <tr>
@@ -239,16 +255,15 @@
                         <td colspan="">  <span class="push-left"> Mean % </span></td>
                         <td colspan="">  <span class="push-left"> Mean % </span></td>
                         <td colspan=""> <span> % </span> </td>
-                        <td colspan="">  <span class="push-left"> Mean % </span></td>
+                    
                         <td colspan=""> <span> % </span> </td>
                         <td colspan="">  <span class="push-left"> Mean % </span></td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan=""> <span> % </span> </td>
-                        <td colspan=""> <span> % </span> </td>
+                        
                         <td colspan="">  <span class="push-left"> Mean % </span></td>
                         <td colspan="">  <span class="push-left"> Mean % </span></td>
                         <td colspan=""> <span> % </span> </td>
-                        <td colspan=""> <span> Media </span> </td>
+                        <td colspan="">  <span class="push-center"> Mean </span></td>
+                        <td colspan="">  <span class="push-left"> Mean % </span></td>
                     </tr>
                     #ITEMS#
                 </tbody>

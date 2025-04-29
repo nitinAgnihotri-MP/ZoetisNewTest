@@ -219,9 +219,7 @@ class CommonClass: NSObject {
             datePicker.preferredDatePickerStyle = .wheels
             datePicker.backgroundColor = UIColor.white
         }
-        let gregorian: NSCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        let currentDate: NSDate = NSDate()
-        let components: NSDateComponents = NSDateComponents()
+
         var xToolBar = Int()
         var widthToolBar = Int()
         if #available(iOS 13.4, *) {

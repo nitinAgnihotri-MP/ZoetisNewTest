@@ -55,14 +55,12 @@ class HelpScreenVcTurkey: UIViewController{
     }
     
     @IBAction func acceptButton1(_ sender: AnyObject) {
+        debugPrint("accepted button pressed")
         UserDefaults.standard.set(false, forKey: "termsAcceptedTrue")
         self.dasBoradPush()
     }
     
-    @IBAction func declinetButton1(_ sender: AnyObject) {
-        UserDefaults.standard.set(false, forKey: "termsAcceptedTrue")
-        self.dasBoradPush()
-    }
+   
     
     // MARK: - METHODS AND FUNCTIONS
     func dasBoradPush()  {

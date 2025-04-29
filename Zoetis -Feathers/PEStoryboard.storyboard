@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad10_9rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -6372,7 +6372,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fKf-2C-Fge" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="74552130846" y="390"/>
+            <point key="canvasLocation" x="74552131092" y="360"/>
         </scene>
         <!--Draft Start New Assessment-->
         <scene sceneID="mGY-F7-crx">
@@ -8579,7 +8579,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0x5-kY-RY5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="74552130244" y="360"/>
+            <point key="canvasLocation" x="74552130247" y="360"/>
         </scene>
         <!--Placards View Controller-->
         <scene sceneID="g2W-la-Ma1">
@@ -8673,7 +8673,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Evaluation Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ie5-7k-qS5" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="128" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="136" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -8790,7 +8790,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Country*" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="krC-Po-r1n" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="72" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="79" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -8900,7 +8900,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Site" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNh-Lo-S37" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="31.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="33.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -9012,7 +9012,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Evaluator" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gaP-EL-u74" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="77.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="81.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -9121,7 +9121,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manufacturer " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GEG-i6-XY6" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="112.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="123" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -9329,7 +9329,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Incubation Style" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ChF-FB-uFu" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="131.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="140.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -9581,7 +9581,7 @@
                                                                 </connections>
                                                             </button>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Only less than 50 weeks of age" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qyc-5v-rSo" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                <rect key="frame" x="77" y="20" width="293" height="20"/>
+                                                                <rect key="frame" x="77" y="21.5" width="293" height="17.5"/>
                                                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="15"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -9617,7 +9617,7 @@
                                                 <rect key="frame" x="30" y="699" width="760" height="60"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Double Sanitation" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zLV-pV-Ff6" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                        <rect key="frame" x="394" y="20" width="154" height="20"/>
+                                                        <rect key="frame" x="394" y="20.5" width="154" height="19.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="154" id="ccp-Hy-q9H"/>
                                                         </constraints>
@@ -10068,7 +10068,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Evaluation Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wVB-Ki-hnD" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="128" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="136" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -10175,7 +10175,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Country" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qpq-5x-BVD" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="65.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="70.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -10279,7 +10279,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Site" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1YO-m8-fqq" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="31.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="33.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -10382,7 +10382,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Evaluator" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbh-bh-xvh" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="77.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="81.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -10485,7 +10485,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manufacturer " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I8q-1U-Vy5" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="112.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="123" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -10687,7 +10687,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Incubation Style" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="02h-Iv-BSK" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="131.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="140.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -10912,7 +10912,7 @@
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All production" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IR0-A0-29G" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                        <rect key="frame" x="328" y="20" width="115.5" height="20"/>
+                                                        <rect key="frame" x="328" y="21.5" width="115.5" height="17.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="115.5" id="F0H-GR-u39"/>
                                                         </constraints>
@@ -10938,7 +10938,7 @@
                                                                 </connections>
                                                             </button>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Only less than 50 weeks of age" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJ5-yG-efX" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                <rect key="frame" x="77" y="20" width="293" height="20"/>
+                                                                <rect key="frame" x="77" y="21.5" width="293" height="17.5"/>
                                                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="15"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -10974,7 +10974,7 @@
                                                 <rect key="frame" x="30" y="699" width="760" height="100"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Double Sanitation" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Xo-KD-37q" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                        <rect key="frame" x="418" y="20" width="144.5" height="20"/>
+                                                        <rect key="frame" x="418" y="20.5" width="144.5" height="19.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="144.5" id="8Ch-Q1-Pqd"/>
                                                         </constraints>
@@ -11061,13 +11061,13 @@
                                                         <rect key="frame" x="15" y="64" width="190" height="40"/>
                                                         <subviews>
                                                             <switch opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Hf3-0d-xR6">
-                                                                <rect key="frame" x="140" y="4.5" width="51" height="31"/>
+                                                                <rect key="frame" x="140" y="1.5" width="51" height="31"/>
                                                                 <accessibility key="accessibilityConfiguration">
                                                                     <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
                                                                 </accessibility>
                                                             </switch>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Is it automatic fail?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nse-jT-7F5" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="120" height="39.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="120" height="33.5"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="120" id="0lf-Vq-3Gh"/>
                                                                 </constraints>
@@ -11440,7 +11440,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Evaluation Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARc-NU-7nl" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="128" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="136" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -11564,7 +11564,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Country" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MgW-IF-x5S" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="65.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="70.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -11674,7 +11674,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Site" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pnI-1J-dbo" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="31.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="33.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -11783,7 +11783,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Evaluator" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s0H-Vr-hGb" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="77.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="81.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -11892,7 +11892,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manufacturer " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oTb-s5-DgX" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="112.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="123" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -12100,7 +12100,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="377" height="60"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Incubation Style" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="seg-q9-Y3e" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                        <rect key="frame" x="10" y="0.0" width="131.5" height="60"/>
+                                                                        <rect key="frame" x="10" y="0.0" width="140.5" height="60"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -12328,7 +12328,7 @@
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All production" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="swe-qO-h2u" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                        <rect key="frame" x="408" y="20" width="115.5" height="20"/>
+                                                        <rect key="frame" x="408" y="21.5" width="115.5" height="17.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="115.5" id="iDO-EI-ZHc"/>
                                                         </constraints>
@@ -12352,7 +12352,7 @@
                                                                 </connections>
                                                             </button>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Only less than 50 weeks of age" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BUm-GU-57D" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                <rect key="frame" x="77" y="20" width="293" height="20"/>
+                                                                <rect key="frame" x="77" y="21.5" width="293" height="17.5"/>
                                                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="15"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -12536,7 +12536,7 @@
                                                 <rect key="frame" x="30" y="724" width="760" height="100"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Double Sanitation" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wbI-gU-LoK" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                        <rect key="frame" x="418" y="20" width="144.5" height="20"/>
+                                                        <rect key="frame" x="418" y="20.5" width="144.5" height="19.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="144.5" id="Xq9-Hg-0Jt"/>
                                                         </constraints>
@@ -12623,13 +12623,13 @@
                                                         <rect key="frame" x="15" y="64" width="190" height="40"/>
                                                         <subviews>
                                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="etZ-FX-0Ff">
-                                                                <rect key="frame" x="140" y="4.5" width="51" height="31"/>
+                                                                <rect key="frame" x="140" y="1.5" width="51" height="31"/>
                                                                 <connections>
                                                                     <action selector="switchClicked:" destination="hhM-gY-z2L" eventType="valueChanged" id="QDT-ig-yGh"/>
                                                                 </connections>
                                                             </switch>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Is it automatic fail?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TiL-xB-QxU" customClass="PEFormLabel" customModule="PoultryView_360" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="120" height="39.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="120" height="33.5"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="120" id="Lb9-IX-t76"/>
                                                                 </constraints>
@@ -15143,1112 +15143,6 @@ CQ
             <point key="canvasLocation" x="74552121813.669067" y="479.13669064748206"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="02h-Iv-BSK">
-            <size key="intrinsicContentSize" width="131.5" height="20"/>
-        </designable>
-        <designable name="0BY-g1-Y32">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="0aq-B6-qI9"/>
-        <designable name="0df-3Z-t1U">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="0ow-jO-DH8">
-            <size key="intrinsicContentSize" width="121" height="20"/>
-        </designable>
-        <designable name="1GY-20-Klg">
-            <size key="intrinsicContentSize" width="82.5" height="20"/>
-        </designable>
-        <designable name="1YO-m8-fqq">
-            <size key="intrinsicContentSize" width="31.5" height="20"/>
-        </designable>
-        <designable name="1cQ-Bh-SuX">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="1gC-x2-sqC">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="1vu-td-Fg7">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="25w-ev-IWY">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="2Lx-4b-Ae6">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="2T8-Lq-LAy">
-            <size key="intrinsicContentSize" width="122" height="20"/>
-        </designable>
-        <designable name="2wJ-ES-GoO">
-            <size key="intrinsicContentSize" width="250.5" height="20"/>
-        </designable>
-        <designable name="34c-SI-s8T">
-            <size key="intrinsicContentSize" width="56" height="35"/>
-        </designable>
-        <designable name="3aD-di-lrI">
-            <size key="intrinsicContentSize" width="76" height="20"/>
-        </designable>
-        <designable name="401-89-8IY">
-            <size key="intrinsicContentSize" width="129.5" height="20"/>
-        </designable>
-        <designable name="44M-8k-f2T">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="45H-l5-0ic">
-            <size key="intrinsicContentSize" width="146" height="21.5"/>
-        </designable>
-        <designable name="4DV-u2-at5">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="4F1-dT-ydp">
-            <size key="intrinsicContentSize" width="214" height="21.5"/>
-        </designable>
-        <designable name="4I6-D7-Xgc">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="4rF-Wg-U2Z">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="4vY-vT-aix">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="4w2-iS-k7D">
-            <size key="intrinsicContentSize" width="115.5" height="20"/>
-        </designable>
-        <designable name="5Ho-Gj-vd0">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="5Lf-w6-LQ4">
-            <size key="intrinsicContentSize" width="82.5" height="20"/>
-        </designable>
-        <designable name="5OO-DE-bkr">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="5Oh-rg-2sN">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="5UP-pQ-slr">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="5W9-Ul-AGu">
-            <size key="intrinsicContentSize" width="182" height="35"/>
-        </designable>
-        <designable name="5YP-hz-TEA">
-            <size key="intrinsicContentSize" width="146" height="21.5"/>
-        </designable>
-        <designable name="5hf-AV-JeF"/>
-        <designable name="5lx-OM-0EI">
-            <size key="intrinsicContentSize" width="108" height="20"/>
-        </designable>
-        <designable name="5tT-8P-Czk">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="5vw-uv-usM">
-            <size key="intrinsicContentSize" width="124" height="20"/>
-        </designable>
-        <designable name="5zF-EH-4CW">
-            <size key="intrinsicContentSize" width="154" height="20"/>
-        </designable>
-        <designable name="6A5-pS-mIl">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="6BT-D9-bVh">
-            <size key="intrinsicContentSize" width="193" height="21.5"/>
-        </designable>
-        <designable name="6EV-yy-18N">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="6g1-1K-7bD">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="791-bg-P5E">
-            <size key="intrinsicContentSize" width="153.5" height="44"/>
-        </designable>
-        <designable name="7Lz-jt-122">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="7Mk-6T-iHV">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="7Xo-KD-37q">
-            <size key="intrinsicContentSize" width="144.5" height="20"/>
-        </designable>
-        <designable name="7ag-us-VCH">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="7xU-Fk-XcP">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="8E7-IE-WW0">
-            <size key="intrinsicContentSize" width="31.5" height="20"/>
-        </designable>
-        <designable name="92p-ZB-jqD">
-            <size key="intrinsicContentSize" width="122" height="20"/>
-        </designable>
-        <designable name="9J1-eE-NQq">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="9NF-s9-Ojg">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="9U9-7f-dZO">
-            <size key="intrinsicContentSize" width="156" height="20"/>
-        </designable>
-        <designable name="9hd-ip-15s">
-            <size key="intrinsicContentSize" width="76" height="20"/>
-        </designable>
-        <designable name="9rR-ka-evQ">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="A0x-VL-KDm"/>
-        <designable name="AFU-Ps-IGx">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="AOF-2F-K27">
-            <size key="intrinsicContentSize" width="221.5" height="20"/>
-        </designable>
-        <designable name="ARc-NU-7nl">
-            <size key="intrinsicContentSize" width="128" height="20"/>
-        </designable>
-        <designable name="AmZ-3O-drv">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="B83-tE-5n8">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="BIc-12-7h9">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="BQM-Ne-mCb">
-            <size key="intrinsicContentSize" width="129.5" height="20"/>
-        </designable>
-        <designable name="BTy-QX-z2S"/>
-        <designable name="BUm-GU-57D">
-            <size key="intrinsicContentSize" width="250.5" height="20"/>
-        </designable>
-        <designable name="BYj-I6-zfK">
-            <size key="intrinsicContentSize" width="286" height="20"/>
-        </designable>
-        <designable name="BiH-ah-JVh">
-            <size key="intrinsicContentSize" width="44" height="35"/>
-        </designable>
-        <designable name="BrA-Zm-37B">
-            <size key="intrinsicContentSize" width="213" height="20"/>
-        </designable>
-        <designable name="BtI-6g-JSz">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="BtU-XA-Uhi">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="CgE-ur-Xgw">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="ChF-FB-uFu">
-            <size key="intrinsicContentSize" width="131.5" height="20"/>
-        </designable>
-        <designable name="D8n-EM-MKT">
-            <size key="intrinsicContentSize" width="124" height="20"/>
-        </designable>
-        <designable name="D8o-nZ-GIa">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="DJJ-Ik-6Gf">
-            <size key="intrinsicContentSize" width="76" height="20"/>
-        </designable>
-        <designable name="DNq-rG-cpg">
-            <size key="intrinsicContentSize" width="44" height="35"/>
-        </designable>
-        <designable name="Duk-OO-ZcB">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="EaY-Q5-k9Q">
-            <size key="intrinsicContentSize" width="124" height="20"/>
-        </designable>
-        <designable name="EfL-4H-lRq">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="Efh-S9-gdf">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="Eh9-GV-dGg">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="F64-Er-3V1">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="FTH-f6-DK8">
-            <size key="intrinsicContentSize" width="30" height="35"/>
-        </designable>
-        <designable name="Fno-0z-Pyo">
-            <size key="intrinsicContentSize" width="114.5" height="20"/>
-        </designable>
-        <designable name="G4Z-WZ-E0H">
-            <size key="intrinsicContentSize" width="214" height="21.5"/>
-        </designable>
-        <designable name="G9Y-Pr-x4W">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="GEG-i6-XY6">
-            <size key="intrinsicContentSize" width="112.5" height="20"/>
-        </designable>
-        <designable name="GXD-PR-BMN">
-            <size key="intrinsicContentSize" width="35" height="20"/>
-        </designable>
-        <designable name="Gg3-Yv-JEP">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="GoU-8p-MtN">
-            <size key="intrinsicContentSize" width="127" height="35"/>
-        </designable>
-        <designable name="Gzr-Ar-tR7">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="HHB-eb-u8J">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="HbK-ht-lGe">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="HdB-KB-I4i">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="HnD-sQ-8Ic">
-            <size key="intrinsicContentSize" width="121" height="20"/>
-        </designable>
-        <designable name="I1W-mQ-NKv">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="I5Y-Nh-cBL">
-            <size key="intrinsicContentSize" width="115.5" height="20"/>
-        </designable>
-        <designable name="I8q-1U-Vy5">
-            <size key="intrinsicContentSize" width="112.5" height="20"/>
-        </designable>
-        <designable name="IQB-ki-XwM">
-            <size key="intrinsicContentSize" width="114.5" height="20"/>
-        </designable>
-        <designable name="IR0-A0-29G">
-            <size key="intrinsicContentSize" width="115.5" height="20"/>
-        </designable>
-        <designable name="IVu-ci-HrP">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="IeQ-Hm-X7C">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="IlD-fi-Dua">
-            <size key="intrinsicContentSize" width="128" height="20"/>
-        </designable>
-        <designable name="IwP-eB-aQT">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="J36-fU-eBX">
-            <size key="intrinsicContentSize" width="76" height="20"/>
-        </designable>
-        <designable name="JC4-fT-kEh">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="JM1-RT-01p">
-            <size key="intrinsicContentSize" width="138" height="21.5"/>
-        </designable>
-        <designable name="JOy-BE-2ri">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="JZY-fD-MDr">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="Jk8-H4-5lf">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="JnQ-RH-Gw3">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="K5R-zf-7BK">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="KAs-dm-bia">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="KI7-LK-8zi">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="KLL-Kl-Mw7">
-            <size key="intrinsicContentSize" width="196" height="21.5"/>
-        </designable>
-        <designable name="KLh-mD-erp">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="KPc-bp-jP4">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="KVP-hP-UYw">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="KZL-st-h7O">
-            <size key="intrinsicContentSize" width="127" height="35"/>
-        </designable>
-        <designable name="Kya-QC-O3w">
-            <size key="intrinsicContentSize" width="206" height="20"/>
-        </designable>
-        <designable name="L0d-BV-mGV">
-            <size key="intrinsicContentSize" width="127" height="35"/>
-        </designable>
-        <designable name="L9k-7X-Mtu">
-            <size key="intrinsicContentSize" width="221.5" height="20"/>
-        </designable>
-        <designable name="LAC-UT-h5o">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="LKB-31-1H6">
-            <size key="intrinsicContentSize" width="115.5" height="20"/>
-        </designable>
-        <designable name="LvO-LA-zwq">
-            <size key="intrinsicContentSize" width="124" height="20"/>
-        </designable>
-        <designable name="MAM-an-Xzx">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="MJy-yk-F2z">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="MWy-Sg-wwO">
-            <size key="intrinsicContentSize" width="47.5" height="20"/>
-        </designable>
-        <designable name="MXt-Xy-x2Z"/>
-        <designable name="MgW-IF-x5S">
-            <size key="intrinsicContentSize" width="65.5" height="20"/>
-        </designable>
-        <designable name="Mrz-CW-Dih"/>
-        <designable name="NKX-hH-i8g">
-            <size key="intrinsicContentSize" width="286" height="20"/>
-        </designable>
-        <designable name="NN3-Uz-g3D">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="NU2-XJ-iNJ">
-            <size key="intrinsicContentSize" width="72" height="20"/>
-        </designable>
-        <designable name="NXR-ac-ItQ">
-            <size key="intrinsicContentSize" width="72" height="20"/>
-        </designable>
-        <designable name="NcA-r4-qVD">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="Ncl-Y3-fek">
-            <size key="intrinsicContentSize" width="127" height="35"/>
-        </designable>
-        <designable name="Ndg-Xb-x3n">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="Nse-jT-7F5">
-            <size key="intrinsicContentSize" width="154" height="20"/>
-        </designable>
-        <designable name="Nvv-K3-tNg">
-            <size key="intrinsicContentSize" width="47.5" height="20"/>
-        </designable>
-        <designable name="ONX-Ub-cIo">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="OQH-dT-XJo">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="OTt-h3-gzA">
-            <size key="intrinsicContentSize" width="128" height="20"/>
-        </designable>
-        <designable name="Oql-zT-grl">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="OzV-Zf-DGJ">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="PGd-vt-khe">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="PP7-vg-cgT">
-            <size key="intrinsicContentSize" width="156" height="20"/>
-        </designable>
-        <designable name="PXp-C8-KdR">
-            <size key="intrinsicContentSize" width="77.5" height="20"/>
-        </designable>
-        <designable name="PbF-bg-lD6">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="Ple-sv-aIY">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="Q2K-UC-Wte">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="QTN-pB-mpH">
-            <size key="intrinsicContentSize" width="138" height="21.5"/>
-        </designable>
-        <designable name="QY0-BG-5tr">
-            <size key="intrinsicContentSize" width="128" height="20"/>
-        </designable>
-        <designable name="Qpq-5x-BVD">
-            <size key="intrinsicContentSize" width="65.5" height="20"/>
-        </designable>
-        <designable name="Qyc-5v-rSo">
-            <size key="intrinsicContentSize" width="250.5" height="20"/>
-        </designable>
-        <designable name="RE9-SH-QJd">
-            <size key="intrinsicContentSize" width="122" height="20"/>
-        </designable>
-        <designable name="RED-Jf-z90">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="RPj-8X-Wrk">
-            <size key="intrinsicContentSize" width="156" height="20"/>
-        </designable>
-        <designable name="RYW-HX-rNR">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="S5s-eQ-Ftn">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="SQZ-U3-SPP">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="SoF-Zr-6GK">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="Szb-nB-LgM">
-            <size key="intrinsicContentSize" width="193" height="21.5"/>
-        </designable>
-        <designable name="Szd-eT-udm">
-            <size key="intrinsicContentSize" width="44" height="35"/>
-        </designable>
-        <designable name="T4k-IC-WRR">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="T6I-na-gZD">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="TLn-qT-Oam">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="TSJ-Jk-gUL">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="TUN-q5-wK6">
-            <size key="intrinsicContentSize" width="122" height="20"/>
-        </designable>
-        <designable name="TaF-cc-hHh">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="TcS-0o-axe">
-            <size key="intrinsicContentSize" width="128" height="20"/>
-        </designable>
-        <designable name="TiL-xB-QxU">
-            <size key="intrinsicContentSize" width="154" height="20"/>
-        </designable>
-        <designable name="Tth-QD-i1E">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="Ty1-WI-w3R">
-            <size key="intrinsicContentSize" width="156" height="20"/>
-        </designable>
-        <designable name="U8R-5e-72a">
-            <size key="intrinsicContentSize" width="47.5" height="20"/>
-        </designable>
-        <designable name="UNP-kp-kRP">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="UQA-Jz-RLU">
-            <size key="intrinsicContentSize" width="129.5" height="20"/>
-        </designable>
-        <designable name="UeD-Bc-hbl">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="UqP-QJ-UbX">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="Utv-v0-dUp">
-            <size key="intrinsicContentSize" width="44" height="35"/>
-        </designable>
-        <designable name="V1J-qS-lmw">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="V23-SJ-sO5">
-            <size key="intrinsicContentSize" width="286" height="20"/>
-        </designable>
-        <designable name="Vhi-c4-Zo2">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="Vr3-oa-fyj">
-            <size key="intrinsicContentSize" width="138" height="20"/>
-        </designable>
-        <designable name="W6n-gs-5KN">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="WMM-YD-mGr">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="WOs-Lw-nA2">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="WYR-es-XQK">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="Wg9-Sq-I5D">
-            <size key="intrinsicContentSize" width="136" height="20"/>
-        </designable>
-        <designable name="Wm1-fc-1SC">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="X5O-oB-sh9">
-            <size key="intrinsicContentSize" width="193" height="21.5"/>
-        </designable>
-        <designable name="X6H-ZR-Dkv">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="X86-Jx-xiL">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="XGy-jM-L62">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="XLe-AG-7lc">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="Xjb-uC-L8B">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="Y75-Ue-T46">
-            <size key="intrinsicContentSize" width="72" height="20"/>
-        </designable>
-        <designable name="Yb5-mD-zUd">
-            <size key="intrinsicContentSize" width="129.5" height="20"/>
-        </designable>
-        <designable name="YgY-Wq-mtq">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="YsH-rL-L91">
-            <size key="intrinsicContentSize" width="128" height="20"/>
-        </designable>
-        <designable name="ZKX-M5-De5">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="ZTf-rJ-lfU">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="aB2-zu-QVn">
-            <size key="intrinsicContentSize" width="154" height="20"/>
-        </designable>
-        <designable name="aLP-gA-Hc3">
-            <size key="intrinsicContentSize" width="56" height="35"/>
-        </designable>
-        <designable name="aNb-Hf-sz8">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="aQD-nq-bmX">
-            <size key="intrinsicContentSize" width="108" height="20"/>
-        </designable>
-        <designable name="aQy-Lu-8fe">
-            <size key="intrinsicContentSize" width="41.5" height="20"/>
-        </designable>
-        <designable name="aiu-ui-akK">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="b0o-Qp-wew">
-            <size key="intrinsicContentSize" width="215.5" height="21.5"/>
-        </designable>
-        <designable name="bAf-yL-kug">
-            <size key="intrinsicContentSize" width="129.5" height="20"/>
-        </designable>
-        <designable name="bBc-qB-1oG">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="bDq-1U-i91">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="bPN-sb-QuY">
-            <size key="intrinsicContentSize" width="193" height="21.5"/>
-        </designable>
-        <designable name="bVw-J8-typ">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="bYy-By-7YE">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="bZa-YG-19D">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="bbd-RS-v6s">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="bp7-1b-ef3">
-            <size key="intrinsicContentSize" width="122" height="20"/>
-        </designable>
-        <designable name="bt0-PE-qnn">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="cN7-eh-Wj9">
-            <size key="intrinsicContentSize" width="121" height="20"/>
-        </designable>
-        <designable name="cU0-y2-tvI"/>
-        <designable name="cU4-DN-WZI">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="cho-BA-Uci">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="cqZ-Yj-S5a">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="cyy-Eh-pJI">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="d00-Uz-lKq">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="d4A-HU-o4d">
-            <size key="intrinsicContentSize" width="77.5" height="20"/>
-        </designable>
-        <designable name="dJS-sn-5qz"/>
-        <designable name="dR6-lL-xUt">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="dTb-3n-7Ha">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="dao-UO-u13">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="dfv-u9-J9h">
-            <size key="intrinsicContentSize" width="286" height="20"/>
-        </designable>
-        <designable name="dra-MO-4Gf">
-            <size key="intrinsicContentSize" width="286" height="20"/>
-        </designable>
-        <designable name="e9A-mp-3H2">
-            <size key="intrinsicContentSize" width="156" height="20"/>
-        </designable>
-        <designable name="eHf-fG-u5Y">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="eY4-Qj-i2i">
-            <size key="intrinsicContentSize" width="47.5" height="20"/>
-        </designable>
-        <designable name="ee8-yg-OrN">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="ent-Tu-lCJ">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="fV7-M9-Etf">
-            <size key="intrinsicContentSize" width="140" height="20"/>
-        </designable>
-        <designable name="fiV-J1-kGJ">
-            <size key="intrinsicContentSize" width="128" height="20"/>
-        </designable>
-        <designable name="fig-SY-Evd">
-            <size key="intrinsicContentSize" width="82.5" height="20"/>
-        </designable>
-        <designable name="fpM-dm-XsM">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="fsC-tz-f4F">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="fsE-Xd-LGZ">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="fwf-ai-7Pj">
-            <size key="intrinsicContentSize" width="250.5" height="20"/>
-        </designable>
-        <designable name="g0g-yn-Y6a">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="gOO-d4-CC0">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="gTB-6k-6r8">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="gXI-6M-lrJ">
-            <size key="intrinsicContentSize" width="78.5" height="20"/>
-        </designable>
-        <designable name="gZB-Eu-lie"/>
-        <designable name="gaP-EL-u74">
-            <size key="intrinsicContentSize" width="77.5" height="20"/>
-        </designable>
-        <designable name="gce-6P-E0q">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="gvg-BB-rw3">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="h8K-wO-n3V">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="hDi-1J-Q1D">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="hEX-N8-U56">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="hLx-VV-6ww">
-            <size key="intrinsicContentSize" width="77.5" height="20"/>
-        </designable>
-        <designable name="hPY-b0-XqW">
-            <size key="intrinsicContentSize" width="250.5" height="20"/>
-        </designable>
-        <designable name="hdb-Yy-zAy">
-            <size key="intrinsicContentSize" width="72" height="20"/>
-        </designable>
-        <designable name="hg6-tG-WJH">
-            <size key="intrinsicContentSize" width="85" height="20"/>
-        </designable>
-        <designable name="hju-oN-a6r">
-            <size key="intrinsicContentSize" width="214" height="21.5"/>
-        </designable>
-        <designable name="i1y-Ql-rlB">
-            <size key="intrinsicContentSize" width="54" height="35"/>
-        </designable>
-        <designable name="i50-VD-7F7">
-            <size key="intrinsicContentSize" width="124" height="20"/>
-        </designable>
-        <designable name="iCD-hl-fSG"/>
-        <designable name="ie5-7k-qS5">
-            <size key="intrinsicContentSize" width="128" height="20"/>
-        </designable>
-        <designable name="imJ-LF-C0e">
-            <size key="intrinsicContentSize" width="85" height="20"/>
-        </designable>
-        <designable name="int-Jn-0YT">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="j1Z-pe-H6c">
-            <size key="intrinsicContentSize" width="76" height="20"/>
-        </designable>
-        <designable name="j4G-JF-KYv">
-            <size key="intrinsicContentSize" width="85.5" height="20"/>
-        </designable>
-        <designable name="j4J-e7-v95">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="jOM-st-mU7">
-            <size key="intrinsicContentSize" width="31.5" height="20"/>
-        </designable>
-        <designable name="jY2-Uu-cbH">
-            <size key="intrinsicContentSize" width="76" height="20"/>
-        </designable>
-        <designable name="jYO-Or-mcZ">
-            <size key="intrinsicContentSize" width="286" height="20"/>
-        </designable>
-        <designable name="jiL-68-hma">
-            <size key="intrinsicContentSize" width="31.5" height="20"/>
-        </designable>
-        <designable name="k2O-o5-IHl">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="kMA-UQ-SqK">
-            <size key="intrinsicContentSize" width="138" height="20"/>
-        </designable>
-        <designable name="kSR-DD-Ycp">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="kaQ-i0-kqF">
-            <size key="intrinsicContentSize" width="122" height="20"/>
-        </designable>
-        <designable name="krC-Po-r1n">
-            <size key="intrinsicContentSize" width="72" height="20"/>
-        </designable>
-        <designable name="kyG-k4-5Xg">
-            <size key="intrinsicContentSize" width="115.5" height="20"/>
-        </designable>
-        <designable name="l5b-tE-wan">
-            <size key="intrinsicContentSize" width="72" height="20"/>
-        </designable>
-        <designable name="lL0-30-ZYP">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="lOm-ah-zh1">
-            <size key="intrinsicContentSize" width="31.5" height="21.5"/>
-        </designable>
-        <designable name="lW8-VF-kt9">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="lbh-bh-xvh">
-            <size key="intrinsicContentSize" width="77.5" height="20"/>
-        </designable>
-        <designable name="mFP-bP-Tnz">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="mc0-N9-xD2">
-            <size key="intrinsicContentSize" width="153.5" height="44"/>
-        </designable>
-        <designable name="mul-2b-KKa">
-            <size key="intrinsicContentSize" width="44" height="35"/>
-        </designable>
-        <designable name="mwQ-h8-xey">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="myL-1Q-DbM">
-            <size key="intrinsicContentSize" width="31.5" height="21.5"/>
-        </designable>
-        <designable name="nAK-79-hJL">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="nJ8-Wn-vky">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="nSm-wE-jxa">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="nWP-if-l0v">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="ney-FD-hzo">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="nh7-nG-Gcp">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="nlH-Rm-BcV">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="nza-5S-LuY">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="oAf-we-fQx">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="oTb-s5-DgX">
-            <size key="intrinsicContentSize" width="112.5" height="20"/>
-        </designable>
-        <designable name="ogM-nx-Vpk">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="oof-Rg-c5T">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="orX-SH-KdK"/>
-        <designable name="ozn-Kb-9vj">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="pan-TM-obC">
-            <size key="intrinsicContentSize" width="154" height="20"/>
-        </designable>
-        <designable name="pge-5F-Bbf">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="pnI-1J-dbo">
-            <size key="intrinsicContentSize" width="31.5" height="20"/>
-        </designable>
-        <designable name="ppF-S4-lez">
-            <size key="intrinsicContentSize" width="47.5" height="20"/>
-        </designable>
-        <designable name="pzs-66-vUV">
-            <size key="intrinsicContentSize" width="114.5" height="20"/>
-        </designable>
-        <designable name="q1n-RE-lQs">
-            <size key="intrinsicContentSize" width="30" height="32"/>
-        </designable>
-        <designable name="q3T-uj-YJl">
-            <size key="intrinsicContentSize" width="182" height="35"/>
-        </designable>
-        <designable name="q7O-AY-M8M">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="qCf-z2-RAF">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="qCr-4q-7F7">
-            <size key="intrinsicContentSize" width="214" height="21.5"/>
-        </designable>
-        <designable name="qKl-Tg-chU">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="qMJ-kb-hzD">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="qQ4-4e-To2">
-            <size key="intrinsicContentSize" width="154" height="20"/>
-        </designable>
-        <designable name="qY4-hq-N6F">
-            <size key="intrinsicContentSize" width="138" height="20"/>
-        </designable>
-        <designable name="qZn-v0-fJz">
-            <size key="intrinsicContentSize" width="204.5" height="20"/>
-        </designable>
-        <designable name="qao-bF-J6H">
-            <size key="intrinsicContentSize" width="47.5" height="20"/>
-        </designable>
-        <designable name="qd1-0s-ef8">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="qfu-au-byb"/>
-        <designable name="qxH-uF-9p0">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="qzD-mU-WfR">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="r0O-fJ-aPW">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="r2p-07-WKh">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="rGZ-Pb-DK7">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="raz-bn-BPV">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="roM-Jh-ogW">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="rtx-Kf-bYA">
-            <size key="intrinsicContentSize" width="124" height="20"/>
-        </designable>
-        <designable name="s0H-Vr-hGb">
-            <size key="intrinsicContentSize" width="77.5" height="20"/>
-        </designable>
-        <designable name="s7W-Ih-wga">
-            <size key="intrinsicContentSize" width="31.5" height="20"/>
-        </designable>
-        <designable name="sNh-Lo-S37">
-            <size key="intrinsicContentSize" width="31.5" height="20"/>
-        </designable>
-        <designable name="sXf-2d-pN5">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="seg-q9-Y3e">
-            <size key="intrinsicContentSize" width="131.5" height="20"/>
-        </designable>
-        <designable name="sfN-a7-zWK">
-            <size key="intrinsicContentSize" width="47.5" height="20"/>
-        </designable>
-        <designable name="suh-9Q-RAl">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="swe-qO-h2u">
-            <size key="intrinsicContentSize" width="115.5" height="20"/>
-        </designable>
-        <designable name="tSI-BJ-L2u">
-            <size key="intrinsicContentSize" width="144.5" height="20"/>
-        </designable>
-        <designable name="tca-CA-0RZ">
-            <size key="intrinsicContentSize" width="44" height="35"/>
-        </designable>
-        <designable name="tkf-ko-pli">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="u7W-73-D0m">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="uDV-vj-UCb">
-            <size key="intrinsicContentSize" width="114.5" height="20"/>
-        </designable>
-        <designable name="udA-DP-SqO">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="v2C-1d-IiQ">
-            <size key="intrinsicContentSize" width="146" height="21.5"/>
-        </designable>
-        <designable name="v5e-tS-vS8">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="v8w-VY-jjM">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="vSt-Iq-rXA">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="vYx-ht-7c3">
-            <size key="intrinsicContentSize" width="108" height="20"/>
-        </designable>
-        <designable name="veU-Z9-yl9">
-            <size key="intrinsicContentSize" width="114.5" height="20"/>
-        </designable>
-        <designable name="vwu-RY-NQG">
-            <size key="intrinsicContentSize" width="144.5" height="20"/>
-        </designable>
-        <designable name="w7R-UN-3B6">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="wIS-9x-Sxh">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="wJ5-yG-efX">
-            <size key="intrinsicContentSize" width="250.5" height="20"/>
-        </designable>
-        <designable name="wJa-TN-M06">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="wVB-Ki-hnD">
-            <size key="intrinsicContentSize" width="128" height="20"/>
-        </designable>
-        <designable name="wXp-sl-mkm">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="wbI-gU-LoK">
-            <size key="intrinsicContentSize" width="144.5" height="20"/>
-        </designable>
-        <designable name="wcK-ZX-AGx">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="wgQ-2A-NQp">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="wte-Wu-Bqt">
-            <size key="intrinsicContentSize" width="156" height="20"/>
-        </designable>
-        <designable name="x6v-nL-2kd">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="xAQ-o1-3Gk">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="xEG-sM-Szw">
-            <size key="intrinsicContentSize" width="79.5" height="20"/>
-        </designable>
-        <designable name="xOx-ZU-f5C">
-            <size key="intrinsicContentSize" width="129.5" height="20"/>
-        </designable>
-        <designable name="xZz-1I-hPz">
-            <size key="intrinsicContentSize" width="72" height="20"/>
-        </designable>
-        <designable name="xkr-zp-EdU">
-            <size key="intrinsicContentSize" width="5" height="21.5"/>
-        </designable>
-        <designable name="xzM-zY-gLy">
-            <size key="intrinsicContentSize" width="50" height="35"/>
-        </designable>
-        <designable name="y4A-KM-bYL">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="yFs-pb-Idb">
-            <size key="intrinsicContentSize" width="138" height="21.5"/>
-        </designable>
-        <designable name="yL8-YE-PLx">
-            <size key="intrinsicContentSize" width="221.5" height="20"/>
-        </designable>
-        <designable name="yfa-dk-EfH">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="ylW-tf-o0L">
-            <size key="intrinsicContentSize" width="24" height="14"/>
-        </designable>
-        <designable name="z66-Dn-p2Q">
-            <size key="intrinsicContentSize" width="47.5" height="21.5"/>
-        </designable>
-        <designable name="zDJ-9F-cfS">
-            <size key="intrinsicContentSize" width="30" height="30"/>
-        </designable>
-        <designable name="zLV-pV-Ff6">
-            <size key="intrinsicContentSize" width="144.5" height="20"/>
-        </designable>
-        <designable name="zta-nf-Rbp">
-            <size key="intrinsicContentSize" width="47.5" height="20"/>
-        </designable>
-    </designables>
     <resources>
         <image name="DocumentNew" width="72" height="72"/>
         <image name="Drop_Icon" width="15.5" height="8.5"/>
@@ -16281,25 +15175,25 @@ CQ
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="linkColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray4Color">
-            <color red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGroupedBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

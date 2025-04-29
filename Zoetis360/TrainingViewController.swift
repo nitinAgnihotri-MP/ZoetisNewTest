@@ -48,67 +48,6 @@ class TrainingViewController: UIViewController, WKUIDelegate{
         self.headerLabel.text = NSLocalizedString("Training & Education", comment: "")
         self.userNameLabel.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
     }
-    
-   
-//    func callWebApiForTutorial(_ completion: @escaping (_ status: Bool) -> Void) {
-//        guard WebClass.sharedInstance.connected() else {
-//            loadFilesOffline(completion: completion)
-//            return
-//        }
-//        
-//        Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(appDelegateObj.loadingStr, comment: ""))
-//        accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-//        
-//        let headerDict: HTTPHeaders = [
-//            "Authorization": accestoken,
-//            "Cache-Control": "Constants.noStoreNoCache
-//        ]
-////        let headerDict: HTTPHeaders = ["Authorization": accestoken]
-//        let url = WebClass.sharedInstance.webUrl + "PostingSession/GetTutorial"
-//        
-//        sessionManager.request(url, method: .get, headers: headerDict).responseJSON { response in
-//            switch response.result {
-//            case .success(let value):
-//                guard let dict = value as? NSDictionary, let paths = dict["PDFPath"] as? NSDictionary else {
-//                    completion(false)
-//                    return
-//                }
-//                
-//                self.pathArr.removeAllObjects()
-//                self.count = paths.count
-//                
-//                for (i, value) in paths {
-//                    let fileName = "my\(i).pdf"
-//                    let filePath = self.getSecureFilePath(fileName)
-//                    
-//                    if self.checkPdfExitOnLocal(fileName: fileName) {
-//                        self.pathArr.add(filePath)
-//                    } else if let urlString = value as? String, let fileURL = URL(string: urlString) {
-//                        self.downloadFile(serverUrl: fileURL, fileName: filePath) { status in
-//                            if status {
-//                                self.pathArr.add(filePath)
-//                            }
-//                            if self.pathArr.count == self.count {
-//                                completion(true)
-//                            }
-//                        }
-//                    }
-//                }
-//                
-//            case .failure(let error):
-//                debugPrint("Error: \(error.localizedDescription)")
-//                completion(false)
-//            }
-//        }
-//    }
-
-    private func loadFilesOffline(completion: @escaping (_ status: Bool) -> Void) {
-        for i in 1..<3 {
-            let filePath = self.getSecureFilePath("myURL\(i).pdf")
-            self.pathArr.add(filePath)
-        }
-        completion(self.pathArr.count == 2)
-    }
 
     private func getSecureFilePath(_ fileName: String) -> URL {
         let libraryPath = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0]

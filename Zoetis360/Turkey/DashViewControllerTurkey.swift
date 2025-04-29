@@ -922,9 +922,9 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         btnTag = 1
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
             
-            var _temp = ServiceDataHolder()
-            _temp = self.dataArray.object(at: btnTag) as! ServiceDataHolder
-            serviceDataHldArr = _temp.ObservaionDetailsArr
+            var cocciServices = ServiceDataHolder()
+            cocciServices = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+            serviceDataHldArr = cocciServices.ObservaionDetailsArr
         }
         
         dataCocoiiArray = CoreDataHandlerTurkey().fetchAllCocoiiDataTurkey()

@@ -372,7 +372,7 @@ class FeatherPulpVC: BaseViewController {
         switch self.requisitionSavedSessionType {
         case .CREATE_NEW_SESSION, .RESTORE_OLD_SESSION:
             if self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .saveAsDraft){
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "You have already added requisition with same date and site.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: Constants.youHaveAlreadyRequisitionStr)
                 return
             }
 
@@ -403,7 +403,7 @@ class FeatherPulpVC: BaseViewController {
         let reviewer = cellCaseInfo?.reviewerTxt.text ?? ""
         if !company.isEmpty && !site.isEmpty && !barcode.isEmpty && !typeOfBird.isEmpty && !reviewer.isEmpty {
             if self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted){
-                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "You have already added requisition with same date and site.")
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: Constants.youHaveAlreadyRequisitionStr)
                 return false
             }
         }else{

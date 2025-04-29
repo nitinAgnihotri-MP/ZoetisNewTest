@@ -320,16 +320,19 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         self.notesBGbtn.removeFromSuperview()
         self.notesView.removeFromSuperview()
     }
-    
     func crossBtnTurky(){
+        debugPrint("delegate method.")
         self.notesBGbtn.removeFromSuperview()
         self.notesView.removeFromSuperview()
     }
     
     func openNoteFunc(){
+        debugPrint("open notes method.")
         self.notesBGbtn.removeFromSuperview()
         self.notesView.removeFromSuperview()
     }
+    
+  
     
     func doneBtnFunc(_ notes : NSMutableArray , notesText : String , noOfBird : Int) {
         // deafult
@@ -367,16 +370,16 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
+
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -404,19 +407,18 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
         
         let allPostingSessionArr = NSMutableArray()
-        
-        var sessionId = NSNumber()
+     
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var  sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -424,7 +426,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     }
     func doneClick() {
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter2.dateFormat=Constants.MMddyyyyStr
         let strdate = dateFormatter2.string(from: datePicker.date) as String
         sessionDateOutlet.text = strdate
         
@@ -685,7 +687,6 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         trimmedString = trimmedString.replacingOccurrences(of: ".", with: "", options:
                                                             NSString.CompareOptions.literal, range: nil)
         
-        let farmWeightTrim = farmWeightText.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         trimmedString = trimmedString.replacingOccurrences(of: ".", with: "", options:
                                                             NSString.CompareOptions.literal, range: nil)
         
@@ -768,19 +769,15 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             let Url = "PostingSession/SyncToDevice"
             let parameters  = ["UserId" :Id,"SessionId": sessionId] as [String : Any]
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             
             let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + Url
-            
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
+       
             
             sessionManager.request(urlString, method: .post,parameters:parameters, headers: headerDict).responseJSON { response in
                 switch response.result {
                 case let .success(value):
-                    
+                    debugPrint(value)
                     Helper.dismissGlobalHUD(self.view)
                     self.alerViewSucees()
                     break
@@ -834,16 +831,13 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        let maxLength = 6
         let currentString: NSString = textField.text! as NSString
-        var newString: NSString =
-        currentString.replacingCharacters(in: range, with: string) as NSString
         var result = true
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         
         if (isBackSpace == -92){
-            
+            debugPrint("Back space action.")
         } else if ((textField.text?.count)! > 50  ){
             return false
         }
@@ -868,35 +862,6 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         default : break
             
         }
-        
-        
-//        if textField == farmWeightText {
-//            
-//            let inverseSet = NSCharacterSet(charactersIn:"0123456789").inverted
-//            let components = string.components(separatedBy: inverseSet)
-//            let filtered = components.joined(separator: "")
-//            if filtered == string {
-//                return newString.length <= maxLength
-//            } else {
-//                let allowedCharacters = CharacterSet.decimalDigits.union(CharacterSet(charactersIn: ".")) // (1) Define allowed characters
-//                let filteredString = string.trimmingCharacters(in: allowedCharacters.inverted) // (2) Remove unwanted characters
-//
-//                if filteredString == string {
-//                    return newString.length <= maxLength
-//                } else if string == "." {
-//                    let dotCount = textField.text?.filter { $0 == "." }.count ?? 0
-//                    
-//                    if dotCount == 0 {
-//                        return newString.length <= maxLength
-//                    } else {
-//                        return false
-//                    }
-//                }
-//                return false
-//                
-//
-//            }
-//        }
         return true
        
     }
@@ -913,7 +878,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         if arr.count>0{
             for  i in 0..<arr.count {
                 let posDict = arr.object(at: i)
-                let deviceId = (posDict as AnyObject).value(forKey: "DeviceSessionId") as! String
+             
                 CoreDataHandlerTurkey().getPostingDatWithSpecificIdTurkey(posDict as! NSDictionary,postinngId: self.postingId)
             }
             
@@ -998,18 +963,14 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     }
     
     fileprivate func vaccinationDataSaved(_ value: Any) {
-        if value != nil {
-            if value is NSArray{
-                self.saveVaccinationData(value)
-            }
-            
-        }
+        if let value = value as? NSArray {
+               self.saveVaccinationData(value)
+           }
     }
     
     func getPostingDataFromServerforVaccination(){
         
         if WebClass.sharedInstance.connected() {
-            let id =  UserDefaults.standard.value(forKey: "Id") as! Int
             let url = "PostingSession/GetVaccinationListBySessionId?DeviceSessionId=\(fullData)"
             let urlString: String = WebClass.sharedInstance.webUrl + url
             
@@ -1099,8 +1060,8 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 }
                 switch response.result{
                 case let .success(value):
-                    if value != nil {
-                        if value is NSArray{
+                 
+                    if let arr = value as? NSArray {
                             let arr : NSArray = value as! NSArray
                           
                             UserDefaults.standard.set("Yes", forKey: "Success")
@@ -1155,7 +1116,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                 self.getCNecStep1Data()
                             }
                         }
-                    }
+                    
                 case .failure(let encodingError):
                     
                     print (encodingError)
@@ -1183,7 +1144,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             else{
                 posttingId = 0
             }
-            let age =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"age")
+            let birdAge =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"age")
             let birds =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"birds")
             let houseNo =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"houseNo")
             let flockId =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"flockId")
@@ -1199,7 +1160,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             let genId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "GenerationId") as! Int
             
             let imgId = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "ImgId") as! Int
-            CoreDataHandlerTurkey().SaveNecropsystep1SingleDataTurkey(posttingId as NSNumber, age: ((age as AnyObject).stringValue)!, farmName: farmName, feedProgram:feedProgram, flockId: ((flockId as AnyObject).stringValue) ?? "", houseNo: ((houseNo as AnyObject).stringValue) ?? "", noOfBirds: ((birds as AnyObject).stringValue)!, sick: sick as NSNumber,necId:sessionId as NSNumber,compexName:complexName,complexDate:seesDat,complexId:complexId as NSNumber,custmerId:custId as NSNumber,feedId: feedId as NSNumber,isSync:false,timeStamp:devSessionId,actualTimeStamp:devSessionId, necIdSingle: self.postingId, farmweight: farmweight, abf: abf,sex: sex,breed: breed,farmId:farmId as NSNumber,imgId:imgId as NSNumber , generationName: genName , generationId: genId as NSNumber)
+            CoreDataHandlerTurkey().SaveNecropsystep1SingleDataTurkey(posttingId as NSNumber, age: ((birdAge as AnyObject).stringValue)!, farmName: farmName, feedProgram:feedProgram, flockId: ((flockId as AnyObject).stringValue) ?? "", houseNo: ((houseNo as AnyObject).stringValue) ?? "", noOfBirds: ((birds as AnyObject).stringValue)!, sick: sick as NSNumber,necId:sessionId as NSNumber,compexName:complexName,complexDate:seesDat,complexId:complexId as NSNumber,custmerId:custId as NSNumber,feedId: feedId as NSNumber,isSync:false,timeStamp:devSessionId,actualTimeStamp:devSessionId, necIdSingle: self.postingId, farmweight: farmweight, abf: abf,sex: sex,breed: breed,farmId:farmId as NSNumber,imgId:imgId as NSNumber , generationName: genName , generationId: genId as NSNumber)
             UserDefaults.standard.set(farmId as NSNumber, forKey: "farmIdTurkey")
         }
     }
@@ -1211,13 +1172,12 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 var posttingId = Int ()
                 let sessionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
                 let devSessionId = (arr.object(at: i) as AnyObject).value(forKey: "deviceSessionId") as! String
-                let lngId  = (arr.object(at: i) as AnyObject).value(forKey: "LanguageId") as! NSNumber
                 let custId = (arr.object(at: i) as AnyObject).value(forKey: "CustomerId") as! Int
                 let complexId = (arr.object(at: i) as AnyObject).value(forKey: "ComplexId") as! Int
                 let complexName = (arr.object(at: i) as AnyObject).value(forKey: "ComplexName") as! String
-                let sessionDateOutlet = (arr.object(at: i) as AnyObject).value(forKey: "SessionDate") as! String
+                let savedSessionDateOutlet = (arr.object(at: i) as AnyObject).value(forKey: "SessionDate") as! String
                 
-                let seesDat = self.convertDateFormater(sessionDateOutlet)
+                let seesDat = self.convertDateFormater(savedSessionDateOutlet)
                 let farmArr = (arr.object(at:i) as AnyObject).value(forKey:  "Farms")
                 if (farmArr as AnyObject).count>0 {
                     self.saveNecropsyDataInDataBase(farmArr, sessionId, &posttingId, complexName, seesDat, complexId, custId, devSessionId)
@@ -1288,21 +1248,18 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             assert(false, "no date from string")
             return ""
         }
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        let timeStamp = dateFormatter.string(from: date)
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
+        let convertedTimeStamp = dateFormatter.string(from: date)
         
-        return timeStamp
+        return convertedTimeStamp
     }
     
     func getPostingDataFromServerforNecorpsy(){
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
         if WebClass.sharedInstance.connected() {
-            
-            var id = Int()
-            id =  UserDefaults.standard.value(forKey: "Id") as! Int
+         
+            var id =  UserDefaults.standard.value(forKey: "Id") as! Int
             let  lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
-            // old let url = "PostingSession/T_GetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
             let url = "PostingSession/TurkeyGetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
             let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
@@ -1686,15 +1643,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         if self.allSessionArrWithPostingId(PId: postingId).count > 0 {
             if WebClass.sharedInstance.connected()  == true{
                 
-                let lngId = UserDefaults.standard.integer(forKey: "lngId")
-                var strMsg = String()
-                if lngId == 5 {
-                    strMsg = "Sincronización de datos ..."
-                }
-                else {
-                    strMsg = "Data syncing..."
-                }
-                Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString(strMsg, comment: ""))
+                Helper.showGlobalProgressHUDWithTitle(self.view, title: NSLocalizedString("Data syncing...", comment: ""))
                 
                 self.callSyncApiPostingId(Pid: postingId)
             } else {

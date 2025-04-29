@@ -37,7 +37,7 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
     var routeDrop = DropDown()
     var isClickOnAnyField = Bool()
     var lngId = NSInteger()
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
     var dataArray = NSArray ()
     var index = 10
     
@@ -197,7 +197,6 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
         hatcStrain = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "HatcheryStrain")
         fieldStrain = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetFieldStrain")
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
         hatecheryArray =  CoreDataHandlerTurkey().fetchRouteTurkeyLngId(lngId: 1)
         self.buttonLayoutSet()
         fieldVaccinationView.isHidden = true
@@ -375,90 +374,7 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
         self.showHatcheryRouteDropdown(sender: sender)
         isClickOnAnyField = true
     }
-    /* Code Not in use so we have commented to fullfill Sonar cube issue warning*/
-   /*
-    func textFieldEnable(){
-        
-        if (vacciTrtStrainField.text == " " || vacciTrtStrainField.text == ""){
-            vacciTrtAgeField.isUserInteractionEnabled = false
-            vacciTrtOutlet.isUserInteractionEnabled = false
-        } else {
-            vacciTrtAgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciIbdv1StrainField.text == " " || vacciIbdv1StrainField.text == ""){
-            vacciIbdv1AgeField.isUserInteractionEnabled = false
-            vacciIbdv1Outlet.isUserInteractionEnabled = false
-        } else {
-            vacciIbdv1AgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciIbdv2StrainField.text == " " || vacciIbdv2StrainField.text == ""){
-            vacciIbdv2AgeField.isUserInteractionEnabled = false
-            vacciIbdv2Outlet.isUserInteractionEnabled = false
-            
-        }else{
-            vacciIbdv2AgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciIbv1StrainField.text == " " || vacciIbv1StrainField.text == ""){
-            vacciIbv1AgeField.isUserInteractionEnabled = false
-            vacciIbv1Outlet.isUserInteractionEnabled = false
-        } else {
-            vacciIbv1AgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciIbv2StrainField.text == " " || vacciIbv2StrainField.text == ""){
-            vacciIbv2AgeField.isUserInteractionEnabled = false
-            vacciIbv2Outlet.isUserInteractionEnabled = false
-        } else {
-            vacciIbv2AgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciTrt2StrainField.text == " " || vacciTrt2StrainField.text == ""){
-            vacciTrt2AgeField.isUserInteractionEnabled = false
-            vacciTrt2Outlet.isUserInteractionEnabled = false
-        } else {
-            vacciTrt2AgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciNdv1StrainField.text == " " || vacciNdv1StrainField.text == ""){
-            vacciNdv1AgeField.isUserInteractionEnabled = false
-            vacciNdv1Outlet.isUserInteractionEnabled = false
-        } else {
-            vacciNdv1AgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciNdv2StrainField.text == " " || vacciNdv2StrainField.text == ""){
-            vacciNdv2AgeField.isUserInteractionEnabled = false
-            vacciNdv2Outlet.isUserInteractionEnabled = false
-        } else {
-            vacciNdv2AgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciStStrainField.text == " " || vacciStStrainField.text == ""){
-            vacciStAgeField.isUserInteractionEnabled = false
-            vacciStOutlet.isUserInteractionEnabled = false
-        } else {
-            vacciStAgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciEcoliStrainField.text == " " || vacciEcoliStrainField.text == ""){
-            vacciEcoliAgeField.isUserInteractionEnabled = false
-            vacciEcoliOutlet.isUserInteractionEnabled = false
-        } else {
-            vacciEcoliAgeField.isUserInteractionEnabled = true
-        }
-        
-        if (vacciOthersStrainField.text == " " || vacciOthersStrainField.text == ""){
-            vacciOthersAgeField.isUserInteractionEnabled = false
-            vacciOthersOutlet.isUserInteractionEnabled = false
-        } else {
-            vacciOthersAgeField.isUserInteractionEnabled = true
-        }
-    }
-    
-    */
+
     @IBAction func vacciNdv2Strain(_ sender: UIButton) {
         sender.tag = 68
         self.showHatcheryRouteDropdown(sender: sender)
@@ -705,7 +621,7 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
         vaccinationPrgrmTextField.text = trimmedString
         if trimmedString == ""{
             if btnTag == 1 {
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                 appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.isDoneClick = true
                 self.navigationController?.popViewController(animated: true)
             }
@@ -733,7 +649,7 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
                 UserDefaults.standard.set(vaccinationPrgrmTextField.text!, forKey: "vaci")
                 UserDefaults.standard.synchronize()
             }
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.isDoneClick = true
             self.navigationController?.popViewController(animated: true)
         }
@@ -813,17 +729,16 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
             }
         }
         let allPostingSessionArr = NSMutableArray()
-        
-        var sessionId = NSNumber()
+    
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -1292,62 +1207,4 @@ extension AddVaccinationTurkey{
         }
     }
 
-   /*
-    func showHatcheryRouteDropdown(sender: UIButton){
-        let vaccInfoDict = CoreDataHandlerTurkey().fetchRouteTurkeyLngId(lngId:lngId as NSNumber)
-        let routeNameArray = vaccInfoDict.value(forKeyPath: "routeName")
-        routeDrop.dataSource = routeNameArray as! [AnyObject]
-        routeDrop.anchorView = sender //5
-        routeDrop.bottomOffset = CGPoint(x: 0, y: sender.frame.size.height)
-        routeDrop.show()
-        routeDrop.selectionAction = { [weak self] (index: Int, item: String) in
-            guard let _ = self else { return }
-            if sender.tag == 50 {
-                self?.hatchMarekStrainLbl.text = item
-            }else if sender.tag == 51 {
-                self?.ibdvMarekStrainLbl.text = item
-            } else if sender.tag == 52 {
-                self?.ibvMarekStrainLbl.text = item
-            } else if sender.tag == 53 {
-                self?.trtMarekStrainLbl.text = item
-            } else if sender.tag == 54 {
-                self?.ndvMarekStrainLbl.text = item
-            }else if sender.tag == 55 {
-                self?.poxMarekStrainLbl.text = item
-            }else if sender.tag == 56 {
-                self?.reoMarekStrainLbl.text = item
-            }else if sender.tag == 57 {
-                self?.stMarekStrainLbl.text = item
-            }else if sender.tag == 58 {
-                self?.ecoliMarekStrainLbl.text = item
-            }else if sender.tag == 59 {
-                self?.othersMarekStrainLbl.text = item
-            }
-            
-            else if sender.tag == 61 {
-                self?.vacciIbdv1StrainLbl.text = item
-            } else if sender.tag == 62 {
-                self?.vacciIbdv2StrainLbl.text = item
-            } else if sender.tag == 63 {
-                self?.vacciIbv1StrainLbl.text = item
-            } else if sender.tag == 64 {
-                self?.vacciIbv2StrainLbl.text = item
-            }else if sender.tag == 65 {
-                self?.vacciTrtStrainLbl.text = item
-            }else if sender.tag == 66 {
-                self?.vacciTrt2StrainLbl.text = item
-            }else if sender.tag == 67 {
-                self?.vacciNdv1StrainLbl.text = item
-            }else if sender.tag == 68 {
-                self?.vacciNdv2StrainLbl.text = item
-            }else if sender.tag == 69 {
-                self?.vacciStStrainLbl.text = item
-            }else if sender.tag == 70 {
-                self?.vacciEcoliStrainLbl.text = item
-            }else if sender.tag == 71 {
-                self?.vacciOthersStrainLbl.text = item
-            }
-        }
-    }
-    */
 }

@@ -105,7 +105,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         self.eggsOtherTxt.keyboardType = .numberPad
         self.visitButton.isUserInteractionEnabled = false
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat=Constants.MMddyyyyStr
         let currentDate: NSDate = NSDate()
         let strdate1 = dateFormatter.string(from: currentDate as Date) as String
         self.cameraSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()

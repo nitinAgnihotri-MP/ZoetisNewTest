@@ -76,28 +76,27 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         if lngid == 3{
             fromLblDate.alpha = 0
             toLblDate.alpha = 0
-            var dateFormatter = DateFormatter()
-            dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-            dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
-            fromLblDateFrench.text = dateFormatter.string(from: Date())
-            toLblDateFrench.text = dateFormatter.string(from: Date())
+            dateFormatterIs = DateFormatter()
+            dateFormatterIs = DateFormatter()
+            dateFormatterIs.dateFormat = Constants.ddMMyyyStr
+            dateFormatterIs = DateFormatter()
+            dateFormatterIs.dateFormat = Constants.ddMMyyyStr
+            fromLblDateFrench.text = dateFormatterIs.string(from: Date())
+            toLblDateFrench.text = dateFormatterIs.string(from: Date())
         }
         else{
             fromLblDateFrench.alpha = 0
             toLblDateFrench.alpha = 0
             fromLblDate.alpha = 1
             toLblDate.alpha = 1
-        }
-        var dateFormatter = DateFormatter()
-        dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        }     
+        var dateFormatterOther = DateFormatter()
+        dateFormatterOther.dateFormat = Constants.MMddyyyyStr
+        dateFormatterOther = DateFormatter()
+        dateFormatterOther.dateFormat = Constants.MMddyyyyStr
 
-        fromString = dateFormatter.string(from: Date())
-        toString = dateFormatter.string(from: Date())
+        fromString = dateFormatterOther.string(from: Date())
+        toString = dateFormatterOther.string(from: Date())
         fromLblDate.text = fromString
         toLblDate.text = toString
     }
@@ -182,12 +181,12 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
     // MARK: 🟠 From date DONE Button Action
     @objc func doneClick() {
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
-        if lngId == 3{
+        let donelngId = UserDefaults.standard.integer(forKey: "lngId")
+        if donelngId == 3{
             fromLblDate.alpha = 0
             fromLblDateFrench.alpha = 1
             dateFormatterIs = DateFormatter()
-            dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatterIs.dateFormat = Constants.ddMMyyyStr
             let strdate = dateFormatterIs.string(from: datePicker.date) as String
             fromLblDateFrench.text = strdate
         }
@@ -197,58 +196,43 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         }
         
         dateFormatterIs = DateFormatter()
-        dateFormatterIs.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatterIs.dateFormat = Constants.MMddyyyyStr
         dateFormatterIs = DateFormatter()
-        dateFormatterIs.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatterIs.dateFormat = Constants.MMddyyyyStr
         fromString = dateFormatterIs.string(from: datePicker.date)
         fromDate = datePicker.date
         
-        if fromString == toString{
-            
-            if lngId == 3{
+        if fromString == toString || fromDate.isLessThanDate(toDate) {
+            // Handle language-specific UI changes
+            if lngId == 3 {
                 fromLblDate.alpha = 0
                 fromLblDateFrench.alpha = 1
                 dateFormatterIs = DateFormatter()
-                dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
-                let strdate = dateFormatterIs.string(from: datePicker.date) as String
+                dateFormatterIs.dateFormat = Constants.ddMMyyyStr
+                let strdate = dateFormatterIs.string(from: datePicker.date)
                 fromLblDateFrench.text = strdate
-            }
-            else{
+            } else {
                 fromLblDate.alpha = 1
                 fromLblDateFrench.alpha = 0
             }
-            let strdate = dateFormatterIs.string(from: datePicker.date) as String
+            
+            // Update both labels with the formatted date
+            let strdate = dateFormatterIs.string(from: datePicker.date)
             fromLblDate.text = strdate
-            UserDefaults.standard.set( fromLblDate.text, forKey: "date")
+            
+            // Save the date to UserDefaults
+            UserDefaults.standard.set(fromLblDate.text, forKey: "date")
+            
+            // Final UI updates
             buttonBg.removeFromSuperview()
             tableView.reloadData()
         }
-        else if fromDate.isLessThanDate(toDate){
-            
-            if lngId == 3{
-                fromLblDate.alpha = 0
-                fromLblDateFrench.alpha = 1
-                dateFormatterIs = DateFormatter()
-                dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
-                let strdate = dateFormatterIs.string(from: datePicker.date) as String
-                fromLblDateFrench.text = strdate
-            }
-            else{
-                fromLblDate.alpha = 1
-                fromLblDateFrench.alpha = 0
-            }
-            let strdate = dateFormatterIs.string(from: datePicker.date) as String
-            fromLblDate.text = strdate
-            UserDefaults.standard.set( fromLblDate.text, forKey: "date")
-            buttonBg.removeFromSuperview()
-            tableView.reloadData()
-            
-        } else {
+        else {
             self.cancelClick()
             
             fromString = fromLblDate.text!
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             fromDate = dateFormatter.date(from: fromString)!
             
             if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -283,12 +267,12 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
     // MARK: 🟠 To date DONE Button Action
     @objc func todoneClick() {
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+         lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3{
             toLblDate.alpha = 0
             toLblDateFrench.alpha = 1
             dateFormatterIs = DateFormatter()
-            dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatterIs.dateFormat = Constants.ddMMyyyStr
             let strdate = dateFormatterIs.string(from: datePicker.date) as String
             toLblDateFrench.text = strdate
         }
@@ -298,19 +282,19 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         }
         
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter2.dateFormat = Constants.MMddyyyyStr
         
         let dateFormatter1 = DateFormatter()
-        dateFormatter1.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter1.dateFormat = Constants.MMddyyyyStr
         toString = dateFormatter1.string(from: datePicker.date)
         toDate = datePicker.date
         
-        if fromString == toString {
+        if fromString == toString || toDate.isGreaterThanDate(fromDate) {
             
             if lngId == 3{
                 toLblDate.alpha = 0
                 dateFormatterIs = DateFormatter()
-                dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
+                dateFormatterIs.dateFormat = Constants.ddMMyyyStr
                 let strdate = dateFormatterIs.string(from: datePicker.date) as String
                 toLblDateFrench.text = strdate
             }
@@ -325,32 +309,13 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             buttonBg.removeFromSuperview()
             tableView.reloadData()
             
-        } else if toDate.isGreaterThanDate(fromDate) {
-            
-            if lngId == 3{
-                toLblDate.alpha = 0
-                dateFormatterIs = DateFormatter()
-                dateFormatterIs.dateFormat = appDelegateObj.ddMMyyyStr
-                let strdate = dateFormatterIs.string(from: datePicker.date) as String
-                toLblDateFrench.text = strdate
-            }
-            else{
-                toLblDate.alpha = 1
-                toLblDateFrench.alpha = 0
-            }
-            
-            let strdate = dateFormatter2.string(from: datePicker.date) as String
-            toLblDate.text = strdate
-            UserDefaults.standard.set( toLblDate.text, forKey: "date")
-            buttonBg.removeFromSuperview()
-            tableView.reloadData()
         }
         
         else {
             self.cancelClick()
             fromString = toLblDate.text!
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             toDate = dateFormatter.date(from: fromString)!
             
             if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -402,8 +367,8 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         }else{
             
             let posting : PostingSession = existingArray.object(at: indexPath.row) as! PostingSession
-            let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
-            if lngId == posting.lngId{
+            let appLngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
+            if appLngId == posting.lngId{
                 
                 let postingSessionDetails = self.storyboard?.instantiateViewController(withIdentifier: "PostingSession") as? PostingSessionDetailController
                 postingSessionDetails?.postingId = posting.postingId!
@@ -478,9 +443,9 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
             {
                 let dateString = posting.sessiondate
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatter.dateFormat = Constants.MMddyyyyStr
                 let dateObj = dateFormatter.date(from: dateString!)
-                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+                dateFormatter.dateFormat = Constants.ddMMyyyStr
                 cell.datelabel.text = dateFormatter.string(from: dateObj!)
             }
             else
@@ -675,14 +640,14 @@ class ExistingPostingSessionViewController: UIViewController,UITableViewDelegate
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            var sessionId = pSession.postingId!
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            var sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         

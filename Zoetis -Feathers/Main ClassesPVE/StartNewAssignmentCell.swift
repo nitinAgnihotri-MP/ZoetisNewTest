@@ -249,68 +249,136 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let currentText = textField.text else { return true }
+        let newString = (currentText as NSString).replacingCharacters(in: range, with: string)
         
-        var newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
-        
-        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield {
-            guard CharacterSet(charactersIn: "1234567890").isSuperset(of: CharacterSet(charactersIn: string)) else {
-                return false
-            }
-        }
-
-        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield {
-            
-            // Max 5 digits allowed
-            if newString.count > 5 {
-                return false
-            }
-            
-            // Prevent value being 0 when input is not empty
-            let sum = newString.compactMap { $0.wholeNumberValue }.reduce(0, +)
-            if sum == 0 && !newString.isEmpty {
-                newString = "0"
-                return false
-            }
-            
-            updateAgeOrNoOfBirds(for: textField, with: newString)
+        // Numeric-only fields with max 5 digits and no all-zero values
+        if [ageOfBirdsTxtfield, noOfBirdsTxtfield].contains(textField) {
+            return handleNumericTextField(textField, newString: newString, input: string)
         }
         
-        if textField == farmNameTxtfield {
-            let isValid = handleFarmNameTxtfield(newString)
+        switch textField {
+        case farmNameTxtfield:
+            return handleFarmNameField(newString)
             
-            if isValid {
-                CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "farm")
-                self.sharedManager.setBorderBlue(btn: farmNameBtn)
+        case houseNoTxtfield:
+            return handleGenericTextField(newString, maxLength: 40) {
+                handleHouseNoTxtfield(newString)
+                sharedManager.setBorderBlue(btn: houseNoBtn)
             }
             
-            return isValid
-        }
-        
-        else if textField == houseNoTxtfield {
-            if newString.count > 40 {
-                return false
-            }
-            handleHouseNoTxtfield(newString)
-            self.sharedManager.setBorderBlue(btn: houseNoBtn)
-        }
-        else if textField == noOfBirdsTxtfield {
+        case noOfBirdsTxtfield:
             handleNoOfBirdsTxtfield(newString)
             return true
+            
+        case breedOfBirdsOtherTxtfield:
+            return handleGenericTextField(newString, maxLength: 40) {
+                handleBreedOfBirdsOtherTxtfield(newString)
+            }
+            
+        case breedOfBirdsFemaleOtherTxtfield:
+            return handleGenericTextField(newString, maxLength: 40) {
+                handleBreedOfBirdsFemaleOtherTxtfield(newString)
+            }
+            
+        default:
+            return true
         }
-        else if textField == breedOfBirdsOtherTxtfield{
-            if newString.count > 40 {
-                return false
-            }
-            handleBreedOfBirdsOtherTxtfield(newString)
-        } else if textField == breedOfBirdsFemaleOtherTxtfield {
-            if newString.count > 40 {
-                return false
-            }
-            handleBreedOfBirdsFemaleOtherTxtfield(newString)
+    }
+    
+    private func handleNumericTextField(_ textField: UITextField, newString: String, input: String) -> Bool {
+        guard CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: input)) else {
+            return false
         }
         
+        guard newString.count <= 5 else {
+            return false
+        }
+        
+        let sum = newString.compactMap { $0.wholeNumberValue }.reduce(0, +)
+        if sum == 0 && !newString.isEmpty {
+            return false
+        }
+        
+        updateAgeOrNoOfBirds(for: textField, with: newString)
         return true
     }
+
+    private func handleFarmNameField(_ newString: String) -> Bool {
+        let isValid = handleFarmNameTxtfield(newString)
+        if isValid {
+            CoreDataHandlerPVE().updateSessionDetails(1, text: newString, forAttribute: "farm")
+            sharedManager.setBorderBlue(btn: farmNameBtn)
+        }
+        return isValid
+    }
+
+    private func handleGenericTextField(_ newString: String, maxLength: Int, update: () -> Void) -> Bool {
+        guard newString.count <= maxLength else { return false }
+        update()
+        return true
+    }
+
+    
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        
+//        var newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
+//        
+//        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield {
+//            guard CharacterSet(charactersIn: "1234567890").isSuperset(of: CharacterSet(charactersIn: string)) else {
+//                return false
+//            }
+//        }
+//
+//        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield {
+//            
+//            // Max 5 digits allowed
+//            if newString.count > 5 {
+//                return false
+//            }
+//            
+//            // Prevent value being 0 when input is not empty
+//            let sum = newString.compactMap { $0.wholeNumberValue }.reduce(0, +)
+//            if sum == 0 && !newString.isEmpty {
+//                newString = "0"
+//                return false
+//            }
+//            
+//            updateAgeOrNoOfBirds(for: textField, with: newString)
+//        }
+//        
+//        if textField == farmNameTxtfield {
+//            let isValid = handleFarmNameTxtfield(newString)
+//            
+//            if isValid {
+//                CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "farm")
+//                self.sharedManager.setBorderBlue(btn: farmNameBtn)
+//            }
+//            
+//            return isValid
+//        } else if textField == houseNoTxtfield {
+//            if newString.count > 40 {
+//                return false
+//            }
+//            handleHouseNoTxtfield(newString)
+//            self.sharedManager.setBorderBlue(btn: houseNoBtn)
+//        } else if textField == noOfBirdsTxtfield {
+//            handleNoOfBirdsTxtfield(newString)
+//            return true
+//        } else if textField == breedOfBirdsOtherTxtfield {
+//            if newString.count > 40 {
+//                return false
+//            }
+//            handleBreedOfBirdsOtherTxtfield(newString)
+//        } else if textField == breedOfBirdsFemaleOtherTxtfield {
+//            if newString.count > 40 {
+//                return false
+//            }
+//            handleBreedOfBirdsFemaleOtherTxtfield(newString)
+//        }
+//        
+//        return true
+//    }
     
     private func updateAgeOrNoOfBirds(for textField: UITextField, with newString: String) {
         let value = Int(newString) ?? 0

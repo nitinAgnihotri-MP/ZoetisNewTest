@@ -12,8 +12,7 @@ import MBProgressHUD
 import Reachability
 import SystemConfiguration
 import CoreData
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -25,8 +24,6 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
 fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -83,17 +80,12 @@ class SingleSyncData: NSObject {
     
     // MARK: - Network Status
     func networkStatusChanged(_ notification: Notification) {
-        if let userInfo = notification.userInfo {
-            if let value  = userInfo.values.first {
-                switch value as! String {
-                case "Online (WiFi)":
-                    print(value)
-                case "Online (WWAN)":
-                    print(value)
-                    
-                default: break
-                    
-                }
+        if let value = notification.userInfo?.values.first as? String {
+            switch value {
+            case "Online (WiFi)", "Online (WWAN)":
+                print(value)
+            default:
+                break
             }
         }
     }
@@ -101,7 +93,7 @@ class SingleSyncData: NSObject {
     // MARK: - Session Array with Posting ID
     func allSessionArr(postinId:NSNumber) ->NSMutableArray{
         
-        let postingArrWithAllData = CoreDataHandler().fetchAllPostingSession(postinId).mutableCopy() as! NSMutableArray
+        let allPostingArrWithAllData = CoreDataHandler().fetchAllPostingSession(postinId).mutableCopy() as! NSMutableArray
         let cNecArr =  CoreDataHandler().FetchNecropsystep1NecId(postinId)
         let necArrWithoutPosting = NSMutableArray()
         
@@ -121,18 +113,18 @@ class SingleSyncData: NSObject {
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
-        for i in 0..<postingArrWithAllData.count
+      
+        for i in 0..<allPostingArrWithAllData.count
         {
-            let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            let pSession = allPostingArrWithAllData.object(at: i) as! PostingSession
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -159,10 +151,10 @@ class SingleSyncData: NSObject {
     // MARK: - Feed Program with Posting ID
     func feedprogram(postingId:NSNumber)  {
         
-        let postingArrWithAllData =   CoreDataHandler().fetchAllPostingSessionWithisSyncisTrue(true).mutableCopy() as! NSMutableArray
+        let feedPostingArrWithAllData =   CoreDataHandler().fetchAllPostingSessionWithisSyncisTrue(true).mutableCopy() as! NSMutableArray
         let cNecArr =  CoreDataHandler().FetchNecropsystep1WithisSync(true)
         let necArrWithoutPosting = NSMutableArray()
-        var timestamp = String()
+       // var timestamp = String()
         for j in 0..<cNecArr.count
         {
             let captureNecropsyData =  cNecArr.object(at: j)  as! CaptureNecropsyData
@@ -181,11 +173,11 @@ class SingleSyncData: NSObject {
         let tempArrTime = NSMutableArray()
         let actualTmestamp = NSMutableArray()
         var sessionId = NSNumber()
-        for i in 0..<postingArrWithAllData.count
+        for i in 0..<feedPostingArrWithAllData.count
         {
-            let pSession =  postingArrWithAllData.object(at: i) as! PostingSession
+            let pSession =  feedPostingArrWithAllData.object(at: i) as! PostingSession
             sessionId = pSession.postingId!
-            timestamp = pSession.timeStamp!
+            var timestamp = pSession.timeStamp!
             var actualTimestampStr =  pSession.actualTimeStamp
             if actualTimestampStr == nil {
                 actualTimestampStr = ""
@@ -204,7 +196,6 @@ class SingleSyncData: NSObject {
         }
         
         let sessionArray = NSMutableArray()
-        var sessionDict = NSMutableDictionary()
         var sessionDictMain = NSMutableDictionary()
         
         for i in 0..<self.postingIdArr.count
@@ -389,15 +380,14 @@ class SingleSyncData: NSObject {
                 
                 mainDict.setValue(sessionId, forKey: "sessionId")
                 let acttimeStamp = tempArrTime.object(at: i)
-                var  fullData  = String()
-                fullData = acttimeStamp as! String
+                var fullData = acttimeStamp as! String
                 mainDict.setValue(fullData, forKey: "deviceSessionId")
                 let langId =  UserDefaults.standard.integer(forKey: "lngId")
                 
                 let id = UserDefaults.standard.integer(forKey: "Id")
                 mainDict.setValue(id, forKey: "UserId")
                 mainDict.setValue(false, forKey: "finalized")
-               
+                var sessionDict = NSMutableDictionary()
                 sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id, "LanguageId":langId  , "feeds" : mainFeeds]
                 sessionArray.add(sessionDict)
                 sessionDict = NSMutableDictionary()
@@ -407,15 +397,6 @@ class SingleSyncData: NSObject {
         }
         
         do {
-            
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print("Feed Programe's " , jsonString)
-            }
-        
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
             if WebClass.sharedInstance.connected() {
                 
@@ -473,7 +454,7 @@ class SingleSyncData: NSObject {
     // MARK: - ********************* Save Add Vacination data On Server ***************************
     func addVaccination(postingId:NSNumber)  {
         
-        let postingArrWithAllData = CoreDataHandler().fetchAllPostingSession(postingId).mutableCopy() as! NSMutableArray
+        let vaccinationPostingArrAllData = CoreDataHandler().fetchAllPostingSession(postingId).mutableCopy() as! NSMutableArray
         let cNecArr =  CoreDataHandler().FetchNecropsystep1NecId(postingId)
         let necArrWithoutPosting = NSMutableArray()
         
@@ -492,16 +473,15 @@ class SingleSyncData: NSObject {
         }
         self.postingIdArr.removeAllObjects()
         var sessionId = NSNumber()
-        var timeStamp = String()
         let tempArrTime = NSMutableArray()
         let actualTemp  = NSMutableArray()
         var vaccinationName = String ()
         
-        for i in 0..<postingArrWithAllData.count
+        for i in 0..<vaccinationPostingArrAllData.count
         {
-            let pSession = postingArrWithAllData.object(at: i) as! PostingSession
+            let pSession = vaccinationPostingArrAllData.object(at: i) as! PostingSession
             sessionId = pSession.postingId!
-            timeStamp = pSession.timeStamp!
+            var timeStamp = pSession.timeStamp!
             var actualtimeStr = pSession.actualTimeStamp
             if actualtimeStr == nil{
                 actualtimeStr = ""
@@ -599,9 +579,9 @@ class SingleSyncData: NSObject {
             for i in 0..<FieldVacinationAll.count
             {
                 let pSession = FieldVacinationAll.object(at: i) as! HatcheryVac
-                var strain = String()
+             
                 let routeName = pSession.route
-                var fieldStrain1 = String()
+               
                 var routeId = NSNumber()
                 let newLngId = UserDefaults.standard.integer(forKey: "lngId")
                 
@@ -658,11 +638,7 @@ class SingleSyncData: NSObject {
                         routeId = 0
                     }
                 }
-                else{
-                }
-                let age = pSession.age
-                fieldStrain1 = pSession.route!
-                strain = pSession.strain!
+                
                 let fieldStrainKey = "fieldStrain\(i + 1)"
                 let fieldrouteKey = "fieldRoute\(i+1)Id"
                 let fieldAgeKey = "fieldAge\(i + 1)"
@@ -686,10 +662,10 @@ class SingleSyncData: NSObject {
                 mainDict.setValue(pId, forKey: "vaccinationId")
                 mainDict.setValue(vaccinationName, forKey: "vaccinationName")
                 
-                let data = postingArrWithAllData.object(at: 0) as! PostingSession
+                let data = vaccinationPostingArrAllData.object(at: 0) as! PostingSession
                 let acttimeStamp = data.timeStamp
-                var  fullData  = String()
-                fullData = acttimeStamp!
+               
+                var fullData = acttimeStamp!
                 mainDict.setValue(fullData, forKey: "deviceSessionId")
                 sessionArr.add(mainDict)
             }
@@ -697,13 +673,7 @@ class SingleSyncData: NSObject {
         sessionDictWithVac.setValue(sessionArr, forKey: "Vaccinations")
         
         do {
-            
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                            print("Vaccination Data -",  jsonString)
-            }
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
+
             
             if WebClass.sharedInstance.connected() {
                 
@@ -739,7 +709,7 @@ class SingleSyncData: NSObject {
                         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                             self.delegeteSyncApiData.failWithErrorInternalSyncdata()
                         }
-                        else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                        else if let data = response.data{
                             if let s = statusCode {
                                 self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
                             }
@@ -771,7 +741,7 @@ class SingleSyncData: NSObject {
             
             if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                 self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+            } else if let data = response.data{
                 
                 if let s = statusCode {
                     self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
@@ -807,15 +777,15 @@ class SingleSyncData: NSObject {
     func savePostingDataOnServer(postingId :NSNumber){
         
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
-        let postingArrWithAllData = CoreDataHandler().fetchAllPostingSession(postingId).mutableCopy() as! NSMutableArray
+        let savePostingArrWithAllData = CoreDataHandler().fetchAllPostingSession(postingId).mutableCopy() as! NSMutableArray
         self.postingIdArr.removeAllObjects()
         let postingServerArray = NSMutableArray()
         let  postingDictOnServer = NSMutableDictionary()
         
-        for i in 0..<postingArrWithAllData.count
+        for i in 0..<savePostingArrWithAllData.count
         {
             let postingDataDict = NSMutableDictionary()
-            let pSession = postingArrWithAllData.object(at: i) as! PostingSession
+            let pSession = savePostingArrWithAllData.object(at: i) as! PostingSession
             let sessionDate = pSession.sessiondate
             var sessionTypeId  = Int ()
             let sessiontype = pSession.sessionTypeName
@@ -853,8 +823,8 @@ class SingleSyncData: NSObject {
             let mortality = (pSession.dayMortality ?? "") as String
             
             self.postingIdArr.add(sessionId!)
-            var fullData = String()
-            fullData =  pSession.timeStamp!
+           
+            var fullData =  pSession.timeStamp!
             
             let udid1 = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
             postingDataDict.setValue(finalize, forKey: "finalized")
@@ -896,14 +866,9 @@ class SingleSyncData: NSObject {
         
         do {
             
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: postingDictOnServer, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
-            
             if WebClass.sharedInstance.connected() {
                 let Url = "PostingSession/SaveMultiplePostingsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 let headerDict = [Constants.authorization:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 var request = URLRequest(url: URL(string: urlString)! )
@@ -949,7 +914,6 @@ class SingleSyncData: NSObject {
         {
             let allArray = NSMutableArray()
             let captureNecropsyData = a.object(at: i)  as! CaptureNecropsyData
-            //let nId = captureNecropsyData.necropsyId!
             complexId = Int(captureNecropsyData.complexId!)
             let cNec =  CoreDataHandler().FetchNecropsystep1NecId(postingId)
             let formWithcatNameWithBirdAndAllObs1 = NSMutableDictionary()
@@ -962,16 +926,14 @@ class SingleSyncData: NSObject {
                 let noOfBird = Int(cNData.noOfBirds!)
                 let houseNo = cNData.houseNo
                 let feedProgram = cNData.feedProgram
-                if let value = cNData.feedId {
-                    var feedId = value
-                }
+             
                 
                 let age = cNData.age
                 let imgId = cNData.imageId
                 complexId = cNData.complexId as! Int
                 let flock = cNData.flockId
                 let sick = cNData.sick
-                let timestamp = cNData.timeStamp
+               
                 let customerId = cNData.custmerId
                 let customerName = cNData.complexName
                 let complexdate = cNData.complexDate
@@ -1014,8 +976,8 @@ class SingleSyncData: NSObject {
                 allArray.add(formWithcatNameWithBirdAndAllObs)
             }
             
-            var fullData = String()
-            fullData =   captureNecropsyData.timeStamp!
+           
+            var fullData =   captureNecropsyData.timeStamp!
             formWithcatNameWithBirdAndAllObs1.setValue(captureNecropsyData.necropsyId!, forKey: "SessionId")
             formWithcatNameWithBirdAndAllObs1.setValue(lngId, forKey: "LanguageId")
             formWithcatNameWithBirdAndAllObs1.setValue(fullData, forKey: "deviceSessionId")
@@ -1035,13 +997,7 @@ class SingleSyncData: NSObject {
         sessionWithAllforms.setValue(sessionArr, forKey: "Session")
         
         do {
-            
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print("Necropsy Data -", jsonString)
-            }
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
+     
             
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
@@ -1074,7 +1030,7 @@ class SingleSyncData: NSObject {
                         
                         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                             self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                        } else if let data = response.data{
                             
                             if let s = statusCode {
                                 self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
@@ -1122,8 +1078,6 @@ class SingleSyncData: NSObject {
         {
             for i in 0..<totalSession.count
             {
-                // let sessionDetails = NSMutableDictionary()
-                let captureNecropsyData = totalSession.object(at: i)  as! CaptureNecropsyData
                 
                 let cNec =  CoreDataHandler().FetchNecropsystep1NecId(postingId)
                 let obsWithImageArr = NSMutableArray()
@@ -1156,7 +1110,7 @@ class SingleSyncData: NSObject {
                                 {
                                     let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCapture
                                     var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
-                                    var data: Data = image.pngData()!
+                                  
                                     
                                     if let imageData = image.jpeg(.lowest) {
                                         
@@ -1165,7 +1119,6 @@ class SingleSyncData: NSObject {
                                     }
                                     let w : CGFloat = image.size.width / 7
                                     yImage = self.resizeImage(image, newWidth: w)!
-                                    data = yImage.pngData()!
                                     let imageDict =  NSMutableDictionary()
                                     imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
                                     photoValArr.add(imageDict)
@@ -1220,14 +1173,13 @@ class SingleSyncData: NSObject {
                                     let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCapture
                                     
                                     var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
-                                    var data: Data = image.pngData()!
                                     
                                     if let imageData = image.jpeg(.lowest) {
                                         image = UIImage(data: imageData)!
                                     }
                                     let w : CGFloat = image.size.width / 7
                                     yImage = self.resizeImage(image, newWidth: w)!
-                                    data = yImage.pngData()!
+                                   
                                     let imageDict =  NSMutableDictionary()
                                     imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
                                     photoValArr.add(imageDict)
@@ -1241,9 +1193,9 @@ class SingleSyncData: NSObject {
                 }
                 
                 _ = Int()
-                var fullData = String()
+             
                 
-                fullData = captureNecropsyData.timeStamp!
+                var fullData = captureNecropsyData.timeStamp!
                 sessionDetails.setValue(obsWithImageArr, forKey: "ImageDetails")
                 let id = UserDefaults.standard.integer(forKey: "Id")
                 sessionDetails.setValue(id, forKey: "UserId")
@@ -1255,17 +1207,9 @@ class SingleSyncData: NSObject {
         sessionDict.setValue(sessionArr, forKey: "Sessions")
         
         do {
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print(jsonString)
-            }
-            
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
             
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 let headerDict = [Constants.authorization:accestoken]
                 
                 let Url = "PostingSession/SaveBirdImageSyncData"
@@ -1451,17 +1395,15 @@ class SingleSyncData: NSObject {
         case .success(let responseObject):
             print(responseObject)
             
-            
         case .failure(let encodingError):
             
-            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet
+            {
                 self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                // other failures
-                if let s = statusCode {
-                } else {
-                    self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                }
+            }
+            else if let data = response.data
+            {
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
             }
         }
     }
@@ -1494,10 +1436,6 @@ class SingleSyncData: NSObject {
         handleimmu(immu, lngId, arr1)
         
         outerDict.setValue(arr1, forKey: "ObservationUserDetails")
-        
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-        var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-        jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
         
         if WebClass.sharedInstance.connected() {
             

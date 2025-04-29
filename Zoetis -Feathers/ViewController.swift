@@ -268,9 +268,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                             "supportapi": 2
                         ]
                         
-                        let liveAlbums = environmentMap.first { environmentIs.contains($0.key) }?.value ?? 3
-                        
-                        // Determine the correct API key
+                        let match = environmentMap.first { environmentIs.contains($0.key) }
+                        let liveAlbums = match?.value ?? 3
                         let apiKey: String = (liveAlbums == 1 || liveAlbums == 2) ? "4_KkOJPb7zC89ubdZyo8pEWg" : (self?.apiKeyIs ?? "")
                         
                         // Initialize Gigya with the determined API key
@@ -1916,7 +1915,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
             assert(false, "no date from string")
             return ""
         }
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         let timeStamp = dateFormatter.string(from: date)
         
         return timeStamp
@@ -2394,7 +2393,8 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                                             let startDate  = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"startDate")
                                             DispatchQueue.main.async {
                                                 
-                                                self.callGetFeedNameFromTurkey(seesionId: seesionId as NSNumber, feedName: feedName as! String, feedId: feedId as NSNumber, startDate: startDate)
+                                                self.handleGetFeedNameFromTurkey(seesionId: seesionId as NSNumber, feedsName: feedName as! String, feedId: feedId as NSNumber, startDate: startDate)
+                                                
                                             }
                                             let feedDetailArr = ((feedDictArr! as AnyObject).object(at: i) as AnyObject).value(forKey: "feedCategoryDetails")
                                             
@@ -2466,6 +2466,10 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
     }
     
+    
+    func handleGetFeedNameFromTurkey(seesionId: NSNumber, feedsName: String, feedId: NSNumber, startDate: Any?) {
+        self.callGetFeedNameFromTurkey(seesionId: seesionId, feedName: feedsName, feedId: feedId, startDate: startDate)
+    }
     
     private func callGetFeedNameFromTurkey(seesionId: NSNumber, feedName: String, feedId: NSNumber, startDate: Any?) {
         CoreDataHandlerTurkey().getFeedNameFromGetApiTurkey(
@@ -2594,7 +2598,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         if WebClass.sharedInstance.connected() {
        
             let id =  UserDefaults.standard.integer(forKey: "Id")
-            let dev = "iOS"
+           
    
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
             

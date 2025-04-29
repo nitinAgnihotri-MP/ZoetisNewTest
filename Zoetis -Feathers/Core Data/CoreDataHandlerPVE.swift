@@ -2504,14 +2504,14 @@ class CoreDataHandlerPVE: NSObject {
         guard expDate != "1900-12-12T00:00:00" else { return "" }
         let dateTempArr = expDate.components(separatedBy: "T")
         let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+        inputFormatter.dateFormat = Constants.yyyyMMddStr
         if let showDate = inputFormatter.date(from: dateTempArr[0]) {
-            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            inputFormatter.dateFormat = Constants.MMddyyyyStr
             return inputFormatter.string(from: showDate)
         }
         return ""
     }
-
+    
     private func getVaccineDetails(_ json: JSON, vaccine: String) -> (String, Int) {
         if json["Vaccine_Mfg_Id"].intValue == 17 {
             return (json["Vaccine_Other"].stringValue, 1000)
@@ -2681,7 +2681,7 @@ class CoreDataHandlerPVE: NSObject {
             person.setValue(json["Evaluation_Date"].string ?? "", forKey: "evaluationDate")
             
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             
             let objEvaluationDate = dateFormatter.date (from: json["Evaluation_Date"].string ?? "")
             person.setValue(objEvaluationDate, forKey: "objEvaluationDate")
@@ -2965,7 +2965,7 @@ class CoreDataHandlerPVE: NSObject {
         
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat=appDelegateObj.MMddYYYYHHmmss
+        dateFormatter.dateFormat=Constants.MMddYYYYHHmmss
         let dateCreatedAt = dateFormatter.string(from: NSDate() as Date) as String
         person.setValue(dateCreatedAt, forKey: "createdAt")
         

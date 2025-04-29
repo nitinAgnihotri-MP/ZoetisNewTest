@@ -343,12 +343,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                 }
                 strdate =  (UserDefaults.standard.value(forKey: "complexDateUnlinked") as? String)!
                 
-                if appDelegate.sendFeedVariable == "Feed"{
-                }
-                else if appDelegate.sendFeedVariable == "vaccination"{
-                }
-                else
-                {print(appDelegateObj.testFuntion())}
+              
             }
             else
             {
@@ -890,21 +885,21 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     // MARK: 🟠 Date Picker Done and Cancel
     @objc func doneClick() {
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3{
             let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateFormat=appDelegateObj.ddMMyyyStr
+            dateFormatter2.dateFormat=Constants.ddMMyyyStr
             strdateFrench = dateFormatter2.string(from: datePicker.date) as String
             
             let dateFormatter3 = DateFormatter()
-            dateFormatter3.dateFormat=appDelegateObj.MMddyyyStr
+            dateFormatter3.dateFormat=Constants.MMddyyyyStr
             
             strdate = dateFormatter3.string(from: datePicker.date) as String
             lblDate.text = strdateFrench
         }
         else{
             let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
+            dateFormatter2.dateFormat=Constants.MMddyyyyStr
             strdate = dateFormatter2.string(from: datePicker.date) as String
             lblDate.text = strdate
         }
@@ -1020,7 +1015,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             btnVetration.layer.borderColor = UIColor.black.cgColor
         }
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+         lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3{
             if  lblDate.text != frenchEmptyDateLabel{
                 btnDate.layer.borderColor = UIColor.black.cgColor
@@ -1103,9 +1098,9 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         {
             let pSession = postingSessionArray.object(at: i) as! PostingSession
             let sessionDate = pSession.sessiondate! as String
-            let postingId = pSession.postingId! as! Int
+            let sessionPostingId = pSession.postingId! as! Int
             let sessioncomplexName = pSession.complexName! as String
-            if postingId == UserDefaults.standard.integer(forKey: "postingId"){
+            if sessionPostingId == UserDefaults.standard.integer(forKey: "postingId"){
                 break
             }
             else{
@@ -1153,9 +1148,10 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             btnVetration.layer.borderColor = UIColor.black.cgColor
         }
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3 {
             if lblDate.text != NSLocalizedString(frenchEmptyDateLabel, comment: "") {
+                btnDate.layer.borderColor = UIColor.black.cgColor
             }
         }
         else{
@@ -1177,11 +1173,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
                     feedId = feedId+1
                 }
             } else {
-                if feedId == 0 {
                     feedId = feedId+1
-                } else {
-                    feedId = feedId+1
-                }
             }
         } else {
             if feedId == -1 {
@@ -1346,7 +1338,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         let string = lblTimeStamp as String
         let character: Character = "i"
         if ((string).contains(character)) {
-            
+            debugPrint("character not found.")
         } else {
             let  udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
             let sessionGUID1 =   lblTimeStamp + "_" + String(describing: postingId as NSNumber)
@@ -1357,7 +1349,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     // MARK: 🟠 Cocci Program Button action
     @IBAction func didSelectonCociiProgramm(_ sender: UIButton) {
         autoSerchTable.alpha = 0
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+         lngId = UserDefaults.standard.integer(forKey: "lngId")
         view.endEditing(true)
         btnTag = 4
         
@@ -1455,7 +1447,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     // MARK: 🟠 Session Type Button Action
     @IBAction func didSelectbtnSessionType(_ sender: AnyObject) {
         autoSerchTable.alpha = 0
-        let lngId =    UserDefaults.standard.integer(forKey: "lngId")
+         lngId =    UserDefaults.standard.integer(forKey: "lngId")
         view.endEditing(true)
         btnTag = 2
         
@@ -1491,7 +1483,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     @IBAction func productionTypeBtnAction(_ sender: Any) {
         view.endEditing(true)
         btnTag = 11
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+         lngId = UserDefaults.standard.integer(forKey: "lngId")
         ProductionTypeArr = CoreDataHandler().fetchProductionType(lngID: lngId )
         tableViewpop()
         droperTableView.frame = CGRect( x: 240, y: 475, width: 270, height: 135)
@@ -1502,16 +1494,11 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         birdSizeOutlet.layer.borderColor = UIColor.black.cgColor
         view.endEditing(true)
         btnTag = 5
-        if butttnTag == 0 {
+      
             tableViewpop()
             droperTableView.frame = CGRect( x: 715, y: 413, width: 276, height: 200)
             droperTableView.reloadData()
-        }
-        else{
-            tableViewpop()
-            droperTableView.frame = CGRect( x: 715, y: 413, width: 276, height: 200)
-            droperTableView.reloadData()
-        }
+        
     }
     // MARK: 🟠 Hide Dropdown
     @IBAction func tapOnView(_ sender: AnyObject) {
@@ -1712,17 +1699,16 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         }
         
         let allPostingSessionArr = NSMutableArray()
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -1790,7 +1776,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         else{
             if UserDefaults.standard.bool(forKey: "Unlinked") == true{
                 feedProgramArray = CoreDataHandler().FetchFeedProgram(postingId as NSNumber)
-                if feedProgramArray.count<0{
+                if feedProgramArray.count == 0 {
                     CoreDataHandler().updatePostingSessionOndashBoard(self.postingId as NSNumber, vetanatrionName: "", veterinarianId: 0, captureNec: 2)
                     CoreDataHandler().deletefieldVACDataWithPostingId(self.postingId as NSNumber)
                     CoreDataHandler().deleteDataWithPostingIdHatchery(self.postingId as NSNumber)
@@ -2011,7 +1997,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if tableView == autoSerchTable {
-            
+            debugPrint("auto search not populated.")
         } else {
             if btnTag == 0 {
                 let str = custmerArray[indexPath.row] as! Custmer
@@ -2157,12 +2143,9 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     // MARK: 🟠   ******************** Textfield Delegates Method **************************************
     func textFieldDidEndEditing(_ textField: UITextField) {
         
-        if (textField == notesTextView ) {
+
             isClickOnAnyField = true
-        }
-        else{
-            isClickOnAnyField = true
-        }
+        
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if (textField == notesTextView ) {

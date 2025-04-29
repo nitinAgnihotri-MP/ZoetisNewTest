@@ -2014,15 +2014,14 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
             let image = UIImage(named:"image001")
             
-            var  necId = getNecId()
+            let  necId = getNecId()
             let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!,Obsid: skleta.obsID!,necId: necId as NSNumber)
             
             let skleta1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
-            if FetchObsArr.count > 0 {
-                if skleta1.obsPoint != 0 {
+             if FetchObsArr.count > 0, skleta1.obsPoint != 0  {
                     
-                    handleObsArrBtnTag0(array, skleta1, cell, skleta, image, rowIndex, necId)
-                }
+                handleObsArrBtnTag0(array, skleta1, cell, skleta, image, rowIndex, necId)
+                
             }
             
             dataSkeltaArray.removeAllObjects()
@@ -2239,10 +2238,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
         let immune1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
         if FetchObsArr.count > 0 {
-            
-            let imageName = "Immune" + "_" + immune1.obsName! + "_n"
-            var image = UIImage(named:imageName)
-            
             
             CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseTurkeySexValue("Immune", obsName: immune.obsName!, formName: immune.formName!, obsVisibility: true, birdNo: immune.birdNo! , obsPoint: 1, index: rowIndexIs, obsId: immune.obsID as! NSInteger, necId: necId as NSNumber, isSync: true, actualText: selectedSexValue)
             
@@ -4272,8 +4267,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 }
                 
                 else if ( measure == "Actual"){
-                    
-                    let farmWeight =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkeyWithFarmName(immu.formName! ,necropsyId:necId as NSNumber)
                     
                     cell.switchNecropsyBtn.alpha = 0
                     cell.plusButton.alpha = 0

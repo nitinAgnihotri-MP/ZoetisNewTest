@@ -77,7 +77,7 @@ class BacterialSurveyVC: BaseViewController {
     
     func barCodeDateWithoutTimeStamp() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = appDelegateObj.MMddyyyStr
+        formatter.dateFormat = Constants.MMddyyyyStr
         let dateString = formatter.string(from: Date())
         return dateString
     }

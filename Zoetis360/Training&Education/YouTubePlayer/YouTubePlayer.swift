@@ -53,8 +53,7 @@ public extension YouTubePlayerDelegate {
        func playerQualityChanged(_ videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {
            print("Player quality changed to \(playbackQuality).")
        }
-//    func playerStateChanged(_ videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {}
-//    func playerQualityChanged(_ videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {}
+
     
 }
 
@@ -137,13 +136,7 @@ open class YouTubePlayerView: UIView, UIWebViewDelegate {
     // MARK: Web view initialization
     
      func buildWebView(_ parameters: [String: AnyObject]) {
-//        webView = UIWebView()
-//        webView.isOpaque = false
-//        webView.backgroundColor = UIColor.clear
-//        webView.allowsInlineMediaPlayback = true
-//        webView.mediaPlaybackRequiresUserAction = false
-//        webView.delegate = self
-//        webView.scrollView.isScrollEnabled = false
+
     }
     
     
@@ -221,27 +214,11 @@ open class YouTubePlayerView: UIView, UIWebViewDelegate {
         //evaluatePlayerCommand("nextVideo()")
     }
     
-//     func evaluatePlayerCommand(_ command: String) -> String? {
-//        let fullCommand = "player." + command + ";"
-//        return webView.stringByEvaluatingJavaScript(from: fullCommand)
-//    }
-    
     
     // MARK: Player setup
     
      func loadWebViewWithParameters(_ parameters: YouTubePlayerParameters) {
-        
-        // Get HTML from player file in bundle
-        let rawHTMLString = htmlStringWithFilePath(playerHTMLPath())!
-        
-        // Get JSON serialized parameters string
-        let jsonParameters = serializedJSON(parameters as AnyObject)!
-        
-        // Replace %@ in rawHTMLString with jsonParameters string
-        let htmlString = rawHTMLString.replacingOccurrences(of: "%@", with: jsonParameters)
-        
-        // Load HTML in web view
-       // webView.loadHTMLString(htmlString, baseURL: URL(string: "about:blank"))
+         debugPrint(parameters)
     }
     
      func playerHTMLPath() -> String {
@@ -357,9 +334,9 @@ open class YouTubePlayerView: UIView, UIWebViewDelegate {
         
         let url = request.url
         
-        // Check if ytplayer event and, if so, pass to handleJSEvent
-        if let url = url, url.scheme == "ytplayer" { handleJSEvent(url) }
-        
+         if let url = url, url.scheme == "ytplayer" {
+             handleJSEvent(url)
+         }
         return true
     }
 }

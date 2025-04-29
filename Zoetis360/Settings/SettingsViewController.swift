@@ -76,11 +76,10 @@ class SettingsViewController: UIViewController,UINavigationControllerDelegate,cl
         btnImmu.setImage(UIImage(named: "immune_unselect"), for: .normal)
         btnResp.setImage(UIImage(named: "respiratory_unselect"), for: .normal)
         
-        if WebClass.sharedInstance.connected() {
-            if (appDelegate.globalDataArr.count) > 0
-            {
+        if WebClass.sharedInstance.connected(), appDelegate.globalDataArr.count > 0 {
+            
                 dataArray = appDelegate.globalDataArr
-            }
+            
         }
         
         self.skeletalMusclarAction(sender: "0" as AnyObject)

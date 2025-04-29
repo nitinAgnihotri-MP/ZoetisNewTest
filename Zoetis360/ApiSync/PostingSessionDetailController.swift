@@ -155,9 +155,9 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         if lngIdFr == 3{
             let dateString = posting.sessiondate
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             let dateObj = dateFormatter.date(from: dateString!)
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             sessionDate.text = dateFormatter.string(from: dateObj!)
             UserDefaults.standard.set(dateFormatter.string(from: dateObj!), forKey: "dateFrench")    // value(forKey: "dateFrench") as? String
             addFeedBtnOutlet.setTitle("Ajouter un flux",for: .normal)
@@ -374,8 +374,8 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             }
             
             let farmArrayWithoutAge = (farmArray.object(at: indexPath.row) as AnyObject).value(forKey: "farmName") as? String
-            let age = ((farmArray as AnyObject).object(at: indexPath.row) as AnyObject).value(forKey:"age") as! String
-            let farmNamevalue =  farmArrayWithoutAge!  + " " + "[" + age + "]"
+            let birdage = ((farmArray as AnyObject).object(at: indexPath.row) as AnyObject).value(forKey:"age") as! String
+            let farmNamevalue =  farmArrayWithoutAge!  + " " + "[" + birdage + "]"
             
             var farmName2 = String()
             let range = farmNamevalue.range(of: ".")
@@ -514,7 +514,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         if self.allSessionArrWithPostingId(PId: postingId).count > 0 {
             if WebClass.sharedInstance.connected()  == true{
                 
-                let lngId = UserDefaults.standard.integer(forKey: "lngId")
+                 lngId = UserDefaults.standard.integer(forKey: "lngId")
                 var strMsg = String()
                 if lngId == 5 {
                     strMsg = "Sincronización de datos ..."
@@ -641,16 +641,15 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -680,18 +679,17 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -776,7 +774,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     // MARK: 🟠 - Session Date Done Button Action
     func doneClick() {
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter2.dateFormat=Constants.MMddyyyyStr
         let strdate = dateFormatter2.string(from: datePicker.date) as String
         sessionDate.text = strdate
         self.buttonbgNew.removeFromSuperview()
@@ -1062,16 +1060,19 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 CoreDataHandler().deleteDataWithPostingIdStep2NotesBirdWithFarmName(necId as NSNumber, farmName: farmsName, { (success) in
                     if success == true {
                         
-                        CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necId as NSNumber, farmName: farmsName, { (success) in
-                            if success == true {
-                                
-                                self.fetcFarmData()
-                                self.appDelegate.saveContext()
-                                self.feedProtableView.reloadData()
-                            }
-                        })
+                        CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necId as NSNumber, farmName: farmsName) { (success) in
+                            handleDeleteSuccess(success: success)
+                        }
                     }})
             }})
+    }
+    
+    func handleDeleteSuccess(success: Bool) {
+        if success == true {
+            self.fetcFarmData()
+            self.appDelegate.saveContext()
+            self.feedProtableView.reloadData()
+        }
     }
     
     @objc func ClickDeleteBtton(_ sender: UIButton){
@@ -1090,9 +1091,9 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         } else {
             
             let farmArrayWithoutAge = (farmArray.object(at: sender.tag) as AnyObject).value(forKey: "farmName") as? String
-            let necId = ((farmArray.object(at: sender.tag) as AnyObject).value(forKey: "necropsyId") as? Int)!
+            let necroId = ((farmArray.object(at: sender.tag) as AnyObject).value(forKey: "necropsyId") as? Int)!
             
-            let dataArr = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationWithDelete(farmname: farmArrayWithoutAge!, necId: necId as NSNumber)
+            let dataArr = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationWithDelete(farmname: farmArrayWithoutAge!, necId: necroId as NSNumber)
             if dataArr.count > 0{
                 
                 for i in 0..<dataArr.count{
@@ -1116,9 +1117,9 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString(strMsgforDelete, comment: ""), preferredStyle: .alert)
             let action1 = UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: .default) { (action) in
                 
-                CoreDataHandler().deleteDataWithPostingIdStep1dataWithfarmName(necId as NSNumber, farmName: farmArrayWithoutAge!, { (success) in
+                CoreDataHandler().deleteDataWithPostingIdStep1dataWithfarmName(necroId as NSNumber, farmName: farmArrayWithoutAge!, { (success) in
                     if success == true{
-                        self.deleteNotesImagesNecropsyWithFarmName(necId: necId as NSNumber, farmsName: farmArrayWithoutAge!)
+                        self.deleteNotesImagesNecropsyWithFarmName(necId: necroId as NSNumber, farmsName: farmArrayWithoutAge!)
                     }
                 })
             }
@@ -1203,12 +1204,11 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             feedButton.layer.borderColor = UIColor.red.cgColor
             nameText.layer.borderColor = UIColor.red.cgColor
         }
-        if strFarmNameFeedId == ""
-        {
-            if strFeddUpdate == "" {
+        if strFarmNameFeedId == "" && strFeddUpdate == "" {
+           
                 feedButton.layer.borderColor = UIColor.red.cgColor
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.mandatoryFieldsMessage, comment: ""))
-            }
+            
         }
         if strFeddCheck == "" && strFeddUpdate == "" && strFarmNameFeedId == ""
         {
@@ -1299,7 +1299,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             assert(false, "no date from string")
             return ""
         }
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         let timeStamp = dateFormatter.string(from: date)
         return timeStamp
     }
@@ -1358,9 +1358,6 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 Helper.showGlobalProgressHUDWithTitle(self.view, title: "Récupération des données du serveur ...")
             }
 
-            
-            let Id = UserDefaults.standard.value(forKey: "Id") as! Int
-            let devType = Constants.deviceType
             let apiUrl = ZoetisWebServices.EndPoint.getPostedSessionsByDeviceSessionID.latestUrl + "\(fullData)"
             
             ZoetisWebServices.shared.getPostedSessionByDeviceIDResponce(controller: self, url: apiUrl, completion: { [weak self] (json, error) in
@@ -1690,20 +1687,20 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                                     }
                                     
                                     let postingArr = coreDataHandler.fetchAllPostingSession(sessionId as NSNumber)
-                                    var postingId: Int = 0
-                                    postingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
+                                    var necroPostingId: Int = 0
+                                    necroPostingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
                                     
-                                    if postingId == sessionId {
+                                    if necroPostingId == sessionId {
                                         coreDataHandler.updateFinalizeDataWithNec(self.postingId, finalizeNec: 1)
                                     }
                                     
-                                    let age = farm["age"].stringValue
+                                    let birdAge = farm["age"].stringValue
                                     let birds = farm["birds"].stringValue
                                     let houseNo = farm["houseNo"].stringValue
                                     let flockId = farm["flockId"].stringValue
                                     
                                     coreDataHandler.SaveNecropsystep1SingleData(
-                                        postingId as NSNumber, age: age, farmName: farmName, feedProgram: feedProgram,
+                                        necroPostingId as NSNumber, age: birdAge, farmName: farmName, feedProgram: feedProgram,
                                         flockId: flockId, houseNo: houseNo, noOfBirds: birds, sick: sick as NSNumber,
                                         necId: sessionId as NSNumber, compexName: complexName, complexDate: seesDat,
                                         complexId: complexId as NSNumber, custmerId: custId as NSNumber,
@@ -1717,13 +1714,8 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                                 }
                             }
                         }
+                            self.getPostingDataFromServerforNecorpsy()
                         
-                        // ✅ Fetch next data if available
-                        if coreDataHandler.FetchNecropsystep1AllNecId().count > 0 {
-                            self.getPostingDataFromServerforNecorpsy()
-                        } else {
-                            self.getPostingDataFromServerforNecorpsy()
-                        }
                     } else {
                         self.getPostingDataFromServerforNecorpsy()
                     }
@@ -1739,12 +1731,11 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     func getPostingDataFromServerforNecorpsy(){
         
         if WebClass.sharedInstance.connected() {
-            var id = Int()
-            id =  UserDefaults.standard.value(forKey: "Id") as! Int
-            let  lngId = UserDefaults.standard.integer(forKey: "lngId")
+     
+            var  id =  UserDefaults.standard.value(forKey: "Id") as! Int
+            lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
             let url = "PostingSession/GetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
-           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
             let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             let urlString: String = WebClass.sharedInstance.webUrl + url
@@ -2092,7 +2083,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
-            
+            debugPrint("back added....")
         }
         else if ((textField.text?.count)! > 50  ){
             return false

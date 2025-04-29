@@ -265,7 +265,7 @@ class PEAssessmentsDAO{
             print(message)
         }
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat=Constants.MMddyyyyStr
         vaccinationCertificationArr.sort(by: {
             let date1Obj = dateFormatter.string(from: $0.scheduledDate ?? Date())
             let date2Obj = dateFormatter.string(from: $1.scheduledDate ?? Date())
@@ -288,7 +288,7 @@ class PEAssessmentsDAO{
             print(message)
         }
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat=Constants.MMddyyyyStr
         vaccinationCertificationArr.sort(by: {
             let date1Obj = dateFormatter.string(from: $0.scheduledDate ?? Date())
             let date2Obj = dateFormatter.string(from: $1.scheduledDate ?? Date())

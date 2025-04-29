@@ -1391,7 +1391,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             selectFarmsLabel.isHidden = false
             
             if (feedProgramTextField.text == "") {
-                
+                debugPrint("feed program is empty.")
             } else  {
                 
                 let necId =  UserDefaults.standard.integer(forKey:("necUnLinked"))
@@ -1483,10 +1483,10 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             let tempDict = arrayMoleculeDetails.object(at:i) as AnyObject
             let mid = tempDict["MoleculeId"] as? Int
-            let lngId =   tempDict["LanguageId"] as? Int
+            let moleculelngId =   tempDict["LanguageId"] as? Int
             let catId =  tempDict["FeedProgramCategoryId"] as? Int
             let desc =  tempDict["MoleculeDescription"] as? String
-            CoreDataHandlerTurkey().saveMoleCuleTurkey(catId!, decscMolecule: desc!, moleculeId: mid!, lngId: lngId!)
+            CoreDataHandlerTurkey().saveMoleCuleTurkey(catId!, decscMolecule: desc!, moleculeId: mid!, lngId: moleculelngId!)
             
         }
         
@@ -1970,14 +1970,10 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             let cocciControl = allCocciControl.object(at:i) as! CoccidiosisControlFeedTurkey
             let coccidiosisVaccine = cocciControl.coccidiosisVaccine
             let dosage = cocciControl.dosage
-            let feedId = cocciControl.feedId
+            let cocciFeedId = cocciControl.feedId
             let feedProgram = cocciControl.feedProgram
-            let formName = cocciControl.formName
             let fromDays = cocciControl.fromDays
-            let loginSessionId = cocciControl.loginSessionId
             let molecule = cocciControl.molecule
-            let postingId = cocciControl.postingId
-            let targetWeight = cocciControl.targetWeight
             let toDays = cocciControl.toDays
             let moleculeId = cocciControl.moleculeId
             let cocoId = cocciControl.coccidiosisVaccineId
@@ -1985,7 +1981,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             mainDict.setValue(coccidiosisVaccine, forKey: "coccidiosisVaccine")
             mainDict.setValue(dosage, forKey: "dose")
-            mainDict.setValue(feedId, forKey: "feedId")
+            mainDict.setValue(cocciFeedId, forKey: "feedId")
             mainDict.setValue(feedProgram, forKey: "feedName")
             mainDict.setValue(fromDays, forKey: "durationFrom")
             mainDict.setValue(molecule, forKey: "molecule")
@@ -2004,19 +2000,16 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             let mainDict = NSMutableDictionary()
             let antiboticFeed = fetchAntibotic.object(at:i) as! AntiboticFeedTurkey
-            let postingId = antiboticFeed.postingId
             let dosage = antiboticFeed.dosage
-            let feedId = antiboticFeed.feedId
+            let antiFeedId = antiboticFeed.feedId
             let feedProgram = antiboticFeed.feedProgram
-            let formName = antiboticFeed.formName
             let fromDays = antiboticFeed.fromDays
-            let loginSessionId = antiboticFeed.loginSessionId
             let molecule = antiboticFeed.molecule
             let toDays = antiboticFeed.toDays
             let feedType = antiboticFeed.feedType
             
             mainDict.setValue(dosage, forKey: "dose")
-            mainDict.setValue(feedId, forKey: "feedId")
+            mainDict.setValue(antiFeedId, forKey: "feedId")
             mainDict.setValue(feedProgram, forKey: "feedName")
             mainDict.setValue(fromDays, forKey: "durationFrom")
             mainDict.setValue(molecule, forKey: "molecule")
@@ -2032,19 +2025,16 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             let mainDict = NSMutableDictionary()
             let antiboticFeed = fetchAlternative.object(at:i) as! AlternativeFeedTurkey
-            let postingId = antiboticFeed.postingId
             let dosage = antiboticFeed.dosage
-            let feedId = antiboticFeed.feedId
+            let alterntiveFeedId = antiboticFeed.feedId
             let feedProgram = antiboticFeed.feedProgram
-            let formName = antiboticFeed.formName
             let fromDays = antiboticFeed.fromDays
-            let loginSessionId = antiboticFeed.loginSessionId
             let molecule = antiboticFeed.molecule
             let toDays = antiboticFeed.toDays
             let feedType = antiboticFeed.feedType
             
             mainDict.setValue(dosage, forKey: "dose")
-            mainDict.setValue(feedId, forKey: "feedId")
+            mainDict.setValue(alterntiveFeedId, forKey: "feedId")
             mainDict.setValue(feedProgram, forKey: "feedName")
             mainDict.setValue(fromDays, forKey: "durationFrom")
             mainDict.setValue(molecule, forKey: "molecule")
@@ -2062,16 +2052,15 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             let mainDict = NSMutableDictionary()
             let antiboticFeed = fetchMyBinde.object(at:i) as! MyCotoxinBindersFeedTurkey
             let dosage = antiboticFeed.dosage
-            let feedId = antiboticFeed.feedId
+            let mytoxinFeedId = antiboticFeed.feedId
             let feedProgram = antiboticFeed.feedProgram
             let fromDays = antiboticFeed.fromDays
-            let loginSessionId = antiboticFeed.loginSessionId
             let molecule = antiboticFeed.molecule
             
             let toDays = antiboticFeed.toDays
             let feedType = antiboticFeed.feedType
             mainDict.setValue(dosage, forKey: "dose")
-            mainDict.setValue(feedId, forKey: "feedId")
+            mainDict.setValue(mytoxinFeedId, forKey: "feedId")
             mainDict.setValue(feedProgram, forKey: "feedName")
             mainDict.setValue(fromDays, forKey: "durationFrom")
             mainDict.setValue(molecule, forKey: "molecule")
@@ -2094,28 +2083,16 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         outerDict.setValue(id, forKey: "UserId")
         outerDict.setValue(false, forKey: "finalized")
         outerDict.setValue(FinalArray, forKey: "feedProgramDetail")
-        
-        do {
-            var error : NSError?
-            
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString =  jsonString.trimmingCharacters(in: (NSCharacterSet.whitespaces))
-            
-        } catch let error as NSError {
-            
-            //print(error)
-        }
+     
     }
     
     // MARK: - METHODS AND FUNCTIONS
     fileprivate func handlesaveAntiBioticMycoxtinUpdateSessionStatus(_ status: Bool,feedexist: Int) {
         if status == true {
             self.saveMyCoxtinDatabase(feedId: feedexist ,postingId: Int(self.postingId), completion: { (status) -> Void in
-                if status == true {
-                    if self.postingIdFromExistingNavigate == "Exting" {
+                if status == true, self.postingIdFromExistingNavigate == "Exting" {
                         CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(self.postingId)
-                    }
+                    
                 }
             })
         }
@@ -2240,23 +2217,6 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                     }})
             }})
         
-//        self.saveFeedProgrameInDatabase(feedId: feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
-//            
-//            ////print("Feed")
-//            
-//            if status == true {
-//                
-//                self.saveCoccoiControlDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
-//                    
-//                    if status == true {
-//                        self.saveAntibioticDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
-//                            
-//                            if status == true {
-//                                saveAlternativeAndMycoxtinData()
-//                            }
-//                        })
-//                    }})
-//            }})
     }
     
     fileprivate func callSyncApiMethd() {
@@ -2361,14 +2321,8 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             
             if btnTagsave == 1 {
+                self.clickHelpPopUp()
                 
-                if postingIdFromExistingNavigate == "Exting"{
-                    self.clickHelpPopUp()
-                }
-                else{
-                    
-                    self.clickHelpPopUp()
-                }
                 
             } else {
                 
@@ -2833,14 +2787,10 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     func noBtnPop(){
         
-        if exitPopUP.tag == 10 {
+        if exitPopUP.tag == 10  || exitPopUP.tag == 20 {
             btnTagsave = 2
             callSaveMethod(btnTagSave: btnTagsave)
-        } else if exitPopUP.tag == 20{
-            btnTagsave = 2
-            callSaveMethod(btnTagSave: btnTagsave)
-            
-        }else {
+        } else {
             UserDefaults.standard.set(false, forKey: "isUpadteFeedFromUnlinked")
             UserDefaults.standard.synchronize()
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -2914,7 +2864,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     fileprivate func handleBtnTag100(_ indexPath: IndexPath, _ cell: UITableViewCell) {
         if indexPath.row > fetchDosage.count {
-            
+            debugPrint("does name not availbale.")
         } else {
             let cocoiControll = (fetchDosage.object(at: indexPath.row) as AnyObject).value(forKey: "doseName") as? String
             cell.textLabel!.text = cocoiControll
@@ -3071,9 +3021,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             
             handleNewCellCheckMarkValidation(newCell, formName)
         } else {
-            
-            let cell:UITableViewCell = tableView.cellForRow(at: indexPath as IndexPath)!
-            
+                        
             
             if btnTag == 0 {
                 // Not sure this will work will check when we get the issue
@@ -3299,8 +3247,8 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         case 11111 :
             
             let ACCEPTED_CHARACTERS = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:;,/-_!@#$%*()-_=+[]\'<>.?/\\~`€£"
-            let set = CharacterSet(charactersIn: ACCEPTED_CHARACTERS)
-            let inverted = set.inverted
+            let chanracterSet = CharacterSet(charactersIn: ACCEPTED_CHARACTERS)
+            let inverted = chanracterSet.inverted
             let filtered = string.components(separatedBy: inverted).joined(separator: "")
             
             let maxLength = 50
@@ -3380,62 +3328,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         logOutPopView1.removeFromSuperview()
         
     }
-    
-    
-    /* Not Used so we have commented this code to full fill Sonar Condition of Cognitive Complexity */
-    /*
-    func textFeildValidation() -> Bool{
-        
-        if(flag == 1){
-   
-            if (FromstarterDurationTextField.text! >= toStarterTextField.text! ) ||
-                ( FromGrowerTextField.text! >= toGrowerTextField.text! ) ||
-                ( fromFinisherTextField.text! >= toFinisherTextField.text! ) ||
-                ( fromWDtextField.text! >= toWdTextField.text! ){
-                return false
-            }
-            
-            else{
-                return true
-            }
-        }
-        
-        else if( flag == 2){
-            
-            if(( antiFromDurationFirstTextField.text! >= antiToDurationFirstTextField.text! ) ||
-               ( antiFromDurationSecondTextField.text! >= antiToDurationSecondTextField.text!) ||
-               ( antiFromDurationThirdTextField.text! >= antiToDurationThirdTextField.text!) ||
-               ( antiFromDurationFourTextField.text! >= antiToDurationFourTextField.text!)){
-                return false
-            } else {
-                return true
-            }
-        }
-        
-        else if(flag == 3){
-            
-            if(( alternativeFromFirstTextField.text! >= alternativeToFirstTextField.text! ) || ( alternativeFromSecondTextField.text! >=
-                                                                                                 alternativeToSecondTextField.text! ) || ( alternativeFromthirdTextField.text! >= alternativeTothirdTextField.text! ) || ( alternativeFromFourTextField.text! >= alternativeToFourTextField.text! )){
-                return false
-            } else {
-                return true
-            }
-        }
-        
-        if(flag == 4){
-            
-            if(( myFromFirstTextField.text! >= myToFirstTextField.text! ) || ( myFromSecondTextField.text! >= myToSecondTextField.text! ) || ( myFromThirdTextField.text! >= myToFirstTextField.text! ) || ( myFromFourTextField.text! >= myToFourTextField.text! )){
-                return false
-            } else {
-                return true
-            }
-        }
-        
-        else {
-            return false
-        }
-    }
-    */
+
     func spacingInTxtField(){
         
         antiMoleculeFeedType1.leftView = createPaddingView(width: 10, height: 20)
@@ -3719,9 +3612,7 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     }
     
     @objc func addFarmEnd(){
-        
-        let necId =  UserDefaults.standard.integer(forKey:"necUnLinked")
-        
+                
         if UserDefaults.standard.bool(forKey:"Unlinked") == true{
             let necId1 =  UserDefaults.standard.integer(forKey:"necUnLinked")
             postingId = necId1 as NSNumber
@@ -3791,16 +3682,15 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count {
             let pSession = postingArrWithAllData.object(at:i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count {
             let nIdSession = necArrWithoutPosting.object(at:i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -3826,9 +3716,9 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     // MARK: - IBACTIONS
     
     @IBAction func logOUT(sender: AnyObject) {
-        let feedProgramArray = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
+        let feedProgramArrayIs = CoreDataHandlerTurkey().FetchFeedProgramTurkey(postingId as NSNumber)
         let farms = CoreDataHandlerTurkey().fetchNecropsystep1neccIdFeedProgramTurkey(postingId as NSNumber)
-        if feedProgramArray.count<1 || feedProgramTextField.text == "" {
+        if feedProgramArrayIs.count<1 || feedProgramTextField.text == "" {
             // Create the alert controller
             if farms.count > 0 {
                 self.showExitAlertWith(msg: "Please connect \(farms.count) farm(s) with feed program. Do you want not do it now?", tag: 20)
@@ -3874,70 +3764,26 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     @IBAction func toAntiboticSecondTextField(sender: AnyObject) {
         
-        if antiFromDurationSecondTextField.text! < antiToDurationSecondTextField.text! {
-            
-            
-        } else if antiFromDurationSecondTextField.text! > antiToDurationSecondTextField.text! {
-            // fromToAlert()
-            
-        }
     }
+    
     @IBAction func toAntiboticThreeTextField(sender: AnyObject) {
         
-        if antiFromDurationThirdTextField.text! < antiToDurationThirdTextField.text! {
-            
-            
-        } else if antiFromDurationThirdTextField.text! > antiToDurationThirdTextField.text! {
-            //  fromToAlert()
-            
-        }
-        
-        
     }
+    
     @IBAction func toAntiboticFourTextField(sender: AnyObject) {
-        
-        
-        
-        if antiFromDurationFourTextField.text! < antiToDurationFourTextField.text! {
-            
-            
-        } else if antiFromDurationFourTextField.text! > antiToDurationFourTextField.text! {
-            
-            // fromToAlert()
-        }
-        
-        
+
     }
+    
     @IBAction func toAntiboticFiveTextField(sender: AnyObject) {
         
-        
-        
-        
-        if antiFromFivthTextField.text! < antiToDurationfivthTextField.text! {
-            
-            
-        } else if antiFromFivthTextField.text! > antiToDurationfivthTextField.text! {
-            
-            //  fromToAlert()
-        }
-        
     }
+    
     @IBAction func toAntiboticSixTextField(sender: AnyObject) {
-        
-        
-        
-        if antiFromSixthTextField.text! < antiToDurationSixTextField.text! {
-            
-            
-        } else if antiFromSixthTextField.text! > antiToDurationSixTextField.text! {
-            
-            //  fromToAlert()
-        }
-        
+                
     }
+    
     @IBAction func feedType1Action(_ sender: Any) {
         
-        // fetchDosage = CoreDataHandler().fetchDataDatabaseWithEntity(entityName: "GetDosage")
         
         if  Bundle.main.versionNumber > "7.5.1" {
             if coccidsisStartrDrinking.text == appDelegateObj.selectStr {
@@ -4409,18 +4255,14 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     }
     @objc func doneClick() {
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
-        if lngId == 3{
+        let currentLngId = UserDefaults.standard.integer(forKey: "lngId")
+        if currentLngId == 3{
             let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateFormat=appDelegateObj.ddMMyyyStr
-            //            dateFormatter2.calendar = Calendar(identifier: .gregorian)
-            //            dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
+            dateFormatter2.dateFormat = Constants.ddMMyyyStr
             lblDate.text = dateFormatter2.string(from: datePicker.date) as String
         } else {
             let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
-            //            dateFormatter2.calendar = Calendar(identifier: .gregorian)
-            //            dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
+            dateFormatter2.dateFormat = Constants.MMddyyyyStr
             lblDate.text = dateFormatter2.string(from: datePicker.date) as String
         }
         buttonbgNew.removeFromSuperview()

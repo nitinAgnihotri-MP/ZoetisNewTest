@@ -63,7 +63,6 @@ class MicrobialViewController: BaseViewController {
             UserDefaults.standard.set(true, forKey: "isFreshLaunched")
             UserDefaults.standard.synchronize()
         }
-        self.tapGestureForDraftImageView()
         self.loggedInUser.text = FirstName
         self.sessionBtn.isHidden = true
         self.backViewBtn.isHidden = true
@@ -99,13 +98,11 @@ class MicrobialViewController: BaseViewController {
                 let alertController = UIAlertController(title: "Data available", message: errorMSg, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
                     _ in
-                    
                     self.suncDataBackToServer(reqType: .bacterial, sessionStatus: .submitted)
-                    
                 }
+                
                 let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
                     _ in
-                    
                     self.logoutAction()
                 }
                 
@@ -127,12 +124,9 @@ class MicrobialViewController: BaseViewController {
         let alertController = UIAlertController(title: "Alert", message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
             self.startLogoutProcess()
-            
         }
         
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-            _ in
-        }
+        let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -157,8 +151,7 @@ class MicrobialViewController: BaseViewController {
     }
     
     // MARK:  /*********** Logout SSO Account **************/
-     func ssologoutMethod()
-     {
+     func ssologoutMethod() {
          gigya.logout() { result in
              switch result {
              case .success(let data):
@@ -168,17 +161,7 @@ class MicrobialViewController: BaseViewController {
              }
          }
      }
-    
-    
-    private func tapGestureForDraftImageView(){
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.draftAction(_:)))
-        draftImageView.addGestureRecognizer(tap)
-    }
-    
-    @objc func draftAction(_ sender: UITapGestureRecognizer? = nil){
-
-    }
-    
+        
     @IBAction func viewRequisitionBtnClicked(_ sender: UIButton) {
         if let viewController = UIStoryboard(name: "ViewRequisition", bundle: nil)
               .instantiateViewController(withIdentifier: "ViewRequisitionViewController") as? ViewRequisitionViewController,
@@ -288,10 +271,7 @@ class MicrobialViewController: BaseViewController {
                     self.suncDataBackToServer(reqType: .bacterial, sessionStatus: .submitted)
                     
                 }
-                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel) {
-                    _ in
-                    
-                }
+                let cancelAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel)
                 
                 alertController.addAction(okAction)
                 alertController.addAction(cancelAction)
@@ -494,60 +474,141 @@ extension MicrobialViewController {
         })
     }
     
-    private func fetchGetAllSyncedDataForRequisition(){
-        dismissGlobalHUD(self.view)
-        self.showGlobalProgressHUDWithTitle(self.view, title: "")
-        ZoetisWebServices.shared.getAllSyncedRequisitionData(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-            self!.dismissGlobalHUD(self!.view)
-            guard let self = self, error == nil else { return }
+    //New Implementation of function: Old Implementation of function is done below this function.. if this functions doesn't function well we will replace the function with older function.
+    private func fetchGetAllSyncedDataForRequisition() {
+        dismissGlobalHUD(view)
+        showGlobalProgressHUDWithTitle(view, title: "")
+
+        ZoetisWebServices.shared.getAllSyncedRequisitionData(controller: self, parameters: [:]) { [weak self] json, error in
+            guard let self = self else { return }
+            self.dismissGlobalHUD(self.view)
+
+            guard error == nil else { return }
+
             UserDefaults.standard.set(false, forKey: "isFreshLaunched")
             UserDefaults.standard.synchronize()
+
             let jsonObject = RequisitionGetDataModel(json)
-            let arrRequisition = jsonObject.requisitionArray
-            if arrRequisition?.count ?? 0 > 0{
-                for objReq in arrRequisition ?? []{
-                    if let microbialDetailsList = objReq.microbialDetailsList{
-                        
-                        for arrMicrobialDetailsList in microbialDetailsList{
-                            if !Microbial_EnviromentalSurveyFormSubmitted.isSameTimeStampAndUserIdAlreadyExisits(reqData: arrMicrobialDetailsList){
-                                let isPlateIdGenerated = false
-                                
-                                let arrReviewers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
-                                let reviewerIds = arrMicrobialDetailsList.reviewerIds ?? []
-                                for reviewer in arrReviewers{
-                                    let isSelected = reviewerIds.contains(reviewer.reviewerId?.intValue ?? 0)
-                                    MicrobialSelectedUnselectedReviewer.saveReviewersInDB(arrMicrobialDetailsList.timeStamp ?? "", reviewerId: reviewer.reviewerId?.intValue ?? 0, reviewerName: reviewer.reviewerName ?? "", isSelected: isSelected, isSessionType: false)
-                                }
-                                
-                                var reviewersText = ""
-                                for selectsId in reviewerIds{
-                                    let selectedReviewer = arrReviewers.filter{ $0.reviewerId?.intValue ?? 0 == selectsId }
-                                    if selectedReviewer.count > 0{
-                                        if reviewersText == ""{
-                                            reviewersText = selectedReviewer.first?.reviewerName ?? ""
-                                        }else{
-                                            reviewersText = "\(reviewersText), \(selectedReviewer.first?.reviewerName ?? "")"
-                                        }
-                                    }
-                                }
-                                
-                                Microbial_EnviromentalSurveyFormSubmitted.saveDataWhichIsAlreadySynced(reqData: arrMicrobialDetailsList, reqText: objReq.SurveyType?.Text ?? "", reqId: objReq.SurveyType?.Id ?? 0, isPlateIdGenerated: isPlateIdGenerated, reviewerText: reviewersText)
+            let requisitions = jsonObject.requisitionArray ?? []
 
-
-                            }else{
-                                //update case status
-                                
-                                Microbial_EnviromentalSurveyFormSubmitted.updateCaseStatusOfReq(timeStamp: arrMicrobialDetailsList.timeStamp ?? "", caseStatus: arrMicrobialDetailsList.status ?? 0)
-                            }
-                        }
-                    }
-                }
+            for requisition in requisitions {
+                self.processRequisition(requisition)
             }
+
             self.checkAndSync()
             self.loadDataForGraphDraftAndSubmittedReq()
             print(json)
-        })
+        }
     }
+    
+    private func processRequisition(_ requisition: RequisitionData) {
+        guard let microbialList = requisition.microbialDetailsList else { return }
+
+        for detail in microbialList {
+            if Microbial_EnviromentalSurveyFormSubmitted.isSameTimeStampAndUserIdAlreadyExisits(reqData: detail) {
+                updateExistingCaseStatus(for: detail)
+            } else {
+                saveNewSurvey(detail, from: requisition)
+            }
+        }
+    }
+
+    private func updateExistingCaseStatus(for detail: MicrobialDetailsList) {
+        let timeStamp = detail.timeStamp ?? ""
+        let status = detail.status ?? 0
+        Microbial_EnviromentalSurveyFormSubmitted.updateCaseStatusOfReq(timeStamp: timeStamp, caseStatus: status)
+    }
+
+    private func saveNewSurvey(_ detail: MicrobialDetailsList, from requisition: RequisitionData) {
+        let isPlateIdGenerated = false
+        let reviewers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as? [Micro_Reviewer] ?? []
+        let reviewerIds = detail.reviewerIds ?? []
+
+        saveReviewersSelection(timeStamp: detail.timeStamp ?? "", reviewerIds: reviewerIds, reviewers: reviewers)
+
+        let reviewersText = buildReviewersText(from: reviewerIds, using: reviewers)
+
+        Microbial_EnviromentalSurveyFormSubmitted.saveDataWhichIsAlreadySynced(
+            reqData: detail,
+            reqText: requisition.SurveyType?.Text ?? "",
+            reqId: requisition.SurveyType?.Id ?? 0,
+            isPlateIdGenerated: isPlateIdGenerated,
+            reviewerText: reviewersText
+        )
+    }
+
+    private func saveReviewersSelection(timeStamp: String, reviewerIds: [Int], reviewers: [Micro_Reviewer]) {
+        for reviewer in reviewers {
+            let id = reviewer.reviewerId?.intValue ?? 0
+            let isSelected = reviewerIds.contains(id)
+            MicrobialSelectedUnselectedReviewer.saveReviewersInDB(
+                timeStamp,
+                reviewerId: id,
+                reviewerName: reviewer.reviewerName ?? "",
+                isSelected: isSelected,
+                isSessionType: false
+            )
+        }
+    }
+
+    private func buildReviewersText(from reviewerIds: [Int], using reviewers: [Micro_Reviewer]) -> String {
+        reviewerIds.compactMap { id in
+            reviewers.first { $0.reviewerId?.intValue == id }?.reviewerName
+        }.joined(separator: ", ")
+    }
+    
+    
+    ///Old Implementation of function
+//    private func fetchGetAllSyncedDataForRequisition(){
+//        dismissGlobalHUD(self.view)
+//        self.showGlobalProgressHUDWithTitle(self.view, title: "")
+//        ZoetisWebServices.shared.getAllSyncedRequisitionData(controller: self, parameters: [:], completion: { [weak self] (json, error) in
+//            self!.dismissGlobalHUD(self!.view)
+//            guard let self = self, error == nil else { return }
+//            UserDefaults.standard.set(false, forKey: "isFreshLaunched")
+//            UserDefaults.standard.synchronize()
+//            let jsonObject = RequisitionGetDataModel(json)
+//            let arrRequisition = jsonObject.requisitionArray
+//            if arrRequisition?.count ?? 0 > 0{
+//                for objReq in arrRequisition ?? []{
+//                    if let microbialDetailsList = objReq.microbialDetailsList {
+//                        
+//                        for arrMicrobialDetailsList in microbialDetailsList{
+//                            if !Microbial_EnviromentalSurveyFormSubmitted.isSameTimeStampAndUserIdAlreadyExisits(reqData: arrMicrobialDetailsList){
+//                                let isPlateIdGenerated = false
+//                                
+//                                let arrReviewers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
+//                                let reviewerIds = arrMicrobialDetailsList.reviewerIds ?? []
+//                                for reviewer in arrReviewers{
+//                                    let isSelected = reviewerIds.contains(reviewer.reviewerId?.intValue ?? 0)
+//                                    MicrobialSelectedUnselectedReviewer.saveReviewersInDB(arrMicrobialDetailsList.timeStamp ?? "", reviewerId: reviewer.reviewerId?.intValue ?? 0, reviewerName: reviewer.reviewerName ?? "", isSelected: isSelected, isSessionType: false)
+//                                }
+//                                
+//                                var reviewersText = ""
+//                                for selectsId in reviewerIds {
+//                                    let selectedReviewer = arrReviewers.filter{ $0.reviewerId?.intValue ?? 0 == selectsId }
+//                                    if selectedReviewer.count > 0{
+//                                        if reviewersText == ""{
+//                                            reviewersText = selectedReviewer.first?.reviewerName ?? ""
+//                                        }else{
+//                                            reviewersText = "\(reviewersText), \(selectedReviewer.first?.reviewerName ?? "")"
+//                                        }
+//                                    }
+//                                }
+//                                
+//                                Microbial_EnviromentalSurveyFormSubmitted.saveDataWhichIsAlreadySynced(reqData: arrMicrobialDetailsList, reqText: objReq.SurveyType?.Text ?? "", reqId: objReq.SurveyType?.Id ?? 0, isPlateIdGenerated: isPlateIdGenerated, reviewerText: reviewersText)
+//                            } else {
+//                                Microbial_EnviromentalSurveyFormSubmitted.updateCaseStatusOfReq(timeStamp: arrMicrobialDetailsList.timeStamp ?? "", caseStatus: arrMicrobialDetailsList.status ?? 0)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            self.checkAndSync()
+//            self.loadDataForGraphDraftAndSubmittedReq()
+//            print(json)
+//        })
+//    }
  
     
     private func fetchCustomerList(){

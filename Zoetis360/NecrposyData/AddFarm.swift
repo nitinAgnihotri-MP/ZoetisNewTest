@@ -236,15 +236,15 @@ class AddFarm:UIView,UIPickerViewDelegate,UIPickerViewDataSource,UITableViewData
         myPickerView.frame = CGRect(x: 785 , y: 122, width: 100, height: 120)
         buttonbg.removeFromSuperview()
         pickerView()
-        var pickerIndex = Int()
+        var birdsPickerIndex = Int()
         for i in 0..<NoOFbirds.count{
             
             if (noOfBirdsLbl.text! == NoOFbirds[i] as! String){
-                pickerIndex = i
+                birdsPickerIndex = i
                 break
             }
         }
-        myPickerView.selectRow(pickerIndex, inComponent: 0, animated: true)
+        myPickerView.selectRow(birdsPickerIndex, inComponent: 0, animated: true)
         myPickerView.reloadInputViews()
         
     }

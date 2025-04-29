@@ -62,10 +62,10 @@ class DatePickerPopupViewController: BaseViewController {
             if evaluationDate != nil && evaluationDate != "" {
                 let theDaysLater = TimeInterval(3.months)
                 let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
-                dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatterObj.dateFormat = Constants.MMddyyyyStr
                 
                 if regionID != 3 {
-                    dateFormatterObj.dateFormat = appDelegateObj.ddMMyyyStr
+                    dateFormatterObj.dateFormat = Constants.ddMMyyyStr
                 }
                 
                 let evaluationDateObj = dateFormatterObj.date(from:self.evaluationDate!)
@@ -112,9 +112,9 @@ class DatePickerPopupViewController: BaseViewController {
     @objc func doneClick1() {
         let dateFormatter = DateFormatter()
         if regionID != 3 {
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
         } else {
-            dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat=Constants.MMddyyyyStr
         }
         
         let strdate1 = dateFormatter.string(from: datePicker.date) as String

@@ -78,7 +78,7 @@ class Report_MainVCViewController: UIViewController,GI_TtactDelegate,UITableView
             
             let date = ((sessionDataArray.object(at: i) as AnyObject).value(forKey: "sessiondate")!)
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
             let date1 = dateFormatter.date(from: date as! String)
             let date2 = dateFormatter.date(from: AllValidSessions.sharedInstance.complexDate as String)
@@ -658,12 +658,7 @@ extension Report_MainVCViewController {
             ]
             dataSet.colors = [UIColor.green, UIColor.yellow, UIColor.orange, UIColor.red, UIColor.blue]
         }
-        
-        
-//        if let values = verticalValues.last {
-//            dataSet.stackLabels = [verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 0",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 1",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 2",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 3",verticalValues.last!.trimmingCharacters(in: .whitespaces)+" 4"]
-//            dataSet.colors = [UIColor.green,UIColor.yellow,UIColor.orange,UIColor.red,UIColor.blue]
-//        }
+ 
         
         let farmNames1 = NSMutableArray()
         for frNme in farmNames{

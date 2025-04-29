@@ -133,7 +133,7 @@ class VaccinationCertificationsTableViewCell: UITableViewCell {
     
     func setPEValues(vaccinationCertificatonObj:PENewAssessment){
         let formatter = DateFormatter()
-        formatter.dateFormat = appDelegateObj.MMddyyyStr
+        formatter.dateFormat = Constants.MMddyyyyStr
         formatter.timeZone = Calendar.current.timeZone
         formatter.locale = Calendar.current.locale
         dateLbl.text = "\(vaccinationCertificatonObj.quarter!)" + " " + "\(vaccinationCertificatonObj.year!)"

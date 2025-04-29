@@ -1008,15 +1008,15 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             return
         }
         
-        for index in 0..<moleculeLabels.count {
-            let molecule = index < molecules.count ? molecules[index] : ""
-            let moleculeID = index < moleculeIDsArray.count ? moleculeIDsArray[index] : 0
+        for moleculeIndex in 0..<moleculeLabels.count {
+            let molecule = moleculeIndex < molecules.count ? molecules[moleculeIndex] : ""
+            let moleculeID = moleculeIndex < moleculeIDsArray.count ? moleculeIDsArray[moleculeIndex] : 0
             
             if molecule.isEmpty {
-                moleculeLabels[index]?.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+                moleculeLabels[moleculeIndex]?.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
             } else {
-                moleculeLabels[index]?.text = molecule
-                moleculeIDs[index] = moleculeID
+                moleculeLabels[moleculeIndex]?.text = molecule
+                moleculeIDs[moleculeIndex] = moleculeID
             }
         }
         
@@ -1111,14 +1111,14 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             let dateFormatter2 = DateFormatter()
             //            dateFormatter2.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
-            dateFormatter2.dateFormat=appDelegateObj.ddMMyyyStr
+            dateFormatter2.dateFormat=Constants.ddMMyyyStr
             lblDate.text = dateFormatter2.string(from: datePicker.date) as String
         }
         else{
             let dateFormatter2 = DateFormatter()
             //            dateFormatter2.calendar = Calendar(identifier: .gregorian)
             //            dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
-            dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
+            dateFormatter2.dateFormat=Constants.MMddyyyyStr
             lblDate.text = dateFormatter2.string(from: datePicker.date) as String
         }
         buttonBg1.removeFromSuperview()
@@ -1675,7 +1675,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             let dosage = antiboticFeed.dosage
             
-            let feedId = antiboticFeed.feedId
+            let antibioticFeedId = antiboticFeed.feedId
             
             let feedProgram = antiboticFeed.feedProgram
             
@@ -1690,7 +1690,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
             
             mainDict.setValue(dosage, forKey: "dose")
             
-            mainDict.setValue(feedId, forKey: "feedId")
+            mainDict.setValue(antibioticFeedId, forKey: "feedId")
             
             mainDict.setValue(feedProgram, forKey: "feedName")
             
@@ -3975,14 +3975,14 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at:i) as! PostingSession
-            var sessionId = pSession.postingId!
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at:i) as! CaptureNecropsyData
-            var sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         

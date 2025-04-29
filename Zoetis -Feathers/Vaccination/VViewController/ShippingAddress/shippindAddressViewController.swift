@@ -51,15 +51,15 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
         self.addressline2TxtFld.text = shippingInfo?.address2
         self.cityTextField.text = shippingInfo?.city
         self.zipCodeTxtFld.text = shippingInfo?.pincode
-        var countryId = String(shippingInfo?.countryID ?? 0)
+        var countryAddressId = String(shippingInfo?.countryID ?? 0)
         self.countryId = shippingInfo?.countryID ?? 0
         self.stateId = shippingInfo?.stateID ?? 0
-        var countryName = VaccinationCustomersDAO.sharedInstance.fetchCountryNameFromCountryId(countryId: countryId)
-        var stateId = String(shippingInfo?.stateID ?? 0)
-        var stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
+        let countryName = VaccinationCustomersDAO.sharedInstance.fetchCountryNameFromCountryId(countryId: countryAddressId)
+        let stateAddressId = String(shippingInfo?.stateID ?? 0)
+        var stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateAddressId)
         if stateName == "" {
-            self.getVaccinationStateList(countryId: countryId)
-            stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
+            self.getVaccinationStateList(countryId: countryAddressId)
+            stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateAddressId)
             self.selectedState.text = stateName
         }
         self.selectedState.text = stateName
@@ -89,15 +89,15 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
             self.addressline2TxtFld.text = shippingInfo?.address2
             self.cityTextField.text = shippingInfo?.city
             self.zipCodeTxtFld.text = shippingInfo?.pincode
-            var countryId = String(shippingInfo?.countryID ?? 0)
+            let handledCountryId = String(shippingInfo?.countryID ?? 0)
             self.countryId = shippingInfo?.countryID ?? 0
             self.stateId = shippingInfo?.stateID ?? 0
-            var countryName = VaccinationCustomersDAO.sharedInstance.fetchCountryNameFromCountryId(countryId: countryId)
-            var stateId = String(shippingInfo?.stateID ?? 0)
-            var stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
+            let countryName = VaccinationCustomersDAO.sharedInstance.fetchCountryNameFromCountryId(countryId: handledCountryId)
+            let handledStateId = String(shippingInfo?.stateID ?? 0)
+            var stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: handledStateId)
             if stateName == "" {
-                self.getVaccinationStateList(countryId: countryId)
-                stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: stateId)
+                self.getVaccinationStateList(countryId: handledCountryId)
+                stateName = VaccinationCustomersDAO.sharedInstance.fetchStateNameFromStateId(stateId: handledStateId)
                 self.selectedState.text = stateName
             }
             self.selectedState.text = stateName
@@ -109,18 +109,17 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
     }
     
     fileprivate func handleCertificationValidation() {
-        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil) {
-            if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1" {
-                if let certobj = VaccinationDashboardDAO.sharedInstance.getStartedCertObjByCategory(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationCategoryId: VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID){
-                    self.curentCertification = certobj
-                }
-            }
+        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil),
+           (isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"),
+           let certobj = VaccinationDashboardDAO.sharedInstance.getStartedCertObjByCategory(
+               userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+               certificationCategoryId: VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID
+           ) {
+            self.curentCertification = certobj
         }
         
-        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil) {
-            if !(self.curentCertification  != nil){
-                self.curentCertification = VaccinationCertificationVM()
-            }
+        if self.curentCertification == nil || self.curentCertification?.certificationId == nil {
+            self.curentCertification = VaccinationCertificationVM()
         }
     }
     
@@ -210,7 +209,6 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
         var shippingInfoArr = [ShippingAddressDTO]()
         shippingInfoArr.append(shippingInfo!)
         VaccinationCustomersDAO.sharedInstance.saveShippingInfoInDB(newAssessment: shippingInfoArr)
-        var shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfo(fssId: Int(self.curentCertification?.selectedFsmId ?? "") ?? 0)
         self.curentCertification?.FSSId = shippingInfo?.fssID
         VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
         
@@ -317,7 +315,7 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
                 
         if curentCertification?.certificationStatus != VaccinationCertificationStatus.submitted.rawValue{
             var arr = self.countryList.map{ $0.countryName}
-            var countryId = String()
+          
             if btn == countryBtn
             {
                 arr = self.countryList.map{ $0.countryName}
@@ -334,7 +332,7 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
                 {
                     selectedState.text = selectedVal
                     let element = self.stateList[index]
-                    let stateId = element.stateId
+                  
                     self.curentCertification?.StateId = Int(element.stateId ?? "")
                     self.shippingInfo?.stateID = Int(element.stateId ?? "")
                     self.stateId = Int(element.stateId ?? "") ?? 0
@@ -350,8 +348,8 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
                     selectedState.text = ""
                     let country = VaccinationCustomersDAO.sharedInstance.fetchCountryIdFromCountryName(countryName: selectedVal)
                     let value = country.first
-                    countryId = value?.countryId ?? ""
-                    self.getVaccinationStateList(countryId: countryId)
+                    var dropCountryId = value?.countryId ?? ""
+                    self.getVaccinationStateList(countryId: dropCountryId)
                     let element = self.countryList[index]
                     self.curentCertification?.CountryId = Int(element.countryId ?? "")
                     self.shippingInfo?.countryID = Int(element.countryId ?? "")
@@ -433,18 +431,17 @@ class shippindAddressViewController: BaseViewController , UITextFieldDelegate {
             }
             return setupZipcodeValidation(string, newLength)
         }
-        else if textField == cityTextField {
-            if cityTextField.layer.borderColor == UIColor.red.cgColor {
-                cityTextField.layer.borderColor = UIColor(displayP3Red: 216/255, green: 236/228, blue: 253/255, alpha: 1).cgColor
-            }
-            
+        else if textField == cityTextField && cityTextField.layer.borderColor == UIColor.red.cgColor {
+            cityTextField.layer.borderColor = UIColor(displayP3Red: 216/255, green: 236/228, blue: 253/255, alpha: 1).cgColor
         }
+            
+        
         
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         
         if (isBackSpace == -92){
-            
+            debugPrint("shipping back space pressed.")
         } else if ((textField.text?.count)! > 45  ){
             return false
         }

@@ -50,7 +50,7 @@ class ViewRequisitionViewModel {
             let arrViewRequisition = caseInfoForrequistion as? [Microbial_EnviromentalSurveyFormSubmitted] ?? []
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .medium
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             
             var sortedArray = arrViewRequisition.sorted { dateFormatter.date(from: $0.sampleCollectionDate ?? "") ?? Date() > dateFormatter.date(from: $1.sampleCollectionDate ?? "") ?? Date() }
             sortedArray = sortedArray.filter({ $0.sampleCollectionDate != "" })

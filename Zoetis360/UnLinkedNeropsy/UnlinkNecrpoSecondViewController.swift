@@ -64,24 +64,24 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
     
     override func viewWillAppear(_ animated: Bool) {
         
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
-        if lngId == 3 {
+        let selecdLngId = UserDefaults.standard.integer(forKey: "lngId")
+        if selecdLngId == 3 {
             let todaysDate:NSDate = NSDate()
             let dateFormatter:DateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
 
             let DateInFormat:String = dateFormatter.string(from: todaysDate as Date)
             lblDate.text = DateInFormat
             UserDefaults.standard.set( DateInFormat, forKey: "dateFrench")
             let todaysDate1:NSDate = NSDate()
             let dateFormatter1:DateFormatter = DateFormatter()
-            dateFormatter1.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter1.dateFormat = Constants.MMddyyyyStr
             strDateEn = dateFormatter1.string(from: todaysDate1 as Date)
         }
         else{
             let todaysDate:NSDate = NSDate()
             let dateFormatter:DateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             strDateEn = dateFormatter.string(from: todaysDate as Date)
             lblDate.text = strDateEn
         }
@@ -553,18 +553,18 @@ class UnlinkNecrpoSecondViewController: UIViewController,UITableViewDelegate,UIT
          lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3 {
             let dateFormatter1 = DateFormatter()
-            dateFormatter1.dateFormat=appDelegateObj.ddMMyyyStr
+            dateFormatter1.dateFormat=Constants.ddMMyyyStr
             let strfrench  = dateFormatter1.string(from: datePicker.date)
             lblDate.text = strfrench
             UserDefaults.standard.set( strfrench, forKey: "dateFrench")
             let dateFormatter2 = DateFormatter()
-            dateFormatter2.dateFormat=appDelegateObj.MMddyyyStr
+            dateFormatter2.dateFormat=Constants.MMddyyyyStr
             strDateEn = dateFormatter2.string(from: datePicker.date)
             
         }
         else{
             let dateFormatter1 = DateFormatter()
-            dateFormatter1.dateFormat=appDelegateObj.MMddyyyStr
+            dateFormatter1.dateFormat=Constants.MMddyyyyStr
             strDateEn = dateFormatter1.string(from: datePicker.date)
             lblDate.text = strDateEn
         }

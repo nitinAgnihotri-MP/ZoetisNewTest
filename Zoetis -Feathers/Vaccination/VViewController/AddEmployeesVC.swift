@@ -114,17 +114,20 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
     
     fileprivate func handleViewWillAppearRefactoringPart1() {
-        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil){
-            if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                
-                if let certobj = VaccinationDashboardDAO.sharedInstance.getStartedCertObjByCategory(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationCategoryId: VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID){
-                    self.curentCertification = certobj
-                }
-                self.fieldServiceManagerLbl.isHidden = true
-                showsiteVw()
-                fsmBtn.isHidden = false
-                fsmDropDownImgVw.isHidden = false
+        if (self.curentCertification == nil || self.curentCertification?.certificationId == nil),
+           isSafetyCertification || self.curentCertification?.certificationCategoryId == "1" {
+            
+            if let certobj = VaccinationDashboardDAO.sharedInstance.getStartedCertObjByCategory(
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                certificationCategoryId: VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID
+            ) {
+                self.curentCertification = certobj
             }
+            
+            self.fieldServiceManagerLbl.isHidden = true
+            showsiteVw()
+            fsmBtn.isHidden = false
+            fsmDropDownImgVw.isHidden = false
         }
     }
     
@@ -247,17 +250,13 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     
     
     func setUpFsmUI(){
-        if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
+        if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"
+           || self.curentCertification?.certificationCategoryId == "0" {
             self.annualBtn.isHidden = true
             self.annualLbl.isHidden = true
             self.recertificateBtn.isHidden = true
             self.recertificateLbl.isHidden = true
-        }else if !isSafetyCertification && self.curentCertification?.certificationCategoryId == "0"{
-            self.annualBtn.isHidden = true
-            self.annualLbl.isHidden = true
-            self.recertificateBtn.isHidden = true
-            self.recertificateLbl.isHidden = true
-        }else{
+        } else {
             self.toggleView.isHidden = true
             self.fsmStackView.isHidden = true
         }
@@ -395,11 +394,16 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
     
     func setBorderView(_ view:UIView){
-        view.layer.borderWidth  = 2
+        applyBorderStyle(to: view)
+    }
+    
+    func applyBorderStyle(to view: UIView) {
+        view.layer.borderWidth = 2
         view.layer.borderColor = UIColor.getBorderColorr().cgColor
         view.layer.cornerRadius = 18.5
         view.backgroundColor = UIColor.white
     }
+    
     
     func setupHeaderView(){
         vaccinationHeaderView = VaccinationHeaderContainerVC()
@@ -485,10 +489,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
     
     func setBordeViewWithColor(_ view:UIView){
-        view.layer.borderWidth  = 2
-        view.layer.borderColor = UIColor.getBorderColorr().cgColor
-        view.layer.cornerRadius = 18.5
-        view.backgroundColor = UIColor.white
+        applyBorderStyle(to: view)
     }
     
     
@@ -560,7 +561,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
                 gpSupervisorTxtFld.isFirstResponder ||
                 gpColleagueJobTitleTxtFld.isFirstResponder ||
                 gpColleagueTxtFld.isFirstResponder  {
-            
+            debugPrint("keyboad will apper.")
         } else {
             guard let userInfo = notification.userInfo else {return}
             guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {return}
@@ -584,7 +585,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
                 gpSupervisorTxtFld.isFirstResponder ||
                 gpColleagueJobTitleTxtFld.isFirstResponder ||
                 gpColleagueTxtFld.isFirstResponder  {
-            
+            debugPrint("dissappers keyboard.")
         } else {
             if self.view.bounds.origin.y != 0 {
                 self.view.bounds.origin.y = 0
@@ -623,12 +624,6 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     @objc func textFieldEditingDidChange(_ textField: UITextField){
         
         switch textField {
-        case costShippingTxtFld:
-            if curentCertification?.customerShippingId != textField.text{
-                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-            }
-            curentCertification?.customerShippingId = textField.text
-            break;
             
         case managerTxtFld:
             if curentCertification?.fsmName != textField.text {
@@ -680,16 +675,14 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        let maxLength = 6
+        
         let currentString: NSString = textField.text! as NSString
-        var newString: NSString =
-        currentString.replacingCharacters(in: range, with: string) as NSString
         var result = true
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         
         if (isBackSpace == -92){
-            
+            debugPrint("add employes back space.")
         } else if ((textField.text?.count)! > 45  ){
             return false
         }
@@ -729,12 +722,9 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
     
     @objc func updateEmployeeData(_ notification: NSNotification) {
-        if let index = notification.userInfo?["index"]  as? Int{
-            if index > -1{
-                if let empObj = notification.userInfo?["emp"]  as? VaccinationEmployeeVM{
-                    handleEmployeesAddedArrValidation(index, empObj)
-                }
-            }
+        if let index = notification.userInfo?["index"] as? Int, index > -1,
+           let empObj = notification.userInfo?["emp"] as? VaccinationEmployeeVM {
+            handleEmployeesAddedArrValidation(index, empObj)
         }
     }
     
@@ -767,10 +757,9 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
     
     @objc func updateEmployeeRoles(_ notification: NSNotification) {
-        if let index = notification.userInfo?["index"]  as? Int {
-            if let selectedVal = notification.userInfo?["selectedValue"]  as? String {
-                handleEmployeesAddedAddCertArrValidation(index, selectedVal, notification)
-            }
+        if let index = notification.userInfo?["index"] as? Int,
+           let selectedVal = notification.userInfo?["selectedValue"] as? String {
+            handleEmployeesAddedAddCertArrValidation(index, selectedVal, notification)
         }
     }
     
@@ -977,12 +966,17 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         
         if curentCertification?.selectedFsmId == nil || curentCertification?.selectedFsmId == ""
         {
-            var UpdateCertification = curentCertification?.fsrId
+            let UpdateCertification = curentCertification?.fsrId
             curentCertification?.selectedFsmId = UpdateCertification
         }
         
         DataService.sharedInstance.getShippingDetails(loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? Constants.noIdFoundStr,  SelectedFsmId:self.curentCertification?.selectedFsmId ?? "", viewController: self, completion: { [weak self] (status, error) in
-            guard let _ = self, error == nil else { self?.dismissGlobalHUD(self?.view ?? UIView()); return }
+            guard let _ = self, error == nil else {
+                let viewToDismiss = self?.view ?? UIView()
+                self?.dismissGlobalHUD(viewToDismiss)
+                return
+            }
+            
             if status == VaccinationConstants.VaccinationStatus.COREDATA_SAVED_SUCCESSFULLY || status == VaccinationConstants.VaccinationStatus.COREDATA_FETCHED_SUCCESSFULLY{
                 let mainQueue = OperationQueue.main
                 mainQueue.addOperation{
@@ -1072,7 +1066,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         
         self.curentCertification?.customerName = self.customerTxtFld.text ?? ""
         
-        self.curentCertification?.siteName = self.siteTxtFld.text ?? "" ?? ""
+        self.curentCertification?.siteName = self.siteTxtFld.text ?? ""
         self.curentCertification?.fsrName = self.serviceTechTxtFld.text ?? ""
         self.curentCertification?.fsmName = self.managerTxtFld.text ?? ""
         self.curentCertification?.selectedFsmName = self.fsmTxtFld.text ?? ""
@@ -1146,7 +1140,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     
     @IBAction func annualCertBtnAction(_ sender: UIButton) {
         if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {
-            
+            debugPrint("anual certification are equal.")
         }else{
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
                 isReCertification = false
@@ -1182,7 +1176,7 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     
     @IBAction func reCertbtnAction(_ sender: UIButton){
         if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {
-            
+            debugPrint("recert are equal.")
         }else{
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
                 isReCertification = true
@@ -1215,7 +1209,10 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
     
     @IBAction func newSiteCertificationBtnAction(_ sender: UIButton) {
-        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {print(appDelegateObj.testFuntion())}else{
+        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {
+            print(appDelegateObj.testFuntion())
+        }
+        else{
             isExistingSite = false
             curentCertification?.isExistingSite = false
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
@@ -1229,7 +1226,10 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
     }
     // MARK: - Existing Site Button Action
     @IBAction func existingSiteBtnAction(_ sender: UIButton) {
-        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {print(appDelegateObj.testFuntion())}else{
+        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {
+            print(appDelegateObj.testFuntion())
+        }
+        else{
             isExistingSite = true
             curentCertification?.isExistingSite = true
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
@@ -1517,7 +1517,7 @@ extension AddEmployeesVC: UITableViewDataSource, UITableViewDelegate{
                     
                     self.resignFirstResponder()
                     
-                    let arr = self.rolesArr.map{ $0.value}
+                   
                     if indexPath.row > -1 && self.employeesAddedArr.count > indexPath.row{
                         let selectedValueObjStr = self.employeesAddedArr[indexPath.row].rolesArrStr
                         
@@ -1610,7 +1610,10 @@ extension AddEmployeesVC: UITableViewDataSource, UITableViewDelegate{
         }
         lbl.textColor = UIColor.white
         view.addSubview(lbl)
-        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{print(appDelegateObj.testFuntion())}else{
+        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {
+            print(appDelegateObj.testFuntion())
+        }
+        else{
             
             let btn = UIButton()
             btn.tag = section

@@ -166,9 +166,9 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
         let dateFormatter = DateFormatter()
         
         if regionID != 3 {
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
         } else {
-            dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat=Constants.MMddyyyyStr
         }
         let currentDate: NSDate = NSDate()
         let strdate1 = dateFormatter.string(from: currentDate as Date) as String

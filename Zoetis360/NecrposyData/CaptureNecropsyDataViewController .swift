@@ -1087,7 +1087,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         ]
         
         // Fetch language ID
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
         
         var descriptions: [String] = []
         
@@ -1682,7 +1682,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     
     func setObsImageDescForImmune(desc: Int) -> NSMutableArray {
         let obsDescArr = NSMutableArray()
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+         lngId = UserDefaults.standard.integer(forKey: "lngId")
         
         switch desc {
         case 58:
@@ -1872,8 +1872,9 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     for i in 0..<array.count {
                         guard let currentElement = Int(array[i]), let lastElement = Int(array.last!) else { continue }
                         
-                        if lastElement != currentElement {
-                            if NSNumber(value: currentElement) == skleta1.obsPoint {
+                        if lastElement != currentElement,
+                           NSNumber(value: currentElement) == skleta1.obsPoint {
+                          
                                 cell.incrementLabel.text = String(array[i+1])
                                 CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase(
                                     "skeltaMuscular",
@@ -1889,7 +1890,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                                     isSync: true
                                 )
                                 break
-                            }
+                            
                         }
                     }
 
@@ -1945,6 +1946,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                         let lastElement = (Int(array.last!)! as Int)
                         if lastElement == Int(array[i])!
                         {
+                            debugPrint("cocci data check")
                         }
                         else
                         {
@@ -2011,6 +2013,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                         let lastElement = (Int(array.last!)! as Int)
                         if lastElement == Int(array[i])!
                         {
+                            debugPrint("GItract data check")
                         }
                         else
                         {
@@ -2079,6 +2082,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                         let lastElement = (Int(array.last!)! as Int)
                         if lastElement == Int(array[i])!
                         {
+                            debugPrint("skeleta  check")
                         }
                         else
                         {
@@ -2148,6 +2152,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                         let lastElement = (Int(array.last!)! as Int)
                         if lastElement == Int(array[i])!
                         {
+                            debugPrint("immune data.")
                         }
                         else
                         {
@@ -2219,6 +2224,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             if FetchObsArr.count > 0 {
                 if skleta1.obsPoint == 0
                 {
+                    debugPrint("skelte obs")
                 }
                 else
                 {
@@ -2226,17 +2232,17 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     {
                         if Int(array[i]) == 1
                         {
+                            debugPrint("skelte array obsrvation")
                         }
                         else
                         {
-                            if skleta1.obsPoint == 1
+                            if skleta1.obsPoint == 1 ,  Int(array[i]) == 0
                             {
-                                if Int(array[i]) == 0
-                                {
+                              
                                     cell.incrementLabel.text = array[0]
                                     CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("skeltaMuscular", obsName: skleta1.obsName!, formName:skleta.formName! , obsVisibility: Bool(truncating:skleta1.objsVisibilty!), birdNo: skleta.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating:skleta1.obsID!),necId: necId as NSNumber,isSync :true)
                                     break
-                                }
+                                
                             }
                             if Int(array[i])! as NSNumber == skleta1.obsPoint
                             {
@@ -2283,6 +2289,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 if cocoi1.obsPoint == 0
                 {
+                    debugPrint("cocci's obs")
                 }
                 else
                 {
@@ -2290,17 +2297,16 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     {
                         if Int(array[i]) == 1
                         {
+                            debugPrint("cocci's array for obs not required")
                         }
                         else
                         {
-                            if cocoi.obsPoint == 1
+                            if cocoi.obsPoint == 1 , Int(array[i]) == 0
                             {
-                                if Int(array[i]) == 0
-                                {
                                     cell.incrementLabel.text = array[0]
                                     CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Coccidiosis", obsName: cocoi1.obsName!, formName:cocoi.formName! , obsVisibility: Bool(truncating:cocoi1.objsVisibilty!), birdNo: cocoi.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating:cocoi1.obsID!),necId: necId as NSNumber,isSync :true)
                                     break
-                                }
+                                
                             }
                             
                             if Int(array[i])! as NSNumber == cocoi1.obsPoint
@@ -2349,6 +2355,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 if gitract1.obsPoint == 0
                 {
+                    debugPrint("gitrect obs data")
                 }
                 else
                 {
@@ -2357,17 +2364,16 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     {
                         if Int(array[i]) == 1
                         {
+                            debugPrint("gitrect array of obs not required.")
                         }
                         else
                         {
-                            if gitract1.obsPoint == 1
+                            if gitract1.obsPoint == 1 , Int(array[i]) == 0
                             {
-                                if Int(array[i]) == 0
-                                {
                                     cell.incrementLabel.text = array[0]
                                     CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("GITract", obsName: gitract1.obsName!, formName:gitract.formName! , obsVisibility:Bool(truncating:gitract1.objsVisibilty!), birdNo: gitract.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating:gitract1.obsID!),necId: necId as NSNumber,isSync :true)
                                     break
-                                }
+                                
                             }
                             if Int(array[i])! as NSNumber == gitract1.obsPoint
                             {
@@ -2414,6 +2420,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 if resp1.obsPoint == 0
                 {
+                    debugPrint("respiratory obsvation data is not found")
                 }
                 else
                 {
@@ -2421,17 +2428,17 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     {
                         if Int(array[i]) == 1
                         {
+                            debugPrint("respiratory aaray found")
+
                         }
                         else
                         {
-                            if resp1.obsPoint == 1
+                            if resp1.obsPoint == 1 , Int(array[i]) == 0
                             {
-                                if Int(array[i]) == 0
-                                {
                                     cell.incrementLabel.text = array[0]
                                     CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Resp", obsName: resp1.obsName!, formName:resp.formName! , obsVisibility: Bool(truncating:resp1.objsVisibilty!), birdNo: resp.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating: resp1.obsID!),necId: necId as NSNumber,isSync :true)
                                     break
-                                }
+                                
                             }
                             
                             if Int(array[i])! as NSNumber == resp1.obsPoint
@@ -2477,6 +2484,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 
                 if immune1.obsPoint == 0
                 {
+                    debugPrint("immune obs data")
                 }
                 else
                 {
@@ -2484,17 +2492,17 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     {
                         if Int(array[i]) == 1
                         {
+                            debugPrint("immune obs array data not required")
                         }
                         else
                         {
-                            if immune1.obsPoint == 1
+                            if immune1.obsPoint == 1 , Int(array[i]) == 0
                             {
-                                if Int(array[i]) == 0
-                                {
+                                
                                     cell.incrementLabel.text = array[0]
                                     CoreDataHandler().updateCaptureSkeletaInDatabaseOnSwithCase("Immune", obsName: immune1.obsName!, formName:immune.formName! , obsVisibility: Bool(truncating:immune1.objsVisibilty!), birdNo: immune.birdNo!, camraImage: image!, obsPoint: Int(array[0])! , index: rowIndex, obsId: Int(truncating:immune1.obsID!),necId: necId as NSNumber,isSync :true)
                                     break
-                                }
+                                
                             }
                             if Int(array[i])! as NSNumber == immune1.obsPoint
                             {
@@ -2801,12 +2809,6 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let immune1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
             if FetchObsArr.count > 0 {
                 
-                let imageName = "Immune" + "_" + immune1.obsName! + "_n"
-                var image = UIImage(named:imageName)
-                if image == nil {
-                    image = UIImage(named:"Image01")
-                }
-                
                 CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("Immune", obsName: immune1.obsName!, formName:immune.formName! , birdNo: immune.birdNo!,  actualName : selectedSexValue, index: rowIndex, necId :necId as NSNumber, isSync :true,refId:immune.refId!)
             }
             
@@ -3110,8 +3112,8 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     fileprivate func handleNoOfLoops(_ formIndex: Int, _ numOfLoop: Int, _ isBirdCount: inout Bool?) {
-        if formIndex == self.farmRow + 1 {
-            if numOfLoop >  10 {
+        if formIndex == self.farmRow + 1, numOfLoop > 10 {
+           
                 isBirdCount = true
                 
                 if lngId == 1 {
@@ -3130,7 +3132,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                 self.decBirdNumberBtn.isUserInteractionEnabled = true
                 self.addFormBtn.isUserInteractionEnabled = true
                 Helper.dismissGlobalHUD(self.view)
-            }
+            
         }
     }
     
@@ -3466,10 +3468,8 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         for i in 0..<farmArray.count
         {
             let farm = farmArray.object(at: i) as! String
-            if farm == formName
-            {
-                if (items.object(at: i) as AnyObject).count == 10
-                {
+            if farm == formName, (items.object(at: i) as AnyObject).count == 10 {
+               
                     if lngId == 1 {
                         Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("You can not add more than 10 birds.", comment: ""))
                     }
@@ -3480,7 +3480,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                         Helper.showAlertMessage(self,titleStr:NSLocalizedString("Alerta", comment: "") , messageStr:"Você não pode adicionar mais de 10 pássaros.")
                     }
                     return
-                }
+                
             }
         }
         
@@ -3655,13 +3655,11 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             for i in 0..<self.farmArray.count
             {
                 let farm = self.farmArray.object(at: i) as! String
-                if farm == formName
-                {
-                    if (self.items.object(at: i) as AnyObject).count == 1
-                    {
+                if farm == formName, (self.items.object(at: i) as AnyObject).count == 1 {
+                    
                         Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(Constants.offline, comment: ""))
                         return
-                    }
+                    
                 }
             }
             
@@ -3926,7 +3924,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     @objc func imageWasSavedSuccessfully(_ image: UIImage, didFinishSavingWithError error: NSError!, context: UnsafeMutableRawPointer){
         
         if let error = error {
-            print(appDelegateObj.testFuntion())
+            debugPrint(error)
         } else {
             DispatchQueue.main.async(execute: { () -> Void in
                 
@@ -4874,9 +4872,6 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                             let immune1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
                             if FetchObsArr.count > 0 {
                                 
-                                let imageName = "Immune" + "_" + immune1.obsName! + "_n"
-                                var image = UIImage(named: imageName) ?? UIImage(named: "Image01")
-                                
                                 CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick("Immune", obsName: immune1.obsName!, formName:immune.formName! , birdNo: immune.birdNo!,  actualName : selectedSexValue, index: indexPath.row, necId :necId as NSNumber, isSync :true,refId:immune.refId!)
                             }
                             
@@ -4986,7 +4981,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         if collectionView == birdsCollectionView
         {
-            
+            debugPrint("bird collection view is selected.")
         }
     }
     
@@ -5331,10 +5326,6 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             customPopV.necIdExIsting = "Exting"
             customPopV.necIdExist = necId
         }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
-        
         customPopV.delegeterefreshPage = self
         customPopV.center = self.view.center
         self.view.addSubview(customPopV)
@@ -5363,18 +5354,19 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     fileprivate func handleCaptureNecropsyArray() {
         for object in captureNecropsy {
             let noOfBirds : Int = Int(object.value(forKey: "noOfBirds") as! String)!
-            let noOfBirdsArr  = NSMutableArray()
+            let ncropsyBirdsArr  = NSMutableArray()
             
-            var numOfLoop = Int()
-            numOfLoop = 0
+     
+            var numOfLoop = 0
             for i in 0..<noOfBirds {
                 numOfLoop  = i + 1
                 if numOfLoop > 10 {
+                    debugPrint("no need of these loop.")
                 } else {
-                    noOfBirdsArr.add(i+1)
+                    ncropsyBirdsArr.add(i+1)
                 }
             }
-            items.add(noOfBirdsArr)
+            items.add(ncropsyBirdsArr)
             farmArray.add(object.value(forKey: "farmName")!)
             ageArray.add(object.value(forKey: "age")!)
             houseArray.add(object.value(forKey: "houseNo")!)
@@ -5546,50 +5538,43 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         let notesDict = NSMutableArray()
         
-        if btnTag == 0
-        {
-            if dataSkeltaArray.count > 0
-            {
-                let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: 0) as! CaptureNecropsyViewData
-                notesDict.add(skleta)
-                self.opennoteView(sender, notesDict: notesDict)
-            }
+        if btnTag == 0 && dataSkeltaArray.count > 0 {
+            
+            let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: 0) as! CaptureNecropsyViewData
+            notesDict.add(skleta)
+            self.opennoteView(sender, notesDict: notesDict)
+            
         }
-        if btnTag == 1
+        if btnTag == 1 && dataArrayCocoi.count > 0
         {
-            if dataArrayCocoi.count > 0
-            {
-                let cocoiDis : CaptureNecropsyViewData = dataArrayCocoi.object(at: 0) as! CaptureNecropsyViewData
-                notesDict.add(cocoiDis)
-                self.opennoteView(sender, notesDict: notesDict)
-            }
+            let cocoiDis : CaptureNecropsyViewData = dataArrayCocoi.object(at: 0) as! CaptureNecropsyViewData
+            notesDict.add(cocoiDis)
+            self.opennoteView(sender, notesDict: notesDict)
+            
         }
-        if btnTag == 2
+        if btnTag == 2 && dataArrayGiTract.count > 0
         {
-            if dataArrayGiTract.count > 0
-            {
-                let gitract : CaptureNecropsyViewData = dataArrayGiTract.object(at: sender.tag) as! CaptureNecropsyViewData
-                notesDict.add(gitract)
-                self.opennoteView(sender, notesDict: notesDict)
-            }
+            
+            let gitract : CaptureNecropsyViewData = dataArrayGiTract.object(at: sender.tag) as! CaptureNecropsyViewData
+            notesDict.add(gitract)
+            self.opennoteView(sender, notesDict: notesDict)
+            
         }
-        if btnTag == 3
+        if btnTag == 3 && dataArrayRes.count > 0
         {
-            if dataArrayRes.count > 0
-            {
-                let resp : CaptureNecropsyViewData = dataArrayRes.object(at: 0) as! CaptureNecropsyViewData
-                notesDict.add(resp)
-                self.opennoteView(sender, notesDict: notesDict)
-            }
+            
+            let resp : CaptureNecropsyViewData = dataArrayRes.object(at: 0) as! CaptureNecropsyViewData
+            notesDict.add(resp)
+            self.opennoteView(sender, notesDict: notesDict)
+            
         }
-        if btnTag == 4
+        if btnTag == 4 && dataArrayImmu.count > 0
         {
-            if dataArrayImmu.count > 0
-            {
-                let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: 0) as! CaptureNecropsyViewData
-                notesDict.add(immune)
-                self.opennoteView(sender, notesDict: notesDict)
-            }
+            
+            let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: 0) as! CaptureNecropsyViewData
+            notesDict.add(immune)
+            self.opennoteView(sender, notesDict: notesDict)
+            
         }
     }
     // MARK: 🟠 Create Custome Notes popup
@@ -5764,18 +5749,17 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
         
         let allPostingSessionArr = NSMutableArray()
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            let sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            let sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         return allPostingSessionArr

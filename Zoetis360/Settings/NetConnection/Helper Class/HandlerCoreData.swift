@@ -4699,7 +4699,7 @@ class CoreDataHandler : NSObject  {
                 postingArray  = results as NSArray
                 
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatter.dateFormat = Constants.MMddyyyyStr
                 
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     return dateFormatter.date(from:one.sessiondate!)! > dateFormatter.date(from: two.sessiondate!)! }
@@ -5289,45 +5289,31 @@ class CoreDataHandler : NSObject  {
     func deleteDataWithPostingIdHatchery (_ postingId: NSNumber)
     {
         
-        let fetchPredicate = NSPredicate(format:Constants.postincIdPredicate, postingId)
-        let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "HatcheryVac")
-        fetchUsers.predicate                = fetchPredicate
-        do
-        {
-            let results = try backgroundContext.fetch(fetchUsers)
-            for managedObject in results
-            {
-                let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                backgroundContext.delete(managedObjectData)
+        deleteHatcheryVacData(postingId: postingId)
+    }
+    
+    func deleteHatcheryVacData(postingId: NSNumber) {
+        let fetchPredicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "HatcheryVac")
+        fetchRequest.predicate = fetchPredicate
+        
+        do {
+            let results = try backgroundContext.fetch(fetchRequest)
+            for managedObject in results {
+                if let managedObjectData = managedObject as? NSManagedObject {
+                    backgroundContext.delete(managedObjectData)
+                }
             }
-        }
-        catch
-        {
+        } catch {
             appDelegateObj.testFuntion()
         }
     }
     
+    
     // MARK: - 🔴 Delete Field Vaccination Data with Posting ID
     func deleteDataWithPostingIdFieldVacinationWithSingle (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format:Constants.postincIdPredicate, postingId)
-        let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "FieldVaccination")
-        fetchUsers.predicate                = fetchPredicate
-        do
-            
-        {
-            let results = try backgroundContext.fetch(fetchUsers)
-            for managedObject in results
-            {
-                let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                backgroundContext.delete(managedObjectData)
-            }
-        }
-        catch
-        {
-            appDelegateObj.testFuntion()
-        }
-        
+        deleteFieldVaccinationData(postingId: postingId)
     }
     
     // MARK: - 🔴 Delete Posting Session Detail Data with Posting ID
@@ -5356,46 +5342,32 @@ class CoreDataHandler : NSObject  {
     // MARK: - 🔴 Delete Hatcher Vaccine Data with Posting ID
     func deleteHetcharyVacDataWithPostingId (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format:Constants.postincIdPredicate, postingId)
-        let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "HatcheryVac")
-        fetchUsers.predicate                = fetchPredicate
-        do
-            
-        {
-            let results = try backgroundContext.fetch(fetchUsers)
-            for managedObject in results
-            {
-                let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                backgroundContext.delete(managedObjectData)
-            }
-        }
-        catch
-        {
-            appDelegateObj.testFuntion()
-        }
-        
+        deleteHatcheryVacData(postingId: postingId)
     }
     // MARK: - 🔴 Delete Field Vaccine Data with Posting ID
     func deletefieldVACDataWithPostingId (_ postingId: NSNumber)
     {
-        let fetchPredicate = NSPredicate(format:Constants.postincIdPredicate, postingId)
-        let fetchUsers                      = NSFetchRequest<NSFetchRequestResult>(entityName:  "FieldVaccination")
-        fetchUsers.predicate                = fetchPredicate
-        do
-        {
-            let results = try backgroundContext.fetch(fetchUsers)
-            for managedObject in results
-            {
-                let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
-                backgroundContext.delete(managedObjectData)
+        deleteFieldVaccinationData(postingId: postingId)
+    }
+    
+    func deleteFieldVaccinationData(postingId: NSNumber) {
+        let fetchPredicate = NSPredicate(format: Constants.postincIdPredicate, postingId)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FieldVaccination")
+        fetchRequest.predicate = fetchPredicate
+        
+        do {
+            let results = try backgroundContext.fetch(fetchRequest)
+            for managedObject in results {
+                if let managedObjectData = managedObject as? NSManagedObject {
+                    backgroundContext.delete(managedObjectData)
+                }
             }
-        }
-        catch
-        {
+        } catch {
             appDelegateObj.testFuntion()
         }
-        
     }
+    
+    
     // MARK: - 🔴 Delete Feed Program Data with Posting ID
     func deleteDataWithPostingIdFeddProgram (_ postingIdFeed: NSNumber)
     {
@@ -5887,7 +5859,6 @@ class CoreDataHandler : NSObject  {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         let managedContext = appDelegate!.managedObjectContext
-        let postingId = dict.value(forKey: "SessionId") as! Int
         self.deleteDataWithDeviceSessionId(postingId : postinngId)
         let entity = NSEntityDescription.entity(forEntityName: "PostingSession", in: managedContext)
         
@@ -5983,7 +5954,7 @@ class CoreDataHandler : NSObject  {
             return ""
         }
         
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         let timeStamp = dateFormatter.string(from: date)
         
         return timeStamp
@@ -6216,7 +6187,6 @@ class CoreDataHandler : NSObject  {
         { let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if fetchedResult!.count > 0
             {
-                let objTable: PostingSession = (fetchedResult![0] as? PostingSession)!
                 do
                 {
                     try managedContext.save()
@@ -6605,6 +6575,8 @@ class CoreDataHandler : NSObject  {
         
     }
     
+    
+    
     func fetchAllPostingExistingSessionwithFullSessionWithCapId(_ session : NSNumber) -> NSArray
     
     {
@@ -6621,7 +6593,7 @@ class CoreDataHandler : NSObject  {
                 
                 postingArray  = results as NSArray
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatter.dateFormat = Constants.MMddyyyyStr
                 
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     return dateFormatter.date(from:one.sessiondate!) > dateFormatter.date(from: two.sessiondate!) }
@@ -8705,7 +8677,7 @@ class CoreDataHandler : NSObject  {
             {
                 postingArray  = results as NSArray
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatter.dateFormat = Constants.MMddyyyyStr
                 let sortedArray = results.sorted{[dateFormatter] one, two in
                     return dateFormatter.date(from:one.sessiondate!) > dateFormatter.date(from: two.sessiondate!)
                 }
@@ -8826,28 +8798,7 @@ class CoreDataHandler : NSObject  {
     
     func FetchNecropsystep1neccIdAll() -> NSArray
     {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
-        fetchRequest.returnsObjectsAsFaults = false
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                necropsyStep1Array = results as NSArray
-            }
-            else
-            {print(appDelegateObj.testFuntion())}
-        }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        
-        return necropsyStep1Array
+        fetchAllNecropsyStep1Data()
         
     }
     
@@ -9072,39 +9023,7 @@ class CoreDataHandler : NSObject  {
     func updatePostingIdWithNecIdNecropsystep1(_ necId : NSNumber , postingId : NSNumber )
     {
         
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
-        fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            
-            if fetchedResult!.count > 0
-            {
-                
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: CaptureNecropsyData = (fetchedResult![i] as? CaptureNecropsyData)!
-                    
-                    objTable.setValue(postingId, forKey:"postingId")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch{
-                    }
-                }
-                
-            }
-        }
-        catch
-        {
-            
-        }
+        updatePostingIdWithNecId(necId, postingId: postingId)
         
     }
     
@@ -9112,40 +9031,32 @@ class CoreDataHandler : NSObject  {
     
     {
         
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        updatePostingIdWithNecId(necId, postingId: postingId)
+    }
+    
+    func updatePostingIdWithNecId(_ necId: NSNumber, postingId: NSNumber) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         let managedContext = appDelegate.managedObjectContext
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            
-            if fetchedResult!.count > 0
-            {
-                
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: CaptureNecropsyData = (fetchedResult![i] as? CaptureNecropsyData)!
-                    
-                    objTable.setValue(postingId, forKey:"postingId")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch{
+        do {
+            if let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject], !fetchedResult.isEmpty {
+                for obj in fetchedResult {
+                    if let objTable = obj as? CaptureNecropsyData {
+                        objTable.setValue(postingId, forKey: "postingId")
                     }
                 }
-                
+                try managedContext.save()
             }
-        }
-        catch
-        {
-            
+        } catch {
+            print("Failed to update postingId: \(error.localizedDescription)")
         }
     }
+
+    
     
     func updateFeedProgramNameoNNecropsystep1neccId(_ necId : NSNumber , feedProgramName : String , formName : String , isCheckForm : Bool , feedId : NSNumber)
     {
@@ -9216,31 +9127,30 @@ class CoreDataHandler : NSObject  {
     /************************ Fetch Data Of Necropsy data 1 *******************************/
     func FetchNecropsystep1AllNecId() -> NSArray
     {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        fetchAllNecropsyStep1Data()
+    }
+    
+    func fetchAllNecropsyStep1Data() -> NSArray {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return [] }
         let managedContext = appDelegate.managedObjectContext
         
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyData")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyData")
         fetchRequest.returnsObjectsAsFaults = false
         
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                necropsyStep1Array = results as NSArray
-            }
-            else
-            {
+        do {
+            if let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject] {
+                necropsyStep1Array = fetchedResult as NSArray
+            } else {
                 print(appDelegateObj.testFuntion())
             }
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
         
         return necropsyStep1Array
     }
+    
+    
     
     func FetchNecropsystep1AllNecIdWithPostingIDZero() -> NSMutableArray
     {
@@ -9479,58 +9389,35 @@ class CoreDataHandler : NSObject  {
     
     func fecthFrmWithBirdAndObservationAll()-> NSArray
     {
+        self.fetchCaptureNecropsyData()
+    }
+    
+    
+    func fetchCaptureNecropsyData() -> NSArray {
         let appDelegate    = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
+        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewData")
         fetchRequest.returnsObjectsAsFaults = false
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                captureNecSkeltetonArray = results as NSArray
-            }
-            else
-            {
-                print(appDelegateObj.testFuntion())
-            }
-        }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
         
-        return captureNecSkeltetonArray
+        do {
+            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+            if let results = fetchedResult {
+                return results as NSArray
+            } else {
+                print(appDelegateObj.testFuntion())
+                return NSArray() // Return an empty array if no results
+            }
+        } catch {
+            print(appDelegateObj.testFuntion())
+            return NSArray() // Return an empty array in case of error
+        }
     }
+    
     
     /****************************************************************************/
     func fecthFrmWithCatnameWithBirdAndObservation(_ birdnumber: NSNumber,farmname : String, catName : String,necId:NSNumber)-> NSArray
     {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdnumber,catName,farmname,necId)
-        fetchRequest.returnsObjectsAsFaults = false
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                captureNecSkeltetonArray = results as NSArray
-                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "obsName", ascending: true)
-                let sortedResults = captureNecSkeltetonArray.sortedArray(using: [descriptor])
-                return sortedResults as  NSArray
-            }
-            else
-            {print(appDelegateObj.testFuntion())}
-        }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        
-        return captureNecSkeltetonArray
+        fetchObservationData(birdNumber: birdnumber, farmName: farmname, catName: catName, necId: necId)
     }
     
     func fecthFrmWithCatnameWithBirdAndObservationWithDelete(farmname : String,necId:NSNumber)-> NSArray {
@@ -9656,32 +9543,34 @@ class CoreDataHandler : NSObject  {
     
     func fecthobsDataWithCatnameAndFarmNameAndBirdNumber(_ birdnumber: NSNumber,farmname : String, catName : String , necId: NSNumber)-> NSArray
     {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+        fetchObservationData(birdNumber: birdnumber, farmName: farmname, catName: catName, necId: necId)
+    }
+    
+    func fetchObservationData(birdNumber: NSNumber, farmName: String, catName: String, necId: NSNumber) -> NSArray {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return [] }
         let managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdnumber,catName,farmname,necId)
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CaptureNecropsyViewData")
+        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdNumber, catName, farmName, necId)
         fetchRequest.returnsObjectsAsFaults = false
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                captureNecSkeltetonArray = results as NSArray
-                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "obsName", ascending: true)
+        
+        do {
+            if let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject] {
+                captureNecSkeltetonArray = fetchedResult as NSArray
+                let descriptor = NSSortDescriptor(key: "obsName", ascending: true)
                 let sortedResults = captureNecSkeltetonArray.sortedArray(using: [descriptor])
                 return sortedResults as NSArray
-            }
-            else
-            {
+            } else {
                 print(appDelegateObj.testFuntion())
             }
-        }
-        catch
-        {
+        } catch {
             print(appDelegateObj.testFuntion())
         }
+        
         return captureNecSkeltetonArray
     }
+    
+    
     // MARK: 🟢 Fetch Observation name with bird & farm Name
     fileprivate func handleNecropsyValdiationsFetchObsWithBirdFarmName(_ captureNecropsyViewData: CaptureNecropsyViewData, _ d: NSMutableDictionary, _ trimmedString: String) {
         if captureNecropsyViewData.measure == "Y,N"
@@ -9691,7 +9580,7 @@ class CoreDataHandler : NSObject  {
             }
             
         }
-        else if captureNecropsyViewData.measure == "Actual"
+        else if captureNecropsyViewData.measure == "Actual" || captureNecropsyViewData.measure == "F,M"
         {
             
             if captureNecropsyViewData.actualText?.isEmpty == false
@@ -9700,14 +9589,7 @@ class CoreDataHandler : NSObject  {
             }
             
         }
-        
-        else if captureNecropsyViewData.measure == "F,M"
-        {
-            if captureNecropsyViewData.actualText?.isEmpty == false
-            {
-                d.setValue(captureNecropsyViewData.actualText!, forKey: trimmedString)
-            }
-        }
+      
         
         else
         {
@@ -9721,10 +9603,9 @@ class CoreDataHandler : NSObject  {
         for i in 0..<c.count {
             let captureNecropsyViewData = c.object(at: i) as! CaptureNecropsyViewData
             
-            var trimmedString =
-            captureNecropsyViewData.obsName!.replacingOccurrences(of: "/", with: "")
-            trimmedString =
-            captureNecropsyViewData.obsName!.replacingOccurrences(of: " ", with: "")
+            var trimmedString = captureNecropsyViewData.obsName!.replacingOccurrences(of: "/", with: "")
+            trimmedString = trimmedString.replacingOccurrences(of: " ", with: "")
+            
             
             if trimmedString == "BursaLesions"{
                 trimmedString = "BursaLesionScore"
@@ -10300,7 +10181,7 @@ class CoreDataHandler : NSObject  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
         let managedContext = appDelegate!.managedObjectContext
-        var imageData: Data = Data()
+       
         viewController.showtoast(message: "Image Conversion")
         
         viewController.showtoast(message: "Image Converted")
@@ -10318,7 +10199,7 @@ class CoreDataHandler : NSObject  {
         viewController.showtoast(message: "obsName Saved")
         person.setValue(obsId, forKey:"obsId")
         viewController.showtoast(message: "obsId Saved")
-        imageData = Data(camraImage.jpegData(compressionQuality: 1.0) ?? Data())
+        var  imageData = Data(camraImage.jpegData(compressionQuality: 1.0) ?? Data())
         person.setValue(imageData, forKey:"photo")
         viewController.showtoast(message: "photo Saved")
         person.setValue(necropsyId, forKey:"necropsyId")
@@ -11027,29 +10908,7 @@ class CoreDataHandler : NSObject  {
     func AllCappNecdata() -> NSArray
     {
         
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.returnsObjectsAsFaults = false
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                captureNecSkeltetonArray = results as NSArray
-            }
-            else
-            {
-                print(appDelegateObj.testFuntion())
-            }
-        }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-        
-        return captureNecSkeltetonArray
+        self.fetchCaptureNecropsyData()
         
     }
     
@@ -11383,7 +11242,7 @@ class CoreDataHandler : NSObject  {
     // MARK: 🟢 Fetch Dossage with Mollecule Id
     func fetchDossgaeWithMoleculeId(_ moliculeId: NSNumber) -> NSArray {
         
-        var dataArray = NSArray()
+        var dossagesDataArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "GetDosageWithMoleculeID")
@@ -11392,7 +11251,7 @@ class CoreDataHandler : NSObject  {
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
+                dossagesDataArray = results as NSArray
             } else {
                 
             }
@@ -11400,12 +11259,12 @@ class CoreDataHandler : NSObject  {
             print(appDelegateObj.testFuntion())
         }
         
-        return dataArray
+        return dossagesDataArray
     }
     // MARK: 🟢 Fetch Turkeuy Dossage with Molecule ID
     func fetchTurkeyDossgaeWithMoleculeId(_ moliculeId: NSNumber) -> NSArray {
         
-        var dataArray = NSArray()
+        var turkeyDosageArray = NSArray()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "GetDosageTurkeyWithMoleculeID")
@@ -11414,14 +11273,14 @@ class CoreDataHandler : NSObject  {
         do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             if let results = fetchedResult {
-                dataArray = results as NSArray
+                turkeyDosageArray = results as NSArray
             } else {
                 
             }
         } catch {
             print(appDelegateObj.testFuntion())
         }
-        return dataArray
+        return turkeyDosageArray
         
     }
     // MARK: 🟢 Fetch Strain with Language ID
@@ -11490,6 +11349,7 @@ class CoreDataHandler : NSObject  {
         let result = NSMutableArray()
         for value in array {
             if encountered.contains(value as! String) {
+                debugPrint("no duplicate data.")
             }
             else {
                 encountered.insert(value as! String)
@@ -11510,10 +11370,10 @@ class CoreDataHandler : NSObject  {
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult{
-                if results.count>0{
+            if let results = fetchedResult, results.count > 0 {
+               
                     return true
-                }
+                
             }
         }
         catch
@@ -11534,10 +11394,10 @@ class CoreDataHandler : NSObject  {
         do
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult{
-                if results.count>0{
+            if let results = fetchedResult, results.count > 0 {
+            
                     return true
-                }
+                
             }
         }
         catch
@@ -11700,12 +11560,11 @@ class CoreDataHandler : NSObject  {
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 
-                if let results = fetchedResult
+                if let results = fetchedResult , results.count > 0
                 {
-                    if results.count > 0{
                         let ob: GITract = results.last as! GITract
                         nameArray.append(ob.observationField!)
-                    }
+                    
                 }
             }
             catch
@@ -11729,13 +11588,12 @@ class CoreDataHandler : NSObject  {
             do
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                if let results = fetchedResult
+                if let results = fetchedResult , results.count > 0
                 {
-                    if results.count > 0
-                    {
+                    
                         let ob: Skeleta = results.last as! Skeleta
                         nameArray.append(ob.observationField!)
-                    }
+                    
                 }
             }
             catch
@@ -11759,12 +11617,12 @@ class CoreDataHandler : NSObject  {
             do
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-                if let results = fetchedResult
+                if let results = fetchedResult , results.count > 0
                 {
-                    if results.count > 0{
+                 
                         let ob: Immune = results.last as! Immune
                         nameArray.append(ob.observationField!)
-                    }
+                    
                 }
             }
             catch {
@@ -11787,12 +11645,11 @@ class CoreDataHandler : NSObject  {
                 
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 
-                if let results = fetchedResult {
-                    if results.count > 0
-                    {
+                if let results = fetchedResult , results.count > 0 {
+                  
                         let ob: Respiratory = results.last as! Respiratory
                         nameArray.append(ob.observationField!)
-                    }
+                    
                 }
             } catch  {
             }
@@ -11814,13 +11671,13 @@ class CoreDataHandler : NSObject  {
             {
                 let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
                 
-                if let results = fetchedResult
+                if let results = fetchedResult ,  results.count > 0
                 {
-                    if results.count > 0{
+                
                         let ob: Coccidiosis = results.last as! Coccidiosis
                         if ob.visibilityCheck == true{
                             nameArray.append(ob.observationField!)}
-                    }
+                    
                 }
             }
             catch

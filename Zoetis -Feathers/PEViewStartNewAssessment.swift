@@ -256,7 +256,7 @@ class PEViewStartNewAssessment: BaseViewController {
         btn_MoveToDraft.isHidden = true
         let dateFormatter = DateFormatter()
         setupUI()
-        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat=Constants.MMddyyyyStr
         let currentDate: NSDate = NSDate()
         let strdate1 = dateFormatter.string(from: currentDate as Date) as String
         self.cameraSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
@@ -1222,7 +1222,7 @@ extension PEViewStartNewAssessment{
         let convertDateFormatter = DateFormatter()
 //        convertDateFormatter.calendar = Calendar(identifier: .gregorian)
 //        convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+        convertDateFormatter.dateFormat = Constants.yyyyMMddStr
         if oldDate != nil{
             return convertDateFormatter.string(from: oldDate!)
         }
@@ -1236,7 +1236,7 @@ extension PEViewStartNewAssessment{
         olDateFormatter.dateFormat = appDelegateObj.mmddyyStr
         let oldDate = olDateFormatter.date(from: inputDate)
         let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+        convertDateFormatter.dateFormat = Constants.yyyyMMddStr
         
         if oldDate != nil{
             return convertDateFormatter.string(from: oldDate!)
@@ -1398,9 +1398,9 @@ extension PEViewStartNewAssessment{
         let RepresentativeName = ""
         let Notes = dict.notes
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddYYYYHHmmss
-        let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
-        let datastr = date?.toString(withFormat: appDelegateObj.MMddYYYYHHmmss)
+        dateFormatter.dateFormat = Constants.MMddYYYYHHmmss
+        let date = dict.evaluationDate?.toDate(withFormat: Constants.MMddyyyyStr)
+        let datastr = date?.toString(withFormat: Constants.MMddYYYYHHmmss)
         let  sig_Datetext = dict.sig_Date
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
@@ -1469,16 +1469,16 @@ extension PEViewStartNewAssessment{
             print(appDelegateObj.testFuntion())
         }else{
             let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+            convertDateFormatter.dateFormat = Constants.yyyyMMddStr
             convertDateFormatter.timeZone = Calendar.current.timeZone
             convertDateFormatter.locale = Calendar.current.locale
         }
         let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
         let dateFormatterObj = CodeHelper.sharedInstance.getDateFormatterObj("")
-//        dateFormatterObj.dateFormat = appDelegateObj.MMddyyyStr
+//        dateFormatterObj.dateFormat = Constants.MMddyyyyStr
 //        
 //        let evalDateObj = dateFormatterObj.date(from: evaluationDate ?? "")
-//        dateFormatterObj.dateFormat = appDelegateObj.yyyyMMddStr
+//        dateFormatterObj.dateFormat = Constants.yyyyMMddStr
 //        let evalDateStr = dateFormatterObj.string(from: evalDateObj ?? Date())
         let RegionalId = UserDefaults.standard.integer(forKey: "Regionid")
         let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
@@ -1486,14 +1486,14 @@ extension PEViewStartNewAssessment{
         if RegionalId == 3 {
             
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            inputFormatter.dateFormat = Constants.MMddyyyyStr
 
             // Convert the string to a Date object
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
                 
                 // Create another DateFormatter for the desired output format
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                outputFormatter.dateFormat = Constants.yyyyMMddStr
                 
                 // Convert the Date object back to a string
                 let formattedDateString = outputFormatter.string(from: date)
@@ -1505,12 +1505,12 @@ extension PEViewStartNewAssessment{
         else
         {
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            inputFormatter.dateFormat = Constants.ddMMyyyStr
 
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
             
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                outputFormatter.dateFormat = Constants.yyyyMMddStr
                 
                 let formattedDateString = outputFormatter.string(from: date)
                 evalDateStr = formattedDateString
@@ -1994,9 +1994,9 @@ extension PEViewStartNewAssessment{
             let dateFormatter = DateFormatter()
 //            dateFormatter.calendar = Calendar(identifier: .gregorian)
 //            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             let date = dateFormatter.date(from: peCertificateData.certificateDate ?? "")
-            dateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+            dateFormatter.dateFormat = Constants.yyyyMMddStr
             resultString = dateFormatter.string(from: date ?? Date())
         }
         else{
@@ -2947,9 +2947,9 @@ extension PEViewStartNewAssessment{
 //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         
-        dateFormatter.dateFormat=appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat=Constants.MMddyyyyStr
         
-        let date = dict.evaluationDate?.toDate(withFormat: appDelegateObj.MMddyyyStr)
+        let date = dict.evaluationDate?.toDate(withFormat: Constants.MMddyyyyStr)
         
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
@@ -2970,7 +2970,7 @@ extension PEViewStartNewAssessment{
             let convertDateFormatter = DateFormatter()
 //            convertDateFormatter.calendar = Calendar(identifier: .gregorian)
 //            convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            convertDateFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+            convertDateFormatter.dateFormat = Constants.yyyyMMddStr
             convertDateFormatter.locale = Calendar.current.locale
         }
         let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
@@ -2978,14 +2978,14 @@ extension PEViewStartNewAssessment{
         if regionId == 3 {
             
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            inputFormatter.dateFormat = Constants.MMddyyyyStr
 
             // Convert the string to a Date object
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
                 
                 // Create another DateFormatter for the desired output format
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                outputFormatter.dateFormat = Constants.yyyyMMddStr
                 
                 // Convert the Date object back to a string
                 let formattedDateString = outputFormatter.string(from: date)
@@ -2997,12 +2997,12 @@ extension PEViewStartNewAssessment{
         else
         {
             let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            inputFormatter.dateFormat = Constants.ddMMyyyStr
 
             if let date = inputFormatter.date(from: evaluationDate ?? "") {
             
                 let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = appDelegateObj.yyyyMMddStr
+                outputFormatter.dateFormat = Constants.yyyyMMddStr
                 
                 let formattedDateString = outputFormatter.string(from: date)
                 dict.evaluationDate = evaluationDate

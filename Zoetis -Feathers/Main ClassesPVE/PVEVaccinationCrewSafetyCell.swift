@@ -112,7 +112,7 @@ class PVEVaccinationCrewSafetyCell: UITableViewCell {
         let commentArr = qArrr.value(forKey: "comment") as? [String]
         let comment = commentArr![currentInd.row]
         if comment.count > 0 {
-            notesBtn.setImage(UIImage(named: "PECommentSelected.png"), for: .normal)
+            notesBtn.setImage(UIImage(named: Constants.peCommentSelectedStr), for: .normal)
         }else{
             notesBtn.setImage(UIImage(named: "commentIconPE.png"), for: .normal)
         }

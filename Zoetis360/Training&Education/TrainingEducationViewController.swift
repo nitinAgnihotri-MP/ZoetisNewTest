@@ -123,7 +123,7 @@ class TrainingEducationViewController: UIViewController,userLogOut,syncApi {
                                 
                                 let formatter = DateFormatter()
                                 // initially set the format based on your datepicker date / server String
-                                formatter.dateFormat = appDelegateObj.MMddyyyStr
+                                formatter.dateFormat = Constants.MMddyyyyStr
                                 
                                 let myString = formatter.string(from: Date()) // string purpose I add here
                                 print("\(String(describing: user.username)) "+myString)
@@ -302,18 +302,17 @@ class TrainingEducationViewController: UIViewController,userLogOut,syncApi {
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
         for i in 0..<postingArrWithAllData.count
         {
             let pSession = postingArrWithAllData.object(at: i) as! PostingSession
-            sessionId = pSession.postingId!
+            var  sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyData
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         

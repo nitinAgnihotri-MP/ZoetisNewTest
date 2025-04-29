@@ -716,11 +716,8 @@ class CaptureNecropsyStep1Turkey: UIViewController,UITextFieldDelegate {
         count = count+1
        
         var imageAutoIncrementId = UserDefaults.standard.integer(forKey: "imageAutoIncrementIdTurkey")
-        if imageAutoIncrementId == 0 {
-            imageAutoIncrementId = imageAutoIncrementId + 1
-        } else {
-            imageAutoIncrementId = imageAutoIncrementId + 1
-        }
+         imageAutoIncrementId = imageAutoIncrementId + 1
+        
         UserDefaults.standard.set(imageAutoIncrementId, forKey: "imageAutoIncrementIdTurkey")
         UserDefaults.standard.set(count, forKey: "count")
         UserDefaults.standard.synchronize()
@@ -1600,6 +1597,7 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
     }
     
     fileprivate func OthersFarmNameValidation() {
+        debugPrint("other farm validation check.")
         nameText.layer.borderColor = UIColor.red.cgColor
         let abc = feedButton.currentTitle!
         
@@ -1799,12 +1797,9 @@ extension CaptureNecropsyStep1Turkey : UITableViewDataSource,UITableViewDelegate
                 
                 buttonPreddDroper()
                 
-                if butttnTag1 == 0 {
-                    indexOfSelectedPerson = indexPath.row
-                }  else {
-                    indexOfSelectedPerson = indexPath.row
+               indexOfSelectedPerson = indexPath.row
                     
-                }
+                
                 valueStore = true
             }
         } else if tableView == autoSerchTable {

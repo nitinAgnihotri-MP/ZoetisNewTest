@@ -327,13 +327,11 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             quicklinksValue = false
             cell.checkBoxOutlet.setImage(UIImage(named: "Uncheck_")!, for: .normal)
         }
-        
-        var observationId = NSInteger()
-        
+                
         if btnTag == 0 {
             
             let skeletaObject : SkeletaTurkey = dataSkeletaArray.object(at: sender.tag) as! SkeletaTurkey
-            observationId = skeletaObject.observationId as! NSInteger
+            var observationId = skeletaObject.observationId as! NSInteger
             let measure = skeletaObject.measure
             let  lngIdValue = skeletaObject.lngId
             let  refId = skeletaObject.refId
@@ -342,7 +340,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
         else if btnTag == 1{
             
             let cocoii : CoccidiosisTurkey = dataCocoiiArray.object(at: sender.tag) as! CoccidiosisTurkey
-            observationId = cocoii.observationId as! NSInteger
+            var  observationId = cocoii.observationId as! NSInteger
             let measure = cocoii.measure
             let  lngIdValue = cocoii.lngId
             let  refId = cocoii.refId
@@ -351,7 +349,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             
         } else if btnTag == 2{
             let skeletaObject : GITractTurkey = dataGiTractArray.object(at: sender.tag) as! GITractTurkey
-            observationId = skeletaObject.observationId as! NSInteger
+            var  observationId = skeletaObject.observationId as! NSInteger
             let measure = skeletaObject.measure
             let  lngIdValue = skeletaObject.lngId
             let refId = skeletaObject.refId
@@ -360,7 +358,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
         }  else if btnTag == 3{
             
             let cocoii : RespiratoryTurkey = dataRespiratoryArray.object(at: sender.tag) as! RespiratoryTurkey
-            observationId = cocoii.observationId as! NSInteger
+            var observationId = cocoii.observationId as! NSInteger
             let measure = cocoii.measure
             let  lngIdValue = cocoii.lngId
             let  refId = cocoii.refId
@@ -369,7 +367,7 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
         } else if btnTag == 4{
             
             let cocoii : ImmuneTurkey = dataImmuneArray.object(at: sender.tag) as! ImmuneTurkey
-            observationId = cocoii.observationId as! NSInteger
+            var observationId = cocoii.observationId as! NSInteger
             let measure = cocoii.measure
             let  lngIdValue = cocoii.lngId
             let  refId = cocoii.refId

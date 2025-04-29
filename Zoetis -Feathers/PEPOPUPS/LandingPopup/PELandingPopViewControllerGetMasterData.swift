@@ -1599,7 +1599,7 @@ extension PELandingPoupViewController {
             return ""
         }
         
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr///this is what you want to convert format
+        dateFormatter.dateFormat = Constants.MMddyyyyStr///this is what you want to convert format
         dateFormatter.timeZone = TimeZone.init(identifier: "UTC") //NSTimeZone(name: "UTC") as TimeZone!
         let timeStamp = dateFormatter.string(from: convertedDate ?? Date())
         

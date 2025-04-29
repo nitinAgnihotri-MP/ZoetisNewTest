@@ -120,12 +120,9 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     @IBOutlet weak var extendedMicroSwitch: UISwitch!
     
     var strings = [String]()
-    let refridFreezerNitro = "Refrigerator\n/Freezer\n/Liquid Nitrogen"
-    let extendedMicStr = appDelegateObj.extendedMicrobialStr
-    let peCommentImg = appDelegateObj.peCommentStr
-    let peCommentSelectedStr = "PECommentSelected.png"
-    let ddmmyyStr = appDelegateObj.ddMMyyyStr
-    let incompleteDataStr = "Incomplete Data"
+    let refridFreezerNitro = Constants.refrigeratorNitrogenStr
+    let extendedMicStr = Constants.extendedMicrobialStr
+    let ddmmyyStr = Constants.ddMMyyyStr
     let oneGallonStr = "1 gallon"
     let twoGallonStr = "2 gallon"
     let fiveGallonStr = "5 gallon"
@@ -137,16 +134,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     let mil400 = "400 ml"
     let mil500 = "500 ml"
     let mil800 = "800 ml"
-    let pleaseEnterMessage = "Please enter comment for (Thaw bath temp) in Aseptic Technique & Vaccination Application"
-    let pleaseEnterMessageVac = "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application"
     let peaseEnterVacDet = "Please enter vaccine details in the Vaccine Preparation & Sterility. "
-    let pleaseEnterFrequencyDet = "Please enter frequency detail in Customer Quality Control Program."
-    let pleaseEnterPersonName = "Please enter person name in Customer Quality Control Program."
-    let pleaseEnterQCount = "Please enter QC count in Customer Quality Control Program."
-    let pleaseEnterPPM = "Please enter PPM Value in Inovoject System Set Up/Shut Down and Operation."
-    let pleaseEnterAMPM = "Please enter AM/PM Value in Miscellaneous."
-    let pleaseEnterProgramName = "Please enter program name in the Vaccine Preparation & Sterility."
-    let pleaseEnterAntibiotic = "Please enter Antibiotic in the Vaccine Preparation & Sterility."
     let pleaseEnterVaccineMixer = "Please enter Vaccine Mixer Observer in  Vaccine Preparation & Sterility."
     
     override func viewWillAppear(_ animated: Bool) {
@@ -154,12 +142,10 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
         extendedMicroSwitch.isHidden = true
         extendedMicroSwitch.isUserInteractionEnabled = false
         
-        if extendedMicroSwitch.isOn
-        {
+        if extendedMicroSwitch.isOn {
             UserDefaults.standard.set(true, forKey:"ExtendedMicro")
             CoreDataHandlerPE().updateIsEMRequestedInAssessmentInProgress(isEMRequested: true)
-        }else
-        {
+        } else {
             UserDefaults.standard.set(false, forKey:"ExtendedMicro")
             CoreDataHandlerPE().updateIsEMRequestedInAssessmentInProgress(isEMRequested: false)
         }
@@ -625,7 +611,7 @@ class PEAssesmentFinalize: BaseViewController , DatePickerPopupViewControllerPro
     
     // MARK: - Finalize Button Action
     fileprivate func secondConfirmationBeforeFinishAssessmentAlert() {
-        let alertController = UIAlertController(title: Constants.alertStr, message: "Are you sure you want to finish the assessment? After finishing the information can't be edited.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: Constants.areYouSureAssessmentStr, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in
             self.saveFinalizedData()
@@ -1045,7 +1031,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     // MARK: - Helper Methods
 
     private func checkForTrainingCondition(indexPath: IndexPath) -> CGFloat? {
-        if checkForTraning(), selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen" {
+        if checkForTraning(), selectedCategory?.catName != Constants.refrigeratorNitrogenStr {
             if indexPath.section == 1 {
                 return 160
             }
@@ -1058,7 +1044,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
 
     private func checkForSpecialTrainingCase() -> CGFloat? {
         if selectedCategory?.sequenceNoo == 12,
-           selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen" {
+           selectedCategory?.catName != Constants.refrigeratorNitrogenStr {
             return 70
         }
         return nil
@@ -1082,14 +1068,14 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
 
     private func checkSpecialRefrigeratorCase() -> CGFloat? {
         if selectedCategory?.sequenceNoo == 11,
-           selectedCategory?.catName == "Refrigerator\n/Freezer\n/Liquid Nitrogen" {
+           selectedCategory?.catName == Constants.refrigeratorNitrogenStr {
             return 80
         }
         return nil
     }
 
     private func checkGeneralSectionHeight(indexPath: IndexPath) -> CGFloat? {
-        if selectedCategory?.catName != "Refrigerator\n/Freezer\n/Liquid Nitrogen",
+        if selectedCategory?.catName != Constants.refrigeratorNitrogenStr,
            indexPath.section > 0 {
             return 130
         }
@@ -1164,11 +1150,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         vc.editable = true
         vc.commentCompleted = {[unowned self] ( note) in
             if note == "" {
-                let image = UIImage(named: peCommentImg)
+                let image = UIImage(named: Constants.peCommentImageStr)
                 cell.noteBtn.setImage(image, for: .normal)
                 
             } else {
-                let image = UIImage(named: peCommentSelectedStr)
+                let image = UIImage(named: Constants.peCommentSelectedStr)
                 cell.noteBtn.setImage(image, for: .normal)
             }
             
@@ -1473,7 +1459,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 
                 let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
                 if c == 0 {
-                    self.showtoast(message: incompleteDataStr)
+                    self.showtoast(message: Constants.incompleteDataStr)
                     CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
                     
                     return
@@ -1518,7 +1504,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             let selectedValIS = selectedVal.replacingOccurrences(of: " ", with: "")
             let c = Double(self.inovojectData[indexPath.row].bagSizeType ?? "0") ?? 0
             if c == 0 {
-                self.showtoast(message: incompleteDataStr)
+                self.showtoast(message: Constants.incompleteDataStr)
                 CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.inovojectData[indexPath.row])
                 return
             }
@@ -2088,8 +2074,8 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 cell.btn_ImageCount.isHidden = false
             }
             
-            let image1 = UIImage(named: peCommentImg)
-            let image2 = UIImage(named: peCommentSelectedStr)
+            let image1 = UIImage(named: Constants.peCommentImageStr)
+            let image2 = UIImage(named: Constants.peCommentSelectedStr)
             if assessment?.note == "" || assessment?.note == nil {
                 cell.btn_Comment.setImage(image1, for: .normal)
             } else {
@@ -2270,11 +2256,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 
                 vc.commentCompleted = {[unowned self] ( note) in
                     if note == "" {
-                        let image = UIImage(named: peCommentImg)
+                        let image = UIImage(named: Constants.peCommentImageStr)
                         cell.btn_Comment.setImage(image, for: .normal)
                         
                     } else {
-                        let image = UIImage(named: peCommentSelectedStr)
+                        let image = UIImage(named: Constants.peCommentSelectedStr)
                         cell.btn_Comment.setImage(image, for: .normal)
                         
                     }
@@ -2449,8 +2435,8 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     } else {
                         cell.btnImageCount.isHidden = false
                     }
-                    let image1 = UIImage(named: peCommentImg)
-                    let image2 = UIImage(named: peCommentSelectedStr)
+                    let image1 = UIImage(named: Constants.peCommentImageStr)
+                    let image2 = UIImage(named: Constants.peCommentSelectedStr)
                     if assessment?.note == "" || assessment?.note == nil {
                         cell.noteBtn.setImage(image1, for: .normal)
                     } else {
@@ -2842,11 +2828,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         
                         vc.commentCompleted = {[unowned self] ( note) in
                             if note == "" {
-                                let image = UIImage(named: peCommentImg)
+                                let image = UIImage(named: Constants.peCommentImageStr)
                                 cell.noteBtn.setImage(image, for: .normal)
                                 
                             } else {
-                                let image = UIImage(named: peCommentSelectedStr)
+                                let image = UIImage(named: Constants.peCommentSelectedStr)
                                 cell.noteBtn.setImage(image, for: .normal)
                                 
                             }
@@ -3460,7 +3446,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     func updateDosageInvojectData(section:Int)  {
         let c = Double(self.peNewAssessment.iCS ?? "0") ?? 0
         if c == 0 {
-            self.showtoast(message: incompleteDataStr)
+            self.showtoast(message: Constants.incompleteDataStr)
             return
         }
         for obj in self.inovojectData{
@@ -4177,35 +4163,35 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 if assessment?.assStatus == 1 && assessment?.assID == 5  {
                     if assessment?.note?.count ?? 0 < 1 {
                         
-                        if strings.contains(pleaseEnterMessage) {
-                            strings = strings.filter { $0 != pleaseEnterMessage
+                        if strings.contains(Constants.pleaseEnterCommentForThawBathTempStr) {
+                            strings = strings.filter { $0 != Constants.pleaseEnterCommentForThawBathTempStr
                             }
                         }
                         if regionID == 3 {
-                            strings.append(pleaseEnterMessage)
+                            strings.append(Constants.pleaseEnterCommentForThawBathTempStr)
                         } else {
                             return true
                         }
                     } else {
-                        if regionID == 3,strings.contains(pleaseEnterMessage) {
-                            strings = strings.filter { $0 != pleaseEnterMessage
+                        if regionID == 3,strings.contains(Constants.pleaseEnterCommentForThawBathTempStr) {
+                            strings = strings.filter { $0 != Constants.pleaseEnterCommentForThawBathTempStr
                             }
                         }
                     }
                 } else if assessment?.assStatus == 1 && assessment?.assID == 9 {
                     if assessment?.note?.count ?? 0 < 1 {
                         
-                        if strings.contains(pleaseEnterMessageVac) {
-                            strings = strings.filter { $0 != pleaseEnterMessageVac }
+                        if strings.contains(Constants.pleaseEnterCommentForVaccineThawingTimesStr) {
+                            strings = strings.filter { $0 != Constants.pleaseEnterCommentForVaccineThawingTimesStr }
                         }
                         if regionID == 3 {
-                            strings.append(pleaseEnterMessageVac)
+                            strings.append(Constants.pleaseEnterCommentForVaccineThawingTimesStr)
                         } else {
                             return true
                         }
                     } else {
-                        if regionID == 3,strings.contains(pleaseEnterMessageVac) {
-                            strings = strings.filter { $0 != pleaseEnterMessageVac
+                        if regionID == 3,strings.contains(Constants.pleaseEnterCommentForVaccineThawingTimesStr) {
+                            strings = strings.filter { $0 != Constants.pleaseEnterCommentForVaccineThawingTimesStr
                             }
                         }
                     }
@@ -4441,8 +4427,8 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                     }
                     
                  } else {
-                    if strings.contains(pleaseEnterFrequencyDet) {
-                        strings = strings.filter { $0 != pleaseEnterFrequencyDet }
+                    if strings.contains(Constants.pleaseEnterFrequencyDet) {
+                        strings = strings.filter { $0 != Constants.pleaseEnterFrequencyDet }
                     }
                 }
                 if(self.peNewAssessment.personName?.count ?? 0 < 1){
@@ -4458,8 +4444,8 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                         }
                     }
                  } else {
-                    if strings.contains(pleaseEnterPersonName) {
-                        strings = strings.filter { $0 != pleaseEnterPersonName }
+                    if strings.contains(Constants.pleaseEnterPersonName) {
+                        strings = strings.filter { $0 != Constants.pleaseEnterPersonName }
                     }
                 }
             }
@@ -4474,16 +4460,16 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                     }
                 }
                 
-            } else if self.peNewAssessment.qcCount?.count ?? 0 > 1,regionID == 3,strings.contains(pleaseEnterQCount) {
-                strings = strings.filter { $0 != pleaseEnterQCount
+            } else if self.peNewAssessment.qcCount?.count ?? 0 > 1,regionID == 3,strings.contains(Constants.pleaseEnterQCount) {
+                strings = strings.filter { $0 != Constants.pleaseEnterQCount
                 }
             }
             if regionID == 3 {
                 if self.peNewAssessment.ppmValue?.count ?? 0 < 1,(self.peNewAssessment.evaluationID == 1) {
                     showAlertForPPMValue()
                 } else {
-                    if (self.peNewAssessment.evaluationID == 1),strings.contains(pleaseEnterPPM) {
-                        strings = strings.filter { $0 != pleaseEnterPPM
+                    if (self.peNewAssessment.evaluationID == 1),strings.contains(Constants.pleaseEnterPPM) {
+                        strings = strings.filter { $0 != Constants.pleaseEnterPPM
                         }
                     }
                 }
@@ -4500,15 +4486,15 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 
             }else
             {
-                if strings.contains(pleaseEnterAMPM) {
-                    strings = strings.filter { $0 != pleaseEnterAMPM }
+                if strings.contains(Constants.pleaseEnterAMPM) {
+                    strings = strings.filter { $0 != Constants.pleaseEnterAMPM }
                 }
             }
         }
         
         let formatter = CodeHelper.sharedInstance.getDateFormatterObj("")
         if(regionID == 3) {
-            formatter.dateFormat = appDelegateObj.MMddyyyStr
+            formatter.dateFormat = Constants.MMddyyyyStr
         } else {
             formatter.dateFormat = ddmmyyStr
         }
@@ -4539,7 +4525,7 @@ extension PEAssesmentFinalize{
     
     func showAlertForAddingPlateType(){
         let errorMSg = "Please select all plate types in Sanitation And Embrex Evaluation Tab"
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
         _ = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
@@ -4554,7 +4540,7 @@ extension PEAssesmentFinalize{
             strings.append(peaseEnterVacDet)
         } else {
             let errorMSg = "Please enter vaccine details in the Vaccine Preparation Tab."
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
@@ -4566,14 +4552,14 @@ extension PEAssesmentFinalize{
     
     func showAlertForProgramName() {
         // Change
-        if regionID == 3,strings.contains(pleaseEnterProgramName) {
-            strings = strings.filter { $0 != pleaseEnterProgramName
+        if regionID == 3,strings.contains(Constants.pleaseEnterProgramNameStr) {
+            strings = strings.filter { $0 != Constants.pleaseEnterProgramNameStr
             }
-            strings.append(pleaseEnterProgramName)
+            strings.append(Constants.pleaseEnterProgramNameStr)
         }
         else{
             let errorMSg = "Please enter program name in the Vaccine Preparation Tab."
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
@@ -4584,7 +4570,7 @@ extension PEAssesmentFinalize{
     
     func showAlertForCommentMandatory(){
         let errorMSg = "Please enter the Comment before submitting the assessment in Extended Microbial."
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
@@ -4592,20 +4578,16 @@ extension PEAssesmentFinalize{
         self.present(alertController, animated: true, completion: nil)
     }
     
-    func showAlertForAntibiotic(){
+    func showAlertForAntibiotic() {
         
-        if regionID == 3
-        {
-            if strings.contains(pleaseEnterAntibiotic)
-            {
-                strings = strings.filter { $0 != pleaseEnterAntibiotic }
+        if regionID == 3 {
+            if strings.contains(Constants.pleaseEnterAntibiotics) {
+                strings = strings.filter { $0 != Constants.pleaseEnterAntibiotics }
             }
-            strings.append(pleaseEnterAntibiotic)
-        }
-        else
-        {
+            strings.append(Constants.pleaseEnterAntibiotics)
+        } else {
             let errorMSg = "Please enter Antibiotic in the Vaccine Preparation Tab."
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -4617,7 +4599,7 @@ extension PEAssesmentFinalize{
     func showAlertForNoValidTraining(){
         
         let errorMSg = "Please enter the certification details before submitting the assessment in Extended Microbial."
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
@@ -4628,7 +4610,7 @@ extension PEAssesmentFinalize{
     func showAlertForVaccineMixture(){
         
         let errorMSg = "Please enter the certification details before submitting the assessment."
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
         alertController.addAction(okAction)
@@ -4639,15 +4621,15 @@ extension PEAssesmentFinalize{
     func showAlertForNoAMPMValue(){
         if regionID == 3
         {
-            if strings.contains(pleaseEnterAMPM)
+            if strings.contains(Constants.pleaseEnterAMPM)
             {
-                strings = strings.filter { $0 != pleaseEnterAMPM }
+                strings = strings.filter { $0 != Constants.pleaseEnterAMPM }
             }
-            strings.append(pleaseEnterAMPM)
+            strings.append(Constants.pleaseEnterAMPM)
         }
         else{
-            let errorMSg = pleaseEnterAMPM
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let errorMSg = Constants.pleaseEnterAMPM
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -4661,15 +4643,15 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains(pleaseEnterPPM)
+            if strings.contains(Constants.pleaseEnterPPM)
             {
-                strings = strings.filter { $0 != pleaseEnterPPM }
+                strings = strings.filter { $0 != Constants.pleaseEnterPPM }
             }
-            strings.append(pleaseEnterPPM)
+            strings.append(Constants.pleaseEnterPPM)
         }
         else{
-            let errorMSg = pleaseEnterPPM
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let errorMSg = Constants.pleaseEnterPPM
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -4682,15 +4664,15 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains(pleaseEnterPersonName)
+            if strings.contains(Constants.pleaseEnterPersonName)
             {
-                strings = strings.filter { $0 != pleaseEnterPersonName }
+                strings = strings.filter { $0 != Constants.pleaseEnterPersonName }
             }
-            strings.append(pleaseEnterPersonName)
+            strings.append(Constants.pleaseEnterPersonName)
         }
         else{
-            let errorMSg = pleaseEnterPersonName
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let errorMSg = Constants.pleaseEnterPersonName
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -4702,16 +4684,16 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains(pleaseEnterFrequencyDet)
+            if strings.contains(Constants.pleaseEnterFrequencyDet)
             {
-                strings = strings.filter { $0 != pleaseEnterFrequencyDet }
+                strings = strings.filter { $0 != Constants.pleaseEnterFrequencyDet }
             }
-            strings.append(pleaseEnterFrequencyDet)
+            strings.append(Constants.pleaseEnterFrequencyDet)
         }
         else{
             
-            let errorMSg = pleaseEnterFrequencyDet
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let errorMSg = Constants.pleaseEnterFrequencyDet
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -4725,16 +4707,16 @@ extension PEAssesmentFinalize{
         
         if regionID == 3
         {
-            if strings.contains(pleaseEnterQCount)
+            if strings.contains(Constants.pleaseEnterQCount)
             {
-                strings = strings.filter { $0 != pleaseEnterQCount }
+                strings = strings.filter { $0 != Constants.pleaseEnterQCount }
             }
             
-            strings.append(pleaseEnterQCount)
+            strings.append(Constants.pleaseEnterQCount)
         }
         else{
-            let errorMSg = pleaseEnterQCount
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let errorMSg = Constants.pleaseEnterQCount
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -4755,7 +4737,7 @@ extension PEAssesmentFinalize{
         }
         else{
             let errorMSg = pleaseEnterVaccineMixer
-            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
             alertController.addAction(okAction)
@@ -4766,7 +4748,7 @@ extension PEAssesmentFinalize{
     
     func showAlertForNoCamera(){
         let errorMSg = "Reached maximum limit of images for this question."
-        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) 
         alertController.addAction(cancelAction)

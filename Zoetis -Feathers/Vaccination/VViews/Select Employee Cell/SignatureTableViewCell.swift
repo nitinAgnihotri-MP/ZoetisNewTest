@@ -103,10 +103,10 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
             empIndex += 1
             signView.clearCanvas()
             if empIndex > -1  {
-                var fullName = ""
+                
                 if certificateData.count > empIndex {
                     let firstname = certificateData[empIndex].name
-                    fullName = firstname ?? ""
+                    var fullName = firstname ?? ""
                     fullName = "\(firstname ?? "") "
                     
                     operatorSignLbl.text = "Vaccine Mixer Signature*"
@@ -118,7 +118,10 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
                         hideShowImgVw(false)
                         signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
                     }
-                    if !(certificateData[empIndex].isCertExpired)! && (prevController == "Rejected"){
+                    if (
+                        (!(certificateData[empIndex].isCertExpired)! && prevController == "Rejected") ||
+                        ((certificateData[empIndex].isCertExpired)! && prevController == "Draft")
+                    ) {
                         hideShowImgVw(false)
                         if certificateData[empIndex].signatureImg == "" {
                             hideShowImgVw(true)
@@ -136,15 +139,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
                         }
                     }
                     
-                    else if (certificateData[empIndex].isCertExpired)! && (prevController == "Draft") {
-                        hideShowImgVw(false)
-                        if certificateData[empIndex].signatureImg == "" {
-                            hideShowImgVw(true)
-                        }
-                        else {
-                            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
-                        }
-                    }
+             
                     
                 }
             }
@@ -177,14 +172,13 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
                     }
                 }
                 
-                if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool {
-                    if isSignedFSR {
-                        hideShowImgVw(false)
-                        
-                        if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
-                            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:signatureImg)
-                        }
+                if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool, isSignedFSR {
+                    hideShowImgVw(false)
+                    
+                    if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
+                        signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:signatureImg)
                     }
+                    
                 }
             }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex
@@ -194,10 +188,10 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
             empIndex += 1
             signView.clearCanvas()
             if empIndex > -1 && empIndex == employeesAddedArr.count + 1 {
-                var fullName = ""
+             
                 let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
                 let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
-                fullName = firstname ?? ""
+                var  fullName = firstname ?? ""
                 if lastName != nil && lastName != ""{
                     fullName = "\(firstname ?? "") \(lastName!)"
                 }
@@ -284,7 +278,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
                 
                 if regionID == 3
                 {
-                    if !(certificateData[empIndex].isCertExpired)! {
+                   
                         hideShowImgVw(false)
                         if certificateData[empIndex].signatureImg == "" {
                             hideShowImgVw(true)
@@ -292,17 +286,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
                         else {
                             signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
                         }
-                    }
-                    else
-                    {
-                        hideShowImgVw(false)
-                        if certificateData[empIndex].signatureImg == "" {
-                            hideShowImgVw(true)
-                        }
-                        else {
-                            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
-                        }
-                    }
+                    
                 }
                 else
                 
@@ -325,8 +309,8 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
                 deviceOperatorNamebl.text  = "Manager Name: "
                 nextBtn.isUserInteractionEnabled = false
                 
-                if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool {
-                    if isSignedFSR {
+                if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool , isSignedFSR {
+              
                         hideShowImgVw(false)
                         
                         if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
@@ -337,7 +321,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
                                 signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:signatureImg)
                             }
                         }
-                    }
+                    
                 }
                 if certificateData[empIndex - 1].fsrSign != "" {
                     hideShowImgVw(false)
@@ -441,15 +425,15 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
         
         if empIndex > -1 && empIndex == certificateData.count{
             
-            if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool {
-                if isSignedFSR {
+            if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool, isSignedFSR {
+               
                     hideShowImgVw(false)
                     
-                    if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
+                if UserDefaults.standard.value(forKey: "FsrSign") as? String != nil {
                         UserDefaults.standard.setValue(nil, forKey: "FsrSign")
                         UserDefaults.standard.setValue(false, forKey: "isSignedFSR")
                     }
-                }
+                
             }
             var k = 0
             for item in certificateData {
@@ -558,20 +542,21 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
     }
     
     fileprivate func handleEmpIndex(_ base64: String) {
-        if empIndex > -1 &&  certificateData.count > empIndex {
+        if empIndex > -1 {
             if certificateData.count > empIndex {
                 isRunningBack = true
                 certificateData[empIndex].isSigned = true
                 certificateData[empIndex].signatureImg = base64
             }
-        }
-        if empIndex > -1 && empIndex == certificateData.count {
-            curentCertification?.hatcheryManagerSign = base64
-            certificateData[0].fsrSign = base64
-            UserDefaults.standard.setValue(base64, forKey: "FsrSign")
-            UserDefaults.standard.setValue(true, forKey: "isSignedFSR")
+            if empIndex == certificateData.count {
+                curentCertification?.hatcheryManagerSign = base64
+                certificateData[0].fsrSign = base64
+                UserDefaults.standard.setValue(base64, forKey: "FsrSign")
+                UserDefaults.standard.setValue(true, forKey: "isSignedFSR")
+            }
         }
     }
+    
     
     fileprivate func handleSignImageValidation(_ view: SignatureView) {
         signImage = view.captureSignatureFromView()!

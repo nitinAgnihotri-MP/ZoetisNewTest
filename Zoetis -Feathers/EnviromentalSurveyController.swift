@@ -61,20 +61,6 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         self.saveButtonAndDraftBurronView.isHidden = (requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY)
         self.userNameLabel.text = userLogedIn
         self.configureTableView()
-//        if (requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY) == true
-//        {
-//            self.saveButtonAndDraftBurronView.isHidden = true
-//            self.bottomViewHeightConstraint.constant = 0
-//        }
-//        else
-//        {
-//            self.saveButtonAndDraftBurronView.isHidden = false
-//            self.bottomViewHeightConstraint.constant = 150
-//        }
-       
-    }
-    
-    func changeSubmitButton(){
     }
     
     
@@ -90,17 +76,14 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
             self.titleLabel.text = "Bacterial Survey Submission Form"
         case .enviromental:
             self.titleLabel.text = "Environmental Survey Submission Form"
-        default:
-            self.titleLabel.text = "Environmental Survey Submission Form"
         }
         if self.currentRequisition.isPlateIdGenerated{
             self.submitButton.setImage(nil, for: .normal)
             self.submitButton.backgroundColor = UIColor.blue
             self.submitButton.setTitle("DONE", for: .normal)
             self.submitButton.cornerRadius = 24.0
-        }else{
+        } else {
             self.submitButton.setImage(UIImage(named: "BacterialSubmitImg"), for: .normal)
-
         }
     }
     
@@ -169,13 +152,13 @@ class EnviromentalSurveyController: BaseViewController , UISearchBarDelegate {
         
         self.isSubmitButtonPressed = true
         guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You have already added requisition with same date and site.")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.youHaveAlreadyRequisitionStr)
             return
         }
         
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please fill all mandatory fields")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.pleaseFillMandatoryFieldsStr)
             return
         }
         
@@ -475,18 +458,13 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
                         
                         let alert:UIAlertController = UIAlertController(title: "\(self.currentRequisition.barCode)-\(index)", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
                         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
-                        {
-                            UIAlertAction in
-                        }
                         alert.addAction(cancelAction)
                         
                         var popover:UIPopoverController?=nil
                         popover = UIPopoverController(contentViewController: alert)
                         popover!.present(from: sender.frame, in: cell, permittedArrowDirections: UIPopoverArrowDirection.down, animated: true)
-                        
                     }
-                    
-                }else{
+                } else {
                     cell.plateIdLabel.text = "\(index)"
                     cell.plateIdLabel.textAlignment = .center
                     cell.infoDetailButton.isHidden = true
@@ -1223,12 +1201,12 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
     func stdButtonPressed(_ view: EnviromentalLocationHeaderView) {
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please fill all mandatory fields")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.pleaseFillMandatoryFieldsStr)
             return
         }
         
         guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You have already added requisition with same date and site.")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.youHaveAlreadyRequisitionStr)
             return
         }
         self.setTemplateFor(templateType: .STD)
@@ -1237,12 +1215,12 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
     func std20ButtonPressed(_ view: EnviromentalLocationHeaderView) {
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please fill all mandatory fields")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.pleaseFillMandatoryFieldsStr)
             return
         }
         
         guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You have already added requisition with same date and site.")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.youHaveAlreadyRequisitionStr)
             return
         }
         self.setTemplateFor(templateType: .STD20)
@@ -1251,11 +1229,11 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
     func std40ButtonPressed(_ view: EnviromentalLocationHeaderView) {
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please fill all mandatory fields")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.pleaseFillMandatoryFieldsStr)
             return
         }
         guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You have already added requisition with same date and site.")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.youHaveAlreadyRequisitionStr)
             return
         }
         self.setTemplateFor(templateType: .STD40)
@@ -1340,8 +1318,22 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
         self.deleteLocationButton()
     }
     
-    func deleteLocationButton(){
-        if !currentRequisition.isPlateIdGenerated{
+    fileprivate func handleRequisitionSavedSessionTypeShowDraftForEditting(_ checkedHeadersIndex: [Int]) {
+        if self.requisitionSavedSessionType == .SHOW_DRAFT_FOR_EDITING {
+            for index in checkedHeadersIndex {
+                self.currentRequisition.deletePlateHeader(locationHeader: self.currentRequisition.actualCreatedHeaders[index])
+            }
+            self.currentRequisition.actualCreatedHeaders.remove(at: checkedHeadersIndex)
+            
+            self.currentRequisition.reArrangeSectionOfHeaders()
+        } else {
+            self.currentRequisition.actualCreatedHeaders.remove(at: checkedHeadersIndex)
+            self.saveCurrentDataInLocalDB(isFinalSubmit: false)
+        }
+    }
+    
+    func deleteLocationButton() {
+        if !currentRequisition.isPlateIdGenerated {
             guard self.currentRequisition.actualCreatedHeaders.count > 1 else {
                 Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You can't delete all the locations.")
                 return
@@ -1362,19 +1354,9 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
                 }
             }
             
-            if self.requisitionSavedSessionType == .SHOW_DRAFT_FOR_EDITING{
-                for index in checkedHeadersIndex {
-                    self.currentRequisition.deletePlateHeader(locationHeader: self.currentRequisition.actualCreatedHeaders[index])
-                }
-                self.currentRequisition.actualCreatedHeaders.remove(at: checkedHeadersIndex)
-                
-                self.currentRequisition.reArrangeSectionOfHeaders()
-            }else{
-                self.currentRequisition.actualCreatedHeaders.remove(at: checkedHeadersIndex)
-                self.saveCurrentDataInLocalDB(isFinalSubmit: false)
-            }
+            self.handleRequisitionSavedSessionTypeShowDraftForEditting(checkedHeadersIndex)
             
-            if self.currentRequisition.actualCreatedHeaders.count == 0{
+            if self.currentRequisition.actualCreatedHeaders.count == 0 {
                 self.submitButton.setImage(UIImage(named: "BacterialSubmitImg"), for: .normal)
                 self.submitButton.backgroundColor = UIColor.clear
                 self.currentRequisition.generateHeader()
@@ -1410,7 +1392,7 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
         self.view.endEditing(true)
         if ((requisitionSavedSessionType == .CREATE_NEW_SESSION) || (requisitionSavedSessionType == .RESTORE_OLD_SESSION)){
             guard !self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .submitted) else {
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You have already added requisition with same date and site.")
+                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.youHaveAlreadyRequisitionStr)
                 return
             }
         }
@@ -1419,7 +1401,7 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
         
         guard self.isAllSampleInfoMandatoryFiledsFilled() else {
             self.reloadTableView()
-            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "Please fill all mandatory fields")
+            Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.pleaseFillMandatoryFieldsStr)
             return
         }
         
@@ -1831,7 +1813,7 @@ extension EnviromentalSurveyController{
         switch requisitionSavedSessionType {
         case .RESTORE_OLD_SESSION, .CREATE_NEW_SESSION:
             if self.currentRequisition.isrequisitionIsAlreadyCreatedForSameDateWithSameSite(sessionStatus: .saveAsDraft){
-                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: "You have already added requisition with same date and site.")
+                Helper.showAlertMessage(self, titleStr: "Alert", messageStr: Constants.youHaveAlreadyRequisitionStr)
                 return
             }
 

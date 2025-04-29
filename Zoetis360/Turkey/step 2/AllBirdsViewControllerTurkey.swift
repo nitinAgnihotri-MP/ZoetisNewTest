@@ -634,8 +634,6 @@ class AllBirdsViewControllerTurkey:BaseViewController,UITableViewDelegate,UITabl
         }
         let captureNec :  CaptureNecropsyViewDataTurkey = (d.object(forKey: noofBirdArrOnObs.object(at: cell.incrementBtnOutlet.tag - 1)) as? CaptureNecropsyViewDataTurkey)!
         
-        let fethchArr = CoreDataHandlerTurkey().fecthFrmWithBirdAndObservationTurkey(noOfBird! as NSNumber, farmname: formNameValue, obsId: captureNec.obsID!, necId: necId as NSNumber)
-        
         
         CoreDataHandlerTurkey().updateObsDataInCaptureSkeletaInDatabaseOnActualTurkey(formName , formName: formNameValue, birdNo: noOfBird! as NSNumber, obsId: captureNec.obsID!, actualName: textField.text!, necId: necId as NSNumber)
         
@@ -777,11 +775,11 @@ extension AllBirdsViewControllerTurkey {
     fileprivate func handleCatNameValidationCaseGITractTurkey(_ fetchdata: NSArray, _ obsName: String?, _ arrOfIndex: inout [QuickIndexObject]) {
         let objTable  = fetchdata.object(at: 0) as! GITractTurkey //: Skeleta = (fetchdata as? Skeleta)!
         
-        if let quickIndex = objTable.quicklinkIndex as? Int {
-            if quickIndex > 0 {
+         if let quickIndex = objTable.quicklinkIndex as? Int, quickIndex > 0 {
+       
                 let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
                 arrOfIndex.append(quickIndexObject)
-            }
+            
         }
     }
     
@@ -847,13 +845,12 @@ extension AllBirdsViewControllerTurkey {
     fileprivate func handleQuickIndex(_ arrOfIndex: [QuickIndexObject]) {
         for (_, object) in arrOfIndex.enumerated() {
             for (birdIndex, obsBird) in obsNameArray.enumerated() {
-                if let obsName = obsBird as? String {
-                    if object.quickIndex < self.obsNameArray.count, obsName == object.obsName {
+                if let obsName = obsBird as? String, object.quickIndex < self.obsNameArray.count, obsName == object.obsName {
                             let movedOBSBird = self.obsNameArray[birdIndex]
                             self.obsNameArray.removeObject(at: birdIndex)
                             self.obsNameArray.insert(movedOBSBird, at: object.quickIndex)
                         
-                    }
+                    
                 }
             }
         }

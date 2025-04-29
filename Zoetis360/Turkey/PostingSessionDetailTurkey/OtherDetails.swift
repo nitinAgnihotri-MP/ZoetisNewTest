@@ -10,8 +10,6 @@ import UIKit
 // MARK: - PROTOCOL & FUNCTIONS
 protocol otherFuncDetails {
     func DoneFunc ()
-   // func doneBtnFunc (_ notes : NSMutableArray , notesText : String , noOfBird : Int)
-   // func postingNotesdoneBtnFunc(_ notesText : String)
 }
 
 class OtherDetails: UIView {
@@ -40,20 +38,11 @@ class OtherDetails: UIView {
     @IBOutlet weak var timeOutlbl: UILabel!
     
     @IBOutlet weak var weightlbl: UILabel!
-    
-    
    
     @IBOutlet weak var agrlbl: UILabel!
     
-    @IBOutlet weak var otherDetails: UILabel!
-    
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+    @IBOutlet weak var Details: UILabel!
+   
     @IBOutlet weak var doneBtn: UIButton!
     
     @IBAction func doneBtnAction(_ sender: UIButton) {
@@ -89,7 +78,7 @@ class OtherDetails: UIView {
         
         fcr.text =  NSLocalizedString("FCR:", comment: "")
         
-        otherDetails.text = NSLocalizedString("Other Details", comment: "")
+        Details.text = NSLocalizedString("Other Details", comment: "")
         doneBtn.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
        
     }

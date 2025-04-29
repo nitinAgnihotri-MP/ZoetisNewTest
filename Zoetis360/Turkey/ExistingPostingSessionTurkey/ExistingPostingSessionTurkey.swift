@@ -55,17 +55,14 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
         
         NotificationCenter.default.addObserver(self, selector: #selector(ExistingPostingSessionTurkey.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifierTurkey"), object: nil)
        
-        var dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
-        //        dateFormatter.calendar = Calendar(identifier: .gregorian)
-        //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
+        dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         fromString = dateFormatter.string(from: Date())
         toString = dateFormatter.string(from: Date())
         selectDateFromLbl.text = fromString
         selectDateToLbl.text = toString
-        // Do any additional setup after loading the view.
         
         complexNameTextField.layer.borderWidth = 1
         complexNameTextField.layer.cornerRadius = 3.5
@@ -122,9 +119,9 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
     @objc func todoneClick() {
         
         let dateFormatter2 = DateFormatter()
-        dateFormatter2.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter2.dateFormat = Constants.MMddyyyyStr
         let dateFormatter1 = DateFormatter()
-        dateFormatter1.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter1.dateFormat = Constants.MMddyyyyStr
         //        dateFormatter1.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter1.timeZone = TimeZone(secondsFromGMT: 0)
         toString = dateFormatter1.string(from: datePicker.date)
@@ -143,7 +140,7 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
             
             fromString = selectDateToLbl.text!
             let dateFormatterIs = DateFormatter()
-            dateFormatterIs.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatterIs.dateFormat = Constants.MMddyyyyStr
             toDate = dateFormatterIs.date(from: fromString)!
             Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"To date must be greater than from date.")
             
@@ -158,9 +155,9 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
     @objc func doneClick() {
         
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         //        dateFormatter.calendar = Calendar(identifier: .gregorian)
         //        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         fromString = dateFormatter.string(from: datePicker.date)
@@ -178,7 +175,7 @@ class ExistingPostingSessionTurkey: UIViewController,UITextFieldDelegate,necrops
             
             fromString = selectDateFromLbl.text!
             let fromDateFormatter = DateFormatter()
-            fromDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            fromDateFormatter.dateFormat = Constants.MMddyyyyStr
             fromDate = fromDateFormatter.date(from: fromString)!
             Helper.showAlertMessage((UIApplication.shared.keyWindow?.rootViewController)!,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:"From date must be smaller than to date.")
         }
@@ -436,7 +433,7 @@ extension ExistingPostingSessionTurkey : UITableViewDataSource,UITableViewDelega
             cell.sessionTypeLbl.text  = posting.sessionTypeName
             cell.complexLbl.text  = posting.complexName
             cell.veterinarianLbl.text  = posting.vetanatrionName
-            let lngId =  posting.lngId
+            
             cell.lblLng.text = "(En)"
             cell.infoButton.addTarget(self, action: #selector(ExistingPostingSessionTurkey.infoButton), for: .touchUpInside)
             

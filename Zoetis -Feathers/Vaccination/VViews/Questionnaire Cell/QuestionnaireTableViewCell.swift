@@ -103,10 +103,10 @@ class QuestionnaireTableViewCell: UITableViewCell, UITextFieldDelegate {
             segmentControl.isHidden = false
         }
         if  questionObj.userComments != nil && questionObj.userComments! != "" {
-            let image = UIImage(named: "PECommentSelected.png")
+            let image = UIImage(named: Constants.peCommentSelectedStr)
             commentBtn.setImage(image, for: .normal)
         } else{
-            let image = UIImage(named: appDelegateObj.peCommentStr)
+            let image = UIImage(named: Constants.peCommentImageStr)
             commentBtn.setImage(image, for: .normal)
         }
     }

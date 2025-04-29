@@ -282,7 +282,7 @@ class PVEDraftSNAFinalizeAssement: BaseViewController {
         }
         
         
-        let errorMSg = "Are you sure you want to finish the assessment? After finishing the information can't be edited."
+        let errorMSg = Constants.areYouSureAssessmentStr
         let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
             _ in

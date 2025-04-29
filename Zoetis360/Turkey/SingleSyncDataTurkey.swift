@@ -124,7 +124,7 @@ class SingleSyncDataTurkey: NSObject {
     /********************* Save Feed Program data On Server *****************************************************************************************************/
     // MARK: - Get Feed Program with Posting ID
     func feedprogram(postingId:NSNumber)  {
-        let postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(postingId).mutableCopy() as! NSMutableArray
+        let savedPostingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(postingId).mutableCopy() as! NSMutableArray
         let cNecArr =  CoreDataHandlerTurkey().FetchNecropsystep1NecIdTurkey(postingId)
         let necArrWithoutPosting = NSMutableArray()
         for j in 0..<cNecArr.count
@@ -144,9 +144,9 @@ class SingleSyncDataTurkey: NSObject {
         let tempArrTime = NSMutableArray()
         let actualTmestamp = NSMutableArray()
         var sessionId = NSNumber()
-        for i in 0..<postingArrWithAllData.count
+        for i in 0..<savedPostingArrWithAllData.count
         {
-            let pSession =  postingArrWithAllData.object(at: i) as! PostingSessionTurkey
+            let pSession =  savedPostingArrWithAllData.object(at: i) as! PostingSessionTurkey
             sessionId = pSession.postingId!
             var timestamp = pSession.timeStamp!
             var actualTimestampStr =  pSession.actualTimeStamp
@@ -159,7 +159,6 @@ class SingleSyncDataTurkey: NSObject {
         }
         
         let sessionArray = NSMutableArray()
-        var sessionDict = NSMutableDictionary()
         var sessionDictMain = NSMutableDictionary()
         
         for i in 0..<self.postingIdArr.count {
@@ -345,7 +344,7 @@ class SingleSyncDataTurkey: NSObject {
             if ( allCocciControl.count > 0 || fetchAntibotic.count > 0 || fetchAlternative.count > 0 || fetchMyBinde.count > 0){
                 
                 mainDict.setValue(sessionId, forKey: "sessionId")
-                let data = postingArrWithAllData.object(at: 0) as! PostingSessionTurkey
+                let data = savedPostingArrWithAllData.object(at: 0) as! PostingSessionTurkey
                 let acttimeStamp = data.timeStamp
              
                 var  fullData = acttimeStamp!
@@ -354,6 +353,7 @@ class SingleSyncDataTurkey: NSObject {
                 let id = UserDefaults.standard.integer(forKey: "Id")
                 mainDict.setValue(id, forKey: "UserId")
                 mainDict.setValue(false, forKey: "finalized")
+                var sessionDict = NSMutableDictionary()
                 sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds]
                 sessionArray.add(sessionDict)
                 sessionDict = NSMutableDictionary()
@@ -398,6 +398,7 @@ class SingleSyncDataTurkey: NSObject {
                             
                             self.delegeteSyncApiData.failWithErrorInternalSyncdata()
                         } else if let data = response.data{
+                            debugPrint(data)
                             if let s = statusCode {
                                 self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
                                 
@@ -574,7 +575,8 @@ class SingleSyncDataTurkey: NSObject {
             if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                 
                 self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-            } else if let data = response.data{
+            } else if let statusData = response.data{
+                debugPrint(statusData)
                 if let s = statusCode {
                     self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
                 } else {
@@ -768,8 +770,8 @@ class SingleSyncDataTurkey: NSObject {
     fileprivate func ApiFailuerHandleForPostedData(_ encodingError: AFError, _ response: AFDataResponse<Any>, _ statusCode: Int?) {
         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
             self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-        } else if let data = response.data{
-            
+        } else if let statusResult = response.data{
+            debugPrint(statusResult)
             if let s = statusCode {
                 self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
                 
@@ -807,9 +809,7 @@ class SingleSyncDataTurkey: NSObject {
             let noOfBird = Int(cNData.noOfBirds!)
             let houseNo = cNData.houseNo
             let feedProgram = cNData.feedProgram
-            if let value = cNData.feedId {
-             
-            }
+          
             let age = cNData.age
             let flock = cNData.flockId
             let sick = cNData.sick
@@ -818,7 +818,7 @@ class SingleSyncDataTurkey: NSObject {
             let customerId = cNData.custmerId
             let customerName = cNData.complexName
             let complexdate = cNData.complexDate
-            var abf = cNData.abf
+            let abf = cNData.abf
             let farmWeight = cNData.farmWeight
             let breedString = cNData.breed
             let sex = cNData.sex
@@ -1110,8 +1110,8 @@ class SingleSyncDataTurkey: NSObject {
     fileprivate func postImagesApiFailer(_ encodingError: AFError, _ response: AFDataResponse<Any>, _ statusCode: Int?) {
         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
             self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-        } else if let data = response.data {
-            
+        } else if let respinceData = response.data {
+            debugPrint(respinceData)
             if let s = statusCode {
                 self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
             }  else  {

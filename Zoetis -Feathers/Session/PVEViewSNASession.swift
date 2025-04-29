@@ -80,7 +80,7 @@ class PVEViewSNASession: BaseViewController {
     
     func generateSeveyNumber(dateStr:String) -> String{
         let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        inputFormatter.dateFormat = Constants.MMddyyyyStr
        
         let siteId = sharedManager.getSessionValueForKeyFromDB(key: "siteId") as! Int
         let evaluationDateStr = sharedManager.getSessionValueForKeyFromDB(key: "evaluationDate") as? String
@@ -436,7 +436,7 @@ extension PVEViewSNASession{
     func getTodayDateSring() -> String {
         let todaysDate = NSDate()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         let DateInFormat = dateFormatter.string(from: todaysDate as Date)
         return DateInFormat
     }

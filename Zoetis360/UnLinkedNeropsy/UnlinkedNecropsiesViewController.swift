@@ -91,9 +91,9 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             toDateLabel.alpha = 0
             var dateFormatter = DateFormatter()
           
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             selectDateLabelFrench.text = dateFormatter.string(from: Date())
             toDateLabelFrench.text = dateFormatter.string(from: Date())
         }
@@ -102,9 +102,9 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             toDateLabel.alpha = 0
             var dateFormatter = DateFormatter()
           
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             selectDateLabelFrench.text = dateFormatter.string(from: Date())
             toDateLabelFrench.text = dateFormatter.string(from: Date())
         }
@@ -114,11 +114,10 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             selectDateLabel.alpha = 1
             toDateLabel.alpha = 1
         }
-        var dateFormatter = DateFormatter()
        
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         fromString = dateFormatter.string(from: Date())
         toString = dateFormatter.string(from: Date())
         selectDateLabel.text = fromString
@@ -252,9 +251,9 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         } else {
             let dateString = comlexDate
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             let dateObj = dateFormatter.date(from: dateString)
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             
             if dateObj == nil {
                 cell.sessionDateLbl.text = dateString
@@ -286,9 +285,9 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 
                 let dateString = comlexDate
               
-                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatter.dateFormat = Constants.MMddyyyyStr
                 let dateObj = dateFormatter.date(from: dateString)
-                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+                dateFormatter.dateFormat = Constants.ddMMyyyStr
                 
                 handleLngIdCellDateObj(lngIdFr, cell, dateObj, dateString, dateFormatter, comlexDate)
                 
@@ -327,17 +326,17 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             if lngIdFr == 3{
                 let dateString = posting.value(forKey: "sessiondate") as! String
               
-                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatter.dateFormat = Constants.MMddyyyyStr
                 let dateObj = dateFormatter.date(from: dateString)
-                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+                dateFormatter.dateFormat = Constants.ddMMyyyStr
                 cell.dateLblPostingSession.text = dateFormatter.string(from: dateObj!)
             }
             if lngIdFr == 4{
                 let dateString = posting.value(forKey: "sessiondate") as! String
                
-                dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                dateFormatter.dateFormat = Constants.MMddyyyyStr
                 let dateObj = dateFormatter.date(from: dateString)
-                dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+                dateFormatter.dateFormat = Constants.ddMMyyyStr
                 cell.dateLblPostingSession.text = dateFormatter.string(from: dateObj!)
             }
             else{
@@ -371,13 +370,13 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
     fileprivate func dateFormatterFrench(_ sessiondate: String) {
         let dateString = sessiondate
         
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         let dateObj = dateFormatter.date(from: dateString)
         if dateObj == nil{
             comlexDateFrench = dateString
         }
         else{
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             comlexDateFrench = dateFormatter.string(from: dateObj!)
         }
         UserDefaults.standard.setValue(comlexDateFrench, forKey: "dateFrench")
@@ -407,8 +406,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             UserDefaults.standard.set(1, forKey: "isBackWithoutFedd")
             UserDefaults.standard.synchronize()
             let lngIdNec = (arr1 as AnyObject).value(forKey: "lngId") as! NSNumber
-            let lngId = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
-            if lngId == lngIdNec {
+            let lngIdNew = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
+            if lngIdNew == lngIdNec {
                 let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "PostingViewController") as? PostingViewController
                 mapViewControllerObj!.navigateFromUnlinked = "Unlinked"
                 UserDefaults.standard.set(true, forKey: "Unlinked")
@@ -464,9 +463,9 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 let lngId = UserDefaults.standard.integer(forKey: "lngId")
                 if lngId == 3{
                     let dateString = posting.sessiondate
-                    dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+                    dateFormatter.dateFormat = Constants.MMddyyyyStr
                     let dateObj = dateFormatter.date(from: dateString!)
-                    dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+                    dateFormatter.dateFormat = Constants.ddMMyyyStr
                     comlexDateFrench = dateFormatter.string(from: dateObj!)
                     UserDefaults.standard.setValue(comlexDateFrench, forKey: "dateFrench")
                 }
@@ -710,14 +709,14 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         lngId = UserDefaults.standard.integer(forKey: "lngId")
         if lngId == 3{
             selectDateLabel.alpha = 0
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             let strdate = dateFormatter.string(from: datePicker.date) as String
             selectDateLabelFrench.text = strdate
         }
         else{
             selectDateLabel.alpha = 1
             selectDateLabelFrench.alpha = 0
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
         }
         
         fromString = dateFormatter.string(from: datePicker.date)
@@ -747,7 +746,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             self.cancelClick1()
             fromString = selectDateLabel.text!
            
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             fromDate = dateFormatter.date(from: fromString)!
             Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString("From date must be smaller than to date.", comment: ""))
         }
@@ -768,7 +767,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         datePicker.locale = Locale(identifier: "en_US")
         if lngId == 3 {
             toDateLabel.alpha = 0
-            dateFormatter.dateFormat = appDelegateObj.ddMMyyyStr
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
             let strdate = dateFormatter.string(from: datePicker.date) as String
             toDateLabelFrench.text = strdate
         }
@@ -777,7 +776,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
             toDateLabelFrench.alpha = 0
         }
         
-        dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+        dateFormatter.dateFormat = Constants.MMddyyyyStr
         toString = dateFormatter.string(from: datePicker.date)
         toDate = datePicker.date
         
@@ -792,7 +791,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         } else {
             self.cancelClick1()
             fromString = toDateLabel.text!
-            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
+            dateFormatter.dateFormat = Constants.MMddyyyyStr
             toDate = dateFormatter.date(from: fromString)!
             Helper.showAlertMessage(self,titleStr: NSLocalizedString(Constants.alertStr, comment: "") , messageStr: NSLocalizedString("To date must be greater than from date.", comment: "") )
         }

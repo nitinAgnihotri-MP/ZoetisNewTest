@@ -13,8 +13,7 @@ import Reachability
 import SystemConfiguration
 import CoreData
 import SwiftyJSON
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -25,8 +24,7 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         return false
     }
 }
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
+
 fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -81,25 +79,18 @@ class ApiSyncTurkey: NSObject {
     }
     
     @objc func networkStatusChanged(_ notification: Notification) {
-        if let userInfo = notification.userInfo {
-            if let value  = userInfo.values.first {
-                switch value as! String {
-                case "Online (WiFi)":
-                    debugPrint(value)
-                case "Online (WWAN)":
-                    debugPrint(value)
-                    
-                default: break
-                    
-                    
-                }
+        if let userInfo = notification.userInfo, let value = userInfo.values.first as? String {
+            switch value {
+            case "Online (WiFi)", "Online (WWAN)":
+                debugPrint(value)
+            default: break
             }
         }
     }
     
     func allSessionArr() ->NSMutableArray{
         
-        let postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
+        let sessionPostingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
         let cNecArr = CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncTurkey(true)
         let necArrWithoutPosting = NSMutableArray()
         
@@ -121,18 +112,17 @@ class ApiSyncTurkey: NSObject {
         
         let allPostingSessionArr = NSMutableArray()
         
-        var sessionId = NSNumber()
-        for i in 0..<postingArrWithAllData.count
+        for i in 0..<sessionPostingArrWithAllData.count
         {
-            let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-            sessionId = pSession.postingId!
+            let pSession = sessionPostingArrWithAllData.object(at: i) as! PostingSessionTurkey
+            var sessionId = pSession.postingId!
             allPostingSessionArr.add(sessionId)
         }
         
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             allPostingSessionArr.add(sessionId)
         }
         
@@ -158,10 +148,10 @@ class ApiSyncTurkey: NSObject {
    
     func feedprogram()  {
         self.isSyncPostingIdArr = false
-        let postingArrWithAllData =   CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
+        let feedArrWithAllData =   CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
         let cNecArr =  CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncTurkey(true)
         let necArrWithoutPosting = NSMutableArray()
-        var timestamp = String()
+       
         for j in 0..<cNecArr.count
         {
             let captureNecropsyData =  cNecArr.object(at: j)  as! CaptureNecropsyDataTurkey
@@ -180,13 +170,13 @@ class ApiSyncTurkey: NSObject {
         let tempArrTime = NSMutableArray()
         let actualTmestamp = NSMutableArray()
         var sessionId = NSNumber()
-        for i in 0..<postingArrWithAllData.count
+        for i in 0..<feedArrWithAllData.count
         {
             if self.isSyncPostingArrWithData == false {
                 self.isSyncPostingArrWithData = true
-                let pSession =  postingArrWithAllData.object(at: i) as! PostingSessionTurkey
+                let pSession =  feedArrWithAllData.object(at: i) as! PostingSessionTurkey
                 sessionId = pSession.postingId!
-                timestamp = pSession.timeStamp!
+                var timestamp = pSession.timeStamp!
                 var actualTimestampStr =  pSession.actualTimeStamp
                 if actualTimestampStr == nil {
                     actualTimestampStr = ""
@@ -206,7 +196,7 @@ class ApiSyncTurkey: NSObject {
             self.postingIdArr.add(sessionId)
         }
         let sessionArray = NSMutableArray()
-        var sessionDict = NSMutableDictionary()
+      //
         var sessionDictMain = NSMutableDictionary()
         
         for i in 0..<self.postingIdArr.count {
@@ -273,7 +263,7 @@ class ApiSyncTurkey: NSObject {
                     let molecule = antiboticFeed.molecule
                     let toDays = antiboticFeed.toDays
                     let feedType = antiboticFeed.feedType
-                    let startDate = antiboticFeed.feedDate
+                   
                     mainDict.setValue(dosage, forKey: "dose")
                     mainDict.setValue(feedId, forKey: "feedId")
                     mainDict.setValue(feedProgram, forKey: "feedName")
@@ -397,15 +387,14 @@ class ApiSyncTurkey: NSObject {
                 if ( allCocciControl.count > 0 || fetchAntibotic.count > 0 || fetchAlternative.count > 0 || fetchMyBinde.count > 0){
                     mainDict.setValue(sessionId, forKey: "sessionId")
                     let acttimeStamp = tempArrTime.object(at: i)
-                    var  udid  = String()
-                    var  fullData  = String()
                     
-                    udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
-                    fullData = acttimeStamp as! String
+                  
+                    var fullData = acttimeStamp as! String
                     mainDict.setValue(fullData, forKey: "deviceSessionId")
                     let id = UserDefaults.standard.integer(forKey: "Id")
                     mainDict.setValue(id, forKey: "UserId")
                     mainDict.setValue(false, forKey: "finalized")
+                    var sessionDict = NSMutableDictionary()
                     sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds]
                     
                     sessionArray.add(sessionDict)
@@ -416,17 +405,6 @@ class ApiSyncTurkey: NSObject {
             
         }
         do {
-            //var error : NSError?
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictMain, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-            
-//            if let jsonString = String(data: jsonData, encoding: .utf8) {
-//                print(jsonString)
-//            }
-            
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
-         //   debugPrint(jsonString)
             
             if WebClass.sharedInstance.connected() {
                          
@@ -491,7 +469,7 @@ class ApiSyncTurkey: NSObject {
     /**************************************************************************/
     func addVaccination()  {
         
-        let postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
+        let vacciPostingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
         let cNecArr = CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncTurkey(true)
         let necArrWithoutPosting = NSMutableArray()
         
@@ -509,18 +487,18 @@ class ApiSyncTurkey: NSObject {
             }
         }
         self.postingIdArr.removeAllObjects()
-        var sessionId = NSNumber()
-        var timeStamp = String()
+        
+     
         let tempArrTime = NSMutableArray()
         let actualTemp  = NSMutableArray()
         
-        for i in 0..<postingArrWithAllData.count
+        for i in 0..<vacciPostingArrWithAllData.count
         {
             if self.isSyncPostingArrWithData == false{
                 self.isSyncPostingArrWithData = true
-                let pSession = postingArrWithAllData.object(at: i) as! PostingSessionTurkey
-                sessionId = pSession.postingId!
-                timeStamp = pSession.timeStamp!
+                let pSession = vacciPostingArrWithAllData.object(at: i) as! PostingSessionTurkey
+                var sessionId = pSession.postingId!
+                var timeStamp = pSession.timeStamp!
                 var actualtimeStr = pSession.actualTimeStamp
                 if actualtimeStr == nil{
                     actualtimeStr = ""
@@ -535,7 +513,7 @@ class ApiSyncTurkey: NSObject {
         for i in 0..<necArrWithoutPosting.count
         {
             let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            sessionId = nIdSession.necropsyId!
+            var sessionId = nIdSession.necropsyId!
             self.postingIdArr.add(sessionId)
         }
         
@@ -580,8 +558,8 @@ class ApiSyncTurkey: NSObject {
                     else{
                         routeId = 0
                     }
-                    var strain = String()
-                    strain = pSession.strain!
+                  
+                    var strain = pSession.strain!
                     let strainKey = "hatcheryStrain\(i + 1)"
                     let routeKey = "hatcheryRoute\(i+1)Id"
                     
@@ -594,7 +572,6 @@ class ApiSyncTurkey: NSObject {
                 for i in 0..<FieldVacinationAll.count
                 {
                     let pSession = FieldVacinationAll.object(at: i) as! HatcheryVacTurkey
-                    var strain = String()
                     let routeName = pSession.route
                 
                     var routeId = NSNumber()
@@ -623,7 +600,7 @@ class ApiSyncTurkey: NSObject {
                         routeId = 0
                     }
                     let age = pSession.age
-                    strain = pSession.strain!
+                    var strain = pSession.strain!
                     let fieldStrainKey = "fieldStrain\(i + 1)"
                     let fieldrouteKey = "fieldRoute\(i+1)Id"
                     let fieldAgeKey = "fieldAge\(i + 1)"
@@ -655,17 +632,11 @@ class ApiSyncTurkey: NSObject {
         sessionDictWithVac.setValue(sessionArr, forKey: "Vaccinations")
         
         do {
-            
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: JSONSerialization.WritingOptions.prettyPrinted) else {return}
-
-            
-            var jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-            jsonString = jsonString.trimmingCharacters(in: CharacterSet.whitespaces)
+   
             
             if WebClass.sharedInstance.connected() {
                 let Url = "/PostingSession/SaveMultipleVaccinationsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 let headerDict = [Constants.authorization:accestoken]
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
                 
@@ -706,7 +677,7 @@ class ApiSyncTurkey: NSObject {
                             
                             self.delegeteSyncApiTurkey.failWithErrorInternal()
                             print(err)
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                        } else if let data = response.data{
                             
                             if let s = statusCode {
                                 
@@ -860,13 +831,13 @@ class ApiSyncTurkey: NSObject {
                 
                 
                 self.postingIdArr.add(sessionId!)
-                var fullData = String()
-                var udid = String()
+         
+              
                 
-                udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
+                var udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")! as! String
                 _ =   timestamp! + "_" + String(describing: sessionId!)
                 
-                fullData = timestamp!
+                var  fullData = timestamp!
                 
                 
                 postingDataDict.setValue(finalize, forKey: "finalized")
@@ -935,7 +906,7 @@ class ApiSyncTurkey: NSObject {
             let finalize = false
             let TimeStamp = pSession.timeStamp
             self.postingIdArr.add(sessionId!)
-            var fullData = String()
+           
             let udid = String()
             _ = String()
             _ = String()
@@ -946,7 +917,7 @@ class ApiSyncTurkey: NSObject {
             let fcr = ""
             let livability = ""
             let mortality = ""
-            fullData = TimeStamp!
+            var fullData = TimeStamp!
             postingDataDict.setValue(finalize, forKey: "finalized")
             postingDataDict.setValue(sessionDate, forKey: "sessionDate")
             postingDataDict.setValue(sessionTypeId, forKey: "sessionTypeId")
@@ -1156,15 +1127,10 @@ class ApiSyncTurkey: NSObject {
                 self.delegeteSyncApiTurkey.failWithErrorInternal()
                 debugPrint(err)
             } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                // other failures
                 debugPrint (encodingError)
                 debugPrint (responseString)
-                //                            if let s = statusCode {
-                //                                
-                //                                self.delegeteSyncApiTurkey.failWithError(statusCode: s)
-                //                            }  else {
+        
                 self.delegeteSyncApiTurkey.failWithErrorInternal()
-                //                           }
             }
         }
     }
@@ -1291,7 +1257,6 @@ class ApiSyncTurkey: NSObject {
                 let sessionDetails = NSMutableDictionary()
                 let captureNecropsyData = totalSession.object(at: i)  as! CaptureNecropsyDataTurkey
                 let nId = captureNecropsyData.necropsyId!
-                let timestamp = captureNecropsyData.timeStamp
                 let cNec =  CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncandPostingIdTurkey(true , postingId:nId)
                 let obsWithImageArr = NSMutableArray()
                 for x in 0..<cNec.count
@@ -1328,7 +1293,6 @@ class ApiSyncTurkey: NSObject {
                                 {
                                     let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCaptureTurkey
                                     var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
-                                    var data: Data = image.pngData()!
                                     
                                     if let imageData = image.jpeg(.lowest) {
                                         
@@ -1337,7 +1301,7 @@ class ApiSyncTurkey: NSObject {
                                     }
                                     let w : CGFloat = image.size.width / 7
                                     yImage = self.resizeImage(image, newWidth: w)!
-                                    data = yImage.pngData()!
+                                    var data = yImage.pngData()!
                                     let imageDict =  NSMutableDictionary()
                                     imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
                                     photoValArr.add(imageDict)
@@ -1350,8 +1314,8 @@ class ApiSyncTurkey: NSObject {
                     }
                 }
                 
-                var fullData = String()
-                fullData = captureNecropsyData.timeStamp!
+               
+                var fullData = captureNecropsyData.timeStamp!
                 sessionDetails.setValue(obsWithImageArr, forKey: "ImageDetails")
                 let id = UserDefaults.standard.integer(forKey: "Id")
                 sessionDetails.setValue(id, forKey: "UserId")
@@ -1406,7 +1370,6 @@ class ApiSyncTurkey: NSObject {
                                         let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCaptureTurkey
                                         
                                         var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
-                                        var data: Data = image.pngData()!
                                         
                                         if let imageData = image.jpeg(.lowest) {
                                             
@@ -1416,7 +1379,6 @@ class ApiSyncTurkey: NSObject {
                                         let w : CGFloat = image.size.width / 7
                                         
                                         yImage = self.resizeImage(image, newWidth: w)!
-                                        data = yImage.pngData()!
                                         let imageDict =  NSMutableDictionary()
                                         imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
                                         photoValArr.add(imageDict)
@@ -1429,8 +1391,8 @@ class ApiSyncTurkey: NSObject {
                         }
                     }
                     
-                    var fullData = String()
-                    fullData = captureNecropsyData.timeStamp!
+                   
+                    var fullData = captureNecropsyData.timeStamp!
                     sessionDetails.setValue(obsWithImageArr, forKey: "ImageDetails")
                     let id = UserDefaults.standard.integer(forKey: "Id")
                     sessionDetails.setValue(id, forKey: "UserId")
@@ -1642,20 +1604,31 @@ class ApiSyncTurkey: NSObject {
     
     private func updateSyncFlagsSequentially(handler: CoreDataHandlerTurkey, necropsyId: NSNumber, completion: @escaping (_ status: Bool) -> Void) {
         handler.updateisSyncOnCaptureSkeletaInDatabaseTurkey(necropsyId, isSync: false) { success in
-            guard success else { completion(false); return }
-
+            guard success else {
+                completion(false)
+                return
+            }
             handler.updateisSyncNecropsystep1neccIdTurkey(necropsyId, isSync: false) { success in
-                guard success else { completion(false); return }
+                guard success else {
+                    completion(false)
+                    return
+                }
 
                 handler.updateisSyncOnCaptureInDatabaseTurkey(necropsyId, isSync: false) { success in
-                    guard success else { completion(false); return }
-
+                    guard success else {
+                        completion(false)
+                        return
+                    }
                     handler.updateisSyncOnBirdPhotoCaptureDatabaseTurkey(necropsyId, isSync: false) { success in
-                        guard success else { completion(false); return }
-
+                        guard success else {
+                            completion(false)
+                            return
+                        }
                         handler.updateisSyncOnNotesBirdDatabaseTurkey(necropsyId, isSync: false) { success in
-                            guard success else { completion(false); return }
-
+                            guard success else {
+                                completion(false)
+                                return
+                            }
                             handler.updateisAllSyncFalseOnPostingSessionTurkey(true) { success in
                                 completion(success)
                             }
@@ -1666,188 +1639,6 @@ class ApiSyncTurkey: NSObject {
         }
     }
     
-//    func updadateNacDataOnCoreData(cNecArr: NSArray, _ completion: (_ status: Bool) -> Void){
-//        
-//        for i in 0..<cNecArr.count
-//        {
-//            let captureNecropsyData = cNecArr.object(at: i)  as! CaptureNecropsyDataTurkey
-//            let nId = captureNecropsyData.necropsyId!
-//            
-//            CoreDataHandlerTurkey().updateisSyncOnCaptureSkeletaInDatabaseTurkey(nId , isSync: false, { (success) in
-//                if success == true{
-//                    
-//                    CoreDataHandlerTurkey().updateisSyncNecropsystep1neccIdTurkey(nId , isSync: false, { (success) in
-//                        if success == true{
-//                            
-//                            CoreDataHandlerTurkey().updateisSyncOnCaptureInDatabaseTurkey(nId , isSync: false, { (success) in
-//                                if success == true{
-//                                    
-//                                    CoreDataHandlerTurkey().updateisSyncOnBirdPhotoCaptureDatabaseTurkey(nId , isSync: false, { (success) in
-//                                        if success == true{
-//                                            CoreDataHandlerTurkey().updateisSyncOnNotesBirdDatabaseTurkey(nId , isSync: false, { (success) in
-//                                                if success == true{
-//                                                    
-//                                                    CoreDataHandlerTurkey().updateisAllSyncFalseOnPostingSessionTurkey(true, { (success) in
-//                                                        if success == true{
-//                                                            completion(success)
-//                                                        }
-//                                                    })
-//                                                }
-//                                            })
-//                                        }
-//                                    })
-//                                }
-//                            })
-//                        }
-//                    })
-//                }
-//            })
-//        }
-//    }
-    /********************* Save User Setting   On Server ***************************/
-    /**************************************************************************/
-    /*
-    func saveDatOnServerAllSeting() {
-        
-        let lngId = UserDefaults.standard.integer(forKey: "lngId")
-        let outerDict = NSMutableDictionary()
-        let arr1 = NSMutableArray()
-        let Id = UserDefaults.standard.integer(forKey: "Id")
-        outerDict.setValue(Id, forKey: "UserId")
-        
-        let cocoii =  CoreDataHandlerTurkey().fetchAllCocoiiDataTurkey().mutableCopy() as! NSMutableArray
-        let gitract =  CoreDataHandlerTurkey().fetchAllGITractDataTurkey().mutableCopy() as! NSMutableArray
-        let resp =  CoreDataHandlerTurkey().fetchAllRespiratoryTurkey().mutableCopy() as! NSMutableArray
-        let immu =  CoreDataHandlerTurkey().fetchAllImmuneTurkey().mutableCopy() as! NSMutableArray
-        let skeletenArr =  CoreDataHandlerTurkey().fetchAllSeettingdataTurkey().mutableCopy() as! NSMutableArray
-        
-        for i in 0..<skeletenArr.count{
-            let obsId = (skeletenArr.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (skeletenArr.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (skeletenArr.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        
-        for i in 0..<cocoii.count{
-            let obsId = (cocoii.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (cocoii.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (cocoii.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-        }
-        
-        for i in 0..<gitract.count{
-            let obsId = (gitract.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (gitract.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (gitract.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-            
-        }
-        for i in 0..<resp.count{
-            let obsId = (resp.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (resp.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (resp.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (resp.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-            
-        }
-        for i in 0..<immu.count{
-            let obsId = (immu.object(at: i) as AnyObject).value(forKey: "observationId")
-            let visbility = (immu.object(at: i) as AnyObject).value(forKey: "visibilityCheck")
-            let quickLink = (immu.object(at: i) as AnyObject).value(forKey: "quicklinks")
-            let quicklinkIndex = (immu.object(at: i) as AnyObject).value(forKey: "quicklinkIndex")
-            let Internaldict = NSMutableDictionary()
-            Internaldict.setValue(obsId, forKey: "ObservationId")
-            Internaldict.setValue(quickLink, forKey: "QuickLink")
-            Internaldict.setValue(visbility, forKey: "Visibility")
-            Internaldict.setValue(lngId, forKey: "LanguageId")
-            Internaldict.setValue(quicklinkIndex, forKey: "SequenceId")
-            arr1.add(Internaldict)
-            
-        }
-        
-        outerDict.setValue(arr1, forKey: "ObservationUserDetails")
-    
-        
-        if WebClass.sharedInstance.connected() {
-            
-            let Url = "Setting/T_SaveUserSetting"
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-            //accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-            let headerDict = [Constants.authorization:accestoken]
-            let urlString: String = WebClass.sharedInstance.webUrl + Url
-            var request = URLRequest(url: URL(string: urlString)! )
-            request.httpMethod = "POST"
-            request.allHTTPHeaderFields = headerDict
-            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
-            if let jsonData = try? JSONSerialization.data(withJSONObject: outerDict, options: []) {
-                request.httpBody = jsonData
-            } else {
-                print("Failed to serialize JSON data")
-                // Handle error case, such as not making the request
-            }
-            
-            sessionManager.request(request as URLRequestConvertible).responseJSON { response in
-                let statusCode =  response.response?.statusCode
-                
-                if statusCode == 401  {
-                    self.loginMethod()
-                }
-                else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                    self.delegeteSyncApiTurkey.failWithError(statusCode: statusCode!)
-                }
-                
-                switch response.result {
-                    
-                case .success(let responseObject):
-                    debugPrint(responseObject)
-                    
-                case .failure(let encodingError):
-                    
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        self.delegeteSyncApiTurkey.failWithErrorInternal()
-                        debugPrint(err)
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        // other failures
-                        print (encodingError)
-                        print (responseString)
-//                        if let s = statusCode {
-//                            
-//                        }  else   {
-                            self.delegeteSyncApiTurkey.failWithErrorInternal()
-                       // }
-                    }
-                }
-            }
-        }
-    }
-    */
     /*************** Login Method call Again  ***************************************************/
     
     func loginMethod(){
@@ -1880,11 +1671,8 @@ class ApiSyncTurkey: NSObject {
                         let aceesTokentype: String = tokenType + " " + acessToken
                         _ = dict.value(forKey: "HasAccess")! as AnyObject
                         
-                        
                         let keychainHelper = AccessTokenHelper()
                         keychainHelper.saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
-//                        UserDefaults.standard.set(aceesTokentype,forKey: Constants.accessToken)
-//                        UserDefaults.standard.synchronize()
                         self.feedprogram()
                     }
                     break

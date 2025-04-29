@@ -10,8 +10,6 @@ import UIKit
 // MARK: - PROTOCOL & FUNCTIONS
 protocol otherFuncDetailsTurkey {
     func DoneFuncTurkey ()
-   // func doneBtnFunc (_ notes : NSMutableArray , notesText : String , noOfBird : Int)
-   // func postingNotesdoneBtnFunc(_ notesText : String)
 }
 
 class OtherDetailsTurkey: UIView {
@@ -37,13 +35,7 @@ class OtherDetailsTurkey: UIView {
     var fcrText = String()
     var buttonDroper = UIButton ()
     var otherFuncDetailsTurkeyDelegate: otherFuncDetailsTurkey!
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+
     @IBOutlet weak var doneBtn: UIButton!
     
     @IBAction func doneBtnAction(_ sender: UIButton) {

@@ -91,11 +91,11 @@ class QuestionnaireVC: BaseViewController {
         
         if  subModule == "" || subModule == VaccinationSubModuleNames.OperationCertification.rawValue || subModule == VaccinationSubModuleNames.SafetyCertification.rawValue || subModule == VaccinationSubModuleNames.VaccineMixing.rawValue{
             operatorAction(true)
-        } else if subModule == VaccinationSubModuleNames.Acknowledgement.rawValue{
-            if operatorCertImgVw != nil && safetyAwarenessImgVw != nil{
+        } else if subModule == VaccinationSubModuleNames.Acknowledgement.rawValue &&
+                    operatorCertImgVw != nil &&
+                    safetyAwarenessImgVw != nil {
                 acknowledgementAction()
             }
-        }
         if !(curentCertification?.certificationCategoryId == certificationTypeId){
             if subModule == VaccinationSubModuleNames.SafetyAwareness.rawValue{
                 safetyAwarenessAction()
@@ -282,44 +282,45 @@ class QuestionnaireVC: BaseViewController {
     }
     
     fileprivate func handleNotificationTabSelection(_ notification: NSNotification, _ tabSelection: Int, _ index: Int) {
-        if let emp = notification.userInfo?["emp"]  as? VaccinationEmployeeVM {
-            if let isSelected = notification.userInfo?["isSelected"]  as? Bool {
-                self.markSyncReady()
-                var tId = VaccinationConstants.LookupMaster.OPERATOR_CERTIFICATION_QUESTION_TYPE_ID
-                if tabSelection == 1 {
-                    tId = VaccinationConstants.LookupMaster.SAFETY_AWARENESS_QUESTION_TYPE_ID
-                }
-                if tabSelection == 2 {
-                    tId = VaccinationConstants.LookupMaster.VACCINE_MIXING_TYPE_ID
-                }
-                
-                let typeIdIndex = questionnaireVMObj?.questionTypeObj?.firstIndex(where: {
-                    $0.typeId == tId
-                })
-                if typeIdIndex != nil {
-                    var employees = questionnaireVMObj?.questionTypeObj?[typeIdIndex!].questionCategories?[index].employees
-                    handleSelectedEmployee(isSelected, &employees, emp, typeIdIndex, index, tabSelection)
-                }
+        if let emp = notification.userInfo?["emp"] as? VaccinationEmployeeVM,
+           let isSelected = notification.userInfo?["isSelected"] as? Bool {
+            
+            self.markSyncReady()
+            var tId = VaccinationConstants.LookupMaster.OPERATOR_CERTIFICATION_QUESTION_TYPE_ID
+            
+            if tabSelection == 1 {
+                tId = VaccinationConstants.LookupMaster.SAFETY_AWARENESS_QUESTION_TYPE_ID
+            }
+            if tabSelection == 2 {
+                tId = VaccinationConstants.LookupMaster.VACCINE_MIXING_TYPE_ID
+            }
+            
+            let typeIdIndex = questionnaireVMObj?.questionTypeObj?.firstIndex(where: {
+                $0.typeId == tId
+            })
+            
+            if typeIdIndex != nil {
+                var employees = questionnaireVMObj?.questionTypeObj?[typeIdIndex!].questionCategories?[index].employees
+                handleSelectedEmployee(isSelected, &employees, emp, typeIdIndex, index, tabSelection)
             }
         }
     }
-    
+
     @objc func UpdateEmployeeSelection(_ notification: NSNotification) {
-        if let index = notification.userInfo?["index"]  as? Int {
-            if let tabSelection = notification.userInfo?["tabSelection"]  as? Int {
-                handleNotificationTabSelection(notification, tabSelection, index)
-            }
+        if let index = notification.userInfo?["index"] as? Int,
+           let tabSelection = notification.userInfo?["tabSelection"] as? Int {
+            handleNotificationTabSelection(notification, tabSelection, index)
         }
     }
     
     @objc func  updateEmpObj(_ notification: NSNotification){
-        if let rowIndex = notification.userInfo?["rowIndex"]  as? Int{
+        if let rowIndex = notification.userInfo?["rowIndex"] as? Int,
+               let index = notification.userInfo?["index"] as? Int {
             
-            if let index = notification.userInfo?["index"] as? Int{
                 selectedEmpIndex = index
                 if let sign = notification.userInfo?["sign"]  as? String{
-                    if rowIndex == 1{
-                        if index > -1{
+                    if rowIndex == 1, index > -1 {
+                      
                             selectedEmpIndex = index
                             if index > -1 && index == employeesAddedArr.count + 1 {
                                 
@@ -337,7 +338,7 @@ class QuestionnaireVC: BaseViewController {
                                 employeesAddedArr[index] = emp
                                 AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: emp)
                             }
-                        }
+                        
                     }
                     if rowIndex == 2{
                         curentCertification?.hatcheryManagerSign = sign
@@ -351,7 +352,7 @@ class QuestionnaireVC: BaseViewController {
                     }
                     markSyncReady()
                 }
-                if  let hasSignCleared = notification.userInfo?["hasSignCleared"]  as? Bool{
+            if notification.userInfo?["hasSignCleared"] as? Bool != nil {
                     selectedEmpIndex = index
                     if rowIndex == 1{
                         var empIndex = index
@@ -389,7 +390,7 @@ class QuestionnaireVC: BaseViewController {
                     self.questionnaireTblVw.endUpdates()
                 }
                 
-            }
+            
         }
     }
     
@@ -403,20 +404,16 @@ class QuestionnaireVC: BaseViewController {
     }
     
     @objc func updateQuestionnaireData(_ notification: NSNotification) {
-        if let sectionIndex = notification.userInfo?["sectionIndex"]  as? Int {
-            if sectionIndex > -1 {
-                if let rowIndex = notification.userInfo?["rowIndex"]  as? Int {
-                    handleQuestionObj(notification, sectionIndex, rowIndex)
-                }
-            }
+        if let sectionIndex = notification.userInfo?["sectionIndex"] as? Int, sectionIndex > -1,
+           let rowIndex = notification.userInfo?["rowIndex"] as? Int {
+            handleQuestionObj(notification, sectionIndex, rowIndex)
         }
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height
-            }
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+           self.view.frame.origin.y == 0 {
+            self.view.frame.origin.y -= keyboardSize.height
         }
     }
     
@@ -479,14 +476,10 @@ class QuestionnaireVC: BaseViewController {
                 }
             }
             
-        } else{
-            if !(curentCertification?.certificationCategoryId == certificationTypeId){
-                if subModule == VaccinationSubModuleNames.SafetyAwareness.rawValue{
-                    operatorAction()
-                    
-                }
-            }
         }
+        else if !(curentCertification?.certificationCategoryId == certificationTypeId), subModule == VaccinationSubModuleNames.SafetyAwareness.rawValue {
+                operatorAction()
+            }
     }
     
     @IBAction func safetyAwarenessBtnAction(_ sender: UIButton) {
@@ -525,11 +518,8 @@ class QuestionnaireVC: BaseViewController {
             navigateToDashboard(status: VaccinationCertificationStatus.submitted)
             //Navigate to the Dashboard with the status as Submitted
         }
-        if curentCertification?.certificationCategoryId == certificationTypeId {
-            if subModule == VaccinationSubModuleNames.Acknowledgement.rawValue {
-                navigateToDashboard(status: VaccinationCertificationStatus.submitted)
-            }
-            
+        if curentCertification?.certificationCategoryId == certificationTypeId, subModule == VaccinationSubModuleNames.Acknowledgement.rawValue {
+            navigateToDashboard(status: VaccinationCertificationStatus.submitted)
         }
     }
     
@@ -605,7 +595,7 @@ class QuestionnaireVC: BaseViewController {
     func configureAcknowledgenmentVw(){
         removeAllBtn()
         if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-            
+            debugPrint("have nothing here.")
         } else{
             saveAsDraftBtn.isHidden = false
             submitBtn.isHidden = false
@@ -623,25 +613,18 @@ class QuestionnaireVC: BaseViewController {
     }
     
     func  configureSafetyAwarenessVw(){
-        removeAllBtn()
-        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-            print("Test Body")
-        }else{
-            
-            saveAsDraftBtn.isHidden = false
-            saveAsDraftBtn.isUserInteractionEnabled = true
-            btnStackVw.addArrangedSubview(saveAsDraftBtn)
-        }
+        configureButtons()
+    }
+        
+    func  configureVaccineMixingVw(){
+        configureButtons()
     }
     
-    
-    
-    func  configureVaccineMixingVw(){
+    func configureButtons() {
         removeAllBtn()
-        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
+        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {
             print("Test Body")
-        }else{
-            
+        } else {
             saveAsDraftBtn.isHidden = false
             saveAsDraftBtn.isUserInteractionEnabled = true
             btnStackVw.addArrangedSubview(saveAsDraftBtn)
@@ -664,27 +647,23 @@ class QuestionnaireVC: BaseViewController {
         }
     }
     
-    
     fileprivate func handleCurrentQuestionTypeObj(_ sectionIndex: Int, _ rowIndex: Int, _ questionObj: VaccinationQuestionVM) {
-        if currentQuestionTypeObj != nil {
-            if currentQuestionTypeObj?.questionCategories != nil && currentQuestionTypeObj?.questionCategories!.count ?? 0 > sectionIndex && (currentQuestionTypeObj?.questionCategories![sectionIndex].questionArr?.count)! > rowIndex{
-                currentQuestionTypeObj?.questionCategories![sectionIndex].questionArr![rowIndex] = questionObj
-            }
+        if let questionCategories = currentQuestionTypeObj?.questionCategories,
+           questionCategories.count > sectionIndex,
+           let questionArr = questionCategories[sectionIndex].questionArr,
+           questionArr.count > rowIndex {
+            currentQuestionTypeObj?.questionCategories![sectionIndex].questionArr![rowIndex] = questionObj
         }
     }
     
-    func `updateCurrentindex`(sectionIndex:Int, rowIndex:Int, questionObj:VaccinationQuestionVM) {
-        let objIndex = questionnaireVMObj?.questionTypeObj!.firstIndex(where: {
+    func updateCurrentindex(sectionIndex: Int, rowIndex: Int, questionObj: VaccinationQuestionVM) {
+        if let objIndex = questionnaireVMObj?.questionTypeObj!.firstIndex(where: {
             $0.typeId == questionObj.typeId!
-        })
-        if let index = objIndex {
-            
-            if let question = questionnaireVMObj?.questionTypeObj![index].questionCategories![sectionIndex].questionArr![rowIndex]{
-                if question.questionId != nil && question.questionId == questionObj.questionId{
-                    questionnaireVMObj?.questionTypeObj![index].questionCategories![sectionIndex].questionArr![rowIndex] = questionObj
-                    handleCurrentQuestionTypeObj(sectionIndex, rowIndex, questionObj)
-                }
-            }
+        }),
+        let question = questionnaireVMObj?.questionTypeObj![objIndex].questionCategories![sectionIndex].questionArr![rowIndex],
+        let questionId = question.questionId, questionId == questionObj.questionId {
+            questionnaireVMObj?.questionTypeObj![objIndex].questionCategories![sectionIndex].questionArr![rowIndex] = questionObj
+            handleCurrentQuestionTypeObj(sectionIndex, rowIndex, questionObj)
         }
     }
     
@@ -746,15 +725,11 @@ class QuestionnaireVC: BaseViewController {
     }
     
     
-    func scrollToTblVwIndex(){
-        if questionnaireVMObj?.questionTypeObj != nil{
-            if (questionnaireVMObj?.questionTypeObj?.count)! > 0{
-                questionnaireTblVw.scrollToRow(at:IndexPath.init(row: 0, section: 0), at: .top, animated: false)
-            }
+    func scrollToTblVwIndex() {
+        if let questionTypeObj = questionnaireVMObj?.questionTypeObj, questionTypeObj.count > 0 {
+            questionnaireTblVw.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
         }
-        
     }
-    
     
     func operatorAction(_ firstLoad:Bool = false){
         subModule = VaccinationSubModuleNames.OperationCertification.rawValue
@@ -806,8 +781,11 @@ class QuestionnaireVC: BaseViewController {
         configureSafetyAwarenessVw()
         questionnaireTblVw.isScrollEnabled = true
         subModule = VaccinationSubModuleNames.SafetyAwareness.rawValue
+     
+        if submitBtn != nil {
+            submitBtn.setTitle("Next", for: .normal)
+        }
         
-        if submitBtn != nil{        submitBtn.setTitle("Next", for: .normal)}
         VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.OperationCertification.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
         
         operatorCertImgVw.image = UIImage.init(named: "tabUnselect")
@@ -826,7 +804,11 @@ class QuestionnaireVC: BaseViewController {
         questionnaireTblVw.isScrollEnabled = true
         subModule = VaccinationSubModuleNames.VaccineMixing.rawValue
         
-        if submitBtn != nil{        submitBtn.setTitle("Next", for: .normal)}
+ 
+        if submitBtn != nil {
+            submitBtn.setTitle("Next", for: .normal)
+        }
+        
         VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.VaccineMixing.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
         
         operatorCertImgVw.image = UIImage.init(named: "tabUnselect")
@@ -871,7 +853,7 @@ class QuestionnaireVC: BaseViewController {
     
     
     func addGradient(){
-        // operatorCertCustomerVw.setGradientThreeColors(topGradientColor: UIColor.white, midGradientColor: UIColor.white, bottomGradientColor: UIColor.getAddEmployeeGradient())
+     
         safetyAwarenessGPVw.setGradientThreeColors(topGradientColor: UIColor.white, midGradientColor: UIColor.white, bottomGradientColor: UIColor.getAddEmployeeGradient())
         safetyAwarenessAssessmentVw.setGradientThreeColors(topGradientColor: UIColor.white, midGradientColor: UIColor.white, bottomGradientColor: UIColor.getAddEmployeeGradient())
         if submitBtn != nil{
@@ -1011,7 +993,7 @@ class QuestionnaireVC: BaseViewController {
     private func navigateToDashboard(status: VaccinationCertificationStatus) {
         if status == .draft {
             submitDataPopup(msg: "Are you sure you want to save certification in Draft?", status: status, header:"Save Draft")
-        } else if status == .submitted{//curentCertification?.hatcheryManagerSign != nil && curentCertification?.hatcheryManagerSign != "" &&
+        } else if status == .submitted{
             if curentCertification?.fsrSignature != nil && curentCertification?.fsrSignature != "" {
                 var isFilled = true
                 handleEmployeeAdedArray(&isFilled)
@@ -1134,9 +1116,8 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
         }
         var currentDate = ""
         currentDate = AssessmentDate
-
         
-        let nameStr = nameArr.joined(separator: " ")
+       
         var ackPart = "On \(currentDate), I received safety information for \(curentCertification?.siteName ?? "") from \(curentCertification?.fsmName ?? "") in which I support the inovoject systems. I agree that I have been provided with the above information and I understand everything that has been communicated to me. I understand that I am expected to comply with the safety policies for this hatchery and all safety policies in place for Global Poultry. I will not knowingly endanger myself or any other person."
         return ackPart
     }
@@ -1146,6 +1127,7 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
             if indexPath.row == 0{
                 if let cell = tableView.dequeueReusableCell(withIdentifier: AcknowledgementTableViewCell.identifier, for: indexPath) as? AcknowledgementTableViewCell{
                     if curentCertification?.certificationCategoryId == "2"{
+                        
                         if  selectedEmpIndex == (employeesAddedArr.count + 1) {
                             var emp = VaccinationEmployeeVM()
                             emp.firstName = UserContext.sharedInstance.userDetailsObj?.firstname
@@ -1167,7 +1149,7 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                             }
                         }
                         if employeesAddedArr.count > 0 && employeesAddedArr.count > selectedEmpIndex && selectedEmpIndex > -1{
-                            var emp =  VaccinationEmployeeVM()//employeesAddedArr[selectedEmpIndex]
+                            var emp =  VaccinationEmployeeVM()
                             emp.firstName = UserContext.sharedInstance.userDetailsObj?.firstname
                             emp.lastName = UserContext.sharedInstance.userDetailsObj?.lastName
                             cell.acknowledgementLbl.text = getAcknowldgementLblTxt(empobj: emp)
@@ -1289,7 +1271,6 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                                     cell.previousBtn.isUserInteractionEnabled = false
                                     cell.previousBtn.isHidden = true
                                 }
-                                var hManager = curentCertification?.fsmName ?? ""
                                 if curentCertification?.fsmName != nil{
                                     cell.deviceOperatorNamebl.text  = "Hatchery Manager Name: \( curentCertification?.fsmName ?? "")"
                                 }
@@ -1308,7 +1289,11 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                                     }
                                 }
                             }
-                            if cell.empIndex > 0 && cell.empIndex < employeesAddedArr.count {print(appDelegateObj.testFuntion())}
+
+                            if cell.empIndex > 0 && cell.empIndex < employeesAddedArr.count {
+                                print(appDelegateObj.testFuntion())
+                            }
+
                             
                             //---*********************
                             if employeesAddedArr.count  > 0{
@@ -1335,9 +1320,9 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                         }
                         
                         if cell.empIndex > -1 && cell.empIndex == employeesAddedArr.count + 1 {
-                            var fullName = ""
+                           
                             let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
-                            fullName = firstname ?? ""
+                            var fullName = firstname ?? ""
                             let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
                             fullName = firstname! + " " + (lastName ?? "") ?? ""
                             cell.deviceOperatorNamebl.text = "Field Service Technician: \(fullName)"
@@ -1386,7 +1371,7 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                                 cell.previousBtn.isUserInteractionEnabled = false
                                 cell.previousBtn.isHidden = true
                             }
-                            var hManager = curentCertification?.fsmName ?? ""
+                            
                             if curentCertification?.fsmName != nil{
                                 cell.deviceOperatorNamebl.text  = "Hatchery Manager Name: \( curentCertification?.fsmName ?? "")"
                             }
@@ -1482,18 +1467,16 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                             }
                             vc.commentCompleted = {[unowned self] ( note) in
                                 if note == "" {
-                                    let image = UIImage(named: appDelegateObj.peCommentStr)
+                                    let image = UIImage(named: Constants.peCommentImageStr)
                                     cell.commentBtn.setImage(image, for: .normal)
                                     
                                 } else {
-                                    let image = UIImage(named: "PECommentSelected.png")
+                                    let image = UIImage(named: Constants.peCommentSelectedStr)
                                     cell.commentBtn.setImage(image, for: .normal)
                                     
                                 }
-                                if  questionObj?.userComments != note{
-                                    if self.curentCertification?.certificationStatus != VaccinationCertificationStatus.submitted.rawValue{
-                                        self.markSyncReady()
-                                    }
+                                if questionObj?.userComments != note, self.curentCertification?.certificationStatus != VaccinationCertificationStatus.submitted.rawValue {
+                                    self.markSyncReady()
                                 }
                                 questionObj?.userComments = note ?? ""
                                 if questionObj != nil{

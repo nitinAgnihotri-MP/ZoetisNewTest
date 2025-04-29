@@ -68,10 +68,10 @@ class PlateInfoCell: UITableViewCell {
             scoreLbl.text = "\(score)"
         }
         if quesObj.userComments != nil && quesObj.userComments != ""{
-            let image = UIImage(named: "PECommentSelected.png")
+            let image = UIImage(named: Constants.peCommentSelectedStr)
             noteBtn.setImage(image, for: .normal)
         }else{
-            let image = UIImage(named: appDelegateObj.peCommentStr)
+            let image = UIImage(named: Constants.peCommentImageStr)
             noteBtn.setImage(image, for: .normal)
         }
         self.quesObj = quesObj

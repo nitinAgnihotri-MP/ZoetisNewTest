@@ -54,9 +54,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
 
         if WebClass.sharedInstance.connected() {
             accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-            let headers: HTTPHeaders = [Constants.authorization: accestoken]
             let Url = "PostingSession/GetTutorial"
-            let urlString: String = WebClass.sharedInstance.webUrl + Url
             
             let newUrl = ZoetisWebServices.EndPoint.getTutorial.latestUrl
             
@@ -77,32 +75,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
                 }
                 
             })
-            /*
-                 AF.request(urlString, method: .get, headers: headers).responseJSON { response in
-                self.pathArr.removeAllObjects()
-                     switch response.result {
-                     case let .success(value):
-                         print(value)
-                     let dict : NSDictionary = value as! NSDictionary
-                     print(dict["PDFPath"]!)
 
-                     if let paths = dict["PDFPath"] as? NSDictionary {
-                         for (_, value) in paths {
-
-                             self.pathArr.add(value as! String)
-                         }
-
-                     }
-                     completion(true)
-                         break
-                     case let .failure(error):
-                         print(error.localizedDescription)
-                        // completion(nil, error as NSError)
-                         break
-                     }
-               
-            }
-            */
         }
 
 
@@ -250,10 +223,10 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
     }
 
         func loadHtmlFile() {
-        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory = paths[0]
-        let filePath = URL(fileURLWithPath: documentsDirectory).appendingPathComponent(pdfFileName).absoluteString
-        let req = URLRequest(url: URL(string: filePath)!)
+            let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+            let documentsDirectory = paths[0]
+            let filePath = URL(fileURLWithPath: documentsDirectory).appendingPathComponent(pdfFileName).absoluteString
+            let req = URLRequest(url: URL(string: filePath)!)
             wkWebView.load(req)
 
     }
@@ -272,15 +245,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         let url = URL(fileURLWithPath: path)
         let filePath = url.appendingPathComponent(pdfFileName).path
-//        let fileLength = self.sizeForLocalFilePath(filePath) / 1048576
-//
-//        if fileLength < 2
-//        {
-//            self.removeFileContentsInLocally(filePath)
-//            return false
-//
-//        }
-//        else{
+
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: filePath) {
                 print("FILE AVAILABLE")
@@ -289,10 +254,6 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
                 print("FILE NOT AVAILABLE")
                 return false
             }
-            
-      //  }
-        
-        
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -349,20 +310,14 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
                 if self.downloadSize != 0.0
                 {
                     self.progressview.progress = Float(datalocal.length) / self.downloadSize
-                    self.labelProgress.text =  NSString(format: "%d %%", Int((Float(datalocal.length) * 100 / self.downloadSize))) as String// "\(Float(dataToDownload!.length) * 100 / downloadSize) %"
-
+                    self.labelProgress.text =  NSString(format: "%d %%", Int(Float(datalocal.length) * 100 / self.downloadSize)) as String
 
                 }
 
-
             }
-
-
 
         })
     }
-
-
 
 
     func urlSession(_ session: Foundation.URLSession, didBecomeInvalidWithError error: Error?) {
@@ -375,16 +330,12 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
         }
         else if dataToDownload != nil {
 
-            //  [self.webview loadData:webdata MIMEType: @"text/html" textEncodingName: @"UTF-8" baseURL:nil];
             let finaldata = dataToDownload?.copy() as! Data
 
             self.wkWebView.load(finaldata as Data, mimeType: "application/pdf", characterEncodingName: "UTF-8", baseURL: Bundle.main.bundleURL)
 
-
-            //Get the local docs directory and append your local filename.
             var docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
             docURL = docURL?.appendingPathComponent(pdfFileName)
-            //Lastly, write your file to the disk.
             try? finaldata.write(to: docURL!, options: [.atomic])
             if self.checkPdfExitOnLocal() == false {
                 self.callPdfApiandDownload()
@@ -395,11 +346,7 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
             print("responseData is nil")
         }
     }
-    
-    
-    
-    
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         self.downloadSize = 0.0
@@ -412,15 +359,5 @@ class PdfReader1ViewController: UIViewController, UIWebViewDelegate , URLSession
             UserDefaults.standard.setValue(self.pathArr.object(at: 0) as! String, forKey: "pdf2Path")
         }
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
+
 }
