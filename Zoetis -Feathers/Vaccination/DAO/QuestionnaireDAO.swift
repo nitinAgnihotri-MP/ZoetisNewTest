@@ -49,22 +49,20 @@ final  public class QuestionnaireDAO{
         }
     }
     
-    private func convertDTOtoMO(dtoObj: CertificationQuestionTypesDTO, userId:String) {
-        
-        if let dtoObjQuestTypes = dtoObj.certificateQuestionTypes {
-            if dtoObjQuestTypes.count  > 0{
-                for questTypeObj in dtoObjQuestTypes {
-                    let moQuestTypeObj = getVaccinationQuestionsTypeObj()
-                    moQuestTypeObj.userId = userId
-                    moQuestTypeObj.typeid = questTypeObj.typeId?.description
-                    
-                    moQuestTypeObj.typename = questTypeObj.typeName
-                    
-                    handleQuestionCategories(questTypeObj, userId, moQuestTypeObj)
-                }
+     private func convertDTOtoMO(dtoObj: CertificationQuestionTypesDTO, userId: String) {
+        if let dtoObjQuestTypes = dtoObj.certificateQuestionTypes, dtoObjQuestTypes.count > 0 {
+            for questTypeObj in dtoObjQuestTypes {
+                let moQuestTypeObj = getVaccinationQuestionsTypeObj()
+                moQuestTypeObj.userId = userId
+                moQuestTypeObj.typeid = questTypeObj.typeId?.description
+                moQuestTypeObj.typename = questTypeObj.typeName
+                
+                handleQuestionCategories(questTypeObj, userId, moQuestTypeObj)
             }
         }
     }
+
+    
     
     private func convertMotoVM(moObj:[VaccinationQuestionTypes])-> QuestionnaireVM{
         
@@ -139,22 +137,20 @@ final  public class QuestionnaireDAO{
     }
     
     
-    func saveQuestionData(dtoObj: CertificationQuestionTypesDTO, userId:String){
-        // hrer
-        do{
-            if  dtoObj != nil && dtoObj.certificateQuestionTypes != nil && dtoObj.certificateQuestionTypes!.count > 0{
-                if !checkIfQuestionnaireeDataExists(userId: userId){
-                    deleteVaccinationQuestions(userId: userId)
-                    convertDTOtoMO(dtoObj: dtoObj, userId:userId)
-                    SyncStatusDAO.sharedInstance.saveSyncStatus(userLoginId: userId, evalParam1: nil, evalParam2: nil, evalParam1Id: nil, evalParam2Id: nil, entityName: EntityName.Questionnaire.rawValue)
-                    try managedContext.save()
-                }
+    func saveQuestionData(dtoObj: CertificationQuestionTypesDTO, userId: String) {
+        do {
+            if let certificateQuestionTypes = dtoObj.certificateQuestionTypes, certificateQuestionTypes.count > 0, !checkIfQuestionnaireeDataExists(userId: userId) {
+                deleteVaccinationQuestions(userId: userId)
+                convertDTOtoMO(dtoObj: dtoObj, userId: userId)
+                SyncStatusDAO.sharedInstance.saveSyncStatus(userLoginId: userId, evalParam1: nil, evalParam2: nil, evalParam1Id: nil, evalParam2Id: nil, entityName: EntityName.Questionnaire.rawValue)
+                try managedContext.save()
             }
-        } catch{
+        } catch {
             managedContext.rollback()
             debugPrint("Error while saveQuestionData in \(type(of: self))")
         }
     }
+    
     
     func getVaccinationQuestionsCategoryObj() ->VaccinationQuestionCategories{
         let vaccinationQuestionCategoriesObj = NSEntityDescription.insertNewObject(forEntityName: "VaccinationQuestionCategories" , into: managedContext) as! VaccinationQuestionCategories
@@ -227,13 +223,13 @@ final  public class QuestionnaireDAO{
             deleteVaccinationQuestions(userId: userId)
             response = false
         } else{
-            if let questionAireData =  fetchQuestionnaireData(userId:userId, typeId: nil ){
-                if let questionTypesArr = questionAireData.questionTypeObj{
-                    if questionTypesArr.count > 0{
-                        response = true
-                    }
-                }
+          
+            
+            if let questionAireData = fetchQuestionnaireData(userId: userId, typeId: nil),
+               let questionTypesArr = questionAireData.questionTypeObj, questionTypesArr.count > 0 {
+                response = true
             }
+            
             
         }
         return response

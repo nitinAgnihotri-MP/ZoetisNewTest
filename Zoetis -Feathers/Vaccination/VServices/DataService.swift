@@ -32,7 +32,10 @@ class DataService{
         
         let url = ZoetisWebServices.EndPoint.getUpcomingCertifications.latestUrl + loginuserId
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else{ completion(nil, error) ;return  ;}
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
             if let responseJSONDict = json.dictionary{
                 if let response = responseJSONDict["Data"]{
                     let jsonDecoder = JSONDecoder()
@@ -63,16 +66,18 @@ class DataService{
     func getCertificationMasterQuestions(loginuserId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void){
         let url = ZoetisWebServices.EndPoint.getQuestionsMasterData.latestUrl
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
-            guard let _ = self, error == nil else{ completion(nil, error) ;return  ;}
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.handleMasterQuestionsResponse(loginuserId,responseStr, jsonDecoder) { (json2,error2) in
-                        completion(json2,error2)
-                    }
+            guard let _ = self, error == nil else {
+                completion(nil, error)
+                return
+            }
+            if let responseJSONDict = json.dictionary, let response = responseJSONDict["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.handleMasterQuestionsResponse(loginuserId, responseStr, jsonDecoder) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
+
         })
     }
     
@@ -96,13 +101,11 @@ class DataService{
                 completion(nil, error)
                 return
             }
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.getDropDownMaster(loginuserId,responseStr, jsonDecoder) {(json2, error2) in
-                        completion(json2,error2)
-                    }
+            if let response = json.dictionary?["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.getDropDownMaster(loginuserId, responseStr, jsonDecoder) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
         })
@@ -130,13 +133,11 @@ class DataService{
                 completion(nil, error)
                 return
             }
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.handleEmployeById(loginuserId,responseStr, jsonDecoder, customerId, siteId) { (json2,error2) in
-                        completion(json2,error2)
-                    }
+            if let response = json.dictionary?["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.handleEmployeById(loginuserId, responseStr, jsonDecoder, customerId, siteId) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
         })
@@ -159,11 +160,10 @@ class DataService{
         }
         
         
-        if let userId = UserContext.sharedInstance.userDetailsObj?.userId{
-            if userId != ""{
-                mainCertObj.CreatedBy = Int64(userId)
-            }
+        if let userId = UserContext.sharedInstance.userDetailsObj?.userId, userId != "" {
+            mainCertObj.CreatedBy = Int64(userId)
         }
+        
         if certificationId != ""{
             mainCertObj.Id = Int64(certificationId)
         }
@@ -265,7 +265,7 @@ class DataService{
             
             
             
-            if let scheduledDate = vacObj.scheduledDate{
+            if vacObj.scheduledDate != nil {
                 mainCertObj.ScheduleDate = formattedDateString // dateFormatterObj.string(from: scheduledDate)
             }
             
@@ -286,7 +286,7 @@ class DataService{
         let jsonEncoder = JSONEncoder()
         let data = try? jsonEncoder.encode(mainCertObj)
         if data != nil{
-            let string = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+           
             do{
                 let jsonDict = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? [String:Any]
                 debugPrint(jsonDict)
@@ -312,7 +312,7 @@ class DataService{
         return deviceIdForServer
     }
     
-    func postCertifications(loginuserId:String, viewController:UIViewController, param:[String:Any], completion: @escaping (String?, NSError?) -> Void){
+    func postCertifications(viewController:UIViewController, param:[String:Any], completion: @escaping (String?, NSError?) -> Void){
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject:param, options:[])
@@ -325,7 +325,11 @@ class DataService{
         let url = ZoetisWebServices.EndPoint.postvaccinationCertification.latestUrl
         ZoetisWebServices.shared.sendPostDataToServerVaccination(controller: viewController, parameters: param as JSONDictionary, url: url,  completion: {
             [weak self] (json, error) in
-            guard let self = self, error == nil else { completion(nil, error) ;return  ;}
+            if error != nil {
+                completion(nil, error)
+                return
+            }
+            
             if json["StatusCode"]  == 200{
                 completion("SUCCESS", nil)
             } else {
@@ -334,7 +338,7 @@ class DataService{
         })
     }
     
-    func postNewCertifications(loginuserId:String, viewController:UIViewController, param:[String:Any], completion: @escaping (String?, NSError?) -> Void){
+    func postNewCertifications(viewController:UIViewController, param:[String:Any], completion: @escaping (String?, NSError?) -> Void){
         let url = ZoetisWebServices.EndPoint.postNewvaccinationCertification.latestUrl
         var jsonDict : NSDictionary!
         
@@ -347,7 +351,11 @@ class DataService{
         }
         ZoetisWebServices.shared.sendPostDataToServerVaccination(controller: viewController, parameters: param as JSONDictionary, url: url,  completion: {
             [weak self] (json, error) in
-            guard let self = self, error == nil else { completion(nil, error) ;return  ;}
+            if error != nil {
+                completion(nil, error)
+                return
+            }
+            
             if json["StatusCode"]  == 200 {
                 completion("SUCCESS", nil)
             } else {
@@ -357,6 +365,10 @@ class DataService{
     }
     
     func fillShippingAddressInfo(certificationId:String, userId:String, customerId:String, siteId:String, fssId: Int , fsrId: String, trainingId: Int = 0) ->[ShippingAddressDTO]?{
+        
+        debugPrint("Received siteId: \(siteId)")
+        debugPrint("Received customerId: \(customerId)")
+        debugPrint("Received customerId: \(userId)")
         var shippingArr  = [ShippingAddressDTO]()
         if trainingId != 0  {
             let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfoByTrainingId(trainingId: trainingId)
@@ -503,8 +515,8 @@ class DataService{
                         questionAnswerDTO.ModuleAssessments = moduleAssessmentArr
                         
                         var attendeeDetails = [AddAttendeeDetailsDTO]()
-                        if let employees =  categoryObj.employees{
-                            if employees.count > 0{
+                        if let employees = categoryObj.employees, employees.count > 0 {
+                        
                                 for categoryEmp in employees{
                                     let attendeeObj =  AddAttendeeDetailsDTO()
                                     if userId != nil && userId != ""{
@@ -526,7 +538,7 @@ class DataService{
                                     
                                     attendeeDetails.append(attendeeObj)
                                 }
-                            }
+                            
                         }
                         questionAnswerDTO.AddAttendeeDetails = attendeeDetails
                         questionArr.append(questionAnswerDTO)
@@ -562,15 +574,15 @@ class DataService{
                 completion(nil, error)
                 return
             }
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.handleVaccinationCust(loginuserId,responseStr, jsonDecoder) { (json2,error2) in
-                        completion(json2,error2)
-                    }
+            
+            if let responseJSONDict = json.dictionary, let response = responseJSONDict["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.handleVaccinationCust(loginuserId, responseStr, jsonDecoder) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
+            
         })
     }
     
@@ -603,13 +615,11 @@ class DataService{
                 return
             }
             
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.handleVaccinationsites(loginuserId,responseStr, jsonDecoder) { (json2, error2) in
-                        completion(json2,error2)
-                    }
+            if let responseJSONDict = json.dictionary, let response = responseJSONDict["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.handleVaccinationsites(loginuserId, responseStr, jsonDecoder) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
         })
@@ -637,19 +647,19 @@ class DataService{
                 completion(nil, error)
                 return
             }
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"] {
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.hsndleVaccFSMList(loginuserId,responseStr, jsonDecoder) { (json2,error2) in
-                        completion(json2,error2)
-                    }
+            if let responseJSONDict = json.dictionary, let response = responseJSONDict["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.hsndleVaccFSMList(loginuserId, responseStr, jsonDecoder) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
+
         })
     }
     
     fileprivate func handleVaccStateLst(_ countryId: String,_ responseStr: String, _ jsonDecoder: JSONDecoder, completion: @escaping (String?, NSError?) -> Void) {
+        debugPrint(countryId)
         if responseStr != ""{
             let jsonData = try? Data(responseStr.utf8 )
             if let data = jsonData{
@@ -671,15 +681,14 @@ class DataService{
                 completion(nil, error)
                 return
             }
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.handleVaccStateLst(countryId,responseStr, jsonDecoder) { (json2,error2) in
-                        completion(json2,error2)
-                    }
+            if let responseJSONDict = json.dictionary, let response = responseJSONDict["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.handleVaccStateLst(countryId, responseStr, jsonDecoder) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
+
         })
     }
     
@@ -705,15 +714,14 @@ class DataService{
                 completion(nil, error)
                 return
             }
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"]{
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.handleVaccCountryList(loginuserId,responseStr, jsonDecoder){ (json2,error2) in
-                        completion(json2,error2)
-                    }
+            if let responseJSONDict = json.dictionary, let response = responseJSONDict["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.handleVaccCountryList(loginuserId, responseStr, jsonDecoder) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
+
         })
     }
     
@@ -750,15 +758,14 @@ class DataService{
                 completion(nil, error)
                 return
             }
-            if let responseJSONDict = json.dictionary{
-                if let response = responseJSONDict["Data"] {
-                    let jsonDecoder = JSONDecoder()
-                    let responseStr = response.description
-                    self?.handleSubmittedCertResponse(loginuserId,responseStr, jsonDecoder) { (json2,error2) in
-                        completion(json2, error2)
-                    }
+            if let responseJSONDict = json.dictionary, let response = responseJSONDict["Data"] {
+                let jsonDecoder = JSONDecoder()
+                let responseStr = response.description
+                self?.handleSubmittedCertResponse(loginuserId, responseStr, jsonDecoder) { (json2, error2) in
+                    completion(json2, error2)
                 }
             }
+
         })
     }
     
@@ -784,6 +791,7 @@ class DataService{
     
     func getShippingDetails(loginuserId:String, SelectedFsmId:String, viewController:UIViewController, completion: @escaping (String?, NSError?) -> Void) {
         let url = ZoetisWebServices.EndPoint.getShippingAddressDetails.latestUrl + SelectedFsmId
+        debugPrint(loginuserId)
         ZoetisWebServices.shared.getVaccinationServicesResponse(controller: viewController, url: url, completion: { [weak self] (json, error) in
             guard let _ = self, error == nil else {
                 completion(nil, error)

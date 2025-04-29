@@ -173,7 +173,7 @@ final public  class UserFilledQuestionnaireDAO{
     }
     
     func getCategoryEmployees(certificationId:String, userId:String, categoryId:String, typeId:String) -> [VaccinationEmployeeVM]{
-        var empArr = [VaccinationEmployeeVM]()
+      
         let catEmpBridgeArr = AddEmployeesDAO.sharedInstance.fetchEmpByCatId(catId:categoryId, typeId:typeId, userId:userId, certificationId:certificationId)
         var predicateList = [NSPredicate]()
         for empBridgeObj in catEmpBridgeArr{
@@ -181,8 +181,7 @@ final public  class UserFilledQuestionnaireDAO{
             predicateList.append(predicate)
             
         }
-        empArr = AddEmployeesDAO.sharedInstance.getAllCertEmployees(predicateArr:predicateList)
-        return empArr
+        return  AddEmployeesDAO.sharedInstance.getAllCertEmployees(predicateArr:predicateList)
         
     }
     
@@ -233,7 +232,7 @@ final public  class UserFilledQuestionnaireDAO{
                 deleteVaccinationQuestions(userId: userId, certificationId: certificationId)
                 if isSafetyCert{
                     let masterListQuestTypes = QuestionnaireDAO.sharedInstance.fetchQuestionnaireMOData(userId: userId, typeId: VaccinationConstants.LookupMaster.SAFETY_CERTIFICATION_QUESTION_TYPE_ID)
-                    `convertQuestMOtoMO`(dtoObjQuestTypes: masterListQuestTypes, userId: userId, certificationId: certificationId)
+                    convertQuestMOtoMO(dtoObjQuestTypes: masterListQuestTypes, userId: userId, certificationId: certificationId)
                     
                     
                 } else{
@@ -382,7 +381,7 @@ final public  class UserFilledQuestionnaireDAO{
                         if let qSeq = questionObj.sequenceNo{
                             
                             
-                            questionMOObj.sequenceNo = ((qSeq)) as NSNumber?
+                            questionMOObj.sequenceNo = (qSeq) as NSNumber?
                         }
                         
                         
@@ -463,7 +462,7 @@ final public  class UserFilledQuestionnaireDAO{
                         
                         if let qSeq = questionObj.sequenceNo{
                             
-                            questionMOObj.sequenceNo = ((qSeq)) as NSNumber?
+                            questionMOObj.sequenceNo = (qSeq) as NSNumber?
                         }
                         questionMOObj.questionType  = questionObj.types
                         questionMOObj.userComments  = questionObj.comments

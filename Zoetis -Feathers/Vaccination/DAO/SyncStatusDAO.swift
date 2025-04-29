@@ -31,7 +31,7 @@ class SyncStatusDAO{
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     
     func checkIfRecordExists(for entityName:String, userId:String, siteId:String?, customerId:String?, evalParam1:String?, evalParam2:String?)-> VaccinationSyncStatus?{
-        var doesDataExists = false
+        
 
         var syncStatusArr = [VaccinationSyncStatus]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationSyncStatus")
@@ -49,7 +49,7 @@ class SyncStatusDAO{
                               syncStatusArr = try managedContext.fetch(fetchRequest) as! [VaccinationSyncStatus]
                             if syncStatusArr.count > 0{
                                 //Determine on basis of the Current Date
-                                doesDataExists  = true
+                                
                                 return syncStatusArr[0]
                             }
                           }catch{

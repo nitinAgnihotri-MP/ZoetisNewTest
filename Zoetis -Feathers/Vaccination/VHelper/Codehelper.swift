@@ -80,6 +80,7 @@ class  CodeHelper{
     
     func getDateFormatterObj(_ date: String, inputFormat:String = Constants.yyyyMMddHHmmss)-> DateFormatter{
         
+        debugPrint(date)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = inputFormat//Constants.yyyyMMddHHmmss
         // dateFormatter.timeZone = Calendar.current.timeZone commented this
@@ -89,21 +90,7 @@ class  CodeHelper{
    
     }
     
-    func compareDates(firstDate:String, scondDate:String){
-        let formatter = DateFormatter()
-        formatter.timeZone = Calendar.current.timeZone
-        formatter.locale = Calendar.current.locale
-        formatter.dateFormat = Constants.ddMMyyyStr
-        var firstDate = formatter.date(from: dateStr)
-        var secondDate = formatter.date(from: dateStr)
-        
-        firstDate = formatter.date(from: "8/08/2017")
-        secondDate = formatter.date(from: dateStr)
-        
-        firstDate = formatter.date(from: "18/08/2017")
-        secondDate = formatter.date(from: dateStr)
-        
-    }
+  
     
 }
 

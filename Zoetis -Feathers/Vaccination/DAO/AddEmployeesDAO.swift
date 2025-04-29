@@ -21,18 +21,14 @@ public class AddEmployeesDAO{
     static let sharedInstance = AddEmployeesDAO()
     let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     
-    func saveEmployees(loginUserId:String, customerId:String, siteId:String, empoyeeDTO: [EmployeesInformationDTO]){
-        do{
-            if empoyeeDTO.count > 0{
-                if !checkIfEmployeeDataExists(userId: loginUserId, siteId: siteId, customerId: customerId
-                ){
-                    deleteEmployeeData(userId:loginUserId, siteId:siteId, customerId:customerId)
-                    for employee in empoyeeDTO{
-                        convertDTOtoMO(dtoObj: employee, moObj: getEmployeeObj(), loginUserId:loginUserId, customerId:customerId, siteId:siteId)
-                    }
-                    SyncStatusDAO.sharedInstance.saveSyncStatus(userLoginId: loginUserId, evalParam1: EntityParameters.siteId.rawValue, evalParam2: EntityParameters.customerId.rawValue, evalParam1Id: siteId, evalParam2Id: customerId, entityName: EntityName.Employees.rawValue)
+    func saveEmployees(loginUserId: String, customerId: String, siteId: String, empoyeeDTO: [EmployeesInformationDTO]) {
+        do {
+            if empoyeeDTO.count > 0, !checkIfEmployeeDataExists(userId: loginUserId, siteId: siteId, customerId: customerId) {
+                deleteEmployeeData(userId: loginUserId, siteId: siteId, customerId: customerId)
+                for employee in empoyeeDTO {
+                    convertDTOtoMO(dtoObj: employee, moObj: getEmployeeObj(), loginUserId: loginUserId, customerId: customerId, siteId: siteId)
                 }
-                
+                SyncStatusDAO.sharedInstance.saveSyncStatus(userLoginId: loginUserId, evalParam1: EntityParameters.siteId.rawValue, evalParam2: EntityParameters.customerId.rawValue, evalParam1Id: siteId, evalParam2Id: customerId, entityName: EntityName.Employees.rawValue)
             }
             try managedContext.save()
         } catch {
@@ -178,25 +174,24 @@ public class AddEmployeesDAO{
         }
     }
     
-    func saveDropdownMasterData(dtoObj:MasterDataTypesDTO, loginUserId:String) {
-        do{
-            if !checkIfMasterDataExists(userId: loginUserId){
-                if dtoObj.languagesList != nil && dtoObj.languagesList!.count > 0 && dtoObj.tshirtSizesList != nil && dtoObj.tshirtSizesList!.count > 0{
-                    deleteMasterData(userId:loginUserId)
-                    
-                    convertDropdownMasterDTOtoMO(dtoObj: dtoObj, loginUserId: loginUserId)
-                    
-                    SyncStatusDAO.sharedInstance.saveSyncStatus(userLoginId: loginUserId, evalParam1: nil, evalParam2: nil, evalParam1Id: nil, evalParam2Id: nil, entityName: EntityName.MasterDropdownData.rawValue)
-                    try managedContext.save()
-                }
-                
+ 
+    
+    func saveDropdownMasterData(dtoObj: MasterDataTypesDTO, loginUserId: String) {
+        do {
+            if !checkIfMasterDataExists(userId: loginUserId),
+               let languagesList = dtoObj.languagesList, languagesList.count > 0,
+               let tshirtSizesList = dtoObj.tshirtSizesList, tshirtSizesList.count > 0 {
+                deleteMasterData(userId: loginUserId)
+                convertDropdownMasterDTOtoMO(dtoObj: dtoObj, loginUserId: loginUserId)
+                SyncStatusDAO.sharedInstance.saveSyncStatus(userLoginId: loginUserId, evalParam1: nil, evalParam2: nil, evalParam1Id: nil, evalParam2Id: nil, entityName: EntityName.MasterDropdownData.rawValue)
+                try managedContext.save()
             }
-            
-        }catch{
+        } catch {
             print("Error while saving Dropdown Master values in \(type(of: self))")
             managedContext.rollback()
         }
     }
+
         
     func checkIfMasterDataExists(_ forceDelete:Bool = false, userId:String) -> Bool{
         var response = false

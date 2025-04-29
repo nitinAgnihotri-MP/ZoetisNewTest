@@ -541,10 +541,8 @@ class JSONAny: Codable {
         if let value = try? container.decode(String.self) {
             return value
         }
-        if let value = try? container.decodeNil() {
-            if value {
-                return JSONNull()
-            }
+        if let value = try? container.decodeNil(), value {
+            return JSONNull()
         }
         if var container = try? container.nestedUnkeyedContainer() {
             return try decodeArray(from: &container)
@@ -568,11 +566,10 @@ class JSONAny: Codable {
         if let value = try? container.decode(String.self, forKey: key) {
             return value
         }
-        if let value = try? container.decodeNil(forKey: key) {
-            if value {
-                return JSONNull()
-            }
+        if let value = try? container.decodeNil(forKey: key), value {
+            return JSONNull()
         }
+
         if var container = try? container.nestedUnkeyedContainer(forKey: key) {
             return try decodeArray(from: &container)
         }

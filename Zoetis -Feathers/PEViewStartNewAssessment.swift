@@ -119,29 +119,30 @@ class PEViewStartNewAssessment: BaseViewController {
         if self.peNewAssessment.noOfEggs ?? 0 > 0 {
             txtNumberOfEggs.text = String(self.peNewAssessment.noOfEggs ?? 0)
         }
-        
-        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
-            if character == constantToSave.character(at: 0){
-                showBreedOthers()
-                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-                txtBreedOfBirdsOthers.text = str
-                txtBreedOfBird.text = "Other"
-            }
+   
+        if let character = peNewAssessment.breedOfBird?.character(at: 1), character == constantToSave.character(at: 0) {
+            showBreedOthers()
+            let str = peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
+            txtBreedOfBirdsOthers.text = str
+            txtBreedOfBird.text = "Other"
         }
+
+        
         if peNewAssessment.breedOfBird == "Other"{
             showBreedOthers()
         } else {
             hideBreedOthers()
         }
         txtBreedOfBird.text = self.peNewAssessment.breedOfBird
-        if let character = peNewAssessment.breedOfBird?.character(at: 1) {
-            if character == constantToSave.character(at: 0){
-                showBreedOthers()
-                let str =  peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-                txtBreedOfBirdsOthers.text = str
-                txtBreedOfBird.text = "Other"
-            }
+        
+        if let character = peNewAssessment.breedOfBird?.character(at: 1), character == constantToSave.character(at: 0) {
+            showBreedOthers()
+            let str = peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
+            txtBreedOfBirdsOthers.text = str
+            txtBreedOfBird.text = "Other"
         }
+
+        
         txtBreedOfBirdsOthers.text =    self.peNewAssessment.breedOfBirdOther
         txtIncubation.text =  self.peNewAssessment.incubation
         txtIncubationOthers.text =   self.peNewAssessment.incubationOthers
@@ -202,19 +203,18 @@ class PEViewStartNewAssessment: BaseViewController {
     }
     
     fileprivate func viewDidLoadRefactoringPart3() {
-        if txtManufacturer.text != "" {
-            if let character = peNewAssessment.manufacturer?.character(at:0) {
-                if txtManufacturer.text == "Other"{
-                    showManufacturerOthers()
-                }
-                if character == constantToSave.character(at: 0){
-                    showManufacturerOthers()
-                    let str =  peNewAssessment.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
-                    manfacturerOtherTxt.text = str
-                    txtManufacturer.text = "Other"
-                }
+        if txtManufacturer.text != "", let character = peNewAssessment.manufacturer?.character(at: 0) {
+            if txtManufacturer.text == "Other" {
+                showManufacturerOthers()
+            }
+            if character == constantToSave.character(at: 0) {
+                showManufacturerOthers()
+                let str = peNewAssessment.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
+                manfacturerOtherTxt.text = str
+                txtManufacturer.text = "Other"
             }
         }
+
         let xx = String(self.peNewAssessment.noOfEggs ?? 000)
         if xx != "0" {
             let last3 = String(xx.suffix(3))
@@ -240,7 +240,7 @@ class PEViewStartNewAssessment: BaseViewController {
             isFlockAgeGreaterThen50Weeks = true
             btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
         }
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
+       
         if peNewAssessment?.isChlorineStrip ?? 0 == 1{
             chlorineStripsSwitch.isOn = true
         }else{
@@ -322,22 +322,16 @@ class PEViewStartNewAssessment: BaseViewController {
     fileprivate func handleRightConstAssignConstraintValidation(_ rightConst: Int, _ leftConst: Int) {
         switch rightConst {
         case 1:
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
-            }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 40 ))
-            }
+                notesTop.constant = CGFloat((leftConst * 55 ) + 40 )
+            
         case 2:
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-            }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
-            }
+                notesTop.constant = CGFloat((leftConst * 55 ) + 20 )
+            
         default:
             if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 40))
+                notesTop.constant = CGFloat((leftConst * 55 ) + 40)
             }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 60))
+                notesTop.constant = CGFloat((leftConst * 55 ) + 60)
             }
         }
     }
@@ -346,22 +340,18 @@ class PEViewStartNewAssessment: BaseViewController {
         switch rightConst {
             
         case 1:
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
-            }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 20 ))
-            }
+         
+                notesTop.constant = CGFloat((leftConst * 55 ) + 20 )
+            
         case 2:
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
-            }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 50))
-            }
+         
+                notesTop.constant = CGFloat((leftConst * 55 ) - 50)
+            
         default:
             if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+                notesTop.constant = CGFloat((leftConst * 55 ) + 20)
             }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 50))
+                notesTop.constant = CGFloat((leftConst * 55 ) + 50)
             }
         }
     }
@@ -370,22 +360,18 @@ class PEViewStartNewAssessment: BaseViewController {
         switch rightConst {
             
         case 1:
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
-            }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 30))
-            }
+           
+                notesTop.constant = CGFloat((leftConst * 55 ) - 30)
+            
         case 2:
-            if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
-            }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) - 75))
-            }
+        
+                notesTop.constant = CGFloat((leftConst * 55 ) - 75)
+            
         default:
             if heightNumberOfEggsView.constant == 94{
-                notesTop.constant = CGFloat(((leftConst * 55 ) ))
+                notesTop.constant = CGFloat((leftConst * 55 ) )
             }else{
-                notesTop.constant = CGFloat(((leftConst * 55 ) + 20))
+                notesTop.constant = CGFloat((leftConst * 55 ) + 20)
             }
         }
     }
@@ -425,12 +411,13 @@ class PEViewStartNewAssessment: BaseViewController {
     // MARK: - Setup Right Constraint
     func rightConstraint()-> Int{
         var otherCount = 0
-        
-        if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-            otherCount += 1
-        } else if self.txtManufacturer.text?.contains("S") ?? false {
-            otherCount += 1
+   
+        if let manufacturerText = self.txtManufacturer.text?.lowercased() {
+            if manufacturerText.contains("other") || manufacturerText.contains("s") {
+                otherCount += 1
+            }
         }
+        
         
         let xx = String(self.peNewAssessment.noOfEggs ?? 000)
         if xx != "0" {
@@ -499,18 +486,7 @@ class PEViewStartNewAssessment: BaseViewController {
     func showFlockView(){
         flockView.isHidden = false
     }
-    // MARK: - Get VAccine Mixture API
-    private func getVaccineMixerList(customerId: Int, siteId: Int, countryId: Int, _ completion: @escaping (_ status: Bool) -> Void){
-        let parameter = [
-            "siteId": "\(siteId)",
-            "customerId": "\(customerId)",
-            "countryId": "\(countryId)"
-        ] as JSONDictionary
-        ZoetisWebServices.shared.getMixerList(controller: self, parameters: parameter) { [weak self] (json, error) in
-            guard let self = self, error == nil else { return }
-            self.handleVaccineMixer(json)
-        }
-    }
+
     // MARK: - Handle Vaccine Mixture API Responce
     private func handleVaccineMixer(_ json: JSON) {
         self.deleteAllData("PE_VaccineMixerDetail")        

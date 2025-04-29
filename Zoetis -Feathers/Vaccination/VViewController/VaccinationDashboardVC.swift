@@ -145,7 +145,6 @@ class VaccinationDashboardVC: BaseViewController{
 
             if certification.certificationCategoryId == "0" {
                 DataService.sharedInstance.postNewCertifications(
-                    loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
                     viewController: self,
                     param: param ?? [:],
                     completion: { [weak self] (status, error) in
@@ -190,7 +189,6 @@ class VaccinationDashboardVC: BaseViewController{
                     })
                 } else {
                     DataService.sharedInstance.postCertifications(
-                        loginuserId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
                         viewController: self,
                         param: param ?? [:],
                         completion: { [weak self] (status, error) in

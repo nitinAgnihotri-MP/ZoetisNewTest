@@ -84,8 +84,8 @@ final  public class UserContextDAO{
     }
     
     func convertMotoVO(moObj:VaccinationUserContext)-> UserDetails{
+        
         var userDetailsObj = UserDetails()
-        userDetailsObj = UserDetails()
         userDetailsObj.phoneNumber = moObj.phoneNumber
         userDetailsObj.firstname = moObj.firstname
         userDetailsObj.lastName = moObj.lastName

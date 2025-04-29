@@ -80,16 +80,12 @@ class PlateInfoCell: UITableViewCell {
     func updateScore(){
         if self.quesObj?.questionDescription != "Control (Non Exposed) Plate"{
             var score = 0
-            if let bacteriaCount = self.quesObj?.bacteriaCount{
-                if let blueGreenMoldCount = self.quesObj?.blueGreenMoldCount{
-                    if bacteriaCount < 5 && blueGreenMoldCount < 1{
-                        score = 5
-                    } else{
-                        score = 0
-                    }
-                    scoreLbl.text = "\(score)"
-                    self.quesObj?.currentScore = score
-                }
+       /* doubt for this change as per sonar */
+            if let bacteriaCount = self.quesObj?.bacteriaCount,
+               let blueGreenMoldCount = self.quesObj?.blueGreenMoldCount {
+                score = (bacteriaCount < 5 && blueGreenMoldCount < 1) ? 5 : 0
+                scoreLbl.text = "\(score)"
+                self.quesObj?.currentScore = score
             }
         }
         

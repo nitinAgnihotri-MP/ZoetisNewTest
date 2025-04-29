@@ -298,6 +298,7 @@ public class VaccinationDashboardDAO{
     
     func saveCertStartedObj(moObj: VaccinationStartedCertifications){
         do{
+            debugPrint(moObj)
             try managedContext.save()
         }catch{
             debugPrint("Error while saving Started Certifications in \(type(of: self))")

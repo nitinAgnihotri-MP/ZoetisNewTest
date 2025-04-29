@@ -38,13 +38,13 @@ public struct VaccineMixerDetail {
         isCertExpired = json["IsCertExpired"].boolValue
         signatureImg = json["SignatureImg"].string
         
-        var NameIs = Name ?? ""
-        var idN = id ?? 0
-        var certificationDate = certificationDate ?? ""
-        var isCertExpired = isCertExpired ?? false
-        var signatureImg = signatureImg ?? ""      
+        let NameIs = Name ?? ""
+        let idN = id ?? 0
+        let certificationDateIs = certificationDate ?? ""
+        let isCertExpiredValue = isCertExpired ?? false
+        let signatureImgIs = signatureImg ?? ""
         
-        CoreDataHandlerPE().saveVaccineMixerInDB(NSNumber(value: idN), Name: NameIs, certificationDate: certificationDate, isCertExpired: isCertExpired, signatureImg: signatureImg)
+        CoreDataHandlerPE().saveVaccineMixerInDB(NSNumber(value: idN), Name: NameIs, certificationDate: certificationDateIs, isCertExpired: isCertExpiredValue, signatureImg: signatureImgIs)
         
     }
     

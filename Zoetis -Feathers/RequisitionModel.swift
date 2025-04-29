@@ -246,38 +246,36 @@ class RequisitionModel {
     
     func configureDataIfSessionInProgress() {
         let enviromentalSessionInProgress = CoreDataHandlerMicro().fetchAllData("Microbial_EnviromentalSessionInProgress")
-        if enviromentalSessionInProgress.count > 0 {
-            if let sessionData = enviromentalSessionInProgress.object(at: 0) as? Microbial_EnviromentalSessionInProgress {
-                self.setSessionInProgressData(sessionData)
-            }
+        if enviromentalSessionInProgress.count > 0,
+           let sessionData = enviromentalSessionInProgress.object(at: 0) as? Microbial_EnviromentalSessionInProgress {
+            self.setSessionInProgressData(sessionData)
         }
-        
+
         let headers = CoreDataHandlerMicro().fetchAllData("Microbial_LocationTypeHeaders")
-       
         if headers.count > 0 {
             self.actualCreatedHeaders = []
             self.selectedLocationTypes = []
             manageHeaders(headers)
         }
     }
+
     
     
     
     //MARK: - Set data saved in draft
     fileprivate func handleHeadersValidations(_ headers: [Microbial_LocationTypeHeadersSubmitted]) {
         for item in headers {
-            if let headerObject = item as? Microbial_LocationTypeHeadersSubmitted {
-                let header = LocationTypeHeaderModel(headerObject: headerObject)
-                if header.numberOfPlateIDCreated.count > 0 {
-                    if let locationTypeId = header.selectedLocationTypeId {
-                        selectedLocationTypes.append(locationTypeId)
-                    }
-                }
+            if let headerObject = item as? Microbial_LocationTypeHeadersSubmitted,
+               let locationTypeId = LocationTypeHeaderModel(headerObject: headerObject).selectedLocationTypeId,
+               LocationTypeHeaderModel(headerObject: headerObject).numberOfPlateIDCreated.count > 0 {
                 
+                let header = LocationTypeHeaderModel(headerObject: headerObject)
+                selectedLocationTypes.append(locationTypeId)
                 self.actualCreatedHeaders.append(header)
             }
         }
     }
+
     
     func configureDataFromDrafts(draftData: Microbial_EnviromentalSurveyFormSubmitted) {
         self.setDataOfDraftOrSubmittedRequisition(draftData)
@@ -292,15 +290,17 @@ class RequisitionModel {
             }
         }
     }
-    
+
     func configureDataIfSessionInProgress_FeatherPulp() {
         let enviromentalSessionInProgress = CoreDataHandlerMicro().fetchAllData("Microbial_EnviromentalSessionInProgress")
-        if enviromentalSessionInProgress.count > 0 {
-            if let sessionData = enviromentalSessionInProgress.object(at: 0) as? Microbial_EnviromentalSessionInProgress {
-                self.setSessionInProgressData(sessionData)
-            }
+        
+        if enviromentalSessionInProgress.count > 0,
+           let sessionData = enviromentalSessionInProgress.object(at: 0) as? Microbial_EnviromentalSessionInProgress {
+            self.setSessionInProgressData(sessionData)
         }
     }
+
+    
     
     //MARK: - Reset Site And BarCode If Selected Company changed
     func resetSiteAndBarCode() {
@@ -684,11 +684,12 @@ class RequisitionModel {
             self.barCodeManualEntered = barCodeManualEntered
         }
         
-        if let requisitionTypeValue = managedObject.requisitionType {
-            if let requisitionType = RequisitionType(rawValue: Int(truncating: requisitionTypeValue)) {
-                self.requisitionType = requisitionType
-            }
+        if let requisitionTypeValue = managedObject.requisitionType,
+           let requisitionType = RequisitionType(rawValue: Int(truncating: requisitionTypeValue)) {
+            self.requisitionType = requisitionType
         }
+
+        
     }
     
     //MARK: - Set data into model from Draft Or Saved Rquisition
@@ -722,11 +723,11 @@ class RequisitionModel {
             self.barCodeManualEntered = barCodeManualEntered
         }
         
-        if let requisitionTypeValue = managedObject.requisitionType {
-            if let requisitionType = RequisitionType(rawValue: Int(truncating: requisitionTypeValue)) {
-                self.requisitionType = requisitionType
-            }
+        if let requisitionTypeValue = managedObject.requisitionType,
+           let requisitionType = RequisitionType(rawValue: Int(truncating: requisitionTypeValue)) {
+            self.requisitionType = requisitionType
         }
+
         print(getSiteIdforSelectedSite())
     }
     
@@ -760,11 +761,11 @@ class RequisitionModel {
             self.barCodeManualEntered = barCodeManualEntered
         }
         
-        if let requisitionTypeValue = managedObject.requisitionType {
-            if let requisitionType = RequisitionType(rawValue: Int(truncating: requisitionTypeValue)) {
-                self.requisitionType = requisitionType
-            }
+        if let requisitionTypeValue = managedObject.requisitionType,
+           let requisitionType = RequisitionType(rawValue: Int(truncating: requisitionTypeValue)) {
+            self.requisitionType = requisitionType
         }
+
        
         self.timeStamp = managedObject.timeStamp ?? ""
     }
@@ -875,6 +876,8 @@ class RequisitionModel {
     
     func updateSampleInfoDataInToDB_Enviromental(isFinalSubmit: Bool) {
         var totalHeaderPlates = [LocationTypeCellModel]()
+        
+        debugPrint("Check final submit bool value :- ",isFinalSubmit)
         
         for (index, header) in self.actualCreatedHeaders.enumerated() {
             if let locationTypeId = header.selectedLocationTypeId {

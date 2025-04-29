@@ -14,7 +14,7 @@ final  public class VaccinationCustomersDAO{
     private init(){print("Initializer")}
     static let sharedInstance = VaccinationCustomersDAO()
     private var shippingInfo = [NSManagedObject]()
-    let managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
+    var managedContext = (UIApplication.shared.delegate as? AppDelegate)!.managedObjectContext
     let userIdStr = "userId = %@"
     let fssIdStr = "fssId = %d"
     
@@ -92,6 +92,17 @@ final  public class VaccinationCustomersDAO{
     }
     
     func fetchAllStateList(userId:String, countryId: String = "0")-> [VaccinationStatesList]{
+        if userId.isEmpty {
+            debugPrint("userId is empty")
+        } else {
+            debugPrint(userId)
+        }
+
+        if countryId.isEmpty {
+            debugPrint("countryId is empty")
+        } else {
+            debugPrint(countryId)
+        }
         var vaccinationMasterDataArr = [VaccinationStatesList]()
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationStatesList")
         fetchRequest.returnsObjectsAsFaults = false
@@ -119,7 +130,7 @@ final  public class VaccinationCustomersDAO{
     func fetchCountryNameFromCountryId(countryId: String)-> String {
         var str = ""
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationCountryList")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format:"countryId = %@", countryId)
@@ -141,7 +152,7 @@ final  public class VaccinationCustomersDAO{
     func fetchStateNameFromStateId(stateId: String)-> String {
         var str = ""
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationStatesList")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format:"stateId = %@", stateId)
@@ -218,6 +229,7 @@ final  public class VaccinationCustomersDAO{
     
     func deleteAllCustomers(userId:String){
         do {
+           
             for cusomterObj in  fetchCustomers(userId:userId){
                 managedContext.delete(cusomterObj)
             }
@@ -251,6 +263,7 @@ final  public class VaccinationCustomersDAO{
     
     func deleteAllCountryList(user_id: String){
         do {
+            debugPrint("user Id is = ",user_id)
             for countryListObj in  fetchAllCountryList(){
                 managedContext.delete(countryListObj)
             }
@@ -430,8 +443,8 @@ final  public class VaccinationCustomersDAO{
     }
     
     func saveShippingInfoInDB(newAssessment:[ShippingAddressDTO]?) {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        managedContext = appDelegate.managedObjectContext
         let entity = NSEntityDescription.entity(forEntityName: "VaccinationShippingAddress", in: managedContext)
         
         let assessmentObj = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -461,12 +474,12 @@ final  public class VaccinationCustomersDAO{
     }
     
     func deleteShippingInfoByFssId(_ fssId: Int) {
-        var dataArray = NSArray()
+       
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationShippingAddress")
         fetchRequest.returnsObjectsAsFaults = false
-        let userID =  UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
+   
         fetchRequest.predicate = NSPredicate(format: "fssId == %d", fssId)
         
         do {
@@ -484,10 +497,10 @@ final  public class VaccinationCustomersDAO{
     }
     
     func fetchShippingInfo(fssId:Int , FsrId:Int = 0) -> ShippingAddressDTO? {
-        var shippingInfo = ShippingAddressDTO(fssName: "", fssID: 0, trainingID: 0, id: 0, city: "", address2: "", stateID: 0, countryID: 0, address1: "", pincode: "")
+        var shippingaddressDetailsInfo = ShippingAddressDTO(fssName: "", fssID: 0, trainingID: 0, id: 0, city: "", address2: "", stateID: 0, countryID: 0, address1: "", pincode: "")
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationShippingAddress")
+              managedContext = appDelegate.managedObjectContext
+        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationShippingAddress")
         if fssId == 0
         {
            
@@ -505,47 +518,45 @@ final  public class VaccinationCustomersDAO{
             if let results = fetchedResult {
                 
                 for result in results {
-                    shippingInfo.id =  result.value(forKey: "certId") as? Int ?? 0
-                    shippingInfo.stateID =  result.value(forKey: "stateId") as? Int ?? 0
-                    shippingInfo.countryID =  result.value(forKey: "countryId") as? Int ?? 0
-                    shippingInfo.fssID =  result.value(forKey: "fssId") as? Int
-                    shippingInfo.trainingID =  result.value(forKey: "trainingId") as? Int
-                    shippingInfo.fssName =  result.value(forKey: "fssName") as? String
-                    shippingInfo.city =  result.value(forKey: "city") as? String
-                    shippingInfo.address1 =  result.value(forKey: "address1") as? String
-                    shippingInfo.address2 =  result.value(forKey: "address2") as? String
-                    shippingInfo.pincode =  result.value(forKey: "pincode") as? String
+                    shippingaddressDetailsInfo.id =  result.value(forKey: "certId") as? Int ?? 0
+                    shippingaddressDetailsInfo.stateID =  result.value(forKey: "stateId") as? Int ?? 0
+                    shippingaddressDetailsInfo.countryID =  result.value(forKey: "countryId") as? Int ?? 0
+                    shippingaddressDetailsInfo.fssID =  result.value(forKey: "fssId") as? Int
+                    shippingaddressDetailsInfo.trainingID =  result.value(forKey: "trainingId") as? Int
+                    shippingaddressDetailsInfo.fssName =  result.value(forKey: "fssName") as? String
+                    shippingaddressDetailsInfo.city =  result.value(forKey: "city") as? String
+                    shippingaddressDetailsInfo.address1 =  result.value(forKey: "address1") as? String
+                    shippingaddressDetailsInfo.address2 =  result.value(forKey: "address2") as? String
+                    shippingaddressDetailsInfo.pincode =  result.value(forKey: "pincode") as? String
                 }
             }
         } catch {
             print(appDelegateObj.testFuntion())
         }
-        return shippingInfo
+        return shippingaddressDetailsInfo
     }
     
     func deleteAllData(_ entity: String) {
 
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+              managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         
         fetchRequest.returnsObjectsAsFaults = false
-//        do {
+
         if let results = try? managedContext.fetch(fetchRequest) {
             for managedObject in results {
                 let managedObjectData: NSManagedObject = managedObject as! NSManagedObject
                 managedContext.delete(managedObjectData)
             }
         }
-//        } catch let error as NSError {
-//            print(appDelegateObj.testFuntion())
-//        }
+
     }
     
     func fetchShippingInfoByTrainingId(trainingId:Int) -> ShippingAddressDTO? {
-        var shippingInfo = ShippingAddressDTO(fssName: "", fssID: 0, trainingID: 0, id: 0, city: "", address2: "", stateID: 0, countryID: 0, address1: "", pincode: "")
+        var shippingInfoByID = ShippingAddressDTO(fssName: "", fssID: 0, trainingID: 0, id: 0, city: "", address2: "", stateID: 0, countryID: 0, address1: "", pincode: "")
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+              managedContext = appDelegate.managedObjectContext
         var fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationShippingAddress")
         fetchRequest.predicate = NSPredicate(format: "trainingId = %d",trainingId)
         
@@ -555,29 +566,29 @@ final  public class VaccinationCustomersDAO{
             if let results = fetchedResult {
                 
                 for result in results {
-                    shippingInfo.id =  result.value(forKey: "certId") as? Int ?? 0
-                    shippingInfo.stateID =  result.value(forKey: "stateId") as? Int ?? 0
-                    shippingInfo.countryID =  result.value(forKey: "countryId") as? Int ?? 0
-                    shippingInfo.fssID =  result.value(forKey: "fssId") as? Int
-                    shippingInfo.trainingID =  result.value(forKey: "trainingId") as? Int
-                    shippingInfo.fssName =  result.value(forKey: "fssName") as? String
-                    shippingInfo.city =  result.value(forKey: "city") as? String
-                    shippingInfo.address1 =  result.value(forKey: "address1") as? String
-                    shippingInfo.address2 =  result.value(forKey: "address2") as? String
-                    shippingInfo.pincode =  result.value(forKey: "pincode") as? String
+                    shippingInfoByID.id =  result.value(forKey: "certId") as? Int ?? 0
+                    shippingInfoByID.stateID =  result.value(forKey: "stateId") as? Int ?? 0
+                    shippingInfoByID.countryID =  result.value(forKey: "countryId") as? Int ?? 0
+                    shippingInfoByID.fssID =  result.value(forKey: "fssId") as? Int
+                    shippingInfoByID.trainingID =  result.value(forKey: "trainingId") as? Int
+                    shippingInfoByID.fssName =  result.value(forKey: "fssName") as? String
+                    shippingInfoByID.city =  result.value(forKey: "city") as? String
+                    shippingInfoByID.address1 =  result.value(forKey: "address1") as? String
+                    shippingInfoByID.address2 =  result.value(forKey: "address2") as? String
+                    shippingInfoByID.pincode =  result.value(forKey: "pincode") as? String
                 }
             }
         } catch {
             print(appDelegateObj.testFuntion())
         }
-        return shippingInfo
+        return shippingInfoByID
     }
     
     
     func fetchShippingInfoArr(fssId:Int) -> [ShippingAddressDTO] {
         var dataArray = [ShippingAddressDTO]()
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
+              managedContext = appDelegate.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "VaccinationShippingAddress")
         fetchRequest.returnsObjectsAsFaults = false
         fetchRequest.predicate = NSPredicate(format: fssIdStr,fssId)

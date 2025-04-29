@@ -17,7 +17,7 @@ final  public class SubmittedCertificationsService{
             
             switch Int64(trainingId) {
             case 1:
-                var status = VaccinationCertificationStatus.inProgress
+                 status = VaccinationCertificationStatus.inProgress
             case 2:
                 status = VaccinationCertificationStatus.draft
             case 3 :
@@ -49,9 +49,9 @@ final  public class SubmittedCertificationsService{
                     VaccinationDashboardDAO.sharedInstance.updateSubmittedDate(userId:userId,  certificationId: certObj?.certificationId ?? "", status: status,certCategoryId:certObj?.certificationCategoryId ?? "", certObj: certObj!,submittedDate: certObj?.submittedDate )
                     
                     if let employeeArr = certificationObj.operatorInfo {
-                        let employeeArr = certificationObj.operatorInfo
+                        let employeeArrIs = certificationObj.operatorInfo
                         var i:Int32 = 1
-                        for employee in employeeArr!{
+                        for employee in employeeArrIs!{
                             AddEmployeesDAO.sharedInstance.addCertEmployee(userId: userId, certificationId: certObj?.certificationId ?? "", employeeObj: getEmployeeObj(sortOrder: Int32(i),certId:certObj?.certificationId ?? "", userId:userId, dto:employee))
                             i += 1
                         }
@@ -159,15 +159,16 @@ final  public class SubmittedCertificationsService{
             .LookupMaster.SAFETY_CERTIFICATION_CATEGORY_ID
         certObj.certificationCategoryName = VaccinationConstants
             .LookupMaster.SAFETY_CERTIFICATION_CATEGORY_VALUE
-        if let dId = certData.deviceID {
-            if dId != ""{
-                let deviceIdComponents = dId.components(separatedBy: "_")
-                if deviceIdComponents.count > 1{
-                    let safetyCertId = deviceIdComponents[1]
-                    certObj.certificationId = safetyCertId
-                }
+        
+        if let dId = certData.deviceID, !dId.isEmpty {
+            let deviceIdComponents = dId.components(separatedBy: "_")
+            if deviceIdComponents.count > 1 {
+                let safetyCertId = deviceIdComponents[1]
+                certObj.certificationId = safetyCertId
             }
         }
+
+        
     }
     
     fileprivate func handleTrainingStatus(_ certData: GetSubmittedTrainingSchedulesInfoDTO, _ certObj: inout VaccinationCertificationVM) {
