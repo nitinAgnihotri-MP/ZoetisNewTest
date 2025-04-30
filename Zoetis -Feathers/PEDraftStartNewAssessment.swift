@@ -94,6 +94,115 @@ class PEDraftStartNewAssessment: BaseViewController {
     @IBOutlet weak var handmixSwitch: UISwitch!
     
     
+    fileprivate func handleViewDidLoadMethod() {
+        let xx = String(self.peNewAssessment.noOfEggs ?? 000)
+        if txtManufacturer.text != "",let character = peNewAssessment.manufacturer?.character(at:0) {
+            if txtManufacturer.text == "Other"{
+                showManufacturerOthers()
+            }
+            if character == constantToSave.character(at: 0) {
+                showManufacturerOthers()
+                let str =  peNewAssessment.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
+                manfacturerOtherTxt.text = str
+                txtManufacturer.text = "Other"
+                showManufacturerOthers()
+            }
+        }
+        if xx != "0" {
+            let last3 = String(xx.suffix(3))
+            if last3 ==  "000" {
+                showEggsOthers()
+                let str =  xx.replacingOccurrences(of: "000", with: "")
+                eggsOtherTxt.text = str
+                txtNumberOfEggs.text = "Other"
+            }
+        }
+        
+        if peNewAssessment.isFlopSelected == 1 || peNewAssessment.isFlopSelected == 3 || peNewAssessment.isFlopSelected == 4 {
+            isFlockAgeGreaterTheAllProd = true
+            btnFlockAgeGreater.setImage(UIImage(named: "checkIconPE"), for: .normal)
+            isFlockAgeGreaterThen50Weeks = false
+            btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+        } else if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5 {
+            isFlockAgeGreaterTheAllProd = false
+            btnFlockAgeGreater.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+            isFlockAgeGreaterThen50Weeks = true
+            btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
+        }
+        
+        let peNewAssessmentArray = CoreDataHandlerPE().getOnGoingDraftAssessmentArrayPEObject()
+        for obj in peNewAssessmentArray {
+            let assessment = obj
+            let imageCount = assessment.images
+            if imageCount.count > 0 {
+                cameraSwitch.isUserInteractionEnabled = false
+                cameraSwitch.alpha = 0.6
+            }
+        }
+    }
+    
+    fileprivate func handleViewDidLoadMethod2() {
+        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
+        if peNewAssessment.isChlorineStrip == 1 {
+            chlorineStripsSwitch.setOn(true, animated: false)
+            self.isAutomaticSwitch.setOn(false, animated: false)
+            isAutomaticFailView.isHidden = true
+            isAutomaticHeightConstraints.constant = 0
+        } else {
+            chlorineStripsSwitch.setOn(false, animated: false)
+            if peNewAssessment.isAutomaticFail == 1{
+                self.isAutomaticSwitch.setOn(true, animated: false)
+                isAutomaticFailView.isHidden = false
+                isAutomaticHeightConstraints.constant = 40
+            } else {
+                self.isAutomaticSwitch.setOn(false, animated: false)
+                isAutomaticFailView.isHidden = false
+                isAutomaticHeightConstraints.constant = 40
+            }
+        }
+        if infoObj != nil {
+            showExtendedPE(flag: false)
+            if !extendedPESwitch.isOn{
+                Constants.isExtendedPopup = true
+                enableExtendedPE(flag:true)
+            } else {
+                Constants.isExtendedPopup = false
+                enableExtendedPE(flag:false)
+            }
+        }
+        
+        if peNewAssessment.sanitationValue == true {
+            extendedPESwitch.isOn = true
+        } else {
+            extendedPESwitch.isOn = false
+        }
+    }
+    
+    fileprivate func handleViewDidLoadMethod3() {
+        if peNewAssessment.evaluationID != nil {
+            
+            if peNewAssessment.evaluationID == 1{
+                self.inventoryView.isHidden = false
+            } else {
+                self.peNewAssessment.isHandMix = false
+                self.inventoryView.isHidden = true
+            }
+        } else {
+            self.peNewAssessment.isHandMix = false
+            self.inventoryView.isHidden = true
+        }
+        checkBackAndSave()
+        if peNewAssessment.selectedTSRID == nil || peNewAssessment.selectedTSRID == 0 {
+            tsrButton.isUserInteractionEnabled = true
+            selectedTSR.alpha = 1
+        } else {
+            selectedTSR.text = peNewAssessment.selectedTSR
+            tsrButton.isUserInteractionEnabled = false
+            selectedTSR.isUserInteractionEnabled = false
+            selectedTSR.alpha = 0.6
+        }
+    }
+    
     override func viewDidLoad() {
         print("<<<<",self)
         super.viewDidLoad()
@@ -218,113 +327,10 @@ class PEDraftStartNewAssessment: BaseViewController {
         hideManufacturerOthers()
         hideEggsOthers()
         txtManufacturer.text = self.peNewAssessment.manufacturer ?? ""
-        if txtManufacturer.text != "",let character = peNewAssessment.manufacturer?.character(at:0) {
-            if txtManufacturer.text == "Other"{
-                showManufacturerOthers()
-            }
-            if character == constantToSave.character(at: 0) {
-                showManufacturerOthers()
-                let str =  peNewAssessment.manufacturer?.replacingOccurrences(of: constantToSave, with: "")
-                manfacturerOtherTxt.text = str
-                txtManufacturer.text = "Other"
-                showManufacturerOthers()
-            }
-        }
-        let xx = String(self.peNewAssessment.noOfEggs ?? 000)
-        if xx != "0" {
-            let last3 = String(xx.suffix(3))
-            if last3 ==  "000" {
-                showEggsOthers()
-                let str =  xx.replacingOccurrences(of: "000", with: "")
-                eggsOtherTxt.text = str
-                txtNumberOfEggs.text = "Other"
-            }
-        }
         
-        if peNewAssessment.isFlopSelected == 1 || peNewAssessment.isFlopSelected == 3 || peNewAssessment.isFlopSelected == 4 {
-            isFlockAgeGreaterTheAllProd = true
-            btnFlockAgeGreater.setImage(UIImage(named: "checkIconPE"), for: .normal)
-            isFlockAgeGreaterThen50Weeks = false
-            btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-        } else if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5 {
-            isFlockAgeGreaterTheAllProd = false
-            btnFlockAgeGreater.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-            isFlockAgeGreaterThen50Weeks = true
-            btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
-        }
-        
-        var  peNewAssessmentArray = CoreDataHandlerPE().getOnGoingDraftAssessmentArrayPEObject()
-        for obj in peNewAssessmentArray {
-            var assessment = obj as? PENewAssessment
-            let imageCount = assessment?.images as? [Int]
-            if imageCount?.count ?? 0 > 0 {
-                cameraSwitch.isUserInteractionEnabled = false
-                cameraSwitch.alpha = 0.6
-            }
-        }
-        
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment.serverAssessmentId ?? "")
-        
-        if peNewAssessment.isChlorineStrip == 1{
-            chlorineStripsSwitch.setOn(true, animated: false)
-            self.isAutomaticSwitch.setOn(false, animated: false)
-            isAutomaticFailView.isHidden = true
-            isAutomaticHeightConstraints.constant = 0
-        }else{
-            chlorineStripsSwitch.setOn(false, animated: false)
-            if peNewAssessment.isAutomaticFail == 1{
-                self.isAutomaticSwitch.setOn(true, animated: false)
-                isAutomaticFailView.isHidden = false
-                isAutomaticHeightConstraints.constant = 40
-            }else{
-                self.isAutomaticSwitch.setOn(false, animated: false)
-                isAutomaticFailView.isHidden = false
-                isAutomaticHeightConstraints.constant = 40
-            }
-        }
-        if infoObj != nil{
-            showExtendedPE(flag: false)
-            if !extendedPESwitch.isOn{
-                Constants.isExtendedPopup = true
-                enableExtendedPE(flag:true)
-            }else{
-                Constants.isExtendedPopup = false
-                enableExtendedPE(flag:false)
-            }
-        }
-        
-        if peNewAssessment.sanitationValue == true {
-            extendedPESwitch.isOn = true
-        }
-        else{
-            extendedPESwitch.isOn = false
-        }
-        
-        if peNewAssessment.evaluationID != nil{
-            
-            if peNewAssessment.evaluationID == 1{
-                self.inventoryView.isHidden = false
-            }
-            else{
-                self.peNewAssessment.isHandMix = false
-                self.inventoryView.isHidden = true
-            }
-        }
-        else
-        {
-            self.peNewAssessment.isHandMix = false
-            self.inventoryView.isHidden = true
-        }
-        checkBackAndSave()
-        if peNewAssessment.selectedTSRID == nil || peNewAssessment.selectedTSRID == 0{
-            tsrButton.isUserInteractionEnabled = true
-            selectedTSR.alpha = 1
-        }else {
-            selectedTSR.text = peNewAssessment.selectedTSR
-            tsrButton.isUserInteractionEnabled = false
-            selectedTSR.isUserInteractionEnabled = false
-            selectedTSR.alpha = 0.6
-        }
+        handleViewDidLoadMethod()
+        handleViewDidLoadMethod2()
+        handleViewDidLoadMethod3()
     }
     
     
@@ -333,7 +339,7 @@ class PEDraftStartNewAssessment: BaseViewController {
         case 1:
             if heightNumberOfEggsView.constant == 94 {
                 notesTop.constant = CGFloat((leftConst * 55 ) + 30)
-            }else{
+            } else {
                 notesTop.constant = CGFloat((leftConst * 55 ) + 40 )
             }
         case 2:
@@ -1961,7 +1967,7 @@ extension PEDraftStartNewAssessment : UITextFieldDelegate{
             if string == "" {
                 return true
             }
-            let isValid = string.stringWithoutWhitespaces.isNumber
+            
             let aSet = CharacterSet(charactersIn:"0123456789").inverted
             let compSepByCharInSet = string.components(separatedBy: aSet)
             let numberFiltered = compSepByCharInSet.joined(separator: "")

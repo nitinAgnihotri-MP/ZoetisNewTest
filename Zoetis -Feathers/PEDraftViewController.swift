@@ -186,10 +186,7 @@ extension PEDraftViewController: UITableViewDelegate, UITableViewDataSource{
     fileprivate func deleteCompletionElse(_ cell: PE_DraftIntCell, _ indexPath: IndexPath) {
         cell.deleteCompletion  = {[unowned self] ( error) in
             let assessment = self.peAssessmentDraftArray[indexPath.row]
-            var date = assessment.evaluationDate
-            date = date?.replacingOccurrences(of: "/", with: "")
-            
-            var siteId = String(assessment.siteId ?? 0)
+            var date = assessment.evaluationDate            
             
             let draftID = assessment.draftID ?? ""
             date = "C-" + draftID.prefix(20)

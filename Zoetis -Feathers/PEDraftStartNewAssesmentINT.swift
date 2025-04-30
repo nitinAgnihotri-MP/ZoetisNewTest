@@ -1978,11 +1978,7 @@ extension PEDraftStartNewAssesmentINT{
                 self.navigationController?.pushViewController(vc!, animated: true)
                 return
             }
-        } else {
-            print(appDelegateObj.testFuntion())
-            
-        }
-        
+        }        
     }
     
     func okButtonTapped() {

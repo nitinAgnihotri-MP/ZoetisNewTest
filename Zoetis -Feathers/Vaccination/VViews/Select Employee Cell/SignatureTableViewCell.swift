@@ -106,8 +106,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
                 
                 if certificateData.count > empIndex {
                     let firstname = certificateData[empIndex].name
-                    var fullName = firstname ?? ""
-                    fullName = "\(firstname ?? "") "
+                    var  fullName = "\(firstname ?? "") "
                     
                     operatorSignLbl.text = "Vaccine Mixer Signature*"
                     operatorSignLbl.text = operatorSignLbl.text  ?? "" + "*"
@@ -262,10 +261,10 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
                 previousBtn.isHidden = true
             }
             if empIndex > -1  && certificateData.count > empIndex {
-                var fullName = ""
+                
                 let firstname = certificateData[empIndex].name
-                fullName = firstname ?? ""
-                fullName = "\(firstname ?? "") "
+             
+                var fullName = "\(firstname ?? "") "
                 nextBtn.isUserInteractionEnabled = true
                 operatorSignLbl.text = "Vaccine Mixer Signature*"
                 operatorSignLbl.text = operatorSignLbl.text  ?? "" + "*"

@@ -1141,13 +1141,44 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
 
 //MARK: - Enviromental Location HeaderView Delegates
 extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates {
+    
+    fileprivate func updateCurrentRequisitionValidation(_ locationValues: [Microbial_LocationValues], _ templateType: EnviromentalSurveyController.STANDARD_TEMPLATE_TYPE, _ tempValue: Int, _ id: Int, _ fullIndex: inout Int) {
+        
+        let index = self.currentRequisition.actualCreatedHeaders.count - 1
+        
+        for lValue in locationValues {
+            let limit = (templateType == (tempValue == 0 ? .STD20 : .STD)) ? (tempValue == 0 ? lValue.rep20!.intValue : lValue.stnRep!.intValue) : lValue.rep40!.intValue
+            for _ in 0..<limit {
+                let plateCell = LocationTypeCellModel()
+                let i = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.append(plateCell)
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].isBacterialChecked = false
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].isMicoscoreChecked = true
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedLocationTypeId = id
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedLocationValues = lValue.text ?? ""
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedLocationValueId = lValue.id?.intValue
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].mediaDefault = lValue.media ?? ""
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].mediaTypeValue = lValue.media ?? ""
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedMediaTypeId = 1
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].samplingDefault = lValue.sampling ?? ""
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].samplingMethodTypeValue = lValue.sampling ?? ""
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].samplingMethodTypeId = 1
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].row = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count - 1
+                self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].section = self.currentRequisition.actualCreatedHeaders.count
+                self.currentRequisition.actualCreatedHeaders[index].noOfPlates = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count
+                self.currentRequisition.actualCreatedHeaders[self.currentRequisition.actualCreatedHeaders.count - 1].numberOfPlateIDCreated[i].plateId = "\(self.currentRequisition.barCode)-\(fullIndex + 1)"
+                fullIndex = fullIndex + 1
+            }
+        }
+    }
+    
     func setTemplateFor(templateType: STANDARD_TEMPLATE_TYPE) {
         self.currentRequisition.actualCreatedHeaders.removeAll()
 
         let locationTypeIds = self.currentRequisition.getAllLocationTypes().locationTypeIds
         let locationTypeNames = self.currentRequisition.getAllLocationTypes().locationTypes
         var fullIndex = 0
-        for (id, name) in zip(locationTypeIds, locationTypeNames){
+        for (id, name) in zip(locationTypeIds, locationTypeNames) {
             let locationHeader = LocationTypeHeaderModel()
             locationHeader.section = self.currentRequisition.actualCreatedHeaders.count + 1
             locationHeader.requisition_Id = self.currentRequisition.barCode
@@ -1166,32 +1197,7 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
             if locationValues.count > 0 {
                 i = i + 1
                 self.currentRequisition.actualCreatedHeaders.append(locationHeader)
-                let index = self.currentRequisition.actualCreatedHeaders.count - 1
-                
-                for lValue in locationValues {
-                    let limit = (templateType == (tempValue == 0 ? .STD20 : .STD)) ? (tempValue == 0 ? lValue.rep20!.intValue : lValue.stnRep!.intValue) : lValue.rep40!.intValue
-                    for _ in 0..<limit {
-                        let plateCell = LocationTypeCellModel()
-                        let i = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.append(plateCell)
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].isBacterialChecked = false
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].isMicoscoreChecked = true
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedLocationTypeId = id
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedLocationValues = lValue.text ?? ""
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedLocationValueId = lValue.id?.intValue
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].mediaDefault = lValue.media ?? ""
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].mediaTypeValue = lValue.media ?? ""
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].selectedMediaTypeId = 1
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].samplingDefault = lValue.sampling ?? ""
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].samplingMethodTypeValue = lValue.sampling ?? ""
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].samplingMethodTypeId = 1
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].row = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count - 1
-                        self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated[i].section = self.currentRequisition.actualCreatedHeaders.count
-                        self.currentRequisition.actualCreatedHeaders[index].noOfPlates = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count
-                        self.currentRequisition.actualCreatedHeaders[self.currentRequisition.actualCreatedHeaders.count - 1].numberOfPlateIDCreated[i].plateId = "\(self.currentRequisition.barCode)-\(fullIndex + 1)"
-                        fullIndex = fullIndex + 1
-                    }
-                }
+                updateCurrentRequisitionValidation(locationValues, templateType, tempValue, id, &fullIndex)
             }
         }
         self.saveCurrentDataInLocalDB(isFinalSubmit: false)
@@ -1634,14 +1640,10 @@ extension EnviromentalSurveyController: BacterialFormCellDelegates {
     
     func reviewerButtonPressed_Bacterial(_ cell: BacterialFormCell) {
         self.saveCurrentDataInLocalDB(isFinalSubmit: false)
-//        let reviewerDetailsArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer")
-//        let reviewerNamesArray  = reviewerDetailsArray.value(forKey: "reviewerName") as? [String] ?? []
-//        self.setDropdrown(cell.reviewerButton, clickedField: Constants.ClickedFieldMicrobialSurvey.reviewer, dropDownArr: reviewerNamesArray, cell: cell)
-//0128001500001961
         self.presentReviewerController()
     }
     
-    private func presentReviewerController(){
+    private func presentReviewerController() {
         let obj = ReviewerViewController(nibName: "ReviewerViewController", bundle: nil)
         obj.definesPresentationContext = true
         obj.providesPresentationContextTransitionStyle = true
@@ -1649,12 +1651,12 @@ extension EnviromentalSurveyController: BacterialFormCellDelegates {
         obj.modalPresentationStyle = .overCurrentContext
         obj.cancelAction = { sender in
             let selectedReviewer = self.reviewerDetails.filter{ $0.isSelected?.boolValue == true }
-            if selectedReviewer.count > 0{
+            self.currentRequisition.reviewer =  ""
+            if selectedReviewer.count > 0 {
                 self.currentRequisition.reviewer = selectedReviewer[0].reviewerName ?? ""
-            }else{
-                self.currentRequisition.reviewer =  ""
             }
-            if selectedReviewer.count > 1{
+            
+            if selectedReviewer.count > 1 {
                 for i in 1..<selectedReviewer.count{
                     self.currentRequisition.reviewer = "\(self.currentRequisition.reviewer), \(selectedReviewer[i].reviewerName ?? "")"
                 }
@@ -1668,13 +1670,13 @@ extension EnviromentalSurveyController: BacterialFormCellDelegates {
         
         obj.doneAction = { sender in
             let selectedReviewer = self.reviewerDetails.filter{ $0.isSelected?.boolValue == true }
-            if selectedReviewer.count > 0{
+            self.currentRequisition.reviewer =  ""
+            if selectedReviewer.count > 0 {
                 self.currentRequisition.reviewer = selectedReviewer[0].reviewerName ?? ""
-            }else{
-                self.currentRequisition.reviewer =  ""
             }
-            if selectedReviewer.count > 1{
-                for i in 1..<selectedReviewer.count{
+            
+            if selectedReviewer.count > 1 {
+                for i in 1..<selectedReviewer.count {
                     self.currentRequisition.reviewer = "\(self.currentRequisition.reviewer), \(selectedReviewer[i].reviewerName ?? "")"
                 }
             }

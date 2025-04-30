@@ -1786,6 +1786,123 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     // MARK: - Setup day of age subcatenous
     
+    fileprivate func populateMLValues() {
+        if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
+            self.ml = 0.0
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
+            self.ml = 3785.41
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
+            self.ml = 7570.82
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
+            self.ml = 18927.05
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
+            self.ml = 2000.00
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
+            self.ml = 2400.00
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {
+            self.ml = 2800.00
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
+            self.ml = 200.00
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
+            self.ml = 300.00
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
+            self.ml = 400.00
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
+            self.ml = 500.00
+        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
+            self.ml = 800.00
+        }
+    }
+    
+    fileprivate func handleAmpleSizeCompletionValidation(_ selectedVal: String,indexPath: IndexPath) {
+        if self.ml == 0.0 {
+            self.dayOfAgeSData[indexPath.row].dosage = ""
+        }
+        self.dayOfAgeSData[indexPath.row].ampuleSize = selectedVal
+        let a = Double(self.dayOfAgeSData[indexPath.row].ampulePerBag ?? "0") ?? 0
+        let b = Double(self.dayOfAgeSData[indexPath.row].ampuleSize ?? "0") ?? 0
+        if a != 0 && b != 0 && self.ml != 0 {
+            let x = a * b
+            let y = self.ml/0.2
+            let z = x/y
+            
+            let r  = Rational(approximating: z)
+            let n = String(r.numerator)
+            let d = String(r.denominator)
+            
+            if regionID == 3 {
+                self.dayOfAgeSData[indexPath.row].dosage = n + "/" + d
+            } else {
+                self.dayOfAgeSData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
+            }
+        }
+    }
+    
+    fileprivate func handleAmplePerBagCompletionDropdown(_ selectedVal: String,indexPath:IndexPath) {
+        if self.ml == 0.0 {
+            self.dayOfAgeSData[indexPath.row].dosage = ""
+        }
+        self.dayOfAgeSData[indexPath.row].ampulePerBag = selectedVal
+        let a = Double(self.dayOfAgeSData[indexPath.row].ampulePerBag ?? "0") ?? 0
+        let b = Double(self.dayOfAgeSData[indexPath.row].ampuleSize ?? "0") ?? 0
+        if a != 0 && b != 0 && self.ml != 0 {
+            let x = a * b
+            let y = self.ml/0.2
+            let z = x/y
+            
+            let r  = Rational(approximating: z)
+            let n = String(r.numerator)
+            let d = String(r.denominator)
+            if regionID == 3 {
+                self.dayOfAgeSData[indexPath.row].dosage = n + "/" + d
+            } else {
+                self.dayOfAgeSData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
+            }
+        }
+    }
+    
+    fileprivate func handleVnameMfgidArrValidation(_ vNameMfgIdArray: NSArray,
+                                                   _ ManufacturerId: Int,
+                                                   _ indexArray: inout [Int],
+                                                   _ vNameArray: NSArray,
+                                                   _ indexPath: IndexPath,
+                                                   _ cell:InovojectCell) {
+        var x = -1
+        for obj in vNameMfgIdArray {
+            x = x + 1
+            if obj as? Int ?? 0 == ManufacturerId {
+                _ = vNameMfgIdArray.index(of: obj) // 3
+                indexArray.append(x)
+            }
+        }
+        
+        let vNameFilterArray = vNameArray as? [String] ?? [String]()
+        if vNameFilterArray.count > 0 {
+            self.dropDownVIewNew(arrayData: vNameFilterArray, kWidth: cell.tfName.frame.width, kAnchor: cell.tfName, yheight: cell.tfName.bounds.height) { [unowned self] selectedVal, index in
+                self.dayOfAgeSData[indexPath.row].name = selectedVal
+                CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeSData[indexPath.row])
+                
+                self.reloadTableViewWithAnimation()
+            }
+            self.dropHiddenAndShow()
+        }
+    }
+    
+    fileprivate func handleVaccineManufacturerCompletionDropDownVIewNew(_ indexPath:IndexPath,_ cell:InovojectCell) {
+        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+        if vManufacutrerNameArray.count > 0 {
+            self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfVaccineMan.frame.width, kAnchor: cell.tfVaccineMan, yheight: cell.tfVaccineMan.bounds.height) { [unowned self] selectedVal, index  in
+                self.dayOfAgeSData[indexPath.row].vaccineMan = selectedVal
+                self.reloadTableViewWithAnimation()
+                self.dayOfAgeSData[indexPath.row].name = ""
+                CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeSData[indexPath.row])
+                self.reloadTableViewWithAnimation()
+            }
+            self.dropHiddenAndShow()
+        }
+    }
+    
     func setupDayOfAgeSCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> InovojectCell {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: InovojectCell.identifier) as? InovojectCell{
@@ -1794,18 +1911,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             cell.vaccineManufacturerCompletion = {[unowned self] ( error) in
                 self.tableviewIndexPath = indexPath
                 
-                let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                if vManufacutrerNameArray.count > 0 {
-                    self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfVaccineMan.frame.width, kAnchor: cell.tfVaccineMan, yheight: cell.tfVaccineMan.bounds.height) { [unowned self] selectedVal, index  in
-                        self.dayOfAgeSData[indexPath.row].vaccineMan = selectedVal
-                        self.reloadTableViewWithAnimation()
-                        self.dayOfAgeSData[indexPath.row].name = ""
-                        CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeSData[indexPath.row])
-                        self.reloadTableViewWithAnimation()
-                    }
-                    self.dropHiddenAndShow()
-                }
+                handleVaccineManufacturerCompletionDropDownVIewNew(indexPath, cell)
             }
             
             cell.ampleSizeCompletion = {[unowned self] ( error) in
@@ -1813,56 +1919,8 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
                 let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "size") as? NSArray ?? NSArray()
                 self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleSize.frame.width, kAnchor: cell.tfAmpleSize, yheight: cell.tfAmpleSize.bounds.height) { [unowned self] selectedVal, index  in
-                    if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
-                        self.ml = 0.0
-                    }
-                    else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
-                        self.ml = 3785.41
-                    }
-                    else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
-                        self.ml = 7570.82
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
-                        self.ml = 18927.05
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
-                        self.ml = 2000.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
-                        self.ml = 2400.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {
-                        self.ml = 2800.00
-                    }
-                    else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
-                        self.ml = 200.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
-                        self.ml = 300.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
-                        self.ml = 400.00
-                    } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
-                        self.ml = 500.00
-                    }else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
-                        self.ml = 800.00
-                    }
-                    let c = self.ml
-                    if c == 0.0 {
-                        self.dayOfAgeSData[indexPath.row].dosage = ""
-                    }
-                    self.dayOfAgeSData[indexPath.row].ampuleSize = selectedVal
-                    let a = Double(self.dayOfAgeSData[indexPath.row].ampulePerBag ?? "0") ?? 0
-                    let b = Double(self.dayOfAgeSData[indexPath.row].ampuleSize ?? "0") ?? 0
-                    if a != 0 && b != 0 && c != 0{
-                        let x = a * b
-                        let y = c/0.2
-                        let z = x/y
-                        
-                        let r  = Rational(approximating: z)
-                        let n = String(r.numerator)
-                        let d = String(r.denominator)
-                        
-                        if regionID == 3 {
-                            self.dayOfAgeSData[indexPath.row].dosage = n + "/" + d
-                        } else {
-                            self.dayOfAgeSData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
-                        }
-                    }
+                    populateMLValues()
+                    self.handleAmpleSizeCompletionValidation(selectedVal, indexPath: indexPath)
                     CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeSData[indexPath.row])
                     self.reloadTableViewWithAnimation()
                 }
@@ -1873,58 +1931,12 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 self.tableviewIndexPath = indexPath
                 let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmplePerBag")
                 let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "bagNo") as? NSArray ?? NSArray()
-                if  vManufacutrerNameArray.count > 0 {
+                if vManufacutrerNameArray.count > 0 {
                     
                     self.dropDownVIewNew(arrayData: vManufacutrerNameArray as? [String] ?? [String](), kWidth: cell.tfAmpleBag.frame.width, kAnchor: cell.tfAmpleBag, yheight: cell.tfAmpleBag.bounds.height) { [unowned self] selectedVal, index  in
                         
-                        if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
-                            self.ml = 0.0
-                        }
-                        else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
-                            self.ml = 3785.41
-                        }else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
-                            self.ml = 7570.82
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
-                            self.ml = 18927.05
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
-                            self.ml = 2000.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
-                            self.ml = 2400.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {  self.ml = 2800.00
-                        }
-                        
-                        else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
-                            self.ml = 200.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
-                            self.ml = 300.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
-                            self.ml = 400.00
-                        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
-                            self.ml = 500.00
-                        }else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
-                            self.ml = 800.00
-                        }
-                        let c = self.ml
-                        if c == 0.0 {
-                            self.dayOfAgeSData[indexPath.row].dosage = ""
-                        }
-                        self.dayOfAgeSData[indexPath.row].ampulePerBag = selectedVal
-                        let a = Double(self.dayOfAgeSData[indexPath.row].ampulePerBag ?? "0") ?? 0
-                        let b = Double(self.dayOfAgeSData[indexPath.row].ampuleSize ?? "0") ?? 0
-                        if a != 0 && b != 0 && c != 0{
-                            let x = a * b
-                            let y = c/0.2
-                            let z = x/y
-                            
-                            let r  = Rational(approximating: z)
-                            let n = String(r.numerator)
-                            let d = String(r.denominator)
-                            if regionID == 3 {
-                                self.dayOfAgeSData[indexPath.row].dosage = n + "/" + d
-                            } else {
-                                self.dayOfAgeSData[indexPath.row].dosage = "\(Double(round(1000 * z) / 1000))"
-                            }
-                        }
+                        populateMLValues()
+                        handleAmplePerBagCompletionDropdown(selectedVal,indexPath: indexPath)
                         
                         CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeSData[indexPath.row])
                         self.reloadTableViewWithAnimation()
@@ -1933,7 +1945,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 self.dropHiddenAndShow()
             }
             
-            cell.nameCompletion  = {[unowned self] ( text) in
+            cell.nameCompletion = {[unowned self] ( text) in
                 self.tableviewIndexPath = indexPath
                 if text != "" {
                     self.dayOfAgeSData[indexPath.row].name = text
@@ -1954,25 +1966,12 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                     let vNameDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
                     let vNameArray = vNameDetailsArray.value(forKey: "name")  as? NSArray ?? NSArray()
                     let vNameMfgIdArray = vNameDetailsArray.value(forKey: "mfgId")  as? NSArray ?? NSArray()
-                    var x = -1
-                    for obj in vNameMfgIdArray {
-                        x = x + 1
-                        if obj as? Int ?? 0 == ManufacturerId {
-                            _ = vNameMfgIdArray.index(of: obj) // 3
-                            indexArray.append(x)
-                        }
-                    }
-                    
-                    let vNameFilterArray = vNameArray as? [String] ?? [String]()
-                    if vNameFilterArray.count > 0 {
-                        self.dropDownVIewNew(arrayData: vNameFilterArray as? [String] ?? [String](), kWidth: cell.tfName.frame.width, kAnchor: cell.tfName, yheight: cell.tfName.bounds.height) { [unowned self] selectedVal, index  in
-                            self.dayOfAgeSData[indexPath.row].name = selectedVal
-                            CoreDataHandlerPE().updateDOAInDB(inovojectData:  self.dayOfAgeSData[indexPath.row])
-                            
-                            self.reloadTableViewWithAnimation()
-                        }
-                        self.dropHiddenAndShow()
-                    }
+                    self.handleVnameMfgidArrValidation(vNameMfgIdArray,
+                                                       ManufacturerId,
+                                                       &indexArray,
+                                                       vNameArray,
+                                                       indexPath,
+                                                       cell)
                 }
                 self.view.endEditing(true)
             }
@@ -3846,42 +3845,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         count += 1
     }
     
-    func updateDosageDayOfAgeDataS(section:Int)  {
-        
-        if self.peNewAssessment.dDDT?.lowercased().contains("unknown") ?? false {
-            self.ml = 0.0
-        }  else if self.peNewAssessment.dDDT?.lowercased().contains(oneGallonStr) ?? false {
-            self.ml = 3785.41
-        }else if self.peNewAssessment.dDDT?.lowercased().contains(twoGallonStr) ?? false {
-            self.ml = 7570.82
-        } else if self.peNewAssessment.dDDT?.lowercased().contains(fiveGallonStr) ?? false {
-            self.ml = 18927.05
-        } else if self.peNewAssessment.dDDT?.lowercased().contains(twoLitre) ?? false {
-            self.ml = 2000.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter24) ?? false {
-            self.ml = 2400.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains(liter28) ?? false {  self.ml = 2800.00
-        }
-        else if self.peNewAssessment.dDDT?.lowercased().contains(mil200) ?? false {
-            self.ml = 200.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil300) ?? false {
-            self.ml = 300.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil400) ?? false {
-            self.ml = 400.00
-        } else if self.peNewAssessment.dDDT?.lowercased().contains(mil500) ?? false {
-            self.ml = 500.00
-        }else if self.peNewAssessment.dDDT?.lowercased().contains(mil800) ?? false {
-            self.ml = 800.00
-        }
-        
-        
-        let c = self.ml
-        if c == 0.0 {
-            // obj.dosage = ""
-        }
+    func updateDosageDayOfAgeDataS(section:Int) {
+        populateMLValues()
         var count = 0
         for obj in self.dayOfAgeSData{
-            dosageCalculation(obj, c, &count)
+            dosageCalculation(obj, self.ml, &count)
         }
     }
     
@@ -3899,8 +3867,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             if(section == 2) {
                 return 100
             }
-        }
-        else{
+        } else {
             if section > 0 {
                 
                 if selectedCategory?.sequenceNoo == 1 {
@@ -3909,11 +3876,11 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 if selectedCategory?.sequenceNoo == 3 {
                     return 95.0
                 }
-            }else {
-                if   selectedCategory?.sequenceNoo == 12{
+            } else {
+                if selectedCategory?.sequenceNoo == 12 {
                     if section == 0 {
                         return 70.0
-                    }else{
+                    } else {
                         return 0.0
                     }
                 }
@@ -4138,10 +4105,50 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
         print(appDelegateObj.testFuntion())
     }
     
+    private func validateAssessmentAssStatus(assessment:PE_AssessmentInProgress?) -> Bool? {
+        if assessment?.note?.count ?? 0 < 1 {
+            if strings.contains(Constants.pleaseEnterCommentForThawBathTempStr) {
+                strings = strings.filter { $0 != Constants.pleaseEnterCommentForThawBathTempStr
+                }
+            }
+            if regionID == 3 {
+                strings.append(Constants.pleaseEnterCommentForThawBathTempStr)
+            } else {
+                return true
+            }
+        } else {
+            if regionID == 3,strings.contains(Constants.pleaseEnterCommentForThawBathTempStr) {
+                strings = strings.filter { $0 != Constants.pleaseEnterCommentForThawBathTempStr
+                }
+            }
+        }
+        
+        return nil
+    }
+    
+    private func validateAssessmentAssStatusNote(assessment:PE_AssessmentInProgress?) -> Bool? {
+        
+        if assessment?.note?.count ?? 0 < 1 {
+            if strings.contains(Constants.pleaseEnterCommentForVaccineThawingTimesStr) {
+                strings = strings.filter { $0 != Constants.pleaseEnterCommentForVaccineThawingTimesStr }
+            }
+            if regionID == 3 {
+                strings.append(Constants.pleaseEnterCommentForVaccineThawingTimesStr)
+            } else {
+                return true
+            }
+        } else {
+            if regionID == 3,strings.contains(Constants.pleaseEnterCommentForVaccineThawingTimesStr) {
+                strings = strings.filter { $0 != Constants.pleaseEnterCommentForVaccineThawingTimesStr
+                }
+            }
+        }
+        return nil
+    }
+    
     // MARK: - Update Assessment Binding notes for every questions */
     
-    func checkNoteForEveryQuestion() -> Bool {
-        self.refreshArray()
+    fileprivate func validateCatArrayForTableAssessmentInProgress() -> Bool? {
         for obj in catArrayForTableIs {
             let assessment = obj as? PE_AssessmentInProgress
             if assessment?.assStatus == 0 && assessment?.isNA == false,assessment?.note?.count ?? 0 < 1 {
@@ -4153,6 +4160,14 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 }
             }
         }
+        return nil
+    }
+    
+    func checkNoteForEveryQuestion() -> Bool {
+        self.refreshArray()
+        if let boolStatus = validateCatArrayForTableAssessmentInProgress() {
+            return boolStatus
+        }
         
         if finishingAssessment == true {
             catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(2)
@@ -4160,40 +4175,13 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
             for obj in catArrayForTableIs {
                 let assessment = obj as? PE_AssessmentInProgress
                 
-                if assessment?.assStatus == 1 && assessment?.assID == 5  {
-                    if assessment?.note?.count ?? 0 < 1 {
-                        
-                        if strings.contains(Constants.pleaseEnterCommentForThawBathTempStr) {
-                            strings = strings.filter { $0 != Constants.pleaseEnterCommentForThawBathTempStr
-                            }
-                        }
-                        if regionID == 3 {
-                            strings.append(Constants.pleaseEnterCommentForThawBathTempStr)
-                        } else {
-                            return true
-                        }
-                    } else {
-                        if regionID == 3,strings.contains(Constants.pleaseEnterCommentForThawBathTempStr) {
-                            strings = strings.filter { $0 != Constants.pleaseEnterCommentForThawBathTempStr
-                            }
-                        }
+                if assessment?.assStatus == 1 && assessment?.assID == 5 {
+                    if let status = validateAssessmentAssStatus(assessment: assessment) {
+                        return status
                     }
                 } else if assessment?.assStatus == 1 && assessment?.assID == 9 {
-                    if assessment?.note?.count ?? 0 < 1 {
-                        
-                        if strings.contains(Constants.pleaseEnterCommentForVaccineThawingTimesStr) {
-                            strings = strings.filter { $0 != Constants.pleaseEnterCommentForVaccineThawingTimesStr }
-                        }
-                        if regionID == 3 {
-                            strings.append(Constants.pleaseEnterCommentForVaccineThawingTimesStr)
-                        } else {
-                            return true
-                        }
-                    } else {
-                        if regionID == 3,strings.contains(Constants.pleaseEnterCommentForVaccineThawingTimesStr) {
-                            strings = strings.filter { $0 != Constants.pleaseEnterCommentForVaccineThawingTimesStr
-                            }
-                        }
+                    if let boolStatus = validateAssessmentAssStatusNote(assessment: assessment) {
+                        return boolStatus
                     }
                 }
             }

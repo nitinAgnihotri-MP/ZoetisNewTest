@@ -431,7 +431,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         
         if regionID == 3
         {
-            dateFormatter.dateFormat = Constants.MMddyyyyStr
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         }
         else{
             dateFormatter.dateFormat = Constants.ddMMyyyStr
@@ -747,7 +747,7 @@ class PEDashboardViewController: BaseViewController , ChartViewDelegate{
         dateFormatter.dateFormat = Constants.ddMMyyyStr
 
         if(regionID == 3) {
-            dateFormatter.dateFormat = Constants.MMddyyyyStr
+            dateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         }
         
         let sortedArray = peAssessmentDraftArray.sorted {
@@ -2482,6 +2482,12 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         }
     }
     
+    fileprivate func modifyJsonWithValidation(_ regionId: Int, _ saveType: Int, _ dict: PENewAssessment, _ json: inout [String : Any]) {
+        if regionId == 3 && saveType == 0 && dict.statusType == 2 {
+            json["Status_Type"] = dict.statusType
+        }
+    }
+    
     func createSyncRequest(dict: PENewAssessment, certificationData: [PECertificateData]) -> JSONDictionary {
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as! String
         let uniID = dict.dataToSubmitID ?? dict.draftID ?? ""
@@ -2569,7 +2575,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
         
         // Format evaluation date
         let dateFormatter = CodeHelper.sharedInstance.getDateFormatterObj("")
-        dateFormatter.dateFormat = regionId == 3 ? Constants.MMddyyyyStr : Constants.ddMMyyyStr
+        dateFormatter.dateFormat = regionId == 3 ? appDelegateObj.MMddyyyStr : Constants.ddMMyyyStr
         let evalDateObj = dateFormatter.date(from: evaluationDate)
         dateFormatter.dateFormat = "yyyyMMdd"
         let evalDateStr = dateFormatter.string(from: evalDateObj ?? Date())
@@ -2628,9 +2634,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             "Handmix": isHandMix
         ]
         
-        if regionId == 3 && saveType == 0 && dict.statusType == 2 {
-            json["Status_Type"] = dict.statusType
-        }
+        modifyJsonWithValidation(regionId, saveType, dict, &json)
         
         return json
     }
@@ -2856,7 +2860,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
             convertDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             convertDateFormatter.dateFormat = yyymmdd
         } else {
-            convertDateFormatter.dateFormat = Constants.MMddyyyyStr
+            convertDateFormatter.dateFormat = appDelegateObj.MMddyyyStr
         }
         
         if oldDate != nil {

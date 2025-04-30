@@ -387,10 +387,10 @@ class SingleSyncData: NSObject {
                 let id = UserDefaults.standard.integer(forKey: "Id")
                 mainDict.setValue(id, forKey: "UserId")
                 mainDict.setValue(false, forKey: "finalized")
-                var sessionDict = NSMutableDictionary()
-                sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id, "LanguageId":langId  , "feeds" : mainFeeds]
+            
+                let sessionDict: NSMutableDictionary = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id, "LanguageId":langId  , "feeds" : mainFeeds]
                 sessionArray.add(sessionDict)
-                sessionDict = NSMutableDictionary()
+                sessionDict.removeAllObjects()
                 sessionDictMain = ["Sessions" : sessionArray]
             }
             
@@ -709,7 +709,7 @@ class SingleSyncData: NSObject {
                         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                             self.delegeteSyncApiData.failWithErrorInternalSyncdata()
                         }
-                        else if let data = response.data{
+                        else if response.data != nil {
                             if let s = statusCode {
                                 self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
                             }
@@ -741,7 +741,8 @@ class SingleSyncData: NSObject {
             
             if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                 self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-            } else if let data = response.data{
+            }
+            else if response.data != nil {
                 
                 if let s = statusCode {
                     self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
@@ -1030,7 +1031,7 @@ class SingleSyncData: NSObject {
                         
                         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                             self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if let data = response.data{
+                        } else if response.data != nil {
                             
                             if let s = statusCode {
                                 self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
@@ -1401,7 +1402,7 @@ class SingleSyncData: NSObject {
             {
                 self.delegeteSyncApiData.failWithErrorInternalSyncdata()
             }
-            else if let data = response.data
+            else if response.data != nil 
             {
                 self.delegeteSyncApiData.failWithErrorInternalSyncdata()
             }

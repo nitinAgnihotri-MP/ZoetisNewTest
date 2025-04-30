@@ -376,155 +376,117 @@ class PEStartNewAssessmentINT: BaseViewController {
     }
     
     // MARK: - Setup UI
-    private func setUpDidLoad(){
-        self.manfacturerOtherTxt.delegate = self
-        self.eggsOtherTxt.delegate = self
-        self.eggsOtherTxt.keyboardType = .numberPad
-        self.txtBreedOfBirdsOthers.delegate = self
-        
-        let dateFormatter = DateFormatter()
-
-        if regionID != 3 {
-            dateFormatter.dateFormat = Constants.ddMMyyyStr
-        }
-        else{
-            dateFormatter.dateFormat=Constants.MMddyyyyStr
-        }
-        
-        let strdate1 = dateFormatter.string(from: scheduledAssessment?.scheduledDate ?? Date()) as String
-        self.cameraSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
-        self.hatcherySwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
-        peHeaderViewController = PEHeaderViewController()
-        peHeaderViewController.titleOfHeader = "Assessment"
-        
-        isAutomaticFailView.isHidden = true
-        isAutomaticSwitch.isHidden = true
-        self.headerView.addSubview(peHeaderViewController.view)
-        self.topviewConstraint(vwTop: peHeaderViewController.view)
-        notesTextView.delegate = self
-        notesTextView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
-        notesTextView.textContainer.lineFragmentPadding = 12
-        notesTextView.text = ""
-        peNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject(serverAssessmentId:scheduledAssessment?.serverAssessmentId ?? "",createNewObject:true)
-        peNewAssessment.evaluatorID = scheduledAssessment?.evaluatorID
-        peNewAssessment.evaluatorName = scheduledAssessment?.evaluatorName
-        if peNewAssessment.serverAssessmentId == nil{
-            peNewAssessment.visitName = scheduledAssessment?.visitName
-            peNewAssessment.visitID = scheduledAssessment?.visitID
-            peNewAssessment.notes = scheduledAssessment?.notes
-            peNewAssessment.customerName = scheduledAssessment?.customerName
-            peNewAssessment.customerId = scheduledAssessment?.customerId
-            peNewAssessment.siteId = scheduledAssessment?.siteId
-            peNewAssessment.sanitationEmbrex = scheduledAssessment?.sanitationEmbrex
-            peNewAssessment.statusType = 3
-            peNewAssessment.siteName = scheduledAssessment?.siteName
-            peNewAssessment.serverAssessmentId = scheduledAssessment?.serverAssessmentId
-            peNewAssessment.evaluationDate = strdate1
-            peNewAssessment.countryName = scheduledAssessment?.countryName
-            peNewAssessment.countryID = scheduledAssessment?.countryID
-            peNewAssessment.fluid = scheduledAssessment?.fluid ?? false
-            peNewAssessment.basicTransfer = scheduledAssessment?.basicTransfer ?? false
-            peNewAssessment.extndMicro = scheduledAssessment?.extndMicro ?? false
-            peNewAssessment.refrigeratorNote = scheduledAssessment?.refrigeratorNote ?? ""
-            peNewAssessment.clorineName = scheduledAssessment?.clorineName
-            peNewAssessment.clorineId = scheduledAssessment?.clorineId
-        }
-        
-        if let selectedTSRID = scheduledAssessment?.selectedTSRID {
-            peNewAssessment.selectedTSRID = selectedTSRID
-        }
-        
-        if let selectedTSR = scheduledAssessment?.selectedTSR,selectedTSR != "" {
-            peNewAssessment.selectedTSR = selectedTSR
-        }
-        
-        peNewAssessment.serverAssessmentId = scheduledAssessment?.serverAssessmentId
-        notesTextView.text = peNewAssessment.notes
-        selectedCustomerText.text = peNewAssessment.customerName
-        selectedSiteText.text = peNewAssessment.siteName
-        countryTxt.text = peNewAssessment.countryName
-        selectedCountryId = peNewAssessment.countryID ?? 0
-        clorineTxtFld.text = peNewAssessment.clorineName
-        selectedClorineId = peNewAssessment.clorineId ?? 0
-        peNewAssessment.fluid = scheduledAssessment?.fluid
-        peNewAssessment.basicTransfer = scheduledAssessment?.basicTransfer
-        peNewAssessment.countryName = scheduledAssessment?.countryName
-        peNewAssessment.countryID = scheduledAssessment?.countryID
-        peNewAssessment.refrigeratorNote = scheduledAssessment?.refrigeratorNote
-        inovoPESwitch = peNewAssessment.fluid ?? false
-        basicPESwitch = peNewAssessment.basicTransfer ?? false
-        extendedPESwitch = peNewAssessment.extndMicro ?? false
-        peNewAssessment.clorineName = scheduledAssessment?.clorineName
-        peNewAssessment.clorineId = scheduledAssessment?.clorineId
-        
-        if inovoPESwitch == false {
-            inovoBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-        }
-        else{
-            inovoBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
-        }
-        
-        if basicPESwitch == false {
-            basicNewBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+    fileprivate func handleViewDidLoadMethod1() {
+        if !Constants.isFirstTime {
+            if peNewAssessment.clorineName == "" || peNewAssessment.clorineName == nil  {
+                
+                self.isAutomaticSwitch.setOn(false, animated: false)
+                isAutomaticFailView.isHidden = true
+                clorineViewHeightConstranit.constant = 60
+                isAutomaticSwitch.isHidden = true
+                
+            } else {
+                
+                if peNewAssessment.isAutomaticFail == 1{
+                    self.isAutomaticSwitch.setOn(true, animated: false)
+                    isAutomaticFailView.isHidden = false
+                    isAutomaticSwitch.isHidden = false
+                    clorineViewHeightConstranit.constant = 120
+                    
+                } else {
+                    self.isAutomaticSwitch.setOn(false, animated: false)
+                    isAutomaticFailView.isHidden = false
+                    isAutomaticSwitch.isHidden = false
+                    clorineViewHeightConstranit.constant = 120
+                }
+            }
         } else {
-            basicNewBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
+            
+            peNewAssessment.isChlorineStrip = 1
+            
+            if clorineTxtFld.text == ""  {
+                clorineViewHeightConstranit.constant = 60
+                isAutomaticFailView.isHidden = true
+                isAutomaticSwitch.isHidden = true
+            } else {
+                clorineViewHeightConstranit.constant = 120
+                isAutomaticFailView.isHidden = false
+                isAutomaticSwitch.isHidden = false
+                
+                if peNewAssessment.isAutomaticFail == 1 {
+                    self.isAutomaticSwitch.setOn(true, animated: false)
+                    peNewAssessment.isAutomaticFail = 1
+                } else {
+                    self.isAutomaticSwitch.setOn(false, animated: false)
+                    peNewAssessment.isAutomaticFail = 0
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleViewDidloadMethod2() {
+        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: scheduledAssessment?.serverAssessmentId ?? "")
+        if peNewAssessment.evaluationID != nil,
+           peNewAssessment.evaluationID == 1,
+           infoObj != nil {
+            
+            extendedPESwitch = infoObj?.isExtendedPE ?? false
+        }
+        checkBackAndSave()
+        
+        if peNewAssessment.selectedTSRID == nil || peNewAssessment.selectedTSRID == 0{
+            tsrButton.isUserInteractionEnabled = true
+            selectedTSR.alpha = 1
+        } else {
+            selectedTSR.text = peNewAssessment.selectedTSR
+            tsrButton.isUserInteractionEnabled = false
+            selectedTSR.isUserInteractionEnabled = false
+            selectedTSR.alpha = 0.6
+        }
+    }
+    
+    fileprivate func handleViewDidLoadMethod3() {
+        let xx = String(self.peNewAssessment.noOfEggs ?? 000)
+        if xx != "0" {
+            let last3 = String(xx.suffix(3))
+            if last3 == "000" {
+                showEggsOthers()
+                let str = xx.replacingOccurrences(of: "000", with: "")
+                eggsOtherTxt.text = str
+                txtNumberOfEggs.text = "Other"
+            }
         }
         
-        var defautUsername = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
-        let LastName = UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
-        defautUsername = defautUsername + LastName
-        if peNewAssessment.evaluationDate == "" {
-            selectedEvaluationDateText.text = strdate1
-            self.peNewAssessment.evaluationDate = strdate1
-        } else {
-            selectedEvaluationDateText.text = peNewAssessment.evaluationDate ?? strdate1
-        }
-        self.peNewAssessment.evaluationID = peNewAssessment.evaluationID
-        selectedEvaluatorText.text = peNewAssessment.evaluatorName ?? defautUsername
-        selectedEvaluationType.text = peNewAssessment.evaluationName ?? ""
+        txtBreedOfBird.text = self.peNewAssessment.breedOfBird
         if let character = peNewAssessment.breedOfBird?.character(at: 1),character == constantToSave.character(at: 0) {
             showBreedOthers()
             let str = peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
             txtBreedOfBirdsOthers.text = str
             txtBreedOfBird.text = "Other"
         }
-        if peNewAssessment.breedOfBird == "Other" {
-            showBreedOthers()
-        } else {
-            hideBreedOthers()
-        }
-        txtBreedOfBird.text = self.peNewAssessment.breedOfBird
-        if let character = peNewAssessment.breedOfBird?.character(at: 1),
-           character == constantToSave.character(at: 0) {
-            
-            showBreedOthers()
-            let str = peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
-            txtBreedOfBirdsOthers.text = str
-            txtBreedOfBird.text = "Other"
-        }
         txtBreedOfBirdsOthers.text = self.peNewAssessment.breedOfBirdOther
-        txtIncubation.text = self.peNewAssessment.incubation
-        if self.peNewAssessment.manufacturer?.count ?? "".count > 0 {
-            txtManufacturer.text = self.peNewAssessment.manufacturer
-        }
-        if self.peNewAssessment.noOfEggs ?? 0 > 0 {
-            txtNumberOfEggs.text = String(self.peNewAssessment.noOfEggs ?? 0)
-        }
-        if selectedEvaluationType.text == "" {
-            hideFlockView()
-        } else {
-            if selectedEvaluationType.text?.contains("Non") ?? false  {
-                self.flockAgeLower.isHidden = true
-                self.btnFlockImageLower.isHidden = true
-                self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected"
-            } else {
-                self.flockAgeLower.isHidden = false
-                self.btnFlockImageLower.isHidden = false
-                self.flockAgeLbl.text = breaderFlock
-            }
-            showFlockView()
-        }
+        getSubmittedAssessmentorEggsAndIncubation()
         
+        if peNewAssessment.isFlopSelected == 1 ||  peNewAssessment.isFlopSelected == 3 ||  peNewAssessment.isFlopSelected == 4 {
+            DispatchQueue.main.async {
+                self.isFlockAgeGreaterTheAllProd = true
+                self.btnFlockAgeGreater.setImage(UIImage(named: "checkIconPE"), for: .normal)
+                self.btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+                self.isFlockAgeGreaterThen50Weeks = false
+            }
+            
+        } else if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5  {
+            DispatchQueue.main.async {
+                self.isFlockAgeGreaterTheAllProd = false
+                self.btnFlockAgeGreater.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+                self.isFlockAgeGreaterThen50Weeks = true
+                self.btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
+            }
+            
+        }
+    }
+    
+    fileprivate func handleViewDidLoadMethod4(_ LastName: String) {
         selectedVisitText.text = peNewAssessment.visitName ?? ""
         if peNewAssessment.camera == 1{
             cameraSwitch.setOn(true, animated: false)
@@ -575,47 +537,167 @@ class PEStartNewAssessmentINT: BaseViewController {
                 txtManufacturer.text = "Other"
             }
         }
-        let xx = String(self.peNewAssessment.noOfEggs ?? 000)
-        if xx != "0" {
-            let last3 = String(xx.suffix(3))
-            if last3 == "000" {
-                showEggsOthers()
-                let str = xx.replacingOccurrences(of: "000", with: "")
-                eggsOtherTxt.text = str
-                txtNumberOfEggs.text = "Other"
-            }
-        }
-        
-        txtBreedOfBird.text = self.peNewAssessment.breedOfBird
+    }
+    
+    fileprivate func handleViewDidLoadMethod5() {
         if let character = peNewAssessment.breedOfBird?.character(at: 1),character == constantToSave.character(at: 0) {
             showBreedOthers()
             let str = peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
             txtBreedOfBirdsOthers.text = str
             txtBreedOfBird.text = "Other"
         }
+        if peNewAssessment.breedOfBird == "Other" {
+            showBreedOthers()
+        } else {
+            hideBreedOthers()
+        }
+        txtBreedOfBird.text = self.peNewAssessment.breedOfBird
+        if let character = peNewAssessment.breedOfBird?.character(at: 1),
+           character == constantToSave.character(at: 0) {
+            
+            showBreedOthers()
+            let str = peNewAssessment.breedOfBird?.replacingOccurrences(of: constantToSave, with: "")
+            txtBreedOfBirdsOthers.text = str
+            txtBreedOfBird.text = "Other"
+        }
         txtBreedOfBirdsOthers.text = self.peNewAssessment.breedOfBirdOther
-        getSubmittedAssessmentorEggsAndIncubation()
-        
-        if peNewAssessment.isFlopSelected == 1 ||  peNewAssessment.isFlopSelected == 3 ||  peNewAssessment.isFlopSelected == 4 {
-            
-            DispatchQueue.main.async {
-                self.isFlockAgeGreaterTheAllProd = true
-                self.btnFlockAgeGreater.setImage(UIImage(named: "checkIconPE"), for: .normal)
-                self.btnFlockImageLower.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-                self.isFlockAgeGreaterThen50Weeks = false
+        txtIncubation.text = self.peNewAssessment.incubation
+        if self.peNewAssessment.manufacturer?.count ?? "".count > 0 {
+            txtManufacturer.text = self.peNewAssessment.manufacturer
+        }
+        if self.peNewAssessment.noOfEggs ?? 0 > 0 {
+            txtNumberOfEggs.text = String(self.peNewAssessment.noOfEggs ?? 0)
+        }
+        if selectedEvaluationType.text == "" {
+            hideFlockView()
+        } else {
+            if selectedEvaluationType.text?.contains("Non") ?? false  {
+                self.flockAgeLower.isHidden = true
+                self.btnFlockImageLower.isHidden = true
+                self.flockAgeLbl.text = "Breeder Flock Age of Eggs Injected"
+            } else {
+                self.flockAgeLower.isHidden = false
+                self.btnFlockImageLower.isHidden = false
+                self.flockAgeLbl.text = breaderFlock
             }
-            
-        } else if peNewAssessment.isFlopSelected == 2 ||  peNewAssessment.isFlopSelected == 5  {
-            DispatchQueue.main.async {
-                self.isFlockAgeGreaterTheAllProd = false
-                self.btnFlockAgeGreater.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
-                self.isFlockAgeGreaterThen50Weeks = true
-                self.btnFlockImageLower.setImage(UIImage(named: "checkIconPE"), for: .normal)
-            }
-            
+            showFlockView()
+        }
+    }
+    
+    fileprivate func handleViewDidLoadMethod6(_ strdate1: String) {
+        if inovoPESwitch == false {
+            inovoBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+        } else {
+            inovoBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
         }
         
-        let  peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
+        if basicPESwitch == false {
+            basicNewBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
+        } else {
+            basicNewBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
+        }
+        
+        if peNewAssessment.evaluationDate == "" {
+            selectedEvaluationDateText.text = strdate1
+            self.peNewAssessment.evaluationDate = strdate1
+        } else {
+            selectedEvaluationDateText.text = peNewAssessment.evaluationDate ?? strdate1
+        }
+    }
+    
+    private func setUpDidLoad() {
+        self.manfacturerOtherTxt.delegate = self
+        self.eggsOtherTxt.delegate = self
+        self.eggsOtherTxt.keyboardType = .numberPad
+        self.txtBreedOfBirdsOthers.delegate = self
+        
+        let dateFormatter = DateFormatter()
+        
+        if regionID != 3 {
+            dateFormatter.dateFormat = Constants.ddMMyyyStr
+        } else {
+            dateFormatter.dateFormat=Constants.MMddyyyyStr
+        }
+        
+        let strdate1 = dateFormatter.string(from: scheduledAssessment?.scheduledDate ?? Date()) as String
+        self.cameraSwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
+        self.hatcherySwitch.tintColor = UIColor.getTextViewBorderColorStartAssessment()
+        peHeaderViewController = PEHeaderViewController()
+        peHeaderViewController.titleOfHeader = "Assessment"
+        
+        isAutomaticFailView.isHidden = true
+        isAutomaticSwitch.isHidden = true
+        self.headerView.addSubview(peHeaderViewController.view)
+        self.topviewConstraint(vwTop: peHeaderViewController.view)
+        notesTextView.delegate = self
+        notesTextView.layer.borderColor = UIColor.getTextViewBorderColorStartAssessment().cgColor
+        notesTextView.textContainer.lineFragmentPadding = 12
+        notesTextView.text = ""
+        peNewAssessment = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject(serverAssessmentId:scheduledAssessment?.serverAssessmentId ?? "",createNewObject:true)
+        peNewAssessment.evaluatorID = scheduledAssessment?.evaluatorID
+        peNewAssessment.evaluatorName = scheduledAssessment?.evaluatorName
+        if peNewAssessment.serverAssessmentId == nil {
+            peNewAssessment.visitName = scheduledAssessment?.visitName
+            peNewAssessment.visitID = scheduledAssessment?.visitID
+            peNewAssessment.notes = scheduledAssessment?.notes
+            peNewAssessment.customerName = scheduledAssessment?.customerName
+            peNewAssessment.customerId = scheduledAssessment?.customerId
+            peNewAssessment.siteId = scheduledAssessment?.siteId
+            peNewAssessment.sanitationEmbrex = scheduledAssessment?.sanitationEmbrex
+            peNewAssessment.statusType = 3
+            peNewAssessment.siteName = scheduledAssessment?.siteName
+            peNewAssessment.serverAssessmentId = scheduledAssessment?.serverAssessmentId
+            peNewAssessment.evaluationDate = strdate1
+            peNewAssessment.countryName = scheduledAssessment?.countryName
+            peNewAssessment.countryID = scheduledAssessment?.countryID
+            peNewAssessment.fluid = scheduledAssessment?.fluid ?? false
+            peNewAssessment.basicTransfer = scheduledAssessment?.basicTransfer ?? false
+            peNewAssessment.extndMicro = scheduledAssessment?.extndMicro ?? false
+            peNewAssessment.refrigeratorNote = scheduledAssessment?.refrigeratorNote ?? ""
+            peNewAssessment.clorineName = scheduledAssessment?.clorineName
+            peNewAssessment.clorineId = scheduledAssessment?.clorineId
+        }
+        
+        if let selectedTSRID = scheduledAssessment?.selectedTSRID {
+            peNewAssessment.selectedTSRID = selectedTSRID
+        }
+        
+        if let selectedTSR = scheduledAssessment?.selectedTSR,selectedTSR != "" {
+            peNewAssessment.selectedTSR = selectedTSR
+        }
+        
+        peNewAssessment.serverAssessmentId = scheduledAssessment?.serverAssessmentId
+        notesTextView.text = peNewAssessment.notes
+        selectedCustomerText.text = peNewAssessment.customerName
+        selectedSiteText.text = peNewAssessment.siteName
+        countryTxt.text = peNewAssessment.countryName
+        selectedCountryId = peNewAssessment.countryID ?? 0
+        clorineTxtFld.text = peNewAssessment.clorineName
+        selectedClorineId = peNewAssessment.clorineId ?? 0
+        peNewAssessment.fluid = scheduledAssessment?.fluid
+        peNewAssessment.basicTransfer = scheduledAssessment?.basicTransfer
+        peNewAssessment.countryName = scheduledAssessment?.countryName
+        peNewAssessment.countryID = scheduledAssessment?.countryID
+        peNewAssessment.refrigeratorNote = scheduledAssessment?.refrigeratorNote
+        inovoPESwitch = peNewAssessment.fluid ?? false
+        basicPESwitch = peNewAssessment.basicTransfer ?? false
+        extendedPESwitch = peNewAssessment.extndMicro ?? false
+        peNewAssessment.clorineName = scheduledAssessment?.clorineName
+        peNewAssessment.clorineId = scheduledAssessment?.clorineId
+        var defautUsername = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
+        let LastName = UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
+        defautUsername = defautUsername + LastName
+        
+        handleViewDidLoadMethod6(strdate1)
+        self.peNewAssessment.evaluationID = peNewAssessment.evaluationID
+        selectedEvaluatorText.text = peNewAssessment.evaluatorName ?? defautUsername
+        selectedEvaluationType.text = peNewAssessment.evaluationName ?? ""
+        
+        handleViewDidLoadMethod5()
+        handleViewDidLoadMethod4(LastName)
+        handleViewDidLoadMethod3()
+        
+        let peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: scheduledAssessment?.serverAssessmentId ?? "")
         for obj in peNewAssessmentArray {
             let assessment = obj
             let imageCount = assessment.images
@@ -624,82 +706,9 @@ class PEStartNewAssessmentINT: BaseViewController {
                 cameraSwitch.alpha = 0.6
             }
         }
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: scheduledAssessment?.serverAssessmentId ?? "")
         
-        if !Constants.isFirstTime{
-            if peNewAssessment.clorineName == "" || peNewAssessment.clorineName == nil  {
-                
-                self.isAutomaticSwitch.setOn(false, animated: false)
-                isAutomaticFailView.isHidden = true
-                clorineViewHeightConstranit.constant = 60
-                isAutomaticSwitch.isHidden = true
-                
-            } else {
-                
-                if peNewAssessment.isAutomaticFail == 1{
-                    self.isAutomaticSwitch.setOn(true, animated: false)
-                    isAutomaticFailView.isHidden = false
-                    isAutomaticSwitch.isHidden = false
-                    clorineViewHeightConstranit.constant = 120
-                    
-                } else {
-                    self.isAutomaticSwitch.setOn(false, animated: false)
-                    isAutomaticFailView.isHidden = false
-                    isAutomaticSwitch.isHidden = false
-                    clorineViewHeightConstranit.constant = 120
-                }
-            }
-        } else {
-            
-            peNewAssessment.isChlorineStrip = 1
-            
-            if clorineTxtFld.text == ""  {
-                clorineViewHeightConstranit.constant = 60
-                isAutomaticFailView.isHidden = true
-                isAutomaticSwitch.isHidden = true
-            }
-            else{
-                clorineViewHeightConstranit.constant = 120
-                isAutomaticFailView.isHidden = false
-                isAutomaticSwitch.isHidden = false
-                
-                if peNewAssessment.isAutomaticFail == 1{
-                    self.isAutomaticSwitch.setOn(true, animated: false)
-                    peNewAssessment.isAutomaticFail = 1
-                }
-                
-                else
-                {
-                    self.isAutomaticSwitch.setOn(false, animated: false)
-                    peNewAssessment.isAutomaticFail = 0
-                }
-            }
-            
-        }
-        
-        if peNewAssessment.evaluationID != nil{
-            if peNewAssessment.evaluationID == 1{
-                if infoObj != nil{
-                    extendedPESwitch = infoObj?.isExtendedPE ?? false
-                } else {
-                    
-                }
-                
-            } else {
-            }
-        }
-        checkBackAndSave()
-        
-        if peNewAssessment.selectedTSRID == nil || peNewAssessment.selectedTSRID == 0{
-            tsrButton.isUserInteractionEnabled = true
-            selectedTSR.alpha = 1
-        } else {
-            selectedTSR.text = peNewAssessment.selectedTSR
-            tsrButton.isUserInteractionEnabled = false
-            selectedTSR.isUserInteractionEnabled = false
-            selectedTSR.alpha = 0.6
-        }
-        
+        handleViewDidLoadMethod1()
+        handleViewDidloadMethod2()
     }
     
     /* Extended PE scope */
@@ -2126,6 +2135,53 @@ extension PEStartNewAssessmentINT {
         }
     }
     
+    fileprivate func handlePECategoryFilteredArrayValidation(_ peCategoryFilteredArray: [PECategory]) {
+        for cat in  peCategoryFilteredArray {
+            for (index, ass) in cat.assessmentQuestions.enumerated() {
+                if let peNewAssessmentNew = self.peNewAssessment {
+                    peNewAssessmentNew.cID = index
+                    peNewAssessmentNew.catID = cat.id
+                    peNewAssessmentNew.catName = cat.categoryName
+                    peNewAssessmentNew.catMaxMark = cat.maxMark
+                    peNewAssessmentNew.sequenceNo = cat.id
+                    peNewAssessmentNew.sequenceNoo = cat.sequenceNo
+                    
+                    peNewAssessmentNew.catEvaluationID = cat.evaluationID
+                    peNewAssessmentNew.catISSelected = cat.isSelected ? 1:0
+                    peNewAssessmentNew.assID = ass.id
+                    peNewAssessmentNew.assDetail1 = ass.assessment
+                    peNewAssessmentNew.evaluationID = cat.evaluationID
+                    peNewAssessmentNew.assDetail2 = ass.assessment2
+                    peNewAssessmentNew.assMinScore = ass.minScore
+                    peNewAssessmentNew.assMaxScore = ass.maxScore
+                    peNewAssessmentNew.assCatType = ass.cateType
+                    peNewAssessmentNew.assModuleCatID = ass.moduleCatId
+                    peNewAssessmentNew.assModuleCatName = ass.moduleCatName
+                    if regionID == 3 {
+                        peNewAssessmentNew.assStatus = 1
+                        peNewAssessmentNew.catResultMark = cat.maxMark
+                    } else {
+                        peNewAssessmentNew.assStatus = 0
+                        peNewAssessmentNew.catResultMark = 0
+                    }
+                    
+                    peNewAssessmentNew.isChlorineStrip = self.peNewAssessment.isChlorineStrip
+                    peNewAssessmentNew.isAutomaticFail = self.peNewAssessment.isAutomaticFail
+                    peNewAssessmentNew.informationImage = ass.informationImage
+                    peNewAssessmentNew.serverAssessmentId = self.peNewAssessment.serverAssessmentId
+                    peNewAssessmentNew.sanitationEmbrex = self.peNewAssessment.sanitationEmbrex
+                    peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
+                    peNewAssessmentNew.isNA = ass.isNA
+                    peNewAssessmentNew.isAllowNA = ass.isAllowNA
+                    peNewAssessmentNew.rollOut = ass.rollOut
+                    peNewAssessmentNew.qSeqNo = ass.qSeqNo
+                    CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:self.peNewAssessment)
+                    PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: extendedPESwitch, assessmentId: self.peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: false, isAutomaticFail: self.isAutomaticSwitch.isOn)
+                }
+            }
+        }
+    }
+    
     func okAction() {
         checkBackAndSave()
         jsonRe = (getJSON("QuestionAns") ?? JSON())
@@ -2141,51 +2197,7 @@ extension PEStartNewAssessmentINT {
         if peCategoryFilteredArray.count > 0 {
             CoreDataHandler().deleteAllData("PE_AssessmentInProgress",predicate: NSPredicate(format: "userID == %d AND serverAssessmentId = %@", self.peNewAssessment.userID ?? 0, self.peNewAssessment.serverAssessmentId ?? ""))
             
-            for cat in  peCategoryFilteredArray {
-                for (index, ass) in cat.assessmentQuestions.enumerated() {
-                    if let peNewAssessmentNew = self.peNewAssessment {
-                        peNewAssessmentNew.cID = index
-                        peNewAssessmentNew.catID = cat.id
-                        peNewAssessmentNew.catName = cat.categoryName
-                        peNewAssessmentNew.catMaxMark = cat.maxMark
-                        peNewAssessmentNew.sequenceNo = cat.id
-                        peNewAssessmentNew.sequenceNoo = cat.sequenceNo
-                        
-                        peNewAssessmentNew.catEvaluationID = cat.evaluationID
-                        peNewAssessmentNew.catISSelected = cat.isSelected ? 1:0
-                        peNewAssessmentNew.assID = ass.id
-                        peNewAssessmentNew.assDetail1 = ass.assessment
-                        peNewAssessmentNew.evaluationID = cat.evaluationID
-                        peNewAssessmentNew.assDetail2 = ass.assessment2
-                        peNewAssessmentNew.assMinScore = ass.minScore
-                        peNewAssessmentNew.assMaxScore = ass.maxScore
-                        peNewAssessmentNew.assCatType = ass.cateType
-                        peNewAssessmentNew.assModuleCatID = ass.moduleCatId
-                        peNewAssessmentNew.assModuleCatName = ass.moduleCatName
-                        if regionID == 3 {
-                            peNewAssessmentNew.assStatus = 1
-                            peNewAssessmentNew.catResultMark = cat.maxMark
-                        } else {
-                            peNewAssessmentNew.assStatus = 0
-                            peNewAssessmentNew.catResultMark = 0
-                        }
-                        
-                        peNewAssessmentNew.isChlorineStrip = self.peNewAssessment.isChlorineStrip
-                        peNewAssessmentNew.isAutomaticFail = self.peNewAssessment.isAutomaticFail
-                        peNewAssessmentNew.informationImage = ass.informationImage
-                        peNewAssessmentNew.serverAssessmentId = self.peNewAssessment.serverAssessmentId
-                        peNewAssessmentNew.sanitationEmbrex = self.peNewAssessment.sanitationEmbrex
-                        peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
-                        peNewAssessmentNew.isNA = ass.isNA
-                        peNewAssessmentNew.isAllowNA = ass.isAllowNA
-                        peNewAssessmentNew.rollOut = ass.rollOut
-                        peNewAssessmentNew.qSeqNo = ass.qSeqNo
-                        CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:self.peNewAssessment)
-                        PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: extendedPESwitch, assessmentId: self.peNewAssessment.serverAssessmentId ?? "", date: nil,hasChlorineStrips: false, isAutomaticFail: self.isAutomaticSwitch.isOn)
-                    }
-                    
-                }
-            }
+            handlePECategoryFilteredArrayValidation(peCategoryFilteredArray)
             
             isMovedForward = true
             let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)

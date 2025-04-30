@@ -476,8 +476,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 UserDefaults.standard.set(newPostingId, forKey: "postingId")
                 UserDefaults.standard.synchronize()
                 self.navigationController?.pushViewController(navigateToAnother!, animated: false)
-            }
-            else{
+            } else {
                 alertMessageLanguageBasis(lngId: lngId as NSNumber)
             }
         }

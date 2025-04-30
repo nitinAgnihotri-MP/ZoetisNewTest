@@ -319,67 +319,6 @@ extension StartNewAssignmentCell: UITextFieldDelegate{
         return true
     }
 
-    
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        
-//        var newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
-//        
-//        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield {
-//            guard CharacterSet(charactersIn: "1234567890").isSuperset(of: CharacterSet(charactersIn: string)) else {
-//                return false
-//            }
-//        }
-//
-//        if textField == ageOfBirdsTxtfield || textField == noOfBirdsTxtfield {
-//            
-//            // Max 5 digits allowed
-//            if newString.count > 5 {
-//                return false
-//            }
-//            
-//            // Prevent value being 0 when input is not empty
-//            let sum = newString.compactMap { $0.wholeNumberValue }.reduce(0, +)
-//            if sum == 0 && !newString.isEmpty {
-//                newString = "0"
-//                return false
-//            }
-//            
-//            updateAgeOrNoOfBirds(for: textField, with: newString)
-//        }
-//        
-//        if textField == farmNameTxtfield {
-//            let isValid = handleFarmNameTxtfield(newString)
-//            
-//            if isValid {
-//                CoreDataHandlerPVE().updateSessionDetails(1, text: newString ?? "", forAttribute: "farm")
-//                self.sharedManager.setBorderBlue(btn: farmNameBtn)
-//            }
-//            
-//            return isValid
-//        } else if textField == houseNoTxtfield {
-//            if newString.count > 40 {
-//                return false
-//            }
-//            handleHouseNoTxtfield(newString)
-//            self.sharedManager.setBorderBlue(btn: houseNoBtn)
-//        } else if textField == noOfBirdsTxtfield {
-//            handleNoOfBirdsTxtfield(newString)
-//            return true
-//        } else if textField == breedOfBirdsOtherTxtfield {
-//            if newString.count > 40 {
-//                return false
-//            }
-//            handleBreedOfBirdsOtherTxtfield(newString)
-//        } else if textField == breedOfBirdsFemaleOtherTxtfield {
-//            if newString.count > 40 {
-//                return false
-//            }
-//            handleBreedOfBirdsFemaleOtherTxtfield(newString)
-//        }
-//        
-//        return true
-//    }
-    
     private func updateAgeOrNoOfBirds(for textField: UITextField, with newString: String) {
         let value = Int(newString) ?? 0
         let attribute: String
