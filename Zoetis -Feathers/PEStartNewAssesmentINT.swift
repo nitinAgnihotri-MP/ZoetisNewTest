@@ -1050,94 +1050,169 @@ class PEStartNewAssessmentINT: BaseViewController {
     @IBAction func nextBtnAction(_ sender: Any) {
         self.view.endEditing(true)
         Constants.isFirstTime = false
-        self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { [self] status in
+
+        self.getVaccineMixerList(
+            customerId: peNewAssessment.customerId ?? 0,
+            siteId: peNewAssessment.siteId ?? 0,
+            countryId: 40
+        ) { status in
             print(status)
         }
-        guard let date = self.peNewAssessment.evaluationDate, date.count > 0 else {
+
+        guard areMandatoryFieldsValid() else {
             changeMandatorySuperviewToRed()
             return
         }
-        
-        guard let customer = self.peNewAssessment.customerName, customer.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        guard let selectedTSR = self.selectedTSR.text, selectedTSR.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        guard let site = self.peNewAssessment.siteName, site.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        guard let evaluationName = self.peNewAssessment.evaluationName, evaluationName.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        guard let evaluator = self.peNewAssessment.evaluatorName, evaluator.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        guard let reasonForVisit = self.peNewAssessment.visitName, reasonForVisit.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != ""{
-            if ((peNewAssessment.breedOfBird?.lowercased().contains("other")) ?? false) {
-                if (peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "") == false {
-                    changeMandatorySuperviewToRed()
-                    return
-                }
-            }
-        } else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        if self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
-            if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-                if (manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "") == false {
-                    changeMandatorySuperviewToRed()
-                    return
-                }
-            }
-        } else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        if (self.countryTxt.text != nil && self.countryTxt.text != "") == false {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        if (peNewAssessment.incubation != nil && peNewAssessment.incubation != "") == false {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        if (txtNumberOfEggs.text != nil && txtNumberOfEggs.text != ""),
-           ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false),
-           (eggsOtherTxt.text != nil && eggsOtherTxt.text != "") == false {
-            
-            if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false),(eggsOtherTxt.text != nil && eggsOtherTxt.text != "") == false {
-                changeMandatorySuperviewToRed()
-                return
-            }
-        } else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
+
         if self.allProductionViewHeightConstraint.constant == 60 {
             showExtendedMicroUI()
         } else {
             otherCaseTOShowExtendedMicroOption()
         }
     }
+
+    private func areMandatoryFieldsValid() -> Bool {
+        let pe = self.peNewAssessment
+
+        guard
+            isNonEmpty(pe?.evaluationDate),
+            isNonEmpty(pe?.customerName),
+            isNonEmpty(selectedTSR.text),
+            isNonEmpty(pe?.siteName),
+            isNonEmpty(pe?.evaluationName),
+            isNonEmpty(pe?.evaluatorName),
+            isNonEmpty(pe?.visitName),
+            isBreedValid(),
+            isManufacturerValid(),
+            isNonEmpty(countryTxt.text),
+            isNonEmpty(pe?.incubation),
+            isEggsValid()
+        else {
+            return false
+        }
+
+        return true
+    }
+
+    private func isNonEmpty(_ text: String?) -> Bool {
+        return (text?.isEmpty == false)
+    }
+
+    private func isBreedValid() -> Bool {
+        guard let breed = peNewAssessment.breedOfBird, !breed.isEmpty else { return false }
+        if breed.lowercased().contains("other") {
+            return isNonEmpty(peNewAssessment.breedOfBirdOther)
+        }
+        return true
+    }
+
+    private func isManufacturerValid() -> Bool {
+        guard let manufacturer = txtManufacturer.text, !manufacturer.isEmpty else { return false }
+        if manufacturer.lowercased().contains("other") {
+            return isNonEmpty(manfacturerOtherTxt.text)
+        }
+        return true
+    }
+
+    private func isEggsValid() -> Bool {
+        guard let eggs = txtNumberOfEggs.text, !eggs.isEmpty else { return false }
+        if eggs.lowercased().contains("other") {
+            return isNonEmpty(eggsOtherTxt.text)
+        }
+        return true
+    }
+
+//    @IBAction func nextBtnAction(_ sender: Any) {
+//        self.view.endEditing(true)
+//        Constants.isFirstTime = false
+//        self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { status in
+//            print(status)
+//        }
+//        guard let date = self.peNewAssessment.evaluationDate, date.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        guard let customer = self.peNewAssessment.customerName, customer.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        guard let selectedTSR = self.selectedTSR.text, selectedTSR.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        guard let site = self.peNewAssessment.siteName, site.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        guard let evaluationName = self.peNewAssessment.evaluationName, evaluationName.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        guard let evaluator = self.peNewAssessment.evaluatorName, evaluator.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        guard let reasonForVisit = self.peNewAssessment.visitName, reasonForVisit.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != ""{
+//            if ((peNewAssessment.breedOfBird?.lowercased().contains("other")) ?? false) {
+//                if (peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "") == false {
+//                    changeMandatorySuperviewToRed()
+//                    return
+//                }
+//            }
+//        } else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        if self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
+//            if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
+//                if (manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "") == false {
+//                    changeMandatorySuperviewToRed()
+//                    return
+//                }
+//            }
+//        } else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        if (self.countryTxt.text != nil && self.countryTxt.text != "") == false {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        if (peNewAssessment.incubation != nil && peNewAssessment.incubation != "") == false {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        if (txtNumberOfEggs.text != nil && txtNumberOfEggs.text != ""),
+//           ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false),
+//           (eggsOtherTxt.text != nil && eggsOtherTxt.text != "") == false {
+//            
+//            if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false),(eggsOtherTxt.text != nil && eggsOtherTxt.text != "") == false {
+//                changeMandatorySuperviewToRed()
+//                return
+//            }
+//        } else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        if self.allProductionViewHeightConstraint.constant == 60 {
+//            showExtendedMicroUI()
+//        } else {
+//            otherCaseTOShowExtendedMicroOption()
+//        }
+//    }
     
     
     // MARK: - Save Assessment In Draft

@@ -136,7 +136,7 @@ open class YouTubePlayerView: UIView, UIWebViewDelegate {
     // MARK: Web view initialization
     
      func buildWebView(_ parameters: [String: AnyObject]) {
-
+         print("parameters")
     }
     
     

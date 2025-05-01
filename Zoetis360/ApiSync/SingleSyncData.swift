@@ -888,6 +888,70 @@ class SingleSyncData: NSObject {
         }
     }
     // MARK: - /********************* Save Farms  data On Server ***************************/ /**************************************************************************/
+    fileprivate func saveMultipleNecropsyAPIResponseHandler(_ statusCode: Int?, _ response: AFDataResponse<Any>,_ postingId: NSNumber) {
+        if statusCode == 401 {
+            self.loginMethod(postingId:postingId)
+        } else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
+            self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
+        }
+        
+        switch response.result {
+            
+        case .success(let responseObject):
+            self.saveObservationImageOnServer(postingId: postingId)
+            
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+            } else if response.data != nil {
+                
+                if let s = statusCode {
+                    self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
+                } else {
+                    self.delegeteSyncApiData.failWithErrorInternalSyncdata()
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleCallSaveMultipleNecropsyDataAPI(_ sessionWithAllforms: NSMutableDictionary, _ postingId: NSNumber) {
+        if WebClass.sharedInstance.connected() {
+            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+            //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
+            let headerDict = [Constants.authorization:accestoken]
+            let Url = "PostingSession/SaveMultipleNecropsySyncData"
+            let urlString: String = WebClass.sharedInstance.webUrl + Url
+            var request = URLRequest(url: URL(string: urlString)! )
+            request.httpMethod = "POST"
+            request.allHTTPHeaderFields = headerDict
+            request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
+            request.httpBody = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
+            
+            sessionManager.request(request as URLRequestConvertible).responseJSON { response in
+                let statusCode = response.response?.statusCode
+                self.saveMultipleNecropsyAPIResponseHandler(statusCode, response,postingId)
+            }
+        }
+    }
+    
+    fileprivate func handleNoOfBirdAndOtherArray(_ noOfBird: Int?, _ farmName: String?, _ cNData: CaptureNecropsyData, _ birdArry:inout NSMutableArray) {
+        for j in 0..<noOfBird! {
+            let obsNameWithValue =   CoreDataHandler().fetchObsWithBirdandFarmName(farmName!, birdNo: (j + 1) as NSNumber, necId: cNData.necropsyId!)
+            let notesWithFarm = CoreDataHandler().fetchNotesWithBirdNumandFarmName((j + 1) as NSNumber, formName: farmName!, necId: cNData.necropsyId!)
+            if notesWithFarm.count > 0 {
+                let n = notesWithFarm.object(at: 0) as! NotesBird
+                let notes = n.notes
+                obsNameWithValue.setValue(j + 1, forKey: "BirdId")
+                obsNameWithValue.setValue(notes, forKey: "birdNotes")
+            } else {
+                obsNameWithValue.setValue(j + 1, forKey: "BirdId")
+                obsNameWithValue.setValue("", forKey: "birdNotes")
+            }
+            birdArry.add(obsNameWithValue)
+        }
+    }
+    
     func saveNecropsyDataOnServer(postingId: NSNumber){
         
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
@@ -895,15 +959,12 @@ class SingleSyncData: NSObject {
         let a = NSMutableArray()
         var complexId = Int()
         
-        for j in 0..<cNecArr.count
-        {
+        for j in 0..<cNecArr.count {
             let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyData
             a.add(captureNecropsyData)
-            for w in 0..<a.count - 1
-            {
+            for w in 0..<a.count - 1 {
                 let c = a.object(at: w)  as! CaptureNecropsyData
-                if c.necropsyId == captureNecropsyData.necropsyId
-                {
+                if c.necropsyId == captureNecropsyData.necropsyId {
                     a.remove(c)
                 }
             }
@@ -911,17 +972,14 @@ class SingleSyncData: NSObject {
         
         let sessionWithAllforms = NSMutableDictionary()
         let sessionArr = NSMutableArray()
-        for i in 0..<a.count
-        {
+        for i in 0..<a.count {
             let allArray = NSMutableArray()
             let captureNecropsyData = a.object(at: i)  as! CaptureNecropsyData
             complexId = Int(captureNecropsyData.complexId!)
             let cNec =  CoreDataHandler().FetchNecropsystep1NecId(postingId)
             let formWithcatNameWithBirdAndAllObs1 = NSMutableDictionary()
-            for x in 0..<cNec.count
-            {
-                
-                let birdArry = NSMutableArray()
+            for x in 0..<cNec.count {
+                var birdArry = NSMutableArray()
                 let cNData = cNec.object(at: x) as! CaptureNecropsyData
                 let farmName = cNData.farmName
                 let noOfBird = Int(cNData.noOfBirds!)
@@ -940,25 +998,7 @@ class SingleSyncData: NSObject {
                 let complexdate = cNData.complexDate
                 let farmId = cNData.farmId
                 let formWithcatNameWithBirdAndAllObs = NSMutableDictionary()
-                for j in 0..<noOfBird!
-                {
-                    let obsNameWithValue =   CoreDataHandler().fetchObsWithBirdandFarmName(farmName!, birdNo: (j + 1) as NSNumber, necId: cNData.necropsyId!)
-                    let notesWithFarm = CoreDataHandler().fetchNotesWithBirdNumandFarmName((j + 1) as NSNumber, formName: farmName!, necId: cNData.necropsyId!)
-                    if notesWithFarm.count > 0
-                    {
-                        let n = notesWithFarm.object(at: 0) as! NotesBird
-                        let notes = n.notes
-                        obsNameWithValue.setValue(j + 1, forKey: "BirdId")
-                        obsNameWithValue.setValue(notes, forKey: "birdNotes")
-                    }
-                    else
-                    {
-                        obsNameWithValue.setValue(j + 1, forKey: "BirdId")
-                        obsNameWithValue.setValue("", forKey: "birdNotes")
-                    }
-                    birdArry.add(obsNameWithValue)
-                    
-                }
+                handleNoOfBirdAndOtherArray(noOfBird, farmName, cNData, &birdArry)
                 
                 formWithcatNameWithBirdAndAllObs.setValue(birdArry, forKey: "BirdDetails")
                 formWithcatNameWithBirdAndAllObs.setValue(farmName, forKey: "farmName")
@@ -978,12 +1018,12 @@ class SingleSyncData: NSObject {
             }
             
            
-            var fullData =   captureNecropsyData.timeStamp!
+            let fullData = captureNecropsyData.timeStamp!
             formWithcatNameWithBirdAndAllObs1.setValue(captureNecropsyData.necropsyId!, forKey: "SessionId")
             formWithcatNameWithBirdAndAllObs1.setValue(lngId, forKey: "LanguageId")
             formWithcatNameWithBirdAndAllObs1.setValue(fullData, forKey: "deviceSessionId")
             
-            if complexId > 0{
+            if complexId > 0 {
                 formWithcatNameWithBirdAndAllObs1.setValue(complexId, forKey: "ComplexId")
             }
             
@@ -998,52 +1038,7 @@ class SingleSyncData: NSObject {
         sessionWithAllforms.setValue(sessionArr, forKey: "Session")
         
         do {
-     
-            
-            if WebClass.sharedInstance.connected() {
-                accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-                let headerDict = [Constants.authorization:accestoken]
-                let Url = "PostingSession/SaveMultipleNecropsySyncData"
-                let urlString: String = WebClass.sharedInstance.webUrl + Url
-                var request = URLRequest(url: URL(string: urlString)! )
-                request.httpMethod = "POST"
-                request.allHTTPHeaderFields = headerDict
-                request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
-                request.httpBody = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
-                
-                sessionManager.request(request as URLRequestConvertible).responseJSON { response in
-                    let statusCode =  response.response?.statusCode
-                    
-                    if statusCode == 401  {
-                        self.loginMethod(postingId:postingId)
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: statusCode!)
-                    }
-                    
-                    switch response.result {
-                        
-                    case .success(let responseObject):
-                        self.saveObservationImageOnServer(postingId: postingId)
-                        
-                    case .failure(let encodingError):
-                        
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                        } else if response.data != nil {
-                            
-                            if let s = statusCode {
-                                self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
-                            }
-                            else
-                            {
-                                self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-                            }
-                        }
-                    }
-                }
-            }
+            handleCallSaveMultipleNecropsyDataAPI(sessionWithAllforms, postingId)
         }
     }
     // MARK: -   /********************* Save Image  On Server ***************************/

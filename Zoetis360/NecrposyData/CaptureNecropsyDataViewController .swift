@@ -1173,105 +1173,104 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
     }
     
-    func setObsImageDescForCocodis(desc : Int) -> NSMutableArray
-    {
+    fileprivate func handleSetObsImageDescForCocodisCase25(_ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add("No oocysts.")
+            obsDescArr.add("1-10 Oocysts per low power field.")
+            obsDescArr.add("11-20 Oocysts per low power field.")
+            obsDescArr.add("21-50 Oocysts per low power field")
+            obsDescArr.add(">50 Oocysts per low power field.")
+        } else if lngId == 3 {
+            obsDescArr.add("Abscence d'oocysts.")
+            obsDescArr.add("1-10 Oocysts par champ à faible grossissement.")
+            obsDescArr.add("11-20 Oocysts par champ à faible grossissement.")
+            obsDescArr.add("21-50 Oocysts par champ à faible grossissement.")
+            obsDescArr.add(">50 Oocysts par champ à faible grossissement.")
+        } else if lngId == 4{
+            obsDescArr.add("Sem oocistos.")
+            obsDescArr.add("1-10 Oocistos por campo de baixa potência.")
+            obsDescArr.add("11-20 Oocistos por campo de baixa potência.")
+            obsDescArr.add("21-50 Oocistos por campo de baixa potência")
+            obsDescArr.add(">50 Oocistos por campo de baixa potência.")
+        }
+    }
+    
+    fileprivate func handleSetObsImageDescForCocodisCase26(_ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add(self.noGrossLesionStr)
+            obsDescArr.add("Petechiae without blood. ")
+            obsDescArr.add("Blood in the cecal contents; cecal wall somewhat thickened (normal contents). ")
+            obsDescArr.add("Blood or cecal cores present, walls greatly thickened (no contents).")
+            obsDescArr.add("Cecal wall greatly distended with blood or cores.")
+        } else if lngId == 3 {
+            obsDescArr.add(self.pasDeLesionStr)
+            obsDescArr.add("Pétécchies uniquement.")
+            obsDescArr.add("Sang dans le contenu caecal, paroi caecale un peu épaissie (contenu normal).")
+            obsDescArr.add("Sang ou caillot caecal présent, paroi légèrement épaissie (absence de contenu).")
+            obsDescArr.add("Paroi caecal très distendue avec du sang ou caillot.")
+        } else if lngId == 4 {
+            obsDescArr.add(self.semLesMacroStr)
+            obsDescArr.add("Poucas petéquias dispersas na parede dos cecos; ausência de espessamento das paredes dos cecos; presença de conteúdo cecal normal.")
+            obsDescArr.add("Lesões mais numerosas, com possibilidade de sangue no conteúdo cecal; parede do ceco um pouco espessada; pouco ou nenhum conteúdo cecal.")
+            obsDescArr.add("Enorme quantidade de sangue presente com paredes dos cecos fortemente espessadas; pouco ou nenhum conteúdo cecal. Perda da estrutura normal das pregas.")
+            obsDescArr.add("Parede cecal muito distendida com presença de sangue e desaparecimento total das pregas. A morte das aves é classificada no grau 4.")
+        }
+    }
+    
+    fileprivate func handleSetObsImageDescForCocodisCase21(_ obsDescArr: NSMutableArray) {
+        if lngId == 1 {
+            obsDescArr.add("No oocysts.")
+            obsDescArr.add("1-10 Oocysts per low power field.")
+            obsDescArr.add("11-20 Oocysts per low power field.")
+            obsDescArr.add("21-50 Oocysts per low power field")
+            obsDescArr.add(">50 Oocysts per low power field.")
+        } else if lngId == 3 {
+            obsDescArr.add("Abscence d'oocysts.")
+            obsDescArr.add("1-10 Oocysts par champ à faible grossissement.")
+            obsDescArr.add("11-20 Oocysts par champ à faible grossissement.")
+            obsDescArr.add("21-50 Oocysts par champ à faible grossissement.")
+            obsDescArr.add(">50 Oocysts par champ à faible grossissement.")
+        } else if lngId == 4 {
+            obsDescArr.add("Sem oocistos.")
+            obsDescArr.add("1-10 Oocistos por campo de baixa potência.")
+            obsDescArr.add("11-20 Oocistos por campo de baixa potência..")
+            obsDescArr.add("21-30 Oocistos por campo de baixa potência.")
+            obsDescArr.add(">50 Oocistos por campo de baixa potência.")
+        }
+    }
+    
+    func setObsImageDescForCocodis(desc : Int) -> NSMutableArray {
         let obsDescArr = NSMutableArray()
         switch desc {
         case 23 :
             lngId = UserDefaults.standard.integer(forKey: "lngId")
             handleLngIdObsImagesCase23(obsDescArr)
-            
             break
             
         case 24 :
             handleLngIdObsImageDescCase24(obsDescArr)
-            
             break
             
         case 25 :
-            if lngId == 1{
-                obsDescArr.add("No oocysts.")
-                obsDescArr.add("1-10 Oocysts per low power field.")
-                obsDescArr.add("11-20 Oocysts per low power field.")
-                obsDescArr.add("21-50 Oocysts per low power field")
-                obsDescArr.add(">50 Oocysts per low power field.")
-            }
-            else if lngId == 3{
-                obsDescArr.add("Abscence d'oocysts.")
-                obsDescArr.add("1-10 Oocysts par champ à faible grossissement.")
-                obsDescArr.add("11-20 Oocysts par champ à faible grossissement.")
-                obsDescArr.add("21-50 Oocysts par champ à faible grossissement.")
-                obsDescArr.add(">50 Oocysts par champ à faible grossissement.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Sem oocistos.")
-                obsDescArr.add("1-10 Oocistos por campo de baixa potência.")
-                obsDescArr.add("11-20 Oocistos por campo de baixa potência.")
-                obsDescArr.add("21-50 Oocistos por campo de baixa potência")
-                obsDescArr.add(">50 Oocistos por campo de baixa potência.")
-            }
-            
+            handleSetObsImageDescForCocodisCase25(obsDescArr)
             break
             
         case 26 :
-            if lngId == 1{
-                obsDescArr.add(self.noGrossLesionStr)
-                obsDescArr.add("Petechiae without blood. ")
-                obsDescArr.add("Blood in the cecal contents; cecal wall somewhat thickened (normal contents). ")
-                obsDescArr.add("Blood or cecal cores present, walls greatly thickened (no contents).")
-                obsDescArr.add("Cecal wall greatly distended with blood or cores.")
-            }
-            else if lngId == 3{
-                obsDescArr.add(self.pasDeLesionStr)
-                obsDescArr.add("Pétécchies uniquement.")
-                obsDescArr.add("Sang dans le contenu caecal, paroi caecale un peu épaissie (contenu normal).")
-                obsDescArr.add("Sang ou caillot caecal présent, paroi légèrement épaissie (absence de contenu).")
-                obsDescArr.add("Paroi caecal très distendue avec du sang ou caillot.")
-            }
-            else if lngId == 4{
-                obsDescArr.add(self.semLesMacroStr)
-                obsDescArr.add("Poucas petéquias dispersas na parede dos cecos; ausência de espessamento das paredes dos cecos; presença de conteúdo cecal normal.")
-                obsDescArr.add("Lesões mais numerosas, com possibilidade de sangue no conteúdo cecal; parede do ceco um pouco espessada; pouco ou nenhum conteúdo cecal.")
-                obsDescArr.add("Enorme quantidade de sangue presente com paredes dos cecos fortemente espessadas; pouco ou nenhum conteúdo cecal. Perda da estrutura normal das pregas.")
-                obsDescArr.add("Parede cecal muito distendida com presença de sangue e desaparecimento total das pregas. A morte das aves é classificada no grau 4.")
-            }
-            
+            handleSetObsImageDescForCocodisCase26(obsDescArr)
             break
             
         case 21:
-            if lngId == 1{
-                obsDescArr.add("No oocysts.")
-                obsDescArr.add("1-10 Oocysts per low power field.")
-                obsDescArr.add("11-20 Oocysts per low power field.")
-                obsDescArr.add("21-50 Oocysts per low power field")
-                obsDescArr.add(">50 Oocysts per low power field.")
-            }
-            else if lngId == 3{
-                obsDescArr.add("Abscence d'oocysts.")
-                obsDescArr.add("1-10 Oocysts par champ à faible grossissement.")
-                obsDescArr.add("11-20 Oocysts par champ à faible grossissement.")
-                obsDescArr.add("21-50 Oocysts par champ à faible grossissement.")
-                obsDescArr.add(">50 Oocysts par champ à faible grossissement.")
-            }
-            else if lngId == 4{
-                obsDescArr.add("Sem oocistos.")
-                obsDescArr.add("1-10 Oocistos por campo de baixa potência.")
-                obsDescArr.add("11-20 Oocistos por campo de baixa potência..")
-                obsDescArr.add("21-30 Oocistos por campo de baixa potência.")
-                obsDescArr.add(">50 Oocistos por campo de baixa potência.")
-            }
+            handleSetObsImageDescForCocodisCase21(obsDescArr)
             break
             
         case 22:
-            
             if lngId == 1 || lngId == 4 {
                 obsDescArr.add("N/A.")
                 obsDescArr.add("N/A. ")
                 obsDescArr.add("N/A ")
                 obsDescArr.add("N/A.")
                 obsDescArr.add("N/A")
-            }
-            else if lngId == 3{
+            } else if lngId == 3 {
                 obsDescArr.add(self.noDisposibleStr)
                 obsDescArr.add(self.noDisposibleStr)
                 obsDescArr.add(self.noDisposibleStr)
@@ -1282,20 +1281,16 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             break
             
         default:
-            if lngId == 1 || lngId == 4{
+            if lngId == 1 || lngId == 4 {
                 obsDescArr.add("N/A.")
                 obsDescArr.add("N/A.")
-            }
-            else if lngId == 3{
+            } else if lngId == 3 {
                 obsDescArr.add(self.noDisposibleStr)
                 obsDescArr.add(self.noDisposibleStr)
             }
-           
             break
-            
         }
         return obsDescArr
-        
     }
     
     
@@ -5016,113 +5011,137 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let noOfBird =  UserDefaults.standard.value(forKey: "bird") as! Int
-        let cell:StartNecropsyTableViewCell = tableView.cellForRow(at: indexPath) as! StartNecropsyTableViewCell
+        let noOfBird = UserDefaults.standard.integer(forKey: "bird")
+        let cell = tableView.cellForRow(at: indexPath) as! StartNecropsyTableViewCell
+
         tableViewSelectedRow = indexPath.row
         isBirdClick = false
-        
-        if self.farmRow == 0{
+
+        if self.farmRow == 0 {
             isFirstTimeLaunch = true
         }
-        if indexPath.row == 0 {
-            
-            btnTag = 0
-            cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
-            dataSkeltaArray.removeAllObjects()
-            let  necId = getNecIdChicken()
-            
-            dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            neccollectionView.reloadData()
-            
-            if dataSkeltaArray.count>0{
-                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
-            }
+
+        switch indexPath.row {
+        case 0:
+            handleSkeltaMuscularSelection(cell: cell, noOfBird: noOfBird)
+        case 1:
+            handleCoccidiosisSelection(cell: cell, noOfBird: noOfBird)
+        case 2:
+            handleGiTractSelection(cell: cell, noOfBird: noOfBird)
+        case 3:
+            handleRespSelection(cell: cell, noOfBird: noOfBird)
+        case 4:
+            handleImmuneSelection(cell: cell, noOfBird: noOfBird)
+        default:
+            break
         }
-        else if indexPath.row == 1 {
-            
-            if btnTag == 0
-            {
-                let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
-                let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
-            }
-            
-            btnTag = 1
-            dataArrayCocoi.removeAllObjects()
-            
-            let  necId = getNecIdChicken()
-            
-            dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Coccidiosis",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
-            neccollectionView.reloadData()
-            
-            if dataArrayCocoi.count>0{
-                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
-            }
-        }
-        else if indexPath.row == 2 {
-            
-            if btnTag == 0
-            {
-                let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
-                let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
-            }
-            
-            btnTag = 2
-            dataArrayGiTract.removeAllObjects()
-            
-            let  necId = getNecIdChicken()
-            dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "GITract",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
-            neccollectionView.reloadData()
-            
-            if dataArrayGiTract.count>0{
-                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
-            }
-        }
-        else if indexPath.row == 3 {
-            
-            if btnTag == 0
-            {
-                let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
-                let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
-            }
-            
-            btnTag = 3
-            dataArrayRes.removeAllObjects()
-            let  necId = getNecIdChicken()
-            
-            dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Resp",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
-            neccollectionView.reloadData()
-            
-            if dataArrayRes.count>0{
-                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
-            }
-        }
-        else if indexPath.row == 4 {
-            
-            if btnTag == 0
-            {
-                let removeindexPath : IndexPath = IndexPath(row: 0, section: 0)
-                let removecell:StartNecropsyTableViewCell = tableView.cellForRow(at: removeindexPath) as! StartNecropsyTableViewCell
-                removecell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
-            }
-            
-            btnTag = 4
-            dataArrayImmu.removeAllObjects()
-            let  necId = getNecIdChicken()
-            
-            dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(noOfBird as NSNumber, farmname: UserDefaults.standard.object(forKey: "farm") as! String, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            neccollectionView.reloadData()
-            if dataArrayImmu.count>0{
-                neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.top)
-            }
-        }
-        
+
         UserDefaults.standard.set(btnTag, forKey: "clickindex")
         cell.bgView.backgroundColor = UIColor(red: 1.0, green: 93/255, blue: 48/255, alpha: 1.0)
     }
+    
+    private func resetFirstCellBackgroundIfNeeded(for row: Int, in tableView: UITableView) {
+        if btnTag == 0 && row != 0 {
+            let removeIndexPath = IndexPath(row: 0, section: 0)
+            if let removeCell = tableView.cellForRow(at: removeIndexPath) as? StartNecropsyTableViewCell {
+                removeCell.bgView.backgroundColor = UIColor(red: 1.0, green: 141/255, blue: 54/255, alpha: 1.0)
+            }
+        }
+    }
+
+    private func handleSkeltaMuscularSelection(cell: StartNecropsyTableViewCell, noOfBird: Int) {
+        btnTag = 0
+        dataSkeltaArray.removeAllObjects()
+        let necId = getNecIdChicken()
+        dataSkeltaArray = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(
+            noOfBird as NSNumber,
+            farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+            catName: "skeltaMuscular",
+            necId: necId as NSNumber
+        ).mutableCopy() as! NSMutableArray
+        neccollectionView.reloadData()
+
+        if dataSkeltaArray.count > 0 {
+            neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+        }
+    }
+
+    private func handleCoccidiosisSelection(cell: StartNecropsyTableViewCell, noOfBird: Int) {
+        resetFirstCellBackgroundIfNeeded(for: 1, in: neccollectionView.superview as! UITableView)
+
+        btnTag = 1
+        dataArrayCocoi.removeAllObjects()
+        let necId = getNecIdChicken()
+        dataArrayCocoi = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(
+            noOfBird as NSNumber,
+            farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+            catName: "Coccidiosis",
+            necId: necId as NSNumber
+        ).mutableCopy() as! NSMutableArray
+        neccollectionView.reloadData()
+
+        if dataArrayCocoi.count > 0 {
+            neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+        }
+    }
+
+    private func handleGiTractSelection(cell: StartNecropsyTableViewCell, noOfBird: Int) {
+        resetFirstCellBackgroundIfNeeded(for: 2, in: neccollectionView.superview as! UITableView)
+
+        btnTag = 2
+        dataArrayGiTract.removeAllObjects()
+        let necId = getNecIdChicken()
+        dataArrayGiTract = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(
+            noOfBird as NSNumber,
+            farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+            catName: "GITract",
+            necId: necId as NSNumber
+        ).mutableCopy() as! NSMutableArray
+        neccollectionView.reloadData()
+
+        if dataArrayGiTract.count > 0 {
+            neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+        }
+    }
+
+    private func handleRespSelection(cell: StartNecropsyTableViewCell, noOfBird: Int) {
+        resetFirstCellBackgroundIfNeeded(for: 3, in: neccollectionView.superview as! UITableView)
+
+        btnTag = 3
+        dataArrayRes.removeAllObjects()
+        let necId = getNecIdChicken()
+        dataArrayRes = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(
+            noOfBird as NSNumber,
+            farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+            catName: "Resp",
+            necId: necId as NSNumber
+        ).mutableCopy() as! NSMutableArray
+        neccollectionView.reloadData()
+
+        if dataArrayRes.count > 0 {
+            neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+        }
+    }
+
+    private func handleImmuneSelection(cell: StartNecropsyTableViewCell, noOfBird: Int) {
+        resetFirstCellBackgroundIfNeeded(for: 4, in: neccollectionView.superview as! UITableView)
+
+        btnTag = 4
+        dataArrayImmu.removeAllObjects()
+        let necId = getNecIdChicken()
+        dataArrayImmu = CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(
+            noOfBird as NSNumber,
+            farmname: UserDefaults.standard.string(forKey: "farm") ?? "",
+            catName: "Immune",
+            necId: necId as NSNumber
+        ).mutableCopy() as! NSMutableArray
+        neccollectionView.reloadData()
+
+        if dataArrayImmu.count > 0 {
+            neccollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+        }
+    }
+
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let cell:StartNecropsyTableViewCell = tableView.cellForRow(at: indexPath) as! StartNecropsyTableViewCell
@@ -5185,12 +5204,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         animateViewMoving(true, moveValue: 100)
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField)
-    {
-        animateViewMoving(false, moveValue: 100)
-        
-        let rowIndex :Int = textField.tag
-        lastSelectedIndex = IndexPath(row: rowIndex, section: 0)
+    fileprivate func handleTextFieldDidEndEditingValidationbtnTag0(_ rowIndex: Int, _ textField: UITextField) {
         if btnTag == 0 {
             
             let skleta : CaptureNecropsyViewData = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewData
@@ -5208,6 +5222,9 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataSkeltaArray =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(skleta.birdNo! , farmname: skleta.formName!, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
+    }
+    
+    fileprivate func handleTextFieldDidEndEditingValidationbtnTag1(_ rowIndex: Int, _ textField: UITextField) {
         if btnTag == 1 {
             
             let cocoi : CaptureNecropsyViewData = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewData
@@ -5227,6 +5244,9 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataArrayCocoi =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(cocoi.birdNo! , farmname: cocoi.formName!, catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
+    }
+    
+    fileprivate func handleTextFieldDidEndEditingValidationbtnTag2(_ rowIndex: Int, _ textField: UITextField) {
         if btnTag == 2 {
             
             let gitract : CaptureNecropsyViewData = dataArrayGiTract.object(at: rowIndex) as! CaptureNecropsyViewData
@@ -5245,6 +5265,9 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataArrayGiTract =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(gitract.birdNo! , farmname: gitract.formName!, catName: "GITract",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
         }
+    }
+    
+    fileprivate func handleTextFieldDidEndEditingValidationbtnTag3(_ rowIndex: Int, _ textField: UITextField) {
         if btnTag == 3 {
             
             let resp : CaptureNecropsyViewData = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewData
@@ -5264,6 +5287,9 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             
             dataArrayRes =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(resp.birdNo! , farmname: resp.formName!, catName: "Resp",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
         }
+    }
+    
+    fileprivate func handleTextFieldDidEndEditingValidationbtnTag4(_ rowIndex: Int, _ textField: UITextField) {
         if btnTag == 4 {
             
             let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewData
@@ -5277,21 +5303,27 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             }
             
             dataArrayImmu.removeAllObjects()
-            
             necId = getNecIdChicken()
-            
             dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
         }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        animateViewMoving(false, moveValue: 100)
+        let rowIndex :Int = textField.tag
+        lastSelectedIndex = IndexPath(row: rowIndex, section: 0)
+        handleTextFieldDidEndEditingValidationbtnTag0(rowIndex, textField)
+        handleTextFieldDidEndEditingValidationbtnTag1(rowIndex, textField)
+        handleTextFieldDidEndEditingValidationbtnTag2(rowIndex, textField)
+        handleTextFieldDidEndEditingValidationbtnTag3(rowIndex, textField)
+        handleTextFieldDidEndEditingValidationbtnTag4(rowIndex, textField)
         
-        if postingIdFromExistingNavigate == "Exting"{
-            
+        if postingIdFromExistingNavigate == "Exting" {
             CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
-        }
-        else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
+        } else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
             let necId = UserDefaults.standard.integer(forKey: "necId") as Int
             CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
-        }
-        else{
+        } else {
             let necId = UserDefaults.standard.integer(forKey: "necId") as Int
             CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
         }
@@ -5602,58 +5634,48 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
     }
     // MARK: 🟠 Done Button Action.
-    func doneBtnFunc (_ notes : NSMutableArray , notesText : String, noOfBird : Int)
-    {
-        if notes.count > 0
-        {
+    fileprivate func handleNotesBirdAndUpdateLocalDB(_ isNotes: NSArray, _ catArr: NSArray, _ notesText: String, _ formName: String?, _ noOfBird: Int) {
+        if isNotes.count > 0 {
+            let note : NotesBird = isNotes[0] as! NotesBird
+            for i in 0..<catArr.count {
+                let necId = getNecIdChicken()
+                CoreDataHandler().updateNoofBirdWithNotes(catArr.object(at: i) as! String,  formName: note.formName!, birdNo: note.noofBirds!,notes:notesText,necId: necId as NSNumber,isSync :true)
+            }
+        } else {
+            for i in 0..<catArr.count {
+                let necId = getNecIdChicken()
+                CoreDataHandler().saveNoofBirdWithNotes(catArr.object(at: i) as! String , notes: notesText, formName: formName! , birdNo: noOfBird as NSNumber, index: 0 , necId: necId as NSNumber, isSync :true)
+            }
+        }
+    }
+    
+    func doneBtnFunc (_ notes : NSMutableArray , notesText : String, noOfBird : Int) {
+        if notes.count > 0 {
             let skleta : CaptureNecropsyViewData = notes.object(at: 0) as! CaptureNecropsyViewData
             let formName = skleta.formName
-            let catName  = skleta.catName
-            var  necId =  getNecIdChicken()
+            let catName = skleta.catName
+            let necId = getNecIdChicken()
             
             let isNotes = CoreDataHandler().fetchNoofBirdWithNotes(catName!, formName: formName!, birdNo: noOfBird as NSNumber, necId: necId as NSNumber)
             let note : NotesBird = isNotes[0] as! NotesBird
             let catArr = ["skeltaMuscular","Coccidiosis","GITract","Resp","Immune"] as NSArray
             
-            if note.notes!.isEmpty && notesText.isEmpty
-            {
-                for i in  0..<catArr.count
-                {
-                    var  necId =  getNecIdChicken()
+            if note.notes!.isEmpty && notesText.isEmpty {
+                for i in  0..<catArr.count {
+                    let necId = getNecIdChicken()
                     CoreDataHandler().updateNoofBirdWithNotes(catArr.object(at: i) as! String,  formName: note.formName!, birdNo: note.noofBirds!,notes:note.notes!,necId: necId as NSNumber,isSync :true)
                 }
                 return
-            }
-            else
-            {
-                if isNotes.count > 0
-                {
-                    let note : NotesBird = isNotes[0] as! NotesBird
-                    for i in  0..<catArr.count
-                    {
-                        var  necId = getNecIdChicken()
-                        CoreDataHandler().updateNoofBirdWithNotes(catArr.object(at: i) as! String,  formName: note.formName!, birdNo: note.noofBirds!,notes:notesText,necId: necId as NSNumber,isSync :true)
-                    }
-                }
-                else
-                {
-                    for i in  0..<catArr.count
-                    {
-                        var  necId = getNecIdChicken()
-                        CoreDataHandler().saveNoofBirdWithNotes(catArr.object(at: i) as! String , notes: notesText, formName: formName! , birdNo: noOfBird as NSNumber, index: 0 , necId: necId as NSNumber, isSync :true)
-                    }
-                }
+            } else {
+                handleNotesBirdAndUpdateLocalDB(isNotes, catArr, notesText, formName, noOfBird)
             }
             
-            if postingIdFromExistingNavigate == "Exting"
-            {
+            if postingIdFromExistingNavigate == "Exting" {
                 CoreDataHandler().updateisSyncTrueOnPostingSession(postingIdFromExisting as NSNumber)
-            }
-            else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
+            } else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
                 let necId = UserDefaults.standard.integer(forKey: "necId") as Int
                 CoreDataHandler().updateisSyncNecropsystep1WithneccId(necId as NSNumber, isSync : true)
-            }
-            else{
+            } else {
                 let necId = UserDefaults.standard.integer(forKey: "necId") as Int
                 CoreDataHandler().updateisSyncTrueOnPostingSession(necId as NSNumber)
             }

@@ -18,53 +18,41 @@ class ZoetisWebServices: BaseViewController {
     let languageIdStr = "&LanguageId=1"
     let countryIdStr = "&CountryId="
     let regionIdStr = "&RegionId="
+    
+    enum DeviceIDRequestType {
+           case postedSession
+           case vaccineList
+           case feedList
+        case farmList
+        case birdsNotes
+        case NecropsyByDeviceID
+        case chickenPostedSessions
+        case FlockFeedSession
+        case PostedSessionVaccination
+        case NotesPostedSession
+        case PostedNecropsyFarmList
+        case necropsyList
+        case necropsyImagesList
+        case tukeyPostedFarmList
+        case targetWeight
+        case cocciVaccineTurkey
+        case salesRepresentative
+        case getRoute
+        case getTurkeyHatcheryStrain
+        case getTurkeyFieldStrain
+        case getDosage
+        case getTurkeyGeneration
+        case  getTurkeyDoseByMoleculeId
+        case getCocciProgram
+        case  getSessionType
+        case getBirdBreedChickenAndTurkey
+        case getFeedProgramCatagoryAndMolecule
+        case getVeterinarian
+       }
+    
+    
     enum EndPoint: String {
         case login = "Token"
-        //        case getPostingSessionList = "/ProcessEvaluation/API/api/PostingSession/GetPostingSessionListByUser?UserId="
-        //        case getAllCustomerPE = "/ProcessEvaluation/API/api/Assessment/GetAllCustomer_PE"
-        //        case getPEDosages = "/ProcessEvaluation/API/api/Assessment/GetPEDosages"
-        //        case getCustomerPE = "/ProcessEvaluation/API/api/Assessment/GetAssignedCustomerByUser?userId="
-        //        case getSitesPE = "/ProcessEvaluation/API/api/Assessment/GetAssignedSitesByUser?userId="
-        //        case getApproversPE = "/ProcessEvaluation/API/api/Assessment/GetTSRUser"
-        //        case getEvaluator = "/ProcessEvaluation/API/api/Assessment/GetEvaluator?CountryId="
-        //        case getVisitTypes = "/ProcessEvaluation/API/api/Assessment/GetReasonForVisitTypes"
-        //        case getEvaluatorTypes = "/ProcessEvaluation/API/api/Assessment/GetEvaluationTypes"
-        //        case getManufacturer = "/ProcessEvaluation/API/api/Assessment/GetManufacturer"
-        //        case getBirdBreed = "/ProcessEvaluation/API/api/Assessment/GetBirdBreeds"
-        //        case getEggs = "/ProcessEvaluation/API/api/Assessment/GetEggsPerFlat"
-        //        case getVaccineManufacturer = "/ProcessEvaluation/API/api/Assessment/GetVaccineManufacturer"
-        //        case getVaccineNames = "/ProcessEvaluation/API/api/Assessment/GetVaccineNames"
-        //
-        //         case getSubVaccineNames = "/ProcessEvaluation/API/api/Assessment/GetVaccineNamesSubcutaneous"
-        //        case getDiluentManufacturer = "/ProcessEvaluation/API/api/Assessment/DiluentManufacturer"
-        //        case getbagSizes = "/ProcessEvaluation/API/api/Assessment/GetBagSizeTypes"
-        //        case getAmplePerBag = "/ProcessEvaluation/API/api/Assessment/GetAmpulePerBag"
-        //        case getAmpleSizes = "/ProcessEvaluation/API/api/Assessment/GetAmpuleSizes"
-        //        case getPERoles = "/ProcessEvaluation/API/api/Assessment/GetRoles"
-        //        case getPEFrequency = "/ProcessEvaluation/API/api/Assessment/GetAssessmentFreuqncies"
-        //
-        //        case getPEDOADiluentType = "/ProcessEvaluation/API/api/Assessment/GetDayOfAgeDiluentType"
-        //        case getIncubationStyle = "/ProcessEvaluation/API/api/Assessment/GetIncubationStyles"
-        //        case getPEDOASizes = "/ProcessEvaluation/API/api/Assessment/GetDayOfAgeBagSizeTypes"
-        ////      New
-        //        case getDuplicacyCheck = "/ProcessEvaluation/API/api/Assessment/DuplicateAssessmentcheck"
-        //
-        //        case getPostingAssessmentListByUserPE = "/ProcessEvaluation/API/api/Assessment/GetPostingAssessmentListByUser?UserId="
-        //        case getPostingAssessmentImagesListByUserPE = "/ProcessEvaluation/API/api/AssessmentImage/GetPostingAssessmentImagesListByUser?UserId="
-        //        case getModuleAssessmentCategoriesDetailsPE = "/ProcessEvaluation/API/api/Assessment/GetQuestionAnswerCategories?"
-        //        case getAssessmentQuesInfoPE = "/ProcessEvaluation/API/api/Assessment/GetAssessmentInfosDetails"
-        //        case postAddAttachmentDetails = "/ProcessEvaluation/API/api/Assessment/AddAssessment"
-        //        case postAddScores = "/ProcessEvaluation/API/api/Assessment/AddScores"
-        //          case postAddDayOfAgeAndInvoject = "/ProcessEvaluation/API/api/Assessment/AddInovojectDayOfAgeDetails"
-        //        case postImagesBase64 = "/ProcessEvaluation/API/api/AssessmentImage/SaveAssessmentImagesDetails"
-        //        case getPEScheduledCertifications = "/ProcessEvaluation/API/api/Assessment/GetAssessmentSchedulesListById/"
-        //        case getPERejectedAssessment = "/ProcessEvaluation/API/api/Assessment/GetRejectedAssessmentListByUser?UserId="
-        //        case getPERejectedAssessmentImages = "/ProcessEvaluation/API/api/AssessmentImage/GetAssessmentImageById?AssessmentId="
-        //        case getPlateTypes = "/ProcessEvaluation/API/api/Assessment/GetPlateTypes"
-        //        case deleteDrafts = "/ProcessEvaluation/API/api/Assessment/DeleteDrafts?draftIds="
-        //        case postUpdateStatus = "/ProcessEvaluation/API/api/Assessment/updateStatusType?assessmentId="
-        //
-        //********************************Master Data Update*******************
         
         case getMasterDataVersion = "/api/UserManagement/GetMasterTableDataVersion"
         
@@ -186,26 +174,7 @@ class ZoetisWebServices: BaseViewController {
         
         
         //Microbial API's Finish
-        
-        //Vaccination API's
-        
-        //        case getUpcomingCertifications = "/ProcessEvaluation/API/api/VaccinationTraining/GetScheduleTrainingByFSRId/"
-        //
-        //        case getQuestionsMasterData = "/ProcessEvaluation/API/api/VaccinationTraining/GetCertificateQuestion"
-        //
-        //        case getVaccinationMasterDropdowndata = "/ProcessEvaluation/API/api/VaccinationTraining/GetlanguagesAndTshirtSizes"
-        //
-        //        case getEmployessById = "/ProcessEvaluation/API/api/VaccinationTraining/GetEmployeeList"
-        //
-        //        case getSiteByCustomerIds  = "/ProcessEvaluation/API/api/VaccinationTraining/GetCustomerListByCustomerlst?customerIds="
-        //
-        //        case getCustomersByUserId = "/ProcessEvaluation/API/api/VaccinationTraining/GetAssingedCustomerListByUser?userId="
-        //
-        //        case postvaccinationCertification = "/ProcessEvaluation/API/api/VaccinationTraining/SubmitTrainingDataSync"
-        //
-        //        case getSubmittedCertifications = "/ProcessEvaluation/API/api/VaccinationTraining/GetPostingCertificateByUserId?userId="
-        //
-        //        case getFSMList = "/ProcessEvaluation/API/api/VaccinationTraining/GetFSMList"
+
         
         //**********************Vaccine Migration API**********************
         
@@ -796,7 +765,6 @@ extension ZoetisWebServices {
     
     func getDownloadBlankFile( controller: UIViewController, parameters: JSONDictionary, fileName: String, completion: @escaping CompletionBlock) {
         let url = EndPoint.getDownloadBlankFile.latestUrl + "fileName=\(fileName)" + "&userId=\(UserContext.sharedInstance.userDetailsObj?.userId ?? "")"
-//        let urls = EndPoint.postUpdateStatus.latestUrl + assId + "&userId=\(UserContext.sharedInstance.userDetailsObj?.userId ?? "")" + "&saveType=\(sType)" + "&appVersion=\(Bundle.main.versionNumber)"
         print("get SERVICE*** : PDF DOWNLOAD LINK ", url)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
@@ -994,86 +962,114 @@ extension ZoetisWebServices {
     }
  
     // Flock Health API ---- Start
-    
-    func getPostedSessionByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getVaccineListByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getFeedListByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getFarmListByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getNecropsyByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getBirdsNotesDataByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getPostedSessionResponceForChicken(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getFlockFeedSessionResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getPostedSessionVaccinationResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
- 
-    func getNotesPostedSessionResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getPostedNecropsyFarmListResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getNecropsyListResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getNecropsyImagesListResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
-    }
-    
-    func getTukeyPostedFarmListResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+//    
+    func getFlockHealthAPIResponce(type: DeviceIDRequestType, controller: UIViewController, url: String, parameters: [String: Any], headers: [String: String], completion: @escaping CompletionBlock) {
         print(url)
         getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
 
+    
+    func getPostedSessionByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.postedSession, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    
+    }
+    
+    func getVaccineListByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.vaccineList, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getFeedListByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.feedList, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getFarmListByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.farmList, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getNecropsyByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.NecropsyByDeviceID, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getBirdsNotesDataByDeviceIDResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.birdsNotes, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getPostedSessionResponceForChicken(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.chickenPostedSessions, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getFlockFeedSessionResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.FlockFeedSession, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getPostedSessionVaccinationResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.PostedSessionVaccination, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+ 
+    func getNotesPostedSessionResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.NotesPostedSession, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getPostedNecropsyFarmListResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.PostedNecropsyFarmList, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+        
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getNecropsyListResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.necropsyList, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getNecropsyImagesListResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.necropsyImagesList, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+    
+    func getTukeyPostedFarmListResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.tukeyPostedFarmList, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+//        print(url)
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+    }
+
     func getTargetWeightResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getTargetWeightForTurkey.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.targetWeight, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+
+//        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getCocciVaccineTurkeyResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let lngId = UserDefaults.standard.integer(forKey: "lngId")
         let url = EndPoint.getTurkeyCocciVaccine.latestUrl + "\(lngId)"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.cocciVaccineTurkey, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+       // getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getChickenTurkeyComplexByUserIdResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
@@ -1084,60 +1080,72 @@ extension ZoetisWebServices {
     }
     
     func getSalesRepresentativeResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
-        var Id = Int()
-        Id = UserDefaults.standard.value(forKey: "Id") as! Int
+       
+        let Id = UserDefaults.standard.value(forKey: "Id") as! Int
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let FlockType = UserDefaults.standard.value(forKey: "chick") as! Int
         
         if FlockType == 4 {
             let url = EndPoint.getTurkeySalesRepresentative.latestUrl + "\(Id)" + "&SubProductID=1&CountryId=\(countryId)"
-            getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+           // getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+            
+            getFlockHealthAPIResponce(type: DeviceIDRequestType.salesRepresentative, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
         } else {
             let url = EndPoint.getTurkeySalesRepresentative.latestUrl + "\(Id)" + "&SubProductID=2&CountryId=\(countryId)"
-            getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+            
+            getFlockHealthAPIResponce(type: DeviceIDRequestType.salesRepresentative, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+           // getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
         }
     }
     
     
     func getRouteResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getRoutes.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getRoute, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+       // getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getTurkeyHatcheryStrainResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getTurkeyHatcheryStrain.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getTurkeyHatcheryStrain, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+       // getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
     func getTurkeyFieldStrainResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getTurkeyFieldStrain.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getTurkeyFieldStrain, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getDosageResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getTurkeyDosage.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getDosage, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getTurkeyGenerationResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getTurkeyGeneratiobnType.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getTurkeyGeneration, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+       // getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getTurkeyDoseByMoleculeIdResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getTurkeyDosageByMoulecule.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getTurkeyDoseByMoleculeId, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getCocciProgramResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getCocciProgram.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getCocciProgram, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+       // getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getSessionTypeResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getSessionType.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getSessionType, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getBirdSizeResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
@@ -1152,19 +1160,23 @@ extension ZoetisWebServices {
     
     func getBirdBreedChickenAndTurkeyResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getBirdBreedChickenAndTurkey.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getBirdBreedChickenAndTurkey, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getFeedProgramCatagoryAndMoleculeDetailsResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.GetFeedProgramCatagoryAndMoleculeDetails.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getFeedProgramCatagoryAndMolecule, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getVeterinarianResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let Id = UserDefaults.standard.value(forKey: "Id") as! Int
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let url = EndPoint.GetChickenTurkeyVeterinarian.latestUrl + "\(Id)" + "&SubProductID=1&CountryId=\(countryId)"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getFlockHealthAPIResponce(type: DeviceIDRequestType.getVeterinarian, controller: controller, url: url, parameters: [:], headers: [:], completion: completion)
+      //  getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getVeterinarianResponceTurkey(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){

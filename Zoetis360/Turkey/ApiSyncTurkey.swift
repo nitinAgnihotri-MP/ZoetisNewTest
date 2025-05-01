@@ -677,7 +677,7 @@ class ApiSyncTurkey: NSObject {
                             
                             self.delegeteSyncApiTurkey.failWithErrorInternal()
                             print(err)
-                        } else if let data = response.data{
+                        } else if response.data != nil {
                             
                             if let s = statusCode {
                                 
@@ -1135,6 +1135,14 @@ class ApiSyncTurkey: NSObject {
         }
     }
     
+    fileprivate func handleAPIResponseStatusCodeHandler(_ statusCode: Int?) {
+        if statusCode == 401 {
+            self.loginMethod()
+        } else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
+            self.delegeteSyncApiTurkey.failWithError(statusCode: statusCode!)
+        }
+    }
+    
     /********************* Save Farms  data On Server ***************************/
     /**************************************************************************/
     func saveNecropsyDataOnServer(){
@@ -1189,7 +1197,6 @@ class ApiSyncTurkey: NSObject {
       
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-               // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 let headerDict = [Constants.authorization:accestoken]
                 let Url = "PostingSession/T_SaveMultipleNecropsySyncData"
                 let urlString: String = WebClass.sharedInstance.webUrl + Url
@@ -1200,22 +1207,13 @@ class ApiSyncTurkey: NSObject {
               
                 if let jsonData = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: []) {
                     request.httpBody = jsonData
-                } else {
-                    print(Constants.failedSerilazedJSON)
-                    // Handle error case, such as not making the request
                 }
                 
                 request.httpBody = try? JSONSerialization.data(withJSONObject: sessionWithAllforms, options: [])
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
                     
-                    if statusCode == 401  {
-                        self.loginMethod()
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApiTurkey.failWithError(statusCode: statusCode!)
-                    }
-                    
+                    self.handleAPIResponseStatusCodeHandler(statusCode)
                     self.handleSaveMultipleNecropsySyncDataSaveNecropsyDataOnServer(response)
                 }
             }
@@ -1301,7 +1299,7 @@ class ApiSyncTurkey: NSObject {
                                     }
                                     let w : CGFloat = image.size.width / 7
                                     yImage = self.resizeImage(image, newWidth: w)!
-                                    var data = yImage.pngData()!
+                                    
                                     let imageDict =  NSMutableDictionary()
                                     imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
                                     photoValArr.add(imageDict)
@@ -1619,21 +1617,28 @@ class ApiSyncTurkey: NSObject {
                         completion(false)
                         return
                     }
-                    handler.updateisSyncOnBirdPhotoCaptureDatabaseTurkey(necropsyId, isSync: false) { success in
-                        guard success else {
-                            completion(false)
-                            return
-                        }
-                        handler.updateisSyncOnNotesBirdDatabaseTurkey(necropsyId, isSync: false) { success in
-                            guard success else {
-                                completion(false)
-                                return
-                            }
-                            handler.updateisAllSyncFalseOnPostingSessionTurkey(true) { success in
-                                completion(success)
-                            }
-                        }
+                    self.handleUpdateIsSyncOnNotesBirdDataBase(handler: handler, necropsyId: necropsyId) { status in
+                        completion(success)
                     }
+                }
+            }
+        }
+    }
+    
+    private func handleUpdateIsSyncOnNotesBirdDataBase(handler: CoreDataHandlerTurkey, necropsyId: NSNumber, completion: @escaping (_ status: Bool) -> Void) {
+        
+        handler.updateisSyncOnBirdPhotoCaptureDatabaseTurkey(necropsyId, isSync: false) { success in
+            guard success else {
+                completion(false)
+                return
+            }
+            handler.updateisSyncOnNotesBirdDatabaseTurkey(necropsyId, isSync: false) { success in
+                guard success else {
+                    completion(false)
+                    return
+                }
+                handler.updateisAllSyncFalseOnPostingSessionTurkey(true) { success in
+                    completion(success)
                 }
             }
         }

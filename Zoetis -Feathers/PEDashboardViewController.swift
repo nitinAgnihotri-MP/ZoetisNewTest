@@ -1501,7 +1501,7 @@ extension PEDashboardViewController:  SyncBtnDelegatePE {
                 if syncArr ?? 0 > 0{
                     self?.syncBtnTapped(showHud: false)
                 } else {
-                    self?.showtoast(message: "Data synced successfully.")
+                    self?.showtoast(message: Constants.dataSyncSuccess)
                     NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                 }
                 

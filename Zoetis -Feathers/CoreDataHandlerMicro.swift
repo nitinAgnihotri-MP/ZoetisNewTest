@@ -53,31 +53,58 @@ class CoreDataHandlerMicro: NSObject {
         
     }
     
-    func saveCustomerDetailsInDBSessionData(_ barcode: String ,company : String,companyId:Int , emailId : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleColectionDate : String, sessionId : String , site: String, siteId : Int) {
-        
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        
-        let entity = NSEntityDescription.entity(forEntityName: "SessionMicrobial", in: appDelegate!.managedObjectContext)
-        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        person.setValue(company, forKey: "companyName")
-        person.setValue(companyId, forKey: "companyId")
-        person.setValue(barcode, forKey: "barcode")
-        person.setValue(emailId, forKey: "emailId")
-        person.setValue(requestor, forKey: "requestor")
-        person.setValue(reviewer, forKey: "reviewer")
-        person.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
-        person.setValue(sampleColectionDate, forKey: "sampleColectionDate")
-        person.setValue(sessionId, forKey: "sessionId")
-        person.setValue(site, forKey: "site")
-        person.setValue(siteId, forKey: "siteId")
-        
+    func saveCustomerDetailsInDBSessionData(_ data: CoreDataHandlerMicrodataModels.CustomerSessionData) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+
+        let context = appDelegate.managedObjectContext
+        guard let entity = NSEntityDescription.entity(forEntityName: "SessionMicrobial", in: context) else { return }
+
+        let session = NSManagedObject(entity: entity, insertInto: context)
+        session.setValue(data.company, forKey: "companyName")
+        session.setValue(data.companyId, forKey: "companyId")
+        session.setValue(data.barcode, forKey: "barcode")
+        session.setValue(data.emailId, forKey: "emailId")
+        session.setValue(data.requestor, forKey: "requestor")
+        session.setValue(data.reviewer, forKey: "reviewer")
+        session.setValue(data.sampleCollectedBy, forKey: "sampleCollectedBy")
+        session.setValue(data.sampleCollectionDate, forKey: "sampleColectionDate")
+        session.setValue(data.sessionId, forKey: "sessionId")
+        session.setValue(data.site, forKey: "site")
+        session.setValue(data.siteId, forKey: "siteId")
+
         do {
-            try appDelegate!.managedObjectContext.save()
+            try context.save()
         } catch {
             print(appDelegateObj.testFuntion())
         }
-        
     }
+    
+    
+//    func saveCustomerDetailsInDBSessionData(_ barcode: String ,company : String,companyId:Int , emailId : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleColectionDate : String, sessionId : String , site: String, siteId : Int) {
+//        
+//        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+//        
+//        let entity = NSEntityDescription.entity(forEntityName: "SessionMicrobial", in: appDelegate!.managedObjectContext)
+//        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
+//        person.setValue(company, forKey: "companyName")
+//        person.setValue(companyId, forKey: "companyId")
+//        person.setValue(barcode, forKey: "barcode")
+//        person.setValue(emailId, forKey: "emailId")
+//        person.setValue(requestor, forKey: "requestor")
+//        person.setValue(reviewer, forKey: "reviewer")
+//        person.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
+//        person.setValue(sampleColectionDate, forKey: "sampleColectionDate")
+//        person.setValue(sessionId, forKey: "sessionId")
+//        person.setValue(site, forKey: "site")
+//        person.setValue(siteId, forKey: "siteId")
+//        
+//        do {
+//            try appDelegate!.managedObjectContext.save()
+//        } catch {
+//            print(appDelegateObj.testFuntion())
+//        }
+//        
+//    }
     
     func fetchSampleInfoDataForATimeStamp(_ entityName: String, predicate: NSPredicate) -> NSArray {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -208,112 +235,93 @@ class CoreDataHandlerMicro: NSObject {
         }
     }
     
-    func saveCaseInfoDataInToDB(requestor: String, sampleCollectedBy: String, company: String,
-                                companyId: Int, site: String, siteId: Int, email: String, reviewer: String,
-                                surveyConductedOn: String, sampleCollectionDate: String, sampleCollectionDateWithTimeStamp: String,
-                                purposeOfSurvey: String, transferIn: String, barCode: String, barCodeManualEntered: String, notes: String, reasonForVisit: String, currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, requisition_Id: String, timeStamp: String, isPlateIdGenerated: Bool, typeOfBird: String, typeOfBirdId: Int, reviewerId: Int, purposeOfSurveyId: Int, surveyConductedOnId: Int, reasonForVisitId: Int) {
-        
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSurveyFormSubmitted", in: appDelegate!.managedObjectContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        managedObject.setValue(reasonForVisitId, forKey: "reasonForVisitId")
-        managedObject.setValue(surveyConductedOnId, forKey: "surveyConductedOnId")
-        managedObject.setValue(purposeOfSurveyId, forKey: "purposeOfSurveyId")
-        managedObject.setValue(reviewerId, forKey: "reviewerId")
-        managedObject.setValue(requestor, forKey: "requestor")
-        managedObject.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
-        managedObject.setValue(company, forKey: "company")
-        managedObject.setValue(companyId, forKey: "companyId")
-        managedObject.setValue(site, forKey: "site")
-        managedObject.setValue(siteId, forKey: "siteId")
-        managedObject.setValue(email, forKey: "email")
-        managedObject.setValue(reviewer, forKey: "reviewer")
-        managedObject.setValue(surveyConductedOn, forKey: "surveyConductedOn")
-        managedObject.setValue(sampleCollectionDate, forKey: "sampleCollectionDate")
-        managedObject.setValue(sampleCollectionDateWithTimeStamp, forKey: "sampleCollectionDateWithTimeStamp")
-        managedObject.setValue(purposeOfSurvey, forKey: "purposeOfSurvey")
-        managedObject.setValue(transferIn, forKey: "transferIn")
-        managedObject.setValue(barCode, forKey: "barcode")
-        managedObject.setValue(barCodeManualEntered, forKey: "barcodeManualEntered")
-        managedObject.setValue(notes, forKey: "notes")
-        managedObject.setValue(reasonForVisit, forKey: "reasonForVisit")
-        managedObject.setValue(typeOfBird, forKey: "typeOfBird")
-        managedObject.setValue(typeOfBirdId, forKey: "typeOfBirdId")
-        managedObject.setValue(currentdate, forKey: "currentdate")
-        managedObject.setValue(customerId, forKey: "customerId")
-        managedObject.setValue(requisitionType, forKey: "requisitionType")
-        managedObject.setValue(sessionStatus, forKey: "sessionStatus")
-        managedObject.setValue(requisition_Id, forKey: "requisition_Id")
-        managedObject.setValue(timeStamp, forKey: "timeStamp")
-        managedObject.setValue(isPlateIdGenerated, forKey: "isPlateIdGenerated")
+    func saveCaseInfoDataInToDB(info: CoreDataHandlerMicrodataModels.CaseInfo) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+
+        let context = appDelegate.managedObjectContext
+        guard let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSurveyFormSubmitted", in: context) else { return }
+
+        let managedObject = NSManagedObject(entity: entity, insertInto: context)
+
+        managedObject.setValue(info.reasonForVisitId, forKey: "reasonForVisitId")
+        managedObject.setValue(info.surveyConductedOnId, forKey: "surveyConductedOnId")
+        managedObject.setValue(info.purposeOfSurveyId, forKey: "purposeOfSurveyId")
+        managedObject.setValue(info.reviewerId, forKey: "reviewerId")
+        managedObject.setValue(info.requestor, forKey: "requestor")
+        managedObject.setValue(info.sampleCollectedBy, forKey: "sampleCollectedBy")
+        managedObject.setValue(info.company, forKey: "company")
+        managedObject.setValue(info.companyId, forKey: "companyId")
+        managedObject.setValue(info.site, forKey: "site")
+        managedObject.setValue(info.siteId, forKey: "siteId")
+        managedObject.setValue(info.email, forKey: "email")
+        managedObject.setValue(info.reviewer, forKey: "reviewer")
+        managedObject.setValue(info.surveyConductedOn, forKey: "surveyConductedOn")
+        managedObject.setValue(info.sampleCollectionDate, forKey: "sampleCollectionDate")
+        managedObject.setValue(info.sampleCollectionDateWithTimeStamp, forKey: "sampleCollectionDateWithTimeStamp")
+        managedObject.setValue(info.purposeOfSurvey, forKey: "purposeOfSurvey")
+        managedObject.setValue(info.transferIn, forKey: "transferIn")
+        managedObject.setValue(info.barCode, forKey: "barcode")
+        managedObject.setValue(info.barCodeManualEntered, forKey: "barcodeManualEntered")
+        managedObject.setValue(info.notes, forKey: "notes")
+        managedObject.setValue(info.reasonForVisit, forKey: "reasonForVisit")
+        managedObject.setValue(info.typeOfBird, forKey: "typeOfBird")
+        managedObject.setValue(info.typeOfBirdId, forKey: "typeOfBirdId")
+        managedObject.setValue(info.currentdate, forKey: "currentdate")
+        managedObject.setValue(info.customerId, forKey: "customerId")
+        managedObject.setValue(info.requisitionType, forKey: "requisitionType")
+        managedObject.setValue(info.sessionStatus, forKey: "sessionStatus")
+        managedObject.setValue(info.requisitionId, forKey: "requisition_Id")
+        managedObject.setValue(info.timeStamp, forKey: "timeStamp")
+        managedObject.setValue(info.isPlateIdGenerated, forKey: "isPlateIdGenerated")
         managedObject.setValue(false, forKey: "isSynced")
         managedObject.setValue(UserDefaults.standard.value(forKey:"Id") ?? 0, forKey: "userId")
-        
+
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as? String ?? ""
-        
-        let syncDeviceId = "\(timeStamp)_\(UserDefaults.standard.value(forKey:"Id") ?? 0)_iOS_\(udid)"
+        let syncDeviceId = "\(info.timeStamp)_\(UserDefaults.standard.value(forKey:"Id") ?? 0)_iOS_\(udid)"
         managedObject.setValue(syncDeviceId, forKey: "syncDeviceId")
-        managedObject.setValue("C-\(timeStamp)", forKey: "reqNo")
+        managedObject.setValue("C-\(info.timeStamp)", forKey: "reqNo")
+
         if let caseStatusArray = CoreDataHandlerMicro().fetchDetailsFor(entityName: "MicrobialCaseStatus") as? [MicrobialCaseStatus] {
             managedObject.setValue(caseStatusArray.first?.id ?? 0, forKey: "reqStatus")
-        }else{
+        } else {
             managedObject.setValue(0, forKey: "reqStatus")
         }
+
+        do {
+            try context.save()
+        } catch {
+            // Handle save error
+        }
+    }
+
+
+    
+    func saveSampleInfoHeaderDataInToDB_Enviromental(info: CoreDataHandlerMicrodataModels.SampleInfoHeader) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.managedObjectContext
+
+        guard let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeadersSubmitted", in: context) else { return }
+        
+        let managedObject = NSManagedObject(entity: entity, insertInto: context)
+        
+        managedObject.setValue(info.currentdate, forKey: "currentdate")
+        managedObject.setValue(info.customerId, forKey: "customerId")
+        managedObject.setValue(info.requisitionType, forKey: "requisitionType")
+        managedObject.setValue(info.sessionStatus, forKey: "sessionStatus")
+        managedObject.setValue(info.locationType, forKey: "locationType")
+        managedObject.setValue(info.locationTypeId, forKey: "locationTypeId")
+        managedObject.setValue(info.noOfPlates, forKey: "noOfPlates")
+        managedObject.setValue(info.section, forKey: "section")
+        managedObject.setValue(info.requisitionId, forKey: "requisition_Id")
+        managedObject.setValue(info.timeStamp, forKey: "timeStamp")
         
         do {
-            try appDelegate!.managedObjectContext.save()
-        } catch { }
+            try context.save()
+        } catch {
+            // handle save error
+        }
     }
-    
-    func saveSampleInfoHeaderDataInToDB_Enviromental(currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, locationType: String, locationTypeId: Int, noOfPlates: Int, section: Int, requisition_Id: String, timeStamp: String) {
         
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeadersSubmitted", in: appDelegate!.managedObjectContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        
-        managedObject.setValue(currentdate, forKey: "currentdate")
-        managedObject.setValue(customerId, forKey: "customerId")
-        managedObject.setValue(requisitionType, forKey: "requisitionType")
-        managedObject.setValue(sessionStatus, forKey: "sessionStatus")
-        
-        managedObject.setValue(locationType, forKey: "locationType")
-        managedObject.setValue(locationTypeId, forKey: "locationTypeId")
-        managedObject.setValue(noOfPlates, forKey: "noOfPlates")
-        managedObject.setValue(section, forKey: "section")
-        managedObject.setValue(requisition_Id, forKey: "requisition_Id")
-        managedObject.setValue(timeStamp, forKey: "timeStamp")
-        
-        do {
-            try appDelegate!.managedObjectContext.save()
-        } catch { }
-    }
-    
-    func addNewRowToPlatesSubmitted(currentdate: String, customerId: String, requisitionType: Int, sessionStatus: Int, isBacterialChecked: Bool, isMicoscoreChecked: Bool, locationTypeId: Int, locationValue: String, plateId: String, row: Int, sampleDescription: String, section: Int, requisition_Id: String, timeStamp: String){
-        
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlatesSubmitted", in: appDelegate!.managedObjectContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        
-        managedObject.setValue(currentdate, forKey: "currentdate")
-        managedObject.setValue(customerId, forKey: "customerId")
-        managedObject.setValue(requisitionType, forKey: "requisitionType")
-        managedObject.setValue(sessionStatus, forKey: "sessionStatus")
-        managedObject.setValue(isMicoscoreChecked, forKey: "isMicoscoreChecked")
-        managedObject.setValue(isBacterialChecked, forKey: "isBacterialChecked")
-        managedObject.setValue(locationTypeId, forKey: "locationTypeId")
-        managedObject.setValue(locationValue, forKey: "locationValue")
-        managedObject.setValue(plateId, forKey: "plateId")
-        managedObject.setValue(row, forKey: "row")
-        managedObject.setValue(sampleDescription, forKey: "sampleDescription")
-        managedObject.setValue(section, forKey: "section")
-        managedObject.setValue(requisition_Id, forKey: "requisition_Id")
-        managedObject.setValue(timeStamp, forKey: "timeStamp")
-        
-        do {
-            try appDelegate!.managedObjectContext.save()
-        } catch {}
-    }
-    
     func saveRequisitionalIDs_Enviromental(requisition_Id: String, requisitionType: Int, sessionStatus: Int, totalHeader: Int, totalPlates: Int, timeStamp: String) {
         
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
@@ -398,42 +406,44 @@ class CoreDataHandlerMicro: NSObject {
     }
     
     //MARK: - Save Enviromental Session In Progress
-    func saveEnviromentalSessionInProgress(requestor: String, sampleCollectedBy: String, company: String,
-                                           companyId: Int, site: String, siteId: Int, email: String, reviewer: String,
-                                           surveyConductedOn: String, sampleCollectionDate: String, sampleCollectionDateWithTimeStamp: String,
-                                           purposeOfSurvey: String, transferIn: String, barCode: String, barCodeManualEntered: String, notes: String, reasonForVisit: String,
-                                           requisition_Id: String, requisitionType: Int, isPlateIdGenerate: Bool, typeOfBird: String, typeOfBirdId: Int) {
+    func saveEnviromentalSessionInProgress(info: CoreDataHandlerMicrodataModels.EnvironmentalSessionInfo) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.managedObjectContext
         
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSessionInProgress", in: appDelegate!.managedObjectContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
+        guard let entity = NSEntityDescription.entity(forEntityName: "Microbial_EnviromentalSessionInProgress", in: context) else { return }
         
-        managedObject.setValue(requestor, forKey: "requestor")
-        managedObject.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
-        managedObject.setValue(company, forKey: "company")
-        managedObject.setValue(companyId, forKey: "companyId")
-        managedObject.setValue(site, forKey: "site")
-        managedObject.setValue(siteId, forKey: "siteId")
-        managedObject.setValue(email, forKey: "email")
-        managedObject.setValue(reviewer, forKey: "reviewer")
-        managedObject.setValue(surveyConductedOn, forKey: "surveyConductedOn")
-        managedObject.setValue(sampleCollectionDate, forKey: "sampleCollectionDate")
-        managedObject.setValue(sampleCollectionDateWithTimeStamp, forKey: "sampleCollectionDateWithTimeStamp")
-        managedObject.setValue(purposeOfSurvey, forKey: "purposeOfSurvey")
-        managedObject.setValue(transferIn, forKey: "transferIn")
-        managedObject.setValue(barCode, forKey: "barcode")
-        managedObject.setValue(barCodeManualEntered, forKey: "barcodeManualEntered")
-        managedObject.setValue(notes, forKey: "notes")
-        managedObject.setValue(reasonForVisit, forKey: "reasonForVisit")
-        managedObject.setValue(requisition_Id, forKey: "requisition_Id")
-        managedObject.setValue(requisitionType, forKey: "requisitionType")
-        managedObject.setValue(isPlateIdGenerate, forKey: "isPlateIdGenerated")
-        managedObject.setValue(typeOfBird, forKey: "typeOfBird")
-        managedObject.setValue(typeOfBirdId, forKey: "typeOfBirdId")
+        let managedObject = NSManagedObject(entity: entity, insertInto: context)
+        
+        managedObject.setValue(info.requestor, forKey: "requestor")
+        managedObject.setValue(info.sampleCollectedBy, forKey: "sampleCollectedBy")
+        managedObject.setValue(info.company, forKey: "company")
+        managedObject.setValue(info.companyId, forKey: "companyId")
+        managedObject.setValue(info.site, forKey: "site")
+        managedObject.setValue(info.siteId, forKey: "siteId")
+        managedObject.setValue(info.email, forKey: "email")
+        managedObject.setValue(info.reviewer, forKey: "reviewer")
+        managedObject.setValue(info.surveyConductedOn, forKey: "surveyConductedOn")
+        managedObject.setValue(info.sampleCollectionDate, forKey: "sampleCollectionDate")
+        managedObject.setValue(info.sampleCollectionDateWithTimeStamp, forKey: "sampleCollectionDateWithTimeStamp")
+        managedObject.setValue(info.purposeOfSurvey, forKey: "purposeOfSurvey")
+        managedObject.setValue(info.transferIn, forKey: "transferIn")
+        managedObject.setValue(info.barCode, forKey: "barcode")
+        managedObject.setValue(info.barCodeManualEntered, forKey: "barcodeManualEntered")
+        managedObject.setValue(info.notes, forKey: "notes")
+        managedObject.setValue(info.reasonForVisit, forKey: "reasonForVisit")
+        managedObject.setValue(info.requisitionId, forKey: "requisition_Id")
+        managedObject.setValue(info.requisitionType, forKey: "requisitionType")
+        managedObject.setValue(info.isPlateIdGenerated, forKey: "isPlateIdGenerated")
+        managedObject.setValue(info.typeOfBird, forKey: "typeOfBird")
+        managedObject.setValue(info.typeOfBirdId, forKey: "typeOfBirdId")
+        
         do {
-            try appDelegate?.managedObjectContext.save()
-        } catch { }
+            try context.save()
+        } catch {
+            // Handle error
+        }
     }
+
     
     func saveEnviromentalLocationTypeHeaderInfo(locationType: String, locationTypeId: Int,
                                                 noOfPlates: Int, section: Int, requisition_Id: String, requisitionType: Int) {
@@ -454,34 +464,36 @@ class CoreDataHandlerMicro: NSObject {
         } catch { }
     }
     
-    func saveEnviromentalLocationTypePlatesInfo(isBacterialChecked: Bool, isMicoscoreChecked: Bool,
-                                                locationValue: String, plateId: String,
-                                                row: Int, section: Int, sampleDescription: String,
-                                                locationTypeId: Int?, requisition_Id: String, requisitionType: Int, mediaTypeValue: String, mediaTypeId: Int?, notes: String, samplingMethodId : Int?,samplingMethodTypeValue : String) {
+    func saveEnviromentalLocationTypePlatesInfo(data: CoreDataHandlerMicrodataModels.EnviromentalLocationPlateData) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.managedObjectContext
+        guard let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlates", in: context) else { return }
+
+        let managedObject = NSManagedObject(entity: entity, insertInto: context)
         
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationTypeHeaderPlates", in: appDelegate!.managedObjectContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        
-        managedObject.setValue(isBacterialChecked, forKey: "isBacterialChecked")
-        managedObject.setValue(isMicoscoreChecked, forKey: "isMicoscoreChecked")
-        managedObject.setValue(locationValue, forKey: "locationValue")
-        managedObject.setValue(mediaTypeValue, forKey: "mediaTypeValue")
-        managedObject.setValue(samplingMethodTypeValue, forKey: "samplingMethodTypeValue")
-        managedObject.setValue(plateId, forKey: "plateId")
-        managedObject.setValue(row, forKey: "row")
-        managedObject.setValue(section, forKey: "section")
-        managedObject.setValue(sampleDescription, forKey: "sampleDescription")
-        managedObject.setValue(locationTypeId, forKey: "locationTypeId")
-        managedObject.setValue(requisition_Id, forKey: "requisition_Id")
-        managedObject.setValue(requisitionType, forKey: "requisitionType")
-        managedObject.setValue(mediaTypeId, forKey: "mediaTypeId")
-        managedObject.setValue(samplingMethodId, forKey: "samplingMethodTypeId")
-        managedObject.setValue(notes, forKey: "notes")
+        managedObject.setValue(data.isBacterialChecked, forKey: "isBacterialChecked")
+        managedObject.setValue(data.isMicoscoreChecked, forKey: "isMicoscoreChecked")
+        managedObject.setValue(data.locationValue, forKey: "locationValue")
+        managedObject.setValue(data.plateId, forKey: "plateId")
+        managedObject.setValue(data.row, forKey: "row")
+        managedObject.setValue(data.section, forKey: "section")
+        managedObject.setValue(data.sampleDescription, forKey: "sampleDescription")
+        managedObject.setValue(data.locationTypeId, forKey: "locationTypeId")
+        managedObject.setValue(data.requisitionId, forKey: "requisition_Id")
+        managedObject.setValue(data.requisitionType, forKey: "requisitionType")
+        managedObject.setValue(data.mediaTypeValue, forKey: "mediaTypeValue")
+        managedObject.setValue(data.mediaTypeId, forKey: "mediaTypeId")
+        managedObject.setValue(data.notes, forKey: "notes")
+        managedObject.setValue(data.samplingMethodId, forKey: "samplingMethodTypeId")
+        managedObject.setValue(data.samplingMethodTypeValue, forKey: "samplingMethodTypeValue")
+
         do {
-            try appDelegate!.managedObjectContext.save()
-        } catch { }
+            try context.save()
+        } catch {
+            print("Failed to save plate info: \(error)")
+        }
     }
+
     
     func fetchEnviromentalLocationTypeHeaderInfoFor() -> NSArray {
         
@@ -528,34 +540,32 @@ class CoreDataHandlerMicro: NSObject {
         return dataArray3
     }
     
-    
-    
-    func saveSessionProgress(_ barcode: String ,company : String,companyId:Int , emailId : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleColectionDate : String, sampleCollectionDateWithTimeStamp: String, sessionId : Int , site: String, siteId : Int, manualEnteredBarCode: String) {
-        
+    func saveSessionProgress(data: CoreDataHandlerMicrodataModels.SessionProgressData) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let entity = NSEntityDescription.entity(forEntityName: "ProgressSessionMicrobial", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        person.setValue(company, forKey: "company")
-        person.setValue(companyId, forKey: "companyId")
-        person.setValue(barcode, forKey: "barcode")
-        person.setValue(emailId, forKey: "emailId")
-        person.setValue(requestor, forKey: "requestor")
-        person.setValue(reviewer, forKey: "reviewer")
-        person.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
-        person.setValue(sampleColectionDate, forKey: "sampleCollectionDate")
-        person.setValue(sessionId, forKey: "sessionId")
-        person.setValue(site, forKey: "site")
-        person.setValue(siteId, forKey: "siteId")
-        person.setValue(sampleCollectionDateWithTimeStamp, forKey: "sampleCollectionDateWithTimeStamp")
-        person.setValue(manualEnteredBarCode, forKey: "manualEnteredBarCode")
+
+        person.setValue(data.company, forKey: "company")
+        person.setValue(data.companyId, forKey: "companyId")
+        person.setValue(data.barcode, forKey: "barcode")
+        person.setValue(data.emailId, forKey: "emailId")
+        person.setValue(data.requestor, forKey: "requestor")
+        person.setValue(data.reviewer, forKey: "reviewer")
+        person.setValue(data.sampleCollectedBy, forKey: "sampleCollectedBy")
+        person.setValue(data.sampleCollectionDate, forKey: "sampleCollectionDate")
+        person.setValue(data.sessionId, forKey: "sessionId")
+        person.setValue(data.site, forKey: "site")
+        person.setValue(data.siteId, forKey: "siteId")
+        person.setValue(data.sampleCollectionDateWithTimeStamp, forKey: "sampleCollectionDateWithTimeStamp")
+        person.setValue(data.manualEnteredBarCode, forKey: "manualEnteredBarCode")
+
         do {
             try appDelegate!.managedObjectContext.save()
-            
-            
         } catch {
-            print(appDelegateObj.testFuntion())
+            print(appDelegate?.testFuntion() ?? "Error saving session progress.")
         }
     }
+
     
     func saveSampleInfoDataInDB(_ noOfPlates: String ,plateId : Int,sampleDescriptiopn:String , additionalTests : String , checkMark:String, microsporeCheck: String, sessionId : Int) {
         
@@ -916,38 +926,33 @@ class CoreDataHandlerMicro: NSObject {
         }
     }
     
-    
-    func saveCustomerDetailsInDraftData(_ barcode: String ,company : String,companyId:Int , emailId : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleColectionDate : String, sessionId : Int , site: String, siteId : Int,draftCheck : String) {
-        
+    func saveCustomerDetailsInDraftData(customerDetails: CoreDataHandlerMicrodataModels.CustomerDetails) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let entity = NSEntityDescription.entity(forEntityName: "MicrobialDraft", in: appDelegate!.managedObjectContext)
         let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        person.setValue(company, forKey: "company")
-        person.setValue(companyId, forKey: "companyId")
-        person.setValue(barcode, forKey: "barcode")
-        person.setValue(emailId, forKey: "emailId")
-        person.setValue(requestor, forKey: "requestor")
-        person.setValue(reviewer, forKey: "reviewer")
-        person.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
-        person.setValue(sampleColectionDate, forKey: "sampleCollectionDate")
-        person.setValue(sessionId, forKey: "sessionId")
-        person.setValue(site, forKey: "site")
-        person.setValue(siteId, forKey: "siteId")
-        person.setValue(draftCheck, forKey: "draftCheck")
+        
+        person.setValue(customerDetails.company, forKey: "company")
+        person.setValue(customerDetails.companyId, forKey: "companyId")
+        person.setValue(customerDetails.barcode, forKey: "barcode")
+        person.setValue(customerDetails.emailId, forKey: "emailId")
+        person.setValue(customerDetails.requestor, forKey: "requestor")
+        person.setValue(customerDetails.reviewer, forKey: "reviewer")
+        person.setValue(customerDetails.sampleCollectedBy, forKey: "sampleCollectedBy")
+        person.setValue(customerDetails.sampleCollectionDate, forKey: "sampleCollectionDate")
+        person.setValue(customerDetails.sessionId, forKey: "sessionId")
+        person.setValue(customerDetails.site, forKey: "site")
+        person.setValue(customerDetails.siteId, forKey: "siteId")
+        person.setValue(customerDetails.draftCheck, forKey: "draftCheck")
         
         do {
             try appDelegate?.managedObjectContext.save()
-            
-            
         } catch {
             print(appDelegateObj.testFuntion())
         }
         
         CustData.append(person)
-        
     }
-    
     
     
     func fetchCustomerWithCustId(_ custId: NSNumber) -> NSArray {
@@ -1041,37 +1046,36 @@ class CoreDataHandlerMicro: NSObject {
         return result
     }
     
-    
-    
-    func saveLocationTypeValuesInDB(_ locationId: NSNumber, id: NSNumber, value: String, std40: Bool, std20: Bool, rep20: Int, rep40: Int, standard: Bool, stnRep: Int , mediaTypeDefault : String, samplingMethodDefault : String) {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationValues", in: appDelegate!.managedObjectContext)
-        let managedObject = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        
-        managedObject.setValue(locationId, forKey: "locationTypeId")
-        managedObject.setValue(id, forKey: "id")
-        managedObject.setValue(value, forKey: "text")
-        managedObject.setValue(std20, forKey: "std20")
-        managedObject.setValue(std40, forKey: "std40")
-        managedObject.setValue(rep40, forKey: "rep40")
-        managedObject.setValue(rep20, forKey: "rep20")
-        managedObject.setValue(standard, forKey: "standard")
-        managedObject.setValue(stnRep, forKey: "stnRep")
-        managedObject.setValue(mediaTypeDefault, forKey: "media")
-        managedObject.setValue(samplingMethodDefault, forKey: "sampling")
-        
-        do {
-            try appDelegate?.managedObjectContext.save()
-        } catch {
-            print(appDelegateObj.testFuntion())
+    func saveLocationTypeValuesInDB(_ values: CoreDataHandlerMicrodataModels.saveLocationTypeValues) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.managedObjectContext
+
+        if let entity = NSEntityDescription.entity(forEntityName: "Microbial_LocationValues", in: context) {
+            let managedObject = NSManagedObject(entity: entity, insertInto: context)
+
+            managedObject.setValue(values.locationId, forKey: "locationTypeId")
+            managedObject.setValue(values.id, forKey: "id")
+            managedObject.setValue(values.value, forKey: "text")
+            managedObject.setValue(values.std20, forKey: "std20")
+            managedObject.setValue(values.std40, forKey: "std40")
+            managedObject.setValue(values.rep40, forKey: "rep40")
+            managedObject.setValue(values.rep20, forKey: "rep20")
+            managedObject.setValue(values.standard, forKey: "standard")
+            managedObject.setValue(values.stnRep, forKey: "stnRep")
+            managedObject.setValue(values.mediaTypeDefault, forKey: "media")
+            managedObject.setValue(values.samplingMethodDefault, forKey: "sampling")
+
+            do {
+                try context.save()
+            } catch {
+                print("Save error: \(error)")
+            }
+
+            CustData.append(managedObject)
         }
-        
-        CustData.append(managedObject)
-        
     }
+
+    
     
     func fetchLocationValueFor(locationId: Int) -> NSArray {
         
@@ -1444,116 +1448,7 @@ class CoreDataHandlerMicro: NSObject {
         CustData.append(person)
         
     }
-    
-    //----
-    func saveFeatherPulpSessionInProgressInDB(_ barcode: String ,company : String, requestor:String,reviewer :String , sampleCollectedBy : String , sampleCollectionDate : String, sessionId : Int , site: String,reasonForVisit :String)
-    {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_FeatherPulpCurrentSession", in: appDelegate!.managedObjectContext)
-        
-        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        
-        person.setValue(company, forKey: "company")
-        
-        person.setValue(barcode, forKey: "barcode")
-        
-        person.setValue(requestor, forKey: "requestor")
-        
-        person.setValue(reviewer, forKey: "reviewer")
-        
-        person.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
-        
-        person.setValue(sampleCollectionDate, forKey: "sampleCollectionDate")
-        
-        person.setValue(reasonForVisit, forKey: "reasonForVisit")
-        
-        person.setValue(site, forKey: "site")
-        
-        person.setValue(sessionId, forKey: "sessionId")
-        
-        
-        do {
-            try appDelegate?.managedObjectContext.save()
-            
-            
-        } catch {
-            print(appDelegateObj.testFuntion())
-        }
-        
-    }
-    
-    
-    
-    //MARK: - Save Feather Pulp customer Submitted Data in DB
-    func saveFeatherPulpCustomerDetailsInDBSubmitData(_ barcode: String ,company : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleCollectionDate : String, sessionId : Int , site: String, siteId : Int,reasonForVisit: String)
-    {
-        
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_FeatherPulp", in: appDelegate!.managedObjectContext)
-        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        person.setValue(company, forKey: "company")
-        
-        person.setValue(requestor, forKey: "requestor")
-        
-        person.setValue(reviewer, forKey: "reviewer")
-        
-        person.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
-        
-        person.setValue(sampleCollectionDate, forKey: "sampleCollectionDate")
-        
-        person.setValue(reasonForVisit, forKey: "reasonForVisit")
-        
-        person.setValue(site, forKey: "site")
-        
-        person.setValue(sessionId, forKey: "sessionId")
-        
-        
-        do {
-            try appDelegate?.managedObjectContext.save()
-            
-            
-        } catch {
-            print(appDelegateObj.testFuntion())
-        }
-        
-    }
-    
-    //MARK: - Save Feather Pulp customer Draft Data in DB
-    
-    func saveFeatherPulpCustomerDetailsInDBDraftData(_ barcode: String ,company : String , requestor:String,reviewer :String , sampleCollectedBy : String , sampleCollectionDate : String, sessionId : Int , site: String, siteId : Int,reasonForVisit: String) {
-        
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        let entity = NSEntityDescription.entity(forEntityName: "Microbial_FeatherPulpDraft", in: appDelegate!.managedObjectContext)
-        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        person.setValue(company, forKey: "company")
-        
-        person.setValue(requestor, forKey: "requestor")
-        
-        person.setValue(reviewer, forKey: "reviewer")
-        
-        person.setValue(sampleCollectedBy, forKey: "sampleCollectedBy")
-        
-        person.setValue(sampleCollectionDate, forKey: "sampleCollectionDate")
-        
-        person.setValue(reasonForVisit, forKey: "reasonForVisit")
-        
-        person.setValue(site, forKey: "site")
-        
-        person.setValue(sessionId, forKey: "sessionId")
-        
-        
-        do {
-            try appDelegate?.managedObjectContext.save()
-            
-            
-        } catch {
-            print(appDelegateObj.testFuntion())
-        }
-        
-    }
+
     
     
     

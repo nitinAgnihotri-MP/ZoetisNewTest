@@ -2269,265 +2269,396 @@ extension PVEDraftSNAFinalizeAssement: UICollectionViewDelegate, UICollectionVie
         
     }
     
+    //MARK: serotypeBtnAction function and helper funtions started
     @IBAction func serotypeBtnAction(_ sender: UIButton) {
-        
         antigenNameArr.removeAll()
         antigenIdArr.removeAll()
-        
         view.endEditing(true)
         
-        let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
-        let currentIndPath = self.tblView.indexPathForRow(at:buttonPosition)
+        guard let currentIndPath = indexPathForSender(sender),
+              isNameEmpty(at: currentIndPath) else { return }
         
-        guard vaccinInfoDetailArr[currentIndPath!.row]["name"] as? String == "" else {return}
+        let vaccineId = vaccinInfoDetailArr[currentIndPath.row]["vaccine_id"] as! Int
+        let vaccineData = fetchVaccineData(for: vaccineId)
         
-        let vaccineId = vaccinInfoDetailArr[currentIndPath!.row]["vaccine_id"]
-        
-        let vaccineManArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id:  vaccineId as! Int, keyStr: "vaccine_Id")
-        
-        let vaccineNamesArr = vaccineManArr.value(forKey: "type") as? NSArray ?? NSArray()
-        let vaccineNamesIdArr = vaccineManArr.value(forKey: "id") as? NSArray ?? NSArray()
-        let strdata = (vaccinInfoDetailArr as [[String :Any]])[currentIndPath!.row]
-        
-        let result: [String: Any] = strdata
-        
-        simpleSelectedArray = (result["serotype"] as? [String] ?? [])
-        antigenFunc(selectedRow: currentIndPath!.row)
-        
-        if vaccineNamesArr.count > 0 {
-            
-            if vaccineId as! Int == 0 {
-                self.dropDownVIewNew(arrayData: vaccineNamesArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
-                    
-                    if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell,currentIndPath! == cell.currentIndPath as IndexPath {
-                        cell.serotypeTxtFld.text = selectedVal
-                        self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
-                        
-                        let id = vaccineNamesIdArr[index]
-                        
-                        self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
-                        
-                        var nameArray = [String]()
-                        nameArray.append("\(selectedVal)")
-                        
-                        var idArray = [String]()
-                        idArray.append("\(id)")
-                        
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: nameArray, id: idArray, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
-                        self.tblView.reloadData()
-                        
-                        if id as! Int == 37 {
-                            cell.otherAntigenBtn.isUserInteractionEnabled = true
-                            cell.otherAntigenTxtFld.isUserInteractionEnabled = true
-                            cell.otherAntigenBtn.backgroundColor = .white
-                            cell.otherAntigenTxtFld.placeholder = "Enter"
-                        } else {
-                            cell.otherAntigenBtn.isUserInteractionEnabled = false
-                            cell.otherAntigenTxtFld.isUserInteractionEnabled = false
-                            cell.otherAntigenBtn.backgroundColor = .lightGray
-                            cell.otherAntigenTxtFld.placeholder = ""
-                        }
-                        
-                        self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
-                    }
-                }
-                CoreDataHandlerPVE().updateStatusForSync(self.currentTimeStamp, text: false, forAttribute: "syncedStatus")
-                
-                self.dropHiddenAndShow()
-                self.tblView.reloadRows(at: [currentIndPath!], with: .none)
-                
-            } else {
-                let selectionMenu = RSSelectionMenu(selectionStyle: .multiple, dataSource: vaccineNamesArr as! [String]) { (cell, name, indexPath) in
-                    cell.textLabel?.text = name
-                }
-                
-                selectionMenu.cellSelectionStyle = .tickmark
-                selectionMenu.show(style: .popover(sourceView: sender, size: CGSize(width: sender.frame.width, height: (sender.bounds.height) * CGFloat((vaccineNamesArr as! [String]).count) + 10)), from: self)
-                
-                selectionMenu.setSelectedItems(items: simpleSelectedArray ) { [self] (name, index, selected, selectedItems) in
-                    print(simpleSelectedArray)
-                    if let indexOfFirstSuchElement = self.selectedDataArray.firstIndex(where: { $0.name == name }) {
-                        self.selectedDataArray.remove(at: indexOfFirstSuchElement)
-                    } else {
-                        let objData = draftSelectedData(id: vaccineNamesIdArr.object(at: index) as! Int, name: name ?? "")
-                        self.selectedDataArray.append(objData)
-                    }
-                    
-                    self.antigenNameArr =  self.selectedDataArray.map { $0.name }
-                    self.antigenIdArr =  self.selectedDataArray.map { String($0.id) }
-                    
-                    if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell {
-                        
-                        if currentIndPath! == cell.currentIndPath as IndexPath {
-                            cell.serotypeTxtFld.text = self.antigenNameArr.joined(separator: ",")}
-                        let idArrnew =  self.selectedDataArray.map { ($0.id) }
-                        cell.otherAntigenBtn.isUserInteractionEnabled = false
-                        cell.otherAntigenTxtFld.isUserInteractionEnabled = false
-                        cell.otherAntigenBtn.backgroundColor = .lightGray
-                        cell.otherAntigenTxtFld.placeholder = ""
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: self.antigenNameArr, id: self.antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
-                        self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+        simpleSelectedArray = (vaccinInfoDetailArr[currentIndPath.row]["serotype"] as? [String] ?? [])
+        antigenFunc(selectedRow: currentIndPath.row)
 
-                        if idArrnew.contains(37) {
-                            cell.otherAntigenBtn.isUserInteractionEnabled = true
-                            cell.otherAntigenTxtFld.isUserInteractionEnabled = true
-                            cell.otherAntigenBtn.backgroundColor = .white
-                            cell.otherAntigenTxtFld.placeholder = "Enter"
-                            
-                            CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                            
-                            CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: 37, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                            
-                            CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: self.antigenNameArr, id: self.antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                            
-                            
-                            vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
-                            self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
-                            self.tblView.reloadData()
-                        }
-                    }
-                }
-                
-                CoreDataHandlerPVE().updateStatusForSync(self.currentTimeStamp, text: false, forAttribute: "syncedStatus")
-            }
-            
-            let selectionMenu = RSSelectionMenu(selectionStyle: .multiple, dataSource: vaccineNamesArr as! [String]) { (cell, name, indexPath) in
-                cell.textLabel?.text = name
-            }
-            
-            selectionMenu.cellSelectionStyle = .tickmark
-            selectionMenu.show(style: .popover(sourceView: sender, size: CGSize(width: sender.frame.width, height: (sender.bounds.height) * CGFloat((vaccineNamesArr as! [String]).count) + 10)), from: self)
-            
-            selectionMenu.setSelectedItems(items: simpleSelectedArray ) { [self] (name, index, selected, selectedItems) in
-                if let indexOfFirstSuchElement = self.selectedDataArray.firstIndex(where: { $0.name == name }) {
-                    self.selectedDataArray.remove(at: indexOfFirstSuchElement)
-                }
-                else{
-                    let objData = draftSelectedData(id: vaccineNamesIdArr.object(at: index) as! Int, name: name ?? "")
-                    self.selectedDataArray.append(objData)
-                }
-                
-                self.antigenNameArr =  self.selectedDataArray.map { $0.name }
-                self.antigenIdArr =  self.selectedDataArray.map { String($0.id) }
-                
-                if  let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell
-                {
-                    
-                    if currentIndPath! == cell.currentIndPath as IndexPath {
-                        cell.serotypeTxtFld.text = self.antigenNameArr.joined(separator: ",")}
-                    let idArrnew =  self.selectedDataArray.map { ($0.id) }
-                    
-                    if idArrnew.contains(37){
-                        cell.otherAntigenBtn.isUserInteractionEnabled = true
-                        cell.otherAntigenTxtFld.isUserInteractionEnabled = true
-                        cell.otherAntigenBtn.backgroundColor = .white
-                        cell.otherAntigenTxtFld.placeholder = "Enter"
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: 37, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: self.antigenNameArr, id: self.antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        
-                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
-                        self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
-                    }else{
-                        
-                        cell.otherAntigenBtn.isUserInteractionEnabled = false
-                        cell.otherAntigenTxtFld.isUserInteractionEnabled = false
-                        cell.otherAntigenBtn.backgroundColor = .lightGray
-                        cell.otherAntigenTxtFld.placeholder = ""
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: self.antigenNameArr, id: self.antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                        
-                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
-                        self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
-                    }
-                }
-                
-            }
-            
-            CoreDataHandlerPVE().updateStatusForSync(self.currentTimeStamp, text: false, forAttribute: "syncedStatus")
-            
+        if vaccineData.names.isEmpty {
+            showDropdownWith(vaccineId: 0, sender: sender, currentIndPath: currentIndPath)
+            return
+        }
+
+        if vaccineId == 0 {
+            showDropdownWith(vaccineId: 0, sender: sender, currentIndPath: currentIndPath)
         } else {
-            
-            
-            let vaccineId = 0
-            let vaccineManArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id:  vaccineId , keyStr: "vaccine_Id")
-            let vaccineNamesArr = vaccineManArr.value(forKey: "type") as? NSArray ?? NSArray()
-            let vaccineNamesIdArr = vaccineManArr.value(forKey: "id") as? NSArray ?? NSArray()
-            
-            self.dropDownVIewNew(arrayData: vaccineNamesArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
-                
-                if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell, currentIndPath! == cell.currentIndPath as IndexPath {
-                    cell.serotypeTxtFld.text = selectedVal
-                    self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
-                    
-                    let id = vaccineNamesIdArr[index]
-                    
-                    self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
-                    
-                    var nameArray = [String]()
-                    nameArray.append("\(selectedVal)")
-                    
-                    var idArray = [String]()
-                    idArray.append("\(id)")
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: nameArray, id: idArray, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                    
-                    CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
-                    
-                    vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
-                    self.tblView.reloadData()
-                    
-                    if id as! Int == 37{
-                        cell.otherAntigenBtn.isUserInteractionEnabled = true
-                        cell.otherAntigenTxtFld.isUserInteractionEnabled = true
-                        cell.otherAntigenBtn.backgroundColor = .white
-                        cell.otherAntigenTxtFld.placeholder = "Enter"
-                    }else{
-                        cell.otherAntigenBtn.isUserInteractionEnabled = false
-                        cell.otherAntigenTxtFld.isUserInteractionEnabled = false
-                        cell.otherAntigenBtn.backgroundColor = .lightGray
-                        cell.otherAntigenTxtFld.placeholder = ""
-                    }
-                    
-                    self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
-                    //                    }
-                    
-                }
-            }
-            CoreDataHandlerPVE().updateStatusForSync(self.currentTimeStamp, text: false, forAttribute: "syncedStatus")
-            
-            self.dropHiddenAndShow()
-            self.tblView.reloadRows(at: [currentIndPath!], with: .none)
+            showSelectionMenu(with: vaccineData, sender: sender, currentIndPath: currentIndPath)
         }
     }
+    
+    private func indexPathForSender(_ sender: UIButton) -> IndexPath? {
+        let point = sender.convert(CGPoint.zero, to: tblView)
+        return tblView.indexPathForRow(at: point)
+    }
+
+    private func isNameEmpty(at indexPath: IndexPath) -> Bool {
+        return (vaccinInfoDetailArr[indexPath.row]["name"] as? String ?? "").isEmpty
+    }
+
+    private func fetchVaccineData(for id: Int) -> (names: [String], ids: [Any]) {
+        let data = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id: id, keyStr: "vaccine_Id")
+        let names = data.value(forKey: "type") as? [String] ?? []
+        let ids = data.value(forKey: "id") as? [Any] ?? []
+        return (names, ids)
+    }
+
+    private func showDropdownWith(vaccineId: Int, sender: UIButton, currentIndPath: IndexPath) {
+        let vaccineData = fetchVaccineData(for: vaccineId)
+        dropDownVIewNew(arrayData: vaccineData.names, kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
+            updateSingleSelectionCell(currentIndPath: currentIndPath, selectedVal: selectedVal, selectedId: vaccineData.ids[index])
+        }
+        CoreDataHandlerPVE().updateStatusForSync(currentTimeStamp, text: false, forAttribute: "syncedStatus")
+        dropHiddenAndShow()
+        tblView.reloadRows(at: [currentIndPath], with: .none)
+    }
+
+    private func updateSingleSelectionCell(currentIndPath: IndexPath, selectedVal: String, selectedId: Any) {
+        guard let cell = tblView.cellForRow(at: currentIndPath) as? PVEVaccineInfoDetailsCell,
+              currentIndPath == cell.currentIndPath as IndexPath else { return }
+
+        cell.serotypeTxtFld.text = selectedVal
+        sharedManager.setBorderBlue(btn: cell.serotypeBtn)
+
+        let nameArray = [selectedVal]
+        let idArray = ["\(selectedId)"]
+
+        updateSyncData(fields: [
+            ("serotype", nameArray, idArray),
+            ("otherAntigen", "", selectedId),
+            ("showMore", "Yes", "")
+        ], at: currentIndPath)
+
+        handleOtherAntigenVisibility(cell: cell, contains37: (selectedId as? Int == 37))
+    }
+
+    private func updateSyncData(fields: [(String, Any, Any)], at indexPath: IndexPath) {
+        for (field, text, id) in fields {
+            CoreDataHandlerPVE().updateVacInfoArrFor(currentTimeStamp, currentField: field, currentIndPath: indexPath as NSIndexPath, text: text, id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+        }
+        vaccinInfoDetailArr[indexPath.row]["showMore"] = fields.first { $0.0 == "showMore" }?.1
+        vaccinInfoDetailArr = getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String: Any]]
+    }
+
+    private func handleOtherAntigenVisibility(cell: PVEVaccineInfoDetailsCell, contains37: Bool) {
+        let enabled = contains37
+        cell.otherAntigenBtn.isUserInteractionEnabled = enabled
+        cell.otherAntigenTxtFld.isUserInteractionEnabled = enabled
+        cell.otherAntigenBtn.backgroundColor = enabled ? .white : .lightGray
+        cell.otherAntigenTxtFld.placeholder = enabled ? "Enter" : ""
+    }
+
+    private func showSelectionMenu(with data: (names: [String], ids: [Any]), sender: UIButton, currentIndPath: IndexPath) {
+        let menu = RSSelectionMenu(selectionStyle: .multiple, dataSource: data.names) { cell, name, _ in
+            cell.textLabel?.text = name
+        }
+
+        menu.cellSelectionStyle = .tickmark
+        menu.show(style: .popover(sourceView: sender, size: CGSize(width: sender.frame.width, height: CGFloat(data.names.count) * sender.bounds.height + 10)), from: self)
+
+        menu.setSelectedItems(items: simpleSelectedArray) { [self] name, index, _, _ in
+            handleMultiSelection(name: name, index: index, currentIndPath: currentIndPath, ids: data.ids)
+        }
+
+        CoreDataHandlerPVE().updateStatusForSync(currentTimeStamp, text: false, forAttribute: "syncedStatus")
+    }
+
+    private func handleMultiSelection(name: String?, index: Int, currentIndPath: IndexPath, ids: [Any]) {
+        if let idx = selectedDataArray.firstIndex(where: { $0.name == name }) {
+            selectedDataArray.remove(at: idx)
+        } else {
+            let obj = draftSelectedData(id: ids[index] as! Int, name: name ?? "")
+            selectedDataArray.append(obj)
+        }
+
+        antigenNameArr = selectedDataArray.map { $0.name }
+        antigenIdArr = selectedDataArray.map { "\($0.id)" }
+
+        guard let cell = tblView.cellForRow(at: currentIndPath) as? PVEVaccineInfoDetailsCell,
+              currentIndPath == cell.currentIndPath as IndexPath else { return }
+
+        cell.serotypeTxtFld.text = antigenNameArr.joined(separator: ",")
+        let selectedIds = selectedDataArray.map { $0.id }
+
+        let contains37 = selectedIds.contains(37)
+        handleOtherAntigenVisibility(cell: cell, contains37: contains37)
+
+        let syncFields: [(String, Any, Any)] = contains37 ?
+            [("showMore", "Yes", ""), ("otherAntigen", "", 37), ("serotype", antigenNameArr, antigenIdArr)] :
+            [("serotype", "", ""), ("showMore", Constants.noStr, ""), ("otherAntigen", "", ""), ("serotype", antigenNameArr, antigenIdArr)]
+
+        updateSyncData(fields: syncFields, at: currentIndPath)
+    }
+    //MARK: serotypeBtnAction function and helper funtions ended
+    
+//    @IBAction func serotypeBtnAction(_ sender: UIButton) {
+//        
+//        antigenNameArr.removeAll()
+//        antigenIdArr.removeAll()
+//        
+//        view.endEditing(true)
+//        
+//        let buttonPosition = sender.convert(CGPoint.zero, to: self.tblView)
+//        let currentIndPath = self.tblView.indexPathForRow(at:buttonPosition)
+//        
+//        guard vaccinInfoDetailArr[currentIndPath!.row]["name"] as? String == "" else {return}
+//        
+//        let vaccineId = vaccinInfoDetailArr[currentIndPath!.row]["vaccine_id"]
+//        
+//        let vaccineManArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id:  vaccineId as! Int, keyStr: "vaccine_Id")
+//        
+//        let vaccineNamesArr = vaccineManArr.value(forKey: "type") as? NSArray ?? NSArray()
+//        let vaccineNamesIdArr = vaccineManArr.value(forKey: "id") as? NSArray ?? NSArray()
+//        let strdata = (vaccinInfoDetailArr as [[String :Any]])[currentIndPath!.row]
+//        
+//        let result: [String: Any] = strdata
+//        
+//        simpleSelectedArray = (result["serotype"] as? [String] ?? [])
+//        antigenFunc(selectedRow: currentIndPath!.row)
+//        
+//        if vaccineNamesArr.count > 0 {
+//            
+//            if vaccineId as! Int == 0 {
+//                self.dropDownVIewNew(arrayData: vaccineNamesArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
+//                    
+//                    if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell,currentIndPath! == cell.currentIndPath as IndexPath {
+//                        cell.serotypeTxtFld.text = selectedVal
+//                        self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
+//                        
+//                        let id = vaccineNamesIdArr[index]
+//                        
+//                        self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
+//                        
+//                        var nameArray = [String]()
+//                        nameArray.append("\(selectedVal)")
+//                        
+//                        var idArray = [String]()
+//                        idArray.append("\(id)")
+//                        
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: nameArray, id: idArray, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
+//                        self.tblView.reloadData()
+//                        
+//                        if id as! Int == 37 {
+//                            cell.otherAntigenBtn.isUserInteractionEnabled = true
+//                            cell.otherAntigenTxtFld.isUserInteractionEnabled = true
+//                            cell.otherAntigenBtn.backgroundColor = .white
+//                            cell.otherAntigenTxtFld.placeholder = "Enter"
+//                        } else {
+//                            cell.otherAntigenBtn.isUserInteractionEnabled = false
+//                            cell.otherAntigenTxtFld.isUserInteractionEnabled = false
+//                            cell.otherAntigenBtn.backgroundColor = .lightGray
+//                            cell.otherAntigenTxtFld.placeholder = ""
+//                        }
+//                        
+//                        self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+//                    }
+//                }
+//                CoreDataHandlerPVE().updateStatusForSync(self.currentTimeStamp, text: false, forAttribute: "syncedStatus")
+//                
+//                self.dropHiddenAndShow()
+//                self.tblView.reloadRows(at: [currentIndPath!], with: .none)
+//                
+//            } else {
+//                let selectionMenu = RSSelectionMenu(selectionStyle: .multiple, dataSource: vaccineNamesArr as! [String]) { (cell, name, indexPath) in
+//                    cell.textLabel?.text = name
+//                }
+//                
+//                selectionMenu.cellSelectionStyle = .tickmark
+//                selectionMenu.show(style: .popover(sourceView: sender, size: CGSize(width: sender.frame.width, height: (sender.bounds.height) * CGFloat((vaccineNamesArr as! [String]).count) + 10)), from: self)
+//                
+//                selectionMenu.setSelectedItems(items: simpleSelectedArray ) { [self] (name, index, selected, selectedItems) in
+//                    print(simpleSelectedArray)
+//                    if let indexOfFirstSuchElement = self.selectedDataArray.firstIndex(where: { $0.name == name }) {
+//                        self.selectedDataArray.remove(at: indexOfFirstSuchElement)
+//                    } else {
+//                        let objData = draftSelectedData(id: vaccineNamesIdArr.object(at: index) as! Int, name: name ?? "")
+//                        self.selectedDataArray.append(objData)
+//                    }
+//                    
+//                    self.antigenNameArr =  self.selectedDataArray.map { $0.name }
+//                    self.antigenIdArr =  self.selectedDataArray.map { String($0.id) }
+//                    
+//                    if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell {
+//                        
+//                        if currentIndPath! == cell.currentIndPath as IndexPath {
+//                            cell.serotypeTxtFld.text = self.antigenNameArr.joined(separator: ",")}
+//                        let idArrnew =  self.selectedDataArray.map { ($0.id) }
+//                        cell.otherAntigenBtn.isUserInteractionEnabled = false
+//                        cell.otherAntigenTxtFld.isUserInteractionEnabled = false
+//                        cell.otherAntigenBtn.backgroundColor = .lightGray
+//                        cell.otherAntigenTxtFld.placeholder = ""
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: self.antigenNameArr, id: self.antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
+//                        self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+//
+//                        if idArrnew.contains(37) {
+//                            cell.otherAntigenBtn.isUserInteractionEnabled = true
+//                            cell.otherAntigenTxtFld.isUserInteractionEnabled = true
+//                            cell.otherAntigenBtn.backgroundColor = .white
+//                            cell.otherAntigenTxtFld.placeholder = "Enter"
+//                            
+//                            CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                            
+//                            CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: 37, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                            
+//                            CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: self.antigenNameArr, id: self.antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                            
+//                            
+//                            vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
+//                            self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+//                            self.tblView.reloadData()
+//                        }
+//                    }
+//                }
+//                
+//                CoreDataHandlerPVE().updateStatusForSync(self.currentTimeStamp, text: false, forAttribute: "syncedStatus")
+//            }
+//            
+//            let selectionMenu = RSSelectionMenu(selectionStyle: .multiple, dataSource: vaccineNamesArr as! [String]) { (cell, name, indexPath) in
+//                cell.textLabel?.text = name
+//            }
+//            
+//            selectionMenu.cellSelectionStyle = .tickmark
+//            selectionMenu.show(style: .popover(sourceView: sender, size: CGSize(width: sender.frame.width, height: (sender.bounds.height) * CGFloat((vaccineNamesArr as! [String]).count) + 10)), from: self)
+//            
+//            selectionMenu.setSelectedItems(items: simpleSelectedArray ) { [self] (name, index, selected, selectedItems) in
+//                if let indexOfFirstSuchElement = self.selectedDataArray.firstIndex(where: { $0.name == name }) {
+//                    self.selectedDataArray.remove(at: indexOfFirstSuchElement)
+//                }
+//                else{
+//                    let objData = draftSelectedData(id: vaccineNamesIdArr.object(at: index) as! Int, name: name ?? "")
+//                    self.selectedDataArray.append(objData)
+//                }
+//                
+//                self.antigenNameArr =  self.selectedDataArray.map { $0.name }
+//                self.antigenIdArr =  self.selectedDataArray.map { String($0.id) }
+//                
+//                if  let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell
+//                {
+//                    
+//                    if currentIndPath! == cell.currentIndPath as IndexPath {
+//                        cell.serotypeTxtFld.text = self.antigenNameArr.joined(separator: ",")}
+//                    let idArrnew =  self.selectedDataArray.map { ($0.id) }
+//                    
+//                    if idArrnew.contains(37){
+//                        cell.otherAntigenBtn.isUserInteractionEnabled = true
+//                        cell.otherAntigenTxtFld.isUserInteractionEnabled = true
+//                        cell.otherAntigenBtn.backgroundColor = .white
+//                        cell.otherAntigenTxtFld.placeholder = "Enter"
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: 37, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: self.antigenNameArr, id: self.antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        
+//                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
+//                        self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+//                    }else{
+//                        
+//                        cell.otherAntigenBtn.isUserInteractionEnabled = false
+//                        cell.otherAntigenTxtFld.isUserInteractionEnabled = false
+//                        cell.otherAntigenBtn.backgroundColor = .lightGray
+//                        cell.otherAntigenTxtFld.placeholder = ""
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: Constants.noStr, id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: self.antigenNameArr, id: self.antigenIdArr, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                        
+//                        vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = Constants.noStr
+//                        self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+//                    }
+//                }
+//                
+//            }
+//            
+//            CoreDataHandlerPVE().updateStatusForSync(self.currentTimeStamp, text: false, forAttribute: "syncedStatus")
+//            
+//        } else {
+//            
+//            
+//            let vaccineId = 0
+//            let vaccineManArr = CoreDataHandlerPVE().fetchDetailsForEntity(entityName: "PVE_SerotypeDetails", id:  vaccineId , keyStr: "vaccine_Id")
+//            let vaccineNamesArr = vaccineManArr.value(forKey: "type") as? NSArray ?? NSArray()
+//            let vaccineNamesIdArr = vaccineManArr.value(forKey: "id") as? NSArray ?? NSArray()
+//            
+//            self.dropDownVIewNew(arrayData: vaccineNamesArr as! [String], kWidth: sender.frame.width, kAnchor: sender, yheight: sender.bounds.height) { [unowned self] selectedVal, index in
+//                
+//                if let cell = self.tblView.cellForRow(at: currentIndPath!) as? PVEVaccineInfoDetailsCell, currentIndPath! == cell.currentIndPath as IndexPath {
+//                    cell.serotypeTxtFld.text = selectedVal
+//                    self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
+//                    
+//                    let id = vaccineNamesIdArr[index]
+//                    
+//                    self.sharedManager.setBorderBlue(btn: cell.serotypeBtn)
+//                    
+//                    var nameArray = [String]()
+//                    nameArray.append("\(selectedVal)")
+//                    
+//                    var idArray = [String]()
+//                    idArray.append("\(id)")
+//                    
+//                    CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "serotype", currentIndPath: currentIndPath! as NSIndexPath, text: nameArray, id: idArray, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                    
+//                    CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "otherAntigen", currentIndPath: currentIndPath! as NSIndexPath, text: "", id: id, forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                    
+//                    CoreDataHandlerPVE().updateVacInfoArrFor(self.currentTimeStamp, currentField: "showMore", currentIndPath: currentIndPath! as NSIndexPath, text: "Yes", id: "", forAttribute: "cat_vaccinInfoDetailArr", entityName: "PVE_Sync")
+//                    
+//                    vaccinInfoDetailArr[currentIndPath!.row]["showMore"] = "Yes"
+//                    self.tblView.reloadData()
+//                    
+//                    if id as! Int == 37{
+//                        cell.otherAntigenBtn.isUserInteractionEnabled = true
+//                        cell.otherAntigenTxtFld.isUserInteractionEnabled = true
+//                        cell.otherAntigenBtn.backgroundColor = .white
+//                        cell.otherAntigenTxtFld.placeholder = "Enter"
+//                    }else{
+//                        cell.otherAntigenBtn.isUserInteractionEnabled = false
+//                        cell.otherAntigenTxtFld.isUserInteractionEnabled = false
+//                        cell.otherAntigenBtn.backgroundColor = .lightGray
+//                        cell.otherAntigenTxtFld.placeholder = ""
+//                    }
+//                    
+//                    self.vaccinInfoDetailArr = self.getDraftValueForKey(key: "cat_vaccinInfoDetailArr") as! [[String : Any]]
+//                    //                    }
+//                    
+//                }
+//            }
+//            CoreDataHandlerPVE().updateStatusForSync(self.currentTimeStamp, text: false, forAttribute: "syncedStatus")
+//            
+//            self.dropHiddenAndShow()
+//            self.tblView.reloadRows(at: [currentIndPath!], with: .none)
+//        }
+//    }
     
     @IBAction func expiryBtnAction(_ sender: UIButton) {
         view.endEditing(true)

@@ -89,7 +89,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         if lngId == 3{
             selectDateLabel.alpha = 0
             toDateLabel.alpha = 0
-            var dateFormatter = DateFormatter()
+             dateFormatter = DateFormatter()
           
             dateFormatter.dateFormat = Constants.ddMMyyyStr
             dateFormatter = DateFormatter()
@@ -100,7 +100,7 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
         if lngId == 4{
             selectDateLabel.alpha = 0
             toDateLabel.alpha = 0
-            var dateFormatter = DateFormatter()
+             dateFormatter = DateFormatter()
           
             dateFormatter.dateFormat = Constants.ddMMyyyStr
             dateFormatter = DateFormatter()
@@ -416,8 +416,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 UserDefaults.standard.set(complexname, forKey: "complexUnlinked")
                 let sessiondate = (arr1 as AnyObject).value(forKey: "complexDate") as! String
                 
-                let lngId = UserDefaults.standard.integer(forKey: "lngId")
-                if lngId == 3{
+                let selectedLngId = UserDefaults.standard.integer(forKey: "lngId")
+                if selectedLngId == 3{
                     dateFormatterFrench(sessiondate)
                 }
                 
@@ -460,8 +460,8 @@ class UnlinkedNecropsiesViewController: UIViewController,UITableViewDataSource,U
                 navigateToAnother?.actualTimestamp = posting.actualTimeStamp ?? ""
                 
                 UserDefaults.standard.set(true, forKey: "nec")
-                let lngId = UserDefaults.standard.integer(forKey: "lngId")
-                if lngId == 3{
+                let newLngId = UserDefaults.standard.integer(forKey: "lngId")
+                if newLngId == 3{
                     let dateString = posting.sessiondate
                     dateFormatter.dateFormat = Constants.MMddyyyyStr
                     let dateObj = dateFormatter.date(from: dateString!)

@@ -134,7 +134,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         dataArray = dbArray
         if dataArray.count > 0 {
             
@@ -715,7 +715,7 @@ class CoreDataHandlerTurkey: NSObject {
     func getFieldDataFromServerSingledataTurkey(_ dict : NSDictionary,postingId: NSNumber)  {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         
         
@@ -885,7 +885,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         FieldVaccindataArray = dbArray
         if FieldVaccindataArray.count > 0 {
             
@@ -1093,7 +1093,7 @@ class CoreDataHandlerTurkey: NSObject {
     func saveSettingsSkeletaInDatabaseTurkey(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex: Int)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         dataSkeletaArray = dbArray
         
         if dataSkeletaArray.count > 0 {
@@ -1253,7 +1253,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         dataCociiaArray = dbArray
         
         if dataCociiaArray.count > 0 {
@@ -1422,7 +1422,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         dataGiTractArray = dbArray
         
         if dataGiTractArray.count > 0 {
@@ -1583,7 +1583,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         dataRespiratoryArray = dbArray
         
         if dataRespiratoryArray.count > 0 {
@@ -1738,7 +1738,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         dataImmuneArray = dbArray
         
         if dataImmuneArray.count > 0 {
@@ -1963,7 +1963,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         routeArray = dbArray
         
         if routeArray.count > 0 {
@@ -2074,7 +2074,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         custArray = dbArray
         
         if custArray.count > 0 {
@@ -2203,7 +2203,7 @@ class CoreDataHandlerTurkey: NSObject {
     func SalesRepDataDatabaseTurkey(_ salesReptId : Int, salesRepName: String ,dbArray :NSArray ,index : Int)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         SalesRepDataArray = dbArray
         if SalesRepDataArray.count > 0 {
             if let objTable: SalesrepTurkey = SalesRepDataArray[index] as? SalesrepTurkey {
@@ -2274,7 +2274,7 @@ class CoreDataHandlerTurkey: NSObject {
     func VetDataDatabaseTurkey(_ vetarId : Int, vtName: String, complexId:NSNumber ,dbArray :NSArray ,index : Int)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         VeterianTypeArray = dbArray
         
         if VeterianTypeArray.count > 0 {
@@ -2386,7 +2386,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         CocoiiProgramArray = dbArray
         
         if CocoiiProgramArray.count > 0 {
@@ -2500,7 +2500,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         BirdSizeArray = dbArray
         
         if BirdSizeArray.count > 0 {
@@ -2574,7 +2574,7 @@ class CoreDataHandlerTurkey: NSObject {
     func SessionTypeDatabaseTurkey(_ sesionId : Int, sesionType: String ,lngId:Int ,dbArray :NSArray ,index : Int)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         SessionTypeArray = dbArray
         
         if SessionTypeArray.count > 0 {
@@ -2673,7 +2673,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let entity   = NSEntityDescription.entity(forEntityName: "MoleculeFeeedTurkey", in: managedContext)
         let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
        
@@ -2737,7 +2737,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         BreedTypeArray = dbArray
         
         if BreedTypeArray.count > 0 {
@@ -2817,7 +2817,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         complexArray = dbArray
         
         if complexArray.count > 0 {
@@ -3035,7 +3035,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         loginArray = dbArray
         
         if loginArray.count > 0 {
@@ -3146,7 +3146,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let entity = NSEntityDescription.entity(forEntityName: "CustomerReprestativeTurkey", in: managedContext)
         let arr =  fectCustomerRepresenttiveWithCustomernameTurkey(customername)
         
@@ -3633,7 +3633,7 @@ class CoreDataHandlerTurkey: NSObject {
         var auto = self.fetchFromAutoIncrementTurkey()
         auto += 1
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let entity = NSEntityDescription.entity(forEntityName: "IdTurkey", in: managedContext)
         let contact1 = NSManagedObject(entity: entity!, insertInto: managedContext)
         contact1.setValue(auto, forKey: "autoId")
@@ -3683,7 +3683,7 @@ class CoreDataHandlerTurkey: NSObject {
     func PostingSessionDbTurkey(_ antobotic: String,birdBreesId:NSNumber,birdbreedName:String,birdBreedType:String,birdSize:String,birdSizeId:NSNumber,cocciProgramId:NSNumber,cociiProgramName: String,complexId:NSNumber,complexName: String,convential:String,customerId:NSNumber,customerName:String,customerRepId:NSNumber,customerRepName:String,imperial:String,metric:String,notes:String,salesRepId:NSNumber,salesRepName:String,sessiondate:String,sessionTypeId:NSNumber,sessionTypeName:String,vetanatrionName:String,veterinarianId: NSNumber,loginSessionId:NSNumber,postingId:NSNumber,mail: String,female: String,finilize: NSNumber,isSync : Bool,timeStamp:String,lngId:NSNumber,birdType:String,birdTypeId:NSNumber,birdbreedId:NSNumber,capNec:NSNumber ,avgAge:String ,avgWeight:String ,outTime:String ,FCR:String ,Livability:String ,mortality:String){
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         self.deleteDataWithPostingIdTurkey(postingId)
         let entity = NSEntityDescription.entity(forEntityName: "PostingSessionTurkey", in: managedContext)
         let contact1 = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -3854,7 +3854,7 @@ class CoreDataHandlerTurkey: NSObject {
     func getPostingDataTurkey(_ dict : NSDictionary) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let postingId = dict.value(forKey: "SessionId") as! Int
         self.deleteDataWithPostingIdTurkey(postingId as NSNumber)
         let entity = NSEntityDescription.entity(forEntityName: "PostingSessionTurkey", in: managedContext)
@@ -3941,7 +3941,7 @@ class CoreDataHandlerTurkey: NSObject {
     func getPostingDatWithSpecificIdTurkey(_ dict : NSDictionary, postinngId: NSNumber) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         self.deleteDataWithDeviceSessionIdTurkey(postingId : postinngId)
         let entity = NSEntityDescription.entity(forEntityName: "PostingSessionTurkey", in: managedContext)
         
@@ -4758,7 +4758,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         cocciControlArray = dbArray
         
         if cocciControlArray.count > 0 {
@@ -5506,7 +5506,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         AntiboticArray = dbArray
         
         if AntiboticArray.count > 0 {
@@ -5562,12 +5562,7 @@ class CoreDataHandlerTurkey: NSObject {
                         objTable.setValue(lngId, forKey:"lngId")
                         objTable.setValue(lbldate, forKey:"feedDate")
                         try? managedContext.save()
-//                        do
-//                        {
-//                            try managedContext.save()
-//                        }
-//                        catch{
-//                        }
+
                    }
                 }
                 else{
@@ -5587,13 +5582,7 @@ class CoreDataHandlerTurkey: NSObject {
                     person.setValue(lngId, forKey:"lngId")
                     person.setValue(lbldate, forKey:"feedDate")
                     try? managedContext.save()
-//                    do
-//                    {
-//                        try managedContext.save()
-//                    }
-//                    catch
-//                    {
-//                    }
+
                     cocciAntibotic.append(person)
                 }
             }
@@ -5620,14 +5609,7 @@ class CoreDataHandlerTurkey: NSObject {
             person.setValue(lngId, forKey:"lngId")
             person.setValue(lbldate, forKey:"feedDate")
             try? managedContext.save()
-//            do
-//            {
-//                try managedContext.save()
-//            }
-//            catch
-//            {
-//                print(appDelegateObj.testFuntion())
-//            }
+
             cocciAntibotic.append(person)
         }
     }
@@ -5777,7 +5759,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         AlternativeArray = dbArray
         
         if AlternativeArray.count > 0 {
@@ -5886,7 +5868,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let entity   = NSEntityDescription.entity(forEntityName: "CocoiVaccineTurkey", in: managedContext)
         let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(catId, forKey:"cocvaccId")
@@ -6209,7 +6191,7 @@ class CoreDataHandlerTurkey: NSObject {
     func saveMyCoxtinDatabaseTurkey(_ loginSessionId : NSNumber, postingId : NSNumber, molecule : String, dosage : String,fromDays:String,toDays:String, index : Int,dbArray: NSArray,feedId :NSNumber,feedProgram : String , formName : String ,isSync : Bool,feedType:String,cocoVacId:NSNumber,lngId:NSNumber,lbldate:String) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         MyCoxtinBindersArray = dbArray
         
         if MyCoxtinBindersArray.count > 0 {
@@ -8416,7 +8398,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         let entity   = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
         
@@ -8455,7 +8437,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         let entity   = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
         
@@ -8493,7 +8475,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         let entity   = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
         
@@ -8532,7 +8514,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let entity   = NSEntityDescription.entity(forEntityName: "CaptureNecropsyViewDataTurkey", in: managedContext)
         
         
@@ -8595,7 +8577,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND catName == %@ AND formName == %@ AND necropsyId == %@ AND obsName == %@", birdNo,catName,formName,necId,obsName)
         
@@ -8626,7 +8608,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "catName == %@ AND formName == %@ AND necropsyId == %@ AND obsName == %@",catName,formName,necId,obsName)
         
@@ -8660,7 +8642,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "catName == %@ AND formName == %@ AND necropsyId == %@ AND obsName == %@",catName,formName,necId,obsName)
@@ -8693,7 +8675,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
@@ -8731,7 +8713,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyDataTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         
@@ -8771,7 +8753,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         
         
@@ -8809,7 +8791,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "birdNo == %@ AND formName == %@ AND obsID == %@ AND necropsyId == %@", birdNo,formName,obsId , necId)
         
@@ -8847,7 +8829,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         
         
@@ -8883,7 +8865,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         
         let imageData = camraImage.jpegData(compressionQuality: 0.5)
@@ -8929,7 +8911,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
@@ -8993,7 +8975,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     func getSaveImageFromServerTurkey(_ dict : NSDictionary)  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         
         let encodedImageData = String(describing: dict.value(forKey: "image")!)
@@ -9026,7 +9008,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     func getSaveImageFromServerSingledataTurkey(_ dict : NSDictionary,necIdSingle:NSNumber)  {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         
         let encodedImageData = String(describing: dict.value(forKey: "image")!)
@@ -9087,7 +9069,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let imageData: Data = camraImage.jpegData(compressionQuality: 1.0)!
         let entity   = NSEntityDescription.entity(forEntityName: "BirdPhotoCaptureTurkey", in: managedContext)
         let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
@@ -9119,7 +9101,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
@@ -9281,7 +9263,7 @@ class CoreDataHandlerTurkey: NSObject {
     func saveNoofBirdWithNotesTurkey(_ catName : String,notes : String,formName : String,   birdNo : NSNumber, index : Int , necId : NSNumber , isSync : Bool)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let entity   = NSEntityDescription.entity(forEntityName: "NotesBirdTurkey", in: managedContext)
         let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
         
@@ -9311,7 +9293,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let entity   = NSEntityDescription.entity(forEntityName: "NotesBirdTurkey", in: managedContext)
         let person   = NSManagedObject(entity: entity!, insertInto: managedContext)
         
@@ -9365,7 +9347,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateisSyncOnNotesBirdDatabaseTurkey(_ necId : NSNumber , isSync : Bool,_ completion: (_ status: Bool) -> Void)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
         do
@@ -9401,7 +9383,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateNoofBirdWithNotesTurkey(_ catName : String,formName : String,   birdNo : NSNumber , notes: String , necId : NSNumber,isSync : Bool)
     {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.predicateBirdsFarmNecID, birdNo,formName,necId)
         do
@@ -9720,7 +9702,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         
         
@@ -9762,7 +9744,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         
         
@@ -9800,7 +9782,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: Constants.predicateObsIdBirdsFarmNecID, birdNo,formName,obsId , necId)
         
@@ -9906,7 +9888,7 @@ class CoreDataHandlerTurkey: NSObject {
     {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let entity = NSEntityDescription.entity(forEntityName: "FarmsListTurkey", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(city, forKey:"City")
@@ -10142,7 +10124,7 @@ class CoreDataHandlerTurkey: NSObject {
     func updateNewFarmAndAgeOnCaptureNecropsyViewDataTurkey(_ necId : NSNumber , oldFarmName : String , newFarmName : String ,isSync:Bool) {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewDataTurkey")
         fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND formName == %@ ", necId , oldFarmName)
         
@@ -10177,7 +10159,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "BirdPhotoCaptureTurkey")
         fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND farmName == %@ ", necId , oldFarmName)
@@ -10212,7 +10194,7 @@ class CoreDataHandlerTurkey: NSObject {
         
         let appDelegate  = UIApplication.shared.delegate as? AppDelegate
         
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "NotesBirdTurkey")
         fetchRequest.predicate = NSPredicate(format: "necropsyId == %@ AND formName == %@ ", necId , oldFarmName)
@@ -10246,7 +10228,7 @@ class CoreDataHandlerTurkey: NSObject {
     func getObservationNameForGITractTurkey(refID: Array<Any>) -> Array<Any> {
         var nameArray = Array<Any>()
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:"GITractTurkey")
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
@@ -10273,7 +10255,7 @@ class CoreDataHandlerTurkey: NSObject {
     func getObservationNameForSkelatalTurkey(refID: Array<Any>) -> Array<Any> {
         var nameArray = Array<Any>()
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:"SkeletaTurkey")
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
@@ -10300,7 +10282,7 @@ class CoreDataHandlerTurkey: NSObject {
     func getObservationNameForImmuneTurkey(refID: Array<Any>) -> Array<Any> {
         var nameArray = Array<Any>()
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:"ImmuneTurkey")
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
@@ -10328,7 +10310,7 @@ class CoreDataHandlerTurkey: NSObject {
     func getObservationNameForMicroscopy(refID: Array<Any>) -> Array<Any> {
         var nameArray = Array<Any>()
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:"CoccidiosisTurkey")
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
@@ -10356,7 +10338,7 @@ class CoreDataHandlerTurkey: NSObject {
     func getObservationNameForRespiratoryTurkey(refID: Array<Any>) -> Array<Any> {
         var nameArray = Array<Any>()
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:"RespiratoryTurkey")
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
@@ -10385,7 +10367,7 @@ class CoreDataHandlerTurkey: NSObject {
     func getObservationNameForCoccidiosisTurkey(refID: Array<Any>) -> Array<Any> {
         var nameArray = Array<Any>()
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:"CoccidiosisTurkey")
         let languageID = UserDefaults.standard.integer(forKey: "lngId") as NSNumber
         
@@ -10606,7 +10588,7 @@ class CoreDataHandlerTurkey: NSObject {
         var result = [AllBirdsSwapedArrayTurkey]()
         
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "AllBirdsSwapedArrayTurkey")
         fetchRequest.returnsObjectsAsFaults = false
@@ -10627,7 +10609,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     func saveAllBirdsSwapedIndexes(_ birdName: String, index: Int) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         let entity = NSEntityDescription.entity(forEntityName: "AllBirdsSwapedArrayTurkey", in: managedContext)
         let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         person.setValue(birdName, forKey:"birdName")
@@ -10643,7 +10625,7 @@ class CoreDataHandlerTurkey: NSObject {
     
     func deleteAllBirdsSwapedIndexes() {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
+        self.managedContext = appDelegate!.managedObjectContext
         
         let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName: "AllBirdsSwapedArrayTurkey")
         fetchRequest.returnsObjectsAsFaults = false

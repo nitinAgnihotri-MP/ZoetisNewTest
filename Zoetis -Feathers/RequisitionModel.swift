@@ -788,7 +788,33 @@ class RequisitionModel {
     //MARK:- Save Enviromental data into DB for current Session
     func saveCaseInfoCurrentSessionDataInToDB() {
         CoreDataHandlerMicro().deleteAllData("Microbial_EnviromentalSessionInProgress")
-        CoreDataHandlerMicro().saveEnviromentalSessionInProgress(requestor: self.requestor, sampleCollectedBy: self.sampleCollectedBy, company: self.company, companyId: self.companyId, site: self.site, siteId: self.siteId, email: self.email, reviewer: self.reviewer, surveyConductedOn: self.surveyConductedOn, sampleCollectionDate: self.sampleCollectionDate, sampleCollectionDateWithTimeStamp: self.sampleCollectionDateWithTimeStamp, purposeOfSurvey: self.purposeOfSurvey, transferIn: self.transferIn, barCode: self.barCode, barCodeManualEntered: self.barCodeManualEntered, notes: self.notes, reasonForVisit: self.reasonForVisit, requisition_Id: self.barCode, requisitionType: self.requisitionType.rawValue, isPlateIdGenerate: self.isPlateIdGenerated, typeOfBird: "", typeOfBirdId: 0)
+        
+        let saveEnvSessionInfo = CoreDataHandlerMicrodataModels.EnvironmentalSessionInfo(
+            requestor: self.requestor,
+            sampleCollectedBy: self.sampleCollectedBy,
+            company: self.company,
+            companyId: self.companyId,
+            site: self.site,
+            siteId: self.siteId,
+            email:  self.email,
+            reviewer: self.reviewer,
+            surveyConductedOn: self.surveyConductedOn,
+            sampleCollectionDate: self.sampleCollectionDate,
+            sampleCollectionDateWithTimeStamp: self.sampleCollectionDateWithTimeStamp,
+            purposeOfSurvey: self.purposeOfSurvey,
+            transferIn:  self.transferIn,
+            barCode: self.barCode,
+            barCodeManualEntered:  self.barCodeManualEntered,
+            notes: self.notes,
+            reasonForVisit: self.reasonForVisit,
+            requisitionId: self.barCode,
+            requisitionType: self.requisitionType.rawValue,
+            isPlateIdGenerated: self.isPlateIdGenerated,
+            typeOfBird: "",
+            typeOfBirdId: 0
+        )
+       
+        CoreDataHandlerMicro().saveEnviromentalSessionInProgress(info: saveEnvSessionInfo)
     }
     
     func saveLocationTypeHeaderCurrentSessionInfoInDB() {
@@ -824,17 +850,69 @@ class RequisitionModel {
             let actualPlateId = "\(plate.plateId)"
             print("your plate id is while saving :\(uiop): :\(actualPlateId)")
             uiop = uiop + 1
-            CoreDataHandlerMicro().saveEnviromentalLocationTypePlatesInfo(isBacterialChecked: plate.isBacterialChecked, isMicoscoreChecked: plate.isMicoscoreChecked,
-                                                                          locationValue: plate.selectedLocationValues, plateId: actualPlateId,
-                                                                          row: plate.row ?? 0, section: plate.section ?? 0, sampleDescription: plate.sampleDescription, locationTypeId: plate.selectedLocationTypeId ?? nil, requisition_Id: self.barCode, requisitionType: self.requisitionType.rawValue, mediaTypeValue: plate.mediaTypeValue, mediaTypeId: plate.selectedMediaTypeId, notes: plate.notes ,samplingMethodId : plate.samplingMethodTypeId
-                                                                          ,samplingMethodTypeValue : plate.samplingMethodTypeValue)
+            
+            let LocationTypePlates = CoreDataHandlerMicrodataModels.EnviromentalLocationPlateData(
+                isBacterialChecked: plate.isBacterialChecked,
+                isMicoscoreChecked: plate.isMicoscoreChecked,
+                locationValue: plate.selectedLocationValues,
+                plateId: actualPlateId,
+                row: plate.row ?? 0, // Default to 0 if `plate.row` is nil
+                section: plate.section ?? 0, // Default to 0 if `plate.section` is nil
+                sampleDescription: plate.sampleDescription,
+                locationTypeId: plate.selectedLocationTypeId ?? nil, // If nil, pass nil, otherwise pass the value
+                requisitionId: self.barCode, // Bar code from current requisition
+                requisitionType: self.requisitionType.rawValue, // Convert raw value of enum
+                mediaTypeValue: plate.mediaTypeValue,
+                mediaTypeId: plate.selectedMediaTypeId,
+                notes: plate.notes,
+                samplingMethodId: plate.samplingMethodTypeId,
+                samplingMethodTypeValue: plate.samplingMethodTypeValue
+            )
+            
+            CoreDataHandlerMicro().saveEnviromentalLocationTypePlatesInfo(data: LocationTypePlates)
+            
+            
         }
     }
     
     
     //MARK:- Save Enviromental  Sample Info/ Case Info data into DB when Submitted or Save As Draft
     func saveCaseInfoDataInToDB_Enviromental() {
-        CoreDataHandlerMicro().saveCaseInfoDataInToDB(requestor: self.requestor, sampleCollectedBy: self.sampleCollectedBy, company: self.company, companyId: self.companyId, site: self.site, siteId: self.siteId, email: self.email, reviewer: self.reviewer, surveyConductedOn: self.surveyConductedOn, sampleCollectionDate: self.sampleCollectionDate, sampleCollectionDateWithTimeStamp: self.sampleCollectionDateWithTimeStamp, purposeOfSurvey: self.purposeOfSurvey, transferIn: self.transferIn, barCode: self.barCode, barCodeManualEntered: self.barCodeManualEntered, notes: self.notes, reasonForVisit: self.reasonForVisit, currentdate: self.currentdate, customerId: "", requisitionType: self.requisitionType.rawValue, sessionStatus: self.sessionStatus.rawValue, requisition_Id: self.barCode, timeStamp: self.timeStamp, isPlateIdGenerated: self.isPlateIdGenerated, typeOfBird: "", typeOfBirdId: 0, reviewerId: self.reviewerId, purposeOfSurveyId: self.purposeOfSurveyId, surveyConductedOnId: self.surveyConductedOnId, reasonForVisitId: self.reasonForVisitId)
+        
+        let caseInfo = CoreDataHandlerMicrodataModels.CaseInfo(
+            requestor: self.requestor,
+            sampleCollectedBy: self.sampleCollectedBy,
+            company: self.company,
+            companyId: self.companyId,
+            site: self.site,
+            siteId: self.siteId,
+            email: self.email,
+            reviewer: self.reviewer,
+            surveyConductedOn: self.surveyConductedOn,
+            sampleCollectionDate: self.sampleCollectionDate,
+            sampleCollectionDateWithTimeStamp: self.sampleCollectionDateWithTimeStamp,
+            purposeOfSurvey: self.purposeOfSurvey,
+            transferIn: self.transferIn,
+            barCode: self.barCode,
+            barCodeManualEntered: self.barCodeManualEntered,
+            notes: self.notes,
+            reasonForVisit: self.reasonForVisit,
+            currentdate: self.currentdate,
+            customerId: "", // Empty or replace with actual ID if available
+            requisitionType: self.requisitionType.rawValue,
+            sessionStatus: self.sessionStatus.rawValue,
+            requisitionId: self.barCode, // Reusing barCode as requisition_Id
+            timeStamp: self.timeStamp,
+            isPlateIdGenerated: self.isPlateIdGenerated,
+            typeOfBird: "", // Provide a default or actual type
+            typeOfBirdId: 0, // Default or lookup ID
+            reviewerId: self.reviewerId,
+            purposeOfSurveyId: self.purposeOfSurveyId,
+            surveyConductedOnId: self.surveyConductedOnId,
+            reasonForVisitId: self.reasonForVisitId
+        )
+        CoreDataHandlerMicro().saveCaseInfoDataInToDB(info: caseInfo)
+        
     }
     
     
@@ -926,23 +1004,27 @@ class RequisitionModel {
             
         }
     }
-    
 
     func saveSampleInfoDataInToDB_Enviromental() {
         var totalHeaderPlates = [LocationTypeCellModel]()
         
         for (index, header) in self.actualCreatedHeaders.enumerated() {
             if let locationTypeId = header.selectedLocationTypeId {
-                CoreDataHandlerMicro().saveSampleInfoHeaderDataInToDB_Enviromental(currentdate: self.currentdate,
-                                                                                   customerId: "",
-                                                                                   requisitionType: self.requisitionType.rawValue,
-                                                                                   sessionStatus: self.sessionStatus.rawValue,
-                                                                                   locationType: header.selectedLocationType,
-                                                                                   locationTypeId: locationTypeId,
-                                                                                   noOfPlates: header.noOfPlates,
-                                                                                   section: index + 1,
-                                                                                   requisition_Id: self.barCode,
-                                                                                   timeStamp: self.timeStamp)
+                
+                let headerInfo = CoreDataHandlerMicrodataModels.SampleInfoHeader(
+                    currentdate: self.currentdate,
+                    customerId: "", // Fill in if available
+                    requisitionType: self.requisitionType.rawValue,
+                    sessionStatus: self.sessionStatus.rawValue,
+                    locationType: header.selectedLocationType,
+                    locationTypeId: locationTypeId,
+                    noOfPlates: header.noOfPlates,
+                    section: index + 1,
+                    requisitionId: self.barCode,
+                    timeStamp: self.timeStamp
+                )
+                
+                CoreDataHandlerMicro().saveSampleInfoHeaderDataInToDB_Enviromental(info: headerInfo)
             }
             
             if header.numberOfPlateIDCreated.count > 0 {

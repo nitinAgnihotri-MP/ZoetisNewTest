@@ -182,7 +182,34 @@ class FeatherPulpVC: BaseViewController {
         case .RESTORE_OLD_SESSION, .CREATE_NEW_SESSION:
             CoreDataHandlerMicro().autoIncrementidtable()
             CoreDataHandlerMicro().deleteAllData("Microbial_EnviromentalSessionInProgress")
-            CoreDataHandlerMicro().saveEnviromentalSessionInProgress(requestor: currentRequisition.requestor, sampleCollectedBy: currentRequisition.sampleCollectedBy, company: currentRequisition.company, companyId: self.currentRequisition.companyId, site: currentRequisition.site, siteId: self.currentRequisition.siteId, email: "", reviewer: currentRequisition.reviewer, surveyConductedOn: "", sampleCollectionDate: currentRequisition.sampleCollectionDate, sampleCollectionDateWithTimeStamp: self.currentRequisition.timeStamp, purposeOfSurvey: "", transferIn: "", barCode: currentRequisition.barCode, barCodeManualEntered: "", notes: currentRequisition.notes, reasonForVisit: currentRequisition.reasonForVisit, requisition_Id: currentRequisition.barCode, requisitionType: self.currentRequisition.requisitionType.rawValue, isPlateIdGenerate: false, typeOfBird: self.currentRequisition.typeOfBird, typeOfBirdId: self.currentRequisition.typeOfBirdId)
+            
+            let saveEnvSessionInfo = CoreDataHandlerMicrodataModels.EnvironmentalSessionInfo(
+                requestor: currentRequisition.requestor,
+                sampleCollectedBy: currentRequisition.sampleCollectedBy,
+                company: currentRequisition.company,
+                companyId: currentRequisition.companyId,
+                site: currentRequisition.site,
+                siteId: currentRequisition.siteId,
+                email:  "",
+                reviewer: currentRequisition.reviewer,
+                surveyConductedOn: "",
+                sampleCollectionDate: currentRequisition.sampleCollectionDate,
+                sampleCollectionDateWithTimeStamp: currentRequisition.timeStamp,
+                purposeOfSurvey: "", // Provide real value
+                transferIn:  "",
+                barCode: currentRequisition.barCode,
+                barCodeManualEntered:  "",
+                notes: currentRequisition.notes,
+                reasonForVisit: currentRequisition.reasonForVisit,
+                requisitionId: currentRequisition.barCode,
+                requisitionType: currentRequisition.requisitionType.rawValue,
+                isPlateIdGenerated: false,
+                typeOfBird: currentRequisition.typeOfBird,
+                typeOfBirdId: currentRequisition.typeOfBirdId
+            )
+           
+            CoreDataHandlerMicro().saveEnviromentalSessionInProgress(info: saveEnvSessionInfo)
+       
             self.saveReviewersDataToDatabase(isSessionType: true)
             UserDefaults.standard.set(true, forKey: "sessionprogresss")
             
@@ -480,14 +507,12 @@ class FeatherPulpVC: BaseViewController {
             plateArr.removeAll()
             let predicate = NSPredicate(format: sessionIdPlate, argumentArray: [sessionId])
             plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]
-//            plateArr =  CoreDataHandlerMicro().fetchFeatherPulpSampleInfo(sessionId)hgfiureyuiheriu
         
         case .SHOW_DRAFT_FOR_EDITING:
             CoreDataHandlerMicro().saveFeatherPulpSampleInfoDataInDB(plate, plateId: plateId, flockId: "", houseNo: "", sampleDescriptiopn: "", additionalTests: "Bacterial", checkMark: "true", microsporeCheck: "false", sessionId: sessionId, timeStamp: self.currentRequisition.timeStamp, isSessionPlate: false)
             plateArr.removeAll()
             let predicate = NSPredicate(format: timeStampSessionPlate, argumentArray: [self.currentRequisition.timeStamp])
             self.plateArr =  CoreDataHandlerMicro().fetchSampleInfoDataForATimeStamp("MicrobialFeatherPulpSampleInfo", predicate: predicate) as! [MicrobialFeatherPulpSampleInfo]
-//            plateArr =  CoreDataHandlerMicro().fetchFeatherPulpSampleInfo(sessionId)
         case .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY: break
         }
     }

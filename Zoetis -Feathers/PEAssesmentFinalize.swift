@@ -4163,6 +4163,24 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
         return nil
     }
     
+    fileprivate func handleCatArrayForTableIsAssStatus() -> Bool? {
+        for obj in catArrayForTableIs {
+            let assessment = obj as? PE_AssessmentInProgress
+            
+            if assessment?.assStatus == 1 && assessment?.assID == 5 {
+                if let status = validateAssessmentAssStatus(assessment: assessment) {
+                    return status
+                }
+            } else if assessment?.assStatus == 1 && assessment?.assID == 9 {
+                if let boolStatus = validateAssessmentAssStatusNote(assessment: assessment) {
+                    return boolStatus
+                }
+            }
+        }
+        
+        return nil
+    }
+    
     func checkNoteForEveryQuestion() -> Bool {
         self.refreshArray()
         if let boolStatus = validateCatArrayForTableAssessmentInProgress() {
@@ -4171,19 +4189,8 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
         
         if finishingAssessment == true {
             catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(2)
-            
-            for obj in catArrayForTableIs {
-                let assessment = obj as? PE_AssessmentInProgress
-                
-                if assessment?.assStatus == 1 && assessment?.assID == 5 {
-                    if let status = validateAssessmentAssStatus(assessment: assessment) {
-                        return status
-                    }
-                } else if assessment?.assStatus == 1 && assessment?.assID == 9 {
-                    if let boolStatus = validateAssessmentAssStatusNote(assessment: assessment) {
-                        return boolStatus
-                    }
-                }
+            if let status = handleCatArrayForTableIsAssStatus() {
+                return status
             }
         }
         return true

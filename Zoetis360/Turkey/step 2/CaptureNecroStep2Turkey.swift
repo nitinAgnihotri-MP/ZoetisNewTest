@@ -2236,7 +2236,6 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         
         let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId:necId as NSNumber)
         
-        let immune1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
         if FetchObsArr.count > 0 {
             
             CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseTurkeySexValue("Immune", obsName: immune.obsName!, formName: immune.formName!, obsVisibility: true, birdNo: immune.birdNo! , obsPoint: 1, index: rowIndexIs, obsId: immune.obsID as! NSInteger, necId: necId as NSNumber, isSync: true, actualText: selectedSexValue)

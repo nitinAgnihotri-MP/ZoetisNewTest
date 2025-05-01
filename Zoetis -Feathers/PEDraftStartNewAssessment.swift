@@ -243,8 +243,8 @@ class PEDraftStartNewAssessment: BaseViewController {
             selectedEvaluationDateText.text = peNewAssessment.evaluationDate ?? strdate1
         }
         self.peNewAssessment.evaluationID = peNewAssessment.evaluationID
-        var FirstName =  UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
-        var LastName =  UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
+        var FirstName = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
+        var LastName = UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
         FirstName = FirstName + LastName
         selectedEvaluatorText.text = peNewAssessment.evaluatorName ?? FirstName
         selectedEvaluationType.text = peNewAssessment.evaluationName ?? ""
@@ -261,12 +261,7 @@ class PEDraftStartNewAssessment: BaseViewController {
             hideBreedOthers()
         }
         
-        if peNewAssessment.isHandMix == true {
-            handmixSwitch.setOn(true, animated: false)
-            
-        } else {
-            handmixSwitch.setOn(false, animated: false)
-        }
+        handmixSwitch.setOn(peNewAssessment.isHandMix ?? false, animated: false)
         
         txtBreedOfBird.text = self.peNewAssessment.breedOfBird
         if let character = peNewAssessment.breedOfBird?.character(at: 1),character == constantToSave.character(at: 0) {

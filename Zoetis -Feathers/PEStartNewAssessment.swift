@@ -978,160 +978,212 @@ class PEStartNewAssessment: BaseViewController {
         }
     }
     // MARK: -Method to Validate the Data.
-    func checkValidations(){
-        guard let date = self.peNewAssessment.evaluationDate, date.count > 0 else {
+    func checkValidations() {
+        guard areMandatoryFieldsValid() else {
             changeMandatorySuperviewToRed()
             return
-        }
-        
-        guard let customer = self.peNewAssessment.customerName, customer.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        guard let selectedTSR = self.selectedTSR.text, selectedTSR.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        guard let site = self.peNewAssessment.siteName, site.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        guard let evaluationName = self.peNewAssessment.evaluationName, evaluationName.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        guard let evaluator = self.peNewAssessment.evaluatorName, evaluator.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        guard let reasonForVisit = self.peNewAssessment.visitName, reasonForVisit.count > 0 else {
-            changeMandatorySuperviewToRed()
-            return
-        }
-        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != "" {
-            if (peNewAssessment.breedOfBird?.lowercased().contains("other") ?? false) {
-                if peNewAssessment.breedOfBirdOther == nil || peNewAssessment.breedOfBirdOther == "" {
-                    changeMandatorySuperviewToRed()
-                    return
-                }
-            }
         }
 
-        
-        
-        else{
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        if let text = txtManufacturer.text, !text.isEmpty,
-           text.lowercased().contains("other") {
-            
-            if manfacturerOtherTxt.text == nil || manfacturerOtherTxt.text?.isEmpty == true {
-                changeMandatorySuperviewToRed()
-                return
-            }
-        }
+        handleFlockAgeScenario()
+    }
+    
+    private func areMandatoryFieldsValid() -> Bool {
+        let pe = self.peNewAssessment
 
-        else{
-            changeMandatorySuperviewToRed()
-            return
+        return
+            isNonEmpty(pe?.evaluationDate) &&
+            isNonEmpty(pe?.customerName) &&
+            isNonEmpty(selectedTSR.text) &&
+            isNonEmpty(pe?.siteName) &&
+            isNonEmpty(pe?.evaluationName) &&
+            isNonEmpty(pe?.evaluatorName) &&
+            isNonEmpty(pe?.visitName) &&
+            isBreedValid() &&
+            isManufacturerValid() &&
+            isNonEmpty(pe?.incubation) &&
+            isEggsValid()
+    }
+
+    private func isNonEmpty(_ text: String?) -> Bool {
+        return !(text?.isEmpty ?? true)
+    }
+
+    private func isBreedValid() -> Bool {
+        guard let breed = peNewAssessment.breedOfBird, !breed.isEmpty else { return false }
+        if breed.lowercased().contains("other") {
+            return isNonEmpty(peNewAssessment.breedOfBirdOther)
         }
-        
-        if peNewAssessment.incubation == nil || peNewAssessment.incubation == "" {
-            changeMandatorySuperviewToRed()
-            return
+        return true
+    }
+
+    private func isManufacturerValid() -> Bool {
+        guard let manufacturer = txtManufacturer.text, !manufacturer.isEmpty else { return false }
+        if manufacturer.lowercased().contains("other") {
+            return isNonEmpty(manfacturerOtherTxt.text)
         }
-        if let eggsText = txtNumberOfEggs.text,
-           !eggsText.isEmpty,
-           eggsText.lowercased().contains("other") {
-            
-            if eggsOtherTxt.text?.isEmpty ?? true {
-                changeMandatorySuperviewToRed()
-                return
-            }
+        return true
+    }
+
+    private func isEggsValid() -> Bool {
+        guard let eggsText = txtNumberOfEggs.text, !eggsText.isEmpty else { return false }
+        if eggsText.lowercased().contains("other") {
+            return isNonEmpty(eggsOtherTxt.text)
         }
-        else{
-            changeMandatorySuperviewToRed()
-            return
-        }
-        
-        
-        
-        let datesStored =  getAllDateArrayStored()
-        let customerStored = getAllCustomerArrayStored()
-        let sitesStored = getAllSitesArrayStored()
-        let evaluationIDs = getAllevaluationIDStored()
-      
-        
-        for  obj  in datesStored {
-            if obj.lowercased() == self.peNewAssessment.evaluationDate?.lowercased(){
-                debugPrint("have evaluation date")
-            }
-        }
-        
-        for  obj  in customerStored {
-            if obj.lowercased() == self.peNewAssessment.customerName?.lowercased(){
-                debugPrint("have customer's name ")
-            }
-        }
-        
-        for  obj  in sitesStored {
-            if obj.lowercased() == self.peNewAssessment.siteName?.lowercased(){
-                debugPrint("have site name")
-               
-            }
-        }
-        for  obj  in evaluationIDs {
-            if obj.lowercased() == self.peNewAssessment.evaluationName?.lowercased(){
-                debugPrint("have evaluator name.")
-            }
-        }
+        return true
+    }
+
+    private func handleFlockAgeScenario() {
+        let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance
+            .fetchAssessmentSanitationQuestions(
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                assessmentId: peNewAssessment?.serverAssessmentId ?? ""
+            )
 
         if self.heightFlockAge.constant == 78 {
-            if isFlockAgeGreaterTheAllProd || isFlockAgeGreaterThen50Weeks {
-                
-                if isFromBack {
-                    let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
-                    if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
-                        showOnlyExtendedMicrobial()
-                    } else{
-                        if !Constants.isMovementDone{
-                            self.fromBackNextBtnAction()
-                            if extendedPESwitch.isOn {
-                                CoreDataHandlerPE().updateIsEMRequestedInAssessmentInProgress(isEMRequested: true)
-                            } else {
-                                CoreDataHandlerPE().updateIsEMRequestedInAssessmentInProgress(isEMRequested: false)
-                                
-                            }
-                        }
-                    }
-                    
-                } else {
-
-                    self.okButtonTapped()
-                }
-            } else {
+            guard isFlockAgeGreaterTheAllProd || isFlockAgeGreaterThen50Weeks else {
                 showAlert(title: Constants.alertStr, message: "Please enter the flock details.", owner: self)
+                return
             }
-        }else {
+
             if isFromBack {
-                let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
-                if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
+                if sanitationQuesArr.isEmpty && Constants.isExtendedPopup {
                     showOnlyExtendedMicrobial()
-                }else{
-                    if !Constants.isMovementDone{
-                        self.fromBackNextBtnAction()
-                    }
+                } else if !Constants.isMovementDone {
+                    fromBackNextBtnAction()
+                    CoreDataHandlerPE().updateIsEMRequestedInAssessmentInProgress(isEMRequested: extendedPESwitch.isOn)
                 }
             } else {
-                self.okButtonTapped()
+                okButtonTapped()
+            }
 
+        } else {
+            if isFromBack {
+                if sanitationQuesArr.isEmpty && Constants.isExtendedPopup {
+                    showOnlyExtendedMicrobial()
+                } else if !Constants.isMovementDone {
+                    fromBackNextBtnAction()
+                }
+            } else {
+                okButtonTapped()
             }
         }
     }
+    
+//    func checkValidations() {
+//        guard let date = self.peNewAssessment.evaluationDate, date.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        guard let customer = self.peNewAssessment.customerName, customer.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        guard let selectedTSR = self.selectedTSR.text, selectedTSR.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        guard let site = self.peNewAssessment.siteName, site.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        guard let evaluationName = self.peNewAssessment.evaluationName, evaluationName.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        guard let evaluator = self.peNewAssessment.evaluatorName, evaluator.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        guard let reasonForVisit = self.peNewAssessment.visitName, reasonForVisit.count > 0 else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != "" {
+//            if (peNewAssessment.breedOfBird?.lowercased().contains("other") ?? false) {
+//                if peNewAssessment.breedOfBirdOther == nil || peNewAssessment.breedOfBirdOther == "" {
+//                    changeMandatorySuperviewToRed()
+//                    return
+//                }
+//            }
+//        } else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        if let text = txtManufacturer.text, !text.isEmpty,
+//           text.lowercased().contains("other") {
+//            
+//            if manfacturerOtherTxt.text == nil || manfacturerOtherTxt.text?.isEmpty == true {
+//                changeMandatorySuperviewToRed()
+//                return
+//            }
+//        } else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        if peNewAssessment.incubation == nil || peNewAssessment.incubation == "" {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        if let eggsText = txtNumberOfEggs.text,
+//           !eggsText.isEmpty,
+//           eggsText.lowercased().contains("other") {
+//            
+//            if eggsOtherTxt.text?.isEmpty ?? true {
+//                changeMandatorySuperviewToRed()
+//                return
+//            }
+//        } else {
+//            changeMandatorySuperviewToRed()
+//            return
+//        }
+//        
+//        if self.heightFlockAge.constant == 78 {
+//            if isFlockAgeGreaterTheAllProd || isFlockAgeGreaterThen50Weeks {
+//                
+//                if isFromBack {
+//                    let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
+//                    if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
+//                        showOnlyExtendedMicrobial()
+//                    } else{
+//                        if !Constants.isMovementDone{
+//                            self.fromBackNextBtnAction()
+//                            if extendedPESwitch.isOn {
+//                                CoreDataHandlerPE().updateIsEMRequestedInAssessmentInProgress(isEMRequested: true)
+//                            } else {
+//                                CoreDataHandlerPE().updateIsEMRequestedInAssessmentInProgress(isEMRequested: false)
+//                                
+//                            }
+//                        }
+//                    }
+//                    
+//                } else {
+//
+//                    self.okButtonTapped()
+//                }
+//            } else {
+//                showAlert(title: Constants.alertStr, message: "Please enter the flock details.", owner: self)
+//            }
+//        } else {
+//            if isFromBack {
+//                let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
+//                if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
+//                    showOnlyExtendedMicrobial()
+//                }else{
+//                    if !Constants.isMovementDone{
+//                        self.fromBackNextBtnAction()
+//                    }
+//                }
+//            } else {
+//                self.okButtonTapped()
+//
+//            }
+//        }
+//    }
     // MARK: - Save assessment in Draft
     func saveAssessmentInProgressDataInDB()  {
         if cameraSwitch.isOn{

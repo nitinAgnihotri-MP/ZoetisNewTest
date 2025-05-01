@@ -393,7 +393,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
             
         default:
             if heightNumberOfEggsView.constant == 94 {
-                notesTop.constant = CGFloat((leftConst * 55 ) )
+                notesTop.constant = CGFloat(leftConst * 55)
             } else {
                 notesTop.constant = CGFloat((leftConst * 55 ) + 20)
             }
@@ -785,7 +785,10 @@ class PEViewStartNewAssesmentINT: BaseViewController {
     }
     
     fileprivate func handleReasonForVisit(_ reasonForVisit: String) {
-        if (reasonForVisit.count > 0){print(appDelegateObj.testFuntion())} else {
+        if (reasonForVisit.count > 0){
+            print(appDelegateObj.testFuntion())
+        }
+        else {
             let superviewCurrent =  visitButton.superview
             if superviewCurrent != nil{
                 for view in superviewCurrent!.subviews {
@@ -908,14 +911,10 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                     view.layer.borderWidth = 2.0
                 }}
         }
-        
-        
-        var customerNamesArray = NSArray()
-        var evaluatorIDArray = NSArray()
-        var evaluatorNameArray = NSArray()
-        var evaluatorDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Evaluator")
-        evaluatorNameArray = evaluatorDetailsArray.value(forKey: "evaluatorName") as? NSArray ?? NSArray()
-        evaluatorIDArray = evaluatorDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+
+        let evaluatorDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Evaluator")
+        var evaluatorNameArray = evaluatorDetailsArray.value(forKey: "evaluatorName") as? NSArray ?? NSArray()
+        var evaluatorIDArray = evaluatorDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
         if  evaluatorNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: evaluatorNameArray as? [String] ?? [String](), kWidth: evaluatorButton.frame.width, kAnchor: evaluatorButton, yheight: evaluatorButton.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectedEvaluatorText.text = selectedVal
@@ -1042,7 +1041,7 @@ class PEViewStartNewAssesmentINT: BaseViewController {
     
     // MARK: - TSR Button Action
     @IBAction func tsrClicked(_ sender: Any) {
-        let RoleId =  UserDefaults.standard.string(forKey: "RoleId")
+    
      
         let superviewCurrent =  tsrButton.superview
         if superviewCurrent != nil{
@@ -1052,11 +1051,10 @@ class PEViewStartNewAssesmentINT: BaseViewController {
                     view.layer.borderWidth = 2.0
                 }}
         }
-        var visitIDArray = NSArray()
-        var visitNameArray = NSArray()
-        var visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
-        visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
-        visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+
+        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
+        var visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
+        var  visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
         if  visitNameArray.count > 0 {
             self.dropDownVIewNew(arrayData: visitNameArray as? [String] ?? [String](), kWidth: tsrButton.frame.width, kAnchor: tsrButton, yheight: tsrButton.bounds.height) { [unowned self] selectedVal, index  in
                 self.selectedTSR.text = selectedVal
@@ -1502,7 +1500,6 @@ extension PEViewStartNewAssesmentINT{
         let Notes = dict.notes
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = Constants.MMddYYYYHHmmss
-        let date = dict.evaluationDate?.toDate(withFormat: Constants.MMddyyyyStr)
       
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
@@ -1520,10 +1517,8 @@ extension PEViewStartNewAssesmentINT{
         var base64Str = ""
         var base64Str2 = ""
         handleSigNumValidation(sigNumber, &base64Str, dict, sigNumber2, &base64Str2)
-        
-        var DisplayId = dict.evaluationDate
-        
-        DisplayId = "C-" + UniID
+                
+        var DisplayId = "C-" + UniID
         var iStle = 0
       
         let iStleDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
@@ -1548,10 +1543,10 @@ extension PEViewStartNewAssesmentINT{
         let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
         
         handleParamsAndPopulate(dateSig, regionId, evaluationDate, &evalDateStr)
-        var json : JSONDictionary = [:]
-        json = [
+     
+        var json: JSONDictionary = [
             "AppAssessmentId":String(AssessmentId),
-            "DisplayId":DisplayId?.prefix(22),
+            "DisplayId":DisplayId.prefix(22),
             "VisitId": VisitId,
             "CustomerId": CustomerId,
             "SiteId": SiteId,
@@ -1610,7 +1605,6 @@ extension PEViewStartNewAssesmentINT{
     
     func createSyncRequestForInvoject(dictArray: PENewAssessment,inovojectData :InovojectData) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -1628,10 +1622,7 @@ extension PEViewStartNewAssesmentINT{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
         
-    
-        var DisplayId = dictArray.evaluationDate
-      
-        DisplayId = "C-" + UniID
+        var  DisplayId = "C-" + UniID
         
         let  HatcheryAntibioticsInt = inovojectData.invoHatchAntibiotic
         var HatcheryAntibiotics = false
@@ -1678,12 +1669,10 @@ extension PEViewStartNewAssesmentINT{
       
         
         let DManufacturerId = 0
-        var DNameArray = NSArray()
+       
         
         var dManufacture = 0
-        
-        let timestamp = Date().currentTimeMillis()
-        
+                
         let unique = "\(deviceIDFORSERVER)_\(inovojectData.id)_iOS_"
         
         let ampulePerBag = Int(inovojectData.ampulePerBag ?? "0")
@@ -1699,7 +1688,7 @@ extension PEViewStartNewAssesmentINT{
             "BagSizeType":inovojectData.bagSizeType,
             "Device_Id": deviceIDFORSERVER,
             "DiluentMfg": inovojectData.vaccineMan,
-            "DisplayId": DisplayId?.prefix(22),
+            "DisplayId": DisplayId.prefix(22),
             "HatcheryAntibiotics": HatcheryAntibiotics,
             "ManufacturerId":  ManufacturerId == 0 ? "" : ManufacturerId,
             "ModuleAssessmentCatId": dictArray.catID,
@@ -1722,7 +1711,6 @@ extension PEViewStartNewAssesmentINT{
     // MARK: - Create Sync Request for DOA Data
     func createSyncRequestForDOA(dictArray: PENewAssessment,dayOfAgeData :InovojectData) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -1735,8 +1723,7 @@ extension PEViewStartNewAssesmentINT{
         }
         
      
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         
         let  HatcheryAntibioticsInt = dictArray.hatcheryAntibioticsDoa
         var HatcheryAntibiotics = false
@@ -1804,7 +1791,7 @@ extension PEViewStartNewAssesmentINT{
             "DayOfBagHatcheryAntibiotics": HatcheryAntibiotics,
             "Device_Id": deviceIDFORSERVER,
             "DiluentMfg": dictArray.dCS,
-            "DisplayId": DisplayId?.prefix(22),
+            "DisplayId": DisplayId.prefix(22),
             "ModuleAssessmentCatId": dictArray.catID,
             "DayOfAgeDosage": dayOfAgeData.dosage,
             "StrUniqueId":unique,
@@ -1820,7 +1807,6 @@ extension PEViewStartNewAssesmentINT{
     // MARK: - Create Sync Request for DOAS Data
     func createSyncRequestForDOAS(dictArray: PENewAssessment,dayOfAgeData :InovojectData) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -1838,8 +1824,7 @@ extension PEViewStartNewAssesmentINT{
         }
         
   
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         
         let  HatcheryAntibioticsInt = dictArray.hatcheryAntibioticsDoaS
         
@@ -1891,7 +1876,7 @@ extension PEViewStartNewAssesmentINT{
             
             "DayAgeSubcutaneousBagSizeType": dictArray.dDDT,
             "Device_Id": deviceIDFORSERVER,
-            "DisplayId": DisplayId?.prefix(22) ?? "",
+            "DisplayId": DisplayId.prefix(22),
             "ModuleAssessmentCatId":  dictArray.catID ?? "",
             "StrUniqueId":unique,
             "SecquenceId": 0,
@@ -1914,7 +1899,6 @@ extension PEViewStartNewAssesmentINT{
     // MARK: - Creater Sync Request for Certificate Data
     func createSyncRequestForCertificateData(dictArray: PENewAssessment,peCertificateData :PECertificateData) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -1929,10 +1913,8 @@ extension PEViewStartNewAssesmentINT{
         if let id = dictArray.serverAssessmentId{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
-    
-        var DisplayId = dictArray.evaluationDate
-       
-        DisplayId = "C-" + UniID
+           
+        var DisplayId = "C-" + UniID
         
         let unique = "\(deviceIDFORSERVER)_\(peCertificateData.id)_iOS_"
         
@@ -1969,7 +1951,7 @@ extension PEViewStartNewAssesmentINT{
             "MicroSamplesName": dictArray.micro,
             "EvaluationTypeId": 1,
             "AppAssessmentId": String(AssessmentId),
-            "DisplayId": DisplayId?.prefix(22),
+            "DisplayId": DisplayId.prefix(22),
             "StrUniqueId":unique ,
             "SignatureImg": peCertificateData.signatureImg ?? ""
         ] as JSONDictionary
@@ -1979,7 +1961,6 @@ extension PEViewStartNewAssesmentINT{
     // MARK: - Create Sync Request for Residue Data
     func createSyncRequestForResidueData(dictArray: PENewAssessment) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -1996,10 +1977,8 @@ extension PEViewStartNewAssesmentINT{
         }
         
     
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         
-        let timestamp = Date().currentTimeMillis()
         
         let unique = "\(deviceIDFORSERVER)_\(dictArray.residue)_iOS_"
         
@@ -2012,7 +1991,7 @@ extension PEViewStartNewAssesmentINT{
             "MicroSamplesName": dictArray.micro,
             "EvaluationTypeId": 1,
             "AppAssessmentId": String(AssessmentId),
-            "DisplayId": DisplayId?.prefix(22),
+            "DisplayId": DisplayId.prefix(22),
             "UserId": dictArray.userID,
             "CreatedAt": "2020-06-11T12:53:38.930Z",
             "DeviceId": deviceIDFORSERVER,
@@ -2025,7 +2004,6 @@ extension PEViewStartNewAssesmentINT{
     // MARK: - Create Sync Request for Microbial Data
     func createSyncRequestForMicroData(dictArray: PENewAssessment) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -2041,11 +2019,8 @@ extension PEViewStartNewAssesmentINT{
         if let id = dictArray.serverAssessmentId{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
-        
-   
-        var DisplayId = dictArray.evaluationDate
 
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
 
         let unique = "\(deviceIDFORSERVER)_\(dictArray.micro)_iOS_"
         
@@ -2065,7 +2040,7 @@ extension PEViewStartNewAssesmentINT{
             "MicroSamplesName": dictArray.micro,
             "EvaluationTypeId": 1,
             "AppAssessmentId": String(AssessmentId),
-            "DisplayId": DisplayId?.prefix(22),
+            "DisplayId": DisplayId.prefix(22),
             "StrUniqueId":unique
         ] as JSONDictionary
         return json
@@ -2307,8 +2282,7 @@ extension PEViewStartNewAssesmentINT{
             AssessmentId = dictArray.draftNumber ?? 0
         }
         var score = 0
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         
         score = dictArray.assMinScore ?? 0
         if dictArray.assStatus == 1 {
@@ -2327,7 +2301,7 @@ extension PEViewStartNewAssesmentINT{
         }
         
         let json = [
-            "DisplayId":DisplayId?.prefix(22) ?? "",
+            "DisplayId":DisplayId.prefix(22),
             "AppAssessmentId": String(AssessmentId),
             "ModuleAssessmentId": dictArray.assID ??  0,
             "AssessmentScore": score,
@@ -2370,7 +2344,6 @@ extension PEViewStartNewAssesmentINT{
     // MARK: - Create SYNC Request for Comment
     func createSyncRequestForComment(dictArray: PENewAssessment) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -2382,8 +2355,7 @@ extension PEViewStartNewAssesmentINT{
             AssessmentId = dictArray.draftNumber ?? 0
         }
     
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         
         var serverAssessmentId:Int64 = 0
         if let id = dictArray.serverAssessmentId{
@@ -2391,7 +2363,7 @@ extension PEViewStartNewAssesmentINT{
         }
         
         let json = [
-            "DisplayId":DisplayId?.prefix(22) ?? "",
+            "DisplayId":DisplayId.prefix(22),
             "AppAssessmentId":  String(AssessmentId),
             "ModuleAssessmentId": dictArray.assID ?? 0,
             "Comment": dictArray.note ?? "",
@@ -2534,10 +2506,9 @@ extension PEViewStartNewAssesmentINT{
         let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
         
     
-        var DisplayId = dictArray.evaluationDate
         var siteId = String(dictArray.siteId ?? 0)
 
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         let base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:img)
         totalImageToSync.append(img)
         let imageName = "ImgName-" + siteId + String(img ?? 0)
@@ -2744,7 +2715,7 @@ extension PEViewStartNewAssesmentINT{
                 for i in self.totalImageToSync {
                     CoreDataHandlerPE().setImageStatusTrue(idArray: i)
                 }
-                self.showtoast(message: appDelegateObj.dataSynedSuccess)
+                self.showtoast(message: Constants.dataSyncSuccess)
                 NotificationCenter.default.post(
                     Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"), object: nil)
                 )
@@ -2760,7 +2731,7 @@ extension PEViewStartNewAssesmentINT{
             if syncArr > 0{
                 self.syncBtnTapped(showHud: false)
             } else {
-                self.showtoast(message: appDelegateObj.dataSynedSuccess)
+                self.showtoast(message: Constants.dataSyncSuccess)
                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
             }
         }

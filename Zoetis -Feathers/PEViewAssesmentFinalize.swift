@@ -84,6 +84,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     @IBOutlet weak var scoreView: UIView!
     @IBOutlet weak var coustomerView: UIView!
     @IBOutlet weak var bckButton: PESubmitButton!
+    let date2020_05_23 = "2020-05-23T06:36:50.915Z"
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
@@ -135,46 +136,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         }
     }
     
-    override func viewDidLoad() {
-        print("<<<<",self)
-        self.navigationController?.navigationBar.isHidden = true
-        viewForSignature.isHidden = true
-        peHeaderViewController = PEHeaderViewController()
-        peHeaderViewController.titleOfHeader = "View Assessment"
-        peHeaderViewController.assId = "C-\(peNewAssessment.dataToSubmitID!)"
-        self.headerView.addSubview(peHeaderViewController.view)
-        self.topviewConstraint(vwTop: peHeaderViewController.view)
-        
-        viewForMultiSignature.isHidden = true
-        regionID = UserDefaults.standard.integer(forKey: "Regionid")
-        
-        
-        let  peNewAssessmentArray1 = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "")
-        sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
-        
-        showExtendedPE = peNewAssessment.sanitationValue ?? false
-        
-        let seq_Number : NSArray = NSArray()
-        for obj in peNewAssessmentArray1 {
-            seq_Number.adding(obj.sequenceNo)
-        }
-   
-        var carColIdArray : [Int] = []
-      
-        var row = 0
-        
-        for cat in peNewAssessmentArray1 {
-            if !carColIdArray.contains(cat.sequenceNo ?? 0){
-                carColIdArray.append(cat.sequenceNo ?? 0)
-                if(cat.catName == "Refrigerator"){
-                    cat.catName = Constants.refrigeratorNitrogenStr
-                    
-                }
-                catArrayForCollectionIs.append(cat)
-                
-            }
-        }
-        
+    fileprivate func handleCatArrayForCollectionIsDOAViewDidLoad() {
         for cat in catArrayForCollectionIs{
             if cat.doa.count > 0 {
                 var idArr : [Int] = []
@@ -191,7 +153,9 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
                 }
             }
         }
-        
+    }
+    
+    fileprivate func handleCatArrayForCollectionIsDoasViewDidLoad() {
         for cat in catArrayForCollectionIs{
             if cat.doaS.count > 0 {
                 var idArr : [Int] = []
@@ -208,7 +172,9 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
                 }
             }
         }
-        
+    }
+    
+    fileprivate func handleCatArrayForCollectionIsInovojectViewDidLoad() {
         for cat in catArrayForCollectionIs{
             if cat.inovoject.count > 0 {
                 var idArr : [Int] = []
@@ -223,8 +189,9 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
                 }
             }
         }
-        
-        
+    }
+    
+    fileprivate func handleCatArrayForCollectionIsVMixerViewDidLoad() {
         for cat in catArrayForCollectionIs{
             if cat.vMixer.count > 0 {
                 var idArr : [Int] = []
@@ -239,6 +206,107 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
                 }
             }
         }
+    }
+    
+    fileprivate func handlePeNewAssessmentArrayValidation() {
+        let peNewAssessmentArray1 = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "")
+        let seq_Number : NSArray = NSArray()
+        for obj in peNewAssessmentArray1 {
+            seq_Number.adding(obj.sequenceNo)
+        }
+        
+        var carColIdArray : [Int] = []
+        for cat in peNewAssessmentArray1 {
+            if !carColIdArray.contains(cat.sequenceNo ?? 0){
+                carColIdArray.append(cat.sequenceNo ?? 0)
+                if(cat.catName == "Refrigerator"){
+                    cat.catName = Constants.refrigeratorNitrogenStr
+                }
+                catArrayForCollectionIs.append(cat)
+            }
+        }
+    }
+    
+    fileprivate func handleisFromEditMicroValidationManageUserIneration(_ row: inout Int) {
+        if !(isFromEditMicro) {
+            row = 0
+            collectionviewIndexPath = IndexPath(row: row, section: 0)
+            lblextenderMicro.isHidden = true
+            extendedMicroSwitch.isHidden = true
+            extendedMicroSwitch.isUserInteractionEnabled = false
+            tableview.isUserInteractionEnabled = true
+        } else {
+            if self.peNewAssessment.IsEMRequested == false {
+                self.extendedMicroSwitch.isOn = false
+                self.synWebBtn.isEnabled = false
+                self.synWebBtn.alpha = 0.3
+                UserDefaults.standard.setValue(false, forKey: "extendedAvailable")
+                UserDefaults.standard.set(false, forKey:"ExtendedMicro")
+                
+            } else {
+                synWebBtn.setTitle(Constants.syncToWebStr, for: .normal)
+                self.synWebBtn.isEnabled = true
+                self.synWebBtn.alpha = 1.0
+            }
+            
+            lblextenderMicro.isHidden = false
+            extendedMicroSwitch.isHidden = false
+            extendedMicroSwitch.isUserInteractionEnabled = true
+        }
+    }
+    
+    fileprivate func registerTableViewCellsAndUIValidations() {
+        if selectedCategory?.sig2 ?? 0 > 0 {
+            let data2 = CoreDataHandlerPE().getImageByImageID(idArray:(selectedCategory?.sig2)!)
+            DispatchQueue.main.async() {
+                self.imgSignature2.image = UIImage(data: data2)
+            }
+        }
+        if regionID == 3 {
+            if showExtendedPE {
+                if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
+                    catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
+                }
+                
+                let catObjectPE = PENewAssessment()
+                catObjectPE.catName = Constants.extendedMicrobialStr
+                catObjectPE.sequenceNo = 12
+                catObjectPE.sequenceNoo = 12
+                catArrayForCollectionIs.append(catObjectPE)
+                tableview.register(UINib(nibName: "PlateInfoCell", bundle: nil), forCellReuseIdentifier: "PlateInfoCell")
+                let nibPlateInfoHeader = UINib(nibName: "PlateInfoHeader", bundle: nil)
+                tableview.register(nibPlateInfoHeader, forHeaderFooterViewReuseIdentifier: "PlateInfoHeader")
+            } else {
+                if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
+                    catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
+                }
+            }
+        }
+    }
+    
+    override func viewDidLoad() {
+        print("<<<<",self)
+        self.navigationController?.navigationBar.isHidden = true
+        viewForSignature.isHidden = true
+        peHeaderViewController = PEHeaderViewController()
+        peHeaderViewController.titleOfHeader = "View Assessment"
+        peHeaderViewController.assId = "C-\(peNewAssessment.dataToSubmitID!)"
+        self.headerView.addSubview(peHeaderViewController.view)
+        self.topviewConstraint(vwTop: peHeaderViewController.view)
+        
+        viewForMultiSignature.isHidden = true
+        regionID = UserDefaults.standard.integer(forKey: "Regionid")
+        
+        sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
+        
+        showExtendedPE = peNewAssessment.sanitationValue ?? false
+        handlePeNewAssessmentArrayValidation()
+        
+        var row = 0
+        handleCatArrayForCollectionIsDOAViewDidLoad()
+        handleCatArrayForCollectionIsDoasViewDidLoad()
+        handleCatArrayForCollectionIsInovojectViewDidLoad()
+        handleCatArrayForCollectionIsVMixerViewDidLoad()
         
         if certificateData.count > 0 {
             self.certificateData =  self.certificateData.sorted(by: {
@@ -246,17 +314,14 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
                 let id2 = $1.id as? Int ?? 0
                 return id1 < id2
             })
-            
         }
-        
-        
         for cat in catArrayForCollectionIs {
             if cat.catISSelected == 1 {
                 row = cat.sequenceNo ?? 0 - 1
                 selectedCategory = cat
             }
         }
-        if  selectedCategory?.evaluationDate?.count == nil {
+        if selectedCategory?.evaluationDate?.count == nil {
             selectedCategory = catArrayForCollectionIs.first
         }
         
@@ -277,33 +342,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         tableview.register(frezerHeaderViewCell, forHeaderFooterViewReuseIdentifier: "SetFrezzerPointCell")
         collectionView.dataSource = self
         collectionView.delegate = self
-        if !(isFromEditMicro) {
-            row = 0
-            collectionviewIndexPath = IndexPath(row: row, section: 0)
-            lblextenderMicro.isHidden = true
-            extendedMicroSwitch.isHidden = true
-            extendedMicroSwitch.isUserInteractionEnabled = false
-            tableview.isUserInteractionEnabled = true
-        }
-        else {
-            if self.peNewAssessment.IsEMRequested == false {
-                self.extendedMicroSwitch.isOn = false
-                self.synWebBtn.isEnabled = false
-                self.synWebBtn.alpha = 0.3
-                UserDefaults.standard.setValue(false, forKey: "extendedAvailable")
-                UserDefaults.standard.set(false, forKey:"ExtendedMicro")
-                
-            }
-            else {
-                synWebBtn.setTitle(Constants.syncToWebStr, for: .normal)
-                self.synWebBtn.isEnabled = true
-                self.synWebBtn.alpha = 1.0
-            }
-            
-            lblextenderMicro.isHidden = false
-            extendedMicroSwitch.isHidden = false
-            extendedMicroSwitch.isUserInteractionEnabled = true
-        }
+        handleisFromEditMicroValidationManageUserIneration(&row)
         
         selectedCategory = catArrayForCollectionIs[0]
         selectinitialCell()
@@ -313,23 +352,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         assessmentDateText.text =  catArrayForCollectionIs.first?.evaluationDate
         chechForLastCategory()
         setupUI()
-        
-        //        let dateFormatter2 = DateFormatter()
-        //        if regionID == 3
-        //        {
-        //        }
-        //
-        //        dateFormatter2.dateFormat="MM/dd/yyyy"
-        //        dateFormatter2.calendar = Calendar(identifier: .gregorian)
-        //        dateFormatter2.timeZone = TimeZone(secondsFromGMT: 0)
-        //        sig_Date.text = dateFormatter2.string(from: selectedCategory?.sig_Date) as String
-        
-        
-        
-        
         sig_Date.text = selectedCategory?.sig_Date
-        
-        
         fsrSign = selectedCategory?.FSTSignatureImage ?? ""
         sig_Name.text = selectedCategory?.sig_Name
         lblRepresentative2.text = selectedCategory?.sig_Name2
@@ -341,42 +364,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
             self.sig_imageView.image = UIImage(data: data)
         }
         
-        if selectedCategory?.sig2 ?? 0 > 0 {
-            let data2 = CoreDataHandlerPE().getImageByImageID(idArray:(selectedCategory?.sig2)!)
-            DispatchQueue.main.async() {
-                self.imgSignature2.image = UIImage(data: data2)
-            }
-        }
-        if regionID == 3
-        {
-            
-            if showExtendedPE {
-             
-                
-                if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
-                    catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
-                }
-                
-                let catObjectPE = PENewAssessment()
-                catObjectPE.catName = Constants.extendedMicrobialStr
-                catObjectPE.sequenceNo = 12
-                catObjectPE.sequenceNoo = 12
-                catArrayForCollectionIs.append(catObjectPE)
-                
-              
-                tableview.register(UINib(nibName: "PlateInfoCell", bundle: nil), forCellReuseIdentifier: "PlateInfoCell")
-                
-                let nibPlateInfoHeader = UINib(nibName: "PlateInfoHeader", bundle: nil)
-                tableview.register(nibPlateInfoHeader, forHeaderFooterViewReuseIdentifier: "PlateInfoHeader")
-                
-                
-            }
-            else{
-                if(catArrayForCollectionIs.last?.catName == "Sanitation and Embrex Evaluation"){
-                    catArrayForCollectionIs.remove(at: catArrayForCollectionIs.count-1)
-                }
-            }
-        }
+        registerTableViewCellsAndUIValidations()
         collectionView.reloadData()
         tableview.reloadData()
         collectionView(collectionView, didSelectItemAt: collectionviewIndexPath)
@@ -384,24 +372,13 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
         NotificationCenter.default.addObserver(self, selector: #selector(refreshScores(_:)), name: NSNotification.Name.init(rawValue: "RefreshExtendedPEScores") , object: nil)
         collectionViewSignature.reloadData()
         synWebBtn.isHidden = false
-        if isFromEditMicro{
-            bckButton.isHidden = true
-            
-        }
-        else {
-            bckButton.isHidden = false
-            
-        }
-        
-        if(regionID == 3){
-            lblNA.isHidden = true
-            btnNA.isHidden = true
-        }else{
-            lblNA.isHidden = false
-            btnNA.isHidden = false
+        bckButton.isHidden = isFromEditMicro
+        lblNA.isHidden = regionID == 3
+        btnNA.isHidden = regionID == 3
+
+        if(regionID != 3) {
             showHideNA(sequenceNoo: self.selectedCategory?.sequenceNoo ?? 0, catName: self.selectedCategory?.catName ?? "")
         }
-        
     }
     
     @objc func  refreshScores(_ notification: NSNotification){
@@ -598,157 +575,135 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
 // MARK:  Table View delegate's
 extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
-    func checkForTraning()-> Bool{
-        var currentAssessmentIs = CoreDataHandlerPE().getSavedOfflineAssessmentPEObject(id: peNewAssessment.dataToSubmitNumber ?? 0)
-        if currentAssessmentIs.visitName == "Training"{
-            return true
-        } else{
-            return true
-        }
+    func checkForTraning()-> Bool {
+        return true
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if catArrayForTableIs.count > 0 {
-            var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
-            
-            if assessment?.sequenceNoo == 1  {
-                if checkForTraning(){
-                    return 5
-                } else {
-                    return 4
-                }
-            }
-            else if assessment?.sequenceNoo == 3 {
-                if regionID != 3{
-                    return 1
-                }
-                else
-                {
-                    if peNewAssessment.evaluationID == 1{
-                        return 1
-                    }
-                    else{
-                        return 2
-                    }
-                }
-                
-            }
-            else if assessment?.sequenceNoo == 1 {
-                return 5
-            }
-            if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != Constants.refrigeratorNitrogenStr{
+        guard let assessment = catArrayForTableIs.first as? PE_AssessmentInProgress else {
+            return sectionCountForSelectedCategory()
+        }
+
+        switch assessment.sequenceNoo {
+        case 1:
+            return checkForTraning() ? 5 : 4
+
+        case 3:
+            if regionID != 3 || peNewAssessment.evaluationID == 1 {
                 return 1
+            } else {
+                return 2
             }
-            if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr{
-                return 3
-            }
-            else {
-                return 1
-            }
+
+        default:
+            return sectionCountForSelectedCategory()
         }
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != Constants.refrigeratorNitrogenStr{
-            return 1
-        }
-        if selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr{
-            return 3
-        }
-        
-        return 2
     }
     
+    private func sectionCountForSelectedCategory() -> Int {
+        if selectedCategory?.sequenceNoo == 12,
+           selectedCategory?.catName != Constants.refrigeratorNitrogenStr {
+            return 1
+        }
+
+        if selectedCategory?.sequenceNoo == 11,
+           selectedCategory?.catName == Constants.refrigeratorNitrogenStr {
+            return 3
+        }
+
+        return 2
+    }
+
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        if checkForTraning(){
-            if section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != Constants.refrigeratorNitrogenStr {
+        if checkForTraning() {
+            // Case: Training Mode
+            if selectedCategory?.sequenceNoo == 12,
+               selectedCategory?.catName != Constants.refrigeratorNitrogenStr,
+               section == 0 {
                 return sanitationQuesArr.count
             }
             
-            if (selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr){
+            if selectedCategory?.sequenceNoo == 11,
+               selectedCategory?.catName == Constants.refrigeratorNitrogenStr {
                 return 2
             }
-            if section == 1 {
-                return certificateData.count
+            
+            switch section {
+            case 1: return certificateData.count
+            case 2: return inovojectData.count
+            case 3: return dayOfAgeData.count
+            case 4: return dayOfAgeSData.count
+            default: return catArrayForTableIs.count
             }
-            if section == 2 {
-                return inovojectData.count
-            }
-            if section == 3 {
-                return dayOfAgeData.count
-            }
-            if section == 4 {
-                return dayOfAgeSData.count
-            }
-            return catArrayForTableIs.count
+            
         } else {
-            var assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
-            if assessment?.sequenceNoo == 3 {
-                if section == 0 {
-                    return catArrayForTableIs.count                }
-                if section == 1 {
-                    return 1
-                }
-            } else {
-                if section == 1 {
-                    return inovojectData.count
-                }
-                if section == 2 {
-                    return dayOfAgeData.count
-                }
-                if section == 3 {
-                    return dayOfAgeSData.count
-                }
+            // Case: Non-training mode
+            guard catArrayForTableIs.count > 0,
+                  let assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress else {
+                return catArrayForTableIs.count
             }
-            return catArrayForTableIs.count
+            
+            if assessment.sequenceNoo == 3 {
+                return section == 0 ? catArrayForTableIs.count : 1
+            }
+
+            switch section {
+            case 1: return inovojectData.count
+            case 2: return dayOfAgeData.count
+            case 3: return dayOfAgeSData.count
+            default: return catArrayForTableIs.count
+            }
         }
-        
     }
-    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if checkForTraning(), selectedCategory?.catName != Constants.refrigeratorNitrogenStr {
-            if indexPath.section == 1 {
+            switch indexPath.section {
+            case 1:
                 return 130
-            } else if indexPath.section == 2 {
+            case 2:
                 return 200
+            default:
+                break
             }
         }
 
-        
-        if selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName != Constants.refrigeratorNitrogenStr{
-       
+        if selectedCategory?.sequenceNoo == 12,
+           selectedCategory?.catName != Constants.refrigeratorNitrogenStr {
             return 70
         }
-        let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-        if selectedCategory?.sequenceNoo == 3 {
-            if (indexPath.section == 0){
-                if selectedCategory?.sequenceNoo == 3 && assessment?.rollOut == "Y" && assessment?.qSeqNo == 1{
-                  
+
+        if selectedCategory?.sequenceNoo == 11,
+           selectedCategory?.catName == Constants.refrigeratorNitrogenStr {
+            return 80
+        }
+
+        if selectedCategory?.sequenceNoo == 3, indexPath.section == 0 {
+            if let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress {
+                if assessment.rollOut == "Y", assessment.qSeqNo == 1 {
                     return 120
-                }
-                else {
-                    
+                } else {
                     return 70
                 }
             }
-            else {
-            
-                return 0
-            }
+            return 70
         }
-        
-        if selectedCategory?.sequenceNoo == 11   && selectedCategory?.catName == Constants.refrigeratorNitrogenStr{
-      
-            return 80
-            
-        }
-        if selectedCategory?.catName != Constants.refrigeratorNitrogenStr, indexPath.section > 0 {
+
+        if selectedCategory?.catName != Constants.refrigeratorNitrogenStr,
+           indexPath.section > 0 {
             return 130
         }
- 
-        return self.estimatedHeightOfLabel(text: assessment?.assDetail1 ?? "") + 50
-        
+
+        // Default case – only access assessment safely
+        if let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress {
+            return estimatedHeightOfLabel(text: assessment.assDetail1 ?? "") + 50
+        }
+
+        return 70
     }
+
     
     func estimatedHeightOfLabel(text: String) -> CGFloat {
         
@@ -765,167 +720,190 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     }
     
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if checkForTraning(){
-            if indexPath.section == 0 && selectedCategory?.sequenceNoo == 12 && selectedCategory?.catName == Constants.extendedMicrobialStr{
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PlateInfoCell", for: indexPath) as! PlateInfoCell
-                cell.currentIndex = indexPath.row
-                cell.plateTypeBtn.isUserInteractionEnabled = false
-                if self.peNewAssessment.IsEMRequested == false{
-                    self.tableview.isUserInteractionEnabled = true
-                    cell.blueGreenMoldTxtField.isUserInteractionEnabled = true
-                    cell.bacteriaTxtField.isUserInteractionEnabled = true
-                    cell.noteBtn.isUserInteractionEnabled = true
-                }
-                else {
-                    self.tableview.isUserInteractionEnabled = true
-                    cell.blueGreenMoldTxtField.isUserInteractionEnabled = false
-                    cell.bacteriaTxtField.isUserInteractionEnabled = false
-                }
-                
-                if sanitationQuesArr.count > indexPath.row{
-                    cell.setValues(quesObj: sanitationQuesArr[indexPath.row], index: indexPath.row)
-                }
-                cell.plateTypeCompletion = {
-                    [unowned self] ( error) in
-                    self.tableviewIndexPath = indexPath
-                    
-                    
-                    let plateTypes = PlateTypesDAO.sharedInstance.fetchPlateTypes(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "")
-                    let arr = plateTypes.map{ $0.value}
-                    self.dropDownVIewNew(arrayData: arr as! [String], kWidth: cell.plateTypeBtn.frame.width, kAnchor: cell.plateTypeBtn, yheight: cell.plateTypeBtn.bounds.height) {
-                        [unowned self] selectedVal, index  in
-                        if indexPath.row > -1 && self.sanitationQuesArr.count > indexPath.row{
-                            let quesObj = self.sanitationQuesArr[indexPath.row]
-                            if index > -1 && plateTypes.count > index{
-                                self.sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
-                                
-                                quesObj.plateTypeDescription = plateTypes[index].value
-                                quesObj.plateTypeId =  plateTypes[index].id
-                                
-                                self.sanitationQuesArr[indexPath.row] = quesObj
-                                SanitationEmbrexQuestionMasterDAO.sharedInstance.updateAssessmentQuestion(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "", questionId: Int64(quesObj.questionId ?? "") ?? 0, questionVM: quesObj)
-                                
-                            }
-                            self.tableview.beginUpdates()
-                            self.tableview.reloadRows(at: [indexPath], with: .none)
-                            self.tableview.endUpdates()
-                            
-                        }
-                    }
-                    
-                    self.dropHiddenAndShow()
-                }
-                cell.commentsCompletion = {[unowned self] ( error) in
-                    self.tableviewIndexPath = indexPath
-                    
-                    self.sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
-                    var comments = self.sanitationQuesArr[indexPath.row].userComments ?? ""
-                    var questionObj = self.sanitationQuesArr[indexPath.row]
-                    
-                    let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                    let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
-                    vc.textOfTextView = comments
-                    if peNewAssessment.IsEMRequested == false {
-                        vc.editable = true
-                    }
-                    else {
-                        vc.editable = false
-                    }
-                    vc.commentCompleted = {[unowned self] ( note) in
-                        if note == "" {
-                            let image = UIImage(named: Constants.peCommentImageStr)
-                            cell.noteBtn.setImage(image, for: .normal)
-                            
-                        } else {
-                            let image = UIImage(named: Constants.peCommentSelectedStr)
-                            cell.noteBtn.setImage(image, for: .normal)
-                        }
+    fileprivate func handlePlateTypeCompletionCellForRow(_ cell: PlateInfoCell, _ indexPath: IndexPath) {
+        cell.plateTypeCompletion = {
+            [unowned self] ( error) in
+            self.tableviewIndexPath = indexPath
+            
+            
+            let plateTypes = PlateTypesDAO.sharedInstance.fetchPlateTypes(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "")
+            let arr = plateTypes.map{ $0.value}
+            self.dropDownVIewNew(arrayData: arr as! [String], kWidth: cell.plateTypeBtn.frame.width, kAnchor: cell.plateTypeBtn, yheight: cell.plateTypeBtn.bounds.height) {
+                [unowned self] selectedVal, index  in
+                if indexPath.row > -1 && self.sanitationQuesArr.count > indexPath.row{
+                    let quesObj = self.sanitationQuesArr[indexPath.row]
+                    if index > -1 && plateTypes.count > index{
+                        self.sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
                         
-                        questionObj.userComments = note ?? ""
-                        self.sanitationQuesArr[indexPath.row] = questionObj
-                        if questionObj != nil{
-                            SanitationEmbrexQuestionMasterDAO.sharedInstance.updateAssessmentQuestion(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "", questionId: Int64(questionObj.questionId ?? "") ?? 0, questionVM: questionObj)
-                            tableView.beginUpdates()
-                            tableView.reloadRows(at: [IndexPath.init(row: indexPath.row, section: 0)], with: .automatic)
-                            tableView.endUpdates()
-                        }
+                        quesObj.plateTypeDescription = plateTypes[index].value
+                        quesObj.plateTypeId =  plateTypes[index].id
+                        
+                        self.sanitationQuesArr[indexPath.row] = quesObj
+                        SanitationEmbrexQuestionMasterDAO.sharedInstance.updateAssessmentQuestion(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "", questionId: Int64(quesObj.questionId ?? "") ?? 0, questionVM: quesObj)
+                        
                     }
-                    if vc.editable{
-                        self.navigationController?.present(vc, animated: false, completion: nil)
-                    }else{
-                        if comments != nil && comments != ""{
-                            self.navigationController?.present(vc, animated: false, completion: nil)
-                        }
-                    }
-                }
-                self.refreshScore(indexPath.row)
-                cell.assessmentId = peNewAssessment?.serverAssessmentId
-                return cell
-            }
-            
-            if(selectedCategory?.catName == Constants.refrigeratorNitrogenStr){
-                
-                return  setUpRerigatorQuesCell(tableView, cellForRowAt: indexPath)
-            }
-            else{
-                
-                if indexPath.section == 1, let cell = tableView.dequeueReusableCell(withIdentifier: CrewInformationCell.identifier) as? CrewInformationCell, certificateData.count > indexPath.row {
-                    cell.config(data: certificateData[indexPath.row])
-                    cell.isUserInteractionEnabled = false
-                    return cell
-                }
-                
-                if indexPath.section == 2 {
-                    return self.setupInovojectCell(tableView, cellForRowAt: indexPath)
-                }
-                if indexPath.section == 3
-                {
-                    return self.setupDayOfAgeCell(tableView, cellForRowAt: indexPath)
-                }
-                if indexPath.section == 4{
-                    return self.setupDayOfAgeSCell(tableView, cellForRowAt: indexPath)
-                }
-                else {
-                    return  self.setupPEQuestionTableViewCell(tableView, cellForRowAt: indexPath)
+                    self.tableview.beginUpdates()
+                    self.tableview.reloadRows(at: [indexPath], with: .none)
+                    self.tableview.endUpdates()
+                    
                 }
             }
             
-        } else {
-            let assessment = catArrayForTableIs[0] as? PE_AssessmentInProgress
-            if assessment?.sequenceNoo == 3 && assessment?.catName?.lowercased()
-                != "miscellaneous" {
-                if indexPath.section == 0 {
-                    return  self.setupPEQuestionTableViewCell(tableView, cellForRowAt: indexPath)              }
-                if indexPath.section == 1 {
-                    return UITableViewCell()
-                }
-            }
-            else if(assessment?.sequenceNoo == 12 && assessment?.catName?.lowercased()
-                    != "Refrigator\n/Fridger\n/Liquid Nitriogen" ){
-                if indexPath.section == 1 {
-                    return self.setupInovojectCell(tableView, cellForRowAt: indexPath)
-                }
-            }
+            self.dropHiddenAndShow()
+        }
+    }
+    
+    fileprivate func handleCommentsCompletionCellForRow(_ cell: PlateInfoCell, _ indexPath: IndexPath, _ tableView: UITableView) {
+        cell.commentsCompletion = {[unowned self] ( error) in
+            self.tableviewIndexPath = indexPath
             
+            self.sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "")
+            var comments = self.sanitationQuesArr[indexPath.row].userComments ?? ""
+            var questionObj = self.sanitationQuesArr[indexPath.row]
+            
+            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+            let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
+            vc.textOfTextView = comments
+            if peNewAssessment.IsEMRequested == false {
+                vc.editable = true
+            }
             else {
-                if indexPath.section == 1 {
-                    return self.setupInovojectCell(tableView, cellForRowAt: indexPath)
-                }
-                if indexPath.section == 2 {
-                    return self.setupDayOfAgeCell(tableView, cellForRowAt: indexPath)
-                }
-                if indexPath.section == 3 {
-                    return self.setupDayOfAgeSCell(tableView, cellForRowAt: indexPath)
+                vc.editable = false
+            }
+            vc.commentCompleted = {[unowned self] ( note) in
+                if note == "" {
+                    let image = UIImage(named: Constants.peCommentImageStr)
+                    cell.noteBtn.setImage(image, for: .normal)
+                    
                 } else {
-                    return  self.setupPEQuestionTableViewCell(tableView, cellForRowAt: indexPath)
+                    let image = UIImage(named: Constants.peCommentSelectedStr)
+                    cell.noteBtn.setImage(image, for: .normal)
+                }
+                
+                questionObj.userComments = note ?? ""
+                self.sanitationQuesArr[indexPath.row] = questionObj
+                if questionObj != nil{
+                    SanitationEmbrexQuestionMasterDAO.sharedInstance.updateAssessmentQuestion(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: self.peNewAssessment?.serverAssessmentId ?? "", questionId: Int64(questionObj.questionId ?? "") ?? 0, questionVM: questionObj)
+                    tableView.beginUpdates()
+                    tableView.reloadRows(at: [IndexPath.init(row: indexPath.row, section: 0)], with: .automatic)
+                    tableView.endUpdates()
+                }
+            }
+            if vc.editable{
+                self.navigationController?.present(vc, animated: false, completion: nil)
+            }else{
+                if comments != nil && comments != ""{
+                    self.navigationController?.present(vc, animated: false, completion: nil)
                 }
             }
         }
+    }
+    
+    private func handleCellForRowCheckForTrainingTrue(indexPath:IndexPath,tableView:UITableView,isExtendedMicrobial:Bool,isRefrigeratorNitrogen:Bool) -> UITableViewCell? {
+        if indexPath.section == 0 && isExtendedMicrobial {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "PlateInfoCell", for: indexPath) as? PlateInfoCell else {
+                return nil
+            }
+
+            cell.currentIndex = indexPath.row
+            cell.plateTypeBtn.isUserInteractionEnabled = false
+            cell.blueGreenMoldTxtField.isUserInteractionEnabled = !peNewAssessment.IsEMRequested!
+            cell.bacteriaTxtField.isUserInteractionEnabled = !peNewAssessment.IsEMRequested!
+            cell.noteBtn.isUserInteractionEnabled = !peNewAssessment.IsEMRequested!
+
+            if sanitationQuesArr.count > indexPath.row {
+                cell.setValues(quesObj: sanitationQuesArr[indexPath.row], index: indexPath.row)
+            }
+
+            handlePlateTypeCompletionCellForRow(cell, indexPath)
+            handleCommentsCompletionCellForRow(cell, indexPath, tableView)
+            refreshScore(indexPath.row)
+            cell.assessmentId = peNewAssessment?.serverAssessmentId
+            return cell
+        }
+
+        // Section 0 – Refrigerator cell
+        if isRefrigeratorNitrogen {
+            return setUpRerigatorQuesCell(tableView, cellForRowAt: indexPath)
+        }
+
+        // Other sections – based on section index
+        switch indexPath.section {
+        case 1:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: CrewInformationCell.identifier) as? CrewInformationCell,
+               certificateData.count > indexPath.row {
+                cell.config(data: certificateData[indexPath.row])
+                cell.isUserInteractionEnabled = false
+                return cell
+            }
+        case 2:
+            return setupInovojectCell(tableView, cellForRowAt: indexPath)
+        case 3:
+            return setupDayOfAgeCell(tableView, cellForRowAt: indexPath)
+        case 4:
+            return setupDayOfAgeSCell(tableView, cellForRowAt: indexPath)
+        default:
+            return setupPEQuestionTableViewCell(tableView, cellForRowAt: indexPath)
+        }
         
+        return nil
+    }
+    
+    
+    fileprivate func handleCheckForTrainingFalseCaseSeqNot12(_ indexPath: IndexPath, _ tableView: UITableView) -> UITableViewCell {
+        switch indexPath.section {
+        case 1:
+            return setupInovojectCell(tableView, cellForRowAt: indexPath)
+        case 2:
+            return setupDayOfAgeCell(tableView, cellForRowAt: indexPath)
+        case 3:
+            return setupDayOfAgeSCell(tableView, cellForRowAt: indexPath)
+        default:
+            return setupPEQuestionTableViewCell(tableView, cellForRowAt: indexPath)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let isExtendedMicrobial = selectedCategory?.sequenceNoo == 12 &&
+                                  selectedCategory?.catName == Constants.extendedMicrobialStr
+
+        let isRefrigeratorNitrogen = selectedCategory?.catName == Constants.refrigeratorNitrogenStr
+        
+        if checkForTraning() {
+            
+            // Section 0 – Extended Microbial Cell
+            if let tableCell = self.handleCellForRowCheckForTrainingTrue(indexPath: indexPath, tableView: tableView, isExtendedMicrobial: isExtendedMicrobial, isRefrigeratorNitrogen: isRefrigeratorNitrogen) {
+                return tableCell
+            }
+        } else {
+            guard catArrayForTableIs.count > 0,
+                  let assessment = catArrayForTableIs.object(at: 0) as? PE_AssessmentInProgress else {
+                return UITableViewCell()
+            }
+
+            let catName = assessment.catName?.lowercased() ?? ""
+
+            if assessment.sequenceNoo == 3 && catName != "miscellaneous" {
+                if indexPath.section == 0 {
+                    return setupPEQuestionTableViewCell(tableView, cellForRowAt: indexPath)
+                } else {
+                    return UITableViewCell()
+                }
+            }
+
+            if assessment.sequenceNoo == 12 && catName != "refrigator\n/fridger\n/liquid nitriogen" {
+                if indexPath.section == 1 {
+                    return setupInovojectCell(tableView, cellForRowAt: indexPath)
+                }
+            } else {
+                return handleCheckForTrainingFalseCaseSeqNot12(indexPath, tableView)
+            }
+        }
+
         return UITableViewCell()
     }
+
     // MARK:  Setup PE  Rerigator questions data */
     
     func setUpRerigatorQuesCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> RefrigatorQuesCell {
@@ -1251,7 +1229,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     
     // MARK:  Set up Customer Vaccine View
     func setCustomerVaccineView(_ tableView: UITableView , section:Int) -> PETableviewConsumerQualityHeader {
-        if selectedCategory?.sequenceNoo == 3{
+        if selectedCategory?.sequenceNoo == 3 {
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PETableviewConsumerQualityHeader" ) as! PETableviewConsumerQualityHeader
             
             headerView.nameMicro.text =  self.peNewAssessment.micro
@@ -1260,243 +1238,181 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             
             headerView.microComplete =
             {[unowned self] ( error) in
-                print("add",( error))
                 self.peNewAssessment.micro  = error ?? ""
                 CoreDataHandlerPE().updateDraftInDoGInProgressInDB(newAssessment: self.peNewAssessment)
             }
             headerView.residueComplete =
             {[unowned self] ( error) in
-                print("add",( error))
                 self.peNewAssessment.residue  = error ?? ""
                 
                 CoreDataHandlerPE().updateDraftInDoGInProgressInDB(newAssessment: self.peNewAssessment)
             }
-            return headerView as! PETableviewConsumerQualityHeader
+            return headerView 
         }
         return UIView() as! PETableviewConsumerQualityHeader
     }
     
     // MARK:  Set up cell for PE Questioner
     func setupPEQuestionTableViewCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> PEQuestionTableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: PEQuestionTableViewCell.identifier) as? PEQuestionTableViewCell{
-            var assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-         
-            if regionID != 3
-            {
-                if((assessment?.isAllowNA) ?? false ){
-                    cell.btn_NA.isHidden = false
-                    cell.lbl_NA.isHidden = false
-                  
-                    if((assessment?.isNA) ?? false){
-                        cell.btn_NA.isSelected = true
-                        if  assessment?.rollOut == "Y" && assessment?.sequenceNoo == 3{
-                            cell.txtQCCount.text =  "NA"
-                            cell.txtQCCount.isUserInteractionEnabled = true
-                        }
-                        if  assessment?.rollOut == "Y" && assessment?.catName == "Miscellaneous"{
-                            cell.txtQCCount.text =  "NA"
-                            cell.txtQCCount.isUserInteractionEnabled = true
-                        }
-                    }
-                    else{
-                        if  assessment?.rollOut == "Y" && assessment?.sequenceNoo == 3{
-                            cell.txtQCCount.text =  ""
-                            cell.txtQCCount.isUserInteractionEnabled = true
-                        }
-                        if   assessment?.rollOut == "Y" && assessment?.catName == "Miscellaneous"{
-                            cell.txtQCCount.text =  ""
-                            cell.txtQCCount.isUserInteractionEnabled = true
-                        }
-                        cell.btn_NA.isSelected = false
-                    }
-                }
-                
-                else{
-                    cell.btn_NA.isHidden = true
-                    cell.lbl_NA.isHidden = true
-                }
-            }
-            else{
-                cell.btn_NA.isHidden = true
-                cell.btn_NA.isHidden = true
-                cell.lbl_NA.isHidden = true
-            }
-            
-            if((assessment?.isNA) ?? false){
-                cell.btn_NA.isSelected = true
-                cell.contentView.alpha = 0.3
-                cell.btnImageCount.isUserInteractionEnabled = false
-                cell.noteBtn.isUserInteractionEnabled = false
-                cell.cameraBTn.isUserInteractionEnabled = false
-                cell.assessmentLbl.isUserInteractionEnabled = false
-                cell.switchBtn.isUserInteractionEnabled = false
-                cell.btnInfo.isUserInteractionEnabled = false
-                cell.txtQCCount.isUserInteractionEnabled = false
-            }
-            else{
-                cell.btn_NA.isSelected = false
-                cell.contentView.alpha = 1
-                cell.btnImageCount.isUserInteractionEnabled = true
-                cell.noteBtn.isUserInteractionEnabled = true
-                cell.cameraBTn.isUserInteractionEnabled = true
-                cell.assessmentLbl.isUserInteractionEnabled = true
-                cell.switchBtn.isUserInteractionEnabled = true
-                cell.btnInfo.isUserInteractionEnabled = true
-                cell.txtQCCount.isUserInteractionEnabled = true
-            }
-            
-            
-            let maxMarksIs =  assessment?.assMaxScore as? Int ?? 0
-            let boldMark1 =  "("
-            let boldMark2 =  ") "
-            let mrk = String(maxMarksIs)
-          
-            
-            if assessment?.rollOut == "Y" && assessment?.sequenceNoo == 3 && assessment?.qSeqNo == 12
-            {
-                cell.txtQCCount.text =  assessment?.qcCount ?? ""
-                cell.showQcCountextField()
-            } else if assessment?.rollOut == "Y" && assessment?.catName == "Miscellaneous" && assessment?.qSeqNo == 1
-            {
-                cell.txtQCCount.text =  assessment?.ampmValue ?? ""
-                cell.showAMPMValuetextField()
-            } else if assessment?.rollOut == "Y" && assessment?.sequenceNoo == 3  && assessment?.qSeqNo == 1
-            {
-                cell.txtPersonName.text =  assessment?.personName ?? ""
-                cell.txtFrequency.text =  assessment?.frequency ?? ""
-                cell.showFrequencytextField()
-            }
-            
-            else if assessment?.rollOut == "Y" && assessment?.sequenceNoo == 5 && assessment?.qSeqNo == 5
-            {
-                cell.txtQCCount.text = assessment?.ppmValue ?? ""
-                cell.showPPMField()
-                
-                self.peNewAssessment.ppmValue  =  cell.txtQCCount.text
-                CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment)
-            }
-            
-            else {
-                cell.hideAMPMValuetextField()
-                cell.hideQcCountextField()
-            }
-            cell.setGraddientAndLayerQcCountextFieldView()
-            cell.txtPersonName.isUserInteractionEnabled = false
-            cell.txtFrequency.isUserInteractionEnabled = false
-            cell.txtQCCount.isUserInteractionEnabled = false
-            cell.assessmentLbl.text =  boldMark1 + mrk + boldMark2 + (assessment?.assDetail1 ?? "")
-            cell.assessmentLbl.attributedText =   cell.assessmentLbl.text?.withBoldText(text: boldMark1 + mrk + boldMark2)
-            if(indexPath.row % 2 == 0) {
-                cell.contentView.backgroundColor =  UIColor.cellAlternateBlueCOlor()
-            } else {
-                cell.contentView.backgroundColor =   UIColor.white
-            }
-            if assessment?.camera == 1 {
-                cell.cameraBTn.isEnabled = true
-                cell.cameraBTn.alpha = 1
-            } else {
-                cell.cameraBTn.isEnabled = false
-                cell.cameraBTn.alpha = 0.3
-            }
-            
-            if assessment?.assStatus == 1 {
-//                cell.switchClicked(status: true)
-                cell.switchBtn.setOn(true, animated: false)
-            } else {
-//                cell.switchClicked(status: false)
-                cell.switchBtn.setOn(false, animated: false)
-            }
-            let imageCount = assessment?.images as? [Int]
-            let cnt = imageCount?.count
-            let ttle = String(cnt ?? 0)
-            cell.btnImageCount.setTitle(ttle,for: .normal)
-            if ttle == "0"{
-                cell.btnImageCount.isHidden = true
-            } else {
-                cell.btnImageCount.isHidden = false
-            }
-            let image1 = UIImage(named: Constants.peCommentImageStr)
-            let image2 = UIImage(named: Constants.peCommentSelectedStr)
-            if assessment?.note?.count ?? 0 < 1 {
-                cell.noteBtn.setImage(image1, for: .normal)
-            } else {
-                cell.noteBtn.setImage(image2, for: .normal)
-            }
-            cell.switchBtn.isUserInteractionEnabled = false
-            cell.completion = { [unowned self] (status, error) in
-                self.tableviewIndexPath = indexPath
-                if status ?? false {
-                    var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                    let maxMarks =  assessment?.assMaxScore ?? 0
-                    result = result + Int(maxMarks)
-                    self.selectedCategory?.catResultMark = result
-                    assessment?.catResultMark = result as NSNumber
-                    self.resultScoreLabel.text = String(result)
-                    assessment?.assStatus = 1
-                    self.updateAssessmentInDb(assessment : assessment!)
-                }
-                else {
-                    var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                    let maxMarks = assessment?.assMaxScore ?? 0
-                    result = result - Int(maxMarks)
-                    self.selectedCategory?.catResultMark = result
-                    assessment?.catResultMark = result as NSNumber
-                    self.resultScoreLabel.text = String(result)
-                    assessment?.assStatus = 0
-                    self.updateAssessmentInDb(assessment : assessment!)
-                }
-                self.refreshTableView()
-                self.updateScore()
-                self.chechForLastCategory()
-            }
-            cell.imagesCompletion  = {[unowned self] ( error) in
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "GroupImagesPEViewController") as! GroupImagesPEViewController
-                self.refreshArray()
-                assessment = self.catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-                vc.imagesArray = assessment?.images as? [Int] ?? [0]
-                self.navigationController?.present(vc, animated: false, completion: nil)
-            }
-            cell.commentCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                self.refreshArray()
-                assessment = self.catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
-                vc.textOfTextView = assessment?.note ?? ""
-                vc.infoText = assessment?.informationText ?? ""
-                
-                vc.editable = false
-                
-                if vc.editable {
-                    self.navigationController?.present(vc, animated: false, completion: nil)
-                } else {
-                    if assessment?.note != nil && assessment?.note != ""{
-                        self.navigationController?.present(vc, animated: false, completion: nil)
-                    }
-                }
-            }
-            cell.cameraCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-            }
-            cell.infoCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "InfoPEViewController") as! InfoPEViewController
-                let maxMarksIs =  assessment?.assMaxScore as? Int ?? 0
-                let boldMark1 =  "("
-                let boldMark2 =  ") "
-                let mrk = String(maxMarksIs)
-                let str  =  boldMark1 + mrk + boldMark2 + (assessment?.assDetail1 ?? "")
-                vc.questionDescriptionIs = str
-                vc.imageDataBase64 = assessment?.informationImage ?? ""
-                vc.infotextIs = assessment?.informationText ?? ""
-                
-                self.navigationController?.present(vc, animated: false, completion: nil)
-            }
-            return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PEQuestionTableViewCell.identifier) as? PEQuestionTableViewCell,
+              let assessment = catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress else {
+            return UITableViewCell() as! PEQuestionTableViewCell
         }
-        return UITableViewCell() as! PEQuestionTableViewCell
+
+        configureNAOptions(cell, with: assessment)
+        configureInteraction(for: cell, isNA: assessment.isNA)
+        configureSpecialFields(cell, with: assessment)
+        configureAssessmentLabel(cell, with: assessment)
+        configureCellAppearance(cell, indexPath: indexPath, assessment: assessment)
+        configureSwitchState(cell, assessment: assessment)
+        configureImageAndNoteButtons(cell, assessment: assessment)
+        setupCallbacks(for: cell, at: indexPath, with: assessment)
+
+        return cell
+    }
+
+    // MARK: - Helper Methods
+
+    private func configureNAOptions(_ cell: PEQuestionTableViewCell, with assessment: PE_AssessmentInProgress) {
+        let showNA = (regionID != 3 && assessment.isAllowNA)
+        cell.btn_NA.isHidden = !showNA
+        cell.lbl_NA.isHidden = !showNA
+
+        guard showNA else { return }
+
+        let isNA = assessment.isNA
+        cell.btn_NA.isSelected = isNA
+
+        let needsSpecialField = assessment.rollOut == "Y" && (assessment.sequenceNoo == 3 || assessment.catName == "Miscellaneous")
+
+        if isNA {
+            cell.txtQCCount.text = "NA"
+        } else if needsSpecialField {
+            cell.txtQCCount.text = ""
+        }
+
+        cell.txtQCCount.isUserInteractionEnabled = needsSpecialField
+    }
+
+    private func configureInteraction(for cell: PEQuestionTableViewCell, isNA: Bool) {
+        let alpha: CGFloat = isNA ? 0.3 : 1
+        cell.contentView.alpha = alpha
+
+        let isEnabled = !isNA
+        [cell.btnImageCount, cell.noteBtn, cell.cameraBTn,
+         cell.assessmentLbl, cell.switchBtn, cell.btnInfo,
+         cell.txtQCCount].forEach { $0?.isUserInteractionEnabled = isEnabled }
+
+        cell.btn_NA.isSelected = isNA
+    }
+
+    private func configureSpecialFields(_ cell: PEQuestionTableViewCell, with assessment: PE_AssessmentInProgress) {
+        switch (assessment.rollOut, assessment.sequenceNoo, assessment.qSeqNo, assessment.catName) {
+        case ("Y", 3, 12, _):
+            cell.txtQCCount.text = assessment.qcCount ?? ""
+            cell.showQcCountextField()
+        case ("Y", _, 1, "Miscellaneous"):
+            cell.txtQCCount.text = assessment.ampmValue ?? ""
+            cell.showAMPMValuetextField()
+        case ("Y", 3, 1, _):
+            cell.txtPersonName.text = assessment.personName ?? ""
+            cell.txtFrequency.text = assessment.frequency ?? ""
+            cell.showFrequencytextField()
+        case ("Y", 5, 5, _):
+            cell.txtQCCount.text = assessment.ppmValue ?? ""
+            cell.showPPMField()
+            peNewAssessment.ppmValue = cell.txtQCCount.text
+            CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: peNewAssessment)
+        default:
+            cell.hideAMPMValuetextField()
+            cell.hideQcCountextField()
+        }
+
+        cell.setGraddientAndLayerQcCountextFieldView()
+        cell.txtPersonName.isUserInteractionEnabled = false
+        cell.txtFrequency.isUserInteractionEnabled = false
+        cell.txtQCCount.isUserInteractionEnabled = false
+    }
+
+    private func configureAssessmentLabel(_ cell: PEQuestionTableViewCell, with assessment: PE_AssessmentInProgress) {
+        let maxMarks = assessment.assMaxScore as? Int ?? 0
+        let markText = "(\(maxMarks)) "
+        let fullText = markText + (assessment.assDetail1 ?? "")
+        cell.assessmentLbl.text = fullText
+        cell.assessmentLbl.attributedText = fullText.withBoldText(text: markText)
+    }
+
+    private func configureCellAppearance(_ cell: PEQuestionTableViewCell, indexPath: IndexPath, assessment: PE_AssessmentInProgress) {
+        cell.contentView.backgroundColor = (indexPath.row % 2 == 0) ? UIColor.cellAlternateBlueCOlor() : .white
+        let cameraEnabled = assessment.camera == 1
+        cell.cameraBTn.isEnabled = cameraEnabled
+        cell.cameraBTn.alpha = cameraEnabled ? 1 : 0.3
+    }
+
+    private func configureSwitchState(_ cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress) {
+        cell.switchBtn.setOn(assessment.assStatus == 1, animated: false)
+        cell.switchBtn.isUserInteractionEnabled = false
+    }
+
+    private func configureImageAndNoteButtons(_ cell: PEQuestionTableViewCell, assessment: PE_AssessmentInProgress) {
+        let imageCount = (assessment.images as? [Int])?.count ?? 0
+        cell.btnImageCount.setTitle("\(imageCount)", for: .normal)
+        cell.btnImageCount.isHidden = (imageCount == 0)
+
+        let image = UIImage(named: (assessment.note?.isEmpty ?? true) ? Constants.peCommentImageStr : Constants.peCommentSelectedStr)
+        cell.noteBtn.setImage(image, for: .normal)
+    }
+
+    private func setupCallbacks(for cell: PEQuestionTableViewCell, at indexPath: IndexPath, with assessment: PE_AssessmentInProgress) {
+        cell.completion = { [unowned self] status, _ in
+            self.tableviewIndexPath = indexPath
+            guard let maxMarks = assessment.assMaxScore as? Int else { return }
+            var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
+            result += (status ?? false) ? maxMarks : -maxMarks
+            self.selectedCategory?.catResultMark = result
+            assessment.catResultMark = result as NSNumber
+            self.resultScoreLabel.text = String(result)
+            assessment.assStatus = (status ?? false) ? 1 : 0
+            self.updateAssessmentInDb(assessment: assessment)
+            self.refreshTableView()
+            self.updateScore()
+            self.chechForLastCategory()
+        }
+
+        cell.imagesCompletion = { [unowned self] _ in
+            let vc = UIStoryboard(name: "PEStoryboard", bundle: nil).instantiateViewController(withIdentifier: "GroupImagesPEViewController") as! GroupImagesPEViewController
+            self.refreshArray()
+            let updatedAssessment = self.catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress
+            vc.imagesArray = updatedAssessment?.images as? [Int] ?? [0]
+            self.navigationController?.present(vc, animated: false)
+        }
+
+        cell.commentCompletion = { [unowned self] _ in
+            self.tableviewIndexPath = indexPath
+            self.refreshArray()
+            guard let updatedAssessment = self.catArrayForTableIs[indexPath.row] as? PE_AssessmentInProgress else { return }
+            let vc = UIStoryboard(name: "PEStoryboard", bundle: nil).instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
+            vc.textOfTextView = updatedAssessment.note ?? ""
+            vc.infoText = updatedAssessment.informationText ?? ""
+            vc.editable = false
+            if !vc.editable && !(updatedAssessment.note?.isEmpty ?? true) {
+                self.navigationController?.present(vc, animated: false)
+            }
+        }
+
+        cell.cameraCompletion = { [unowned self] _ in
+            self.tableviewIndexPath = indexPath
+        }
+
+        cell.infoCompletion = { [unowned self] _ in
+            self.tableviewIndexPath = indexPath
+            let vc = UIStoryboard(name: "PEStoryboard", bundle: nil).instantiateViewController(withIdentifier: "InfoPEViewController") as! InfoPEViewController
+            let maxMarks = assessment.assMaxScore as? Int ?? 0
+            vc.questionDescriptionIs = "(\(maxMarks)) " + (assessment.assDetail1 ?? "")
+            vc.imageDataBase64 = assessment.informationImage ?? ""
+            vc.infotextIs = assessment.informationText ?? ""
+            self.navigationController?.present(vc, animated: false)
+        }
     }
     
     // MARK: DROP DOWN HIDDEN AND SHOW
@@ -2099,139 +2015,158 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        categoarylabelText = ""
-        self.synWebBtn.isEnabled = true
-        self.synWebBtn.alpha = 1.0
-        self.bckButton.isHidden = true
-        self.synWebBtn.setTitle(Constants.syncToWebStr, for: .normal)
-        self.tableview.isUserInteractionEnabled = true
-        let cellsArray = self.collectionView.visibleCells
-        if cellsArray.count > 0{
-            for cell in cellsArray{
-                if cell as! PECategoryCell == self.collectionView.cellForItem(at: indexPath) as! PECategoryCell{
-                    (cell as! PECategoryCell).imageview.image = UIImage(named: "tabSelect") ?? UIImage()
-                    
-                }else{
-                    (cell as! PECategoryCell).imageview.image = UIImage(named: "tabUnselect") ?? UIImage()
-                }
-            }
-        }
-        
-        
+        resetInitialUI()
+
+        updateTabSelection(at: indexPath)
+
         if indexPath.row == catArrayForCollectionIs.count {
-            categoarylabelText = ""
-            tableview.isHidden = true
-            self.scoreParentView.isHidden = true
-            viewForSignature.isHidden = false
-            viewForMultiSignature.isHidden = false
-            
-            lblextenderMicro.isHidden = true
-            extendedMicroSwitch.isHidden = true
-            extendedMicroSwitch.isUserInteractionEnabled = false
-            if peNewAssessment.evaluationID == 2 {
-                self.scoreParentView.isHidden = true
-                
-                viewForSignature.isHidden = true
-                viewForMultiSignature.isHidden = false
-                constraintConstantHeight.constant = 0
-            }
-            collectionView.reloadItems(at: [IndexPath.init(row: indexPath.row, section: 0)])
+            handleSignatureView(for: indexPath)
         } else {
-            tableview.isHidden = false
-            self.scoreParentView.isHidden = false
-            viewForSignature.isHidden = true
-            selectedCategory?.catISSelected = 0
-            viewForMultiSignature.isHidden = true
-            self.updateCategoryInDb(assessment:selectedCategory!)
-            if catArrayForCollectionIs.count > indexPath.row{
-            
-                collectionviewIndexPath = indexPath
-                selectedCategory = catArrayForCollectionIs[indexPath.row]
-                selectedCategory?.catISSelected = 1
-                self.updateCategoryInDb(assessment:selectedCategory!)
-                chechForLastCategory()
-                catArrayForTableIs = CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0,dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
-                let totalMark = selectedCategory?.catMaxMark ?? 0
-                totalScoreLabel.text = String(totalMark)
-                resultScoreLabel.text = String(0)
-                if(selectedCategory?.catName == Constants.refrigeratorNitrogenStr){
-                    lblextenderMicro.isHidden = true
-                    extendedMicroSwitch.isHidden = true
-                    extendedMicroSwitch.isUserInteractionEnabled = false
-                    if(catArrayForTableIs.count > 0){
-                        let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
-                        refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-                    }
-                    
-                }
-                if(selectedCategory?.catName == Constants.extendedMicrobialStr){
-                    categoarylabelText = Constants.extendedMicrobialStr
-                    
-                    selectedCategory?.sequenceNoo = 12
-                    extendedMicroSwitch.isUserInteractionEnabled = true
-                    if self.peNewAssessment.IsEMRequested == false {
-                        if self.submitExtend == true {
-                            self.extendedMicroSwitch.isOn = true
-                            self.synWebBtn.isEnabled = true
-                            self.synWebBtn.alpha = 1.0
-                            UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
-                            UserDefaults.standard.set(true, forKey:"ExtendedMicro")
-                            
-                        }
-                        else {
-                            self.extendedMicroSwitch.isOn = false
-                            self.synWebBtn.isEnabled = false
-                            self.synWebBtn.alpha = 0.3
-                            UserDefaults.standard.setValue(false, forKey: "extendedAvailable")
-                            UserDefaults.standard.set(false, forKey:"ExtendedMicro")
-                        }
-                        
-                        lblextenderMicro.isHidden = false
-                        extendedMicroSwitch.isHidden = false
-                        self.synWebBtn.setTitle("Finish Extended Microbial", for: .normal)
-                        
-                        
-                    } else {
-                        self.synWebBtn.isEnabled = true
-                        self.synWebBtn.alpha = 1.0
-                        lblextenderMicro.isHidden = true
-                        extendedMicroSwitch.isHidden = true
-                        UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
-                        UserDefaults.standard.set(true, forKey:"ExtendedMicro")
-                        self.synWebBtn.setTitle(Constants.syncToWebStr, for: .normal)
-                    }
-                }
-                else{
-                    categoarylabelText = ""
-                    self.tableview.isUserInteractionEnabled = true
-                    lblextenderMicro.isHidden = true
-                    extendedMicroSwitch.isHidden = true
-                    extendedMicroSwitch.isUserInteractionEnabled = false
-                    catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                    if(checkCategoryisNA()){
-                        self.btnNA.isSelected = true
-                    }
-                    else{
-                        self.btnNA.isSelected = false
-                    }
-                }
-                tableview.reloadData()
-                updateScore()
-                
-               
-                if regionID != 3
-                {
-                   
-                    showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
-                    
-                }
-                
-                refreshTableView()
-            }
+            handleCategorySelection(at: indexPath)
         }
+        
         synWebBtn.isHidden = false
     }
+
+    // MARK: - Refactored Helper Methods
+
+    private func resetInitialUI() {
+        categoarylabelText = ""
+        synWebBtn.isEnabled = true
+        synWebBtn.alpha = 1.0
+        bckButton.isHidden = true
+        synWebBtn.setTitle(Constants.syncToWebStr, for: .normal)
+        tableview.isUserInteractionEnabled = true
+    }
+
+    private func updateTabSelection(at indexPath: IndexPath) {
+        for cell in collectionView.visibleCells {
+            guard let categoryCell = cell as? PECategoryCell else { continue }
+            let isSelected = categoryCell == collectionView.cellForItem(at: indexPath)
+            categoryCell.imageview.image = UIImage(named: isSelected ? "tabSelect" : "tabUnselect")
+        }
+    }
+
+    private func handleSignatureView(for indexPath: IndexPath) {
+        tableview.isHidden = true
+        scoreParentView.isHidden = true
+        viewForSignature.isHidden = true
+        viewForMultiSignature.isHidden = false
+        lblextenderMicro.isHidden = true
+        extendedMicroSwitch.isHidden = true
+        extendedMicroSwitch.isUserInteractionEnabled = false
+
+        if peNewAssessment.evaluationID == 2 {
+            scoreParentView.isHidden = true
+            viewForSignature.isHidden = true
+            viewForMultiSignature.isHidden = false
+            constraintConstantHeight.constant = 0
+        }
+
+        collectionView.reloadItems(at: [indexPath])
+    }
+
+    private func handleCategorySelection(at indexPath: IndexPath) {
+        guard catArrayForCollectionIs.indices.contains(indexPath.row) else { return }
+
+        tableview.isHidden = false
+        scoreParentView.isHidden = false
+        viewForSignature.isHidden = true
+        viewForMultiSignature.isHidden = true
+
+        selectedCategory?.catISSelected = 0
+        updateCategoryInDb(assessment: selectedCategory!)
+
+        selectedCategory = catArrayForCollectionIs[indexPath.row]
+        selectedCategory?.catISSelected = 1
+        updateCategoryInDb(assessment: selectedCategory!)
+
+        chechForLastCategory()
+        collectionviewIndexPath = indexPath
+
+        let sequenceNo = selectedCategory?.sequenceNo as? NSNumber ?? 0
+        catArrayForTableIs = CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(sequenceNo, dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
+
+        totalScoreLabel.text = String(selectedCategory?.catMaxMark ?? 0)
+        resultScoreLabel.text = "0"
+
+        switch selectedCategory?.catName {
+        case Constants.refrigeratorNitrogenStr:
+            handleRefrigeratorCategory()
+
+        case Constants.extendedMicrobialStr:
+            handleExtendedMicrobialCategory()
+
+        default:
+            handleStandardCategory()
+        }
+
+        tableview.reloadData()
+        updateScore()
+
+        if regionID != 3 {
+            showHideNA(sequenceNoo: selectedCategory?.sequenceNoo ?? 0, catName: selectedCategory?.catName ?? "")
+        }
+
+        refreshTableView()
+    }
+
+    private func handleRefrigeratorCategory() {
+        lblextenderMicro.isHidden = true
+        extendedMicroSwitch.isHidden = true
+        extendedMicroSwitch.isUserInteractionEnabled = false
+
+        if let refri = catArrayForTableIs.first as? PE_AssessmentInProgress {
+            let id = Int(refri.serverAssessmentId ?? "0") ?? 0
+            refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: id)
+        }
+    }
+
+    private func handleExtendedMicrobialCategory() {
+        categoarylabelText = Constants.extendedMicrobialStr
+        selectedCategory?.sequenceNoo = 12
+        extendedMicroSwitch.isUserInteractionEnabled = true
+
+        let isRequested = peNewAssessment.IsEMRequested!
+        let shouldSubmit = submitExtend
+
+        if !isRequested {
+            extendedMicroSwitch.isOn = shouldSubmit
+            synWebBtn.isEnabled = shouldSubmit
+            synWebBtn.alpha = shouldSubmit ? 1.0 : 0.3
+
+            UserDefaults.standard.setValue(shouldSubmit, forKey: "extendedAvailable")
+            UserDefaults.standard.set(shouldSubmit, forKey: "ExtendedMicro")
+
+            lblextenderMicro.isHidden = false
+            extendedMicroSwitch.isHidden = false
+            synWebBtn.setTitle("Finish Extended Microbial", for: .normal)
+        } else {
+            extendedMicroSwitch.isHidden = true
+            lblextenderMicro.isHidden = true
+            synWebBtn.setTitle(Constants.syncToWebStr, for: .normal)
+            synWebBtn.isEnabled = true
+            synWebBtn.alpha = 1.0
+
+            UserDefaults.standard.setValue(true, forKey: "extendedAvailable")
+            UserDefaults.standard.set(true, forKey: "ExtendedMicro")
+        }
+    }
+
+    private func handleStandardCategory() {
+        categoarylabelText = ""
+        tableview.isUserInteractionEnabled = true
+        lblextenderMicro.isHidden = true
+        extendedMicroSwitch.isHidden = true
+        extendedMicroSwitch.isUserInteractionEnabled = false
+
+        let sequenceNo = selectedCategory?.sequenceNo as? NSNumber ?? 0
+        catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(sequenceNo)
+
+        btnNA.isSelected = checkCategoryisNA()
+    }
+
+    
     // MARK:  Show Hide is NA
     func showHideNA(sequenceNoo:Int,catName:String){
         
@@ -2275,23 +2210,9 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
             }
         }
         
-        
         let count = catArrayForCollectionIs.count - 1
         if count > 0 {
-            if let cat = catArrayForCollectionIs[count] as? PENewAssessment {
-                if cat.sequenceNo == selectedCategory?.sequenceNo {
-                    bckButton.isHidden = true
-                    
-                } else {
-                    bckButton.isHidden = false
-                }
-            }
-            else {
-                bckButton.isHidden = false
-                
-            }
-            
-            if let cat = catArrayForCollectionIs[0] as? PENewAssessment{
+            if let cat = catArrayForCollectionIs[0] as? PENewAssessment {
                 if cat.sequenceNo == selectedCategory?.sequenceNo{
                     bckButton.isHidden = false
                 }  else {
@@ -2303,7 +2224,6 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
             
             for cat in catArrayForCollectionIsAre {
                 if cat.catResultMark == 0 {
-                    
                     return
                 }
             }
@@ -2536,7 +2456,7 @@ extension PEViewAssesmentFinalize{
         if UniID == "" {
             UniID = dict.draftID ?? ""
         }
-        var Complete = 1
+  
       
         var SaveType = 1
         saveTypeString.append(11)
@@ -2551,7 +2471,7 @@ extension PEViewAssesmentFinalize{
             }
             AssessmentId = dict.draftNumber ?? 0
            
-            Complete = 0
+           
             SaveType = 0
             saveTypeString.append(00)
         }
@@ -2569,7 +2489,7 @@ extension PEViewAssesmentFinalize{
         let SiteId = dict.siteId
         let IncubationStyle = dict.incubation
         let EvaluationId = dict.evaluationID
-        let BreedBirds = dict.breedOfBird
+       
         var EvaluationDate = ""
         let EvaulaterId = dict.evaluatorID
         var hacheryAntibiotics:Bool = false
@@ -2577,18 +2497,19 @@ extension PEViewAssesmentFinalize{
             hacheryAntibiotics = true
         }
         
-        var TSRIdUser = dict.selectedTSR
+     
         var  TSRId  = dict.selectedTSRID
         
         let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
         let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray ()
         let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray ()
-        if dict.selectedTSR?.count ?? 0 > 0 {
-            if visitNameArray.contains(dict.selectedTSR ?? ""){
-                let indexOfe =  visitNameArray.index(of: dict.selectedTSR ?? "") //
-                TSRId = visitIDArray[indexOfe] as? Int ?? 0
-            }
+        
+        if dict.selectedTSR?.count ?? 0 > 0, visitNameArray.contains(dict.selectedTSR ?? "") {
+            let indexOfe = visitNameArray.index(of: dict.selectedTSR ?? "")
+            TSRId = visitIDArray[indexOfe] as? Int ?? 0
         }
+
+        
         
         let HatchAnti = false
         var Camera = false
@@ -2598,15 +2519,14 @@ extension PEViewAssesmentFinalize{
         
         var man = dict.manufacturer  ?? ""
         var manOther =  ""
-        if  man != "" {
-            if let character = dict.manufacturer?.character(at:0) {
-                if character == "S"{
-                    let str =  man.replacingOccurrences(of: "S", with: "")
-                    manOther = str
-                    man = "Other"
-                }
-            }
+        
+        if man != "", let character = dict.manufacturer?.character(at: 0), character == "S" {
+            let str = man.replacingOccurrences(of: "S", with: "")
+            manOther = str
+            man = "Other"
         }
+
+        
         var eggg = ""
         var egggOther =  ""
         let xx = String(dict.noOfEggs ?? 000)
@@ -2623,16 +2543,13 @@ extension PEViewAssesmentFinalize{
         
         var breeedd = dict.breedOfBird  ?? ""
         var breeeddOther =  ""
-        if breeedd != "" {
-            if let character = breeedd.character(at:0) {
-                if character == "S".character(at: 0){
-                    let str =  breeedd.replacingOccurrences(of: "S", with: "")
-                    breeeddOther = str
-                    breeedd = "Other"
-                    
-                }
-            }
+        if breeedd != "", let character = breeedd.character(at: 0), character == "S".character(at: 0) {
+            let str = breeedd.replacingOccurrences(of: "S", with: "")
+            breeeddOther = str
+            breeedd = "Other"
         }
+
+        
         breeeddOther = dict.breedOfBirdOther ?? ""
         
         var ManufacturerId = 0
@@ -2671,7 +2588,6 @@ extension PEViewAssesmentFinalize{
         let Notes = dict.notes
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = Constants.MMddYYYYHHmmss
-        let date = dict.evaluationDate?.toDate(withFormat: Constants.MMddyyyyStr)
         
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
@@ -2698,9 +2614,7 @@ extension PEViewAssesmentFinalize{
             base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
         }
         
-        var DisplayId = dict.evaluationDate
-        
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         var iStle = 0
 
         let iStleDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
@@ -2793,7 +2707,7 @@ extension PEViewAssesmentFinalize{
         {
             json = [
                 "AppAssessmentId":String(AssessmentId),
-                "DisplayId":DisplayId?.prefix(22),
+                "DisplayId":DisplayId.prefix(22),
                 "VisitId": VisitId,
                 "CustomerId": CustomerId,
                 "SiteId": SiteId,
@@ -2847,7 +2761,7 @@ extension PEViewAssesmentFinalize{
         {
             json = [
                 "AppAssessmentId":String(AssessmentId),
-                "DisplayId":DisplayId?.prefix(22),
+                "DisplayId":DisplayId.prefix(22),
                 "VisitId": VisitId,
                 "CustomerId": CustomerId,
                 "SiteId": SiteId,
@@ -3109,7 +3023,6 @@ extension PEViewAssesmentFinalize{
     // MARK: Create Sync Request for DOAS
     func createSyncRequestForDOAS(dictArray: PENewAssessment,dayOfAgeData :InovojectData) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -3125,10 +3038,8 @@ extension PEViewAssesmentFinalize{
         if AssessmentId == 0 {
             AssessmentId = dictArray.draftNumber ?? 0
         }
-        
-   
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = "C-" + UniID
+ 
+        var DisplayId = "C-" + UniID
         
         let  HatcheryAntibioticsInt = dictArray.hatcheryAntibioticsDoaS
         
@@ -3172,11 +3083,8 @@ extension PEViewAssesmentFinalize{
             let indexOfe =  vManufacutrerNameArray.index(of: dayOfAgeData.vaccineMan) //
             ManufacturerId = vManufacutrerIDArray[indexOfe] as? Int ?? 0
         }
-        let timestamp = Date().currentTimeMillis()
         let unique = "\(deviceIDFORSERVER)_\(dayOfAgeData.id)_iOS_"
         var AntibioticInformation  =  ""
-        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dictArray.serverAssessmentId ?? "")
-        
         
         if HatcheryAntibiotics {
             AntibioticInformation =  dictArray.hatcheryAntibioticsDoaSText ?? ""
@@ -3187,7 +3095,7 @@ extension PEViewAssesmentFinalize{
             
             "DayAgeSubcutaneousBagSizeType": dictArray.dDDT,
             "Device_Id": deviceIDFORSERVER,
-            "DisplayId": DisplayId?.prefix(22) ?? "",
+            "DisplayId": DisplayId.prefix(22),
             "ModuleAssessmentCatId":  dictArray.catID ?? "",
             "StrUniqueId":unique,
             "SecquenceId": 0,
@@ -3209,7 +3117,6 @@ extension PEViewAssesmentFinalize{
     // MARK: Create Synce Request for Certificate Data
     func createSyncRequestForCertificateData(dictArray: PENewAssessment,peCertificateData :PECertificateData) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -3224,10 +3131,8 @@ extension PEViewAssesmentFinalize{
         if let id = dictArray.serverAssessmentId{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
-   
-        var DisplayId = dictArray.evaluationDate
     
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         
         let unique = "\(deviceIDFORSERVER)_\(peCertificateData.id)_iOS_"
         
@@ -3259,7 +3164,7 @@ extension PEViewAssesmentFinalize{
                 "Name": peCertificateData.name,
                 "CertificationDate": resultString,
                 "AlternateName": "string",
-                "CertificationDate2": "2020-05-23T06:36:50.915Z",
+                "CertificationDate2": date2020_05_23,
                 "ModuleAssessmentCatId":  dictArray.catID,
                 "userId": dictArray.userID,
                 "DeviceId": deviceIDFORSERVER,
@@ -3267,7 +3172,7 @@ extension PEViewAssesmentFinalize{
                 "MicroSamplesName": dictArray.micro,
                 "EvaluationTypeId": 1,
                 "AppAssessmentId": String(AssessmentId),
-                "DisplayId": DisplayId?.prefix(22),
+                "DisplayId": DisplayId.prefix(22),
                 "StrUniqueId":unique,
                 "VacOperatorId": peCertificateData.vacOperatorId ?? 0,
                 "IsCertiExpired": peCertificateData.isCertExpired,
@@ -3287,7 +3192,7 @@ extension PEViewAssesmentFinalize{
                 "Name": peCertificateData.name,
                 "CertificationDate": resultString,
                 "AlternateName": "string",
-                "CertificationDate2": "2020-05-23T06:36:50.915Z",
+                "CertificationDate2": date2020_05_23,
                 "ModuleAssessmentCatId":  dictArray.catID,
                 "userId": dictArray.userID,
                 "DeviceId": deviceIDFORSERVER,
@@ -3295,7 +3200,7 @@ extension PEViewAssesmentFinalize{
                 "MicroSamplesName": dictArray.micro,
                 "EvaluationTypeId": 1,
                 "AppAssessmentId": String(AssessmentId),
-                "DisplayId": DisplayId?.prefix(22),
+                "DisplayId": DisplayId.prefix(22),
                 "StrUniqueId":unique,
                 "SignatureImg": peCertificateData.signatureImg ?? ""
             ] as JSONDictionary
@@ -3306,7 +3211,6 @@ extension PEViewAssesmentFinalize{
     // MARK: Create Sync Request for Residue Data
     func createSyncRequestForResidueData(dictArray: PENewAssessment) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -3321,15 +3225,10 @@ extension PEViewAssesmentFinalize{
         if let id = dictArray.serverAssessmentId{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
-        
-     
-        var DisplayId = dictArray.evaluationDate
-     
-       
-        DisplayId = "C-" + UniID
+
+        var DisplayId = "C-" + UniID
         
         let timestamp = Date().currentTimeMillis()
-        let uni = dictArray.userID ?? 32 + Int(timestamp)
         let unique = "\(deviceIDFORSERVER)_\(dictArray.residue)_iOS_"
         
         
@@ -3343,7 +3242,7 @@ extension PEViewAssesmentFinalize{
             "MicroSamplesName": dictArray.micro,
             "EvaluationTypeId": 1,
             "AppAssessmentId": String(AssessmentId),
-            "DisplayId": DisplayId?.prefix(22),
+            "DisplayId": DisplayId.prefix(22),
             "UserId": dictArray.userID,
             "CreatedAt": "2020-06-11T12:53:38.930Z",
             "DeviceId": deviceIDFORSERVER,
@@ -3356,7 +3255,6 @@ extension PEViewAssesmentFinalize{
     // MARK: Create Sync Request for Micro Data
     func createSyncRequestForMicroData(dictArray: PENewAssessment) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -3372,12 +3270,8 @@ extension PEViewAssesmentFinalize{
         if let id = dictArray.serverAssessmentId{
             serverAssessmentId = Int64(id ?? "") ?? 0
         }
-        
    
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = "C-" + UniID
-        
-        let timestamp = Date().currentTimeMillis()
+        var  DisplayId = "C-" + UniID
         
         let unique = "\(deviceIDFORSERVER)_\(dictArray.micro)_iOS_"
         
@@ -3390,7 +3284,7 @@ extension PEViewAssesmentFinalize{
             "Name": "",
             "CertificationDate": "",
             "AlternateName": "string",
-            "CertificationDate2": "2020-05-23T06:36:50.915Z",
+            "CertificationDate2": date2020_05_23,
             "ModuleAssessmentCatId":  dictArray.catID,
             "userId": dictArray.userID,
             "DeviceId": deviceIDFORSERVER,
@@ -3398,7 +3292,7 @@ extension PEViewAssesmentFinalize{
             "MicroSamplesName": dictArray.micro,
             "EvaluationTypeId": 1,
             "AppAssessmentId": String(AssessmentId),
-            "DisplayId": DisplayId?.prefix(22),
+            "DisplayId": DisplayId.prefix(22),
             "StrUniqueId":unique
         ] as JSONDictionary
         return json
@@ -3456,7 +3350,6 @@ extension PEViewAssesmentFinalize{
         
         
         if ConnectionManager.shared.hasConnectivity() {
-            var extendedMicroArr : [JSONDictionary]  = []
             var inovojectDataArr : [JSONDictionary]  = []
             var dayOfAgeDataArr : [JSONDictionary]  = []
             var dayOfAgeSDataArr : [JSONDictionary]  = []
@@ -3468,7 +3361,6 @@ extension PEViewAssesmentFinalize{
             
             if(regionID != 3){
                 refrigratorDataArr.removeAll()
-                let refri = peNewAssessment as! PENewAssessment
                 var assId  = UserDefaults.standard.value(forKey: "currentServerAssessmentId")
                 let refriArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(assId as! String) ?? 0)
                 for objn in  refriArray {
@@ -3487,6 +3379,7 @@ extension PEViewAssesmentFinalize{
                     let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
                     if data != nil {
                         if idArr.contains(data!.id ?? 0){
+                            debugPrint("no data for Day of Age.")
                         }else{
                             idArr.append(data!.id ?? 0)
                             if data != nil{
@@ -3504,7 +3397,7 @@ extension PEViewAssesmentFinalize{
                     let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
                     if data != nil {
                         if idArr.contains(data!.id ?? 0){
-                            //   // // print("already there",idArr)
+                            debugPrint("no data for DayOfAge.")
                         }else{
                             idArr.append(data!.id ?? 0)
                             if data != nil{
@@ -3521,6 +3414,7 @@ extension PEViewAssesmentFinalize{
                     let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
                     if data != nil {
                         if idArr.contains(data!.id ?? 0){
+                            debugPrint("no data for inovo")
                         }else{
                             idArr.append(data!.id ?? 0)
                             if data != nil{
@@ -3536,6 +3430,7 @@ extension PEViewAssesmentFinalize{
                 for objn in  peNewAssessment.vMixer {
                     let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
                     if idArr.contains(data!.id ?? 0){
+                        debugPrint("vacine mix data.")
                     }else{
                         idArr.append(data!.id ?? 0)
                         if data != nil{
@@ -3611,7 +3506,7 @@ extension PEViewAssesmentFinalize{
                 if error != nil {
                     self?.dismissGlobalHUD(self?.view ?? UIView())
                 }
-                guard let `self` = self, error == nil else { return }
+                guard let self = self, error == nil else { return }
                 
                 if json["StatusCode"]  == 200{
                     
@@ -3639,17 +3534,13 @@ extension PEViewAssesmentFinalize{
         let jsonEncoder = JSONEncoder()
         let jsonDataArr = try? jsonEncoder.encode(arr)
         if jsonDataArr != nil{
-            extendedData = try! JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
+            extendedData = try? JSONSerialization.jsonObject(with: jsonDataArr!, options: []) as? [[String: Any]]
         }
-        
-        
+
         let evaluationDate = dict.evaluationDate
         if UniID == "" {
             UniID = dict.draftID ?? ""
         }
-        var Complete = 1
-        var Draft = 0
-        var SaveType = 1
         saveTypeString.append(11)
         var AssessmentId = dict.dataToSubmitNumber ?? 0
         
@@ -3657,14 +3548,10 @@ extension PEViewAssesmentFinalize{
         deviceIDFORSERVER = deviceIdForServer
         
         if AssessmentId == 0 {
-            //  print("draft id id",dict.assDetail2 )
             if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
                 deviceIDFORSERVER = dict.assDetail2 ?? ""
             }
             AssessmentId = dict.draftNumber ?? 0
-            Draft = 1
-            Complete = 0
-            SaveType = 0
             saveTypeString.append(00)
         }
         if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
@@ -3674,23 +3561,13 @@ extension PEViewAssesmentFinalize{
         if dict.serverAssessmentId != nil{
             serverAssessmentId = Int64( dict.serverAssessmentId ?? "") ?? 0
         }
-        let DocId = ""
-        let VisitId = dict.visitID
-        let CustomerId = dict.customerId
-        let SiteId = dict.siteId
-     
         let EvaluationId = dict.evaluationID
-        var EvaluationDate = ""
-        let Status_Type = ""
         let UserId = dict.userID
-        let RepresentativeName = ""
        
         let dateFormatter = DateFormatter()
         
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
         dateFormatter.dateFormat=Constants.MMddyyyyStr
-        
-        let date = dict.evaluationDate?.toDate(withFormat: Constants.MMddyyyyStr)
        
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
@@ -3714,8 +3591,7 @@ extension PEViewAssesmentFinalize{
             inputFormatter.dateFormat = Constants.MMddyyyyStr
             
             // Convert the string to a Date object
-            if let date = inputFormatter.date(from: evaluationDate ?? "") {
-                
+            if inputFormatter.date(from: evaluationDate ?? "") != nil {
                 let outputFormatter = DateFormatter()
                 outputFormatter.dateFormat = Constants.yyyyMMddStr
                 dict.evaluationDate = evaluationDate
@@ -3724,30 +3600,28 @@ extension PEViewAssesmentFinalize{
             let inputFormatter = DateFormatter()
             inputFormatter.dateFormat = Constants.ddMMyyyStr
             
-            if let date = inputFormatter.date(from: evaluationDate ?? "") {
-                
+            if inputFormatter.date(from: evaluationDate ?? "") != nil {
                 let outputFormatter = DateFormatter()
                 outputFormatter.dateFormat = Constants.yyyyMMddStr
                 dict.evaluationDate = evaluationDate
             }
+            
         }
         
         let appVersion = "\(Bundle.main.versionNumber)"
         
         var saveType = 0
+        self.peNewAssessment.IsEMRequested = false
+        CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: false)
         if self.extendedMicroSwitch.isOn {
             saveType = 1
             self.peNewAssessment.IsEMRequested = true
             CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: true)
-        } else {
-            self.peNewAssessment.IsEMRequested = false
-            CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: false)
-            saveType = 0
         }
         
         tempArr.removeAll()
-        var json : JSONDictionary = [:]
-        json = [
+     
+        let json: JSONDictionary = [
             "AssessmentId":serverAssessmentId,
             "DeviceId": deviceIDFORSERVER,
             "UserId": UserId,
@@ -3764,6 +3638,14 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: ------------ Call Extended Micro Sync API --------------
+    fileprivate func handlNaviationTapOfAlert() {
+        for controller in self.navigationController!.viewControllers as Array {
+            if controller.isKind(of: PEDashboardViewController.self) {
+                self.navigationController!.popToViewController(controller, animated: true)
+            }
+        }
+    }
+    
     func callExtendedMicro(param:JSONDictionary) {
         
         ZoetisWebServices.shared.sendExtendedMicroToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
@@ -3781,11 +3663,7 @@ extension PEViewAssesmentFinalize{
                     let alertController = UIAlertController(title: "Success!", message: errorMSg, preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) {
                         _ in
-                        for controller in self.navigationController!.viewControllers as Array {
-                            if controller.isKind(of: PEDashboardViewController.self) {
-                                self.navigationController!.popToViewController(controller, animated: true)
-                            }
-                        }
+                        self.handlNaviationTapOfAlert()
                     }
                     alertController.addAction(okAction)
                     self.present(alertController, animated: true, completion: nil)
@@ -3819,112 +3697,95 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Post request for Score
-    func createSyncRequestForScore(dictArray: PENewAssessment) -> JSONDictionary{
-        var UniID = dictArray.dataToSubmitID ?? ""
-        if UniID == "" {
-            UniID = dictArray.draftID ?? ""
-        }
-        var AssessmentId = dictArray.dataToSubmitNumber ?? 0
-        if AssessmentId == 0 {
-            AssessmentId = dictArray.draftNumber ?? 0
-        }
-        var score = 0
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = "C-" + UniID
-        if  dictArray.assStatus == 1 {
-            score = dictArray.assMaxScore ?? 0
-        } else {
-            score = dictArray.assMinScore ?? 0
-        }
-        var TextAmPm = ""
-        var PersonName = ""
-        var FrequencyValue = 32
-        var QCCount = ""
-        var PPMValue = ""
-       
-        if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 12
-        {
-            QCCount =  dictArray.qcCount ?? ""
-        } else if dictArray.rollOut == "Y" && dictArray.catName == "Miscellaneous"
-        {
-            TextAmPm =  dictArray.ampmValue ?? ""
-        }
-        else if  dictArray.rollOut == "Y" && dictArray.sequenceNoo == 5  && dictArray.qSeqNo == 5
-                    
-        {
-            PPMValue =  dictArray.ppmValue ?? ""              }
-        
-        else if dictArray.rollOut == "Y" && dictArray.sequenceNoo == 3 && dictArray.qSeqNo == 1
-        {
-            PersonName =  dictArray.personName ?? ""
-            let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
-            let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
-            let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-            if dictArray.frequency?.count ?? 0 > 0 {
-                if visitNameArray.contains(dictArray.frequency ?? ""){
-                    let indexOfe =  visitNameArray.index(of: dictArray.frequency ?? "")
-                    FrequencyValue = visitIDArray[indexOfe] as? Int ?? 0
-                }
-            }
-            
-          
-            
-        }
-        
-        var serverAssessmentId:Int64 = 0
-        if let id = dictArray.serverAssessmentId{
-            serverAssessmentId = Int64(id ?? "") ?? 0
-        }
-        
+    func createSyncRequestForScore(dict: PENewAssessment) -> JSONDictionary {
+        let uniID = (dict.dataToSubmitID?.isEmpty == false ? dict.dataToSubmitID : dict.draftID) ?? ""
+        let assessmentID = (dict.dataToSubmitNumber != 0 ? dict.dataToSubmitNumber : dict.draftNumber) ?? 0
+        let displayID = "C-" + uniID
+
+        let score = (dict.assStatus == 1 ? dict.assMaxScore : dict.assMinScore) ?? 0
+
+        let qcCount = getQCCount(from: dict)
+        let textAmPm = getAmPm(from: dict)
+        let ppmValue = getPPM(from: dict)
+        let personName = getPersonName(from: dict)
+        let frequencyValue = getFrequencyValue(from: dict)
+
+        let serverAssessmentId = Int64(dict.serverAssessmentId ?? "") ?? 0
         let regionId = UserDefaults.standard.integer(forKey: "Regionid")
+
+        var json: JSONDictionary = [
+            "DisplayId": String(displayID.prefix(22)),
+            "AppAssessmentId": String(assessmentID),
+            "ModuleAssessmentId": dict.assID ?? 0,
+            "AssessmentScore": score,
+            "UserId": dict.userID ?? 0,
+            "Device_Id": deviceIDFORSERVER,
+            "QCCount": qcCount,
+            "PersonName": personName,
+            "FrequencyValue": frequencyValue == 32 ? "" : frequencyValue,
+            "TextAmPm": textAmPm,
+            "AssessmentId": serverAssessmentId,
+            "SequenceNo": dict.sequenceNoo ?? 0,
+            "MaxScore": dict.assMaxScore ?? 0,
+            "isNA": dict.isNA ?? false
+        ]
+
         if regionId == 3 {
-            let json = [
-                "DisplayId":DisplayId?.prefix(22) ?? "",
-                "AppAssessmentId": String(AssessmentId),
-                "ModuleAssessmentId": dictArray.assID ??  0,
-                "AssessmentScore": score,
-                "UserId": dictArray.userID ?? 0,
-                "Device_Id": deviceIDFORSERVER,
-                "QCCount":QCCount,
-                "PersonName":PersonName,
-                "FrequencyValue": FrequencyValue == 32 ? "" : FrequencyValue,
-                "TextAmPm":TextAmPm,
-                "AssessmentId": serverAssessmentId,
-                "SequenceNo":dictArray.sequenceNoo ?? 0,
-                "MaxScore":dictArray.assMaxScore ?? 0,
-                "Chlorine_Value": PPMValue,
-                "isNA":dictArray.isNA ?? false
-            ] as JSONDictionary
-            return json
-            
+            json["Chlorine_Value"] = ppmValue
         }
-        else
-        {
-            let json = [
-                "DisplayId":DisplayId?.prefix(22) ?? "",
-                "AppAssessmentId": String(AssessmentId),
-                "ModuleAssessmentId": dictArray.assID ??  0,
-                "AssessmentScore": score,
-                "UserId": dictArray.userID ?? 0,
-                "Device_Id": deviceIDFORSERVER,
-                "QCCount":QCCount,
-                "PersonName":PersonName,
-                "FrequencyValue": FrequencyValue == 32 ? "" : FrequencyValue,
-                "TextAmPm":TextAmPm,
-                "AssessmentId": serverAssessmentId,
-                "SequenceNo":dictArray.sequenceNoo ?? 0,
-                "MaxScore":dictArray.assMaxScore ?? 0,
-                "isNA":dictArray.isNA ?? false
-            ] as JSONDictionary
-            return json
-            
-        }
+
+        return json
     }
+    
+    private func getQCCount(from dict: PENewAssessment) -> String {
+        if dict.rollOut == "Y", dict.sequenceNoo == 3, dict.qSeqNo == 12 {
+            return dict.qcCount ?? ""
+        }
+        return ""
+    }
+
+    private func getAmPm(from dict: PENewAssessment) -> String {
+        if dict.rollOut == "Y", dict.catName == "Miscellaneous" {
+            return dict.ampmValue ?? ""
+        }
+        return ""
+    }
+
+    private func getPPM(from dict: PENewAssessment) -> String {
+        if dict.rollOut == "Y", dict.sequenceNoo == 5, dict.qSeqNo == 5 {
+            return dict.ppmValue ?? ""
+        }
+        return ""
+    }
+
+    private func getPersonName(from dict: PENewAssessment) -> String {
+        if dict.rollOut == "Y", dict.sequenceNoo == 3, dict.qSeqNo == 1 {
+            return dict.personName ?? ""
+        }
+        return ""
+    }
+
+    private func getFrequencyValue(from dict: PENewAssessment) -> Int {
+        guard dict.rollOut == "Y", dict.sequenceNoo == 3, dict.qSeqNo == 1,
+              let frequency = dict.frequency, !frequency.isEmpty else {
+            return 32
+        }
+
+        let visitDetails = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
+        let names = visitDetails.value(forKey: "frequencyName") as? [String] ?? []
+        let ids = visitDetails.value(forKey: "frequencyId") as? [Int] ?? []
+
+        if let index = names.firstIndex(of: frequency), index < ids.count {
+            return ids[index]
+        }
+
+        return 32
+    }
+
     
     // MARK: Create Sync Request for Comment
     func createSyncRequestForComment(dictArray: PENewAssessment) -> JSONDictionary{
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
         var UniID = dictArray.dataToSubmitID ?? ""
         
         if UniID == "" {
@@ -3935,9 +3796,8 @@ extension PEViewAssesmentFinalize{
         if AssessmentId == 0 {
             AssessmentId = dictArray.draftNumber ?? 0
         }
-   
-        var DisplayId = dictArray.evaluationDate
-        DisplayId = "C-" + UniID
+    
+        var DisplayId = "C-" + UniID
         
         var serverAssessmentId:Int64 = 0
         if let id = dictArray.serverAssessmentId{
@@ -3945,7 +3805,7 @@ extension PEViewAssesmentFinalize{
         }
         
         let json = [
-            "DisplayId":DisplayId?.prefix(22) ?? "",
+            "DisplayId":DisplayId.prefix(22),
             "AppAssessmentId":  String(AssessmentId),
             "ModuleAssessmentId": dictArray.assID ?? 0,
             "Comment": dictArray.note ?? "",
@@ -3959,22 +3819,7 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Handle Sync Response
-    private func handleSyncResponse(_ json: JSON) {
-        
-        let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
-        let dNumber = peNewAssessment.draftNumber ?? 0
-        var  getOfflineArray : [PENewAssessment] = []
-        var  getDraftArray : [PENewAssessment] = []
-        if sNumber != 0 {
-            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
-        }
-        if dNumber != 0 {
-            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
-        }
-        callRequest4Int = 0
-        
-        totalImageToSync = []
-        
+    fileprivate func handleOfflineArrayAndCallAPI(_ getOfflineArray: [PENewAssessment]) {
         if getOfflineArray.count > 0 {
             var carColIdArray : [Int] = []
             var catArray : [PENewAssessment] = []
@@ -3995,7 +3840,7 @@ extension PEViewAssesmentFinalize{
             var imgArray : [JSONDictionary]  = []
             imgArray.removeAll()
             for objCtIs in catAllRowArray {
-                let json = createSyncRequestForScore(dictArray: objCtIs)
+                let json = createSyncRequestForScore(dict: objCtIs)
                 let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
                 ScoreDataArr.append(json)
                 comntArray.append(jsonComment)
@@ -4004,6 +3849,25 @@ extension PEViewAssesmentFinalize{
             self.callRequest3(param:param)
             
         }
+    }
+    
+    private func handleSyncResponse(_ json: JSON) {
+        
+        let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
+        let dNumber = peNewAssessment.draftNumber ?? 0
+        var  getOfflineArray : [PENewAssessment] = []
+        var  getDraftArray : [PENewAssessment] = []
+        if sNumber != 0 {
+            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
+        }
+        if dNumber != 0 {
+            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
+        }
+        callRequest4Int = 0
+        
+        totalImageToSync = []
+        
+        handleOfflineArrayAndCallAPI(getOfflineArray)
         
         if getDraftArray.count > 0 {
             var carColIdArray : [Int] = []
@@ -4023,7 +3887,7 @@ extension PEViewAssesmentFinalize{
             var tempArr : [JSONDictionary]  = []
             var comntArray : [JSONDictionary]  = []
             for objCtIs in catAllRowArray {
-                let json = createSyncRequestForScore(dictArray: objCtIs)
+                let json = createSyncRequestForScore(dict: objCtIs)
                 let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
                 tempArr.append(json)
                 comntArray.append(jsonComment)
@@ -4086,10 +3950,9 @@ extension PEViewAssesmentFinalize{
         let deviceIdForServer = "\(UniID)_\(AssessmentId)_iOS_\(udid)"
         
        
-        var DisplayId = dictArray.evaluationDate
         var siteId = String(dictArray.siteId ?? 0)
 
-        DisplayId = "C-" + UniID
+        var DisplayId = "C-" + UniID
         let base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:img)
         totalImageToSync.append(img)
         let imageName = "ImgName-" + siteId + String(img ?? 0)
@@ -4155,7 +4018,7 @@ extension PEViewAssesmentFinalize{
             var imgArray : [JSONDictionary]  = []
             
             for objCtIs in catAllRowArray {
-                let json = createSyncRequestForScore(dictArray: objCtIs)
+                let json = createSyncRequestForScore(dict: objCtIs)
                 let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
                 for i in objCtIs.images{
                     let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) as? Bool ?? false
@@ -4169,7 +4032,6 @@ extension PEViewAssesmentFinalize{
                 tempArr.append(json)
                 comntArray.append(jsonComment)
             }
-            let param = ["AssessmentCommentsData":comntArray,"AssessmentScoreData":tempArr] as JSONDictionary
             var arrayCount  = 0
             var imgDic :  [JSONDictionary] = []
             
@@ -4218,7 +4080,7 @@ extension PEViewAssesmentFinalize{
             var imgArray : [JSONDictionary]  = []
             
             for objCtIs in catAllRowArray {
-                let json = createSyncRequestForScore(dictArray: objCtIs)
+                let json = createSyncRequestForScore(dict: objCtIs)
                 let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
                 for i in objCtIs.images{
                     let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) as? Bool ?? false
@@ -4298,7 +4160,7 @@ extension PEViewAssesmentFinalize{
                 if syncArr ?? 0 > 0{
                     self?.syncBtnTapped(showHud: false)
                 } else {
-                    self?.showtoast(message: "Data synced successfully.")
+                    self?.showtoast(message: Constants.dataSyncSuccess)
                     NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                 }
             }
@@ -4315,17 +4177,15 @@ extension PEViewAssesmentFinalize{
                 }
                 if ConnectionManager.shared.hasConnectivity(), self.callRequest4Int == 0 {
                         
-                        if regionID == 3
-                        {
-                            if peNewAssessment.IsEMRequested == true {
+                    if regionID == 3 && peNewAssessment.IsEMRequested == true {
                                 self.syncExtendedMicrobial()
-                            }
-                        }
+                            
+                    }
                         
                         let syncArr = self.getAllAssessmentInOfflineFromDb()
                         if syncArr > 0{
                             
-                            self.showtoast(message: "Data synced successfully.")
+                            self.showtoast(message: Constants.dataSyncSuccess)
                             NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                             self.dismissGlobalHUD(self.view)
                             self.syncBtnTapped(showHud: true)
@@ -4335,7 +4195,7 @@ extension PEViewAssesmentFinalize{
                                 CoreDataHandlerPE().setImageStatusTrue(idArray: i)
                             }
                             
-                            self.showtoast(message: "Data synced successfully.")
+                            self.showtoast(message: Constants.dataSyncSuccess)
                             NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
                             self.dismissGlobalHUD(self.view)
                         }

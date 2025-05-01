@@ -1995,150 +1995,191 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         if tableView == autoSerchTable {
             debugPrint("auto search not populated.")
+            return
+        }
+        
+        switch btnTag {
+        case 0:
+            handleCustomerSelection(indexPath)
+            
+        case 1:
+            handleSalesRepSelection(indexPath)
+            
+        case 2:
+            handleSessionTypeSelection(indexPath)
+            
+        case 3:
+            handleComplexSelection(indexPath)
+            
+        case 4:
+            handleCocciProgramSelection(indexPath)
+            
+        case 5:
+            handleBirdSizeSelection(indexPath)
+            
+        case 6:
+            handleMaleBreedSelection(indexPath)
+            
+        case 7:
+            handleFemaleBreedSelection(indexPath)
+            
+        case 8:
+            handleVeterinarianSelection(indexPath)
+            
+        case 9:
+            handleFeedProgramSelection(indexPath)
+            
+        case 11:
+            handleProductionTypeSelection(indexPath)
+            
+        default:
+            populateFieldsFromSession(indexPath)
+        }
+        
+        buttonPressed1()
+    }
+    
+    private func handleCustomerSelection(_ indexPath: IndexPath) {
+        guard let customer = custmerArray[indexPath.row] as? Custmer else { return }
+        lblCustmer.text = customer.custName
+        UserDefaults.standard.set(customer.custName, forKey: "custmer")
+        custmetIdDb = customer.custId!
+        UserDefaults.standard.set(customer.custId!, forKey: "SelectedCustmer")
+        UserDefaults.standard.synchronize()
+        
+        complexArr = CoreDataHandler().fetchCompexTypePrdicate(customer.custId!)
+        isClickOnAnyField = true
+    }
+
+    private func handleSalesRepSelection(_ indexPath: IndexPath) {
+        guard let salesRep = SalesRepArr[indexPath.row] as? Salesrep else { return }
+        lblSelesRep.text = salesRep.salesRepName
+        salesRepIdDb = salesRep.salesReptId!
+        isClickOnAnyField = true
+    }
+    
+    private func handleBirdSizeSelection(_ indexPath: IndexPath) {
+        if butttnTag == 0 {
+            let obj = metricArray[indexPath.row]
+            birdSize.text = obj.birdSize
+            birdSizeIdDb = obj.birdSizeId!
         } else {
-            if btnTag == 0 {
-                let str = custmerArray[indexPath.row] as! Custmer
-                lblCustmer.text = str.custName
-                UserDefaults.standard.set( lblCustmer.text, forKey: "custmer")
-                UserDefaults.standard.synchronize()
-                custmetIdDb = str.custId!
-                UserDefaults.standard.set( str.custId!, forKey: "SelectedCustmer")
-                complexArr = CoreDataHandler().fetchCompexTypePrdicate(str.custId!)
-                isClickOnAnyField = true
-            } else if btnTag == 1 {
-                let str = SalesRepArr[indexPath.row] as! Salesrep
-                lblSelesRep.text = str.salesRepName
-                salesRepIdDb = str.salesReptId!
-                isClickOnAnyField = true
-            } else if btnTag == 2 {
-                let str = sessionTypeArr[indexPath.row] as! Sessiontype
-                lblSessionType.text = str.sesionType
-                sessionTypeIdDb = str.sesionId!
-                isClickOnAnyField = true
-            } else if btnTag == 4 {
-                let str = CocoiiProgramArr[indexPath.row] as! CocciProgramPosting
-                lblCocieeProgram.text = str.cocciProgramName
-                cocciProgramIdDb = str.cocciProgramId!
-                isClickOnAnyField = true
-            } else if btnTag == 5 {
-                
-                if butttnTag == 0 {
-                    let objMedtricarray = metricArray[indexPath.row]
-                    birdSize.text = objMedtricarray.birdSize
-                    birdSizeIdDb = objMedtricarray.birdSizeId!
-                    indexOfSelectedPerson = indexPath.row
-                    isClickOnAnyField = true
-                } else {
-                    let objstr = birdArray[indexPath.row]
-                    birdSize.text = objstr.birdSize
-                    birdSizeIdDb = objstr.birdSizeId!
-                    indexOfSelectedPerson = indexPath.row
-                    isClickOnAnyField = true
-                }
-            } else if btnTag == 6 {
-                let str = breedArray[indexPath.row]
-                maleLabel.text = str.breedName
-                breedIdDb = str.breedId!
-                isClickOnAnyField = true
-            } else if btnTag == 7 {
-                let str = femaleArr[indexPath.row]
-                femaleLabel.text = str.breedName
-                breedIdDb = str.breedId!
-                isClickOnAnyField = true
-            } else if btnTag == 8 {
-                let str = VetrationArr[indexPath.row] as! Veteration
-                lblVeteration.text = str.vtName
-                veterinartionIdDb = str.vetarId!
-                isClickOnAnyField = true
-                btnVetration.layer.borderColor = UIColor.black.cgColor
-            } else if btnTag == 11 {
-                let str = ProductionTypeArr[indexPath.row] as! ProductionType
-                productionTypeLbl.text = str.productionName
-                productionNameStr = str.productionName ?? ""
-                productionIdDb = str.productionId!
-                isClickOnAnyField = true
-                productionTypeBtn.layer.borderColor = UIColor.black.cgColor
-            } else if btnTag == 3 {
-                let str = complexArr[indexPath.row] as! ComplexPosting
-                lblComplex.text = str.complexName
-                
-                if checkComplexNameandDate(strdate, complexName: lblComplex.text!) == true {
-                    let alertController = UIAlertController(title: NSLocalizedString(Constants.alertStr, comment: ""), message: NSLocalizedString(sameDateComplexValidationMsg, comment: ""), preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default) {
-                        UIAlertAction in
-                        self.lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                        self.lblVeteration.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                    }
-                    alertController.addAction(okAction)
-                    self.present(alertController, animated: true, completion: nil)
-                    
-                } else {
-                    UserDefaults.standard.set( lblComplex.text, forKey: "complex")
-                    UserDefaults.standard.synchronize()
-                    complexIdDb =  str.complexId!
-                    UserDefaults.standard.set(complexIdDb, forKey: "UnlinkComplex")
-                    UserDefaults.standard.set(custmetIdDb, forKey: "unCustId")
-                    UserDefaults.standard.synchronize()
-                    
-                    if UserDefaults.standard.bool(forKey: "Unlinked") == true {
-                        VetrationArr = CoreDataHandler().fetchVetDataPrdicate(unComplexId as NSNumber)
-                    } else {
-                        VetrationArr = CoreDataHandler().fetchVetDataPrdicate(str.complexId!)
-                    }
-                    isClickOnAnyField = true
-                }
-                
-            } else if btnTag == 9 {
-                let str = feedProgramArray[indexPath.row] as! FeedProgram
-                feedProgramLbl.text = str.feddProgramNam
-                
-                if UserDefaults.standard.bool(forKey: "Unlinked") == true {
-                    UserDefaults.standard.set(true, forKey: "isUpadteFeedFromUnlinked")
-                    UserDefaults.standard.synchronize()
-                } else {
-                    UserDefaults.standard.set(false, forKey: "isUpadteFeedFromUnlinked")
-                    UserDefaults.standard.synchronize()
-                }
-                
-                let feedProgramId = str.feedId!
-                let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "feed") as? FeedProgramViewController
-                mapViewControllerObj?.navigatePostingsession = "PostingFeedProgram"
-                mapViewControllerObj?.feedPostingId = feedProgramId as! Int
-                self.navigationController?.pushViewController(mapViewControllerObj!, animated: false)
-            } else {
-                let psData  = machineArray[indexPath.row] as! PostingSession
-                
-                lblVeteration.text = psData.vetanatrionName
-                CustRepTextField.text = psData.customerRepName
-                lblSelesRep.text = psData.salesRepName
-                maleLabel.text = psData.mail
-                femaleLabel.text = psData.female
-                lblSessionType.text = psData.sessionTypeName
-                lblCocieeProgram.text = psData.cociiProgramName
-                notesTextView.text = psData.notes
-                birdSize.text = psData.birdSize
-                let vetIdVal = psData.veterinarianId
-                let birdSizeIdDbVal = psData.birdSizeId
-                let breedIdDbVal = psData.birdBreedId
-                let salesRepIdDbVal = psData.salesRepId
-                let sessionTypeIdDbVal = psData.sessionTypeId
-                let cocciProgramIdDbVal = psData.cocciProgramId
-                let productionTypeIdDbVal = psData.productionTypeId
-                cusmerRepIdDb = 1
-                birdSizeIdDb = birdSizeIdDbVal!
-                breedIdDb = breedIdDbVal!
-                salesRepIdDb = salesRepIdDbVal!
-                sessionTypeIdDb = sessionTypeIdDbVal!
-                veterinartionIdDb = vetIdVal!
-                cocciProgramIdDb = cocciProgramIdDbVal!
-                productionIdDb = productionTypeIdDbVal!
-            }
-            buttonPressed1()
+            let obj = birdArray[indexPath.row]
+            birdSize.text = obj.birdSize
+            birdSizeIdDb = obj.birdSizeId!
+        }
+        indexOfSelectedPerson = indexPath.row
+        isClickOnAnyField = true
+    }
+
+    private func handleSessionTypeSelection(_ indexPath: IndexPath) {
+        guard let session = sessionTypeArr[indexPath.row] as? Sessiontype else { return }
+        lblSessionType.text = session.sesionType
+        sessionTypeIdDb = session.sesionId!
+        isClickOnAnyField = true
+    }
+    private func handleComplexSelection(_ indexPath: IndexPath) {
+        guard let complex = complexArr[indexPath.row] as? ComplexPosting else { return }
+        lblComplex.text = complex.complexName
+        
+        if checkComplexNameandDate(strdate, complexName: complex.complexName ?? "") {
+            let alert = UIAlertController(
+                title: NSLocalizedString(Constants.alertStr, comment: ""),
+                message: NSLocalizedString(sameDateComplexValidationMsg, comment: ""),
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { _ in
+                self.lblComplex.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+                self.lblVeteration.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
+            })
+            present(alert, animated: true)
+        } else {
+            UserDefaults.standard.set(complex.complexName, forKey: "complex")
+            complexIdDb = complex.complexId!
+            UserDefaults.standard.set(complexIdDb, forKey: "UnlinkComplex")
+            UserDefaults.standard.set(custmetIdDb, forKey: "unCustId")
+            UserDefaults.standard.synchronize()
+            
+            let fetchId: NSNumber = UserDefaults.standard.bool(forKey: "Unlinked") ? unComplexId as NSNumber : complex.complexId!
+            VetrationArr = CoreDataHandler().fetchVetDataPrdicate(fetchId)
+            isClickOnAnyField = true
         }
     }
+    private func handleCocciProgramSelection(_ indexPath: IndexPath) {
+        guard let cocci = CocoiiProgramArr[indexPath.row] as? CocciProgramPosting else { return }
+        lblCocieeProgram.text = cocci.cocciProgramName
+        cocciProgramIdDb = cocci.cocciProgramId!
+        isClickOnAnyField = true
+    }
+    private func handleMaleBreedSelection(_ indexPath: IndexPath) {
+        let breed = breedArray[indexPath.row]
+        maleLabel.text = breed.breedName
+        breedIdDb = breed.breedId!
+        isClickOnAnyField = true
+    }
+    private func handleFemaleBreedSelection(_ indexPath: IndexPath) {
+        let breed = femaleArr[indexPath.row]
+        femaleLabel.text = breed.breedName
+        breedIdDb = breed.breedId!
+        isClickOnAnyField = true
+    }
+    private func handleVeterinarianSelection(_ indexPath: IndexPath) {
+        guard let vet = VetrationArr[indexPath.row] as? Veteration else { return }
+        lblVeteration.text = vet.vtName
+        veterinartionIdDb = vet.vetarId!
+        isClickOnAnyField = true
+        btnVetration.layer.borderColor = UIColor.black.cgColor
+    }
+    private func handleFeedProgramSelection(_ indexPath: IndexPath) {
+        guard let feed = feedProgramArray[indexPath.row] as? FeedProgram else { return }
+        feedProgramLbl.text = feed.feddProgramNam
+        
+        let isUnlinked = UserDefaults.standard.bool(forKey: "Unlinked")
+        UserDefaults.standard.set(isUnlinked, forKey: "isUpadteFeedFromUnlinked")
+        UserDefaults.standard.synchronize()
+        
+        if let feedId = feed.feedId as? Int {
+            if let vc = storyboard?.instantiateViewController(withIdentifier: "feed") as? FeedProgramViewController {
+                vc.navigatePostingsession = "PostingFeedProgram"
+                vc.feedPostingId = feedId
+                navigationController?.pushViewController(vc, animated: false)
+            }
+        }
+    }
+    private func handleProductionTypeSelection(_ indexPath: IndexPath) {
+        guard let type = ProductionTypeArr[indexPath.row] as? ProductionType else { return }
+        productionTypeLbl.text = type.productionName
+        productionNameStr = type.productionName ?? ""
+        productionIdDb = type.productionId!
+        isClickOnAnyField = true
+        productionTypeBtn.layer.borderColor = UIColor.black.cgColor
+    }
+    private func populateFieldsFromSession(_ indexPath: IndexPath) {
+        guard let psData = machineArray[indexPath.row] as? PostingSession else { return }
+        
+        lblVeteration.text = psData.vetanatrionName
+        CustRepTextField.text = psData.customerRepName
+        lblSelesRep.text = psData.salesRepName
+        maleLabel.text = psData.mail
+        femaleLabel.text = psData.female
+        lblSessionType.text = psData.sessionTypeName
+        lblCocieeProgram.text = psData.cociiProgramName
+        notesTextView.text = psData.notes
+        birdSize.text = psData.birdSize
+        
+        cusmerRepIdDb = 1
+        birdSizeIdDb = psData.birdSizeId!
+        breedIdDb = psData.birdBreedId!
+        salesRepIdDb = psData.salesRepId!
+        sessionTypeIdDb = psData.sessionTypeId!
+        veterinartionIdDb = psData.veterinarianId!
+        cocciProgramIdDb = psData.cocciProgramId!
+        productionIdDb = psData.productionTypeId!
+    }
+
+    
     
     // MARK: 🟠   ******************** Textfield Delegates Method **************************************
     func textFieldDidEndEditing(_ textField: UITextField) {

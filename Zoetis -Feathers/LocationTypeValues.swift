@@ -100,8 +100,22 @@ public class LocationValue {
         self.stnRep = stnRep
         self.mediaTypeDefault = mediaTypeDefault
         self.samplingMethodDefault = samplingMethodDefault
+        
+        let values = CoreDataHandlerMicrodataModels.saveLocationTypeValues(
+            locationId: NSNumber(value: locatgionTypeId!),
+            id: NSNumber(value: id!),
+            value: text!,
+            std40: std40 ?? false,
+            std20: std20 ?? false,
+            rep20: rapoNo20 ?? 0,
+            rep40: rapNo40 ?? 0,
+            standard: standard ?? false,
+            stnRep: stnRep ?? 0,
+            mediaTypeDefault: mediaTypeDefault ?? "",
+            samplingMethodDefault: samplingMethodDefault ?? ""
+        )
 
-        //saveLocationTypeValuesInDB(_ locationId: NSNumber, id: NSNumber, value: String)
-        CoreDataHandlerMicro().saveLocationTypeValuesInDB(NSNumber(value: locatgionTypeId!), id: NSNumber(value: id!), value: text!, std40: std40 ?? false, std20: std20 ?? false, rep20: rapoNo20 ?? 0, rep40: rapNo40 ?? 0, standard: standard ?? false, stnRep: stnRep ?? 0, mediaTypeDefault : mediaTypeDefault ?? "", samplingMethodDefault : samplingMethodDefault ?? "" )
+        CoreDataHandlerMicro().saveLocationTypeValuesInDB(values)
+
     }
 }

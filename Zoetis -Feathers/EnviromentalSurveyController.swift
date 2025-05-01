@@ -402,159 +402,330 @@ extension EnviromentalSurveyController: UITableViewDataSource, UITableViewDelega
     }
     
     
+    // MARK: cellForRowAt Started
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
-            switch self.currentRequisition.requisitionType {
-            case .bacterial:
-                return self.cellForRowOfBacterialCaseInfo(tableView, indexPath: indexPath)
-            case .enviromental:
-                return self.cellForRowOfEnvironmentalCaseInfo(tableView, indexPath: indexPath)
-            default:
-                return UITableViewCell()
-            }
-            
-        default:
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: "EnviromentalSampleInfoCell") as! EnviromentalSampleInfoCell
-            cell.requisitionSavedSessionType = self.requisitionSavedSessionType
-            cell.delegate = self
-            cell.tag = indexPath.row
-            cell.sampleDescriptionTextField.delegate = cell
-            var locationTypeId = ""
-            cell.notesButton.tag = indexPath.row
-            cell.searchBarLocation.delegate = self
-            cell.searchBarLocation.tag = 100 + indexPath.row
-            dropButton.anchorView = cell.searchBarLocation
-            
-            dropButton.bottomOffset = CGPoint(x: 40 , y:(dropButton.anchorView?.bounds.height)! + 10)
-            dropButton.backgroundColor = .white
-            dropButton.direction = .top
-            dropButton.tag = 100 + indexPath.row
-            cell.searchBarLocation.placeholder = "Location Value"
-            dropButton.dataSource = data as [AnyObject]
-            dropButton.selectionAction = { [unowned self] (index: Int, item: String) in
-                self.setValueInTextFields(selectedValue: item, selectedIndex:index, clickedField: Constants.ClickedFieldMicrobialSurvey.locationValue, cell: Constants.cell, view: view)
-            }
-            
-            if let id = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].selectedLocationTypeId {
-                locationTypeId = "\(id)"
-            }
-            cell.plateIdLabel.text = ""
-            let key = "\(String(describing: locationTypeId)) - \(indexPath.section) - \(indexPath.row + 1)"
-            
-            if let index = self.generatePlateIndex()[key] {
-                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].plateId = "\(self.currentRequisition.barCode)-\(index)"
-                print("your plate id in cell :\(index)  : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].plateId)")
-                if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY{
-                    cell.plateIdLabel.text = "\(self.currentRequisition.barCode)-\(index)"
-                    print("your plate id is here a: \(self.currentRequisition.barCode)-\(index)")
-                    cell.infoDetailButton.isHidden = false
-                    cell.plateIdLabel.isHidden = true
-                    saveButtonAndDraftBurronView.isHidden = true
-                    cell.infoIconImage.isHidden = true
-                    
-                    cell.addInfoPlate = { sender in
-                        
-                        let alert:UIAlertController = UIAlertController(title: "\(self.currentRequisition.barCode)-\(index)", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
-                        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
-                        alert.addAction(cancelAction)
-                        
-                        var popover:UIPopoverController?=nil
-                        popover = UIPopoverController(contentViewController: alert)
-                        popover!.present(from: sender.frame, in: cell, permittedArrowDirections: UIPopoverArrowDirection.down, animated: true)
-                    }
-                } else {
-                    cell.plateIdLabel.text = "\(index)"
-                    cell.plateIdLabel.textAlignment = .center
-                    cell.infoDetailButton.isHidden = true
-                    cell.plateIdLabel.isHidden = false
-                    cell.infoIconImage.isHidden = true
-                }
-            }
-            
-            cell.sampleDescriptionTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].sampleDescription
-            
-            if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
-                cell.searchBarLocation.isHidden = true
-                cell.locationValueTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues
-                cell.locationValueTextField.isHidden = false
-                saveButtonAndDraftBurronView.isHidden = true
-                cell.samplingTypeButton.isUserInteractionEnabled = false
-                cell.noteButtonNew.isUserInteractionEnabled = false
-                cell.selectionStyle = .none
-            } else {
-                cell.searchBarLocation.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues
-            }
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue == "" {
-                cell.mediaTypeTextField.text =   self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault
-                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault ?? ""
-                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedMediaTypeId = 1
-                
-            } else {
-                cell.mediaTypeTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue
-            }
-            
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue == "" {
-                cell.samplingTextField.text =   self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault
-                
-                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault ?? ""
-                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeId = 1
-            } else {
-                cell.samplingTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue
-            }
-            
-            print("your section no. : \(indexPath.section - 1) and index no: \(indexPath.row) and note string : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].notes)")
-            
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues != "Other" {
-                cell.sampleDescriptionButton.backgroundColor =  UIColor(red: 236/255, green: 236/255, blue: 236/255, alpha: 0.2)
-            } else {
-                cell.sampleDescriptionButton.backgroundColor = .white
-            }
-            
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isBacterialChecked {
-                cell.bacterialCheckBoxButton.setImage(UIImage(named: "checkIcon"), for: .normal)
-            } else {
-                cell.bacterialCheckBoxButton.setImage(UIImage(named: "uncheckIcon"), for: .normal)
-            }
-            print("note button is selected : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isSelectedNote)")
-            if  self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].notes.count > 0 {
-                cell.noteButtonNew.setImage(UIImage(named: "PECommentSelected"), for: .normal)
-                if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
-                    cell.noteButtonNew.isUserInteractionEnabled = true
-                }
-            } else {
-                cell.noteButtonNew.contentMode = .scaleToFill
-                cell.noteButtonNew.setTitle("", for: .normal)
-                cell.noteButtonNew.setImage(UIImage(named: "NewImgeComment"), for: .normal)
-            }
-            
-            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isMicoscoreChecked { }
-            
-            if self.isSubmitButtonPressed && self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues.isEmpty {
-                cell.locationValueButton.layer.borderColor = UIColor.red.cgColor
-            } else {
-                cell.locationValueButton.layer.borderColor = defaultBorderColor
-            }
-            
-            if self.isSubmitButtonPressed && (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].sampleDescription == "") && (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues == "Other") {
-                cell.sampleDescriptionButton.layer.borderColor = UIColor.red.cgColor
-            } else {
-                cell.sampleDescriptionButton.layer.borderColor = defaultBorderColor
-            }
-            
-            cell.lineBetweenCellsView.isHidden = false
-            cell.lineBetweenCellsViewHeight.constant = 1
-            if (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated.count - 1) == indexPath.row {
-                cell.lineBetweenCellsView.isHidden = true
-                cell.lineBetweenCellsViewHeight.constant = 0
-            }
-            cell.isPlateIdGenerated = self.currentRequisition.isPlateIdGenerated
-            cell.disableAllEventsAccordingToSavedSession()
-            cell.disableAllEventsAccordingToPlateIdsGenerated()
-            return cell
+        if indexPath.section == 0 {
+            return handleCaseInfoSection(tableView, indexPath: indexPath)
+        } else {
+            return configureEnvironmentalSampleCell(tableView, indexPath: indexPath)
         }
     }
+
+    private func handleCaseInfoSection(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        switch currentRequisition.requisitionType {
+        case .bacterial:
+            return cellForRowOfBacterialCaseInfo(tableView, indexPath: indexPath)
+        case .enviromental:
+            return cellForRowOfEnvironmentalCaseInfo(tableView, indexPath: indexPath)
+        }
+    }
+
+    private func configureEnvironmentalSampleCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "EnviromentalSampleInfoCell") as! EnviromentalSampleInfoCell
+        let headerIndex = indexPath.section - 1
+        let plate = currentRequisition.actualCreatedHeaders[headerIndex].numberOfPlateIDCreated[indexPath.row]
+
+        configureBasicCellProperties(cell, indexPath: indexPath)
+        configureDropDown(for: cell, at: indexPath)
+        configurePlateID(for: cell, at: indexPath, plate: plate)
+        configureReadOnlyUI(for: cell, plate: plate, indexPath: indexPath)
+        configureTextFields(for: cell, plate: plate)
+        configureButtons(for: cell, plate: plate, indexPath: indexPath)
+        configureValidationBorders(for: cell, plate: plate)
+        configureLineView(for: cell, at: indexPath)
+        
+        cell.isPlateIdGenerated = currentRequisition.isPlateIdGenerated
+        cell.disableAllEventsAccordingToSavedSession()
+        cell.disableAllEventsAccordingToPlateIdsGenerated()
+        
+        return cell
+    }
+
+    private func configureBasicCellProperties(_ cell: EnviromentalSampleInfoCell, indexPath: IndexPath) {
+        cell.requisitionSavedSessionType = requisitionSavedSessionType
+        cell.delegate = self
+        cell.tag = indexPath.row
+        cell.sampleDescriptionTextField.delegate = cell
+        cell.notesButton.tag = indexPath.row
+        cell.searchBarLocation.delegate = self
+        cell.searchBarLocation.tag = 100 + indexPath.row
+    }
+
+    private func configureDropDown(for cell: EnviromentalSampleInfoCell, at indexPath: IndexPath) {
+        dropButton.anchorView = cell.searchBarLocation
+        dropButton.bottomOffset = CGPoint(x: 40, y: (dropButton.anchorView?.bounds.height ?? 0) + 10)
+        dropButton.backgroundColor = .white
+        dropButton.direction = .top
+        dropButton.tag = 100 + indexPath.row
+        dropButton.dataSource = data as [AnyObject]
+        dropButton.selectionAction = { [unowned self] (index, item) in
+            self.setValueInTextFields(
+                selectedValue: item,
+                selectedIndex: index,
+                clickedField: Constants.ClickedFieldMicrobialSurvey.locationValue,
+                cell: Constants.cell,
+                view: view
+            )
+        }
+        cell.searchBarLocation.placeholder = "Location Value"
+    }
+
+    private func configurePlateID(for cell: EnviromentalSampleInfoCell, at indexPath: IndexPath, plate: LocationTypeCellModel) {
+        let header = currentRequisition.actualCreatedHeaders[indexPath.section - 1]
+        let key = "\(plate.selectedLocationTypeId ?? 0) - \(indexPath.section) - \(indexPath.row + 1)"
+
+        if let index = generatePlateIndex()[key] {
+            let barcode = currentRequisition.barCode
+            let plateId = "\(barcode)-\(index)"
+            header.numberOfPlateIDCreated[indexPath.row].plateId = plateId
+
+            if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
+                cell.plateIdLabel.text = plateId
+                cell.plateIdLabel.isHidden = true
+                cell.infoDetailButton.isHidden = false
+                cell.infoIconImage.isHidden = true
+                saveButtonAndDraftBurronView.isHidden = true
+
+                cell.addInfoPlate = { sender in
+                    let alert = UIAlertController(title: plateId, message: nil, preferredStyle: .actionSheet)
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                    UIPopoverController(contentViewController: alert).present(
+                        from: sender.frame,
+                        in: cell,
+                        permittedArrowDirections: .down,
+                        animated: true
+                    )
+                }
+            } else {
+                cell.plateIdLabel.text = "\(index)"
+                cell.plateIdLabel.isHidden = false
+                cell.plateIdLabel.textAlignment = .center
+                cell.infoDetailButton.isHidden = true
+                cell.infoIconImage.isHidden = true
+            }
+        }
+    }
+
+    private func configureReadOnlyUI(for cell: EnviromentalSampleInfoCell, plate: LocationTypeCellModel, indexPath: IndexPath) {
+        if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
+            cell.searchBarLocation.isHidden = true
+            cell.locationValueTextField.isHidden = false
+            cell.locationValueTextField.text = plate.selectedLocationValues
+            saveButtonAndDraftBurronView.isHidden = true
+            cell.samplingTypeButton.isUserInteractionEnabled = false
+            cell.noteButtonNew.isUserInteractionEnabled = false
+            cell.selectionStyle = .none
+        } else {
+            cell.searchBarLocation.text = plate.selectedLocationValues
+        }
+    }
+
+    private func configureTextFields(for cell: EnviromentalSampleInfoCell, plate: LocationTypeCellModel) {
+        cell.sampleDescriptionTextField.text = plate.sampleDescription
+        
+        if plate.mediaTypeValue.isEmpty {
+            plate.mediaTypeValue = plate.mediaDefault ?? ""
+            plate.selectedMediaTypeId = 1
+        }
+        cell.mediaTypeTextField.text = plate.mediaTypeValue
+
+        if plate.samplingMethodTypeValue.isEmpty {
+            plate.samplingMethodTypeValue = plate.samplingDefault ?? ""
+            plate.samplingMethodTypeId = 1
+        }
+        cell.samplingTextField.text = plate.samplingMethodTypeValue
+    }
+
+    private func configureButtons(for cell: EnviromentalSampleInfoCell, plate: LocationTypeCellModel, indexPath: IndexPath) {
+        if plate.selectedLocationValues == "Other" {
+            cell.sampleDescriptionButton.backgroundColor = .white
+        } else {
+            cell.sampleDescriptionButton.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 236/255, alpha: 0.2)
+        }
+
+        let imageName = plate.isBacterialChecked ? "checkIcon" : "uncheckIcon"
+        cell.bacterialCheckBoxButton.setImage(UIImage(named: imageName), for: .normal)
+
+        if plate.notes.count > 0 {
+            cell.noteButtonNew.setImage(UIImage(named: "PECommentSelected"), for: .normal)
+            if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
+                cell.noteButtonNew.isUserInteractionEnabled = true
+            }
+        } else {
+            cell.noteButtonNew.setTitle("", for: .normal)
+            cell.noteButtonNew.setImage(UIImage(named: "NewImgeComment"), for: .normal)
+            cell.noteButtonNew.contentMode = .scaleToFill
+        }
+    }
+
+    private func configureValidationBorders(for cell: EnviromentalSampleInfoCell, plate: LocationTypeCellModel) {
+        let showError = isSubmitButtonPressed
+        let locationEmpty = plate.selectedLocationValues.isEmpty
+        let sampleDescriptionEmpty = plate.sampleDescription.isEmpty
+        let isOther = plate.selectedLocationValues == "Other"
+
+        cell.locationValueButton.layer.borderColor = showError && locationEmpty ? UIColor.red.cgColor : defaultBorderColor
+        cell.sampleDescriptionButton.layer.borderColor = showError && sampleDescriptionEmpty && isOther ? UIColor.red.cgColor : defaultBorderColor
+    }
+
+    private func configureLineView(for cell: EnviromentalSampleInfoCell, at indexPath: IndexPath) {
+        let isLast = indexPath.row == currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated.count - 1
+        cell.lineBetweenCellsView.isHidden = isLast
+        cell.lineBetweenCellsViewHeight.constant = isLast ? 0 : 1
+    }
+    // MARK: cellForRowAt Ended
+    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        switch indexPath.section {
+//        case 0:
+//            switch self.currentRequisition.requisitionType {
+//            case .bacterial:
+//                return self.cellForRowOfBacterialCaseInfo(tableView, indexPath: indexPath)
+//            case .enviromental:
+//                return self.cellForRowOfEnvironmentalCaseInfo(tableView, indexPath: indexPath)
+//            }
+//            
+//        default:
+//            
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "EnviromentalSampleInfoCell") as! EnviromentalSampleInfoCell
+//            cell.requisitionSavedSessionType = self.requisitionSavedSessionType
+//            cell.delegate = self
+//            cell.tag = indexPath.row
+//            cell.sampleDescriptionTextField.delegate = cell
+//            var locationTypeId = ""
+//            cell.notesButton.tag = indexPath.row
+//            cell.searchBarLocation.delegate = self
+//            cell.searchBarLocation.tag = 100 + indexPath.row
+//            dropButton.anchorView = cell.searchBarLocation
+//            
+//            dropButton.bottomOffset = CGPoint(x: 40 , y:(dropButton.anchorView?.bounds.height)! + 10)
+//            dropButton.backgroundColor = .white
+//            dropButton.direction = .top
+//            dropButton.tag = 100 + indexPath.row
+//            cell.searchBarLocation.placeholder = "Location Value"
+//            dropButton.dataSource = data as [AnyObject]
+//            dropButton.selectionAction = { [unowned self] (index: Int, item: String) in
+//                self.setValueInTextFields(selectedValue: item, selectedIndex:index, clickedField: Constants.ClickedFieldMicrobialSurvey.locationValue, cell: Constants.cell, view: view)
+//            }
+//            
+//            if let id = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].selectedLocationTypeId {
+//                locationTypeId = "\(id)"
+//            }
+//            cell.plateIdLabel.text = ""
+//            let key = "\(String(describing: locationTypeId)) - \(indexPath.section) - \(indexPath.row + 1)"
+//            
+//            if let index = self.generatePlateIndex()[key] {
+//                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].plateId = "\(self.currentRequisition.barCode)-\(index)"
+//                print("your plate id in cell :\(index)  : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].plateId)")
+//                if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY{
+//                    cell.plateIdLabel.text = "\(self.currentRequisition.barCode)-\(index)"
+//                    print("your plate id is here a: \(self.currentRequisition.barCode)-\(index)")
+//                    cell.infoDetailButton.isHidden = false
+//                    cell.plateIdLabel.isHidden = true
+//                    saveButtonAndDraftBurronView.isHidden = true
+//                    cell.infoIconImage.isHidden = true
+//                    
+//                    cell.addInfoPlate = { sender in
+//                        
+//                        let alert:UIAlertController = UIAlertController(title: "\(self.currentRequisition.barCode)-\(index)", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
+//                        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
+//                        alert.addAction(cancelAction)
+//                        
+//                        var popover:UIPopoverController?=nil
+//                        popover = UIPopoverController(contentViewController: alert)
+//                        popover!.present(from: sender.frame, in: cell, permittedArrowDirections: UIPopoverArrowDirection.down, animated: true)
+//                    }
+//                } else {
+//                    cell.plateIdLabel.text = "\(index)"
+//                    cell.plateIdLabel.textAlignment = .center
+//                    cell.infoDetailButton.isHidden = true
+//                    cell.plateIdLabel.isHidden = false
+//                    cell.infoIconImage.isHidden = true
+//                }
+//            }
+//            
+//            cell.sampleDescriptionTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].sampleDescription
+//            
+//            if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
+//                cell.searchBarLocation.isHidden = true
+//                cell.locationValueTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues
+//                cell.locationValueTextField.isHidden = false
+//                saveButtonAndDraftBurronView.isHidden = true
+//                cell.samplingTypeButton.isUserInteractionEnabled = false
+//                cell.noteButtonNew.isUserInteractionEnabled = false
+//                cell.selectionStyle = .none
+//            } else {
+//                cell.searchBarLocation.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues
+//            }
+//            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue == "" {
+//                cell.mediaTypeTextField.text =   self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault
+//                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaDefault ?? ""
+//                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedMediaTypeId = 1
+//                
+//            } else {
+//                cell.mediaTypeTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue
+//            }
+//            
+//            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue == "" {
+//                cell.samplingTextField.text =   self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault
+//                
+//                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingDefault ?? ""
+//                self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeId = 1
+//            } else {
+//                cell.samplingTextField.text = self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue
+//            }
+//            
+//            print("your section no. : \(indexPath.section - 1) and index no: \(indexPath.row) and note string : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].notes)")
+//            
+//            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues != "Other" {
+//                cell.sampleDescriptionButton.backgroundColor =  UIColor(red: 236/255, green: 236/255, blue: 236/255, alpha: 0.2)
+//            } else {
+//                cell.sampleDescriptionButton.backgroundColor = .white
+//            }
+//            
+//            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isBacterialChecked {
+//                cell.bacterialCheckBoxButton.setImage(UIImage(named: "checkIcon"), for: .normal)
+//            } else {
+//                cell.bacterialCheckBoxButton.setImage(UIImage(named: "uncheckIcon"), for: .normal)
+//            }
+//            print("note button is selected : \(self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isSelectedNote)")
+//            if  self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].notes.count > 0 {
+//                cell.noteButtonNew.setImage(UIImage(named: "PECommentSelected"), for: .normal)
+//                if requisitionSavedSessionType == .SHOW_SUBMITTED_REQUISITION_FOR_READ_ONLY {
+//                    cell.noteButtonNew.isUserInteractionEnabled = true
+//                }
+//            } else {
+//                cell.noteButtonNew.contentMode = .scaleToFill
+//                cell.noteButtonNew.setTitle("", for: .normal)
+//                cell.noteButtonNew.setImage(UIImage(named: "NewImgeComment"), for: .normal)
+//            }
+//            
+//            if self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].isMicoscoreChecked { }
+//            
+//            if self.isSubmitButtonPressed && self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues.isEmpty {
+//                cell.locationValueButton.layer.borderColor = UIColor.red.cgColor
+//            } else {
+//                cell.locationValueButton.layer.borderColor = defaultBorderColor
+//            }
+//            
+//            if self.isSubmitButtonPressed && (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].sampleDescription == "") && (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues == "Other") {
+//                cell.sampleDescriptionButton.layer.borderColor = UIColor.red.cgColor
+//            } else {
+//                cell.sampleDescriptionButton.layer.borderColor = defaultBorderColor
+//            }
+//            
+//            cell.lineBetweenCellsView.isHidden = false
+//            cell.lineBetweenCellsViewHeight.constant = 1
+//            if (self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated.count - 1) == indexPath.row {
+//                cell.lineBetweenCellsView.isHidden = true
+//                cell.lineBetweenCellsViewHeight.constant = 0
+//            }
+//            cell.isPlateIdGenerated = self.currentRequisition.isPlateIdGenerated
+//            cell.disableAllEventsAccordingToSavedSession()
+//            cell.disableAllEventsAccordingToPlateIdsGenerated()
+//            return cell
+//        }
+//    }
     
     @objc func addInfoPopup(PlateID : String) {
         showtoast(message: PlateID)
@@ -1009,132 +1180,264 @@ extension EnviromentalSurveyController: EnviromentalFormCellDelegates {
         self.currentRequisition.reasonForVisitId = self.currentRequisition.getReasonForVisitId()
     }
     
-    func setValueInTextFields(selectedValue: String, selectedIndex: Int, clickedField:String, cell: UITableViewCell?, view: UIView? = nil) {
+    
+    func setValueInTextFields(selectedValue: String, selectedIndex: Int, clickedField: String, cell: UITableViewCell?, view: UIView? = nil) {
         switch clickedField {
         case Constants.ClickedFieldMicrobialSurvey.reasonForVisit:
-            if let cell = cell as? EnviromentalFormCell {
-                populateSelectedValueVisitIdEnviromentalFormCell(cell, selectedValue)
-            } else if let cell = cell as? BacterialFormCell  {
-                populateSelectedValueVisitIdBacterialFormCell(cell, selectedValue)
-            }
-         
+            handleReasonForVisit(selectedValue, cell)
+            
         case Constants.ClickedFieldMicrobialSurvey.SampleCollectedBy:
-            guard let cell = cell as? EnviromentalFormCell  else {
-                return
+            if let cell = cell as? EnviromentalFormCell {
+                cell.sampleCollectedByText.text = selectedValue
+                currentRequisition.sampleCollectedBy = selectedValue
             }
-            cell.sampleCollectedByText.text = selectedValue
-            self.currentRequisition.sampleCollectedBy = selectedValue
-            
+
         case Constants.ClickedFieldMicrobialSurvey.company:
-            if let cell = cell as? EnviromentalFormCell  {
-                cell.companyTextField.text = selectedValue
-            } else if let cell = cell as? BacterialFormCell  {
-                cell.companyTextField.text = selectedValue
-            }
-            
-            if self.currentRequisition.company != selectedValue {
-                self.currentRequisition.resetSiteAndBarCode()
-            }
-            self.isSubmitButtonPressed = false
-            self.currentRequisition.company = selectedValue
-            self.currentRequisition.companyId = self.currentRequisition.getCompanyIdforSelectedCompany()
+            handleCompanySelection(selectedValue, cell: cell)
             
         case Constants.ClickedFieldMicrobialSurvey.siteId:
-            if let cell = cell as? EnviromentalFormCell  {
-                cell.siteTextField.text = selectedValue
-                
-            } else if let cell = cell as? BacterialFormCell  {
-                cell.siteTextField.text = selectedValue
-                
-            }
-            self.currentRequisition.site = selectedValue
-            self.currentRequisition.siteId = self.currentRequisition.getSiteIdforSelectedSite()
-            self.currentRequisition.generatebarCode()
-            
+            handleSiteSelection(selectedValue, cell)
+
         case Constants.ClickedFieldMicrobialSurvey.reviewer:
-            if let _ = cell as? EnviromentalFormCell  {
-                self.currentRequisition.reviewer = selectedValue
-                self.currentRequisition.reviewerId = self.currentRequisition.getReviewerId()
-            } else if let _ = cell as? BacterialFormCell  {
-                self.currentRequisition.reviewer = selectedValue
-                self.currentRequisition.reviewerId = self.currentRequisition.getReviewerId()
-            }
-           
+            currentRequisition.reviewer = selectedValue
+            currentRequisition.reviewerId = currentRequisition.getReviewerId()
+
         case Constants.ClickedFieldMicrobialSurvey.surveyCondustedOn:
-            guard let cell = cell as? EnviromentalFormCell  else {
-                return
+            if let cell = cell as? EnviromentalFormCell {
+                cell.surveyConductedTextField.text = selectedValue
+                currentRequisition.surveyConductedOn = selectedValue
+                currentRequisition.surveyConductedOnId = currentRequisition.getSurveyConductedOnId()
             }
-            cell.surveyConductedTextField.text = selectedValue
-            self.currentRequisition.surveyConductedOn = selectedValue
-            self.currentRequisition.surveyConductedOnId = self.currentRequisition.getSurveyConductedOnId()
-            
+
         case Constants.ClickedFieldMicrobialSurvey.purposeOfSurvey:
-            guard let cell = cell as? EnviromentalFormCell  else {
-                return
+            if let cell = cell as? EnviromentalFormCell {
+                cell.purposeOfSurveyTextField.text = selectedValue
+                currentRequisition.purposeOfSurvey = selectedValue
+                currentRequisition.purposeOfSurveyId = currentRequisition.getPurposeOfSurveyId()
             }
-            cell.purposeOfSurveyTextField.text = selectedValue
-            self.currentRequisition.purposeOfSurvey = selectedValue
-            self.currentRequisition.purposeOfSurveyId = self.currentRequisition.getPurposeOfSurveyId()
-            
+
         case Constants.ClickedFieldMicrobialSurvey.transferIn:
-            guard let cell = cell as? EnviromentalFormCell  else {
-                return
+            if let cell = cell as? EnviromentalFormCell {
+                cell.transferInTextField.text = selectedValue
+                currentRequisition.transferIn = selectedValue
             }
-            cell.transferInTextField.text = selectedValue
-            self.currentRequisition.transferIn = selectedValue
-            
+
         case Constants.ClickedFieldMicrobialSurvey.locationType:
-            guard let headerView = view as? EnviromentalLocationHeaderView  else {
-                return
-            }
-            headerView.locationTypeTextField.text = selectedValue
-            
-            self.currentRequisition.actualCreatedHeaders[headerView.tag].selectedLocationType = selectedValue
-            self.currentRequisition.actualCreatedHeaders[headerView.tag].selectedLocationTypeId = self.currentRequisition.getAllLocationTypes().locationTypeIds[selectedIndex]
-            
+            handleLocationTypeSelection(selectedValue, selectedIndex, view)
+
         case Constants.ClickedFieldMicrobialSurvey.locationValue:
-            guard let cell = cell as? EnviromentalSampleInfoCell  else {
-                return
-            }
-            cell.searchBarLocation.text = selectedValue
-            
-            guard let indexPath = self.tableView.indexPath(for: cell) else {
-                return
-            }
-            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues = selectedValue
-            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValueId = self.currentRequisition.getLocationValues(selectedValue: selectedValue)
-            
+            updateSampleInfoCell(selectedValue, selectedIndex, cell, fieldType: .location)
+
         case Constants.ClickedFieldMicrobialSurvey.mediaType:
-            guard let cell = cell as? EnviromentalSampleInfoCell  else {
-                return
-            }
-            cell.mediaTypeTextField.text = selectedValue
+            updateSampleInfoCell(selectedValue, selectedIndex, cell, fieldType: .media)
 
-            guard let indexPath = self.tableView.indexPath(for: cell) else {
-                return
-            }
-            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = selectedValue
-            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedMediaTypeId = self.currentRequisition.getMediaTypeValues(selectedValue: selectedValue)
-           
-            
         case Constants.ClickedFieldMicrobialSurvey.sampling:
-            guard let cell = cell as? EnviromentalSampleInfoCell  else {
-                return
-            }
-            cell.samplingTextField.text = selectedValue
+            updateSampleInfoCell(selectedValue, selectedIndex, cell, fieldType: .sampling)
 
-            guard let indexPath = self.tableView.indexPath(for: cell) else {
-                return
-            }
-            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue = selectedValue
-            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeId = self.currentRequisition.getSamplingMethodTypeValues(selectedValue: selectedValue)
         default:
             break
         }
-        
-        self.saveCurrentDataInLocalDB(isFinalSubmit: false)
-        self.reloadTableView()
+
+        saveCurrentDataInLocalDB(isFinalSubmit: false)
+        reloadTableView()
     }
+
+    
+    private func handleReasonForVisit(_ selectedValue: String, _ cell: UITableViewCell?) {
+        if let cell = cell as? EnviromentalFormCell {
+            populateSelectedValueVisitIdEnviromentalFormCell(cell, selectedValue)
+        } else if let cell = cell as? BacterialFormCell {
+            populateSelectedValueVisitIdBacterialFormCell(cell, selectedValue)
+        }
+    }
+
+    private func handleCompanySelection(_ selectedValue: String, cell: UITableViewCell?) {
+        if let formCell = cell as? EnviromentalFormCell {
+            formCell.companyTextField.text = selectedValue
+        } else if let formCell = cell as? BacterialFormCell {
+            formCell.companyTextField.text = selectedValue
+        }
+        
+        if currentRequisition.company != selectedValue {
+            currentRequisition.resetSiteAndBarCode()
+        }
+        
+        isSubmitButtonPressed = false
+        currentRequisition.company = selectedValue
+        currentRequisition.companyId = currentRequisition.getCompanyIdforSelectedCompany()
+    }
+
+    private func handleSiteSelection(_ selectedValue: String, _ cell: UITableViewCell?) {
+        if let cell = cell as? EnviromentalFormCell {
+            cell.siteTextField.text = selectedValue
+        } else if let cell = cell as? BacterialFormCell {
+            cell.siteTextField.text = selectedValue
+        }
+        currentRequisition.site = selectedValue
+        currentRequisition.siteId = currentRequisition.getSiteIdforSelectedSite()
+        currentRequisition.generatebarCode()
+    }
+
+    private func handleLocationTypeSelection(_ selectedValue: String, _ selectedIndex: Int, _ view: UIView?) {
+        guard let headerView = view as? EnviromentalLocationHeaderView else { return }
+        headerView.locationTypeTextField.text = selectedValue
+        currentRequisition.actualCreatedHeaders[headerView.tag].selectedLocationType = selectedValue
+        currentRequisition.actualCreatedHeaders[headerView.tag].selectedLocationTypeId = currentRequisition.getAllLocationTypes().locationTypeIds[selectedIndex]
+    }
+
+    private enum SampleFieldType {
+        case location, media, sampling
+    }
+
+    private func updateSampleInfoCell(_ selectedValue: String, _ selectedIndex: Int, _ cell: UITableViewCell?, fieldType: SampleFieldType) {
+        guard let cell = cell as? EnviromentalSampleInfoCell,
+              let indexPath = tableView.indexPath(for: cell)
+        else { return }
+
+        switch fieldType {
+        case .location:
+            cell.searchBarLocation.text = selectedValue
+            currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues = selectedValue
+            currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValueId = currentRequisition.getLocationValues(selectedValue: selectedValue)
+
+        case .media:
+            cell.mediaTypeTextField.text = selectedValue
+            currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = selectedValue
+            currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedMediaTypeId = currentRequisition.getMediaTypeValues(selectedValue: selectedValue)
+
+        case .sampling:
+            cell.samplingTextField.text = selectedValue
+            currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue = selectedValue
+            currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeId = currentRequisition.getSamplingMethodTypeValues(selectedValue: selectedValue)
+        }
+    }
+
+//    func setValueInTextFields(selectedValue: String, selectedIndex: Int, clickedField:String, cell: UITableViewCell?, view: UIView? = nil) {
+//        switch clickedField {
+//        case Constants.ClickedFieldMicrobialSurvey.reasonForVisit:
+//            if let cell = cell as? EnviromentalFormCell {
+//                populateSelectedValueVisitIdEnviromentalFormCell(cell, selectedValue)
+//            } else if let cell = cell as? BacterialFormCell  {
+//                populateSelectedValueVisitIdBacterialFormCell(cell, selectedValue)
+//            }
+//         
+//        case Constants.ClickedFieldMicrobialSurvey.SampleCollectedBy:
+//            guard let cell = cell as? EnviromentalFormCell  else {
+//                return
+//            }
+//            cell.sampleCollectedByText.text = selectedValue
+//            self.currentRequisition.sampleCollectedBy = selectedValue
+//            
+//        case Constants.ClickedFieldMicrobialSurvey.company:
+//            if let cell = cell as? EnviromentalFormCell  {
+//                cell.companyTextField.text = selectedValue
+//            } else if let cell = cell as? BacterialFormCell  {
+//                cell.companyTextField.text = selectedValue
+//            }
+//            
+//            if self.currentRequisition.company != selectedValue {
+//                self.currentRequisition.resetSiteAndBarCode()
+//            }
+//            self.isSubmitButtonPressed = false
+//            self.currentRequisition.company = selectedValue
+//            self.currentRequisition.companyId = self.currentRequisition.getCompanyIdforSelectedCompany()
+//            
+//        case Constants.ClickedFieldMicrobialSurvey.siteId:
+//            if let cell = cell as? EnviromentalFormCell  {
+//                cell.siteTextField.text = selectedValue
+//                
+//            } else if let cell = cell as? BacterialFormCell  {
+//                cell.siteTextField.text = selectedValue
+//                
+//            }
+//            self.currentRequisition.site = selectedValue
+//            self.currentRequisition.siteId = self.currentRequisition.getSiteIdforSelectedSite()
+//            self.currentRequisition.generatebarCode()
+//            
+//        case Constants.ClickedFieldMicrobialSurvey.reviewer:
+//            if let _ = cell as? EnviromentalFormCell  {
+//                self.currentRequisition.reviewer = selectedValue
+//                self.currentRequisition.reviewerId = self.currentRequisition.getReviewerId()
+//            } else if let _ = cell as? BacterialFormCell  {
+//                self.currentRequisition.reviewer = selectedValue
+//                self.currentRequisition.reviewerId = self.currentRequisition.getReviewerId()
+//            }
+//           
+//        case Constants.ClickedFieldMicrobialSurvey.surveyCondustedOn:
+//            guard let cell = cell as? EnviromentalFormCell  else {
+//                return
+//            }
+//            cell.surveyConductedTextField.text = selectedValue
+//            self.currentRequisition.surveyConductedOn = selectedValue
+//            self.currentRequisition.surveyConductedOnId = self.currentRequisition.getSurveyConductedOnId()
+//            
+//        case Constants.ClickedFieldMicrobialSurvey.purposeOfSurvey:
+//            guard let cell = cell as? EnviromentalFormCell  else {
+//                return
+//            }
+//            cell.purposeOfSurveyTextField.text = selectedValue
+//            self.currentRequisition.purposeOfSurvey = selectedValue
+//            self.currentRequisition.purposeOfSurveyId = self.currentRequisition.getPurposeOfSurveyId()
+//            
+//        case Constants.ClickedFieldMicrobialSurvey.transferIn:
+//            guard let cell = cell as? EnviromentalFormCell  else {
+//                return
+//            }
+//            cell.transferInTextField.text = selectedValue
+//            self.currentRequisition.transferIn = selectedValue
+//            
+//        case Constants.ClickedFieldMicrobialSurvey.locationType:
+//            guard let headerView = view as? EnviromentalLocationHeaderView  else {
+//                return
+//            }
+//            headerView.locationTypeTextField.text = selectedValue
+//            
+//            self.currentRequisition.actualCreatedHeaders[headerView.tag].selectedLocationType = selectedValue
+//            self.currentRequisition.actualCreatedHeaders[headerView.tag].selectedLocationTypeId = self.currentRequisition.getAllLocationTypes().locationTypeIds[selectedIndex]
+//            
+//        case Constants.ClickedFieldMicrobialSurvey.locationValue:
+//            guard let cell = cell as? EnviromentalSampleInfoCell  else {
+//                return
+//            }
+//            cell.searchBarLocation.text = selectedValue
+//            
+//            guard let indexPath = self.tableView.indexPath(for: cell) else {
+//                return
+//            }
+//            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValues = selectedValue
+//            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedLocationValueId = self.currentRequisition.getLocationValues(selectedValue: selectedValue)
+//            
+//        case Constants.ClickedFieldMicrobialSurvey.mediaType:
+//            guard let cell = cell as? EnviromentalSampleInfoCell  else {
+//                return
+//            }
+//            cell.mediaTypeTextField.text = selectedValue
+//
+//            guard let indexPath = self.tableView.indexPath(for: cell) else {
+//                return
+//            }
+//            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].mediaTypeValue = selectedValue
+//            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].selectedMediaTypeId = self.currentRequisition.getMediaTypeValues(selectedValue: selectedValue)
+//           
+//            
+//        case Constants.ClickedFieldMicrobialSurvey.sampling:
+//            guard let cell = cell as? EnviromentalSampleInfoCell  else {
+//                return
+//            }
+//            cell.samplingTextField.text = selectedValue
+//
+//            guard let indexPath = self.tableView.indexPath(for: cell) else {
+//                return
+//            }
+//            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeValue = selectedValue
+//            self.currentRequisition.actualCreatedHeaders[indexPath.section - 1].numberOfPlateIDCreated[indexPath.row].samplingMethodTypeId = self.currentRequisition.getSamplingMethodTypeValues(selectedValue: selectedValue)
+//        default:
+//            break
+//        }
+//        
+//        self.saveCurrentDataInLocalDB(isFinalSubmit: false)
+//        self.reloadTableView()
+//    }
     
 }
 

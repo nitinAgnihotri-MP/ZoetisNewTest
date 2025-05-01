@@ -148,8 +148,7 @@ import Reachability
         
         chartNameLable.text = self.subjectString as String
         let barData : ChartDataSet = dataSet.currentSet
-        var chartData = BarChartData()
-        chartData = BarChartData(dataSets: [barData])
+        var lastChartData = BarChartData(dataSets: [barData])
         
         var singleColorBlue = Bool()
         var singleColorRed = Bool()
@@ -191,7 +190,7 @@ import Reachability
         
         barData.colors = colorArr.mutableCopy() as! [NSUIColor]
 
-        barChartView.data = chartData
+        barChartView.data = lastChartData
         
         if barData.yMax == 0.0 {
             barChartView.clear()
@@ -377,8 +376,8 @@ import Reachability
          }
          
          let barData : ChartDataSet = dataSet.currentSet
-         var chartData = BarChartData()
-         chartData = BarChartData(dataSets: [barData])
+       
+         var otherChartData = BarChartData(dataSets: [barData])
          
          self.barChartView.xAxis.labelCount = verticalValues.count
          self.barChartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:verticalValues)
@@ -422,7 +421,7 @@ import Reachability
          }
          
          barData.colors = colorArr.mutableCopy() as! [NSUIColor]
-         barChartView.data = chartData
+         barChartView.data = otherChartData
          barChartView.leftAxis.axisMinimum = 0.0
          
          if barData.yMax == 0.0 {
@@ -496,10 +495,10 @@ import Reachability
             
         }
         let chartDataSet = BarChartDataSet(entries: dataEntries, label: UtilityClass.convertDateFormater(sessionDate as String))
-        let chartData = BarChartData(dataSet: chartDataSet)
-        chartData.barWidth = 0.7
+        let setNewChartData = BarChartData(dataSet: chartDataSet)
+        setNewChartData.barWidth = 0.7
         barChartView.zoom(scaleX: 0, scaleY: 0, x: 0, y: 0)
-        barChartView.data = chartData
+        barChartView.data = setNewChartData
         barChartView.setVisibleXRangeMaximum(10)
         
         

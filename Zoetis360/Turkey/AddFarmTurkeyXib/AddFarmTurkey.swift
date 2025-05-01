@@ -1372,14 +1372,7 @@ extension AddFarmTurkey :UITableViewDataSource,UITableViewDelegate {
             
             else if arrayTag == 4 {
                 
-                if butttnTag1 == 0 {
-                    indexOfSelectedPerson = indexPath.row
-                    
-                    
-                } else {
-                    indexOfSelectedPerson = indexPath.row
-                    
-                }
+                indexOfSelectedPerson = indexPath.row
                 valueStore = true
             }
             buttonPreddDroper()

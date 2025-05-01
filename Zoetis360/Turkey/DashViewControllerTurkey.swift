@@ -921,9 +921,8 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
         
         btnTag = 1
         if WebClass.sharedInstance.connected() || dataArray.count > 0{
-            
-            var cocciServices = ServiceDataHolder()
-            cocciServices = self.dataArray.object(at: btnTag) as! ServiceDataHolder
+          
+            var cocciServices = self.dataArray.object(at: btnTag) as! ServiceDataHolder
             serviceDataHldArr = cocciServices.ObservaionDetailsArr
         }
         

@@ -299,6 +299,7 @@ struct Constants {
     static let pleaseEnterCommentForVaccineThawingTimesStr = "Please enter comment for (Vaccine thawing time) in Aseptic Technique & Vaccine Application"
     static let youHaveAlreadyRequisitionStr = "You have already added requisition with same date and site."
     static let pleaseFillMandatoryFieldsStr = "Please fill all mandatory fields"
+    static let dataSyncSuccess = "Data synced successfully."
 }
 
 enum ZoetisArt {
@@ -459,3 +460,160 @@ extension NSMutableDictionary {
 }
 
 let appDelegateObj = UIApplication.shared.delegate as! AppDelegate
+
+
+ struct CoreDataHandlerMicrodataModels
+{
+   struct CustomerSessionData {
+        let barcode: String
+        let company: String
+        let companyId: Int
+        let emailId: String
+        let requestor: String
+        let reviewer: String
+        let sampleCollectedBy: String
+        let sampleCollectionDate: String
+        let sessionId: String
+        let site: String
+        let siteId: Int
+    }
+    
+    struct CaseInfo {
+        let requestor: String
+        let sampleCollectedBy: String
+        let company: String
+        let companyId: Int
+        let site: String
+        let siteId: Int
+        let email: String
+        let reviewer: String
+        let surveyConductedOn: String
+        let sampleCollectionDate: String
+        let sampleCollectionDateWithTimeStamp: String
+        let purposeOfSurvey: String
+        let transferIn: String
+        let barCode: String
+        let barCodeManualEntered: String
+        let notes: String
+        let reasonForVisit: String
+        let currentdate: String
+        let customerId: String
+        let requisitionType: Int
+        let sessionStatus: Int
+        let requisitionId: String
+        let timeStamp: String
+        let isPlateIdGenerated: Bool
+        let typeOfBird: String
+        let typeOfBirdId: Int
+        let reviewerId: Int
+        let purposeOfSurveyId: Int
+        let surveyConductedOnId: Int
+        let reasonForVisitId: Int
+    }
+    
+    struct SampleInfoHeader {
+        let currentdate: String
+        let customerId: String
+        let requisitionType: Int
+        let sessionStatus: Int
+        let locationType: String
+        let locationTypeId: Int
+        let noOfPlates: Int
+        let section: Int
+        let requisitionId: String
+        let timeStamp: String
+    }
+     
+ 
+     struct EnvironmentalSessionInfo {
+         let requestor: String
+         let sampleCollectedBy: String
+         let company: String
+         let companyId: Int
+         let site: String
+         let siteId: Int
+         let email: String
+         let reviewer: String
+         let surveyConductedOn: String
+         let sampleCollectionDate: String
+         let sampleCollectionDateWithTimeStamp: String
+         let purposeOfSurvey: String
+         let transferIn: String
+         let barCode: String
+         let barCodeManualEntered: String
+         let notes: String
+         let reasonForVisit: String
+         let requisitionId: String
+         let requisitionType: Int
+         let isPlateIdGenerated: Bool
+         let typeOfBird: String
+         let typeOfBirdId: Int
+     }
+     
+     struct EnviromentalLocationPlateData {
+         var isBacterialChecked: Bool
+         var isMicoscoreChecked: Bool
+         var locationValue: String
+         var plateId: String
+         var row: Int
+         var section: Int
+         var sampleDescription: String
+         var locationTypeId: Int?
+         var requisitionId: String
+         var requisitionType: Int
+         var mediaTypeValue: String
+         var mediaTypeId: Int?
+         var notes: String
+         var samplingMethodId: Int?
+         var samplingMethodTypeValue: String
+     }
+     
+     struct SessionProgressData {
+         var barcode: String
+         var company: String
+         var companyId: Int
+         var emailId: String
+         var requestor: String
+         var reviewer: String
+         var sampleCollectedBy: String
+         var sampleCollectionDate: String
+         var sampleCollectionDateWithTimeStamp: String
+         var sessionId: Int
+         var site: String
+         var siteId: Int
+         var manualEnteredBarCode: String
+     }
+
+     struct CustomerDetails {
+         var barcode: String
+         var company: String
+         var companyId: Int
+         var emailId: String
+         var requestor: String
+         var reviewer: String
+         var sampleCollectedBy: String
+         var sampleCollectionDate: String
+         var sessionId: Int
+         var site: String
+         var siteId: Int
+         var draftCheck: String
+     }
+
+     struct saveLocationTypeValues {
+         let locationId: NSNumber
+         let id: NSNumber
+         let value: String
+         let std40: Bool
+         let std20: Bool
+         let rep20: Int
+         let rep40: Int
+         let standard: Bool
+         let stnRep: Int
+         let mediaTypeDefault: String
+         let samplingMethodDefault: String
+     }
+
+    
+}
+
+

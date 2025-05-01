@@ -112,7 +112,23 @@ class BacterialSurveyVC: BaseViewController {
             date = dateForBarcode.replacingOccurrences(of: "/", with: "")
         }
         
-        CoreDataHandlerMicro().saveSessionProgress(cell.barcodeTxt.text!, company: cell.selectedCompanyTxt.text!, companyId: Int(self.selectedCompanyId) ?? 0, emailId: cell.emailIdTxt.text!, requestor: cell.requestorTxt.text!, reviewer: cell.reviewerTxt.text!, sampleCollectedBy: cell.sampleColletedByTxt.text!, sampleColectionDate: cell.sampleCollectionDateTxt.text!, sampleCollectionDateWithTimeStamp: date, sessionId: Int(self.sessionId), site: cell.siteTxt.text!, siteId: 3022, manualEnteredBarCode: self.globalBarcode)
+        let sessionDataInProgress = CoreDataHandlerMicrodataModels.SessionProgressData(
+            barcode: cell.barcodeTxt.text!, // Barcode text from the cell
+            company: cell.selectedCompanyTxt.text!, // Company name text from the cell
+            companyId: Int(self.selectedCompanyId) ?? 0, // Company ID, safely cast to Int, default to 0 if nil
+            emailId: cell.emailIdTxt.text!, // Email text from the cell
+            requestor: cell.requestorTxt.text!, // Requestor text from the cell
+            reviewer: cell.reviewerTxt.text!, // Reviewer text from the cell
+            sampleCollectedBy: cell.sampleColletedByTxt.text!, // Sample collected by text from the cell
+            sampleCollectionDate: cell.sampleCollectionDateTxt.text!, // Sample collection date text from the cell
+            sampleCollectionDateWithTimeStamp: date, // The timestamp (date variable) passed directly
+            sessionId: Int(self.sessionId), // Session ID cast to an Int
+            site: cell.siteTxt.text!, // Site text from the cell
+            siteId: 3022, // Static Site ID (3022) – if dynamic, replace this with a variable
+            manualEnteredBarCode: self.globalBarcode // The global barcode from the class property
+        )
+        
+        CoreDataHandlerMicro().saveSessionProgress(data: sessionDataInProgress)
         UserDefaults.standard.set(true, forKey: "sessionprogresss")
     }
     
@@ -277,7 +293,23 @@ class BacterialSurveyVC: BaseViewController {
     }
     
     @IBAction func sessionBtnAction(_ sender: UIButton) {
-        CoreDataHandlerMicro().saveCustomerDetailsInDBSessionData(selectedBarcode, company: self.selectedCompany, companyId: Int(self.selectedCompanyId) ?? 0, emailId: self.selectedEmailId, requestor: self.selectedRequestor, reviewer: self.selectedReviewer, sampleCollectedBy: self.selectedSampleCollectedBy, sampleColectionDate: self.selectedSampleCollectionDate, sessionId: "\(self.sessionId)", site: self.selectedSite, siteId: 3022)
+        
+        let sessionData = CoreDataHandlerMicrodataModels.CustomerSessionData(
+            barcode: selectedBarcode,
+            company: self.selectedCompany,
+            companyId: Int(self.selectedCompanyId) ?? 0,
+            emailId: self.selectedEmailId,
+            requestor: self.selectedRequestor,
+            reviewer: self.selectedReviewer,
+            sampleCollectedBy: self.selectedSampleCollectedBy,
+            sampleCollectionDate: self.selectedSampleCollectionDate,
+            sessionId: "\(self.sessionId)",
+            site: self.selectedSite,
+            siteId: 3022
+        )
+
+        CoreDataHandlerMicro().saveCustomerDetailsInDBSessionData(sessionData)
+
     }
     
     func isValidEmail(_ email: String) -> Bool {
@@ -340,7 +372,25 @@ class BacterialSurveyVC: BaseViewController {
         seesionProgress = false
         CoreDataHandlerMicro().deleteAllData("ProgressSessionMicrobial")
         CoreDataHandlerMicro().deleteAllData("MicrobialSampleInfo")
-        CoreDataHandlerMicro().saveCustomerDetailsInDraftData(selectedBarcode, company: self.selectedCompany, companyId: Int(self.selectedCompanyId) ?? 0, emailId: self.selectedEmailId, requestor: self.selectedRequestor, reviewer: self.selectedReviewer, sampleCollectedBy: self.selectedSampleCollectedBy, sampleColectionDate: self.selectedSampleCollectionDate, sessionId: Int(self.sessionId), site: self.selectedSite, siteId: 3022,draftCheck : "draft")
+        
+        
+        let sessionData = CoreDataHandlerMicrodataModels.CustomerDetails(
+            barcode: selectedBarcode,
+                 company: self.selectedCompany,
+                 companyId: Int(self.selectedCompanyId) ?? 0,
+                 emailId: self.selectedEmailId,
+                 requestor: self.selectedRequestor,
+                 reviewer: self.selectedReviewer,
+                 sampleCollectedBy: self.selectedSampleCollectedBy,
+                 sampleCollectionDate: self.selectedSampleCollectionDate,
+                 sessionId: Int(self.sessionId),
+                 site: self.selectedSite,
+                 siteId: 3022,
+                 draftCheck: "draft"
+             )
+        
+        CoreDataHandlerMicro().saveCustomerDetailsInDraftData(customerDetails: sessionData)
+        
         UserDefaults.standard.removeObject(forKey: "autogenratedID")
         UserDefaults.standard.removeObject(forKey: "sessionprogresss")
         

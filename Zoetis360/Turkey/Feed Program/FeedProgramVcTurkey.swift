@@ -1232,19 +1232,15 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             }
             handleCoccoControlArrayValidation(i)
             var str3 = String()
-            if cocciControlArray.count == 1{
+            str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String)!
+            if cocciControlArray.count == 1 {
                 str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
-            } else {
-                
-                str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String)!
             }
             
             if (str3.count) > 0 {
-                
                 coccidiosisWdDrinking.text =  (cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String
             } else {
                 coccidiosisWdDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
-                
             }
             
             handleCoccoControlArrayFiveMoleculeIBLValidations(i)
@@ -1252,12 +1248,12 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
             cocciDossageDataSetup(i)
             cocciFromDaysDataSetup(i)
             cocciToDaysDataSetup(i)
-            if cocciControlArray.count == 1{
+            if cocciControlArray.count == 1 {
                 coccidiosisVaccineDrinkin.text =  (cocciControlArray.value(forKey:"coccidiosisVaccine") as AnyObject).object(at:i) as? String
             } else {
                 coccidiosisVaccineDrinkin.text =  (cocciControlArray.value(forKey:"coccidiosisVaccine") as AnyObject).object(at:0) as? String
             }
-            if cocciControlArray.count == 1{
+            if cocciControlArray.count == 1 {
                 feedProgramTextField.text =
                 (cocciControlArray.value(forKey:"feedProgram") as AnyObject).object(at:i) as? String
             } else {
@@ -2181,6 +2177,18 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         })
     }
     
+    fileprivate func handleSaveAlternateDataBase(_ status: Bool) {
+        if status == true {
+            self.saveMyCoxtinDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
+                
+                if status == true {
+                    UserDefaults.standard.set(false, forKey: "isNewPostingId")
+                    UserDefaults.standard.synchronize()
+                }
+            })
+        }
+    }
+    
     fileprivate func saveUnlinkedSessionData() {
         if UserDefaults.standard.bool(forKey:"Unlinked") == true {
             postingId = UserDefaults.standard.integer(forKey:"necUnLinked") as NSNumber
@@ -2190,9 +2198,6 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
         }
         
         self.saveFeedProgrameInDatabase(feedId: feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
-            
-            ////print("Feed")
-            
             if status == true {
                 
                 self.saveCoccoiControlDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
@@ -2203,20 +2208,14 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                             if status == true {
                                 self.saveAlternativeDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
                                     
-                                    if status == true {
-                                        self.saveMyCoxtinDatabase(feedId: self.feedId,postingId: Int(self.postingId), completion: { (status) -> Void in
-                                            
-                                            if status == true {
-                                                
-                                                UserDefaults.standard.set(false, forKey: "isNewPostingId")
-                                                UserDefaults.standard.synchronize()
-                                                
-                                            }})
-                                    }})
-                            }})
-                    }})
-            }})
-        
+                                    self.handleSaveAlternateDataBase(status)
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
     }
     
     fileprivate func callSyncApiMethd() {
@@ -3748,44 +3747,36 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
     
     
     @IBAction func fromStarterTextField(sender: AnyObject) {
-        
-        if antiFromDurationFirstTextField.text?.isEmpty == true {
+ 
             
             antiToDurationFirstTextField.isUserInteractionEnabled = true
-            
-        } else if antiFromDurationFirstTextField.text?.isEmpty == true {
-            
-            antiToDurationFirstTextField.isUserInteractionEnabled = false
-            
-        }
+ 
         
     }
     
     
     @IBAction func toAntiboticSecondTextField(sender: AnyObject) {
-        
+        print("toAntiboticSecondTextField")
     }
     
     @IBAction func toAntiboticThreeTextField(sender: AnyObject) {
-        
+        print("toAntiboticThreeTextField")
     }
     
     @IBAction func toAntiboticFourTextField(sender: AnyObject) {
-
+        print("toAntiboticFourTextField")
     }
     
     @IBAction func toAntiboticFiveTextField(sender: AnyObject) {
-        
+        print("toAntiboticFiveTextField")
     }
     
     @IBAction func toAntiboticSixTextField(sender: AnyObject) {
-                
+        print("toAntiboticSixTextField")
     }
     
     @IBAction func feedType1Action(_ sender: Any) {
-        
-        
-        if  Bundle.main.versionNumber > "7.5.1" {
+        if Bundle.main.versionNumber > "7.5.1" {
             if coccidsisStartrDrinking.text == appDelegateObj.selectStr {
                 Helper.showAlertMessage(self,titleStr:NSLocalizedString(Constants.alertStr, comment: "") , messageStr:NSLocalizedString(selectMoleculeFeed, comment: ""))
                 return

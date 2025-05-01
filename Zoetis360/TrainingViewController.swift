@@ -49,14 +49,6 @@ class TrainingViewController: UIViewController, WKUIDelegate{
         self.userNameLabel.text! = UserDefaults.standard.value(forKey: "FirstName") as! String
     }
 
-    private func getSecureFilePath(_ fileName: String) -> URL {
-        let libraryPath = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0]
-        let privateDocumentsPath = libraryPath.appendingPathComponent("Private Documents")
-        return privateDocumentsPath.appendingPathComponent(fileName)
-    }
-
-    
-    
     // MARK: 🟢 - METHODS AND FUNCTIONS
 
     

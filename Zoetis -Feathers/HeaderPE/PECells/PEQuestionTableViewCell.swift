@@ -258,6 +258,7 @@ class PEQuestionTableViewCell: UITableViewCell , UITextFieldDelegate{
     }
     
     @IBAction func cameraBtnCLicked(_ sender: Any) {
+        print(appDelegateObj.testFuntion())
     }
     
     @IBAction func cameraClicked(_ sender: Any) {

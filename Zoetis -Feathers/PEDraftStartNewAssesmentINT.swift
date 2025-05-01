@@ -148,21 +148,7 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
     var inovoPESwitch = Bool()
     var basicPESwitch = Bool()
     var selectedCountryId : Int = 0
-    override func viewDidLoad() {
-        print("<<<<",self)
-        super.viewDidLoad()
-        self.navigationController?.navigationBar.isHidden = true
-        regionID = UserDefaults.standard.integer(forKey: "Regionid")
-        self.hideManufacturerOthers()
-        
-        self.hideBreedOthers()
-        self.hideEggsOthers()
-        self.visitButton.isUserInteractionEnabled = false
-        setupUI()
-        self.manfacturerOtherTxt.delegate = self
-        self.eggsOtherTxt.delegate = self
-        self.eggsOtherTxt.keyboardType = .numberPad
-        
+    fileprivate func SetupViewDidLoadMethod1() {
         let dateFormatter = DateFormatter()
         
         if regionID != 3 {
@@ -196,13 +182,9 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
         } else {
             selectedEvaluationDateText.text = peNewAssessment.evaluationDate ?? strdate1
         }
-        self.peNewAssessment.evaluationID = peNewAssessment.evaluationID
-        var FirstName = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
-        var LastName = UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
-        FirstName = FirstName + LastName
-        selectedEvaluatorText.text = peNewAssessment.evaluatorName ?? FirstName
-        selectedEvaluationType.text = peNewAssessment.evaluationName ?? ""
-        
+    }
+    
+    fileprivate func setupViewDidLoadMethod2() {
         if let character = peNewAssessment.breedOfBird?.character(at: 1),
            character == constantToSave.character(at: 0) {
             
@@ -239,14 +221,9 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
             }
             showFlockView()
         }
-        
-        selectedVisitText.text = peNewAssessment.visitName ?? ""
-        
-        countryTxt.text = peNewAssessment.countryName ?? ""
-        clorineTxtFld.text = peNewAssessment.clorineName ?? ""
-        selectedClorineId = peNewAssessment.clorineId ?? 0
-        selectedCountryId = peNewAssessment.countryID ?? 0
-        
+    }
+    
+    fileprivate func setupViewDidLoadMetho3(_ FirstName: inout String, _ LastName: inout String) {
         if peNewAssessment.camera == 1 {
             cameraSwitch.setOn(true, animated: false)
         } else {
@@ -307,7 +284,9 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
                 showManufacturerOthers()
             }
         }
-        
+    }
+    
+    fileprivate func setupViewDidLoadMethod4() {
         let xx = String(self.peNewAssessment.noOfEggs ?? 000)
         if xx != "0" {
             let last3 = String(xx.suffix(3))
@@ -351,8 +330,9 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
             basicPESwitch = false
             basicBtn.setImage(UIImage(named: "uncheckIconPE"), for: .normal)
         }
-        
-        
+    }
+    
+    fileprivate func setupViewDidLoadMethod5() {
         if peNewAssessment.extndMicro == true {
             extendedPESwitch = true
             extendedPEBtn.setImage(UIImage(named: "checkIconPE"), for: .normal)
@@ -388,18 +368,54 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
                 peNewAssessment.isAutomaticFail = 0
             }
         }
+    }
+    
+    override func viewDidLoad() {
+        print("<<<<",self)
+        super.viewDidLoad()
+        self.navigationController?.navigationBar.isHidden = true
+        regionID = UserDefaults.standard.integer(forKey: "Regionid")
+        self.hideManufacturerOthers()
+        
+        self.hideBreedOthers()
+        self.hideEggsOthers()
+        self.visitButton.isUserInteractionEnabled = false
+        setupUI()
+        self.manfacturerOtherTxt.delegate = self
+        self.eggsOtherTxt.delegate = self
+        self.eggsOtherTxt.keyboardType = .numberPad
+        
+        SetupViewDidLoadMethod1()
+        self.peNewAssessment.evaluationID = peNewAssessment.evaluationID
+        var FirstName = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
+        var LastName = UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
+        FirstName = FirstName + LastName
+        selectedEvaluatorText.text = peNewAssessment.evaluatorName ?? FirstName
+        selectedEvaluationType.text = peNewAssessment.evaluationName ?? ""
+        
+        setupViewDidLoadMethod2()
+        
+        selectedVisitText.text = peNewAssessment.visitName ?? ""
+        
+        countryTxt.text = peNewAssessment.countryName ?? ""
+        clorineTxtFld.text = peNewAssessment.clorineName ?? ""
+        selectedClorineId = peNewAssessment.clorineId ?? 0
+        selectedCountryId = peNewAssessment.countryID ?? 0
+        
+        setupViewDidLoadMetho3(&FirstName, &LastName)
+        setupViewDidLoadMethod4()
+        setupViewDidLoadMethod5()
         
         checkBackAndSave()
         if peNewAssessment.selectedTSRID == nil || peNewAssessment.selectedTSRID == 0{
             tsrButton.isUserInteractionEnabled = true
             selectedTSR.alpha = 1
-        }else {
+        } else {
             selectedTSR.text = peNewAssessment.selectedTSR
             tsrButton.isUserInteractionEnabled = false
             selectedTSR.isUserInteractionEnabled = false
             selectedTSR.alpha = 0.6
         }
-        
     }
     
     
