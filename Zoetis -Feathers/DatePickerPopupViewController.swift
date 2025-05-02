@@ -80,7 +80,6 @@ class DatePickerPopupViewController: BaseViewController {
                 let evaluationDateObj =  Date()
                 
                 if isCertificateDate == 0 {
-                    let currentQuarterDate =  evaluationDateObj.startOfQuarter.startOfMonth()
                     let theDaysLater = TimeInterval(3.months)
                     datePicker.minimumDate = Date().addingTimeInterval(-theDaysLater)
                     datePicker.maximumDate = Date()

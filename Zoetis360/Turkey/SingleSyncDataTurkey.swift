@@ -353,10 +353,10 @@ class SingleSyncDataTurkey: NSObject {
                 let id = UserDefaults.standard.integer(forKey: "Id")
                 mainDict.setValue(id, forKey: "UserId")
                 mainDict.setValue(false, forKey: "finalized")
-                var sessionDict = NSMutableDictionary()
-                sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds]
+               
+                var  sessionDict = ["deviceSessionId" : fullData,"sessionId" : postingIdArr[i] as! NSNumber, "userId" : id,"feeds" : mainFeeds] as NSMutableDictionary
                 sessionArray.add(sessionDict)
-                sessionDict = NSMutableDictionary()
+                sessionDict.removeAllObjects()
                 sessionDictMain = ["Sessions" : sessionArray]
             }
         }
@@ -635,8 +635,7 @@ class SingleSyncDataTurkey: NSObject {
     fileprivate func failuerOfPostedSessionAPI(_ encodingError: AFError, _ response: AFDataResponse<Any>, _ statusCode: Int?) {
         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
             self.delegeteSyncApiData.failWithErrorInternalSyncdata()
-        } else if let data = response.data {
-            
+        }else if response.data != nil {
             if let s = statusCode {
                 self.delegeteSyncApiData.failWithErrorSyncdata(statusCode: s)
             }

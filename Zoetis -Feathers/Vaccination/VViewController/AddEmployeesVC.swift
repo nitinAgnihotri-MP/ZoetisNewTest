@@ -690,24 +690,25 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         return true
     }
     
+    fileprivate func handleEmployeesAddedArrValidationData(_ index: Int, _ empObj: VaccinationEmployeeVM) {
+        if employeesAddedArr[index].firstName != empObj.firstName {
+            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+        }
+        if employeesAddedArr[index].middleName != empObj.middleName {
+            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+        }
+        if employeesAddedArr[index].startDate != empObj.startDate {
+            self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
+        }
+    }
+    
     fileprivate func handleEmployeesAddedArrValidation(_ index: Int, _ empObj: VaccinationEmployeeVM) {
         if employeesAddedArr.count > 0 {
-            if employeesAddedArr[index].firstName != empObj.firstName {
-                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                
-            }
-            if employeesAddedArr[index].middleName != empObj.middleName {
-                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                
-            }
-            if employeesAddedArr[index].startDate != empObj.startDate {
-                self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                
-            }
+            handleEmployeesAddedArrValidationData(index, empObj)
             if employeesAddedArr[index].lastName != empObj.lastName {
                 self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                
             }
+            
             employeesAddedArr[index] = empObj
             if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1" {
                 VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: curentCertification?.certificationId  ?? "", subModule: nil, certificationCategoryId:"1", certObj: self.curentCertification!)
@@ -807,159 +808,136 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         NotificationCenter.default.removeObserver(self)
     }
     
-    
-    func validate(){
-        var hasCertificationFilled = true
+    func validate() {
+        let hasCertificationFilled = validateCertificationFields()
+        let hasEmpInfoFilled = validateEmployeeInfo()
         
-        if curentCertification?.fsmName != nil && curentCertification?.fsmName != "" {
-            
-            //Extra Validation
-            hasCertificationFilled = true
-        }else{
-            hasCertificationFilled = false
-        }
-        
-        if isSafetyCertification && (curentCertification?.selectedFsmId == nil || curentCertification?.selectedFsmId == "") {
-            hasCertificationFilled = true
-        }else{
-            hasCertificationFilled = false
-            
-        }
-        
-        if curentCertification?.siteId != nil && curentCertification?.siteId != "" {
-            hasCertificationFilled = true
-        }else{
-            hasCertificationFilled = false
-        }
-        
-        if curentCertification?.customerId != nil && curentCertification?.customerId != "" {
-            hasCertificationFilled = true
-        }else{
-            hasCertificationFilled = false
-        }
-        
-        var hasEmpInfoFilled = true
-        if employeesAddedArr.count > 0{
-            for emp in employeesAddedArr{
-                if emp.firstName != nil && emp.firstName != "" {
-                    hasEmpInfoFilled = hasEmpInfoFilled && true
-                }else{
-                    hasEmpInfoFilled = hasEmpInfoFilled && false
-                }
-                
-                if emp.lastName != nil && emp.lastName != "" {
-                    hasEmpInfoFilled = hasEmpInfoFilled && true
-                }else{
-                    hasEmpInfoFilled = hasEmpInfoFilled && false
-                }
-                
-                if emp.selectedTshirtId != nil && emp.selectedTshirtId != "" {
-                    hasEmpInfoFilled = hasEmpInfoFilled && true
-                }else{
-                    hasEmpInfoFilled = hasEmpInfoFilled && false
-                }
-                
-                if emp.selectedLangId != nil && emp.selectedLangId != "" {
-                    hasEmpInfoFilled = hasEmpInfoFilled && true
-                }else{
-                    hasEmpInfoFilled = hasEmpInfoFilled && false
-                }
-                
-                if emp.selectedRolesStr != nil && emp.selectedRolesStr != "" {
-                    hasEmpInfoFilled = hasEmpInfoFilled && true
-                }else{
-                    hasEmpInfoFilled = hasEmpInfoFilled && false
-                }
+        if hasCertificationFilled {
+            if hasEmpInfoFilled {
+                handleCertificationCategoryChecks()
+            } else {
+                handleEmployeeInfoMissing()
             }
-            
-        }else{
-            if isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                hasEmpInfoFilled = hasEmpInfoFilled && true
-            }else{
-                hasEmpInfoFilled = hasEmpInfoFilled && false
+        } else {
+            handleCertificationFieldsMissing()
+        }
+    }
+
+    private func validateCertificationFields() -> Bool {
+        guard let cert = curentCertification else { return false }
+        if cert.fsmName == nil || cert.fsmName == "" { return false }
+        if isSafetyCertification && (cert.selectedFsmId == nil || cert.selectedFsmId == "") { return false }
+        if cert.siteId == nil || cert.siteId == "" { return false }
+        if cert.customerId == nil || cert.customerId == "" { return false }
+        return true
+    }
+
+    private func validateEmployeeInfo() -> Bool {
+        if employeesAddedArr.isEmpty {
+            if isSafetyCertification || curentCertification?.certificationCategoryId == "1" {
+                return true
+            } else {
                 displayAlertMessage(userMessage: "Please add employee(s) to continue.")
+                return false
+            }
+        }
+        for emp in employeesAddedArr {
+            if emp.firstName == nil || emp.firstName == "" { return false }
+            if emp.lastName == nil || emp.lastName == "" { return false }
+            if emp.selectedTshirtId == nil || emp.selectedTshirtId == "" { return false }
+            if emp.selectedLangId == nil || emp.selectedLangId == "" { return false }
+            if emp.selectedRolesStr == nil || emp.selectedRolesStr == "" { return false }
+        }
+        return true
+    }
+
+    private func handleCertificationCategoryChecks() {
+        guard let cert = curentCertification else { return }
+        if cert.certificationCategoryId != "2" {
+            if cert.selectedFsmId == nil || cert.selectedFsmId == "" {
+                showMandatoryFieldsColor()
+                return
+            }
+            if cert.siteId == nil || cert.siteId == "" {
+                showMandatoryFieldsColor()
                 return
             }
         }
-        
-        if hasCertificationFilled {
-            if hasEmpInfoFilled{
-                if curentCertification?.certificationCategoryId !=  "2"
-                {
-                    if curentCertification?.selectedFsmId == nil || curentCertification?.selectedFsmId == "" {
-                        self.showMandatoryFieldsColor()
-                        return
-                    }
-                    
-                    if curentCertification?.siteId == nil || curentCertification?.siteId == "" {
-                        self.showMandatoryFieldsColor()
-                        return
-                    }
-                }
-                
-                if curentCertification?.fsmName != nil && curentCertification?.fsmName != ""{
-                    
-                    if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                        let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfoByTrainingId(trainingId: self.trainingId)
-                        if shippingInfoDB != nil {
-                            let countryID = shippingInfoDB?.countryID
-                            self.getVaccinationStateList(countryId: String(countryID ?? 0))
-                        }
-                        self.navigatetToQuestionnaireScreen(trainingId: self.trainingId, fssId: self.fssId)
-                    }
-                    
-                    else{
-                        if curentCertification?.certificationStatus == VaccinationCertificationStatus.draft.rawValue {
-                            let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfoByTrainingId(trainingId: self.trainingId)
-                            if shippingInfoDB != nil {
-                                let countryID = shippingInfoDB?.countryID
-                                self.getVaccinationStateList(countryId: String(countryID ?? 0))
-                            }
-                        }
-                        else {
-                            self.getShippingDetails()
-                        }
-                        
-                        let alertController = UIAlertController(title: "Confirmation Required", message: "Please confirm you have entered the hatchery manager's full name.", preferredStyle: .alert)
-                        let okAction = UIAlertAction(title: "Confirm", style: UIAlertAction.Style.default) { [self]
-                            _ in
-                            if self.curentCertification?.selectedFsmId == self.curentCertification?.fsrId {
-                                self.curentCertification?.selectedFsmId = nil
-                            }
-                            if curentCertification?.certificationStatus == VaccinationCertificationStatus.draft.rawValue {
-                                self.navigatetToQuestionnaireScreen(trainingId: self.trainingId)
-                            } else {
-                                self.navigatetToQuestionnaireScreen()
-                            }
-                            
-                        }
-                        let cancelAction = UIAlertAction(title: "Edit", style: UIAlertAction.Style.default){
-                            _ in
-                            self.managerTxtFld.becomeFirstResponder()
-                        }
-                        alertController.addAction(cancelAction)
-                        alertController.addAction(okAction)
-                        
-                        self.present(alertController, animated: true, completion: nil)
-                    }
-                }else{
-                    DispatchQueue.main.async{
-                        self.showMandatoryFieldsColor()
-                    }
-                }
-            }else{
-                self.employeesTblVw.reloadData()
-                displayAlertMessage(userMessage: Constants.pleaseEnterMandatoryFields)
-            }
-        }else{
-            DispatchQueue.main.async{
-                self.showMandatoryFieldsColor()
-            }
-            self.employeesTblVw.reloadData()
-            displayAlertMessage(userMessage: Constants.pleaseEnterMandatoryFields)
-        }
-        
+        handleFsmNameAndStatus()
     }
+
+    private func handleFsmNameAndStatus() {
+        guard let cert = curentCertification else { return }
+        if cert.fsmName != nil && cert.fsmName != "" {
+            if cert.certificationStatus == VaccinationCertificationStatus.submitted.rawValue {
+                handleSubmittedStatus()
+            } else {
+                handleDraftOrOtherStatus()
+            }
+        } else {
+            DispatchQueue.main.async { self.showMandatoryFieldsColor() }
+        }
+    }
+
+    private func handleSubmittedStatus() {
+        let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfoByTrainingId(trainingId: self.trainingId)
+        if let shippingInfoDB = shippingInfoDB {
+            let countryID = shippingInfoDB.countryID
+            self.getVaccinationStateList(countryId: String(countryID ?? 0))
+        }
+        self.navigatetToQuestionnaireScreen(trainingId: self.trainingId, fssId: self.fssId)
+    }
+
+    private func handleDraftOrOtherStatus() {
+        guard let cert = curentCertification else { return }
+        if cert.certificationStatus == VaccinationCertificationStatus.draft.rawValue {
+            let shippingInfoDB = VaccinationCustomersDAO.sharedInstance.fetchShippingInfoByTrainingId(trainingId: self.trainingId)
+            if let shippingInfoDB = shippingInfoDB {
+                let countryID = shippingInfoDB.countryID
+                self.getVaccinationStateList(countryId: String(countryID ?? 0))
+            }
+        } else {
+            self.getShippingDetails()
+        }
+        presentManagerConfirmationAlert()
+    }
+
+    private func presentManagerConfirmationAlert() {
+        let alertController = UIAlertController(
+            title: "Confirmation Required",
+            message: "Please confirm you have entered the hatchery manager's full name.",
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "Confirm", style: .default) { [self] _ in
+            if self.curentCertification?.selectedFsmId == self.curentCertification?.fsrId {
+                self.curentCertification?.selectedFsmId = nil
+            }
+            if curentCertification?.certificationStatus == VaccinationCertificationStatus.draft.rawValue {
+                self.navigatetToQuestionnaireScreen(trainingId: self.trainingId)
+            } else {
+                self.navigatetToQuestionnaireScreen()
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Edit", style: .default) { _ in
+            self.managerTxtFld.becomeFirstResponder()
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    private func handleEmployeeInfoMissing() {
+        self.employeesTblVw.reloadData()
+        displayAlertMessage(userMessage: Constants.pleaseEnterMandatoryFields)
+    }
+
+    private func handleCertificationFieldsMissing() {
+        DispatchQueue.main.async { self.showMandatoryFieldsColor() }
+        self.employeesTblVw.reloadData()
+        displayAlertMessage(userMessage: Constants.pleaseEnterMandatoryFields)
+    }
+
+    // ... existing code ...
     
     // MARK: - Get Shipping Details
     private func getShippingDetails(){
@@ -1417,138 +1395,156 @@ extension AddEmployeesVC: UITableViewDataSource, UITableViewDelegate{
         if let spacer = tableView.reorder.spacerCell(for: indexPath) {
             return spacer
         }
-        if let cell = tableView.dequeueReusableCell(withIdentifier: AddEmployeeTableViewCell.identifier, for: indexPath) as? AddEmployeeTableViewCell{
-            if employeesAddedArr.count > 0 && employeesAddedArr.count > indexPath.row {
-                cell.showRedFieldsValidation = showRedFieldsValidation
-                cell.index = indexPath.row
-                if employeesAddedArr.count - 1  == indexPath.row{
-                    cell.contentView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 18.5)
-                }else{
-                    cell.contentView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 0)
-                }
-                if indexPath.row % 2 == 0{
-                    cell.assignWhitebackgroundVw()
-                } else{
-                    cell.assignBorderVw()
-                }
-                
-                if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                    cell.enableOrDisable(flag: false)
-                }else{
-                    cell.enableOrDisable(flag: true)
-                }
-                cell.setValues(employee:employeesAddedArr[indexPath.row])
-                if showRedFieldsValidation{
-                    cell.changeMandatoryFieldsBorder()
-                }
-                if showRedFieldsValidation{
-                    DispatchQueue.main.async{
-                        cell.changeMandatoryFieldsBorder()
-                    }
-                }
-                cell.tShirtCompletion = {
-                    [unowned self] ( error) in
-                    self.tableviewIndexPath = indexPath
-                    let arr = self.tShirtArr.map{ $0.value}
-                    self.dropDownVIewNew(arrayData: arr as! [String], kWidth: cell.tShirtSizeVw.frame.width, kAnchor: cell.tShirtSizeVw, yheight: cell.tShirtSizeVw.bounds.height) { [unowned self] selectedVal, index  in
-                        if indexPath.row > -1 && self.employeesAddedArr.count > indexPath.row{
-                            var employeeObj = self.employeesAddedArr[indexPath.row]
-                            if index > -1 && self.tShirtArr.count > index{
-                                if employeeObj.selectedTshirtId != self.tShirtArr[index].id{
-                                    self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                                }
-                                if self.isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                                    VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: self.curentCertification?.certificationId  ?? "", subModule: nil, certificationCategoryId:"1", certObj: self.curentCertification!)
-                                } else{
-                                    VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: self.curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
-                                }
-                                
-                                employeeObj.selectedTshirtId =  self.tShirtArr[index].id
-                                employeeObj.selectedTshirtValue =  self.tShirtArr[index].value
-                                
-                                if self.curentCertification?.certificationId != nil &&  employeeObj.employeeId != nil{
-                                    self.employeesAddedArr[indexPath.row] = employeeObj
-                                    AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: self.curentCertification?.certificationId ?? "", employeeObj: employeeObj)
-                                }
-                                self.employeesTblVw.beginUpdates()
-                                self.employeesTblVw.reloadRows(at: [indexPath], with: .automatic)
-                                self.employeesTblVw.endUpdates()
-                            }
-                        }
-                        
-                    }
-                    self.dropHiddenAndShow()
-                }
-                cell.languageCompletion = {
-                    [unowned self] ( error) in
-                    self.tableviewIndexPath = indexPath
-                    let arr = self.langArr.map{ $0.value}
-                    self.dropDownVIewNew(arrayData: arr as! [String], kWidth: cell.certlangVw.frame.width, kAnchor: cell.certlangVw, yheight: cell.certlangVw.bounds.height) {
-                        [unowned self] selectedVal, index  in
-                        if indexPath.row > -1 && self.employeesAddedArr.count > indexPath.row{
-                            var employeeObj = self.employeesAddedArr[indexPath.row]
-                            if index > -1 && self.langArr.count > index{
-                                if employeeObj.selectedLangId != self.langArr[index].id{
-                                    self.curentCertification?.syncStatus =  VaccinationCertificationSyncStatus.syncReady.rawValue
-                                }
-                                if self.isSafetyCertification || self.curentCertification?.certificationCategoryId == "1"{
-                                    VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: self.curentCertification?.certificationId  ?? "", subModule: nil, certificationCategoryId:"1", certObj: self.curentCertification!)
-                                } else {
-                                    VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .AddEmployeesVC, certificationId: self.curentCertification?.certificationId  ?? "", subModule: nil, certObj: self.curentCertification!)
-                                }
-                                employeeObj.selectedLangId =  self.langArr[index].id!
-                                employeeObj.selectedLangValue =  self.langArr[index].value!
-                                if self.curentCertification?.certificationId != nil &&  employeeObj.employeeId != nil{
-                                    self.employeesAddedArr[indexPath.row] = employeeObj
-                                    AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: self.curentCertification?.certificationId ?? "", employeeObj: employeeObj)
-                                }
-                                self.employeesTblVw.beginUpdates()
-                                self.employeesTblVw.reloadRows(at: [indexPath], with: .automatic)
-                                self.employeesTblVw.endUpdates()
-                            }
-                        }
-                    }
-                    self.dropHiddenAndShow()
-                }
-                
-                cell.rolesCompletion = {
-                    [unowned self] ( error) in
-                    self.tableviewIndexPath = indexPath
-                    
-                    self.resignFirstResponder()
-                    
-                   
-                    if indexPath.row > -1 && self.employeesAddedArr.count > indexPath.row{
-                        let selectedValueObjStr = self.employeesAddedArr[indexPath.row].rolesArrStr
-                        
-                        var selectedRoleArr = [DropwnMasterDataVM]()
-                        if selectedValueObjStr != "" && selectedValueObjStr != nil{
-                            let data = selectedValueObjStr?.data(using: .utf8)
-                            let decoder = JSONDecoder()
-                            do{
-                                if data != nil{
-                                    selectedRoleArr =  try decoder.decode([DropwnMasterDataVM].self, from: data!) ?? [DropwnMasterDataVM]()
-                                }
-                            }catch{
-                                print(appDelegateObj.testFuntion())
-                            }
-                        }
-                        self.displayEmployeePopup(view: cell.roleBtn, rolesArr: self.rolesArr, defaultRolesArr: selectedRoleArr, empId: self.employeesAddedArr[indexPath.row].employeeId ?? "", indexPath: indexPath
-                        )
-                    }
-                }
-                
-                cell.startDateCompletion = {
-                    [unowned self] ( error) in
-                    self.tableviewIndexPath = indexPath
-                    self.datePicker()
-                }
-                
-                return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: AddEmployeeTableViewCell.identifier, for: indexPath) as? AddEmployeeTableViewCell,
+              employeesAddedArr.count > 0, employeesAddedArr.count > indexPath.row else {
+            return UITableViewCell()
+        }
+        configureCellAppearance(cell, indexPath)
+        configureCellState(cell)
+        configureCellValues(cell, indexPath)
+        configureCellCompletions(cell, indexPath)
+        return cell
+    }
+
+    private func configureCellAppearance(_ cell: AddEmployeeTableViewCell, _ indexPath: IndexPath) {
+        cell.showRedFieldsValidation = showRedFieldsValidation
+        cell.index = indexPath.row
+        let isLast = employeesAddedArr.count - 1 == indexPath.row
+        cell.contentView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: isLast ? 18.5 : 0)
+        if indexPath.row % 2 == 0 {
+            cell.assignWhitebackgroundVw()
+        } else {
+            cell.assignBorderVw()
+        }
+    }
+
+    private func configureCellState(_ cell: AddEmployeeTableViewCell) {
+        let isSubmitted = curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue
+        cell.enableOrDisable(flag: !isSubmitted)
+    }
+
+    private func configureCellValues(_ cell: AddEmployeeTableViewCell, _ indexPath: IndexPath) {
+        cell.setValues(employee: employeesAddedArr[indexPath.row])
+        if showRedFieldsValidation {
+            DispatchQueue.main.async {
+                cell.changeMandatoryFieldsBorder()
             }
         }
-        return UITableViewCell()
     }
+
+    private func configureCellCompletions(_ cell: AddEmployeeTableViewCell, _ indexPath: IndexPath) {
+        cell.tShirtCompletion = { [unowned self] error in
+            handleTShirtSelection(cell, indexPath)
+        }
+        cell.languageCompletion = { [unowned self] error in
+            handleLanguageSelection(cell, indexPath)
+        }
+        cell.rolesCompletion = { [unowned self] error in
+            handleRolesSelection(cell, indexPath, cell)
+        }
+        cell.startDateCompletion = { [unowned self] error in
+            self.tableviewIndexPath = indexPath
+            self.datePicker()
+        }
+    }
+
+    private func handleTShirtSelection(_ cell: AddEmployeeTableViewCell, _ indexPath: IndexPath) {
+        self.tableviewIndexPath = indexPath
+        let arr = self.tShirtArr.map { $0.value }
+        self.dropDownVIewNew(arrayData: arr as! [String], kWidth: cell.tShirtSizeVw.frame.width, kAnchor: cell.tShirtSizeVw, yheight: cell.tShirtSizeVw.bounds.height) { [unowned self] selectedVal, index in
+            updateEmployeeTShirt(indexPath, index)
+        }
+        self.dropHiddenAndShow()
+    }
+
+    private func updateEmployeeTShirt(_ indexPath: IndexPath, _ index: Int) {
+        guard indexPath.row > -1, employeesAddedArr.count > indexPath.row else { return }
+        var employeeObj = employeesAddedArr[indexPath.row]
+        if index > -1, tShirtArr.count > index {
+            if employeeObj.selectedTshirtId != tShirtArr[index].id {
+                curentCertification?.syncStatus = VaccinationCertificationSyncStatus.syncReady.rawValue
+            }
+            insertLastVisitedModuleName()
+            employeeObj.selectedTshirtId = tShirtArr[index].id
+            employeeObj.selectedTshirtValue = tShirtArr[index].value
+            if curentCertification?.certificationId != nil, employeeObj.employeeId != nil {
+                employeesAddedArr[indexPath.row] = employeeObj
+                AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: employeeObj)
+            }
+            employeesTblVw.beginUpdates()
+            employeesTblVw.reloadRows(at: [indexPath], with: .automatic)
+            employeesTblVw.endUpdates()
+        }
+    }
+
+    private func handleLanguageSelection(_ cell: AddEmployeeTableViewCell, _ indexPath: IndexPath) {
+        self.tableviewIndexPath = indexPath
+        let arr = self.langArr.map { $0.value }
+        self.dropDownVIewNew(arrayData: arr as! [String], kWidth: cell.certlangVw.frame.width, kAnchor: cell.certlangVw, yheight: cell.certlangVw.bounds.height) { [unowned self] selectedVal, index in
+            updateEmployeeLanguage(indexPath, index)
+        }
+        self.dropHiddenAndShow()
+    }
+
+    private func updateEmployeeLanguage(_ indexPath: IndexPath, _ index: Int) {
+        guard indexPath.row > -1, employeesAddedArr.count > indexPath.row else { return }
+        var employeeObj = employeesAddedArr[indexPath.row]
+        if index > -1, langArr.count > index {
+            if employeeObj.selectedLangId != langArr[index].id {
+                curentCertification?.syncStatus = VaccinationCertificationSyncStatus.syncReady.rawValue
+            }
+            insertLastVisitedModuleName()
+            employeeObj.selectedLangId = langArr[index].id!
+            employeeObj.selectedLangValue = langArr[index].value!
+            if curentCertification?.certificationId != nil, employeeObj.employeeId != nil {
+                employeesAddedArr[indexPath.row] = employeeObj
+                AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: employeeObj)
+            }
+            employeesTblVw.beginUpdates()
+            employeesTblVw.reloadRows(at: [indexPath], with: .automatic)
+            employeesTblVw.endUpdates()
+        }
+    }
+
+    private func handleRolesSelection(_ cell: AddEmployeeTableViewCell, _ indexPath: IndexPath, _ sender: AddEmployeeTableViewCell) {
+        self.tableviewIndexPath = indexPath
+        self.resignFirstResponder()
+        guard indexPath.row > -1, employeesAddedArr.count > indexPath.row else { return }
+        let selectedValueObjStr = employeesAddedArr[indexPath.row].rolesArrStr
+        var selectedRoleArr = [DropwnMasterDataVM]()
+        if let selectedValueObjStr = selectedValueObjStr, !selectedValueObjStr.isEmpty {
+            if let data = selectedValueObjStr.data(using: .utf8) {
+                let decoder = JSONDecoder()
+                if let decoded = try? decoder.decode([DropwnMasterDataVM].self, from: data) {
+                    selectedRoleArr = decoded
+                }
+            }
+        }
+        self.displayEmployeePopup(view: sender.roleBtn, rolesArr: self.rolesArr, defaultRolesArr: selectedRoleArr, empId: employeesAddedArr[indexPath.row].employeeId ?? "", indexPath: indexPath)
+    }
+
+    private func insertLastVisitedModuleName() {
+        if isSafetyCertification || curentCertification?.certificationCategoryId == "1" {
+            VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                lastModuleName: .AddEmployeesVC,
+                certificationId: curentCertification?.certificationId ?? "",
+                subModule: nil,
+                certificationCategoryId: "1",
+                certObj: curentCertification!
+            )
+        } else {
+            VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                lastModuleName: .AddEmployeesVC,
+                certificationId: curentCertification?.certificationId ?? "",
+                subModule: nil,
+                certObj: curentCertification!
+            )
+        }
+    }
+
+    // ... existing code ...
     
     func displayEmployeePopup(view: UIButton, rolesArr: [DropwnMasterDataVM], defaultRolesArr: [DropwnMasterDataVM]?, empId:String, indexPath: IndexPath){
         self.resignFirstResponder()

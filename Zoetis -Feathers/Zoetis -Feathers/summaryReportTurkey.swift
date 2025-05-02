@@ -20,6 +20,7 @@ class summaryReportTurkey: UIView {
     var sumarryDelegate: summmaryReportTUR!
 
     override func draw(_ rect: CGRect) {
+        appDelegateObj.testFuntion()
     }
 
     @IBAction func yesBtnAction(_ sender: UIButton) {

@@ -761,81 +761,7 @@ class PEStartNewAssessment: BaseViewController {
     func showFlockView(){
         flockView.isHidden = false
     }
-    
-    /* Get offline and draft stored session */
-    // MARK: - Get offline and draft stored session
-    private func getAllDateArrayStored() -> [String]{
-        //let draft =  ZoetisDropdownShared.sharedInstance.sharedPEDraft ?? []
-        let drafts  = CoreDataHandlerPE().getDraftAssessmentArrayPEObject()
-        var dates : [String] = []
-        var coustomers : [String] = []
-        var sites : [String] = []
-        for obj in drafts {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        let syncData =  CoreDataHandlerPE().getOfflineAssessmentArrayPEObject()
-        for obj in syncData {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        return dates
-    }
-    
-    // MARK: - Get saved Customers list
-    private func getAllCustomerArrayStored() -> [String]{
-        let drafts  = CoreDataHandlerPE().getDraftAssessmentArrayPEObject()
-        var dates : [String] = []
-        var coustomers : [String] = []
-        var sites : [String] = []
-        for obj in drafts {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        let syncData =  CoreDataHandlerPE().getOfflineAssessmentArrayPEObject()
-        for obj in syncData {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        return coustomers
-    }
-    // MARK: - Get saved Site's list
-    private func getAllSitesArrayStored() -> [String]{
-        let drafts  = CoreDataHandlerPE().getDraftAssessmentArrayPEObject()
-        var dates : [String] = []
-        var coustomers : [String] = []
-        var sites : [String] = []
-        for obj in drafts {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        let syncData =  CoreDataHandlerPE().getOfflineAssessmentArrayPEObject()
-        for obj in syncData {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        return sites
-    }
-    // MARK: - Get Evaluation Type list
-    private func getAllevaluationIDStored() -> [String]{
-        let drafts  = CoreDataHandlerPE().getDraftAssessmentArrayPEObject(ofCurrentDate:true)
-        var evaluationIDs : [String] = []
-        for obj in drafts {
-            evaluationIDs.append(obj.evaluationName ?? "")
-        }
-        let syncData =  CoreDataHandlerPE().getOfflineAssessmentArrayPEObject(ofCurrentDate:true)
-        for obj in syncData {
-            evaluationIDs.append(obj.evaluationName ?? "")
-        }
-        return evaluationIDs
-    }
-    
+
     @IBAction func btnAction(_ sender: Any) {
         appDelegateObj.testFuntion()
     }
@@ -1032,6 +958,18 @@ class PEStartNewAssessment: BaseViewController {
         return true
     }
 
+    fileprivate func handleFlockAgeScenarioNavigationValidation(_ sanitationQuesArr: [PE_ExtendedPEQuestion]) {
+        if isFromBack {
+            if sanitationQuesArr.isEmpty && Constants.isExtendedPopup {
+                showOnlyExtendedMicrobial()
+            } else if !Constants.isMovementDone {
+                fromBackNextBtnAction()
+            }
+        } else {
+            okButtonTapped()
+        }
+    }
+    
     private func handleFlockAgeScenario() {
         let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance
             .fetchAssessmentSanitationQuestions(
@@ -1057,133 +995,10 @@ class PEStartNewAssessment: BaseViewController {
             }
 
         } else {
-            if isFromBack {
-                if sanitationQuesArr.isEmpty && Constants.isExtendedPopup {
-                    showOnlyExtendedMicrobial()
-                } else if !Constants.isMovementDone {
-                    fromBackNextBtnAction()
-                }
-            } else {
-                okButtonTapped()
-            }
+            handleFlockAgeScenarioNavigationValidation(sanitationQuesArr)
         }
     }
     
-//    func checkValidations() {
-//        guard let date = self.peNewAssessment.evaluationDate, date.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        guard let customer = self.peNewAssessment.customerName, customer.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        guard let selectedTSR = self.selectedTSR.text, selectedTSR.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        guard let site = self.peNewAssessment.siteName, site.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        guard let evaluationName = self.peNewAssessment.evaluationName, evaluationName.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        guard let evaluator = self.peNewAssessment.evaluatorName, evaluator.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        guard let reasonForVisit = self.peNewAssessment.visitName, reasonForVisit.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != "" {
-//            if (peNewAssessment.breedOfBird?.lowercased().contains("other") ?? false) {
-//                if peNewAssessment.breedOfBirdOther == nil || peNewAssessment.breedOfBirdOther == "" {
-//                    changeMandatorySuperviewToRed()
-//                    return
-//                }
-//            }
-//        } else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        if let text = txtManufacturer.text, !text.isEmpty,
-//           text.lowercased().contains("other") {
-//            
-//            if manfacturerOtherTxt.text == nil || manfacturerOtherTxt.text?.isEmpty == true {
-//                changeMandatorySuperviewToRed()
-//                return
-//            }
-//        } else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        if peNewAssessment.incubation == nil || peNewAssessment.incubation == "" {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        if let eggsText = txtNumberOfEggs.text,
-//           !eggsText.isEmpty,
-//           eggsText.lowercased().contains("other") {
-//            
-//            if eggsOtherTxt.text?.isEmpty ?? true {
-//                changeMandatorySuperviewToRed()
-//                return
-//            }
-//        } else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        if self.heightFlockAge.constant == 78 {
-//            if isFlockAgeGreaterTheAllProd || isFlockAgeGreaterThen50Weeks {
-//                
-//                if isFromBack {
-//                    let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
-//                    if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
-//                        showOnlyExtendedMicrobial()
-//                    } else{
-//                        if !Constants.isMovementDone{
-//                            self.fromBackNextBtnAction()
-//                            if extendedPESwitch.isOn {
-//                                CoreDataHandlerPE().updateIsEMRequestedInAssessmentInProgress(isEMRequested: true)
-//                            } else {
-//                                CoreDataHandlerPE().updateIsEMRequestedInAssessmentInProgress(isEMRequested: false)
-//                                
-//                            }
-//                        }
-//                    }
-//                    
-//                } else {
-//
-//                    self.okButtonTapped()
-//                }
-//            } else {
-//                showAlert(title: Constants.alertStr, message: "Please enter the flock details.", owner: self)
-//            }
-//        } else {
-//            if isFromBack {
-//                let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: peNewAssessment?.serverAssessmentId ?? "")
-//                if sanitationQuesArr.count == 0 && Constants.isExtendedPopup{
-//                    showOnlyExtendedMicrobial()
-//                }else{
-//                    if !Constants.isMovementDone{
-//                        self.fromBackNextBtnAction()
-//                    }
-//                }
-//            } else {
-//                self.okButtonTapped()
-//
-//            }
-//        }
-//    }
     // MARK: - Save assessment in Draft
     func saveAssessmentInProgressDataInDB()  {
         if cameraSwitch.isOn{
@@ -1274,7 +1089,7 @@ class PEStartNewAssessment: BaseViewController {
     }
     
     // MARK: - Add red Boredr to blank fields
-    func changeMandatorySuperviewToRed(){
+    func changeMandatorySuperviewToRed() {
         let date = self.peNewAssessment.evaluationDate ?? ""
         let customer = self.peNewAssessment.customerName ?? ""
         let site = self.peNewAssessment.siteName ?? ""
@@ -1282,161 +1097,74 @@ class PEStartNewAssessment: BaseViewController {
         let evaluator = self.peNewAssessment.evaluatorName ?? ""
         let reasonForVisit = self.peNewAssessment.visitName ?? ""
         let TSRSelected = self.selectedTSR.text ?? ""
-        
-        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != ""{
-            if peNewAssessment.breedOfBird?.lowercased().contains("other") ?? false {
-                if peNewAssessment.breedOfBirdOther?.isEmpty ?? true {
-                    let superviewCurrent = btnBreedOthers.superview
-                    if let superview = superviewCurrent {
-                        for view in superview.subviews {
-                            if view.isKind(of: UIButton.self) {
-                                view.layer.borderColor = UIColor.red.cgColor
-                                view.layer.borderWidth = 2.0
-                            }
-                        }
-                    }
-                }
-            }
-        }else{
-            let superviewCurrent =  btnBreed.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
-        }
-        
-        if  self.txtManufacturer.text != nil &&  self.txtManufacturer.text != ""{
-            if (( self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-                if manfacturerOtherTxt.text?.isEmpty ?? true {
-                    let superviewCurrent = manfacturerOtherBtn.superview
-                    superviewCurrent?.subviews.forEach { view in
-                        if view.isKind(of: UIButton.self) {
-                            view.layer.borderColor = UIColor.red.cgColor
-                            view.layer.borderWidth = 2.0
-                        }
-                    }
-                }
 
-            }
-        }else{
-            let superviewCurrent =  manufacturerButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
-        }
-        
-        if peNewAssessment.incubation?.isEmpty ?? true {
-            let superviewCurrent = btnIncubation.superview
-            superviewCurrent?.subviews.forEach { view in
-                if view.isKind(of: UIButton.self) {
-                    view.layer.borderColor = UIColor.red.cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
-        }
+        checkBreedOfBird()
+        checkManufacturer()
+        checkIncubation()
+        checkNumberOfEggs()
+        checkField(date, button: evaluationDateButton)
+        checkField(customer, button: customerButton)
+        checkField(TSRSelected, button: tsrButton)
+        checkField(site, button: siteButton)
+        checkField(evaluationName, button: evaluationTypeButton)
+        checkField(evaluator, button: evaluatorButton)
+        checkField(reasonForVisit, button: visitButton)
 
-        if txtNumberOfEggs.text?.lowercased().contains("other") ?? false,
-           eggsOtherTxt.text?.isEmpty ?? true {
-            eggsOtherBtn.superview?.subviews.forEach { view in
-                if view.isKind(of: UIButton.self) {
-                    view.layer.borderColor = UIColor.red.cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
-        }
-
-        else{
-            let superviewCurrent =  numberOfEggsButton.superview
-            if superviewCurrent != nil {
-                for view in superviewCurrent!.subviews {
-                    if view.isKind(of:UIButton.self) {
-                        view.layer.borderColor = UIColor.red.cgColor
-                        view.layer.borderWidth = 2.0
-                    }
-                }
-            }
-        }
-        
-        if date.isEmpty {
-            let superviewCurrent = evaluationDateButton.superview
-            superviewCurrent?.subviews.forEach { view in
-                if view.isKind(of: UIButton.self) {
-                    view.layer.borderColor = UIColor.red.cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
-        }
-        if customer.isEmpty {
-            let superviewCurrent = customerButton.superview
-            superviewCurrent?.subviews.forEach { view in
-                if view.isKind(of: UIButton.self) {
-                    view.layer.borderColor = UIColor.red.cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
-        }
-
-        if TSRSelected.isEmpty {
-            let superviewCurrent = tsrButton.superview
-            superviewCurrent?.subviews.forEach { view in
-                if view.isKind(of: UIButton.self) {
-                    view.layer.borderColor = UIColor.red.cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
-        }
-        if site.isEmpty {
-            let superviewCurrent = siteButton.superview
-            superviewCurrent?.subviews.forEach { view in
-                if view.isKind(of: UIButton.self) {
-                    view.layer.borderColor = UIColor.red.cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
-        }
-
-        if evaluationName.isEmpty {
-            let superviewCurrent = evaluationTypeButton.superview
-            superviewCurrent?.subviews.forEach { view in
-                if view.isKind(of: UIButton.self) {
-                    view.layer.borderColor = UIColor.red.cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
-        }
-
-        if evaluator.isEmpty {
-            let superviewCurrent = evaluatorButton.superview
-            superviewCurrent?.subviews.forEach { view in
-                if view.isKind(of: UIButton.self) {
-                    view.layer.borderColor = UIColor.red.cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
-        }
-
-        if reasonForVisit.isEmpty {
-            let superviewCurrent = visitButton.superview
-            superviewCurrent?.subviews.forEach { view in
-                if view.isKind(of: UIButton.self) {
-                    view.layer.borderColor = UIColor.red.cgColor
-                    view.layer.borderWidth = 2.0
-                }
-            }
-        }
-
-        
         showAlert(title: Constants.alertStr, message: Constants.pleaseEnterMandatoryFields, owner: self)
-        
+    }
+
+    // Helper 1: Check breed of bird and highlight if needed
+    private func checkBreedOfBird() {
+        if let breed = peNewAssessment.breedOfBird, !breed.isEmpty {
+            if breed.lowercased().contains("other"), peNewAssessment.breedOfBirdOther?.isEmpty ?? true {
+                highlightSuperview(of: btnBreedOthers)
+            }
+        } else {
+            highlightSuperview(of: btnBreed)
+        }
+    }
+
+    // Helper 2: Check manufacturer and highlight if needed
+    private func checkManufacturer() {
+        if let manufacturer = txtManufacturer.text, !manufacturer.isEmpty {
+            if manufacturer.lowercased().contains("other"), manfacturerOtherTxt.text?.isEmpty ?? true {
+                highlightSuperview(of: manfacturerOtherBtn)
+            }
+        } else {
+            highlightSuperview(of: manufacturerButton)
+        }
+    }
+
+    // Helper 3: Check incubation and highlight if needed
+    private func checkIncubation() {
+        if peNewAssessment.incubation?.isEmpty ?? true {
+            highlightSuperview(of: btnIncubation)
+        }
+    }
+
+    // Helper 4: Check number of eggs and highlight if needed
+    private func checkNumberOfEggs() {
+        if txtNumberOfEggs.text?.lowercased().contains("other") ?? false, eggsOtherTxt.text?.isEmpty ?? true {
+            highlightSuperview(of: eggsOtherBtn)
+        } else {
+            highlightSuperview(of: numberOfEggsButton)
+        }
+    }
+
+    // Helper 5: Generic field check and highlight
+    private func checkField(_ value: String, button: UIButton) {
+        if value.isEmpty {
+            highlightSuperview(of: button)
+        }
+    }
+
+    // Helper 6: Highlight all UIButton subviews in a superview
+    private func highlightSuperview(of button: UIButton) {
+        guard let superview = button.superview else { return }
+        for view in superview.subviews where view.isKind(of: UIButton.self) {
+            view.layer.borderColor = UIColor.red.cgColor
+            view.layer.borderWidth = 2.0
+        }
     }
     
     /* evaluation date selected */

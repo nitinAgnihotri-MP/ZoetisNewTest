@@ -81,53 +81,111 @@ enum ZoetisApiManager {
         request(URLString: endPoint, httpMethod: .delete, parameters: parameters, success: success, failure: failure)
     }
     
-    private static func request(URLString: String,
-                                httpMethod: HTTPMethod,
-                                parameters: JSONDictionary = [:],
-                                imageData: Data = Data(),
-                                imageKey: String = "",
-                                success : @escaping SuccessBlock,
-                                failure : @escaping ErrorBlock) {
-        
-        var additionalHeaders: HTTPHeaders?
-        additionalHeaders = ["DeviceType":"ios", "UserId":"\(String(describing: UserDefaults.standard.value(forKey: "Id") ?? 0))",
-                             "Authorization":"\(AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken) ?? "")"]
-        
-        if imageKey != "" {
-            guard let url = URL(string: URLString) else {
-                return
-            }
-            AF.upload(
-                multipartFormData: { multipartFormData in
-                    for (key, value) in parameters {
-                        if let data = "\(value)".data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue)) {
-                            multipartFormData.append(data, withName: key)
-                        }
-                    }
-                    multipartFormData.append(imageData, withName: imageKey, fileName: "image.png", mimeType: "jpeg/png")
-                },
-                to: url, method: .post, headers: additionalHeaders )
-            .responseJSON { resp in
-                switch resp.result {
-                case .success(let value):
-                    parseResponse(value as! AFDataResponse<Data>, success: success, failure: failure)
-                case .failure(let error):
-                    print(error)
-                    failure(error as NSError)
-                }
-            }
+    private static func request(
+        URLString: String,
+        httpMethod: HTTPMethod,
+        parameters: JSONDictionary = [:],
+        imageData: Data = Data(),
+        imageKey: String = "",
+        success: @escaping SuccessBlock,
+        failure: @escaping ErrorBlock
+    ) {
+        let additionalHeaders = buildHeaders()
+        if !imageKey.isEmpty {
+            handleMultipartRequest(
+                URLString: URLString,
+                parameters: parameters,
+                imageData: imageData,
+                imageKey: imageKey,
+                headers: additionalHeaders,
+                success: success,
+                failure: failure
+            )
         } else {
-            print("*************\(URLString)***************")
-            AF.request(URLString, method: httpMethod,
-                       parameters: parameters,
-                       encoding: httpMethod == .post || httpMethod == .put || httpMethod == .patch ? JSONEncoding.default : URLEncoding.queryString,
-                       headers: additionalHeaders).responseData { (response: AFDataResponse<Data>) in
-                print("Response from server is ",response)
-                parseResponse(response, success: success, failure: failure)
+            handleStandardRequest(
+                URLString: URLString,
+                httpMethod: httpMethod,
+                parameters: parameters,
+                headers: additionalHeaders,
+                success: success,
+                failure: failure
+            )
+        }
+    }
+
+    // Helper 1: Build headers
+    private static func buildHeaders() -> HTTPHeaders {
+        return [
+            "DeviceType": "ios",
+            "UserId": "\(String(describing: UserDefaults.standard.value(forKey: "Id") ?? 0))",
+            "Authorization": "\(AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken) ?? "")"
+        ]
+    }
+
+    // Helper 2: Handle multipart (image) request
+    private static func handleMultipartRequest(
+        URLString: String,
+        parameters: JSONDictionary,
+        imageData: Data,
+        imageKey: String,
+        headers: HTTPHeaders,
+        success: @escaping SuccessBlock,
+        failure: @escaping ErrorBlock
+    ) {
+        guard let url = URL(string: URLString) else { return }
+        AF.upload(
+            multipartFormData: { multipartFormData in
+                appendParametersToMultipart(multipartFormData, parameters: parameters)
+                multipartFormData.append(imageData, withName: imageKey, fileName: "image.png", mimeType: "jpeg/png")
+            },
+            to: url, method: .post, headers: headers
+        )
+        .responseJSON { resp in
+            switch resp.result {
+            case .success(let value):
+                if let dataResponse = value as? AFDataResponse<Data> {
+                    parseResponse(dataResponse, success: success, failure: failure)
+                } else {
+                    // Fallback: try to parse as JSON directly
+                    success(JSON(value))
+                }
+            case .failure(let error):
+                print(error)
+                failure(error as NSError)
             }
         }
     }
-    
+
+    // Helper 3: Append parameters to multipart form data
+    private static func appendParametersToMultipart(_ multipartFormData: MultipartFormData, parameters: JSONDictionary) {
+        for (key, value) in parameters {
+            if let data = "\(value)".data(using: .utf8) {
+                multipartFormData.append(data, withName: key)
+            }
+        }
+    }
+
+    // Helper 4: Handle standard (non-image) request
+    private static func handleStandardRequest(
+        URLString: String,
+        httpMethod: HTTPMethod,
+        parameters: JSONDictionary,
+        headers: HTTPHeaders,
+        success: @escaping SuccessBlock,
+        failure: @escaping ErrorBlock
+    ) {
+        print("*************\(URLString)***************")
+        AF.request(
+            URLString,
+            method: httpMethod,
+            parameters: parameters,
+            encoding: httpMethod == .post || httpMethod == .put || httpMethod == .patch ? JSONEncoding.default : URLEncoding.queryString,
+            headers: headers
+        ).responseData { (response: AFDataResponse<Data>) in
+            print("Response from server is ", response)
+            parseResponse(response, success: success, failure: failure)
+        }
+    }
     
     private static func parseResponse(_ response: AFDataResponse<Data>,
                                       success : @escaping SuccessBlock,

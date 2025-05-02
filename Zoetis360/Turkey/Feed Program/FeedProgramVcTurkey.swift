@@ -1231,8 +1231,8 @@ class FeedProgramVcTurkey: UIViewController,UITextFieldDelegate,UITableViewDeleg
                 coccidsisStartrDrinking.text = NSLocalizedString(appDelegateObj.selectStr, comment: "")
             }
             handleCoccoControlArrayValidation(i)
-            var str3 = String()
-            str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String)!
+            
+            var str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:3) as? String)!
             if cocciControlArray.count == 1 {
                 str3 = ((cocciControlArray.value(forKey:"molecule") as AnyObject).object(at:i) as? String)!
             }

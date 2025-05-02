@@ -1300,8 +1300,8 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             return ""
         }
         dateFormatter.dateFormat = Constants.MMddyyyyStr
-        let timeStamp = dateFormatter.string(from: date)
-        return timeStamp
+        let convertedtimeStamp = dateFormatter.string(from: date)
+        return convertedtimeStamp
     }
     
     // MARK: 🟢 Sync to device Button action
@@ -1475,7 +1475,8 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         ZoetisWebServices.shared.getFeedListByDeviceIDResponce(controller: self, url: apiUrl) { [weak self] json, error in
             guard let self = self else { return }
 
-            if let error = error {
+            if let apiError = error {
+                print("Error occurred: \(apiError)")
                 self.dismissGlobalHUD(self.view)
                 return
             }
@@ -1601,139 +1602,6 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         handler.deleteDataWithPostingIdFeddProgramAntiboiticSingle(postingId)
         handler.deleteDataWithPostingIdFeddProgramMyCotoxinSingle(postingId)
     }
-
-//    func getPostingDataFromServerforFeed() {
-//        
-//        if WebClass.sharedInstance.connected() {
-//            
-//            let apiUrl = ZoetisWebServices.EndPoint.getFeedListByDeviceSessionID.latestUrl + "\(fullData)"
-//            ZoetisWebServices.shared.getFeedListByDeviceIDResponce(controller: self, url: apiUrl, completion: { [weak self] (json, error) in
-//                guard let _ = self, error == nil else {
-//                    self?.dismissGlobalHUD(self?.view ?? UIView())
-//                    return
-//                }
-//                
-//                let jsonResponse = JSON(json)
-//                // Check for the "errorResult" key and handle errors
-//                if let errorResult = jsonResponse["errorResult"].dictionary {
-//                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-//                    let statusCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
-//                    
-//                    print("Error from PostingSession/getFeedListByDeviceSessionID  API : \(errorMsg) (Code: \(statusCode))")
-//                    
-//                    if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-//                        UserDefaults.standard.set(Constants.noStr, forKey: "Success")
-//                        self!.getCNecStep1Data()
-//                    }
-//                }
-//                
-//                DispatchQueue.main.async { [weak self] in
-//                    guard let self = self else { return }
-//                    
-//                    if let jsonDict = JSON(json).dictionary,
-//                       let errorMessage = jsonDict["Message"]?.string {
-//                        print("Error responce from  PostingSession/getFeedListByDeviceSessionID  API is \(errorMessage)")
-//                        //  self.showToastWithTimer(message: errorMessage, duration: 3.0)
-//                        return
-//                    }
-//                    
-//                    if let arr = JSON(json).array, !arr.isEmpty {
-//                        //  Mark success in UserDefaults
-//                        UserDefaults.standard.set("Yes", forKey: "Success")
-//
-//                        //  Delete previous data before inserting new data
-//                        let coreDataHandler = CoreDataHandler()
-//                        coreDataHandler.deleteDataWithPostingIdFeddProgram(self.postingId)
-//                        coreDataHandler.deleteDataWithPostingIdFeddProgramCocoiiSinle(self.postingId)
-//                        coreDataHandler.deleteDataWithPostingIdFeddProgramAlternativeSinle(self.postingId)
-//                        coreDataHandler.deleteDataWithPostingIdFeddProgramAntiboiticSingle(self.postingId)
-//                        coreDataHandler.deleteDataWithPostingIdFeddProgramMyCotoxinSingle(self.postingId)
-//
-//                        //  Iterate safely over the array
-//                        for posDict in arr {
-//                            guard let sessionId = posDict["sessionId"].int,
-//                                  let feedDictArr = posDict["Feeds"].array else {
-//                                print("Invalid data format for sessionId or Feeds.")
-//                                continue
-//                            }
-//
-//                            //  Process each feed
-//                            for feed in feedDictArr {
-//                                guard let feedId = feed["feedId"].int,
-//                                      let feedName = feed["feedName"].string,
-//                                      let feedDate = feed["startDate"].string,
-//                                      let feedDetailArr = feed["feedCategoryDetails"].array else {
-//                                    print("Invalid feed data format.")
-//                                    continue
-//                                }
-//
-//                                //  Update UserDefaults if needed
-//                                let savedFeedId = UserDefaults.standard.integer(forKey: "feedId")
-//                                if feedId > savedFeedId {
-//                                    UserDefaults.standard.set(feedId, forKey: "feedId")
-//                                }
-//
-//                                //  Store feed data in CoreData
-//                                coreDataHandler.getFeedNameFromGetApiSingleDeviceToken(
-//                                    sessionId as NSNumber,
-//                                    sessionId: sessionId as NSNumber,
-//                                    feedProgrameName: feedName,
-//                                    feedId: feedId as NSNumber,
-//                                    postingIdFeed: self.postingId
-//                                )
-//
-//                                for feedDetail in feedDetailArr {
-//                                    guard let feedCatName = feedDetail["feedProgramCategory"].string,
-//                                          let feedDetails = feedDetail["feedDetails"].array else {
-//                                        print("Invalid category data format.")
-//                                        continue
-//                                    }
-//
-//                                    for postDict in feedDetails {
-//                                        guard let dict = postDict.dictionaryObject as NSDictionary? else { continue }
-//
-//                                        switch feedCatName {
-//                                        case Constants.coccidioStr:
-//                                            coreDataHandler.getDataFromCocoiiControllForSingleData(
-//                                                dict, feedId: feedId as NSNumber, postingId: sessionId as NSNumber,
-//                                                feedProgramName: feedName, postingIdCocoii: self.postingId, feedDate: feedDate
-//                                            )
-//
-//                                        case "Alternatives":
-//                                            coreDataHandler.getDataFromAlterNativeForSingleDevToken(
-//                                                dict, feedId: feedId as NSNumber, postingId: sessionId as NSNumber,
-//                                                feedProgramName: feedName, postingAlterNative: self.postingId, feedDate: feedDate
-//                                            )
-//
-//                                        case "Antibiotic":
-//                                            coreDataHandler.getDataFromAntiboiticWithSigleData(
-//                                                dict, feedId: feedId as NSNumber, postingId: sessionId as NSNumber,
-//                                                feedProgramName: feedName, postingIdAlterNative: self.postingId, feedDate: feedDate
-//                                            )
-//
-//                                        case Constants.mytoxinStr:
-//                                            coreDataHandler.getDataFromMyCocotinBinderWithSingleData(
-//                                                dict, feedId: feedId as NSNumber, postingId: sessionId as NSNumber,
-//                                                feedProgramName: feedName, postingidMycotxin: self.postingId, feedDate: feedDate
-//                                            )
-//
-//                                        default:
-//                                            print("Unknown feed category: \(feedCatName)")
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        self.getCNecStep1Data()
-//                    } else {
-//                        self.getCNecStep1Data()
-//                    }
-//                }
-//            })
-//        } else {
-//            self.failWithInternetConnection()
-//        }
-//    }
     
     // MARK: 🟢 Get Farm list for  posted Session Detail
     func getCNecStep1Data() {
@@ -2062,6 +1930,15 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         }
     }
     // MARK: 🟢 Get images list from the Server
+    fileprivate func saveBirdsImagesReceivedFromAPIToLocalDatabase(_ imagArr: Any?) {
+        if (imagArr as AnyObject).count>0 {
+            for  i in 0..<(imagArr! as AnyObject).count {
+                let posDict = (imagArr! as AnyObject).object(at: i)
+                CoreDataHandler().getSaveImageFromServerSingledata(posDict as! NSDictionary,necIdSingle: self.postingId)
+            }
+        }
+    }
+    
     fileprivate func getBirdsImageListAPISuccessResponseHandler(_ value: Any, _ statusCode: Int?) {
         let arr : NSArray = value as! NSArray
         if arr.count>0 {
@@ -2069,12 +1946,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             
             for i in 0..<arr.count {
                 let imagArr = (arr.object(at: i) as AnyObject).value(forKey: "Images")
-                if  (imagArr as AnyObject).count>0{
-                    for  i in 0..<(imagArr! as AnyObject).count {
-                        let posDict = (imagArr! as AnyObject).object(at: i)
-                        CoreDataHandler().getSaveImageFromServerSingledata(posDict as! NSDictionary,necIdSingle: self.postingId)
-                    }
-                }
+                saveBirdsImagesReceivedFromAPIToLocalDatabase(imagArr)
             }
             
             self.fetcFarmData()

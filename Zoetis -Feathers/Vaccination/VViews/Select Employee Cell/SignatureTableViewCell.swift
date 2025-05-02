@@ -99,319 +99,338 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
     
     // MARK: - IBACTIONS
     @IBAction func nextBtnAction(_ sender: UIButton) {
+        empIndex += 1
+        signView.clearCanvas()
         if fromScreen == "PEFinishPopUpScreen" {
-            empIndex += 1
-            signView.clearCanvas()
-            if empIndex > -1  {
-                
-                if certificateData.count > empIndex {
-                    let firstname = certificateData[empIndex].name
-                    var  fullName = "\(firstname ?? "") "
-                    
-                    operatorSignLbl.text = "Vaccine Mixer Signature*"
-                    operatorSignLbl.text = operatorSignLbl.text  ?? "" + "*"
-                    deviceOperatorNamebl.text  = "Vaccine Mixer Name: \(fullName)"
-                    showImgVw(true)
-                    
-                    if (certificateData[empIndex].isSigned){
-                        hideShowImgVw(false)
-                        signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
-                    }
-                    if (
-                        (!(certificateData[empIndex].isCertExpired)! && prevController == "Rejected") ||
-                        ((certificateData[empIndex].isCertExpired)! && prevController == "Draft")
-                    ) {
-                        hideShowImgVw(false)
-                        if certificateData[empIndex].signatureImg == "" {
-                            hideShowImgVw(true)
-                        }
-                        else {
-                            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
-                        }
-                    }
-                    
-                    else if !(certificateData[empIndex].isCertExpired)! && (prevController == "Draft"){
-                        hideShowImgVw(false)
-                        signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
-                        if certificateData[empIndex].signatureImg == "" {
-                            hideShowImgVw(true)
-                        }
-                    }
-                    
-             
-                    
-                }
-            }
-            if empIndex > 0{
-                previousBtn.isEnabled = true
-                previousBtn.isUserInteractionEnabled = true
-                previousBtn.isHidden = false
-            }
-            
-            if empIndex > -1 && empIndex == certificateData.count {
-                operatorSignLbl.text =  "FSR Signature"
-                deviceOperatorNamebl.text  = "Zoetis Representative: " + String(UserDefaults.standard.value(forKey: "FirstName") as? String ?? "") + " " + String(UserDefaults.standard.value(forKey: "LastName") as? String ?? "")
-                nextBtn.isUserInteractionEnabled = false
-                nextBtn.isHidden = true
-                for item in certificateData {
-                    
-                    if item.fsrSign != "" {
-                        signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].fsrSign)
-                        hideShowImgVw(false)
-                        
-                    }
-                    else {
-                        if(certificateData[0].fsrSign != ""){
-                            hideShowImgVw(false)
-                            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].fsrSign)
-                        }
-                        else{
-                            hideShowImgVw(true)
-                        }
-                    }
-                }
-                
-                if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool, isSignedFSR {
-                    hideShowImgVw(false)
-                    
-                    if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
-                        signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:signatureImg)
-                    }
-                    
-                }
-            }
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex
-                                                                                                                              ])
+            handlePEFinishPopUpScreen()
+        } else {
+            handleDefaultScreen()
         }
-        else {
-            empIndex += 1
-            signView.clearCanvas()
-            if empIndex > -1 && empIndex == employeesAddedArr.count + 1 {
-             
-                let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
-                let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
-                var  fullName = firstname ?? ""
-                if lastName != nil && lastName != ""{
-                    fullName = "\(firstname ?? "") \(lastName!)"
-                }
-                operatorSignLbl.text = "Field Service Technician Signature*"
-                operatorSignLbl.text = operatorSignLbl.text  ?? "" + "*"
-                deviceOperatorNamebl.text  = "Field Service Technician: \(fullName)"
-                if curentCertification?.fsrSignature != nil && !(curentCertification?.fsrSignature!.isEmpty)!{
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: "UpdateEmployeeSign"),
+            object: nil,
+            userInfo: ["index": empIndex, "rowIndex": rowIndex]
+        )
+    }
+
+    private func handlePEFinishPopUpScreen() {
+        if empIndex > -1, certificateData.count > empIndex {
+            updateVaccineMixerSignature()
+        }
+        updatePreviousButtonState()
+        if empIndex > -1, empIndex == certificateData.count {
+            updateFSRSignature()
+        }
+        updateFSRSignatureFromDefaults()
+    }
+
+    private func updateVaccineMixerSignature() {
+        let firstname = certificateData[empIndex].name
+        let fullName = "\(firstname ?? "") "
+        operatorSignLbl.text = "Vaccine Mixer Signature*"
+        operatorSignLbl.text = (operatorSignLbl.text ?? "") + "*"
+        deviceOperatorNamebl.text = "Vaccine Mixer Name: \(fullName)"
+        showImgVw(true)
+        if certificateData[empIndex].isSigned {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[empIndex].signatureImg)
+        }
+        if shouldShowRejectedOrDraftSignature(empIndex: empIndex) {
+            updateRejectedOrDraftSignature(empIndex: empIndex)
+        } else if !(certificateData[empIndex].isCertExpired ?? false), prevController == "Draft" {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[empIndex].signatureImg)
+            if certificateData[empIndex].signatureImg == "" {
+                hideShowImgVw(true)
+            }
+        }
+    }
+
+    private func shouldShowRejectedOrDraftSignature(empIndex: Int) -> Bool {
+        let cert = certificateData[empIndex]
+        return (!(cert.isCertExpired ?? false) && prevController == "Rejected") ||
+               ((cert.isCertExpired ?? false) && prevController == "Draft")
+    }
+
+    private func updateRejectedOrDraftSignature(empIndex: Int) {
+        hideShowImgVw(false)
+        if certificateData[empIndex].signatureImg == "" {
+            hideShowImgVw(true)
+        } else {
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[empIndex].signatureImg)
+        }
+    }
+
+    private func updatePreviousButtonState() {
+        if empIndex > 0 {
+            previousBtn.isEnabled = true
+            previousBtn.isUserInteractionEnabled = true
+            previousBtn.isHidden = false
+        }
+    }
+
+    private func updateFSRSignature() {
+        operatorSignLbl.text = "FSR Signature"
+        let firstName = UserDefaults.standard.value(forKey: "FirstName") as? String ?? ""
+        let lastName = UserDefaults.standard.value(forKey: "LastName") as? String ?? ""
+        deviceOperatorNamebl.text = "Zoetis Representative: \(firstName) \(lastName)"
+        nextBtn.isUserInteractionEnabled = false
+        nextBtn.isHidden = true
+        for item in certificateData {
+            if item.fsrSign != "" {
+                signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].fsrSign)
+                hideShowImgVw(false)
+            } else {
+                if certificateData[0].fsrSign != "" {
                     hideShowImgVw(false)
-                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.fsrSignature!)! )
-                }else{
+                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].fsrSign)
+                } else {
                     hideShowImgVw(true)
                 }
-                
             }
-            if empIndex > -1 && empIndex == employeesAddedArr.count{
-                operatorSignLbl.text = "Hatchery Manager Signature"
-                deviceOperatorNamebl.text  = "Hatchery Manager Name: "
-                if curentCertification?.fsmName != nil{
-                    var hName = ""
-                    hName = (curentCertification?.fsmName)!
-                    deviceOperatorNamebl.text  = "Hatchery Manager Name: \(hName)"
-                    
-                }
-                if curentCertification?.hatcheryManagerSign != nil && !(curentCertification?.hatcheryManagerSign!.isEmpty)!{
-                    hideShowImgVw(false)
-                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.hatcheryManagerSign!)! )
-                }else{
-                    hideShowImgVw(true)
-                }
-                
+        }
+    }
+
+    private func updateFSRSignatureFromDefaults() {
+        if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool, isSignedFSR {
+            hideShowImgVw(false)
+            if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
+                signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: signatureImg)
             }
-            if empIndex > -1 && empIndex < employeesAddedArr.count {
-                let emp = employeesAddedArr[empIndex]
-                deviceOperatorNamebl.text = getEmpName(empobj:emp)
-                if emp.signBase64 != nil && !emp.signBase64!.isEmpty{
-                    hideShowImgVw(false)
-                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:emp.signBase64! )
-                }else{
-                    hideShowImgVw(true)
-                }
-            }
-            if empIndex > 0{
-                previousBtn.isEnabled = true
-                previousBtn.isUserInteractionEnabled = true
-                previousBtn.isHidden = false
-            }
-            if empIndex == employeesAddedArr.count + 2 - 1 {
-                nextBtn.isEnabled = false
-                nextBtn.isUserInteractionEnabled = false
-                nextBtn.isHidden = true
-                previousBtn.isEnabled = true
-                previousBtn.isUserInteractionEnabled = true
-                previousBtn.isHidden = false
-            }
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex
-                                                                                                                              ])
+        }
+    }
+
+    private func handleDefaultScreen() {
+        if empIndex > -1, empIndex == employeesAddedArr.count + 1 {
+            updateFieldServiceTechnicianSignature()
+        }
+        if empIndex > -1, empIndex == employeesAddedArr.count {
+            updateHatcheryManagerSignature()
+        }
+        if empIndex > -1, empIndex < employeesAddedArr.count {
+            updateEmployeeSignature()
+        }
+        updatePreviousButtonState()
+        if empIndex == employeesAddedArr.count + 1 {
+            nextBtn.isEnabled = false
+            nextBtn.isUserInteractionEnabled = false
+            nextBtn.isHidden = true
+            previousBtn.isEnabled = true
+            previousBtn.isUserInteractionEnabled = true
+            previousBtn.isHidden = false
+        }
+    }
+
+    private func updateFieldServiceTechnicianSignature() {
+        let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
+        let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
+        var fullName = firstname ?? ""
+        if let lastName = lastName, !lastName.isEmpty {
+            fullName = "\(firstname ?? "") \(lastName)"
+        }
+        operatorSignLbl.text = "Field Service Technician Signature*"
+        operatorSignLbl.text = (operatorSignLbl.text ?? "") + "*"
+        deviceOperatorNamebl.text = "Field Service Technician: \(fullName)"
+        if let fsrSignature = curentCertification?.fsrSignature, !fsrSignature.isEmpty {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: fsrSignature)
+        } else {
+            hideShowImgVw(true)
+        }
+    }
+
+    private func updateHatcheryManagerSignature() {
+        operatorSignLbl.text = "Hatchery Manager Signature"
+        deviceOperatorNamebl.text = "Hatchery Manager Name: "
+        if let fsmName = curentCertification?.fsmName {
+            deviceOperatorNamebl.text = "Hatchery Manager Name: \(fsmName)"
+        }
+        if let hatcheryManagerSign = curentCertification?.hatcheryManagerSign, !hatcheryManagerSign.isEmpty {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: hatcheryManagerSign)
+        } else {
+            hideShowImgVw(true)
+        }
+    }
+
+    private func updateEmployeeSignature() {
+        let emp = employeesAddedArr[empIndex]
+        deviceOperatorNamebl.text = getEmpName(empobj: emp)
+        if let signBase64 = emp.signBase64, !signBase64.isEmpty {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: signBase64)
+        } else {
+            hideShowImgVw(true)
         }
     }
     
     @IBAction func previousBtnAction(_ sender: UIButton) {
-        
+        empIndex -= 1
+        signView.clearCanvas()
         if fromScreen == "PEFinishPopUpScreen" {
-            empIndex -= 1
-            signView.clearCanvas()
-            nextBtn.isUserInteractionEnabled = true
-            nextBtn.isHidden = false
-            if empIndex == 0 {
-                previousBtn.isHidden = true
-            }
-            if empIndex > -1  && certificateData.count > empIndex {
-                
-                let firstname = certificateData[empIndex].name
-             
-                var fullName = "\(firstname ?? "") "
-                nextBtn.isUserInteractionEnabled = true
-                operatorSignLbl.text = "Vaccine Mixer Signature*"
-                operatorSignLbl.text = operatorSignLbl.text  ?? "" + "*"
-                deviceOperatorNamebl.text  = "Vaccine Mixer Name: \(fullName)"
-                hideShowImgVw(true)
-                if certificateData[empIndex].isSigned {
-                    hideShowImgVw(false)
-                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
-                }
-                
-                if regionID == 3
-                {
-                   
-                        hideShowImgVw(false)
-                        if certificateData[empIndex].signatureImg == "" {
-                            hideShowImgVw(true)
-                        }
-                        else {
-                            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
-                        }
-                    
-                }
-                else
-                
-                {
-                    hideShowImgVw(false)
-                    if certificateData[empIndex].signatureImg == "" {
-                        hideShowImgVw(true)
-                    }
-                    else {
-                        
-                        signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].signatureImg)
-                        hideShowImgVw(false)
-                    }
-                    
-                }
-            }
-            
-            if empIndex > -1 && empIndex == certificateData.count {
-                operatorSignLbl.text =  "Manager Signature"
-                deviceOperatorNamebl.text  = "Manager Name: "
-                nextBtn.isUserInteractionEnabled = false
-                
-                if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool , isSignedFSR {
-              
-                        hideShowImgVw(false)
-                        
-                        if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
-                            if signatureImg == "" {
-                                hideShowImgVw(false)
-                            }
-                            else {
-                                signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:signatureImg)
-                            }
-                        }
-                    
-                }
-                if certificateData[empIndex - 1].fsrSign != "" {
-                    hideShowImgVw(false)
-                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[empIndex].fsrSign)
-                }
-            }
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex
-                                                                                                                              ])
+            handlePEFinishPopUpPrevious()
+        } else {
+            handleDefaultScreenPrevious()
         }
-        else {
-            empIndex -= 1
-            signView.clearCanvas()
-            
-            if empIndex > -1 && empIndex == employeesAddedArr.count + 1 {
-                var fullName = ""
-                let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
-                let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
-                fullName = firstname ?? ""
-                if lastName != nil && lastName != ""{
-                    fullName = "\(firstname ?? "") \(lastName!)"
-                }
-                operatorSignLbl.text = "Field Service Technician Signature*"
-                operatorSignLbl.text = operatorSignLbl.text  ?? "" + "*"
-                deviceOperatorNamebl.text  = "Field Service Technician: \(fullName)"
-                if curentCertification?.fsrSignature != nil && !(curentCertification?.fsrSignature!.isEmpty)!{
-                    hideShowImgVw(false)
-                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.fsrSignature!)! )
-                }else{
-                    hideShowImgVw(true)
-                }
-            }
-            if empIndex > -1 && empIndex == employeesAddedArr.count{
-                operatorSignLbl.text = "Hatchery Manager Signature"
-                deviceOperatorNamebl.text  = "Hatchery Manager Name: "
-                if curentCertification?.fsmName != nil{
-                    var hName = ""
-                    hName = (curentCertification?.fsmName)!
-                    deviceOperatorNamebl.text  = "Hatchery Manager Name: \(hName)"
-                }
-                
-                if curentCertification?.hatcheryManagerSign != nil && !(curentCertification?.hatcheryManagerSign!.isEmpty)!{
-                    hideShowImgVw(false)
-                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.hatcheryManagerSign!)! )
-                }else{
-                    hideShowImgVw(true)
-                }
-                
-            }
-            if empIndex > -1 && empIndex < employeesAddedArr.count {
-                operatorSignLbl.text = "Device Operator Signature*"
-                operatorSignLbl.text = operatorSignLbl.text ?? "" + "*"
-                
-                let emp = employeesAddedArr[empIndex]
-                deviceOperatorNamebl.text = getEmpName(empobj:emp)
-                
-                if emp.signBase64 != nil && !emp.signBase64!.isEmpty{
-                    hideShowImgVw(false)
-                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:emp.signBase64!)
-                }else{
-                    hideShowImgVw(true)
-                }
-            }
-            if empIndex == 0{
-                
-                previousBtn.isEnabled = false
-                previousBtn.isUserInteractionEnabled = false
-                previousBtn.isHidden = true
-                nextBtn.isEnabled = true
-                nextBtn.isUserInteractionEnabled = true
-                nextBtn.isHidden = false
-            }
-            if  employeesAddedArr.count > 0{
-                nextBtn.isEnabled = true
-                nextBtn.isUserInteractionEnabled = true
-                nextBtn.isHidden = false
-            }
-            if empIndex == employeesAddedArr.count + 2 {
-                nextBtn.isEnabled = false
-                nextBtn.isUserInteractionEnabled = false
-                nextBtn.isHidden = true
-            }
-            if empIndex == employeesAddedArr.count + 2 {
-                nextBtn.isEnabled = false
-                nextBtn.isUserInteractionEnabled = false
-                nextBtn.isHidden = true
-            }
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "UpdateEmployeeSign"), object: nil, userInfo: ["index":empIndex, "rowIndex":rowIndex
-                                                                                                                              ])
-            
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: "UpdateEmployeeSign"),
+            object: nil,
+            userInfo: ["index": empIndex, "rowIndex": rowIndex]
+        )
+    }
+
+    private func handlePEFinishPopUpPrevious() {
+        nextBtn.isUserInteractionEnabled = true
+        nextBtn.isHidden = false
+        if empIndex == 0 {
+            previousBtn.isHidden = true
+        }
+        if empIndex > -1, certificateData.count > empIndex {
+            updateVaccineMixerSignaturePrevious()
+        }
+        if empIndex > -1, empIndex == certificateData.count {
+            updateManagerSignaturePrevious()
         }
     }
+
+    private func updateVaccineMixerSignaturePrevious() {
+        let firstname = certificateData[empIndex].name
+        let fullName = "\(firstname ?? "") "
+        nextBtn.isUserInteractionEnabled = true
+        operatorSignLbl.text = "Vaccine Mixer Signature*"
+        operatorSignLbl.text = (operatorSignLbl.text ?? "") + "*"
+        deviceOperatorNamebl.text = "Vaccine Mixer Name: \(fullName)"
+        hideShowImgVw(true)
+        if certificateData[empIndex].isSigned {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[empIndex].signatureImg)
+        }
+        if regionID == 3 {
+            updateRegionSignature(empIndex: empIndex)
+        } else {
+            updateDefaultSignature(empIndex: empIndex)
+        }
+    }
+
+    private func updateRegionSignature(empIndex: Int) {
+        hideShowImgVw(false)
+        if certificateData[empIndex].signatureImg == "" {
+            hideShowImgVw(true)
+        } else {
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[empIndex].signatureImg)
+        }
+    }
+
+    private func updateDefaultSignature(empIndex: Int) {
+        hideShowImgVw(false)
+        if certificateData[empIndex].signatureImg == "" {
+            hideShowImgVw(true)
+        } else {
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[empIndex].signatureImg)
+            hideShowImgVw(false)
+        }
+    }
+
+    private func updateManagerSignaturePrevious() {
+        operatorSignLbl.text = "Manager Signature"
+        deviceOperatorNamebl.text = "Manager Name: "
+        nextBtn.isUserInteractionEnabled = false
+        if let isSignedFSR = UserDefaults.standard.value(forKey: "isSignedFSR") as? Bool, isSignedFSR {
+            hideShowImgVw(false)
+            if let signatureImg = UserDefaults.standard.value(forKey: "FsrSign") as? String {
+                if signatureImg == "" {
+                    hideShowImgVw(false)
+                } else {
+                    signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: signatureImg)
+                }
+            }
+        }
+        if certificateData[empIndex - 1].fsrSign != "" {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[empIndex].fsrSign)
+        }
+    }
+
+    private func handleDefaultScreenPrevious() {
+        if empIndex > -1, empIndex == employeesAddedArr.count + 1 {
+            updateFieldServiceTechnicianSignaturePrevious()
+        }
+        if empIndex > -1, empIndex == employeesAddedArr.count {
+            updateHatcheryManagerSignaturePrevious()
+        }
+        if empIndex > -1, empIndex < employeesAddedArr.count {
+            updateDeviceOperatorSignaturePrevious()
+        }
+        updateButtonStatesPrevious()
+    }
+
+    private func updateFieldServiceTechnicianSignaturePrevious() {
+        let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
+        let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
+        var fullName = firstname ?? ""
+        if let lastName = lastName, !lastName.isEmpty {
+            fullName = "\(firstname ?? "") \(lastName)"
+        }
+        operatorSignLbl.text = "Field Service Technician Signature*"
+        operatorSignLbl.text = (operatorSignLbl.text ?? "") + "*"
+        deviceOperatorNamebl.text = "Field Service Technician: \(fullName)"
+        if let fsrSignature = curentCertification?.fsrSignature, !fsrSignature.isEmpty {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: fsrSignature)
+        } else {
+            hideShowImgVw(true)
+        }
+    }
+
+    private func updateHatcheryManagerSignaturePrevious() {
+        operatorSignLbl.text = "Hatchery Manager Signature"
+        deviceOperatorNamebl.text = "Hatchery Manager Name: "
+        if let fsmName = curentCertification?.fsmName {
+            deviceOperatorNamebl.text = "Hatchery Manager Name: \(fsmName)"
+        }
+        if let hatcheryManagerSign = curentCertification?.hatcheryManagerSign, !hatcheryManagerSign.isEmpty {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: hatcheryManagerSign)
+        } else {
+            hideShowImgVw(true)
+        }
+    }
+
+    private func updateDeviceOperatorSignaturePrevious() {
+        operatorSignLbl.text = "Device Operator Signature*"
+        operatorSignLbl.text = (operatorSignLbl.text ?? "") + "*"
+        let emp = employeesAddedArr[empIndex]
+        deviceOperatorNamebl.text = getEmpName(empobj: emp)
+        if let signBase64 = emp.signBase64, !signBase64.isEmpty {
+            hideShowImgVw(false)
+            signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: signBase64)
+        } else {
+            hideShowImgVw(true)
+        }
+    }
+
+    private func updateButtonStatesPrevious() {
+        if empIndex == 0 {
+            previousBtn.isEnabled = false
+            previousBtn.isUserInteractionEnabled = false
+            previousBtn.isHidden = true
+            nextBtn.isEnabled = true
+            nextBtn.isUserInteractionEnabled = true
+            nextBtn.isHidden = false
+        }
+        if employeesAddedArr.count > 0 {
+            nextBtn.isEnabled = true
+            nextBtn.isUserInteractionEnabled = true
+            nextBtn.isHidden = false
+        }
+        if empIndex == employeesAddedArr.count + 2 {
+            nextBtn.isEnabled = false
+            nextBtn.isUserInteractionEnabled = false
+            nextBtn.isHidden = true
+        }
+    }
+
+    // ... existing code ...
     
     fileprivate func clearSignatureViewData() {
         var base64 = ""

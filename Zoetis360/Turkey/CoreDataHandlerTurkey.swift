@@ -130,59 +130,54 @@ class CoreDataHandlerTurkey: NSObject {
     
     /********* Add Vacination *******************************************/
     
-    func saveHatcheryVacinationInDatabaseTurkey(_ type : String, strain : String, route : String, age : String, index : Int, dbArray: NSArray,postingId : NSNumber,vaciProgram: String,sessionId : NSNumber, isSync : Bool,lngId:NSNumber)
-    {
+    func saveHatcheryVacinationInDatabaseTurkey(vaccination:CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        
         self.managedContext = appDelegate!.managedObjectContext
-        dataArray = dbArray
+        dataArray = vaccination.dbArray
+        
         if dataArray.count > 0 {
-            
-            if let objTable: HatcheryVacTurkey = dataArray[index] as? HatcheryVacTurkey {
-                
-                objTable.setValue(type, forKey:"type")
-                objTable.setValue(strain, forKey:"strain")
-                objTable.setValue(route, forKey:"route")
-                objTable.setValue(age, forKey:"age")
-                objTable.setValue(postingId, forKey:"postingId")
-                objTable.setValue(vaciProgram, forKey:"vaciNationProgram")
-                objTable.setValue(sessionId, forKey:"loginSessionId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(lngId, forKey:"lngId")
-                
+            if let objTable: HatcheryVacTurkey = dataArray[vaccination.index] as? HatcheryVacTurkey {
+                objTable.setValue(vaccination.type, forKey: "type")
+                objTable.setValue(vaccination.strain, forKey: "strain")
+                objTable.setValue(vaccination.route, forKey: "route")
+                objTable.setValue(vaccination.age, forKey: "age")
+                objTable.setValue(vaccination.postingId, forKey: "postingId")
+                objTable.setValue(vaccination.vaciProgram, forKey: "vaciNationProgram")
+                objTable.setValue(vaccination.sessionId, forKey: "loginSessionId")
+                objTable.setValue(vaccination.isSync, forKey: "isSync")
+                objTable.setValue(vaccination.lngId, forKey: "lngId")
             }
             do {
                 try managedContext.save()
             }
-            catch{
+            catch {
+                // Handle error
             }
         }
         else {
-            
-            
             let entity = NSEntityDescription.entity(forEntityName: "HatcheryVacTurkey", in: managedContext)
             let person = NSManagedObject(entity: entity!, insertInto: managedContext)
             
-            person.setValue(type, forKey:"type")
-            person.setValue(strain, forKey:"strain")
-            person.setValue(route, forKey:"route")
-            person.setValue(age, forKey:"age")
-            person.setValue(postingId, forKey:"postingId")
-            person.setValue(vaciProgram, forKey:"vaciNationProgram")
-            person.setValue(sessionId, forKey:"loginSessionId")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
+            person.setValue(vaccination.type, forKey: "type")
+            person.setValue(vaccination.strain, forKey: "strain")
+            person.setValue(vaccination.route, forKey: "route")
+            person.setValue(vaccination.age, forKey: "age")
+            person.setValue(vaccination.postingId, forKey: "postingId")
+            person.setValue(vaccination.vaciProgram, forKey: "vaciNationProgram")
+            person.setValue(vaccination.sessionId, forKey: "loginSessionId")
+            person.setValue(vaccination.isSync, forKey: "isSync")
+            person.setValue(vaccination.lngId, forKey: "lngId")
             
             do {
                 try managedContext.save()
             }
             catch {
+                // Handle error
             }
             
             hatcheryVaccinationObject.append(person)
         }
     }
-    
     
     func fetchAddvacinationDataAllTurkey() -> NSArray {
         
@@ -881,64 +876,50 @@ class CoreDataHandlerTurkey: NSObject {
     }
     
     /************************/
-    func saveFieldVacinationInDatabaseTurkey(_ type : String, strain : String, route : String, index : Int, dbArray: NSArray,postingId : NSNumber,vaciProgram: String,sessionId : NSNumber,isSync : Bool,lngId:NSNumber)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    
+    func saveFieldVacinationInDatabaseTurkey(vaccinationData: CoreDataHandlerTurkeyModels.turkyVaccinationData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
-        FieldVaccindataArray = dbArray
+        FieldVaccindataArray = vaccinationData.dbArray
+
         if FieldVaccindataArray.count > 0 {
-            
-            if let objTable: FieldVaccinationTurkey = FieldVaccindataArray[index] as? FieldVaccinationTurkey {
-                
-                objTable.setValue(type, forKey:"type")
-                objTable.setValue(strain, forKey:"strain")
-                objTable.setValue(route, forKey:"route")
-                objTable.setValue(postingId, forKey:"postingId")
-                objTable.setValue(vaciProgram, forKey:"vaciNationProgram")
-                objTable.setValue(sessionId, forKey:"loginSessionId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(lngId, forKey:"lngId")
-                
+            if let objTable: FieldVaccinationTurkey = FieldVaccindataArray[vaccinationData.index] as? FieldVaccinationTurkey {
+                objTable.setValue(vaccinationData.type, forKey: "type")
+                objTable.setValue(vaccinationData.strain, forKey: "strain")
+                objTable.setValue(vaccinationData.route, forKey: "route")
+                objTable.setValue(vaccinationData.postingId, forKey: "postingId")
+                objTable.setValue(vaccinationData.vaciProgram, forKey: "vaciNationProgram")
+                objTable.setValue(vaccinationData.sessionId, forKey: "loginSessionId")
+                objTable.setValue(vaccinationData.isSync, forKey: "isSync")
+                objTable.setValue(vaccinationData.lngId, forKey: "lngId")
             }
-            do
-            {
+            do {
                 try managedContext.save()
+            } catch {
+                print("Error saving data")
             }
-            catch{
-            }
-        }
-        else {
-            
-            
+        } else {
             let entity = NSEntityDescription.entity(forEntityName: "FieldVaccinationTurkey", in: managedContext)
-            
-            let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-            
-            person.setValue(type, forKey:"type")
-            person.setValue(strain, forKey:"strain")
-            person.setValue(route, forKey:"route")
-            person.setValue(postingId, forKey:"postingId")
-            person.setValue(vaciProgram, forKey:"vaciNationProgram")
-            person.setValue(sessionId, forKey:"loginSessionId")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            
-            do
-            {
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+
+            person.setValue(vaccinationData.type, forKey: "type")
+            person.setValue(vaccinationData.strain, forKey: "strain")
+            person.setValue(vaccinationData.route, forKey: "route")
+            person.setValue(vaccinationData.postingId, forKey: "postingId")
+            person.setValue(vaccinationData.vaciProgram, forKey: "vaciNationProgram")
+            person.setValue(vaccinationData.sessionId, forKey: "loginSessionId")
+            person.setValue(vaccinationData.isSync, forKey: "isSync")
+            person.setValue(vaccinationData.lngId, forKey: "lngId")
+
+            do {
                 try managedContext.save()
+            } catch {
+                print("Error saving data")
             }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
-            }
-            
+
             hatcheryVaccinationObject.append(person)
         }
     }
-    
-    
-    
     
     func fetchFieldAddvacinationDataAllTurkey() -> NSArray {
         
@@ -1090,102 +1071,85 @@ class CoreDataHandlerTurkey: NSObject {
     
     /*******************************  Setting data Base ********************************************************/
     /***************** save data Skleta ************************************************************************/
-    func saveSettingsSkeletaInDatabaseTurkey(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex: Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
+    
+    
+    func saveSettingsSkeletaInDatabaseTurkey(settingsData: CoreDataHandlerTurkeyModels.turkeySettingsSkeletaData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
-        dataSkeletaArray = dbArray
-        
+        dataSkeletaArray = settingsData.dbArray
+
         if dataSkeletaArray.count > 0 {
-            
-            if let objTable: SkeletaTurkey = dataSkeletaArray[index] as? SkeletaTurkey {
-                
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-                
+            if let objTable: SkeletaTurkey = dataSkeletaArray[settingsData.index] as? SkeletaTurkey {
+                objTable.setValue(settingsData.strObservationField, forKey: "observationField")
+                objTable.setValue(NSNumber(value: settingsData.visibilityCheck as Bool), forKey: "visibilityCheck")
+                objTable.setValue(NSNumber(value: settingsData.quicklinks as Bool), forKey: "quicklinks")
+                objTable.setValue(settingsData.strInformation, forKey: "information")
+                objTable.setValue(settingsData.obsId, forKey: "observationId")
+                objTable.setValue(settingsData.measure, forKey: "measure")
+                objTable.setValue(settingsData.lngId, forKey: "lngId")
+                objTable.setValue(settingsData.refId, forKey: "refId")
+                objTable.setValue(settingsData.isSync, forKey: "isSync")
+                objTable.setValue(settingsData.quicklinkIndex, forKey: "quicklinkIndex")
             }
             do {
                 try managedContext.save()
+            } catch {
+                print(error)
             }
-            catch{
-            }
-        }  else {
-            
-            let entity   = NSEntityDescription.entity(forEntityName: "SkeletaTurkey", in: managedContext)
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "SkeletaTurkey", in: managedContext)
             let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-            
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            do
-            {
+
+            person.setValue(settingsData.strObservationField, forKey: "observationField")
+            person.setValue(NSNumber(value: settingsData.visibilityCheck as Bool), forKey: "visibilityCheck")
+            person.setValue(NSNumber(value: settingsData.quicklinks as Bool), forKey: "quicklinks")
+            person.setValue(settingsData.strInformation, forKey: "information")
+            person.setValue(settingsData.obsId, forKey: "observationId")
+            person.setValue(settingsData.measure, forKey: "measure")
+            person.setValue(settingsData.isSync, forKey: "isSync")
+            person.setValue(settingsData.lngId, forKey: "lngId")
+            person.setValue(settingsData.refId, forKey: "refId")
+            person.setValue(settingsData.quicklinkIndex, forKey: "quicklinkIndex")
+
+            do {
                 try managedContext.save()
+            } catch {
+                print(error)
             }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
-            }
-            
+
             settingsSkeletaObject.append(person)
         }
     }
-    func updateSettingDataSkeltaTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    func updateSettingDataSkeltaTurkey(_ data: CoreDataHandlerTurkeyModels.updateTurkySkeletaSettings) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         self.managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "SkeletaTurkey")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SkeletaTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, data.refId)
         
-        do
-            
-        {
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: SkeletaTurkey = (fetchedResult![i] as? SkeletaTurkey)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                    objTable.setValue(strInformation, forKey:"information")
-                    objTable.setValue(isSync, forKey:"isSync")
+            if let fetchedResult = fetchedResult, fetchedResult.count > 0 {
+                for i in 0..<fetchedResult.count {
+                    let objTable = fetchedResult[i] as! SkeletaTurkey
+                    objTable.setValue(NSNumber(value: data.visibilityCheck), forKey: "visibilityCheck")
+                    objTable.setValue(NSNumber(value: data.quicklinks), forKey: "quicklinks")
+                    objTable.setValue(data.strInformation, forKey: "information")
+                    objTable.setValue(data.isSync, forKey: "isSync")
                     
-                    
-                    do
-                    {
+                    do {
                         try managedContext.save()
-                    }
-                    catch{
+                    } catch {
+                        print("Error saving managed context: \(error)")
                     }
                 }
-                
             }
-            
+        } catch {
+            print("Error fetching data: \(error)")
         }
-        catch
-        {
-            
-        }
-        
-        
     }
+
     /***************** Fetch data Skleta ************************************************************************/
     
     func fetchAllSeettingdataTurkey() -> NSArray
@@ -1247,61 +1211,48 @@ class CoreDataHandlerTurkey: NSObject {
     }
     
     /***************************** Save Setting  Data Cocoii Data ***********************************************/
-    
-    
-    func saveSettingsCocoiiInDatabaseTurkey(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex:Int)
-    {
+    func saveSettingsCocoiiInDatabaseTurkey(data: CoreDataHandlerTurkeyModels.turkeyCoccidiosisSettings) {
         let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
         self.managedContext = appDelegate!.managedObjectContext
-        dataCociiaArray = dbArray
+        dataCociiaArray = data.dbArray
         
         if dataCociiaArray.count > 0 {
-            if let objTable: CoccidiosisTurkey = dataCociiaArray[index] as? CoccidiosisTurkey {
-                
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
+            if let objTable: CoccidiosisTurkey = dataCociiaArray[data.index] as? CoccidiosisTurkey {
+                objTable.setValue(data.strObservationField, forKey:"observationField")
+                objTable.setValue(NSNumber(value: data.visibilityCheck as Bool), forKey:"visibilityCheck")
+                objTable.setValue(NSNumber(value: data.quicklinks as Bool), forKey:"quicklinks")
+                objTable.setValue(data.strInformation, forKey:"information")
+                objTable.setValue(data.obsId, forKey:"observationId")
+                objTable.setValue(data.measure, forKey:"measure")
+                objTable.setValue(data.lngId, forKey:"lngId")
+                objTable.setValue(data.isSync, forKey:"isSync")
+                objTable.setValue(data.refId, forKey:"refId")
+                objTable.setValue(data.quicklinkIndex, forKey:"quicklinkIndex")
             }
-            do
-            {
+            
+            do {
                 try managedContext.save()
+            } catch {
+                // Handle the error if needed
             }
-            catch{
-            }
-        }
-        else {
-            
-            
+        } else {
             let entity  = NSEntityDescription.entity(forEntityName: "CoccidiosisTurkey", in: managedContext)
-            
             let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
             
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
+            person.setValue(data.strObservationField, forKey:"observationField")
+            person.setValue(NSNumber(value: data.visibilityCheck as Bool), forKey:"visibilityCheck")
+            person.setValue(NSNumber(value: data.quicklinks as Bool), forKey:"quicklinks")
+            person.setValue(data.strInformation, forKey:"information")
+            person.setValue(data.obsId, forKey:"observationId")
+            person.setValue(data.measure, forKey:"measure")
+            person.setValue(data.isSync, forKey:"isSync")
+            person.setValue(data.lngId, forKey:"lngId")
+            person.setValue(data.refId, forKey:"refId")
+            person.setValue(data.quicklinkIndex, forKey:"quicklinkIndex")
             
-            do
-            {
+            do {
                 try managedContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
             
@@ -1309,48 +1260,35 @@ class CoreDataHandlerTurkey: NSObject {
         }
     }
     
-    func updateSettingDataCocoiiTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    func updateSettingDataCocoiiTurkey(data: CoreDataHandlerTurkeyModels.updateCoccidiosisTurkeySettings) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         self.managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "CoccidiosisTurkey")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoccidiosisTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, data.refId)
         
-        do
-            
-        {
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
+            if fetchedResult!.count > 0 {
+                for i in 0..<fetchedResult!.count {
                     let objTable: CoccidiosisTurkey = (fetchedResult![i] as? CoccidiosisTurkey)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-
-                    objTable.setValue(isSync, forKey:"isSync")
+                    objTable.setValue(NSNumber(value: data.visibilityCheck), forKey: "visibilityCheck")
+                    objTable.setValue(NSNumber(value: data.quicklinks), forKey: "quicklinks")
+                    objTable.setValue(data.isSync, forKey: "isSync")
                     
-                    
-                    do
-                    {
+                    do {
                         try managedContext.save()
-                    }
-                    catch{
+                    } catch {
+                        // Handle error here
                     }
                 }
-                
             }
-            
+        } catch {
+            // Handle fetch error here
         }
-        catch
-        {
-            
-        }
-        
-        
     }
+
     /***************** Fetch data Skleta ************************************************************************/
     
     func fetchAllCocoiiDataTurkey() -> NSArray
@@ -1418,105 +1356,78 @@ class CoreDataHandlerTurkey: NSObject {
     
     /******************************* Saving data Of GiTract********************************************/
     
-    func saveSettingsGITractDatabaseTurkey(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex: Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveSettingsGITractDatabaseTurkey(_ data: CoreDataHandlerTurkeyModels.turkeyGITractSettingsData) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
-        dataGiTractArray = dbArray
-        
+        dataGiTractArray = data.dbArray
+
         if dataGiTractArray.count > 0 {
-            
-            if let objTable: GITractTurkey = dataGiTractArray[index] as? GITractTurkey {
-                
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-                
+            if let objTable = dataGiTractArray[data.index] as? GITractTurkey {
+                objTable.setValue(data.observationField, forKey: "observationField")
+                objTable.setValue(NSNumber(value: data.visibilityCheck), forKey: "visibilityCheck")
+                objTable.setValue(NSNumber(value: data.quicklinks), forKey: "quicklinks")
+                objTable.setValue(data.information, forKey: "information")
+                objTable.setValue(data.obsId, forKey: "observationId")
+                objTable.setValue(data.measure, forKey: "measure")
+                objTable.setValue(data.lngId, forKey: "lngId")
+                objTable.setValue(data.isSync, forKey: "isSync")
+                objTable.setValue(data.refId, forKey: "refId")
+                objTable.setValue(data.quicklinkIndex, forKey: "quicklinkIndex")
             }
-            do
-            {
+            do {
                 try managedContext.save()
+            } catch {
             }
-            catch{
-            }
-        }
-        else {
-            
-            
-            let entity  = NSEntityDescription.entity(forEntityName: "GITractTurkey", in: managedContext)
-            
-            let person  = NSManagedObject(entity: entity!, insertInto: managedContext)
-            
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            
-            do
-            {
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "GITractTurkey", in: managedContext)
+            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
+
+            person.setValue(data.observationField, forKey: "observationField")
+            person.setValue(NSNumber(value: data.visibilityCheck), forKey: "visibilityCheck")
+            person.setValue(NSNumber(value: data.quicklinks), forKey: "quicklinks")
+            person.setValue(data.information, forKey: "information")
+            person.setValue(data.obsId, forKey: "observationId")
+            person.setValue(data.measure, forKey: "measure")
+            person.setValue(data.isSync, forKey: "isSync")
+            person.setValue(data.lngId, forKey: "lngId")
+            person.setValue(data.refId, forKey: "refId")
+            person.setValue(data.quicklinkIndex, forKey: "quicklinkIndex")
+
+            do {
                 try managedContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
-            
+
             settingsGITract.append(person)
         }
     }
-    func updateSettingDataGitractTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    
+    func updateSettingDataGitractTurkey(_ data: CoreDataHandlerTurkeyModels.updateGITractSettingsData) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         self.managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "GITractTurkey")
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "GITractTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
-        
-        do
-            
-        {
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, data.refId)
+
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: GITractTurkey = (fetchedResult![i] as? GITractTurkey)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                    objTable.setValue(isSync, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch{
+            if let results = fetchedResult, !results.isEmpty {
+                for obj in results {
+                    if let objTable = obj as? GITractTurkey {
+                        objTable.setValue(NSNumber(value: data.visibilityCheck), forKey: "visibilityCheck")
+                        objTable.setValue(NSNumber(value: data.quicklinks), forKey: "quicklinks")
+                        objTable.setValue(data.isSync, forKey: "isSync")
                     }
                 }
-                
+                try managedContext.save()
             }
-            
+        } catch {
+            // Handle error if needed
         }
-        catch
-        {
-            
-        }
-        
-        
     }
+
     /************** Fetch data Of GiTract* ***************************************/
     
     func fetchAllGITractDataTurkey() -> NSArray {
@@ -1578,100 +1489,84 @@ class CoreDataHandlerTurkey: NSObject {
     }
     
     /******************** Saving data Of Respiratory *********************************/
-    
-    func saveSettingsRespiratoryDatabaseTurkey(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync: Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex:Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveSettingsRespiratoryDatabaseTurkey(_ settings: CoreDataHandlerTurkeyModels.turkeyRespiratorySettings) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
-        dataRespiratoryArray = dbArray
-        
+        dataRespiratoryArray = settings.dbArray
+
         if dataRespiratoryArray.count > 0 {
-            if let objTable: RespiratoryTurkey = dataRespiratoryArray[index] as? RespiratoryTurkey {
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-                
+            if let objTable = dataRespiratoryArray[settings.index] as? RespiratoryTurkey {
+                objTable.setValue(settings.observationField, forKey: "observationField")
+                objTable.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+                objTable.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+                objTable.setValue(settings.information, forKey: "information")
+                objTable.setValue(settings.observationId, forKey: "observationId")
+                objTable.setValue(settings.measure, forKey: "measure")
+                objTable.setValue(settings.lngId, forKey: "lngId")
+                objTable.setValue(settings.isSync, forKey: "isSync")
+                objTable.setValue(settings.refId, forKey: "refId")
+                objTable.setValue(settings.quicklinkIndex, forKey: "quicklinkIndex")
             }
-            do
-            {
+            do {
                 try managedContext.save()
+            } catch {
+                // Handle error
             }
-            catch{
-            }
-        }
-        else {
-            
-            
-            let entity = NSEntityDescription.entity(forEntityName: "RespiratoryTurkey", in: managedContext)
-            
-            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-            
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            
-            do
-            {
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "RespiratoryTurkey", in: managedContext)!
+            let person = NSManagedObject(entity: entity, insertInto: managedContext)
+
+            person.setValue(settings.observationField, forKey: "observationField")
+            person.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+            person.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+            person.setValue(settings.information, forKey: "information")
+            person.setValue(settings.observationId, forKey: "observationId")
+            person.setValue(settings.measure, forKey: "measure")
+            person.setValue(settings.isSync, forKey: "isSync")
+            person.setValue(settings.lngId, forKey: "lngId")
+            person.setValue(settings.refId, forKey: "refId")
+            person.setValue(settings.quicklinkIndex, forKey: "quicklinkIndex")
+
+            do {
                 try managedContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
-            
+
             settingsRespiratory.append(person)
         }
     }
     
-    func updateSettingDataRespTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    func updateSettingDataRespTurkey(_ settings: CoreDataHandlerTurkeyModels.turkeyRespiratorySettingsUpdate) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         self.managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "RespiratoryTurkey")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "RespiratoryTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, settings.refId)
         
-        do
-            
-        {
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
+            if fetchedResult!.count > 0 {
+                for i in 0..<fetchedResult!.count {
                     let objTable: RespiratoryTurkey = (fetchedResult![i] as? RespiratoryTurkey)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                    objTable.setValue(isSync, forKey:"isSync")
+                    objTable.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+                    objTable.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+                    objTable.setValue(settings.isSync, forKey: "isSync")
                     
                     do {
                         try managedContext.save()
-                    }
-                    catch{
+                    } catch {
+                        // Handle error
                     }
                 }
             }
             
         } catch {
-            
+            // Handle error
         }
     }
+
     /************** Fetch data Of Respiratory* ***************************************/
     
     func fetchAllRespiratoryTurkey() -> NSArray {
@@ -1734,107 +1629,83 @@ class CoreDataHandlerTurkey: NSObject {
     
     /******************************* Saving data Of immune ********************************************/
     
-    func saveSettingsImmuneDatabaseTurkey(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex:Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
+    func saveSettingsImmuneDatabaseTurkey(_ settings: CoreDataHandlerTurkeyModels.turkeyImmuneSettings) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         self.managedContext = appDelegate!.managedObjectContext
-        dataImmuneArray = dbArray
+        dataImmuneArray = settings.dbArray
         
         if dataImmuneArray.count > 0 {
-            
-            if let objTable: ImmuneTurkey = dataImmuneArray[index] as? ImmuneTurkey {
-                
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-                
-                
+            if let objTable = dataImmuneArray[settings.index] as? ImmuneTurkey {
+                objTable.setValue(settings.observationField, forKey: "observationField")
+                objTable.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+                objTable.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+                objTable.setValue(settings.information, forKey: "information")
+                objTable.setValue(settings.observationId, forKey: "observationId")
+                objTable.setValue(settings.measure, forKey: "measure")
+                objTable.setValue(settings.lngId, forKey: "lngId")
+                objTable.setValue(settings.isSync, forKey: "isSync")
+                objTable.setValue(settings.refId, forKey: "refId")
+                objTable.setValue(settings.quicklinkIndex, forKey: "quicklinkIndex")
             }
-            do
-            {
+            do {
                 try managedContext.save()
+            } catch {
+                // Handle error
             }
-            catch{
-            }
-        }
-        else {
-            
-            let entity = NSEntityDescription.entity(forEntityName: "ImmuneTurkey", in: managedContext)
-            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            
-            do
-            {
+        } else {
+            let entity = NSEntityDescription.entity(forEntityName: "ImmuneTurkey", in: managedContext)!
+            let person = NSManagedObject(entity: entity, insertInto: managedContext)
+
+            person.setValue(settings.observationField, forKey: "observationField")
+            person.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+            person.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+            person.setValue(settings.information, forKey: "information")
+            person.setValue(settings.observationId, forKey: "observationId")
+            person.setValue(settings.measure, forKey: "measure")
+            person.setValue(settings.isSync, forKey: "isSync")
+            person.setValue(settings.lngId, forKey: "lngId")
+            person.setValue(settings.refId, forKey: "refId")
+            person.setValue(settings.quicklinkIndex, forKey: "quicklinkIndex")
+
+            do {
                 try managedContext.save()
-            }
-            catch
-            {
+            } catch {
                 print(appDelegateObj.testFuntion())
             }
-            
+
             settingsImmune.append(person)
         }
     }
     
-    func updateSettingDataImmuneTurkey (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
+    func updateSettingDataImmuneTurkey(_ settings: CoreDataHandlerTurkeyModels.ImmuneSettingsUpdate) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         self.managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "ImmuneTurkey")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ImmuneTurkey")
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
+        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, settings.refId)
         
-        do
-            
-        {
+        do {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: ImmuneTurkey = (fetchedResult![i] as? ImmuneTurkey)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                    objTable.setValue(strInformation, forKey:"information")
+            if fetchedResult!.count > 0 {
+                for i in 0..<fetchedResult!.count {
+                    let objTable = fetchedResult![i] as! ImmuneTurkey
+                    objTable.setValue(NSNumber(value: settings.visibilityCheck), forKey: "visibilityCheck")
+                    objTable.setValue(NSNumber(value: settings.quicklinks), forKey: "quicklinks")
+                    objTable.setValue(settings.information, forKey: "information")
                     
-                    
-                    
-                    do
-                    {
+                    do {
                         try managedContext.save()
-                    }
-                    catch{
+                    } catch {
+                        // Handle error
                     }
                 }
-                
             }
-            
+        } catch {
+            // Handle error
         }
-        catch
-        {
-            
-        }
-        
-        
     }
+
     
     /************** Fetch data Of immune* ***************************************/
     
@@ -3028,56 +2899,6 @@ class CoreDataHandlerTurkey: NSObject {
     }
     
     
-    
-    /******************* Login *******************************************************/
-    //////////////////////// compex //////////////////////////////////
-    func LoginDatabaseTurkey(_ userTypeId : NSNumber, userId: NSNumber ,userName: String,status: NSNumber,signal:String,loginId:NSNumber,dbArray :NSArray ,index : Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        self.managedContext = appDelegate!.managedObjectContext
-        loginArray = dbArray
-        
-        if loginArray.count > 0 {
-            
-            if let objTable: LoginTurkey = loginArray[index] as? LoginTurkey {
-                objTable.setValue(userTypeId, forKey:"userTypeId")
-                objTable.setValue(userId, forKey:"userId")
-                objTable.setValue(status, forKey:"status")
-                objTable.setValue(userName, forKey:"username")
-                objTable.setValue(signal, forKey:"signal")
-                objTable.setValue(loginId, forKey:"loginId")
-            }
-            do
-            {
-                try managedContext.save()
-            }
-            catch{
-            }
-        }
-        else {
-            
-            let entity = NSEntityDescription.entity(forEntityName: "LoginTurkey", in: managedContext)
-            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(userTypeId, forKey:"userTypeId")
-            person.setValue(userId, forKey:"userId")
-            person.setValue(status, forKey:"status")
-            person.setValue(userName, forKey:"username")
-            person.setValue(signal, forKey:"signal")
-            person.setValue(loginId, forKey:"loginId")
-            
-            do
-            {
-                try managedContext.save()
-            }
-            catch
-            {
-                print(appDelegateObj.testFuntion())
-            }
-            
-            loginType.append(person)
-        }
-    }
     
     /**************** Fetch  complex posting *******************************************/
     func fetchLoginTypeTurkey() -> NSArray
@@ -8330,6 +8151,7 @@ class CoreDataHandlerTurkey: NSObject {
                     let captureNecropsyViewData = c.object(at: i) as! CaptureNecropsyViewDataTurkey
                     var trimmedString = captureNecropsyViewData.obsName!.replacingOccurrences(of: "/", with: "")
                     trimmedString = captureNecropsyViewData.obsName!.replacingOccurrences(of: " ", with: "")
+                    
                     handleTrimmedStringAndValidations(&trimmedString)
                     
                     handleCaptureNecropsyViewDataValidation(captureNecropsyViewData, d, trimmedString)

@@ -237,7 +237,8 @@ class MicrobialViewController: BaseViewController {
         
             if let isFreshLaunched = UserDefaults.standard.value(forKey: "isFreshLaunched") as? Bool, !isFreshLaunched {
                 let n: Int! = self.navigationController?.viewControllers.count
-                if let objHatcherySelectionViewController = self.navigationController?.viewControllers[n-2] as? HatcherySelectionViewController {
+                
+                if self.navigationController?.viewControllers[n-2] is HatcherySelectionViewController {
                     self.checkAndSync()
                     if ConnectionManager.shared.hasConnectivity() {
                         return
@@ -246,6 +247,7 @@ class MicrobialViewController: BaseViewController {
                 } else {
                     self.checkAndSync()
                 }
+
             }
         }
         draftContainerView.firstColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -431,6 +433,7 @@ extension MicrobialViewController {
         if let theJSONData = try? JSONSerialization.data(
             withJSONObject: dict,
             options: []) {
+            debugPrint(theJSONData)
         }
      
         ZoetisWebServices.shared.syncEnvironmentalData(reqType: reqType, controller: self, parameters: dict, completion: { [weak self] (json, error) in
@@ -557,58 +560,6 @@ extension MicrobialViewController {
         }.joined(separator: ", ")
     }
     
-    
-    ///Old Implementation of function
-//    private func fetchGetAllSyncedDataForRequisition(){
-//        dismissGlobalHUD(self.view)
-//        self.showGlobalProgressHUDWithTitle(self.view, title: "")
-//        ZoetisWebServices.shared.getAllSyncedRequisitionData(controller: self, parameters: [:], completion: { [weak self] (json, error) in
-//            self!.dismissGlobalHUD(self!.view)
-//            guard let self = self, error == nil else { return }
-//            UserDefaults.standard.set(false, forKey: "isFreshLaunched")
-//            UserDefaults.standard.synchronize()
-//            let jsonObject = RequisitionGetDataModel(json)
-//            let arrRequisition = jsonObject.requisitionArray
-//            if arrRequisition?.count ?? 0 > 0{
-//                for objReq in arrRequisition ?? []{
-//                    if let microbialDetailsList = objReq.microbialDetailsList {
-//                        
-//                        for arrMicrobialDetailsList in microbialDetailsList{
-//                            if !Microbial_EnviromentalSurveyFormSubmitted.isSameTimeStampAndUserIdAlreadyExisits(reqData: arrMicrobialDetailsList){
-//                                let isPlateIdGenerated = false
-//                                
-//                                let arrReviewers = CoreDataHandlerMicro().fetchDetailsFor(entityName: "Micro_Reviewer") as! [Micro_Reviewer]
-//                                let reviewerIds = arrMicrobialDetailsList.reviewerIds ?? []
-//                                for reviewer in arrReviewers{
-//                                    let isSelected = reviewerIds.contains(reviewer.reviewerId?.intValue ?? 0)
-//                                    MicrobialSelectedUnselectedReviewer.saveReviewersInDB(arrMicrobialDetailsList.timeStamp ?? "", reviewerId: reviewer.reviewerId?.intValue ?? 0, reviewerName: reviewer.reviewerName ?? "", isSelected: isSelected, isSessionType: false)
-//                                }
-//                                
-//                                var reviewersText = ""
-//                                for selectsId in reviewerIds {
-//                                    let selectedReviewer = arrReviewers.filter{ $0.reviewerId?.intValue ?? 0 == selectsId }
-//                                    if selectedReviewer.count > 0{
-//                                        if reviewersText == ""{
-//                                            reviewersText = selectedReviewer.first?.reviewerName ?? ""
-//                                        }else{
-//                                            reviewersText = "\(reviewersText), \(selectedReviewer.first?.reviewerName ?? "")"
-//                                        }
-//                                    }
-//                                }
-//                                
-//                                Microbial_EnviromentalSurveyFormSubmitted.saveDataWhichIsAlreadySynced(reqData: arrMicrobialDetailsList, reqText: objReq.SurveyType?.Text ?? "", reqId: objReq.SurveyType?.Id ?? 0, isPlateIdGenerated: isPlateIdGenerated, reviewerText: reviewersText)
-//                            } else {
-//                                Microbial_EnviromentalSurveyFormSubmitted.updateCaseStatusOfReq(timeStamp: arrMicrobialDetailsList.timeStamp ?? "", caseStatus: arrMicrobialDetailsList.status ?? 0)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            self.checkAndSync()
-//            self.loadDataForGraphDraftAndSubmittedReq()
-//            print(json)
-//        })
-//    }
  
     
     private func fetchCustomerList(){

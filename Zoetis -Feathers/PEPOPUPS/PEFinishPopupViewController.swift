@@ -544,225 +544,169 @@ extension PEFinishPopupViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if(indexPath.section == 0 && catArrayForCollectionIs[0].isOpened ){
-            if golbalEvaluationID != 1 {
-                tableView.isScrollEnabled = true
-            }
-            else{
-                tableView.isScrollEnabled = false
-            }
+        updateTableViewScrollState(tableView, for: indexPath)
+        if indexPath.row == 0 {
+            return setupHeaderCell(tableView, indexPath: indexPath)
+        } else {
+            return setupContentCell(tableView, indexPath: indexPath)
         }
-        else{
+    }
+
+    // Helper 1: Update scroll state
+    private func updateTableViewScrollState(_ tableView: UITableView,for indexPath: IndexPath) {
+        if indexPath.section == 0 && catArrayForCollectionIs[0].isOpened {
+            tableView.isScrollEnabled = (golbalEvaluationID != 1)
+        } else {
             tableView.isScrollEnabled = true
         }
-        
-        
-        if indexPath.row == 0 {
-            if let headerView = tableView.dequeueReusableCell(withIdentifier: "PEFinializeHeaderTableViewCell") as? PEFinializeHeaderTableViewCell {
-                headerView.contentView.backgroundColor =  UIColor.cellAlternateBlueCOlor()
-                
-                if golbalEvaluationID != 2 {
-                    if indexPath.section == 0 {
-                        headerView.lblTitle.text = "Signature"
-                        let plus = UIImage.init(named: "add-4")
-                        let minus = UIImage.init(named: "minusBtn")
-                        if catArrayForCollectionIs[indexPath.section].isOpened {
-                            headerView.btnPlusMinus.setImage(minus!, for: .normal)
-                        }
-                        else {
-                            headerView.btnPlusMinus.setImage(plus!, for: .normal)
-                            DispatchQueue.main.async {
-                                let indexPathRow:Int = 1
-                                let indexPath = IndexPath(item: indexPathRow, section: 0)
-                                self.tableview.reloadRows(at: [indexPath], with: .automatic)
-                                
-                            }
-                        }
-                        headerView.lblScore.text = ""
-                        return headerView
-                    }
-                    else {
-                        headerView.lblTitle.text = catArrayForCollectionIs[indexPath.section].catName
-                        let resultMark  = String(catArrayForCollectionIs[indexPath.section].catResultMark ?? 0)
-                        let maxMark  = String(catArrayForCollectionIs[indexPath.section].catMaxMark ?? 0)
-                        let score = resultMark + "/" + maxMark
-                        let plus = UIImage.init(named: "add-4")
-                        let minus = UIImage.init(named: "minusBtn")
-                        if catArrayForCollectionIs[indexPath.section].isOpened {
-                            headerView.btnPlusMinus.setImage(minus!, for: .normal)
-                        }
-                        else {
-                            headerView.btnPlusMinus.setImage(plus!, for: .normal)
-                        }
-                        headerView.lblScore.text = score
-                        if(catArrayForCollectionIs[indexPath.section].sequenceNoo == 11){
-                            headerView.lblScore.text = "NA"
-                        }
-                        
-                        return headerView
-                        
-                    }
-                }
-                else {
-                    headerView.lblTitle.text = catArrayForCollectionIs[indexPath.section].catName
-                    let resultMark  = String(catArrayForCollectionIs[indexPath.section].catResultMark ?? 0)
-                    let maxMark  = String(catArrayForCollectionIs[indexPath.section].catMaxMark ?? 0)
-                    let score = resultMark + "/" + maxMark
-                    let plus = UIImage.init(named: "add-4")
-                    let minus = UIImage.init(named: "minusBtn")
-                    if catArrayForCollectionIs[indexPath.section].isOpened {
-                        headerView.btnPlusMinus.setImage(minus!, for: .normal)
-                    }
-                    else {
-                        headerView.btnPlusMinus.setImage(plus!, for: .normal)
-                    }
-                    headerView.lblScore.text = score
-                    return headerView
-                    
-                    
-                    
-                }
-            }
+    }
+
+    // Helper 2: Setup header cell
+    private func setupHeaderCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        guard let headerView = tableView.dequeueReusableCell(withIdentifier: "PEFinializeHeaderTableViewCell") as? PEFinializeHeaderTableViewCell else {
+            return UITableViewCell()
         }
-        else {
-            
-            let catID = catArrayForCollectionIs[indexPath.section].catID
-            for cat in peNewAssessmentArray {
-                if catID == cat.catID{
-                    peNewAssessmentArrayForCatQuest.append(cat)
-                }
-            }
-            
-            if golbalEvaluationID != 2 {
-                if indexPath.section == 0 {
-                    
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: "signatureTableViewCell") as? SignatureTableViewCell {
-                        cell.certificateData = certificateData
-                        cell.fromScreen = "PEFinishPopUpScreen"
-                        cell.prevController = self.prevController
-                        cell.empIndex = 0
-                        cell.index = 0
-                        
-                        cell.shipToLbl.isHidden = true
-                        cell.shippindAddressBtn.isHidden = true
-                        if regionID != 3 {
-                            var fullName = ""
-                            let firstname = certificateData[0].name
-                            fullName = firstname ?? ""
-                            cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
-                            cell.operatorSignLbl.text = cell.operatorSignLbl.text  ?? "" + "*"
-                            cell.deviceOperatorNamebl.text  = "Vaccine Mixer Name: \(fullName)"
-                            if ("\(fullName)" == certificateData[0].name) {
-                                
-                                cell.previousBtn.isHidden = true
-                                cell.nextBtn.isHidden = false
-                                cell.nextBtn.isUserInteractionEnabled = true
-                                
-                            }
-                            if !(certificateData[0].isCertExpired)! && (prevController == "Rejected") {
-                                cell.hideShowImgVw(false)
-                                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
-                            } else {
-                                cell.showImgVw(true)
-                                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
-                            }
-                        } else {
-                            if indexPath.row == 1 {
-                                var fullName = ""
-                                let firstname = certificateData[0].name
-                                fullName = firstname ?? ""
-                                cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
-                                cell.operatorSignLbl.text = cell.operatorSignLbl.text  ?? "" + "*"
-                                cell.deviceOperatorNamebl.text  = "Vaccine Mixer Name: \(fullName)"
-                                
-                                if ("\(fullName)" == certificateData[0].name) {
-                                    
-                                    cell.previousBtn.isHidden = true
-                                    cell.nextBtn.isHidden = false
-                                    cell.nextBtn.isUserInteractionEnabled = true
-                                    
-                                }
-                                
-                                if !(certificateData[0].isCertExpired)! && (prevController == "Rejected") {
-                                    cell.hideShowImgVw(false)
-                                    cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
-                                } else {
-                                    cell.showImgVw(true)
-                                    cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:certificateData[0].signatureImg)
-                                }
-                            }
-                        }
-                        
-                        cell.blockSignature = { [unowned self] (data) in
-                            certificateData = data
-                            var i = 0
-                            for item in certificateData {
-                                if item.signatureImg.isEmpty {
-                                    print("your signature is empty \(i)")
-                                } else {
-                                    print("your signature is having \(i)")
-                                }
-                                i = i + 1
-                            }
-                        }
-                        return cell
-                    }
-                    
-                } else {
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: PE_FinalizeCell.identifier) as? PE_FinalizeCell {
-                        
-                        if peNewAssessmentArrayForCatQuest.count > indexPath.row {
-                            cell.lblQuestion.text = peNewAssessmentArrayForCatQuest[indexPath.row].assDetail1
-                            var resultMark = ""
-                            var maxMark = ""
-                            if peNewAssessmentArrayForCatQuest[indexPath.row].assStatus == 1 {
-                                resultMark  = String(peNewAssessmentArrayForCatQuest[indexPath.row].assMaxScore ?? 0)
-                                maxMark  = String(peNewAssessmentArrayForCatQuest[indexPath.row].assMaxScore ?? 0)
-                            } else {
-                                resultMark  = String(peNewAssessmentArrayForCatQuest[indexPath.row].assMinScore ?? 0)
-                                maxMark  = String(peNewAssessmentArrayForCatQuest[indexPath.row].assMaxScore ?? 0)
-                            }
-                            var score = resultMark + "/" + maxMark
-                            if(peNewAssessmentArrayForCatQuest[indexPath.row].sequenceNoo == 11){
-                                score = "NA"
-                            }
-                            
-                            cell.lblResult.text = score
-                        }
-                        return cell
-                        
-                        
-                    }
-                    
-                }
+        headerView.contentView.backgroundColor = UIColor.cellAlternateBlueCOlor()
+        if golbalEvaluationID != 2 {
+            if indexPath.section == 0 {
+                configureSignatureHeader(headerView)
             } else {
-                if let cell = tableView.dequeueReusableCell(withIdentifier: PE_FinalizeCell.identifier) as? PE_FinalizeCell {
-                    
-                    if peNewAssessmentArrayForCatQuest.count > indexPath.row {
-                        cell.lblQuestion.text = peNewAssessmentArrayForCatQuest[indexPath.row].assDetail1
-                        var resultMark = ""
-                        var maxMark = ""
-                        if peNewAssessmentArrayForCatQuest[indexPath.row].assStatus == 1 {
-                            resultMark  = String(peNewAssessmentArrayForCatQuest[indexPath.row].assMaxScore ?? 0)
-                            maxMark  = String(peNewAssessmentArrayForCatQuest[indexPath.row].assMaxScore ?? 0)
-                        } else {
-                            resultMark  = String(peNewAssessmentArrayForCatQuest[indexPath.row].assMinScore ?? 0)
-                            maxMark  = String(peNewAssessmentArrayForCatQuest[indexPath.row].assMaxScore ?? 0)
-                        }
-                        
-                        let score = resultMark + "/" + maxMark
-                        
-                        
-                        cell.lblResult.text = score
-                    }
-                    return cell
-                    
-                    
+                configureCategoryHeader(headerView, section: indexPath.section)
+            }
+        } else {
+            configureCategoryHeader(headerView, section: indexPath.section)
+        }
+        return headerView
+    }
+
+    private func configureSignatureHeader(_ headerView: PEFinializeHeaderTableViewCell) {
+        headerView.lblTitle.text = "Signature"
+        let plus = UIImage(named: "add-4")
+        let minus = UIImage(named: "minusBtn")
+        if catArrayForCollectionIs[0].isOpened {
+            headerView.btnPlusMinus.setImage(minus, for: .normal)
+        } else {
+            headerView.btnPlusMinus.setImage(plus, for: .normal)
+            DispatchQueue.main.async {
+                let indexPathRow = 1
+                let indexPath = IndexPath(item: indexPathRow, section: 0)
+                self.tableview.reloadRows(at: [indexPath], with: .automatic)
+            }
+        }
+        headerView.lblScore.text = ""
+    }
+
+    private func configureCategoryHeader(_ headerView: PEFinializeHeaderTableViewCell, section: Int) {
+        headerView.lblTitle.text = catArrayForCollectionIs[section].catName
+        let resultMark = String(catArrayForCollectionIs[section].catResultMark ?? 0)
+        let maxMark = String(catArrayForCollectionIs[section].catMaxMark ?? 0)
+        let score = (catArrayForCollectionIs[section].sequenceNoo == 11) ? "NA" : "\(resultMark)/\(maxMark)"
+        let plus = UIImage(named: "add-4")
+        let minus = UIImage(named: "minusBtn")
+        if catArrayForCollectionIs[section].isOpened {
+            headerView.btnPlusMinus.setImage(minus, for: .normal)
+        } else {
+            headerView.btnPlusMinus.setImage(plus, for: .normal)
+        }
+        headerView.lblScore.text = score
+    }
+
+    // Helper 3: Setup content cell
+    private func setupContentCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let catID = catArrayForCollectionIs[indexPath.section].catID
+        peNewAssessmentArrayForCatQuest = peNewAssessmentArray.filter { $0.catID == catID }
+        if golbalEvaluationID != 2 {
+            if indexPath.section == 0 {
+                return setupSignatureCell(tableView, indexPath: indexPath)
+            } else {
+                return setupFinalizeCell(tableView, indexPath: indexPath)
+            }
+        } else {
+            return setupFinalizeCell(tableView, indexPath: indexPath)
+        }
+    }
+
+    private func setupSignatureCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "signatureTableViewCell") as? SignatureTableViewCell else {
+            return UITableViewCell()
+        }
+        cell.certificateData = certificateData
+        cell.fromScreen = "PEFinishPopUpScreen"
+        cell.prevController = self.prevController
+        cell.empIndex = 0
+        cell.index = 0
+        cell.shipToLbl.isHidden = true
+        cell.shippindAddressBtn.isHidden = true
+        configureSignatureCell(cell, indexPath: indexPath)
+        cell.blockSignature = { [unowned self] data in
+            certificateData = data
+            for (i, item) in certificateData.enumerated() {
+                if item.signatureImg.isEmpty {
+                    print("your signature is empty \(i)")
+                } else {
+                    print("your signature is having \(i)")
                 }
             }
         }
-        return UITableViewCell()
+        return cell
+    }
+
+    private func configureSignatureCell(_ cell: SignatureTableViewCell, indexPath: IndexPath) {
+        if regionID != 3 {
+            let fullName = certificateData[0].name ?? ""
+            cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
+            cell.deviceOperatorNamebl.text = "Vaccine Mixer Name: \(fullName)"
+            if fullName == certificateData[0].name {
+                cell.previousBtn.isHidden = true
+                cell.nextBtn.isHidden = false
+                cell.nextBtn.isUserInteractionEnabled = true
+            }
+            if !(certificateData[0].isCertExpired ?? false) && (prevController == "Rejected") {
+                cell.hideShowImgVw(false)
+                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].signatureImg)
+            } else {
+                cell.showImgVw(true)
+                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].signatureImg)
+            }
+        } else if indexPath.row == 1 {
+            let fullName = certificateData[0].name ?? ""
+            cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
+            cell.deviceOperatorNamebl.text = "Vaccine Mixer Name: \(fullName)"
+            if fullName == certificateData[0].name {
+                cell.previousBtn.isHidden = true
+                cell.nextBtn.isHidden = false
+                cell.nextBtn.isUserInteractionEnabled = true
+            }
+            if !(certificateData[0].isCertExpired ?? false) && (prevController == "Rejected") {
+                cell.hideShowImgVw(false)
+                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].signatureImg)
+            } else {
+                cell.showImgVw(true)
+                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: certificateData[0].signatureImg)
+            }
+        }
+    }
+
+    private func setupFinalizeCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PE_FinalizeCell.identifier) as? PE_FinalizeCell else {
+            return UITableViewCell()
+        }
+        if peNewAssessmentArrayForCatQuest.count > indexPath.row {
+            let quest = peNewAssessmentArrayForCatQuest[indexPath.row]
+            cell.lblQuestion.text = quest.assDetail1
+            let resultMark: String
+            let maxMark: String
+            if quest.assStatus == 1 {
+                resultMark = String(quest.assMaxScore ?? 0)
+                maxMark = String(quest.assMaxScore ?? 0)
+            } else {
+                resultMark = String(quest.assMinScore ?? 0)
+                maxMark = String(quest.assMaxScore ?? 0)
+            }
+            let score = (quest.sequenceNoo == 11) ? "NA" : "\(resultMark)/\(maxMark)"
+            cell.lblResult.text = score
+        }
+        return cell
     }
     
     

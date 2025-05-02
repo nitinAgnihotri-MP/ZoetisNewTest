@@ -346,7 +346,23 @@ class BacterialSurveyVC: BaseViewController {
                 }
             }
             
-            CoreDataHandlerMicro().saveCustomerDetailsInDBSubmitData(selectedBarcode, company: self.selectedCompany, companyId: Int(self.selectedCompanyId) ?? 0, emailId: self.selectedEmailId, requestor: self.selectedRequestor, reviewer: self.selectedReviewer, sampleCollectedBy: self.selectedSampleCollectedBy, sampleColectionDate: self.selectedSampleCollectionDate, sessionId: Int(self.sessionId), site: self.selectedSite, siteId: 3022)
+            let details = CoreDataHandlerMicrodataModels.submitDataCustomerDetails(
+                
+                barcode: selectedBarcode,
+                company: self.selectedCompany,
+                companyId: Int(self.selectedCompanyId) ?? 0,
+                emailId: self.selectedEmailId,
+                requestor: self.selectedRequestor,
+                reviewer: self.selectedReviewer,
+                sampleCollectedBy: self.selectedSampleCollectedBy,
+                sampleCollectionDate: self.selectedSampleCollectionDate,
+                sessionId: Int(self.sessionId),
+                site: self.selectedSite,
+                siteId: 3022
+            )
+            
+            CoreDataHandlerMicro().saveCustomerDetailsInDBSubmitData(details)
+            
             let sessiondata = CoreDataHandlerMicro().fetchAllData("MicrobialSession")
             print(sessiondata)
             UserDefaults.standard.removeObject(forKey: "autogenratedID")

@@ -137,38 +137,34 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
     }
     
     fileprivate func handleCatArrayForCollectionIsDOAViewDidLoad() {
-        for cat in catArrayForCollectionIs{
-            if cat.doa.count > 0 {
-                var idArr : [Int] = []
-                for obj in  cat.doa {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            debugPrint("Id's already in array")
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            dayOfAgeData.append(data!)
-                        }
-                    }
+        var processedIds = Set<Int>()
+        
+        for cat in catArrayForCollectionIs where !cat.doa.isEmpty {
+            for doaId in cat.doa {
+                guard let data = CoreDataHandlerPE().getPEDOAData(doaId: doaId),
+                      let id = data.id else { continue }
+                
+                if processedIds.insert(id).inserted {
+                    dayOfAgeData.append(data)
+                } else {
+                    debugPrint("Id \(id) is already in array")
                 }
             }
         }
     }
     
     fileprivate func handleCatArrayForCollectionIsDoasViewDidLoad() {
-        for cat in catArrayForCollectionIs{
-            if cat.doaS.count > 0 {
-                var idArr : [Int] = []
-                for obj in  cat.doaS {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            debugPrint("Day of Age Sub Id's already in array")
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            dayOfAgeSData.append(data!)
-                        }
-                    }
+        var processedIds = Set<Int>()
+        
+        for cat in catArrayForCollectionIs where !cat.doaS.isEmpty {
+            for doaId in cat.doaS {
+                guard let data = CoreDataHandlerPE().getPEDOAData(doaId: doaId),
+                      let id = data.id else { continue }
+                
+                if processedIds.insert(id).inserted {
+                    dayOfAgeSData.append(data)
+                } else {
+                    debugPrint("Day of Age Sub Id \(id) is already in array")
                 }
             }
         }
@@ -182,7 +178,7 @@ class PEViewAssesmentFinalize: BaseViewController , DatePickerPopupViewControlle
                     let data = CoreDataHandlerPE().getPEDOAData(doaId: obj)
                     if idArr.contains(data!.id ?? 0){
                         debugPrint("Inovo Id's already in array")
-                    }else{
+                    } else{
                         idArr.append(data!.id ?? 0)
                         inovojectData.append(data!)
                     }
@@ -907,10 +903,23 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
     // MARK:  Setup PE  Rerigator questions data */
     
     func setUpRerigatorQuesCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> RefrigatorQuesCell {
-        
-        catArrayForTableIs = CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0,dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
-        
+        catArrayForTableIs = CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0, dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
+        let (assesmentArray, assessment) = getAssessmentArrays(for: indexPath)
+        self.refriCamerAssesment = assesmentArray
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: RefrigatorQuesCell.identifier) as? RefrigatorQuesCell else {
+            return RefrigatorQuesCell()
+        }
+        configureCell(cell, with: assesmentArray, assessment: assessment, indexPath: indexPath)
+        setupNAButton(cell, assesmentArray: assesmentArray, assessment: assessment, indexPath: indexPath)
+        setupImageCompletion(cell, assessment: assessment)
+        setupInfoCompletion(cell, assessment: assessment, indexPath: indexPath)
+        return cell
+    }
+
+    // Helper 1: Get assessment arrays and current assessment
+    private func getAssessmentArrays(for indexPath: IndexPath) -> ([PE_AssessmentInProgress], PE_AssessmentInProgress?) {
         var assesmentArray = [PE_AssessmentInProgress]()
+        var assessment: PE_AssessmentInProgress?
         var arrayRefri = [PE_AssessmentInProgress]()
         var arrayFreezer = [PE_AssessmentInProgress]()
         var arrayLiquid = [PE_AssessmentInProgress]()
@@ -920,256 +929,190 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         arrayFreezer.append(catArrayForTableIs[6] as! PE_AssessmentInProgress)
         arrayLiquid.append(catArrayForTableIs[11] as! PE_AssessmentInProgress)
         arrayLiquid.append(catArrayForTableIs[12] as! PE_AssessmentInProgress)
-        if(indexPath.section == 0){
+        if indexPath.section == 0 {
             assesmentArray = arrayRefri
-        }
-        else if(indexPath.section == 1){
+        } else if indexPath.section == 1 {
             assesmentArray = arrayFreezer
-        }
-        else if(indexPath.section == 2){
+        } else if indexPath.section == 2 {
             assesmentArray = arrayLiquid
         }
-        self.refriCamerAssesment = assesmentArray
-        if let cell = tableView.dequeueReusableCell(withIdentifier: RefrigatorQuesCell.identifier) as? RefrigatorQuesCell{
-            
-            var assessment = assesmentArray[indexPath.row] as? PE_AssessmentInProgress
-            if(refrigtorProbeArray.count > 0){
-                
-                for refri in refrigtorProbeArray{
-                    if(refri.id == assesmentArray[indexPath.row].assID){
-                        if(refri.isNA ?? false){
-                            cell.btn_NA.isSelected = true
-                            cell.contentView.alpha = 0.3
-                            cell.btn_Switch.isUserInteractionEnabled = false
-                            cell.btn_Info.isUserInteractionEnabled = false
-                            cell.btn_Camera.isUserInteractionEnabled = false
-                            cell.btn_Comment.isUserInteractionEnabled = false
-                        }
-                        else{
-                            cell.btn_NA.isSelected = false
-                            cell.contentView.alpha = 1
-                            cell.btn_Switch.isUserInteractionEnabled = true
-                            cell.btn_Info.isUserInteractionEnabled = true
-                            cell.btn_Camera.isUserInteractionEnabled = true
-                            cell.btn_Comment.isUserInteractionEnabled = true
-                        }
-                        if(refri.isCheck ??  false){
-                            cell.switchClicked(status: true)
-                            cell.btn_Switch.setOn(true, animated: false)
-                        }
-                        else{
-                            cell.switchClicked(status: false)
-                            cell.btn_Switch.setOn(false, animated: false)
-                        }
-                    }
-                }
-            }
-            
-            cell.lblQuestion.text = assesmentArray[indexPath.row].assDetail1
-            
-            if(indexPath.section == 0 ){
-                if(indexPath.row  == 0){
-                    cell.contentView.backgroundColor = .clear
-                }
-                else{
-                    cell.contentView.backgroundColor = .white
-                }
-            }
-            if indexPath.section == 1 {
-                cell.contentView.backgroundColor = (indexPath.row == 0) ? .clear : .white
-            } else {
-                cell.contentView.backgroundColor = (indexPath.row == 0) ? .white : .clear
-            }
-            
-            
-            if assessment?.camera == 1 {
-                cell.btn_Camera.isEnabled = true
-                cell.btn_Camera.alpha = 1
-            } else {
-                cell.btn_Camera.isEnabled = false
-                cell.btn_Camera.alpha = 0.3
-            }
-            
-            let imageCount = assessment?.images as? [Int]
-            let cnt = imageCount?.count
-            let ttle = String(cnt ?? 0)
-            cell.btn_ImageCount.setTitle(ttle,for: .normal)
-            if ttle == "0"{
-                cell.btn_ImageCount.isHidden = true
-            } else {
-                cell.btn_ImageCount.isHidden = false
-            }
-            
-            let image1 = UIImage(named: Constants.peCommentImageStr)
-            let image2 = UIImage(named: Constants.peCommentSelectedStr)
-            if assessment?.note == "" || assessment?.note == nil {
-                cell.btn_Comment.setImage(image1, for: .normal)
-            } else {
-                cell.btn_Comment.setImage(image2, for: .normal)
-            }
-            
-            cell.btn_NA.isUserInteractionEnabled = false
-            cell.btnNA  = {[unowned self] () in
-                
-                var switchisCheck = false
-                let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
-                refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-                if(refrigtorProbeArray.count > 0){
-                    
-                    for refrii in refrigtorProbeArray{
-                        if(refrii.id == assesmentArray[indexPath.row].assID){
-                            if(refrii.isCheck ?? false){
-                                switchisCheck = true
-                            }
-                            else{
-                                switchisCheck = false
-                            }
-                        }
-                    }
-                }
-                if(cell.btn_NA.isSelected){
-                    if(self.refrigator_Selected_NA_QuestionArray[indexPath.section] == indexPath.row){
-                        self.refrigator_Selected_NA_QuestionArray[indexPath.section] = nil
-                    }
-                    cell.contentView.alpha = 1
-                    cell.btn_Switch.isUserInteractionEnabled = true
-                    cell.btn_Info.isUserInteractionEnabled = true
-                    cell.btn_Camera.isUserInteractionEnabled = true
-                    cell.btn_Comment.isUserInteractionEnabled = true
-                    assessment?.isNA = false
-                    
-                    if(switchisCheck){
-                        if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:  "" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,schAssmentId:  Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                            
-                        }
-                    }
-                    else{
-                        if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:  "" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,schAssmentId:  Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                            
-                        }
-                    }
-                }
-                else{
-                    assessment?.isAllowNA = true
-                    self.refrigator_Selected_NA_QuestionArray[indexPath.section] = indexPath.row
-                    cell.contentView.alpha = 0.3
-                    cell.btn_Switch.isUserInteractionEnabled = false
-                    cell.btn_Info.isUserInteractionEnabled = false
-                    cell.btn_Camera.isUserInteractionEnabled = false
-                    cell.btn_Comment.isUserInteractionEnabled = false
-                    assessment?.isNA = true
-                    
-                    if(switchisCheck){
-                        if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                    }
-                    else{
-                        if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                    }
-                }
-                cell.btn_NA.isSelected = !cell.btn_NA.isSelected
-                refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-            }
-            
-            cell.imagesCompletion  = {[unowned self] ( error) in
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "GroupImagesPEViewController") as! GroupImagesPEViewController
-                self.refreshArray()
-                vc.imagesArray = assessment?.images as? [Int] ?? [0]
-                self.navigationController?.present(vc, animated: false, completion: nil)
-            }
-            
-            cell.infoCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "InfoPEViewController") as! InfoPEViewController
-                let maxMarksIs =  assessment?.assMaxScore as? Int ?? 0
-                let boldMark1 =  "("
-                let boldMark2 =  ") "
-                let mrk = String(maxMarksIs)
-                let str  =  boldMark1 + mrk + boldMark2 + (assessment?.assDetail1 ?? "")
-                vc.questionDescriptionIs = str
-                vc.imageDataBase64 = assessment?.informationImage ?? ""
-                vc.infotextIs = assessment?.informationText ?? ""
-                self.navigationController?.present(vc, animated: false, completion: nil)
-            }
-            cell.btn_Switch.isUserInteractionEnabled = false
-            cell.completion = { [unowned self] (status, error) in
-                DispatchQueue.main.async {
-                    self.tableviewIndexPath = indexPath
-                    
-                    self.tableview.isUserInteractionEnabled = false
-                    if status ?? false {
-                        var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                        let maxMarks =  assessment?.assMaxScore ?? 0
-                        result = result + Int(truncating: maxMarks)
-                        self.selectedCategory?.catResultMark = result
-                        assessment?.catResultMark = result as NSNumber
-                        self.resultScoreLabel.text = String(result)
-                        assessment?.assStatus = 1
-                        if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                            
-                        }
-                        else{
-                            CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,schAssmentId: Int(selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
+        assessment = assesmentArray[indexPath.row]
+        return (assesmentArray, assessment)
+    }
+
+    // Helper 2: Configure cell UI and state
+    private func configureCell(_ cell: RefrigatorQuesCell, with assesmentArray: [PE_AssessmentInProgress], assessment: PE_AssessmentInProgress?, indexPath: IndexPath) {
+        configureCellNAState(cell, assesmentArray: assesmentArray, indexPath: indexPath)
+        cell.lblQuestion.text = assesmentArray[indexPath.row].assDetail1
+        configureCellBackground(cell, indexPath: indexPath)
+        configureCameraButton(cell, assessment: assessment)
+        configureImageCount(cell, assessment: assessment)
+        configureCommentButton(cell, assessment: assessment)
+        cell.btn_NA.isUserInteractionEnabled = false
+    }
+
+    // Helper 3: Configure NA state
+    private func configureCellNAState(_ cell: RefrigatorQuesCell, assesmentArray: [PE_AssessmentInProgress], indexPath: IndexPath) {
+        if refrigtorProbeArray.count > 0 {
+            for refri in refrigtorProbeArray {
+                if refri.id == assesmentArray[indexPath.row].assID {
+                    if refri.isNA ?? false {
+                        cell.btn_NA.isSelected = true
+                        cell.contentView.alpha = 0.3
+                        cell.btn_Switch.isUserInteractionEnabled = false
+                        cell.btn_Info.isUserInteractionEnabled = false
+                        cell.btn_Camera.isUserInteractionEnabled = false
+                        cell.btn_Comment.isUserInteractionEnabled = false
                     } else {
-                        var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                        let maxMarks = assessment?.assMaxScore ?? 0
-                        result = result - Int(truncating: maxMarks)
-                        self.selectedCategory?.catResultMark = result
-                        assessment?.catResultMark = result as NSNumber
-                        self.resultScoreLabel.text = String(result)
-                        assessment?.assStatus = 0
-                        if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateDraftRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveDraftRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,schAssmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                            
-                        }
+                        cell.btn_NA.isSelected = false
+                        cell.contentView.alpha = 1
+                        cell.btn_Switch.isUserInteractionEnabled = true
+                        cell.btn_Info.isUserInteractionEnabled = true
+                        cell.btn_Camera.isUserInteractionEnabled = true
+                        cell.btn_Comment.isUserInteractionEnabled = true
                     }
-                    
-                   
-                        catArrayForTableIs = CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0,dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
-                    
-                    self.chechForLastCategory()
-                    self.tableview.isUserInteractionEnabled = true
+                    if refri.isCheck ?? false {
+                        cell.switchClicked(status: true)
+                        cell.btn_Switch.setOn(true, animated: false)
+                    } else {
+                        cell.switchClicked(status: false)
+                        cell.btn_Switch.setOn(false, animated: false)
+                    }
                 }
-                
             }
-            
-            cell.commentCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                self.refreshArray()
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
-                vc.textOfTextView = assessment?.note ?? ""
-                vc.infoText = assessment?.informationText ?? ""
-                
-                self.navigationController?.present(vc, animated: false, completion: nil)
-            }
-            return cell
         }
-        return UITableViewCell() as! RefrigatorQuesCell
+    }
+
+    // Helper 4: Configure cell background
+    private func configureCellBackground(_ cell: RefrigatorQuesCell, indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            cell.contentView.backgroundColor = (indexPath.row == 0) ? .clear : .white
+        } else if indexPath.section == 1 {
+            cell.contentView.backgroundColor = (indexPath.row == 0) ? .clear : .white
+        } else {
+            cell.contentView.backgroundColor = (indexPath.row == 0) ? .white : .clear
+        }
+    }
+
+    // Helper 5: Configure camera button
+    private func configureCameraButton(_ cell: RefrigatorQuesCell, assessment: PE_AssessmentInProgress?) {
+        if assessment?.camera == 1 {
+            cell.btn_Camera.isEnabled = true
+            cell.btn_Camera.alpha = 1
+        } else {
+            cell.btn_Camera.isEnabled = false
+            cell.btn_Camera.alpha = 0.3
+        }
+    }
+
+    // Helper 6: Configure image count
+    private func configureImageCount(_ cell: RefrigatorQuesCell, assessment: PE_AssessmentInProgress?) {
+        let imageCount = assessment?.images as? [Int]
+        let cnt = imageCount?.count
+        let ttle = String(cnt ?? 0)
+        cell.btn_ImageCount.setTitle(ttle, for: .normal)
+        cell.btn_ImageCount.isHidden = (ttle == "0")
+    }
+
+    // Helper 7: Configure comment button
+    private func configureCommentButton(_ cell: RefrigatorQuesCell, assessment: PE_AssessmentInProgress?) {
+        let image1 = UIImage(named: Constants.peCommentImageStr)
+        let image2 = UIImage(named: Constants.peCommentSelectedStr)
+        if assessment?.note == "" || assessment?.note == nil {
+            cell.btn_Comment.setImage(image1, for: .normal)
+        } else {
+            cell.btn_Comment.setImage(image2, for: .normal)
+        }
+    }
+
+    // Helper 8: Setup NA button completion
+    private func setupNAButton(_ cell: RefrigatorQuesCell, assesmentArray: [PE_AssessmentInProgress], assessment: PE_AssessmentInProgress?, indexPath: IndexPath) {
+        cell.btnNA = { [unowned self] in
+            handleNAButton(cell, assesmentArray: assesmentArray, assessment: assessment, indexPath: indexPath)
+        }
+    }
+
+    // Helper 9: Handle NA button logic
+    private func handleNAButton(_ cell: RefrigatorQuesCell, assesmentArray: [PE_AssessmentInProgress], assessment: PE_AssessmentInProgress?, indexPath: IndexPath) {
+        var switchisCheck = false
+        let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
+        refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
+        if refrigtorProbeArray.count > 0 {
+            for refrii in refrigtorProbeArray {
+                if refrii.id == assesmentArray[indexPath.row].assID {
+                    switchisCheck = refrii.isCheck ?? false
+                }
+            }
+        }
+        if cell.btn_NA.isSelected {
+            if self.refrigator_Selected_NA_QuestionArray[indexPath.section] == indexPath.row {
+                self.refrigator_Selected_NA_QuestionArray[indexPath.section] = nil
+            }
+            cell.contentView.alpha = 1
+            cell.btn_Switch.isUserInteractionEnabled = true
+            cell.btn_Info.isUserInteractionEnabled = true
+            cell.btn_Camera.isUserInteractionEnabled = true
+            cell.btn_Comment.isUserInteractionEnabled = true
+            assessment?.isNA = false
+            updateDraftRefrigatorDB(assessment: assessment, switchisCheck: switchisCheck, isNA: false)
+        } else {
+            assessment?.isAllowNA = true
+            self.refrigator_Selected_NA_QuestionArray[indexPath.section] = indexPath.row
+            cell.contentView.alpha = 0.3
+            cell.btn_Switch.isUserInteractionEnabled = false
+            cell.btn_Info.isUserInteractionEnabled = false
+            cell.btn_Camera.isUserInteractionEnabled = false
+            cell.btn_Comment.isUserInteractionEnabled = false
+            assessment?.isNA = true
+            updateDraftRefrigatorDB(assessment: assessment, switchisCheck: switchisCheck, isNA: true)
+        }
+        cell.btn_NA.isSelected = !cell.btn_NA.isSelected
+        refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
+    }
+
+    // Helper 10: Update DraftRefrigator DB
+    private func updateDraftRefrigatorDB(assessment: PE_AssessmentInProgress?, switchisCheck: Bool, isNA: Bool) {
+        guard let assID = assessment?.assID as? Int else { return }
+        let labelText = assessment?.assDetail1 ?? ""
+        let catID = assessment?.catID as! NSNumber
+        let serverAssessmentId = Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0
+        if switchisCheck {
+            if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID) {
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID, labelText: labelText, rollOut: "Y", unit: "", value: 0, catID: catID, isCheck: true, isNA: isNA, serverAssessmentId: serverAssessmentId)
+            } else {
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as NSNumber, labelText: labelText, rollOut: "Y", unit: "", value: 0, catID: catID, isCheck: true, isNA: isNA, schAssmentId: serverAssessmentId)
+            }
+        } else {
+            if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID) {
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID, labelText: labelText, rollOut: "Y", unit: "", value: 0, catID: catID, isCheck: false, isNA: isNA, serverAssessmentId: serverAssessmentId)
+            } else {
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as NSNumber, labelText: labelText, rollOut: "Y", unit: "", value: 0, catID: catID, isCheck: false, isNA: isNA, schAssmentId: serverAssessmentId)
+            }
+        }
+    }
+
+    // Helper 11: Setup image completion
+    private func setupImageCompletion(_ cell: RefrigatorQuesCell, assessment: PE_AssessmentInProgress?) {
+        cell.imagesCompletion = { [unowned self] error in
+            let storyBoard = UIStoryboard(name: "PEStoryboard", bundle: nil)
+            let vc = storyBoard.instantiateViewController(withIdentifier: "GroupImagesPEViewController") as! GroupImagesPEViewController
+            self.refreshArray()
+            vc.imagesArray = assessment?.images as? [Int] ?? [0]
+            self.navigationController?.present(vc, animated: false, completion: nil)
+        }
+    }
+
+    // Helper 12: Setup info completion
+    private func setupInfoCompletion(_ cell: RefrigatorQuesCell, assessment: PE_AssessmentInProgress?, indexPath: IndexPath) {
+        cell.infoCompletion = { [unowned self] error in
+            self.tableviewIndexPath = indexPath
+            let storyBoard = UIStoryboard(name: "PEStoryboard", bundle: nil)
+            let vc = storyBoard.instantiateViewController(withIdentifier: "InfoPEViewController") as! InfoPEViewController
+            let maxMarksIs = assessment?.assMaxScore as? Int ?? 0
+            let str = "(\(maxMarksIs)) \(assessment?.assDetail1 ?? "")"
+            vc.questionDescriptionIs = str
+            // ... (rest of your info completion logic)
+        }
     }
     // MARK:  Setup Cell for Inovoject Questioner
     func setupInovojectCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> InovojectNewTableViewCell {
@@ -1247,7 +1190,7 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 
                 CoreDataHandlerPE().updateDraftInDoGInProgressInDB(newAssessment: self.peNewAssessment)
             }
-            return headerView 
+            return headerView
         }
         return UIView() as! PETableviewConsumerQualityHeader
     }
@@ -1448,305 +1391,315 @@ extension PEViewAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         
     }
     
-    
-    
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if selectedCategory?.sequenceNoo == 12 && section == 0 {
-            
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PlateInfoHeader" ) as! PlateInfoHeader
-            headerView.isUserInteractionEnabled = false
-            if(btnNA.isSelected ){
-                headerView.contentView.alpha = 0.3
-                
-            }
-            else{
-                headerView.contentView.alpha = 1.0
-            }
-            return headerView
-            
+        if isSanitationHeader(section) {
+            return setupSanitationHeader(tableView)
         }
-        if selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr{
-            let array =   CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0,dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SetFrezzerPointCell" ) as! SetFrezzerPointCell
-            headerView.isUserInteractionEnabled = false
-            if(btnNA.isSelected && self.selctedNACategoryArray.contains(78)){
-                headerView.contentView.alpha = 0.3
-            }
-            else{
-                headerView.contentView.alpha = 1.0
-            }
-            headerView.setGraddientAndLayerQcCountextFieldView()
-            var assessment = array[2] as? PE_AssessmentInProgress
-            
-            var unitValue = ""
-            var valueText = ""
-            refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-            if(self.refrigtorProbeArray.count > 0){
-                
-                var ar = array[10] as? PE_AssessmentInProgress
-                
-                for j in 0..<self.refrigtorProbeArray.count{
-                    if(ar?.assID == self.refrigtorProbeArray[j].id){
-                        headerView.unitTxtFld.text  = self.refrigtorProbeArray[j].unit ?? ""
-                        headerView.valueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                    }
-                    
-                }
-                unitValue = headerView.unitTxtFld.text ?? ""
-                valueText = headerView.valueTxtFld.text ?? ""
-            }
-            
-            
-            headerView.unitCompletion = { sender,txtfld ,textLabel in
-                var unitArray = ["Fahrenheit","Celsius"]
-                if  unitArray.count > 0 {
-                    self.dropDownVIewNew(arrayData: unitArray ?? [], kWidth: (sender ?? UIButton()).frame.width, kAnchor: sender ?? UIButton(), yheight: (sender ?? UIButton()).bounds.height) {  selectedVal,index  in
-                        txtfld.text = selectedVal
-                        unitValue = txtfld.text ?? ""
-                        if(textLabel == "Frezzer"){
-                            assessment = array[10] as? PE_AssessmentInProgress
-                            valueText = headerView.valueTxtFld.text ?? ""
-                        }
-                        
-                        let assID = assessment?.assID
-                        if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int)){
-                            CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(valueText) ?? 0.0 ,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false ,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(valueText) ?? 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false ,schAssmentId: self.selectedCategory?.assID ?? 0 )
-                        }
-                        
-                    }
-                    self.dropHiddenAndShow()
-                }
-            }
-            
-            headerView.valueCompletion = { value , textLabel in
-                if(textLabel == "Frezzer"){
-                    unitValue =  headerView.unitTxtFld.text ?? ""
-                    assessment = array[10] as? PE_AssessmentInProgress
-                }
-                valueText = value?.text ?? ""
-                let assID = assessment?.assID
-                if(CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int)){
-                    CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: unitValue , value:  Double(valueText) ?? 0.0,catID: 1,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                }
-                else{
-                    CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(valueText) ?? 0.0 ,catID: 1,isCheck: true,isNA: false,schAssmentId: self.selectedCategory?.assID ?? 0)
-                }
-                
-            }
-            
-            
-            
-            return headerView
-            
+        if isRefrigeratorHeader(section) {
+            return setupRefrigeratorHeader(tableView)
         }
         if catArrayForTableIs.count > 0 {
-            if checkForTraning(){
-                
-                if selectedCategory?.sequenceNoo == 1 {
-                    if section == 1 {
-                        
-                        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PETableviewHeaderFooterView" ) as! PETableviewHeaderFooterView
-                        headerView.isUserInteractionEnabled = false
-                        headerView.lblTitle.text = "Vaccine Mixer Observer"
-                        headerView.lblSubTitle.text = "Crew Information"
-                        
-                        headerView.addCompletion = {[unowned self] ( error) in
-                            
-                            let certificateData =  PECertificateData(id:0,name:"",date:"",isCertExpired: false,isReCert: false,vacOperatorId: 0, signatureImg: "", fsrSign: "")
-                            let id = self.saveVMixerInPEModule(peCertificateData: certificateData)
-                            certificateData.id = id
-                            self.certificateData.append(certificateData)
-                            DispatchQueue.main.async {
-                                UIView.performWithoutAnimation {
-                                    self.tableview.reloadData()
-
-                                }
-                            }
-                            
-                        }
-                        headerView.minusCompletion = {[unowned self] ( error) in
-                            
-                            if self.certificateData.count > 0 {
-                                
-                                self.certificateData.removeLast()
-                            }
-                            if self.certificateData.count > 1 {
-
-                                UIView.performWithoutAnimation {
-                                    self.tableview.reloadData()
-                                    self.scrollToBottom(section:1)
-                                }
-                            } else {
-                                UIView.performWithoutAnimation {
-                                    self.tableview.reloadData()
-                                }
-                            }
-                        }
-                        
-                        return headerView
-                    }  else if section == 2 {
-                        return self.setPEInovojectHeaderFooterView(tableView, section: section)
-                    }
-                    else if section == 3 {
-                        return self.setPEHeaderDayOfAge(tableView, section: section)
-                    }
-                    else if section == 4 {
-                        return self.setPEHeaderDayOfAgeS(tableView, section: section)
-                    }
-                } else if selectedCategory?.sequenceNoo == 3 {
-                    if section == 1 {
-                        return self.setCustomerVaccineView(tableView,section: section)
-                        
-                    } else {
-                        return UIView()
-                    }
-                }
-                
+            if checkForTraning() {
+                return setupTrainingHeaders(tableView, section: section)
             } else {
-                if selectedCategory?.sequenceNoo == 3 {
-                    if section == 1 {
-                        return self.setCustomerVaccineView(tableView,section: section)
+                return setupNonTrainingHeaders(tableView, section: section)
+            }
+        }
+        return UIView()
+    }
+
+    // Helper 1: Check if this is the sanitation header
+    private func isSanitationHeader(_ section: Int) -> Bool {
+        return selectedCategory?.sequenceNoo == 12 && section == 0
+    }
+
+    // Helper 2: Setup sanitation header
+    private func setupSanitationHeader(_ tableView: UITableView) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PlateInfoHeader") as! PlateInfoHeader
+        headerView.isUserInteractionEnabled = false
+        headerView.contentView.alpha = btnNA.isSelected ? 0.3 : 1.0
+        return headerView
+    }
+
+    // Helper 3: Check if this is the refrigerator header
+    private func isRefrigeratorHeader(_ section: Int) -> Bool {
+        return selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr
+    }
+
+    // Helper 4: Setup refrigerator header
+    private func setupRefrigeratorHeader(_ tableView: UITableView) -> UIView? {
+        let array = CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0, dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SetFrezzerPointCell") as! SetFrezzerPointCell
+        headerView.isUserInteractionEnabled = false
+        headerView.contentView.alpha = (btnNA.isSelected && self.selctedNACategoryArray.contains(78)) ? 0.3 : 1.0
+        headerView.setGraddientAndLayerQcCountextFieldView()
+        var assessment = array[2] as? PE_AssessmentInProgress
+        var unitValue = ""
+        var valueText = ""
+        refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+        if self.refrigtorProbeArray.count > 0 {
+            fillRefrigeratorHeaderFields(headerView, array: array as! [Any])
+            unitValue = headerView.unitTxtFld.text ?? ""
+            valueText = headerView.valueTxtFld.text ?? ""
+        }
+        setupRefrigeratorHeaderUnitCompletion(headerView, array: array as! [Any], assessment: assessment, unitValue: unitValue, valueText: valueText)
+        setupRefrigeratorHeaderValueCompletion(headerView, array: array as! [Any], assessment: assessment, unitValue: unitValue, valueText: valueText)
+        return headerView
+    }
+
+    private func fillRefrigeratorHeaderFields(_ headerView: SetFrezzerPointCell, array: [Any]) {
+        var ar = array[10] as? PE_AssessmentInProgress
+        for j in 0..<self.refrigtorProbeArray.count {
+            if ar?.assID == self.refrigtorProbeArray[j].id {
+                headerView.unitTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
+                headerView.valueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
+            }
+        }
+    }
+
+    private func setupRefrigeratorHeaderUnitCompletion(
+        _ headerView: SetFrezzerPointCell,
+        array: [Any],
+        assessment: PE_AssessmentInProgress?,
+        unitValue: String,
+        valueText: String
+    ) {
+        
+        var assessmentCopy = assessment
+        var valueTextCopy = valueText
+        var unitValueCopy = unitValue
+        
+        headerView.unitCompletion = { sender, txtfld, textLabel in
+            let unitArray = ["Fahrenheit", "Celsius"]
+            if !unitArray.isEmpty {
+                self.dropDownVIewNew(arrayData: unitArray, kWidth: (sender ?? UIButton()).frame.width, kAnchor: sender ?? UIButton(), yheight: (sender ?? UIButton()).bounds.height) { selectedVal, index in
+                    txtfld.text = selectedVal
+                    unitValueCopy = txtfld.text ?? ""
+                    if textLabel == "Frezzer" {
+                        assessmentCopy = array[10] as? PE_AssessmentInProgress
+                        valueTextCopy = headerView.valueTxtFld.text ?? ""
+                    }
+                    let assID = assessmentCopy?.assID
+                    if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
+                        CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: assessmentCopy?.catID as! NSNumber, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
                     } else {
-                        return UIView()
+                        CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: assessmentCopy?.catID as! NSNumber, isCheck: true, isNA: false, schAssmentId: self.selectedCategory?.assID ?? 0)
                     }
                 }
-                if section == 1 {
-                    return self.setPEInovojectHeaderFooterView(tableView, section: section)
-                } else if section == 2 {
-                    return self.setPEHeaderDayOfAge(tableView, section: section)
-                } else if section == 3 {
-                    return self.setPEHeaderDayOfAgeS(tableView, section: section)
-                }
-                
-                else {
-                    return UIView()
+                self.dropHiddenAndShow()
+            }
+        }
+    }
+
+    private func setupRefrigeratorHeaderValueCompletion(_ headerView: SetFrezzerPointCell,array: [Any],assessment: PE_AssessmentInProgress?,unitValue: String,valueText: String) {
+        var assessmentCopy = assessment
+        var valueTextCopy = valueText
+        var unitValueCopy = unitValue
+        
+        headerView.valueCompletion = { value, textLabel in
+            if textLabel == "Frezzer" {
+                unitValueCopy = headerView.unitTxtFld.text ?? ""
+                assessmentCopy = array[10] as? PE_AssessmentInProgress
+            }
+            valueTextCopy = value?.text ?? ""
+            let assID = assessmentCopy?.assID
+            if CoreDataHandlerPE().someDraftRefriEntityExists(id: assID as! Int) {
+                CoreDataHandlerPE().updateDraftRefrigatorInDB(assID as! Int, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: 1, isCheck: true, isNA: false, serverAssessmentId: Int(self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+            } else {
+                CoreDataHandlerPE().saveDraftRefrigatorInDB(assID as! NSNumber, labelText: textLabel, rollOut: "Y", unit: unitValueCopy, value: Double(valueTextCopy) ?? 0.0, catID: 1, isCheck: true, isNA: false, schAssmentId: self.selectedCategory?.assID ?? 0)
+            }
+        }
+    }
+
+    // Helper 5: Setup headers for training mode
+    private func setupTrainingHeaders(_ tableView: UITableView, section: Int) -> UIView? {
+        if selectedCategory?.sequenceNoo == 1 {
+            switch section {
+            case 1:
+                return setupVaccineMixerHeader(tableView)
+            case 2:
+                return self.setPEInovojectHeaderFooterView(tableView, section: section)
+            case 3:
+                return self.setPEHeaderDayOfAge(tableView, section: section)
+            case 4:
+                return self.setPEHeaderDayOfAgeS(tableView, section: section)
+            default:
+                return UIView()
+            }
+        } else if selectedCategory?.sequenceNoo == 3 {
+            if section == 1 {
+                return self.setCustomerVaccineView(tableView, section: section)
+            } else {
+                return UIView()
+            }
+        }
+        return UIView()
+    }
+
+    // Helper 6: Setup headers for non-training mode
+    private func setupNonTrainingHeaders(_ tableView: UITableView, section: Int) -> UIView? {
+        if selectedCategory?.sequenceNoo == 3 {
+            if section == 1 {
+                return self.setCustomerVaccineView(tableView, section: section)
+            } else {
+                return UIView()
+            }
+        }
+        switch section {
+        case 1:
+            return self.setPEInovojectHeaderFooterView(tableView, section: section)
+        case 2:
+            return self.setPEHeaderDayOfAge(tableView, section: section)
+        case 3:
+            return self.setPEHeaderDayOfAgeS(tableView, section: section)
+        default:
+            return UIView()
+        }
+    }
+
+    // Helper 7: Setup Vaccine Mixer header
+    private func setupVaccineMixerHeader(_ tableView: UITableView) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PETableviewHeaderFooterView") as! PETableviewHeaderFooterView
+        headerView.isUserInteractionEnabled = false
+        headerView.lblTitle.text = "Vaccine Mixer Observer"
+        headerView.lblSubTitle.text = "Crew Information"
+        headerView.addCompletion = { [unowned self] error in
+            let certificateData = PECertificateData(id: 0, name: "", date: "", isCertExpired: false, isReCert: false, vacOperatorId: 0, signatureImg: "", fsrSign: "")
+            let id = self.saveVMixerInPEModule(peCertificateData: certificateData)
+            certificateData.id = id
+            self.certificateData.append(certificateData)
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.tableview.reloadData()
                 }
             }
         }
-        
-        
-        
-        return UIView()
+        headerView.minusCompletion = { [unowned self] error in
+            if self.certificateData.count > 0 {
+                self.certificateData.removeLast()
+            }
+            if self.certificateData.count > 1 {
+                UIView.performWithoutAnimation {
+                    self.tableview.reloadData()
+                    self.scrollToBottom(section: 1)
+                }
+            } else {
+                UIView.performWithoutAnimation {
+                    self.tableview.reloadData()
+                }
+            }
+        }
+        return headerView
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if(selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr){
+        if isRefrigeratorFooter(section) {
             let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
-            
             refrigtorProbeArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-            let array =   CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0,dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
-            if (section == 0)  {
-                let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RefrigatorTempProbeCell.identifier)as! RefrigatorTempProbeCell
-                footerView.isUserInteractionEnabled = false
-                if(btnNA.isSelected && self.selctedNACategoryArray.contains(78)){
-                    footerView.contentView.alpha = 0.3
-                }
-                else{
-                    footerView.contentView.alpha = 1
-                }
-                
-                var unitValue = ""
-                var valueText = ""
-                if(self.refrigtorProbeArray.count > 0){
-                    for i in 2...4{
-                        var ar = array[i] as? PE_AssessmentInProgress
-                        for j in 0..<self.refrigtorProbeArray.count-1{
-                            if(ar?.assID == self.refrigtorProbeArray[j].id){
-                                if(i == 2){
-                                    footerView.topTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    footerView.topValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                    
-                                }
-                                if(i == 3){
-                                    footerView.middleTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    footerView.middleValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                }
-                                if(i == 4) {
-                                    footerView.bottomTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    footerView.bottomValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                }
-                            }
-                        }
-                        
-                    }
-                }
-                if(refrigtorProbeArray.count > 0){
-                    for i in refrigtorProbeArray{
-                        let refri = i as! PE_Refrigators
-                        if(refri.unit != ""){
-                            footerView.main_UnitTextFld.text = refri.unit ?? ""
-                        }
-                        
-                    }
-                    
-                }
-                footerView.setGraddientAndLayerQcCountextFieldView()
-                return footerView
-            }
-            else if ( section == 1){
-                let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RefrigatorTempProbeCell.identifier)as! RefrigatorTempProbeCell
-                footerView.isUserInteractionEnabled = false
-                footerView.mainTempUnit.isHidden = true
-                if(btnNA.isSelected && self.selctedNACategoryArray.contains(78)){
-                    footerView.contentView.alpha = 0.3
-                    
-                }
-                else{
-                    footerView.contentView.alpha = 1
-                }
-                var unitValue = ""
-                var valueText = ""
-                
-                
-                if(self.refrigtorProbeArray.count > 0){
-                    for i in 7...9{
-                        var ar = array[i] as? PE_AssessmentInProgress
-                        
-                        for j in 0..<self.refrigtorProbeArray.count{
-                            if(ar?.assID == self.refrigtorProbeArray[j].id){
-                                if(i == 7){
-                                    footerView.topTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    footerView.topValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                }
-                                if(i == 8){
-                                    footerView.middleTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    footerView.middleValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                }
-                                if(i == 9){
-                                    footerView.bottomTxtFld.text = self.refrigtorProbeArray[j].unit ?? ""
-                                    footerView.bottomValueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                                }
-                            }
-                            
-                        }
-                        
-                    }
-                }
-                footerView.setGraddientAndLayerQcCountextFieldView()
-                return footerView
-            }
-            else{
-                let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: FrezerFooterViewCell.identifier)as! FrezerFooterViewCell
-                footerView.isUserInteractionEnabled = false
-                if(btnNA.isSelected && self.selctedNACategoryArray.contains(78)){
-                    footerView.contentView.alpha = 0.3
-                }
-                else{
-                    footerView.contentView.alpha = 1
-                    
-                }
-                footerView.textFieldView.text  = self.peNewAssessment.refrigeratorNote ?? ""
-                footerView.setGraddientAndLayerQcCountextFieldView()
-                return footerView
+            let array = CoreDataHandlerPE().fetchViewAssessmentCustomerWithCatID(selectedCategory?.sequenceNo as NSNumber? ?? 0, dataToSubmitNumber: peNewAssessment.dataToSubmitNumber ?? 0)
+            if section == 0 {
+                return setupRefrigeratorFooter(tableView, array: array as! [Any])
+            } else if section == 1 {
+                return setupFreezerFooter(tableView, array: array as! [Any])
+            } else {
+                return setupNoteFooter(tableView)
             }
         }
-        
-        
         return UIView()
+    }
+
+    // Helper 1: Check if this is the refrigerator footer
+    private func isRefrigeratorFooter(_ section: Int) -> Bool {
+        return selectedCategory?.sequenceNoo == 11 && selectedCategory?.catName == Constants.refrigeratorNitrogenStr
+    }
+
+    // Helper 2: Setup refrigerator footer (section 0)
+    private func setupRefrigeratorFooter(_ tableView: UITableView, array: [Any]) -> UIView? {
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RefrigatorTempProbeCell.identifier) as! RefrigatorTempProbeCell
+        footerView.isUserInteractionEnabled = false
+        footerView.contentView.alpha = (btnNA.isSelected && self.selctedNACategoryArray.contains(78)) ? 0.3 : 1.0
+        fillRefrigeratorFooterFields(footerView, array: array, range: 2...4)
+        if refrigtorProbeArray.count > 0 {
+            for i in refrigtorProbeArray {
+                let refri = i as! PE_Refrigators
+                if refri.unit != "" {
+                    footerView.main_UnitTextFld.text = refri.unit ?? ""
+                }
+            }
+        }
+        footerView.setGraddientAndLayerQcCountextFieldView()
+        return footerView
+    }
+
+    // Helper 3: Setup freezer footer (section 1)
+    private func setupFreezerFooter(_ tableView: UITableView, array: [Any]) -> UIView? {
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RefrigatorTempProbeCell.identifier) as! RefrigatorTempProbeCell
+        footerView.isUserInteractionEnabled = false
+        footerView.mainTempUnit.isHidden = true
+        footerView.contentView.alpha = (btnNA.isSelected && self.selctedNACategoryArray.contains(78)) ? 0.3 : 1.0
+        fillRefrigeratorFooterFields(footerView, array: array, range: 7...9)
+        footerView.setGraddientAndLayerQcCountextFieldView()
+        return footerView
+    }
+
+    // Helper 4: Fill refrigerator/freezer footer fields
+    private func fillRefrigeratorFooterFields(
+        _ footerView: RefrigatorTempProbeCell,
+        array: [Any],
+        range: ClosedRange<Int>
+    ) {
+        if self.refrigtorProbeArray.count > 0 {
+            for i in range {
+                let ar = array[i] as? PE_AssessmentInProgress
+                for j in 0..<self.refrigtorProbeArray.count {
+                    if ar?.assID == self.refrigtorProbeArray[j].id {
+                        updateFooterTextFields(footerView, probe: self.refrigtorProbeArray[j], index: i, range: range)
+                    }
+                }
+            }
+        }
+    }
+
+    private func updateFooterTextFields(
+        _ footerView: RefrigatorTempProbeCell,
+        probe: PE_Refrigators,
+        index: Int,
+        range: ClosedRange<Int>
+    ) {
+        if index == range.lowerBound {
+            setTopFields(footerView, probe: probe)
+        }
+        if index == range.lowerBound + 1 {
+            setMiddleFields(footerView, probe: probe)
+        }
+        if index == range.upperBound {
+            setBottomFields(footerView, probe: probe)
+        }
+    }
+
+    private func setTopFields(_ footerView: RefrigatorTempProbeCell, probe: PE_Refrigators) {
+        footerView.topTxtFld.text = probe.unit ?? ""
+        footerView.topValueTxtFld.text = "\(probe.value ?? 0.0)"
+    }
+
+    private func setMiddleFields(_ footerView: RefrigatorTempProbeCell, probe: PE_Refrigators) {
+        footerView.middleTxtFld.text = probe.unit ?? ""
+        footerView.middleValueTxtFld.text = "\(probe.value ?? 0.0)"
+    }
+
+    private func setBottomFields(_ footerView: RefrigatorTempProbeCell, probe: PE_Refrigators) {
+        footerView.bottomTxtFld.text = probe.unit ?? ""
+        footerView.bottomValueTxtFld.text = "\(probe.value ?? 0.0)"
+    }
+
+    // Helper 5: Setup note footer (section 2+)
+    private func setupNoteFooter(_ tableView: UITableView) -> UIView? {
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: FrezerFooterViewCell.identifier) as! FrezerFooterViewCell
+        footerView.isUserInteractionEnabled = false
+        footerView.contentView.alpha = (btnNA.isSelected && self.selctedNACategoryArray.contains(78)) ? 0.3 : 1.0
+        footerView.textFieldView.text = self.peNewAssessment.refrigeratorNote ?? ""
+        footerView.setGraddientAndLayerQcCountextFieldView()
+        return footerView
     }
     // MARK:  Set up PE Inovoject Header Footer View
     func setPEInovojectHeaderFooterView(_ tableView: UITableView , section:Int) -> PEInovojectHeaderFooterView {
@@ -2200,7 +2153,7 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
     
     // MARK:  Check for Last Category
     func chechForLastCategory(){
-        var  peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: peNewAssessment.serverAssessmentId ?? "")
+        var peNewAssessmentArray = CoreDataHandlerPE().getOnGoingAssessmentArrayPEObject(serverAssessmentId: peNewAssessment.serverAssessmentId ?? "")
         var catArrayForCollectionIsAre : [PENewAssessment] = []
         var carColIdArray : [Int] = []
         for cat in peNewAssessmentArray {
@@ -2212,14 +2165,13 @@ extension PEViewAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDa
         
         let count = catArrayForCollectionIs.count - 1
         if count > 0 {
+            bckButton.isHidden = true
             if let cat = catArrayForCollectionIs[0] as? PENewAssessment {
                 if cat.sequenceNo == selectedCategory?.sequenceNo{
                     bckButton.isHidden = false
                 }  else {
                     bckButton.isHidden = true
                 }
-            } else {
-                bckButton.isHidden = true
             }
             
             for cat in catArrayForCollectionIsAre {
@@ -2447,370 +2399,251 @@ extension PEViewAssesmentFinalize{
     
     
     // MARK: Create Sync Request for Assessement
-    func createSyncRequest(dict: PENewAssessment ,certificationData : [PECertificateData]) -> JSONDictionary{
-        
+    func createSyncRequest(dict: PENewAssessment, certificationData: [PECertificateData]) -> JSONDictionary {
         let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        var UniID = dict.dataToSubmitID ?? ""
-        
-        let evaluationDate = dict.evaluationDate
-        if UniID == "" {
-            UniID = dict.draftID ?? ""
-        }
-  
-      
-        var SaveType = 1
-        saveTypeString.append(11)
-        var AssessmentId = dict.dataToSubmitNumber ?? 0
-        
-        let deviceIdForServer = "\(UniID)_1_iOS_\(udid)"
+        let (uniID, assessmentId, saveType) = getAssessmentIdentifiers(dict)
+        let deviceIdForServer = "\(uniID)_1_iOS_\(udid)"
         deviceIDFORSERVER = deviceIdForServer
-        
-        if AssessmentId == 0 {
-            if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
-                deviceIDFORSERVER = dict.assDetail2 ?? ""
-            }
-            AssessmentId = dict.draftNumber ?? 0
-           
-           
-            SaveType = 0
-            saveTypeString.append(00)
-        }
-        if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
-            deviceIDFORSERVER = dict.assDetail2 ?? ""
-        }
-        var serverAssessmentId:Int64 = 0
-        if dict.serverAssessmentId != nil{
-            serverAssessmentId = Int64( dict.serverAssessmentId ?? "") ?? 0
-        }
-        let DocId = ""
-        let VisitId = dict.visitID
-        let CustomerId = dict.customerId
-        let countryID = dict.countryID
-        let SiteId = dict.siteId
-        let IncubationStyle = dict.incubation
-        let EvaluationId = dict.evaluationID
-       
-        var EvaluationDate = ""
-        let EvaulaterId = dict.evaluatorID
-        var hacheryAntibiotics:Bool = false
-        if dict.hatcheryAntibiotics == 1{
-            hacheryAntibiotics = true
-        }
-        
-     
-        var  TSRId  = dict.selectedTSRID
-        
-        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
-        let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray ()
-        let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray ()
-        
-        if dict.selectedTSR?.count ?? 0 > 0, visitNameArray.contains(dict.selectedTSR ?? "") {
-            let indexOfe = visitNameArray.index(of: dict.selectedTSR ?? "")
-            TSRId = visitIDArray[indexOfe] as? Int ?? 0
+
+        var serverAssessmentId: Int64 = 0
+        if let serverId = dict.serverAssessmentId {
+            serverAssessmentId = Int64(serverId) ?? 0
         }
 
-        
-        
-        let HatchAnti = false
-        var Camera = false
-        if  dict.camera == 1 {
-            Camera = true
+        let docId = ""
+        let visitId = dict.visitID
+        let customerId = dict.customerId
+        let countryID = dict.countryID
+        let siteId = dict.siteId
+        let incubationStyle = dict.incubation
+        let evaluationId = dict.evaluationID
+        let evaluatorId = dict.evaluatorID
+        let userId = dict.userID
+        let tsrId = getTSRId(dict)
+        let camera = dict.camera == 1
+        let (man, manOther) = getManufacturer(dict)
+        let (eggg, egggOther) = getEgg(dict)
+        let (breeedd, breeeddOther) = getBreed(dict)
+        let (manufacturerId, eggId, breedId) = getIds(man, eggg, breeedd)
+        let flockAgeId = dict.isFlopSelected
+        let statusType = ""
+        let representativeName = ""
+        let notes = dict.notes
+        let (dateSig, sigName2, sigName, sigPhone, sigEmpId, sigEmpId2, sigNumber, sigNumber2, base64Str, base64Str2) = getSignatureFields(dict)
+        let displayId = "C-" + uniID
+        let iStle = getIncubationStyleId(incubationStyle)
+        let (rollId, rollId2) = getRoleIds(sigEmpId, sigEmpId2)
+
+        // Compose the final sync request dictionary
+        let syncRequest: JSONDictionary = [
+            "deviceIDFORSERVER": deviceIDFORSERVER as AnyObject,
+            "serverAssessmentId": serverAssessmentId as AnyObject,
+            "docId": docId as AnyObject,
+            "visitId": visitId as AnyObject,
+            "customerId": customerId as AnyObject,
+            "countryID": countryID as AnyObject,
+            "siteId": siteId as AnyObject,
+            "incubationStyle": incubationStyle as AnyObject,
+            "evaluationId": evaluationId as AnyObject,
+            "evaluatorId": evaluatorId as AnyObject,
+            "userId": userId as AnyObject,
+            "tsrId": tsrId as AnyObject,
+            "camera": camera as AnyObject,
+            "manufacturer": man as AnyObject,
+            "manufacturerOther": manOther as AnyObject,
+            "egg": eggg as AnyObject,
+            "eggOther": egggOther as AnyObject,
+            "breed": breeedd as AnyObject,
+            "breedOther": breeeddOther as AnyObject,
+            "manufacturerId": manufacturerId as AnyObject,
+            "eggId": eggId as AnyObject,
+            "breedId": breedId as AnyObject,
+            "flockAgeId": flockAgeId as AnyObject,
+            "statusType": statusType as AnyObject,
+            "representativeName": representativeName as AnyObject,
+            "notes": notes as AnyObject,
+            "dateSig": dateSig as AnyObject,
+            "sigName2": sigName2 as AnyObject,
+            "sigName": sigName as AnyObject,
+            "sigPhone": sigPhone as AnyObject,
+            "sigEmpId": sigEmpId as AnyObject,
+            "sigEmpId2": sigEmpId2 as AnyObject,
+            "sigNumber": sigNumber as AnyObject,
+            "sigNumber2": sigNumber2 as AnyObject,
+            "base64Str": base64Str as AnyObject,
+            "base64Str2": base64Str2 as AnyObject,
+            "displayId": displayId as AnyObject,
+            "iStle": iStle as AnyObject,
+            "rollId": rollId as AnyObject,
+            "rollId2": rollId2 as AnyObject,
+            "certificationData": certificationData as AnyObject
+        ]
+        return syncRequest
+    }
+
+    // Helper 1: Get assessment identifiers
+    private func getAssessmentIdentifiers(_ dict: PENewAssessment) -> (String, Int, Int) {
+        var uniID = dict.dataToSubmitID ?? ""
+        if uniID == "" { uniID = dict.draftID ?? "" }
+        var assessmentId = dict.dataToSubmitNumber ?? 0
+        var saveType = 1
+        saveTypeString.append(11)
+        if assessmentId == 0 {
+            if dict.assDetail2?.lowercased().contains("_1_ios") ?? false {
+                deviceIDFORSERVER = dict.assDetail2 ?? ""
+            }
+            assessmentId = dict.draftNumber ?? 0
+            saveType = 0
+            saveTypeString.append(00)
         }
-        
-        var man = dict.manufacturer  ?? ""
-        var manOther =  ""
-        
+        if dict.assDetail2?.lowercased().contains("_1_ios") ?? false {
+            deviceIDFORSERVER = dict.assDetail2 ?? ""
+        }
+        return (uniID, assessmentId, saveType)
+    }
+
+    // Helper 2: Get TSR Id
+    private func getTSRId(_ dict: PENewAssessment) -> Int? {
+        var tsrId = dict.selectedTSRID
+        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
+        let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
+        let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        if dict.selectedTSR?.count ?? 0 > 0, visitNameArray.contains(dict.selectedTSR ?? "") {
+            let indexOfe = visitNameArray.index(of: dict.selectedTSR ?? "")
+            tsrId = visitIDArray[indexOfe] as? Int ?? 0
+        }
+        return tsrId
+    }
+
+    // Helper 3: Get manufacturer and other
+    private func getManufacturer(_ dict: PENewAssessment) -> (String, String) {
+        var man = dict.manufacturer ?? ""
+        var manOther = ""
         if man != "", let character = dict.manufacturer?.character(at: 0), character == "S" {
             let str = man.replacingOccurrences(of: "S", with: "")
             manOther = str
             man = "Other"
         }
+        return (man, manOther)
+    }
 
-        
+    // Helper 4: Get egg and other
+    private func getEgg(_ dict: PENewAssessment) -> (String, String) {
         var eggg = ""
-        var egggOther =  ""
-        let xx = String(dict.noOfEggs ?? 000)
+        var egggOther = ""
+        let xx = String(dict.noOfEggs ?? 0)
         if xx != "0" {
             let last3 = String(xx.suffix(3))
-            if last3 ==  "000" {
-                let str =  xx.replacingOccurrences(of: "000", with: "")
+            if last3 == "000" {
+                let str = xx.replacingOccurrences(of: "000", with: "")
                 egggOther = str
                 eggg = "Other"
             } else {
                 eggg = xx
             }
         }
-        
-        var breeedd = dict.breedOfBird  ?? ""
-        var breeeddOther =  ""
+        return (eggg, egggOther)
+    }
+
+    // Helper 5: Get breed and other
+    private func getBreed(_ dict: PENewAssessment) -> (String, String) {
+        var breeedd = dict.breedOfBird ?? ""
+        var breeeddOther = ""
         if breeedd != "", let character = breeedd.character(at: 0), character == "S".character(at: 0) {
             let str = breeedd.replacingOccurrences(of: "S", with: "")
             breeeddOther = str
             breeedd = "Other"
         }
-
-        
         breeeddOther = dict.breedOfBirdOther ?? ""
-        
-        var ManufacturerId = 0
-        var EggID = 0
-        var breeddId = 0
-        
+        return (breeedd, breeeddOther)
+    }
 
-        var manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
-        var manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
-        var manufacutrerIDArray = manufacutrerDetailsArray.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
+    // Helper 6: Get manufacturer, egg, and breed IDs
+    private func getIds(_ man: String, _ eggg: String, _ breeedd: String) -> (Int, Int, Int) {
+        var manufacturerId = 0
+        var eggId = 0
+        var breedId = 0
+        let manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
+        let manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
+        let manufacutrerIDArray = manufacutrerDetailsArray.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
         if man != "" {
-            let indexOfd = manufacutrerNameArray.index(of: man) // 3
-            ManufacturerId = manufacutrerIDArray[indexOfd] as? Int ?? 0
+            let indexOfd = manufacutrerNameArray.index(of: man)
+            manufacturerId = manufacutrerIDArray[indexOfd] as? Int ?? 0
         }
-        
-        var BirdBreedDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
-        var  BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
-        var BirdBreedIDArray = BirdBreedDetailsArray.value(forKey: "birdId") as? NSArray ?? NSArray()
+        let BirdBreedDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
+        let BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
+        let BirdBreedIDArray = BirdBreedDetailsArray.value(forKey: "birdId") as? NSArray ?? NSArray()
         if breeedd != "" {
-            let indexOfe = BirdBreedNameArray.index(of: breeedd) // 3
-            breeddId = BirdBreedIDArray[indexOfe] as? Int ?? 0
+            let indexOfe = BirdBreedNameArray.index(of: breeedd)
+            breedId = BirdBreedIDArray[indexOfe] as? Int ?? 0
         }
-
         let EggsDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
-        var EggsNameArray = EggsDetailsArray.value(forKey: "eggCount") as? NSArray ?? NSArray()
-        var EggsIDArray = EggsDetailsArray.value(forKey: "eggId") as? NSArray ?? NSArray()
+        let EggsNameArray = EggsDetailsArray.value(forKey: "eggCount") as? NSArray ?? NSArray()
+        let EggsIDArray = EggsDetailsArray.value(forKey: "eggId") as? NSArray ?? NSArray()
         if eggg != "" {
-            let indexOfp = EggsNameArray.index(of: eggg) // 3
-            EggID = EggsIDArray[indexOfp] as? Int ?? 0
+            let indexOfp = EggsNameArray.index(of: eggg)
+            eggId = EggsIDArray[indexOfp] as? Int ?? 0
         }
-        
-        let FlockAgeId = dict.isFlopSelected
-        let Status_Type = ""
-        let UserId = dict.userID
-        let RepresentativeName = ""
-        let Notes = dict.notes
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = Constants.MMddYYYYHHmmss
-        
+        return (manufacturerId, eggId, breedId)
+    }
+
+    // Helper 7: Get signature fields
+    private func getSignatureFields(_ dict: PENewAssessment) -> (String, String?, String?, String?, String?, String?, Int?, Int?, String, String) {
         var dateSig = ""
         let ddd = dict.sig_Date ?? ""
         if ddd != "" {
             dateSig = self.convertDateFormat(inputDate: ddd)
         }
-        let sig_Nametext2 = dict.sig_Name2
-        let sig_Nametext = dict.sig_Name
-        let sig_Phonetext = dict.sig_Phone
-        let sig_EmployeeIDtext = dict.sig_EmpID
-        let sig_EmployeeIDtext2 = dict.sig_EmpID2
+        let sigName2 = dict.sig_Name2
+        let sigName = dict.sig_Name
+        let sigPhone = dict.sig_Phone
+        let sigEmpId = dict.sig_EmpID
+        let sigEmpId2 = dict.sig_EmpID2
         let sigNumber = dict.sig ?? 0
         let sigNumber2 = dict.sig2 ?? 0
         var base64Str = ""
         var base64Str2 = ""
-        if sigNumber == 0 {
-            debugPrint(sigNumber)
-        } else {
-            base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig) ?? 0)
+        if sigNumber != 0 {
+            base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray: dict.sig ?? 0)
         }
-        if sigNumber2 == 0 {
-            debugPrint(sigNumber2)
-        } else {
-            base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
+        if sigNumber2 != 0 {
+            base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray: dict.sig2 ?? 0)
         }
-        
-        var DisplayId = "C-" + UniID
-        var iStle = 0
+        return (dateSig, sigName2, sigName, sigPhone, sigEmpId, sigEmpId2, sigNumber, sigNumber2, base64Str, base64Str2)
+    }
 
+    // Helper 8: Get incubation style id
+    private func getIncubationStyleId(_ incubationStyle: String?) -> Int {
+        var iStle = 0
         let iStleDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
-        var iStleNameArray = iStleDetailsArray.value(forKey: "incubationStylesName") as? NSArray ?? NSArray()
-        var iStleIDArray = iStleDetailsArray.value(forKey: "incubationId") as? NSArray ?? NSArray()
-        if IncubationStyle?.count ?? 0 > 1 {
-            let indexOfe = iStleNameArray.index(of: IncubationStyle ?? "") // 3
+        let iStleNameArray = iStleDetailsArray.value(forKey: "incubationStylesName") as? NSArray ?? NSArray()
+        let iStleIDArray = iStleDetailsArray.value(forKey: "incubationId") as? NSArray ?? NSArray()
+        if incubationStyle?.count ?? 0 > 1 {
+            let indexOfe = iStleNameArray.index(of: incubationStyle ?? "")
             iStle = iStleIDArray[indexOfe] as? Int ?? 0
         }
-        var rollID = 0
+        return iStle
+    }
+
+    // Helper 9: Get role ids
+    private func getRoleIds(_ sigEmpId: String?, _ sigEmpId2: String?) -> (Int, Int) {
+        var rollId = 0
+        var rollId2 = 0
         let rollDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
-        var rollNameArray = rollDetailsArray.value(forKey: "roleName") as? NSArray ?? NSArray()
-        var rollIDArray = rollDetailsArray.value(forKey: "roleId") as? NSArray ?? NSArray()
-        if sig_EmployeeIDtext?.count ?? 0 > 1 {
-            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext ?? "") // 3
-            rollID = rollIDArray[indexOfe] as? Int ?? 0
+        let rollNameArray = rollDetailsArray.value(forKey: "roleName") as? NSArray ?? NSArray()
+        let rollIDArray = rollDetailsArray.value(forKey: "roleId") as? NSArray ?? NSArray()
+        if sigEmpId?.count ?? 0 > 1 {
+            let indexOfe = rollNameArray.index(of: sigEmpId ?? "")
+            rollId = rollIDArray[indexOfe] as? Int ?? 0
         }
-        
-        var rollID2 = 0
-        if sig_EmployeeIDtext2?.count ?? 0 > 1 {
-            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext2 ?? "") // 3
-            rollID2 = rollIDArray[indexOfe] as? Int ?? 0
+        if sigEmpId2?.count ?? 0 > 1 {
+            let indexOfe = rollNameArray.index(of: sigEmpId2 ?? "")
+            rollId2 = rollIDArray[indexOfe] as? Int ?? 0
         }
-        
-       
-        if dateSig != ""{
-            debugPrint("signature date is not empty")
-        }else{
-            let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = Constants.yyyyMMddStr
-            convertDateFormatter.timeZone = Calendar.current.timeZone
-            convertDateFormatter.locale = Calendar.current.locale
-        }
-        let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
-        let regionId = UserDefaults.standard.integer(forKey: "Regionid")
-        
-        
-        
-     
-        var evalDateStr = ""
-        if regionId == 3 {
-            
-            let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = Constants.MMddyyyyStr
-            
-            // Convert the string to a Date object
-            if let date = inputFormatter.date(from: evaluationDate ?? "") {
-                
-                // Create another DateFormatter for the desired output format
-                let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = Constants.yyyyMMddStr
-                
-                let formattedDateString = outputFormatter.string(from: date)
-                evalDateStr = formattedDateString
-            }
-        } else {
-            let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = Constants.ddMMyyyStr
-            
-            if let date = inputFormatter.date(from: evaluationDate ?? "") {
-                
-                let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = Constants.yyyyMMddStr
-                
-                let formattedDateString = outputFormatter.string(from: date)
-                evalDateStr = formattedDateString
-            }
-        }
-        
-        let inovoFluid : Bool
-        
-        let basicTransfer : Bool
-       
-        let countryIDSelc = dict.countryID
-        inovoFluid = dict.fluid!
-        basicTransfer = dict.basicTransfer!
-        let isEMRequested = dict.IsEMRequested ?? false
-        
-        let handMix : Bool
-        
-        handMix = dict.isHandMix!
-        let ppmValue = dict.ppmValue ?? ""
-        var FSRsign = ""
-        if certificationData.count > 0 {
-            FSRsign = certificateData[0].fsrSign
-        }
-      
-        var json: JSONDictionary = [:]
-        if regionID == 3
-        {
-            json = [
-                "AppAssessmentId":String(AssessmentId),
-                "DisplayId":DisplayId.prefix(22),
-                "VisitId": VisitId,
-                "CustomerId": CustomerId,
-                "SiteId": SiteId,
-                "IncubationStyle": iStle,
-                "EvaluationId": EvaluationId,
-                "BreedBirds": breeddId == 0 ? "" : breeddId,
-                "EvaluationDate": evalDateStr,
-                "EvaulaterId": EvaulaterId ?? 0,
-                "TSRId": TSRId,
-                "Camera": Camera,
-                "ManufacturerId": ManufacturerId == 0 ? "" : ManufacturerId,
-                "EggsPerFlat": EggID == 0 ? "" : EggID,
-                "Notes": Notes,
-                "FlockAgeId": FlockAgeId == 0 ? "" : FlockAgeId,
-                "SaveType":SaveType,
-                "UserId": UserId,
-                "DeviceId": deviceIDFORSERVER,
-                "RepresentativeName":sig_Nametext,
-                "RepresentativeName2":sig_Nametext2,
-                "RepresentativeNotes":sig_Phonetext,
-                "SignatureImage": base64Str,
-                "SignatureImage2": base64Str2,
-                "ManufacturerOther": manOther,
-                "BreedOfBirdsOther": breeeddOther,
-                "EggsPerFlatOther": egggOther,
-                "RoleId":rollID,
-                "RoleId2":rollID2 == 0 ? "" : rollID2,
-                "EvaluationTypeText": dict.evaluationName,
-                "AppCreationTime": UniID.prefix(22),
-                "SignatureDate":dateSig,
-                "AssessmentId":serverAssessmentId,
-                "DoubleSanitation":hacheryAntibiotics,
-                "SanitationEmbrex": dict.sanitationValue ?? false, //dict.extndMicro ?? false,
-                "HasChlorineStrips" :  dict.isChlorineStrip ?? false,
-                "FSTSignatureImage": FSRsign,
-                "IsAutomaticFail" :  dict.isAutomaticFail ?? false,
-                "IsEMRequested" : isEMRequested,
-                "RefrigeratorNote": "",
-                "RegionId" : regionId,
-                "IsInterMicrobial": userInfo?.isExtendedPE ?? false,
-                "CountryId":countryID,
-                "IsInovoFluids": false,
-                "IsBasicTrfAssessment" :  false,
-                "ChlorineId" :  "",
-                "Handmix" : handMix ?? false,
-                "Chlorine_Value" : ppmValue
-            ] as JSONDictionary
-            return json
-        }
-        else
-        {
-            json = [
-                "AppAssessmentId":String(AssessmentId),
-                "DisplayId":DisplayId.prefix(22),
-                "VisitId": VisitId,
-                "CustomerId": CustomerId,
-                "SiteId": SiteId,
-                "IncubationStyle": iStle,
-                "EvaluationId": EvaluationId,
-                "BreedBirds": breeddId == 0 ? "" : breeddId,
-                "EvaluationDate": evalDateStr,
-                "EvaulaterId": EvaulaterId ?? 0,
-                "TSRId": TSRId,
-                "Camera": Camera,
-                "ManufacturerId": ManufacturerId == 0 ? "" : ManufacturerId,
-                "EggsPerFlat": EggID == 0 ? "" : EggID,
-                "Notes": Notes,
-                "FlockAgeId": FlockAgeId == 0 ? "" : FlockAgeId,
-                "SaveType":SaveType,
-                "UserId": UserId,
-                "DeviceId": deviceIDFORSERVER,
-                "RepresentativeName":sig_Nametext,
-                "RepresentativeName2":sig_Nametext2,
-                "RepresentativeNotes":sig_Phonetext,
-                "SignatureImage": base64Str,
-                "SignatureImage2": base64Str2,
-                "ManufacturerOther": manOther,
-                "BreedOfBirdsOther": breeeddOther,
-                "EggsPerFlatOther": egggOther,
-                "RoleId":rollID,
-                "RoleId2":rollID2 == 0 ? "" : rollID2,
-                "EvaluationTypeText": dict.evaluationName,
-                "AppCreationTime": UniID.prefix(22),
-                "SignatureDate":dateSig,
-                "AssessmentId":serverAssessmentId,
-                "DoubleSanitation":hacheryAntibiotics,
-                "SanitationEmbrex": false ,//userInfo?.isExtendedPE ?? false,
-                "HasChlorineStrips" :  dict.isChlorineStrip ?? false,
-                "IsAutomaticFail" :  dict.isAutomaticFail ?? false,
-                "RefrigeratorNote": dict.refrigeratorNote ?? "",
-                "RegionId" : regionId,
-                "IsInterMicrobial": dict.extndMicro,
-                "CountryId":countryIDSelc,
-                "IsInovoFluids": inovoFluid,
-                "IsBasicTrfAssessment" :  basicTransfer,
-                "ChlorineId" : dict.clorineId ?? 0
-            ] as JSONDictionary
-            return json
-        }
-        
+        return (rollId, rollId2)
     }
     // MARK: Create Sync request for Inovoject Data
-    func createSyncRequestForInvoject(dictArray: PENewAssessment,inovojectData :InovojectData) -> JSONDictionary{
+    func createSyncRequestForInvoject(dictArray: PENewAssessment,inovojectData :InovojectData) -> JSONDictionary {
         
         
         var UniID = dictArray.dataToSubmitID ?? ""
@@ -3321,204 +3154,155 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Sync Functionality
-    func syncBtnTapped(showHud: Bool){
-        if self.submitExtend == true && self.categoarylabelText != Constants.extendedMicrobialStr {
-            let alert = UIAlertController(title: "Alert!", message: "Please finish Extended Microbial first or turn off the switch in order to sync the other data",
-                                          preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            return
+    func syncBtnTapped(showHud: Bool) {
+        guard validateExtendedMicrobialSync() else { return }
+        updateIsEMRequestedFlag()
+        guard ConnectionManager.shared.hasConnectivity() else { return }
+        showGlobalProgressHUDWithTitle(view, title: "Data syncing...")
+
+        let refrigratorDataArr = prepareRefrigeratorData()
+        let dayOfAgeSData = fetchPEData(from: peNewAssessment.doaS)
+        let dayOfAgeData = fetchPEData(from: peNewAssessment.doa)
+        let inovojectData = fetchPEData(from: peNewAssessment.inovoject)
+        let certificateData = fetchCertificateData()
+
+        let json = createSyncRequest(dict: peNewAssessment, certificationData: certificateData)
+        tempArr.append(json)
+
+        let inovojectDataArr = inovojectData.map { createSyncRequestForInvoject(dictArray: peNewAssessment, inovojectData: $0) }
+        let dayOfAgeDataArr = dayOfAgeData.map { createSyncRequestForDOA(dictArray: peNewAssessment, dayOfAgeData: $0) }
+        let dayOfAgeSDataArr = dayOfAgeSData.map { createSyncRequestForDOAS(dictArray: peNewAssessment, dayOfAgeData: $0) }
+        let certificateDataArr = certificateData.map { createSyncRequestForCertificateData(dictArray: peNewAssessment, peCertificateData: $0) }
+
+        let (vaccineResidueMoldsDataArr, vaccineMicroSamplesDataArr) = prepareVaccineDataIfNeeded()
+
+        let paramForDoaInnovoject = createDOAInnovojectParams(
+            inovojectDataArr: inovojectDataArr,
+            dayOfAgeDataArr: dayOfAgeDataArr,
+            dayOfAgeSDataArr: dayOfAgeSDataArr,
+            certificateDataArr: certificateDataArr,
+            vaccineResidueMoldsDataArr: vaccineResidueMoldsDataArr,
+            vaccineMicroSamplesDataArr: vaccineMicroSamplesDataArr,
+            refrigratorDataArr: refrigratorDataArr
+        )
+
+        let idArr = tempArr.compactMap { "\($0["AssessmentId"] as? Int64 ?? 0)" }.filter { $0 != "0" }
+        let sanitationArr = idArr.flatMap {
+            SanitationEmbrexQuestionMasterDAO.sharedInstance.sendExtendedPEFilledDTO(
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: $0
+            )
         }
-        else {
-            if !extendedMicroSwitch.isHidden{
-                if self.submitExtend == true {
-                    self.peNewAssessment.IsEMRequested = true
-                }
-                else {
-                    self.peNewAssessment.IsEMRequested = false
-                }
-            }
-        }
-        
-        if peNewAssessment.IsEMRequested == true {
-            CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: true)
-        }
-        else
-        {
-            CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: false)
-        }
-        
-        
-        if ConnectionManager.shared.hasConnectivity() {
-            var inovojectDataArr : [JSONDictionary]  = []
-            var dayOfAgeDataArr : [JSONDictionary]  = []
-            var dayOfAgeSDataArr : [JSONDictionary]  = []
-            var certificateDataArr : [JSONDictionary]  = []
-            var vaccineMicroSamplesDataArr : [JSONDictionary]  = []
-            var vaccineResidueMoldsDataArr : [JSONDictionary]  = []
-            var refrigratorDataArr : [JSONDictionary]  = []
-            
-            
-            if(regionID != 3){
-                refrigratorDataArr.removeAll()
-                var assId  = UserDefaults.standard.value(forKey: "currentServerAssessmentId")
-                let refriArray = CoreDataHandlerPE().getOfflineREfriData(id: Int(assId as! String) ?? 0)
-                for objn in  refriArray {
-                    if objn != nil {
-                        let data = self.createSyncRequestRefrigator(dictArray: objn)
-                        refrigratorDataArr.append(data)
-                    }
-                }
-            }
-            self.showGlobalProgressHUDWithTitle(self.view, title: "Data syncing...")
-            
-            dayOfAgeSData.removeAll()
-            if peNewAssessment.doaS.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.doaS {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            debugPrint("no data for Day of Age.")
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                dayOfAgeSData.append(data!)
-                            }
-                        }
-                    }
-                }
-            }
-            
-            dayOfAgeData.removeAll()
-            if peNewAssessment.doa.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.doa {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            debugPrint("no data for DayOfAge.")
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                dayOfAgeData.append(data!)
-                            }
-                        }
-                    }
-                }
-            }
-            inovojectData.removeAll()
-            if peNewAssessment.inovoject.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.inovoject {
-                    let data = CoreDataHandlerPE().getPEDOAData(doaId: objn)
-                    if data != nil {
-                        if idArr.contains(data!.id ?? 0){
-                            debugPrint("no data for inovo")
-                        }else{
-                            idArr.append(data!.id ?? 0)
-                            if data != nil{
-                                inovojectData.append(data!)
-                            }
-                        }
-                    }
-                }
-            }
-            certificateData.removeAll()
-            if peNewAssessment.vMixer.count > 0 {
-                var idArr : [Int] = []
-                for objn in  peNewAssessment.vMixer {
-                    let data = CoreDataHandlerPE().getCertificateData(doaId: objn)
-                    if idArr.contains(data!.id ?? 0){
-                        debugPrint("vacine mix data.")
-                    }else{
-                        idArr.append(data!.id ?? 0)
-                        if data != nil{
-                            certificateData.append(data!)
-                            
-                        }
-                    }
-                }
-            }
-            
-            let json = createSyncRequest(dict: peNewAssessment, certificationData: certificateData)
-            tempArr.append(json)
-            
-            if inovojectData.count > 0 {
-                for item in inovojectData {
-                    let json = createSyncRequestForInvoject(dictArray: peNewAssessment, inovojectData: item)
-                    inovojectDataArr.append(json)
-                }
-            }
-            if dayOfAgeData.count > 0 {
-                for item in dayOfAgeData {
-                    let json = createSyncRequestForDOA(dictArray: peNewAssessment, dayOfAgeData: item)
-                    dayOfAgeDataArr.append(json)
-                }
-            }
-            if dayOfAgeSData.count > 0 {
-                for item in dayOfAgeSData {
-                    let json = createSyncRequestForDOAS(dictArray: peNewAssessment, dayOfAgeData: item)
-                    dayOfAgeSDataArr.append(json)
-                }
-            }
-            if certificateData.count > 0 {
-                for item in certificateData {
-                    let json = createSyncRequestForCertificateData(dictArray: peNewAssessment, peCertificateData: item)
-                    certificateDataArr.append(json)
-                }
-            }
-            if peNewAssessment.evaluationID == 2 {
-                let json = createSyncRequestForResidueData(dictArray: peNewAssessment)
-                vaccineResidueMoldsDataArr.append(json)
-            }
-            if peNewAssessment.evaluationID == 2 {
-                let json = createSyncRequestForMicroData(dictArray: peNewAssessment)
-                vaccineMicroSamplesDataArr.append(json)
-            }
-            
-            var paramForDoaInnovoject = JSONDictionary()
-            if( regionID != 3 ){
-                paramForDoaInnovoject = ["InovojectData":inovojectDataArr,"DayOfAgeData":dayOfAgeDataArr,"DayAgeSubcutaneousDetailsData":dayOfAgeSDataArr,"VaccineMixerObservedData":certificateDataArr,"VaccineResidueMoldsData":vaccineResidueMoldsDataArr,"VaccineMicroSamplesData":vaccineMicroSamplesDataArr,"RefrigeratorData":refrigratorDataArr,
-                                         "DeviceId": deviceIDFORSERVER] as JSONDictionary
-            }
-            else{
-                paramForDoaInnovoject = ["InovojectData":inovojectDataArr,"DayOfAgeData":dayOfAgeDataArr,"DayAgeSubcutaneousDetailsData":dayOfAgeSDataArr,"VaccineMixerObservedData":certificateDataArr,"VaccineResidueMoldsData":vaccineResidueMoldsDataArr,"VaccineMicroSamplesData":vaccineMicroSamplesDataArr,
-                                         "DeviceId": deviceIDFORSERVER] as JSONDictionary
-            }
-            var idArr = [String]()
-            for val in tempArr{
-                let id = val["AssessmentId"] as? Int64 ?? 0
-                if id != 0{
-                    idArr.append("\(id)")
-                }
-            }
-            var arr = [PESanitationDTO]()
-            for id in idArr{
-                let tempPEArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.sendExtendedPEFilledDTO(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: id)
-                arr.append(contentsOf: tempPEArr)
-            }
-            
-            var param = ["AssessmentData":tempArr,"appVersion":Bundle.main.versionNumber,"IsSendEmail":"false"] as JSONDictionary
-            
-            self.convertDictToJson(dict: param,apiName: "add assessment")
-            ZoetisWebServices.shared.sendPostDataToServer(controller: self, parameters: param, completion: { [weak self] (json, error) in
-                if error != nil {
-                    self?.dismissGlobalHUD(self?.view ?? UIView())
-                }
-                guard let self = self, error == nil else { return }
-                
-                if json["StatusCode"]  == 200{
-                    
-                    
-                    self.callRequest2(paramForDoaInnovoject: paramForDoaInnovoject, json: json)
-                } else {
-                    self.dismissGlobalHUD(self.view)
-                    self.showAlert(title: "Error", message: "Error in first api sync", owner: self)
-                }
-            })
+
+        let param: JSONDictionary = [
+            "AssessmentData": tempArr,
+            "appVersion": Bundle.main.versionNumber,
+            "IsSendEmail": "false"
+        ]
+
+        convertDictToJson(dict: param, apiName: "add assessment")
+
+        ZoetisWebServices.shared.sendPostDataToServer(controller: self, parameters: param) { [weak self] json, error in
+            self?.handleSyncResponse(json: json.rawValue as! JSONDictionary, error: error, paramForDoaInnovoject: paramForDoaInnovoject)
         }
     }
+
+    private func prepareVaccineDataIfNeeded() -> ([JSONDictionary], [JSONDictionary]) {
+        var vaccineResidueMoldsDataArr: [JSONDictionary] = []
+        var vaccineMicroSamplesDataArr: [JSONDictionary] = []
+        if peNewAssessment.evaluationID == 2 {
+            vaccineResidueMoldsDataArr.append(createSyncRequestForResidueData(dictArray: peNewAssessment))
+            vaccineMicroSamplesDataArr.append(createSyncRequestForMicroData(dictArray: peNewAssessment))
+        }
+        return (vaccineResidueMoldsDataArr, vaccineMicroSamplesDataArr)
+    }
+
+    private func handleSyncResponse(json: JSONDictionary, error: Error?, paramForDoaInnovoject: JSONDictionary) {
+        self.dismissGlobalHUD(self.view)
+        if let error = error {
+            print("Sync failed: \(error)")
+            return
+        }
+        if json["StatusCode"] as? Int == 200 {
+            self.callRequest2(paramForDoaInnovoject: paramForDoaInnovoject, json: JSON(rawValue: json) ?? JSON())
+        } else {
+            self.showAlert(title: "Error", message: "Error in first API sync", owner: self)
+        }
+    }
+
+    // ... existing code ...
+    private func validateExtendedMicrobialSync() -> Bool {
+        if submitExtend, categoarylabelText != Constants.extendedMicrobialStr {
+            let alert = UIAlertController(title: "Alert!", message: "Please finish Extended Microbial first or turn off the switch in order to sync the other data", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return false
+        }
+        return true
+    }
+
+    private func updateIsEMRequestedFlag() {
+        if !extendedMicroSwitch.isHidden {
+            peNewAssessment.IsEMRequested = submitExtend
+        }
+        CoreDataHandlerPE().updateOfflineIsEMRequested(isEMRequested: peNewAssessment.IsEMRequested!)
+    }
+
+    private func prepareRefrigeratorData() -> [JSONDictionary] {
+        guard regionID != 3 else { return [] }
+        let assId = Int(UserDefaults.standard.string(forKey: "currentServerAssessmentId") ?? "") ?? 0
+        return CoreDataHandlerPE().getOfflineREfriData(id: assId).compactMap {
+            $0 != nil ? createSyncRequestRefrigator(dictArray: $0) : nil
+        }
+    }
+
+    private func fetchPEData(from ids: [Int]) -> [InovojectData] {
+        var result: [InovojectData] = []
+        var idSet = Set<Int>()
+        for id in ids {
+            if let data = CoreDataHandlerPE().getPEDOAData(doaId: id), let dataId = data.id, !idSet.contains(dataId) {
+                idSet.insert(dataId)
+                result.append(data)
+            }
+        }
+        return result
+    }
+
+    private func fetchCertificateData() -> [PECertificateData] {
+        var result: [PECertificateData] = []
+        var idSet = Set<Int>()
+        for id in peNewAssessment.vMixer {
+            if let data = CoreDataHandlerPE().getCertificateData(doaId: id), let dataId = data.id, !idSet.contains(dataId) {
+                idSet.insert(dataId)
+                result.append(data)
+            }
+        }
+        return result
+    }
+
+    private func createDOAInnovojectParams(
+        inovojectDataArr: [JSONDictionary],
+        dayOfAgeDataArr: [JSONDictionary],
+        dayOfAgeSDataArr: [JSONDictionary],
+        certificateDataArr: [JSONDictionary],
+        vaccineResidueMoldsDataArr: [JSONDictionary],
+        vaccineMicroSamplesDataArr: [JSONDictionary],
+        refrigratorDataArr: [JSONDictionary]
+    ) -> JSONDictionary {
+        var params: JSONDictionary = [
+            "InovojectData": inovojectDataArr,
+            "DayOfAgeData": dayOfAgeDataArr,
+            "DayAgeSubcutaneousDetailsData": dayOfAgeSDataArr,
+            "VaccineMixerObservedData": certificateDataArr,
+            "VaccineResidueMoldsData": vaccineResidueMoldsDataArr,
+            "VaccineMicroSamplesData": vaccineMicroSamplesDataArr,
+            "DeviceId": deviceIDFORSERVER
+        ]
+        if regionID != 3 {
+            params["RefrigeratorData"] = refrigratorDataArr
+        }
+        return params
+    }
+
     
     // MARK: ------------ Extended Micro Create Sync Request --------------
     func createSyncRequestForExtendedMicro(dict: PENewAssessment ,certificationData : [PECertificateData]) -> JSONDictionary{
@@ -3924,7 +3708,7 @@ extension PEViewAssesmentFinalize{
             }
             guard let self = self, error == nil else { return }
             if json["StatusCode"]  == 200{
-                self.CalculateImageCount()
+                self.calculateImageCount()
             } else {
                 self.dismissGlobalHUD(self.view)
                 self.showAlert(title: "Error", message: "Error in sync score", owner: self)
@@ -3981,148 +3765,96 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Calculate Images Count
-    func CalculateImageCount(){
-        
-        let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
-        let dNumber = peNewAssessment.draftNumber ?? 0
-        var  getOfflineArray : [PENewAssessment] = []
-        var  getDraftArray : [PENewAssessment] = []
-        if sNumber != 0 {
-            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
-            CoreDataHandlerPE().updateOfflineStatus(assessment: peNewAssessment)
-        }
-        if dNumber != 0 {
-            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
-        }
+    func calculateImageCount() {
         callRequest4Int = 0
-        
         totalImageToSync = []
-        
-        if getOfflineArray.count > 0 {
-            var carColIdArray : [Int] = []
-            var catArray : [PENewAssessment] = []
-            var catAllRowArray : [PENewAssessment] = []
-            for cat in getOfflineArray {
-                if !carColIdArray.contains(cat.sequenceNo ?? 0){
-                    carColIdArray.append(cat.sequenceNo ?? 0)
-                    catArray.append(cat)
+
+        handleAssessmentImages(isDraft: false)
+        handleAssessmentImages(isDraft: true)
+    }
+
+    private func handleAssessmentImages(isDraft: Bool) {
+        let assessments = isDraft ? getDraftAssessments() : getOfflineAssessments()
+
+        guard !assessments.isEmpty else { return }
+
+        let groupedAssessments = groupAssessmentsBySequence(assessments)
+        let allRows = fetchAllAssessmentRows(from: groupedAssessments, isDraft: isDraft)
+
+        var imagePayloads: [JSONDictionary] = []
+
+        for assessment in allRows {
+            _ = createSyncRequestForScore(dict: assessment)
+            _ = createSyncRequestForComment(dictArray: assessment)
+
+            for imageID in assessment.images {
+                if !CoreDataHandlerPE().imageAlreadySyncStatus(imageId: imageID) {
+                    let imagePayload = createSyncRequestForImage(dictArray: assessment, img: imageID)
+                    imagePayloads.append(imagePayload)
                 }
             }
-            for objCt in catArray{
-                let catArrayForTableIs = CoreDataHandlerPE().fetchCustomerForSyncWithCatID(objCt.sequenceNo as NSNumber? ?? 0,dataToSubmitNumber:peNewAssessment.dataToSubmitNumber as NSNumber? ?? 0) as? [PENewAssessment] ?? []
-                
-                catAllRowArray.append(contentsOf: catArrayForTableIs)
-            }
-            var tempArr : [JSONDictionary]  = []
-            var comntArray : [JSONDictionary]  = []
-            var imgArray : [JSONDictionary]  = []
-            
-            for objCtIs in catAllRowArray {
-                let json = createSyncRequestForScore(dict: objCtIs)
-                let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
-                for i in objCtIs.images{
-                    let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) as? Bool ?? false
-                    if status {
-                        debugPrint("status is" , status)
-                    } else {
-                        let jsonIMages = createSyncRequestForImage(dictArray: objCtIs,img:i)
-                        imgArray.append(jsonIMages)
-                    }
-                }
-                tempArr.append(json)
-                comntArray.append(jsonComment)
-            }
-            var arrayCount  = 0
-            var imgDic :  [JSONDictionary] = []
-            
-            if imgArray.count > 3 {
-                for objimgr in imgArray{
-                    arrayCount  = arrayCount + 1
-                    imgDic.append(objimgr)
-                    if arrayCount == 3  {
-                        let ss  = imgDic as?  [JSONDictionary]  ?? []
-                        var  paramForImages  = ["AssessmentImages":ss] as JSONDictionary
-                        arrayCount  = 0
-                        imgDic.removeAll()
-                        self.callRequest4(paramForImages:paramForImages)
-                    }
-                }
-                if  arrayCount > 0 {
-                    let ss  = imgDic as?  [JSONDictionary]  ?? []
-                    var  paramForImages  = ["AssessmentImages":ss] as JSONDictionary
-                    imgDic.removeAll()
-                    self.callRequest4(paramForImages:paramForImages)
-                }
-            } else {
-                var  paramForImages  = ["AssessmentImages":imgArray] as JSONDictionary
-                self.callRequest4(paramForImages:paramForImages)
-            }
-            
         }
-        
-        if getDraftArray.count > 0 {
-            var carColIdArray : [Int] = []
-            var catArray : [PENewAssessment] = []
-            var catAllRowArray : [PENewAssessment] = []
-            for cat in getDraftArray {
-                if !carColIdArray.contains(cat.sequenceNo ?? 0){
-                    carColIdArray.append(cat.sequenceNo ?? 0)
-                    catArray.append(cat)
-                }
+
+        sendImagesInBatches(imagePayloads)
+    }
+
+    private func getOfflineAssessments() -> [PENewAssessment] {
+        let count = peNewAssessment.dataToSubmitNumber ?? 0
+        if count == 0 { return [] }
+
+        CoreDataHandlerPE().updateOfflineStatus(assessment: peNewAssessment)
+        return CoreDataHandlerPE().getOfflineAssessmentArray(id: peNewAssessment.dataToSubmitID ?? "")
+    }
+
+    private func getDraftAssessments() -> [PENewAssessment] {
+        let count = peNewAssessment.draftNumber ?? 0
+        if count == 0 { return [] }
+
+        return CoreDataHandlerPE().getDraftAssessmentArray(id: count)
+    }
+
+    private func groupAssessmentsBySequence(_ assessments: [PENewAssessment]) -> [PENewAssessment] {
+        var seen = Set<Int>()
+        var unique = [PENewAssessment]()
+
+        for assessment in assessments {
+            if let seq = assessment.sequenceNo, !seen.contains(seq) {
+                seen.insert(seq)
+                unique.append(assessment)
             }
-            for objCt in catArray{
-                var catArrayForTableIs = CoreDataHandlerPE().fetchCustomerForSyncWithCatIDDraft(objCt.sequenceNo as NSNumber? ?? 0,draftNumber:peNewAssessment.draftNumber as? NSNumber ?? 0) as? [PENewAssessment] ?? []
-                
-                catAllRowArray.append(contentsOf: catArrayForTableIs)
+        }
+
+        return unique
+    }
+
+    private func fetchAllAssessmentRows(from grouped: [PENewAssessment], isDraft: Bool) -> [PENewAssessment] {
+        var allRows: [PENewAssessment] = []
+
+        for assessment in grouped {
+            let sequence = assessment.sequenceNo ?? 0
+            let rows = isDraft
+                ? CoreDataHandlerPE().fetchCustomerForSyncWithCatIDDraft(sequence as NSNumber, draftNumber: peNewAssessment.draftNumber as? NSNumber ?? 0) as? [PENewAssessment] ?? []
+                : CoreDataHandlerPE().fetchCustomerForSyncWithCatID(sequence as NSNumber, dataToSubmitNumber: peNewAssessment.dataToSubmitNumber as? NSNumber ?? 0) as? [PENewAssessment] ?? []
+            allRows.append(contentsOf: rows)
+        }
+
+        return allRows
+    }
+
+    private func sendImagesInBatches(_ images: [JSONDictionary]) {
+        let batchSize = 3
+        var batch: [JSONDictionary] = []
+
+        for (index, image) in images.enumerated() {
+            batch.append(image)
+            if batch.count == batchSize || index == images.count - 1 {
+                let param: JSONDictionary = ["AssessmentImages": batch]
+                self.callRequest4(paramForImages: param)
+                batch.removeAll()
             }
-            var tempArr : [JSONDictionary]  = []
-            var comntArray : [JSONDictionary]  = []
-            var imgArray : [JSONDictionary]  = []
-            
-            for objCtIs in catAllRowArray {
-                let json = createSyncRequestForScore(dict: objCtIs)
-                let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
-                for i in objCtIs.images{
-                    let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) as? Bool ?? false
-                    if status {
-                        debugPrint("status of APi" , status)
-                    } else {
-                        let jsonIMages = createSyncRequestForImage(dictArray: objCtIs,img:i)
-                        imgArray.append(jsonIMages)
-                    }
-                }
-                tempArr.append(json)
-                comntArray.append(jsonComment)
-                
-            }
-            var arrayCount  = 0
-            var imgDic :  [JSONDictionary] = []
-            
-            if imgArray.count > 3 {
-                for objimgr in imgArray{
-                    arrayCount  = arrayCount + 1
-                    imgDic.append(objimgr)
-                    if arrayCount == 3  {
-                        let ss  = imgDic as?  [JSONDictionary]  ?? []
-                        var  paramForImages  = ["AssessmentImages":ss] as JSONDictionary
-                        arrayCount  = 0
-                        imgDic.removeAll()
-                        self.callRequest4(paramForImages:paramForImages)
-                    }
-                }
-                if  arrayCount > 0 {
-                    let ss  = imgDic as?  [JSONDictionary]  ?? []
-                    var  paramForImages  = ["AssessmentImages":ss] as JSONDictionary
-                    imgDic.removeAll()
-                    self.callRequest4(paramForImages:paramForImages)
-                }
-            } else {
-                var  paramForImages  = ["AssessmentImages":imgArray] as JSONDictionary
-                self.callRequest4(paramForImages:paramForImages)
-            }
-            
         }
     }
+
     
     // MARK: Get Off Line Saved Assessments from DB
     func getAllAssessmentInOfflineFromDb() -> Int {
@@ -4150,68 +3882,81 @@ extension PEViewAssesmentFinalize{
     }
     
     // MARK: Call Request for images
-    func callRequest4(paramForImages:JSONDictionary){
-        callRequest4Int = callRequest4Int + 1
-        ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages, completion: { [weak self] (json, error) in
-            self?.callRequest4Int = self!.callRequest4Int - 1
-            
-            if error != nil {
-                let syncArr = self?.getAllAssessmentInOfflineFromDb()
-                if syncArr ?? 0 > 0{
-                    self?.syncBtnTapped(showHud: false)
-                } else {
-                    self?.showtoast(message: Constants.dataSyncSuccess)
-                    NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                }
+    func callRequest4(paramForImages: JSONDictionary) {
+        callRequest4Int += 1
+
+        ZoetisWebServices.shared.sendMultipleImagesBase64ToServer(controller: self, parameters: paramForImages) { [weak self] (json, error) in
+            guard let self = self else { return }
+            self.callRequest4Int -= 1
+
+            if let error = error {
+                self.handleSyncError()
+                return
             }
-            guard let self = self, error == nil else { return }
-            if json["StatusCode"]  == 200{
-                if self.saveTypeString.contains(11)
-                {
-                    if self.saveTypeString.contains(00) {
-                        CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
-                    }
-                    CoreDataHandlerPE().updateOfflineStatus(assessment: self.peNewAssessment)
-                } else {
-                    CoreDataHandlerPE().updateDraftStatus(assessment: self.peNewAssessment)
-                }
-                if ConnectionManager.shared.hasConnectivity(), self.callRequest4Int == 0 {
-                        
-                    if regionID == 3 && peNewAssessment.IsEMRequested == true {
-                                self.syncExtendedMicrobial()
-                            
-                    }
-                        
-                        let syncArr = self.getAllAssessmentInOfflineFromDb()
-                        if syncArr > 0{
-                            
-                            self.showtoast(message: Constants.dataSyncSuccess)
-                            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                            self.dismissGlobalHUD(self.view)
-                            self.syncBtnTapped(showHud: true)
-                            
-                        } else {
-                            for i in self.totalImageToSync{
-                                CoreDataHandlerPE().setImageStatusTrue(idArray: i)
-                            }
-                            
-                            self.showtoast(message: Constants.dataSyncSuccess)
-                            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                            self.dismissGlobalHUD(self.view)
-                        }
-                    
-                }
-            } else {
+
+            guard json["StatusCode"] as? Int == 200 else {
                 self.dismissGlobalHUD(self.view)
+                return
             }
-            
-        })
+
+            self.updateSyncStatuses()
+
+            if ConnectionManager.shared.hasConnectivity(), self.callRequest4Int == 0 {
+                self.handlePostSync()
+            }
+        }
     }
+    private func handleSyncError() {
+        let syncCount = getAllAssessmentInOfflineFromDb()
+        if syncCount > 0 {
+            syncBtnTapped(showHud: false)
+        } else {
+            showtoast(message: Constants.dataSyncSuccess)
+            notifyDashboardUpdate()
+        }
+    }
+
+    private func updateSyncStatuses() {
+        if saveTypeString.contains(11) {
+            if saveTypeString.contains(00) {
+                CoreDataHandlerPE().updateDraftStatus(assessment: peNewAssessment)
+            }
+            CoreDataHandlerPE().updateOfflineStatus(assessment: peNewAssessment)
+        } else {
+            CoreDataHandlerPE().updateDraftStatus(assessment: peNewAssessment)
+        }
+    }
+
+    private func handlePostSync() {
+        if regionID == 3 && peNewAssessment.IsEMRequested == true {
+            syncExtendedMicrobial()
+        }
+
+        let syncCount = getAllAssessmentInOfflineFromDb()
+        if syncCount > 0 {
+            showtoast(message: Constants.dataSyncSuccess)
+            notifyDashboardUpdate()
+            dismissGlobalHUD(view)
+            syncBtnTapped(showHud: true)
+        } else {
+            for imageGroup in totalImageToSync {
+                CoreDataHandlerPE().setImageStatusTrue(idArray: imageGroup)
+            }
+            showtoast(message: Constants.dataSyncSuccess)
+            notifyDashboardUpdate()
+            dismissGlobalHUD(view)
+        }
+    }
+
+    private func notifyDashboardUpdate() {
+        NotificationCenter.default.post(Notification(name: Notification.Name("UpdateComplexOnDashboardPE"), object: nil))
+    }
+
     
     // MARK: Sync Extended Microbial
     func syncExtendedMicrobial ()
     {
-        var extendedMicroArr : [JSONDictionary]  = []        
+        var extendedMicroArr : [JSONDictionary]  = []
         self.showGlobalProgressHUDWithTitle(self.view, title: "Data syncing...")
         
         certificateData.removeAll()

@@ -612,8 +612,429 @@ let appDelegateObj = UIApplication.shared.delegate as! AppDelegate
          let mediaTypeDefault: String
          let samplingMethodDefault: String
      }
+     
+     struct submitDataCustomerDetails {
+         let barcode: String
+         let company: String
+         let companyId: Int
+         let emailId: String
+         let requestor: String
+         let reviewer: String
+         let sampleCollectedBy: String
+         let sampleCollectionDate: String
+         let sessionId: Int
+         let site: String
+         let siteId: Int
+     }
 
-    
+     
+     struct SessionUpdateData {
+         let requestor: String
+         let sampleCollectedBy: String
+         let company: String
+         let companyId: Int
+         let site: String
+         let siteId: Int
+         let email: String
+         let reviewer: String
+         let surveyConductedOn: String
+         let sampleCollectionDate: String
+         let sampleCollectionDateWithTimeStamp: String
+         let purposeOfSurvey: String
+         let transferIn: String
+         let barCode: String
+         let barCodeManualEntered: String
+         let notes: String
+         let reasonForVisit: String
+         let currentdate: String
+         let customerId: String
+         let requisitionType: Int
+         let sessionStatus: Int
+         let requisition_Id: String
+         let timeStamp: String
+         let isPlateIdGenerated: Bool
+         let typeOfBird: String
+         let typeOfBirdId: Int
+         let reviewerId: Int
+         let purposeOfSurveyId: Int
+         let surveyConductedOnId: Int
+         let reasonForVisitId: Int
+     }
+
+     struct EnvSampleHeaderUpdateInfo {
+         let currentDate: String
+         let customerId: String
+         let requisitionType: Int
+         let sessionStatus: Int
+         let locationType: String
+         let locationTypeId: Int
+         let noOfPlates: Int
+         let section: Int
+         let requisitionId: String
+         let timeStamp: String
+         let prevSection: Int
+     }
+
+     struct EnvSamplePlateData {
+         let currentDate: String
+         let customerId: String
+         let requisitionType: Int
+         let sessionStatus: Int
+         let isBacterialChecked: Bool
+         let isMicoscoreChecked: Bool
+         let locationTypeId: Int
+         let locationValueId: Int
+         let plateId: String
+         let row: Int
+         let sampleDescription: String
+         let section: Int
+         let requisitionId: String
+         let timeStamp: String
+         let mediaTypeId: Int
+         let notes: String
+         let samplingMethodTypeId: Int
+     }
+     
+     struct envPlateSampleInfo {
+         let currentDate: String
+         let customerId: String
+         let requisitionType: Int
+         let sessionStatus: Int
+         let isBacterialChecked: Bool
+         let isMicoscoreChecked: Bool
+         let locationTypeId: Int
+         let locationValue: String
+         let plateId: String
+         let row: Int
+         let sampleDescription: String
+         let section: Int
+         let requisitionId: String
+         let timeStamp: String
+         let locationValueId: Int
+         let mediaTypeId: Int
+         let notes: String
+         let samplingMethodTypeId: Int
+     }
+
+     
+
+     struct SampleInfoPlate {
+         var currentdate: String
+         var customerId: String
+         var requisitionType: Int
+         var sessionStatus: Int
+         var isBacterialChecked: Bool
+         var isMicoscoreChecked: Bool
+         var locationTypeId: Int
+         var locationValue: String
+         var plateId: String
+         var row: Int
+         var sampleDescription: String
+         var section: Int
+         var requisition_Id: String
+         var timeStamp: String
+         var locationValueId: Int
+         var mediaTypeValue: String
+         var mediaTypeId: Int
+         var notes: String
+         var samplingMethodTypeValue: String
+         var samplingMethodTypeId: Int
+     }
+
+     struct environmentalSampleInfoPlate {
+         var currentdate: String
+         var customerId: String
+         var requisitionType: Int
+         var sessionStatus: Int
+         var isBacterialChecked: Bool
+         var isMicoscoreChecked: Bool
+         var locationTypeId: Int
+         var locationValue: String
+         var locationValueId: Int
+         var plateId: String
+         var row: Int
+         var sampleDescription: String
+         var section: Int
+         var requisition_Id: String
+         var timeStamp: String
+         var prevSection: Int
+         var mediaTypeValue: String
+         var mediaTypeId: Int
+         var notes: String
+         var samplingMethodTypeId: Int
+         var samplingMethodTypeValue: String
+     }
+  
 }
 
+
+struct CoreDataHandlerPEModels
+{
+    
+    struct refrigeratorData {
+        let id: NSNumber
+        let labelText: String
+        let rollOut: String
+        let unit: String
+        let value: Double
+        let catID: NSNumber
+        let isCheck: Bool
+        let isNA: Bool
+        let schAssmentId: Int
+    }
+    
+    struct offlineRefrigatorData {
+        let id: NSNumber
+        let labelText: String
+        let rollOut: String
+        let unit: String
+        let value: Double
+        let catID: NSNumber
+        let isCheck: Bool
+        let isNA: Bool
+        let schAssmentId: Int
+    }
+    
+    struct RefrigatorDraftData {
+        var id: NSNumber
+        var labelText: String
+        var rollOut: String
+        var unit: String
+        var value: Double
+        var catID: NSNumber
+        var isCheck: Bool
+        var isNA: Bool
+        var schAssmentId: Int
+    }
+
+    struct rejectedRefrigatorData {
+        var id: NSNumber
+        var labelText: String
+        var rollOut: String
+        var unit: String
+        var value: Double
+        var catID: NSNumber
+        var isCheck: Bool
+        var isNA: Bool
+        var schAssmentId: Int
+    }
+
+    struct DraftRefrigerator {
+        var id: Int
+        var labelText: String
+        var rollOut: String
+        var unit: String
+        var value: Double
+        var catID: NSNumber
+        var isCheck: Bool
+        var isNA: Bool
+        var serverAssessmentId: Int
+    }
+    
+    struct updateOfflineRefrigeratorData {
+        var id: Int
+        var labelText: String
+        var rollOut: String
+        var unit: String
+        var value: Double
+        var catID: NSNumber
+        var isCheck: Bool
+        var isNA: Bool
+        var serverAssessmentId: Int
+    }
+
+    struct updateRefrigatorData {
+        let id: Int
+        let labelText: String
+        let rollOut: String
+        let unit: String
+        let value: Double
+        let catID: NSNumber
+        let isCheck: Bool
+        let isNA: Bool
+        let serverAssessmentId: Int
+    }
+
+}
+
+
+struct CoreDataHandlerTurkeyModels
+{
+    struct turkeyfieldStrnVaccination {
+        var type: String
+        var strain: String
+        var route: String
+        var age: String
+        var index: Int
+        var dbArray: NSArray
+        var postingId: NSNumber
+        var vaciProgram: String
+        var sessionId: NSNumber
+        var isSync: Bool
+        var lngId: NSNumber
+    }
+    
+    
+    struct turkyVaccinationData {
+        let type: String
+        let strain: String
+        let route: String
+        let index: Int
+        let dbArray: NSArray
+        let postingId: NSNumber
+        let vaciProgram: String
+        let sessionId: NSNumber
+        let isSync: Bool
+        let lngId: NSNumber
+    }
+
+    
+    struct turkeySettingsSkeletaData {
+        let strObservationField: String
+        let visibilityCheck: Bool
+        let quicklinks: Bool
+        let strInformation: String
+        let index: Int
+        let dbArray: NSArray
+        let obsId: NSInteger
+        let measure: String
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+        let quicklinkIndex: Int
+    }
+
+    struct updateTurkySkeletaSettings {
+        var strObservationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var strInformation: String
+        var index: Int
+        var dbArray: NSArray
+        var obsId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+    }
+
+    struct turkeyCoccidiosisSettings {
+        var strObservationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var strInformation: String
+        var index: Int
+        var dbArray: NSArray
+        var obsId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+        var quicklinkIndex: Int
+    }
+
+    struct updateCoccidiosisTurkeySettings {
+        let strObservationField: String
+        let visibilityCheck: Bool
+        let quicklinks: Bool
+        let strInformation: String
+        let index: Int
+        let dbArray: NSArray
+        let obsId: NSInteger
+        let measure: String
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+    }
+
+    struct turkeyGITractSettingsData {
+        let observationField: String
+        let visibilityCheck: Bool
+        let quicklinks: Bool
+        let information: String
+        let index: Int
+        let dbArray: NSArray
+        let obsId: NSInteger
+        let measure: String
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+        let quicklinkIndex: Int
+    }
+    struct updateGITractSettingsData {
+        let observationField: String
+        let visibilityCheck: Bool
+        let quicklinks: Bool
+        let information: String
+        let index: Int
+        let dbArray: NSArray
+        let obsId: NSInteger
+        let measure: String
+        let isSync: Bool
+        let lngId: NSNumber
+        let refId: NSNumber
+    }
+
+    struct turkeyRespiratorySettings {
+        var observationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var information: String
+        var index: Int
+        var dbArray: NSArray
+        var observationId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+        var quicklinkIndex: Int
+    }
+
+    struct turkeyRespiratorySettingsUpdate {
+        var observationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var information: String
+        var index: Int
+        var dbArray: NSArray
+        var observationId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+    }
+
+    struct turkeyImmuneSettings {
+        var observationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var information: String
+        var index: Int
+        var dbArray: NSArray
+        var observationId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+        var quicklinkIndex: Int
+    }
+    
+    struct ImmuneSettingsUpdate {
+        var observationField: String
+        var visibilityCheck: Bool
+        var quicklinks: Bool
+        var information: String
+        var index: Int
+        var dbArray: NSArray
+        var observationId: NSInteger
+        var measure: String
+        var isSync: Bool
+        var lngId: NSNumber
+        var refId: NSNumber
+    }
+
+
+    
+    
+}
 

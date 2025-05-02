@@ -556,7 +556,6 @@ extension PELandingPoupViewController {
         
         let AmpulePerbag = inoDicIS["AmpulePerbag"] as? Int ?? 0
         let HatcheryAntibiotics =  inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
-        let ManufacturerId = inoDicIS["ManufacturerId"] as? Int ?? 0
         let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
         let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
         var VManufacturerName = ""
@@ -874,12 +873,12 @@ extension PELandingPoupViewController {
                 let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
                 let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
                 let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                if peNewAssessmentWas.selectedTSRID != 0 {
-                    if visitIDArray.contains(peNewAssessmentWas.selectedTSRID) {
+                if peNewAssessmentWas.selectedTSRID != 0,
+                   visitIDArray.contains(peNewAssessmentWas.selectedTSRID) {
                         let indexOfe =  visitIDArray.index(of: peNewAssessmentWas.selectedTSRID)
                         let TSRName = visitNameArray[indexOfe] as? String ?? ""
                         peNewAssessmentWas.selectedTSR =  TSRName
-                    }
+                    
                 }
                 peNewAssessmentWas.evaluatorName = objDic["UserName"] as? String ?? ""
                 peNewAssessmentWas.evaluatorID =  objDic["UserId"] as? Int ?? 0

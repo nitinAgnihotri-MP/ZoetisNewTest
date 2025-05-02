@@ -831,7 +831,6 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        let currentString: NSString = textField.text! as NSString
         var result = true
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
@@ -1061,7 +1060,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                 switch response.result{
                 case let .success(value):
                  
-                    if let arr = value as? NSArray {
+                    if value is NSArray {
                             let arr : NSArray = value as! NSArray
                           
                             UserDefaults.standard.set("Yes", forKey: "Success")
@@ -1258,7 +1257,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         if WebClass.sharedInstance.connected() {
          
             var id =  UserDefaults.standard.value(forKey: "Id") as! Int
-            let  lngId = UserDefaults.standard.integer(forKey: "lngId")
+            lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
             let url = "PostingSession/TurkeyGetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!

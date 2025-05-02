@@ -2537,148 +2537,105 @@ extension PEViewStartNewAssesmentINT{
     }
     
     // MARK: - Calculate Images Count
-    func CalculateImageCount(){
-        
+    func CalculateImageCount() {
         let sNumber = peNewAssessment.dataToSubmitNumber ?? 0
         let dNumber = peNewAssessment.draftNumber ?? 0
-        var  getOfflineArray : [PENewAssessment] = []
-        var  getDraftArray : [PENewAssessment] = []
+        var getOfflineArray: [PENewAssessment] = []
+        var getDraftArray: [PENewAssessment] = []
         if sNumber != 0 {
-            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id:peNewAssessment.dataToSubmitID ?? "" )
+            getOfflineArray = CoreDataHandlerPE().getOfflineAssessmentArray(id: peNewAssessment.dataToSubmitID ?? "")
             CoreDataHandlerPE().updateOfflineStatus(assessment: peNewAssessment)
         }
         if dNumber != 0 {
-            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id:peNewAssessment.draftNumber ?? 0)
+            getDraftArray = CoreDataHandlerPE().getDraftAssessmentArray(id: peNewAssessment.draftNumber ?? 0)
         }
         callRequest4Int = 0
-        
         totalImageToSync = []
-        
-        if getOfflineArray.count > 0 {
-            var carColIdArray : [Int] = []
-            var catArray : [PENewAssessment] = []
-            var catAllRowArray : [PENewAssessment] = []
-            for cat in getOfflineArray {
-                if !carColIdArray.contains(cat.sequenceNo ?? 0){
-                    carColIdArray.append(cat.sequenceNo ?? 0)
-                    catArray.append(cat)
-                }
-            }
-            for objCt in catArray{
-                let catArrayForTableIs = CoreDataHandlerPE().fetchCustomerForSyncWithCatID(objCt.sequenceNo as NSNumber? ?? 0,dataToSubmitNumber:peNewAssessment.dataToSubmitNumber as NSNumber? ?? 0) as? [PENewAssessment] ?? []
-                
-                catAllRowArray.append(contentsOf: catArrayForTableIs)
-            }
-            var tempArr : [JSONDictionary]  = []
-            var comntArray : [JSONDictionary]  = []
-            var imgArray : [JSONDictionary]  = []
-            
-            for objCtIs in catAllRowArray {
-                let json = createSyncRequestForScore(dictArray: objCtIs)
-                let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
-                for i in objCtIs.images{
-                    let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) as? Bool ?? false
-                    if status {
-                        debugPrint(status)
-                    } else {
-                        let jsonIMages = createSyncRequestForImage(dictArray: objCtIs,img:i)
-                        imgArray.append(jsonIMages)
-                    }
-                }
-                tempArr.append(json)
-                comntArray.append(jsonComment)
-            }
-            var arrayCount  = 0
-            var imgDic :  [JSONDictionary] = []
-            
-            if imgArray.count > 3 {
-                for objimgr in imgArray{
-                    arrayCount  = arrayCount + 1
-                    imgDic.append(objimgr)
-                    if arrayCount == 3  {
-                        let ss  = imgDic as?  [JSONDictionary]  ?? []
-                        var  paramForImages  = ["AssessmentImages":ss] as JSONDictionary
-                        arrayCount  = 0
-                        imgDic.removeAll()
-                        self.callRequest4(paramForImages:paramForImages)
-                    }
-                }
-                if  arrayCount > 0 {
-                    let ss  = imgDic as?  [JSONDictionary]  ?? []
-                    var  paramForImages  = ["AssessmentImages":ss] as JSONDictionary
-                    arrayCount  = 0
-                    imgDic.removeAll()
-                    self.callRequest4(paramForImages:paramForImages)
-                }
-            } else {
-                var  paramForImages  = ["AssessmentImages":imgArray] as JSONDictionary
-                self.callRequest4(paramForImages:paramForImages)
-            }
-            
+        if !getOfflineArray.isEmpty {
+            processAssessmentArray(getOfflineArray, isDraft: false)
         }
-        
-        if getDraftArray.count > 0 {
-            var carColIdArray : [Int] = []
-            var catArray : [PENewAssessment] = []
-            var catAllRowArray : [PENewAssessment] = []
-            for cat in getDraftArray {
-                if !carColIdArray.contains(cat.sequenceNo ?? 0){
-                    carColIdArray.append(cat.sequenceNo ?? 0)
-                    catArray.append(cat)
-                }
+        if !getDraftArray.isEmpty {
+            processAssessmentArray(getDraftArray, isDraft: true)
+        }
+    }
+
+    // Helper 1: Process assessment array (offline or draft)
+    private func processAssessmentArray(_ assessmentArray: [PENewAssessment], isDraft: Bool) {
+        let (catArray, catAllRowArray) = buildCategoryArrays(assessmentArray, isDraft: isDraft)
+        let (tempArr, comntArray, imgArray) = buildSyncArrays(catAllRowArray)
+        sendImageSyncRequests(imgArray)
+    }
+
+    // Helper 2: Build category arrays
+    private func buildCategoryArrays(_ assessmentArray: [PENewAssessment], isDraft: Bool) -> ([PENewAssessment], [PENewAssessment]) {
+        var carColIdArray: [Int] = []
+        var catArray: [PENewAssessment] = []
+        var catAllRowArray: [PENewAssessment] = []
+        for cat in assessmentArray {
+            if !carColIdArray.contains(cat.sequenceNo ?? 0) {
+                carColIdArray.append(cat.sequenceNo ?? 0)
+                catArray.append(cat)
             }
-            for objCt in catArray{
-                var catArrayForTableIs = CoreDataHandlerPE().fetchCustomerForSyncWithCatIDDraft(objCt.sequenceNo as NSNumber? ?? 0,draftNumber:peNewAssessment.draftNumber as? NSNumber ?? 0) as? [PENewAssessment] ?? []
-                
-                catAllRowArray.append(contentsOf: catArrayForTableIs)
-            }
-            var tempArr : [JSONDictionary]  = []
-            var comntArray : [JSONDictionary]  = []
-            var imgArray : [JSONDictionary]  = []
-            
-            for objCtIs in catAllRowArray {
-                let json = createSyncRequestForScore(dictArray: objCtIs)
-                let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
-                for i in objCtIs.images{
-                    let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) as? Bool ?? false
-                    if status {
-                        debugPrint("full images synced")
-                    } else {
-                        let jsonIMages = createSyncRequestForImage(dictArray: objCtIs,img:i)
-                        imgArray.append(jsonIMages)
-                    }
-                }
-                tempArr.append(json)
-                comntArray.append(jsonComment)
-                
-            }
-            var arrayCount  = 0
-            var imgDic :  [JSONDictionary] = []
-            
-            if imgArray.count > 3 {
-                for objimgr in imgArray{
-                    arrayCount  = arrayCount + 1
-                    imgDic.append(objimgr)
-                    if arrayCount == 3  {
-                        let ss  = imgDic as?  [JSONDictionary]  ?? []
-                        var  paramForImages  = ["AssessmentImages":ss] as JSONDictionary
-                        arrayCount  = 0
-                        imgDic.removeAll()
-                        self.callRequest4(paramForImages:paramForImages)
-                    }
-                }
-                if  arrayCount > 0 {
-                    let ss  = imgDic as?  [JSONDictionary]  ?? []
-                    var  paramForImages  = ["AssessmentImages":ss] as JSONDictionary
-                    arrayCount  = 0
-                    imgDic.removeAll()
-                    self.callRequest4(paramForImages:paramForImages)
-                }
+        }
+        for objCt in catArray {
+            let catArrayForTableIs: [PENewAssessment]
+            if isDraft {
+                catArrayForTableIs = CoreDataHandlerPE().fetchCustomerForSyncWithCatIDDraft(objCt.sequenceNo as NSNumber? ?? 0, draftNumber: peNewAssessment.draftNumber as? NSNumber ?? 0) as? [PENewAssessment] ?? []
             } else {
-                var  paramForImages  = ["AssessmentImages":imgArray] as JSONDictionary
-                self.callRequest4(paramForImages:paramForImages)
+                catArrayForTableIs = CoreDataHandlerPE().fetchCustomerForSyncWithCatID(objCt.sequenceNo as NSNumber? ?? 0, dataToSubmitNumber: peNewAssessment.dataToSubmitNumber as NSNumber? ?? 0) as? [PENewAssessment] ?? []
             }
-            
+            catAllRowArray.append(contentsOf: catArrayForTableIs)
+        }
+        return (catArray, catAllRowArray)
+    }
+
+    // Helper 3: Build sync arrays (score, comment, image)
+    private func buildSyncArrays(_ catAllRowArray: [PENewAssessment]) -> ([JSONDictionary], [JSONDictionary], [JSONDictionary]) {
+        var tempArr: [JSONDictionary] = []
+        var comntArray: [JSONDictionary] = []
+        var imgArray: [JSONDictionary] = []
+        for objCtIs in catAllRowArray {
+            let json = createSyncRequestForScore(dictArray: objCtIs)
+            let jsonComment = createSyncRequestForComment(dictArray: objCtIs)
+            for i in objCtIs.images {
+                let status = CoreDataHandlerPE().imageAlreadySyncStatus(imageId: i) as? Bool ?? false
+                if !status {
+                    let jsonIMages = createSyncRequestForImage(dictArray: objCtIs, img: i)
+                    imgArray.append(jsonIMages)
+                }
+            }
+            tempArr.append(json)
+            comntArray.append(jsonComment)
+        }
+        return (tempArr, comntArray, imgArray)
+    }
+
+    // Helper 4: Send image sync requests in batches of 3
+    private func sendImageSyncRequests(_ imgArray: [JSONDictionary]) {
+        var arrayCount = 0
+        var imgDic: [JSONDictionary] = []
+        if imgArray.count > 3 {
+            for objimgr in imgArray {
+                arrayCount += 1
+                imgDic.append(objimgr)
+                if arrayCount == 3 {
+                    let ss = imgDic
+                    let paramForImages = ["AssessmentImages": ss] as JSONDictionary
+                    arrayCount = 0
+                    imgDic.removeAll()
+                    self.callRequest4(paramForImages: paramForImages)
+                }
+            }
+            if arrayCount > 0 {
+                let ss = imgDic
+                let paramForImages = ["AssessmentImages": ss] as JSONDictionary
+                arrayCount = 0
+                imgDic.removeAll()
+                self.callRequest4(paramForImages: paramForImages)
+            }
+        } else {
+            let paramForImages = ["AssessmentImages": imgArray] as JSONDictionary
+            self.callRequest4(paramForImages: paramForImages)
         }
     }
     // MARK: - Get Offline Assessment From DB

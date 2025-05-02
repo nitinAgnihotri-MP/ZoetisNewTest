@@ -76,50 +76,54 @@ open class TableViewDragger: NSObject {
         targetTableView?.removeGestureRecognizer(longPressGesture)
         targetTableView?.removeGestureRecognizer(panGesture)
     }
-
+    
     func targetIndexPath(_ tableView: UITableView, draggingCell: TableViewDraggerCell) -> IndexPath {
-        let location        = draggingCell.location
-        let offsetY         = (draggingCell.viewHeight / 2) + 2
-        let offsetX         = tableView.center.x
-        let topPoint        = CGPoint(x: offsetX, y: location.y - offsetY)
-        let bottomPoint     = CGPoint(x: offsetX, y: location.y + offsetY)
-        let point           = draggingDirection == .up ? topPoint : bottomPoint
+        let location = draggingCell.location
+        let offsetY = (draggingCell.viewHeight / 2) + 2
+        let offsetX = tableView.center.x
+        let topPoint = CGPoint(x: offsetX, y: location.y - offsetY)
+        let bottomPoint = CGPoint(x: offsetX, y: location.y + offsetY)
+        let point = draggingDirection == .up ? topPoint : bottomPoint
 
         if let targetIndexPath = tableView.indexPathForRow(at: point) {
-            if tableView.cellForRow(at: targetIndexPath) == nil {
-                return draggingCell.dropIndexPath
-            }
-
-            let targetRect = tableView.rectForRow(at: targetIndexPath)
-            let targetCenterY = targetRect.origin.y + (targetRect.height / 2)
-
-            guard let direction = draggingDirection else {
-                return draggingCell.dropIndexPath
-            }
-
-            switch direction {
-            case .up:
-                if (targetCenterY > point.y && draggingCell.dropIndexPath > targetIndexPath) {
-                    return targetIndexPath
-                }
-            case .down:
-                if (targetCenterY < point.y && draggingCell.dropIndexPath < targetIndexPath) {
-                    return targetIndexPath
-                }
-            }
+            return handleTargetIndexPath(tableView, targetIndexPath, point, draggingCell)
         } else {
-            let section = (0..<tableView.numberOfSections).filter { section -> Bool in
-                tableView.rect(forSection: section).contains(point)
-            }.first
+            return handleEmptySection(tableView, point, draggingCell)
+        }
+    }
 
-            if let section = section, tableView.numberOfRows(inSection: section) == 0 {
-                return IndexPath(row: 0, section: section)
+    private func handleTargetIndexPath(_ tableView: UITableView, _ targetIndexPath: IndexPath, _ point: CGPoint, _ draggingCell: TableViewDraggerCell) -> IndexPath {
+        if tableView.cellForRow(at: targetIndexPath) == nil {
+            return draggingCell.dropIndexPath
+        }
+        let targetRect = tableView.rectForRow(at: targetIndexPath)
+        let targetCenterY = targetRect.origin.y + (targetRect.height / 2)
+        guard let direction = draggingDirection else {
+            return draggingCell.dropIndexPath
+        }
+        switch direction {
+        case .up:
+            if (targetCenterY > point.y && draggingCell.dropIndexPath > targetIndexPath) {
+                return targetIndexPath
+            }
+        case .down:
+            if (targetCenterY < point.y && draggingCell.dropIndexPath < targetIndexPath) {
+                return targetIndexPath
             }
         }
-
         return draggingCell.dropIndexPath
     }
 
+    private func handleEmptySection(_ tableView: UITableView, _ point: CGPoint, _ draggingCell: TableViewDraggerCell) -> IndexPath {
+        let section = (0..<tableView.numberOfSections).first(where: { section in
+            tableView.rect(forSection: section).contains(point)
+        })
+        if let section = section, tableView.numberOfRows(inSection: section) == 0 {
+            return IndexPath(row: 0, section: section)
+        }
+        return draggingCell.dropIndexPath
+    }
+    
     func dragCell(_ tableView: UITableView, draggingCell: TableViewDraggerCell) {
         let indexPath = targetIndexPath(tableView, draggingCell: draggingCell)
         if draggingCell.dropIndexPath.compare(indexPath) == .orderedSame {

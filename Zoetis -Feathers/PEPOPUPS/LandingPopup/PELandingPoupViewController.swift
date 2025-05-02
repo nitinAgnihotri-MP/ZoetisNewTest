@@ -44,7 +44,6 @@ class PELandingPoupViewController: BaseViewController {
         let customerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Customer")
         let customerNamesArray = customerDetailsArray.value(forKey: "customerName") as? NSArray ?? NSArray()
         let newUserLogin = UserDefaults.standard.bool(forKey: "PENewUserLoginFlag")
-        let cleanSession = UserDefaults.standard.bool(forKey: "PECleanSession")
         let customerId = UserDefaults.standard.integer(forKey: "PE_Selected_Customer_Id")
         
         if fromSyncDel == false {

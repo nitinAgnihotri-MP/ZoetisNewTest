@@ -2007,6 +2007,212 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    fileprivate func handleCellUIActionsAndButtonImages(_ indexPath: IndexPath, _ cell: RefrigatorQuesCell, _ assessment: PE_AssessmentInProgress?) {
+        if(indexPath.section == 0 ) {
+            if(indexPath.row  == 0) {
+                cell.contentView.backgroundColor = .clear
+            } else {
+                cell.contentView.backgroundColor = .white
+            }
+        } else {
+            if(indexPath.row  == 0) {
+                cell.contentView.backgroundColor = .white
+            } else {
+                cell.contentView.backgroundColor = .clear
+            }
+        }
+        
+        if assessment?.camera == 1 {
+            cell.btn_Camera.isEnabled = true
+            cell.btn_Camera.alpha = 1
+        } else {
+            cell.btn_Camera.isEnabled = false
+            cell.btn_Camera.alpha = 0.3
+        }
+        
+        if assessment?.assStatus == 1 {
+            cell.switchClicked(status: true)
+            cell.btn_Switch.setOn(true, animated: false)
+        } else {
+            cell.switchClicked(status: false)
+            cell.btn_Switch.setOn(false, animated: false)
+        }
+        let imageCount = assessment?.images as? [Int]
+        let cnt = imageCount?.count
+        let ttle = String(cnt ?? 0)
+        cell.btn_ImageCount.setTitle(ttle,for: .normal)
+        if ttle == "0"{
+            cell.btn_ImageCount.isHidden = true
+        } else {
+            cell.btn_ImageCount.isHidden = false
+        }
+        
+        let image1 = UIImage(named: Constants.peCommentImageStr)
+        let image2 = UIImage(named: Constants.peCommentSelectedStr)
+        if assessment?.note == "" || assessment?.note == nil {
+            cell.btn_Comment.setImage(image1, for: .normal)
+        } else {
+            cell.btn_Comment.setImage(image2, for: .normal)
+        }
+    }
+    
+    fileprivate func configureCellBtnNAValidations(_ cell: RefrigatorQuesCell, _ assesmentArray: [PE_AssessmentInProgress], _ indexPath: IndexPath, _ assessment: PE_AssessmentInProgress?) {
+        cell.btnNA = {[unowned self] () in
+            var switchisCheck = false
+            let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
+            refrigtorProbeArray = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
+            if(refrigtorProbeArray.count > 0){
+                
+                for refrii in refrigtorProbeArray{
+                    if(refrii.id == assesmentArray[indexPath.row].assID){
+                        if(refrii.isCheck ?? false){
+                            switchisCheck = true
+                        }
+                        else{
+                            switchisCheck = false
+                        }
+                    }
+                }
+            }
+            if(cell.btn_NA.isSelected){
+                if(self.refrigator_Selected_NA_QuestionArray[indexPath.section] == indexPath.row){
+                    self.refrigator_Selected_NA_QuestionArray[indexPath.section] = nil
+                }
+                cell.contentView.alpha = 1
+                cell.btn_Switch.isUserInteractionEnabled = true
+                cell.btn_Info.isUserInteractionEnabled = true
+                cell.btn_Camera.isUserInteractionEnabled = true
+                cell.btn_Comment.isUserInteractionEnabled = true
+                assessment?.isNA = false
+                
+                if(switchisCheck){
+                    if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
+                        CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                    }
+                    else{
+                        CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:  "" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,schAssmentId:  Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
+                        
+                    }
+                }
+                else{
+                    if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
+                        CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                    }
+                    else{
+                        CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:  "" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,schAssmentId:  Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
+                        
+                    }
+                }
+                
+            }
+            else{
+                assessment?.isAllowNA = true
+                self.refrigator_Selected_NA_QuestionArray[indexPath.section] = indexPath.row
+                cell.contentView.alpha = 0.3
+                cell.btn_Switch.isUserInteractionEnabled = false
+                cell.btn_Info.isUserInteractionEnabled = false
+                cell.btn_Camera.isUserInteractionEnabled = false
+                cell.btn_Comment.isUserInteractionEnabled = false
+                assessment?.isNA = true
+                
+                if(switchisCheck){
+                    if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
+                        CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                    }
+                    else{
+                        CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,schAssmentId: Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
+                    }
+                }
+                else{
+                    if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
+                        CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                    }
+                    else{
+                        CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,schAssmentId: Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
+                    }
+                }
+                
+            }
+            cell.btn_NA.isSelected = !cell.btn_NA.isSelected
+            
+            refrigtorProbeArray = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
+        }
+    }
+    
+    fileprivate func configureCellCompletionActions(_ cell: RefrigatorQuesCell, _ indexPath: IndexPath, _ assessment: PE_AssessmentInProgress?) {
+        cell.completion = { [unowned self] (status, error) in
+            DispatchQueue.main.async {
+                self.tableviewIndexPath = indexPath
+                
+                self.tableview.isUserInteractionEnabled = false
+                if status ?? false {
+                    var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
+                    let maxMarks =  assessment?.assMaxScore ?? 0
+                    result = result + Int(truncating: maxMarks)
+                    self.selectedCategory?.catResultMark = result
+                    assessment?.catResultMark = result as NSNumber
+                    self.resultScoreLabel.text = String(result)
+                    assessment?.assStatus = 1
+                    
+                    if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
+                        CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                        
+                    }
+                    else{
+                        CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,schAssmentId: Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
+                    }
+                } else {
+                    var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
+                    let maxMarks = assessment?.assMaxScore ?? 0
+                    result = result - Int(truncating: maxMarks)
+                    self.selectedCategory?.catResultMark = result
+                    assessment?.catResultMark = result as NSNumber
+                    self.resultScoreLabel.text = String(result)
+                    assessment?.assStatus = 0
+                    
+                    if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)) {
+                        CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                    } else {
+                        CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,schAssmentId: Int(self.scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
+                        
+                    }
+                }
+                
+                self.catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(self.selectedCategory?.sequenceNo as? NSNumber ?? 0)
+                self.refreshTableView()
+                self.chechForLastCategory()
+                self.tableview.isUserInteractionEnabled = true
+            }
+            
+        }
+    }
+    
+    fileprivate func configureCommentCompletionActions(_ cell: RefrigatorQuesCell, _ indexPath: IndexPath, _ assessment: PE_AssessmentInProgress?) {
+        cell.commentCompletion = {[unowned self] ( error) in
+            self.tableviewIndexPath = indexPath
+            self.refreshArray()
+            let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
+            let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
+            vc.textOfTextView = assessment?.note ?? ""
+            vc.infoText = assessment?.informationText ?? ""
+            
+            vc.commentCompleted = {[unowned self] ( note) in
+                if note == "" {
+                    let image = UIImage(named: Constants.peCommentImageStr)
+                    cell.btn_Comment.setImage(image, for: .normal)
+                    
+                } else {
+                    let image = UIImage(named: Constants.peCommentSelectedStr)
+                    cell.btn_Comment.setImage(image, for: .normal)
+                    
+                }
+                assessment?.note = note
+                self.updateNoteAssessmentInProgressPE(assessment : assessment!)
+            }
+            self.navigationController?.present(vc, animated: false, completion: nil)
+        }
+    }
+    
     func setUpRerigatorQuesCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> RefrigatorQuesCell {
         var assesmentArray = [PE_AssessmentInProgress]()
         var arrayRefri = [PE_AssessmentInProgress]()
@@ -2034,134 +2240,9 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             }
             cell.lblQuestion.text = assesmentArray[indexPath.row].assDetail1
             
-            if(indexPath.section == 0 ) {
-                if(indexPath.row  == 0) {
-                    cell.contentView.backgroundColor = .clear
-                } else {
-                    cell.contentView.backgroundColor = .white
-                }
-            } else {
-                if(indexPath.row  == 0) {
-                    cell.contentView.backgroundColor = .white
-                } else {
-                    cell.contentView.backgroundColor = .clear
-                }
-            }
+            handleCellUIActionsAndButtonImages(indexPath, cell, assessment)
+            configureCellBtnNAValidations(cell, assesmentArray, indexPath, assessment)
             
-            if assessment?.camera == 1 {
-                cell.btn_Camera.isEnabled = true
-                cell.btn_Camera.alpha = 1
-            } else {
-                cell.btn_Camera.isEnabled = false
-                cell.btn_Camera.alpha = 0.3
-            }
-            
-            if assessment?.assStatus == 1 {
-                cell.switchClicked(status: true)
-                cell.btn_Switch.setOn(true, animated: false)
-            } else {
-                cell.switchClicked(status: false)
-                cell.btn_Switch.setOn(false, animated: false)
-            }
-            let imageCount = assessment?.images as? [Int]
-            let cnt = imageCount?.count
-            let ttle = String(cnt ?? 0)
-            cell.btn_ImageCount.setTitle(ttle,for: .normal)
-            if ttle == "0"{
-                cell.btn_ImageCount.isHidden = true
-            } else {
-                cell.btn_ImageCount.isHidden = false
-            }
-            
-            let image1 = UIImage(named: Constants.peCommentImageStr)
-            let image2 = UIImage(named: Constants.peCommentSelectedStr)
-            if assessment?.note == "" || assessment?.note == nil {
-                cell.btn_Comment.setImage(image1, for: .normal)
-            } else {
-                cell.btn_Comment.setImage(image2, for: .normal)
-            }
-            
-            
-            cell.btnNA  = {[unowned self] () in
-                var switchisCheck = false
-                let refri = catArrayForTableIs[0] as! PE_AssessmentInProgress
-                refrigtorProbeArray = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-                if(refrigtorProbeArray.count > 0){
-                    
-                    for refrii in refrigtorProbeArray{
-                        if(refrii.id == assesmentArray[indexPath.row].assID){
-                            if(refrii.isCheck ?? false){
-                                switchisCheck = true
-                            }
-                            else{
-                                switchisCheck = false
-                            }
-                        }
-                    }
-                }
-                if(cell.btn_NA.isSelected){
-                    if(self.refrigator_Selected_NA_QuestionArray[indexPath.section] == indexPath.row){
-                        self.refrigator_Selected_NA_QuestionArray[indexPath.section] = nil
-                    }
-                    cell.contentView.alpha = 1
-                    cell.btn_Switch.isUserInteractionEnabled = true
-                    cell.btn_Info.isUserInteractionEnabled = true
-                    cell.btn_Camera.isUserInteractionEnabled = true
-                    cell.btn_Comment.isUserInteractionEnabled = true
-                    assessment?.isNA = false
-                    
-                    if(switchisCheck){
-                        if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:  "" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,schAssmentId:  Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
-                            
-                        }
-                    }
-                    else{
-                        if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:  "" , value: 0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,schAssmentId:  Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
-                            
-                        }
-                    }
-                    
-                }
-                else{
-                    assessment?.isAllowNA = true
-                    self.refrigator_Selected_NA_QuestionArray[indexPath.section] = indexPath.row
-                    cell.contentView.alpha = 0.3
-                    cell.btn_Switch.isUserInteractionEnabled = false
-                    cell.btn_Info.isUserInteractionEnabled = false
-                    cell.btn_Camera.isUserInteractionEnabled = false
-                    cell.btn_Comment.isUserInteractionEnabled = false
-                    assessment?.isNA = true
-                    
-                    if(switchisCheck){
-                        if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,schAssmentId: Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                    }
-                    else{
-                        if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ??  "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,schAssmentId: Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                    }
-                    
-                }
-                cell.btn_NA.isSelected = !cell.btn_NA.isSelected
-                
-                refrigtorProbeArray = CoreDataHandlerPE().getREfriData(id: Int(refri.serverAssessmentId ?? "0") ?? 0)
-            }
             cell.cameraCompletion = {[unowned self] ( error) in
                 self.tableviewIndexPath.row = indexPath.row
                 self.tableviewIndexPath.section = indexPath.section
@@ -2176,8 +2257,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 }
             }
             
-            cell.imagesCompletion  = {[unowned self] ( error) in
-                
+            cell.imagesCompletion = {[unowned self] ( error) in
                 let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
                 let vc = storyBoard.instantiateViewController(withIdentifier: "GroupImagesPEViewController") as! GroupImagesPEViewController
                 self.refreshArray()
@@ -2199,75 +2279,8 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                 vc.infotextIs = assessment?.informationText ?? ""
                 self.navigationController?.present(vc, animated: false, completion: nil)
             }
-            cell.completion = { [unowned self] (status, error) in
-                DispatchQueue.main.async {
-                    self.tableviewIndexPath = indexPath
-                    
-                    self.tableview.isUserInteractionEnabled = false
-                    if status ?? false {
-                        var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                        let maxMarks =  assessment?.assMaxScore ?? 0
-                        result = result + Int(truncating: maxMarks)
-                        self.selectedCategory?.catResultMark = result
-                        assessment?.catResultMark = result as NSNumber
-                        self.resultScoreLabel.text = String(result)
-                        assessment?.assStatus = 1
-                        
-                        if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)){
-                            CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                            
-                        }
-                        else{
-                            CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true,schAssmentId: Int(scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                    } else {
-                        var result = Int(self.resultScoreLabel.text ?? "0") ?? 0
-                        let maxMarks = assessment?.assMaxScore ?? 0
-                        result = result - Int(truncating: maxMarks)
-                        self.selectedCategory?.catResultMark = result
-                        assessment?.catResultMark = result as NSNumber
-                        self.resultScoreLabel.text = String(result)
-                        assessment?.assStatus = 0
-                        
-                        if(CoreDataHandlerPE().someEntityExists(id: assessment?.assID as! Int)) {
-                            CoreDataHandlerPE().updateRefrigatorInDB(assessment?.assID as! Int,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: false,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        } else {
-                            CoreDataHandlerPE().saveRefrigatorInDB(assessment?.assID as! NSNumber,  labelText: assessment?.assDetail1 ?? "", rollOut: "Y", unit:"" , value: 0.0,catID: assessment?.catID as! NSNumber,isCheck: false,isNA: true,schAssmentId: Int(self.scheduledAssessment?.serverAssessmentId ?? "0") ?? 0)
-                            
-                        }
-                    }
-                    
-                    self.catArrayForTableIs = CoreDataHandlerPE().fetchCustomerWithCatID(self.selectedCategory?.sequenceNo as? NSNumber ?? 0)
-                    self.refreshTableView()
-                    self.chechForLastCategory()
-                    self.tableview.isUserInteractionEnabled = true
-                }
-                
-            }
-            
-            cell.commentCompletion = {[unowned self] ( error) in
-                self.tableviewIndexPath = indexPath
-                self.refreshArray()
-                let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
-                let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
-                vc.textOfTextView = assessment?.note ?? ""
-                vc.infoText = assessment?.informationText ?? ""
-                
-                vc.commentCompleted = {[unowned self] ( note) in
-                    if note == "" {
-                        let image = UIImage(named: Constants.peCommentImageStr)
-                        cell.btn_Comment.setImage(image, for: .normal)
-                        
-                    } else {
-                        let image = UIImage(named: Constants.peCommentSelectedStr)
-                        cell.btn_Comment.setImage(image, for: .normal)
-                        
-                    }
-                    assessment?.note = note
-                    self.updateNoteAssessmentInProgressPE(assessment : assessment!)
-                }
-                self.navigationController?.present(vc, animated: false, completion: nil)
-            }
+            configureCellCompletionActions(cell, indexPath, assessment)
+            configureCommentCompletionActions(cell, indexPath, assessment)
             return cell
         }
         return UITableViewCell() as! RefrigatorQuesCell
@@ -3240,27 +3253,183 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    fileprivate func configureUnitCompletionAction(_ headerView: SetFrezzerPointCell, _ unitValue: String, _ assessment: PE_AssessmentInProgress?, _ array: NSArray, _ valueText: String) {
+        var assessmentCopy = assessment
+        var valueTextCopy = valueText
+        var unitValueCopy = unitValue
+        
+        headerView.unitCompletion = { sender,txtfld ,textLabel in
+            let unitArray = ["Fahrenheit","Celsius"]
+            if  unitArray.count > 0 {
+                self.dropDownVIewNew(arrayData: unitArray, kWidth: (sender ?? UIButton()).frame.width, kAnchor: sender ?? UIButton(), yheight: (sender ?? UIButton()).bounds.height) {  selectedVal,index  in
+                    txtfld.text = selectedVal
+                    unitValueCopy = txtfld.text ?? ""
+                    if(textLabel == "Frezzer") {
+                        assessmentCopy = array[10] as? PE_AssessmentInProgress
+                        valueTextCopy = headerView.valueTxtFld.text ?? ""
+                    }
+                    
+                    let assID = assessmentCopy?.assID
+                    if(CoreDataHandlerPE().someEntityExists(id: assID as! Int)){
+                        CoreDataHandlerPE().updateRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: unitValueCopy , value: Double(valueTextCopy) ?? 0.0 ,catID: assessmentCopy?.catID as! NSNumber,isCheck: true,isNA: true ,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+                    } else {
+                        CoreDataHandlerPE().saveRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: unitValueCopy , value: Double(valueTextCopy) ?? 0.0,catID: assessmentCopy?.catID as! NSNumber,isCheck: true,isNA: true ,schAssmentId: self.scheduledAssessment?.assID ?? 0 )
+                    }
+                }
+                self.dropHiddenAndShow()
+            }
+        }
+    }
+    
+    fileprivate func configureHeaderValueCompletionAction(_ headerView: SetFrezzerPointCell, _ unitValue: inout String, _ assessment: PE_AssessmentInProgress?, _ array: NSArray, _ valueText: String) {
+        var assessmentCopy = assessment
+        var valueTextCopy = valueText
+        var unitValueCopy = unitValue
+        
+        headerView.valueCompletion = { value , textLabel in
+            if(textLabel == "Frezzer") {
+                unitValueCopy =  headerView.unitTxtFld.text ?? ""
+                assessmentCopy = array[10] as? PE_AssessmentInProgress
+            }
+            valueTextCopy = value?.text ?? ""
+            let assID = assessmentCopy?.assID
+            if(CoreDataHandlerPE().someEntityExists(id: assID as! Int)){
+                CoreDataHandlerPE().updateRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: unitValueCopy , value:  Double(valueTextCopy) ?? 0.0,catID: 1,isCheck: true,isNA: false ,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
+            } else {
+                CoreDataHandlerPE().saveRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: unitValueCopy , value: Double(valueTextCopy) ?? 0.0 ,catID: 1,isCheck: true,isNA: false,schAssmentId: self.scheduledAssessment?.assID ?? 0)
+            }
+        }
+    }
+    
+    fileprivate func handleMinusCompletionAction(_ headerView: PETableviewHeaderFooterView) {
+        headerView.minusCompletion = {[unowned self] ( error) in
+            
+            if self.certificateData.count > 0 {
+                let certificateData =  PECertificateData(id:0,name:"",date:"",isCertExpired: false,isReCert: false,vacOperatorId: 0, signatureImg: "", fsrSign: "")
+                let lastItem = self.certificateData.last
+                
+                self.delVMixerInPEModule(peCertificateData: lastItem ?? certificateData)
+                self.certificateData.removeLast()
+            }
+            if self.certificateData.count > 1 {
+                
+                UIView.performWithoutAnimation {
+                    self.tableview.reloadData()
+                    self.scrollToBottom(section:1)
+                }
+            } else {
+                UIView.performWithoutAnimation {
+                    self.tableview.reloadData()
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleHeaderAddCompletionAction(_ headerView: PETableviewHeaderFooterView) {
+        headerView.addCompletion = {[unowned self] ( error) in
+            
+            let lastItem = self.certificateData.last
+            
+            if (lastItem == nil) || (lastItem?.name != "") {
+                let certificateData =  PECertificateData(id:0,name:"",date:"",isCertExpired: false,isReCert: false,vacOperatorId: 0, signatureImg: "", fsrSign: "")
+                let id = self.saveVMixerInPEModule(peCertificateData: certificateData)
+                certificateData.id = id
+                self.certificateData.append(certificateData)
+            } else {
+                self.showtoast(message: "Please add Vaccine Mixer & Certification Date")
+            }
+            
+            handleDispatchQueueMainReloadTableView()
+        }
+    }
+    
+    fileprivate func configureSectionSequenceAndValidation(_ section: Int, _ tableView: UITableView) -> UIView? {
+        if selectedCategory?.sequenceNoo == 3 {
+            if section == 1 {
+                return self.setCustomerVaccineView(tableView,section: section)
+            } else {
+                return UIView()
+            }
+        }
+        if section == 1 {
+            return self.setPEInovojectHeaderFooterView(tableView, section: section)
+        } else if section == 2 {
+            return self.setPEHeaderDayOfAge(tableView, section: section)
+        } else if section == 3 {
+            return self.setPEHeaderDayOfAgeS(tableView, section: section)
+        } else {
+            return UIView()
+        }
+    }
+    
+    fileprivate func configureCellSelectedCatSequence1(_ section: Int, _ tableView: UITableView) -> UIView? {
+        if section == 1 {
+            
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PETableviewHeaderFooterView" ) as! PETableviewHeaderFooterView
+            headerView.lblTitle.text = "Vaccine Mixer Observer"
+            headerView.lblSubTitle.text = "Crew Information"
+            handleHeaderAddCompletionAction(headerView)
+            handleMinusCompletionAction(headerView)
+            
+            return headerView
+        } else if section == 2 {
+            return self.setPEInovojectHeaderFooterView(tableView, section: section)
+        } else if section == 3 {
+            return self.setPEHeaderDayOfAge(tableView, section: section)
+        } else if section == 4 {
+            return self.setPEHeaderDayOfAgeS(tableView, section: section)
+        } else {
+            return UIView()
+        }
+    }
+    
+    fileprivate func checkForSelectedCategoryAndReturnUI(_ section: Int, _ tableView: UITableView) -> UIView? {
+        if checkForTraning() {
+            if selectedCategory?.sequenceNoo == 1 {
+                return configureCellSelectedCatSequence1(section, tableView)
+            } else if selectedCategory?.sequenceNoo == 3 {
+                if section == 1 {
+                    return self.setCustomerVaccineView(tableView,section: section)
+                } else {
+                    return UIView()
+                }
+            } else {
+                return UIView()
+            }
+        } else {
+            return configureSectionSequenceAndValidation(section, tableView)
+        }
+    }
+    
+    fileprivate func configureRefridgerateProbArray(_ ar: PE_AssessmentInProgress?, _ headerView: SetFrezzerPointCell) {
+        for j in 0..<self.refrigtorProbeArray.count {
+            if(ar?.assID == self.refrigtorProbeArray[j].id) {
+                headerView.unitTxtFld.text  = self.refrigtorProbeArray[j].unit ?? ""
+                if(self.refrigtorProbeArray[j].value != 0.0) {
+                    headerView.valueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
+                }
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if selectedCategory?.sequenceNoo == 12 && section == 0 {
             
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PlateInfoHeader" ) as! PlateInfoHeader
-            if(btnNA.isSelected ){
+            if(btnNA.isSelected) {
                 headerView.contentView.alpha = 0.3
-            }
-            else{
+            } else {
                 headerView.contentView.alpha = 1.0
             }
-            
             return headerView
             
         }
-        if selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == refridFreezerNitro{
-            let array =   CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
+        if selectedCategory?.sequenceNoo == 11 && section == 2 && selectedCategory?.catName == refridFreezerNitro {
+            let array = CoreDataHandlerPE().fetchCustomerWithCatID(selectedCategory?.sequenceNo as? NSNumber ?? 0)
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SetFrezzerPointCell" ) as! SetFrezzerPointCell
-            if(btnNA.isSelected && self.selctedNACategoryArray.contains(78)){
+            if(btnNA.isSelected && self.selctedNACategoryArray.contains(78)) {
                 headerView.contentView.alpha = 0.3
-            }
-            else{
+            } else {
                 headerView.contentView.alpha = 1.0
             }
             headerView.setGraddientAndLayerQcCountextFieldView()
@@ -3268,150 +3437,20 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
             var unitValue = ""
             var valueText = ""
             
-            if(self.refrigtorProbeArray.count > 0){
+            if(self.refrigtorProbeArray.count > 0) {
                 
-                var ar = array[10] as? PE_AssessmentInProgress
-                
-                for j in 0..<self.refrigtorProbeArray.count{
-                    if(ar?.assID == self.refrigtorProbeArray[j].id){
-                        headerView.unitTxtFld.text  = self.refrigtorProbeArray[j].unit ?? ""
-                        if(self.refrigtorProbeArray[j].value != 0.0){
-                            headerView.valueTxtFld.text = "\(self.refrigtorProbeArray[j].value ?? 0.0)"
-                        }
-                    }
-                }
+                let ar = array[10] as? PE_AssessmentInProgress
+                configureRefridgerateProbArray(ar, headerView)
                 unitValue = headerView.unitTxtFld.text ?? ""
                 valueText = headerView.valueTxtFld.text ?? ""
             }
-            
-            
-            headerView.unitCompletion = { sender,txtfld ,textLabel in
-                var unitArray = ["Fahrenheit","Celsius"]
-                if  unitArray.count > 0 {
-                    self.dropDownVIewNew(arrayData: unitArray ?? [], kWidth: (sender ?? UIButton()).frame.width, kAnchor: sender ?? UIButton(), yheight: (sender ?? UIButton()).bounds.height) {  selectedVal,index  in
-                        txtfld.text = selectedVal
-                        unitValue = txtfld.text ?? ""
-                        if(textLabel == "Frezzer"){
-                            assessment = array[10] as? PE_AssessmentInProgress
-                            valueText = headerView.valueTxtFld.text ?? ""
-                        }
-                        
-                        let assID = assessment?.assID
-                        if(CoreDataHandlerPE().someEntityExists(id: assID as! Int)){
-                            CoreDataHandlerPE().updateRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(valueText) ?? 0.0 ,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true ,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                        }
-                        else{
-                            CoreDataHandlerPE().saveRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(valueText) ?? 0.0,catID: assessment?.catID as! NSNumber,isCheck: true,isNA: true ,schAssmentId: self.scheduledAssessment?.assID ?? 0 )
-                        }
-                        
-                    }
-                    self.dropHiddenAndShow()
-                }
-            }
-            
-            headerView.valueCompletion = { value , textLabel in
-                if(textLabel == "Frezzer"){
-                    unitValue =  headerView.unitTxtFld.text ?? ""
-                    assessment = array[10] as? PE_AssessmentInProgress
-                }
-                valueText = value?.text ?? ""
-                let assID = assessment?.assID
-                if(CoreDataHandlerPE().someEntityExists(id: assID as! Int)){
-                    CoreDataHandlerPE().updateRefrigatorInDB(assID as! Int,  labelText: textLabel, rollOut: "Y", unit: unitValue , value:  Double(valueText) ?? 0.0,catID: 1,isCheck: true,isNA: false ,serverAssessmentId: Int( self.selectedCategory?.serverAssessmentId ?? "0") ?? 0)
-                }
-                else{
-                    CoreDataHandlerPE().saveRefrigatorInDB(assID as! NSNumber,  labelText: textLabel, rollOut: "Y", unit: unitValue , value: Double(valueText) ?? 0.0 ,catID: 1,isCheck: true,isNA: false,schAssmentId: self.scheduledAssessment?.assID ?? 0)
-                }
-            }
-            
+            configureUnitCompletionAction(headerView, unitValue, assessment, array, valueText)
+            configureHeaderValueCompletionAction(headerView, &unitValue, assessment, array, valueText)
             return headerView
-            
         }
+        
         if catArrayForTableIs.count > 0 {
-            if checkForTraning(){
-                
-                if selectedCategory?.sequenceNoo == 1 {
-                    if section == 1 {
-                        
-                        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "PETableviewHeaderFooterView" ) as! PETableviewHeaderFooterView
-                        headerView.lblTitle.text = "Vaccine Mixer Observer"
-                        headerView.lblSubTitle.text = "Crew Information"
-                        
-                        headerView.addCompletion = {[unowned self] ( error) in
-                            
-                            let lastItem = self.certificateData.last
-                            
-                            if (lastItem == nil) || (lastItem?.name != "") {
-                                let certificateData =  PECertificateData(id:0,name:"",date:"",isCertExpired: false,isReCert: false,vacOperatorId: 0, signatureImg: "", fsrSign: "")
-                                let id = self.saveVMixerInPEModule(peCertificateData: certificateData)
-                                certificateData.id = id
-                                self.certificateData.append(certificateData)
-                            } else {
-                                self.showtoast(message: "Please add Vaccine Mixer & Certification Date")
-                            }
-                            
-                            handleDispatchQueueMainReloadTableView()
-                        }
-                        headerView.minusCompletion = {[unowned self] ( error) in
-                            
-                            if self.certificateData.count > 0 {
-                                let certificateData =  PECertificateData(id:0,name:"",date:"",isCertExpired: false,isReCert: false,vacOperatorId: 0, signatureImg: "", fsrSign: "")
-                                let lastItem = self.certificateData.last
-                                
-                                self.delVMixerInPEModule(peCertificateData: lastItem ?? certificateData)
-                                self.certificateData.removeLast()
-                            }
-                            if self.certificateData.count > 1 {
- 
-                                UIView.performWithoutAnimation {
-                                    self.tableview.reloadData()
-                                    self.scrollToBottom(section:1)
-                                }
-                            } else {
-                                UIView.performWithoutAnimation {
-                                    self.tableview.reloadData()
-                                }
-                            }
-                        }
-                        
-                        return headerView
-                    }
-                    else if section == 2 {
-                        return self.setPEInovojectHeaderFooterView(tableView, section: section)
-                    }
-                    else if section == 3 {
-                        return self.setPEHeaderDayOfAge(tableView, section: section)
-                    }
-                    else if section == 4 {
-                        return self.setPEHeaderDayOfAgeS(tableView, section: section)
-                    }
-                } else if selectedCategory?.sequenceNoo == 3 {
-                    if section == 1 {
-                        return self.setCustomerVaccineView(tableView,section: section)
-                        
-                    } else {
-                        return UIView()
-                    }
-                }
-                
-            } else {
-                if selectedCategory?.sequenceNoo == 3 {
-                    if section == 1 {
-                        return self.setCustomerVaccineView(tableView,section: section)
-                    } else {
-                        return UIView()
-                    }
-                }
-                if section == 1 {
-                    return self.setPEInovojectHeaderFooterView(tableView, section: section)
-                } else if section == 2 {
-                    return self.setPEHeaderDayOfAge(tableView, section: section)
-                } else if section == 3 {
-                    return self.setPEHeaderDayOfAgeS(tableView, section: section)
-                 } else {
-                    return UIView()
-                }
-            }
+            return checkForSelectedCategoryAndReturnUI(section, tableView)
         }
         
         return UIView()
@@ -3538,7 +3577,7 @@ extension PEAssesmentFinalize: UITableViewDelegate, UITableViewDataSource{
                         CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: self.peNewAssessment)
                     }
                     self.dropHiddenAndShow()
-                }                
+                }
             }
             headerView.cSizeCompletion = {[unowned self] ( error) in
                 let bagSizeDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BagSizes")
@@ -4306,9 +4345,8 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
     
     // MARK: - Field validation check
     
-    func validateForm() -> Bool {
-        
-        if showExtendedPE{
+    private func checkhowExtendedPlateAndCheckSanitationQuesArr() -> Bool? {
+        if showExtendedPE {
             var hasEmptyPlateType = true
             for question in sanitationQuesArr{
                 if question.plateTypeId == nil || question.plateTypeId == "" || question.plateTypeId == "0"{
@@ -4329,63 +4367,67 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 return false
             }
         }
-        if !(self.peNewAssessment.evaluationName?.contains("Non"))! ?? false {
-            if self.inovojectData.count > 0 {
-                //self.inovojectData[indexPath.row].name
-                let countt = self.inovojectData[0].name?.count ?? 0
-                if countt < 1 {
-                    if regionID == 3 {
-                        showAlertForNoValid()
-                    } else {
-                        showAlertForNoValid()
-                        return false
-                    }
-                    
-                } else {
-                    if regionID == 3,strings.contains(peaseEnterVacDet) {
-                        strings = strings.filter { $0 != peaseEnterVacDet
-                        }
-                    }
-                }
-                
-                for inovo in self.inovojectData {
-                    let switchAnti = inovo.invoHatchAntibiotic
-                    let txtAnti = inovo.invoHatchAntibioticText
-                    if (switchAnti == 1) && (txtAnti == ""){
-                        if regionID == 3 {
-                            showAlertForAntibiotic()
-                        } else {
-                            showAlertForAntibiotic()
-                            return false
-                        }
-                    }
-                }
-                if (self.peNewAssessment.hatcheryAntibioticsDoa == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaText == ""){
-                    if regionID == 3 {
-                        showAlertForAntibiotic()
-                    } else {
-                        showAlertForAntibiotic()
-                        return false
-                    }
-                    
-                }
-                if (self.peNewAssessment.hatcheryAntibioticsDoaS == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaSText == ""){
-                    if regionID == 3 {
-                        showAlertForAntibiotic()
-                    } else {
-                        showAlertForAntibiotic()
-                        return false
-                    }
-                }
+        return nil
+    }
+    
+    private func validateFormRefactor() -> Bool? {
+        let countt = self.inovojectData[0].name?.count ?? 0
+        if countt < 1 {
+            if regionID == 3 {
+                showAlertForNoValid()
             } else {
+                showAlertForNoValid()
+                return false
+            }
+            
+        } else {
+            if regionID == 3,strings.contains(peaseEnterVacDet) {
+                strings = strings.filter { $0 != peaseEnterVacDet
+                }
+            }
+        }
+        return nil
+    }
+    
+    private func validateFormRefactor2() -> Bool? {
+        for inovo in self.inovojectData {
+            let switchAnti = inovo.invoHatchAntibiotic
+            let txtAnti = inovo.invoHatchAntibioticText
+            if (switchAnti == 1) && (txtAnti == ""){
                 if regionID == 3 {
-                    showAlertForNoValid()
-                 } else {
-                    showAlertForNoValid()
+                    showAlertForAntibiotic()
+                } else {
+                    showAlertForAntibiotic()
                     return false
                 }
             }
         }
+        return nil
+    }
+    
+    private func validateFormRefactor3() -> Bool? {
+        if (self.peNewAssessment.hatcheryAntibioticsDoa == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaText == ""){
+            if regionID == 3 {
+                showAlertForAntibiotic()
+            } else {
+                showAlertForAntibiotic()
+                return false
+            }
+            
+        }
+        if (self.peNewAssessment.hatcheryAntibioticsDoaS == 1) && (self.peNewAssessment.hatcheryAntibioticsDoaSText == ""){
+            if regionID == 3 {
+                showAlertForAntibiotic()
+            } else {
+                showAlertForAntibiotic()
+                return false
+            }
+        }
+        
+        return nil
+    }
+    
+    private func validateFormRefactor4() -> Bool? {
         if self.checkForTraning() && !(self.peNewAssessment.evaluationName?.contains("Non"))! {
             if self.certificateData.count > 0 {
                 let countt = self.certificateData[0].name?.count ?? 0
@@ -4404,86 +4446,162 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
                 showAlertForNoValidTrainingName()
             }
         }
-        if self.checkForTraning()  {
-            if regionID == 3
-            {
-                if(self.peNewAssessment.frequency?.count ?? 0 < 1){
-                    
-                    if regionID == 3 {
-                        if(self.peNewAssessment.evaluationID == 1){
-                            showAlertForNoFrequency()
-                        }
-                    }
-                    else {
-                        if(self.peNewAssessment.evaluationID == 1){
-                            showAlertForNoFrequency()
-                            return false
-                        }
-                    }
-                    
-                 } else {
-                    if strings.contains(Constants.pleaseEnterFrequencyDet) {
-                        strings = strings.filter { $0 != Constants.pleaseEnterFrequencyDet }
-                    }
-                }
-                if(self.peNewAssessment.personName?.count ?? 0 < 1){
-                    if regionID == 3 {
-                        if(self.peNewAssessment.evaluationID == 1){
-                            showAlertForNoPersonName()
-                        }
-                    }
-                    else {
-                        if(self.peNewAssessment.evaluationID == 1){
-                            showAlertForNoPersonName()
-                            return false
-                        }
-                    }
-                 } else {
-                    if strings.contains(Constants.pleaseEnterPersonName) {
-                        strings = strings.filter { $0 != Constants.pleaseEnterPersonName }
-                    }
-                }
-            }
-            if self.peNewAssessment.qcCount?.count ?? 0 < 1 {
-                
-                if regionID == 3,(self.peNewAssessment.evaluationID == 1) {
-                    showAlertForNoQCCount()
-                } else {
-                    if(self.peNewAssessment.evaluationID == 1) {
-                        showAlertForNoQCCount()
-                        return false
-                    }
-                }
-                
-            } else if self.peNewAssessment.qcCount?.count ?? 0 > 1,regionID == 3,strings.contains(Constants.pleaseEnterQCount) {
-                strings = strings.filter { $0 != Constants.pleaseEnterQCount
-                }
-            }
+        
+        return nil
+    }
+    
+    private func validateForRefactor5() -> Bool? {
+        if(self.peNewAssessment.frequency?.count ?? 0 < 1) {
+            
             if regionID == 3 {
-                if self.peNewAssessment.ppmValue?.count ?? 0 < 1,(self.peNewAssessment.evaluationID == 1) {
-                    showAlertForPPMValue()
-                } else {
-                    if (self.peNewAssessment.evaluationID == 1),strings.contains(Constants.pleaseEnterPPM) {
-                        strings = strings.filter { $0 != Constants.pleaseEnterPPM
-                        }
-                    }
+                if(self.peNewAssessment.evaluationID == 1) {
+                    showAlertForNoFrequency()
+                }
+            } else {
+                if(self.peNewAssessment.evaluationID == 1) {
+                    showAlertForNoFrequency()
+                    return false
                 }
             }
             
-            if self.peNewAssessment.ampmValue?.count ?? 0 < 1 {
-                
-                if regionID == 3 {
-                    showAlertForNoAMPMValue()
-                 } else {
-                    showAlertForNoAMPMValue()
+         } else {
+            if strings.contains(Constants.pleaseEnterFrequencyDet) {
+                strings = strings.filter { $0 != Constants.pleaseEnterFrequencyDet }
+            }
+        }
+        
+        return nil
+    }
+    
+    private func validateFormRefactor6() -> Bool? {
+        if(self.peNewAssessment.personName?.count ?? 0 < 1) {
+            if regionID == 3 {
+                if(self.peNewAssessment.evaluationID == 1) {
+                    showAlertForNoPersonName()
+                }
+            } else {
+                if(self.peNewAssessment.evaluationID == 1) {
+                    showAlertForNoPersonName()
                     return false
                 }
-                
-            }else
-            {
-                if strings.contains(Constants.pleaseEnterAMPM) {
-                    strings = strings.filter { $0 != Constants.pleaseEnterAMPM }
+            }
+         } else {
+            if strings.contains(Constants.pleaseEnterPersonName) {
+                strings = strings.filter { $0 != Constants.pleaseEnterPersonName }
+            }
+        }
+        
+        return nil
+    }
+    
+    private func validatFormRefactor7() -> Bool? {
+        if regionID == 3 {
+            if let status = validateForRefactor5() {
+                return status
+            }
+            
+            if let status = validateFormRefactor6() {
+                return status
+            }
+        }
+        if self.peNewAssessment.qcCount?.count ?? 0 < 1 {
+            
+            if regionID == 3,(self.peNewAssessment.evaluationID == 1) {
+                showAlertForNoQCCount()
+            } else {
+                if(self.peNewAssessment.evaluationID == 1) {
+                    showAlertForNoQCCount()
+                    return false
                 }
+            }
+        } else if self.peNewAssessment.qcCount?.count ?? 0 > 1,regionID == 3,strings.contains(Constants.pleaseEnterQCount) {
+            strings = strings.filter { $0 != Constants.pleaseEnterQCount
+            }
+        }
+        
+        return nil
+    }
+    
+    private func validateFormRefactor8() -> Bool? {
+        if regionID == 3 {
+            if self.peNewAssessment.ppmValue?.count ?? 0 < 1,(self.peNewAssessment.evaluationID == 1) {
+                showAlertForPPMValue()
+            } else {
+                if (self.peNewAssessment.evaluationID == 1),strings.contains(Constants.pleaseEnterPPM) {
+                    strings = strings.filter { $0 != Constants.pleaseEnterPPM
+                    }
+                }
+            }
+        }
+        
+        if self.peNewAssessment.ampmValue?.count ?? 0 < 1 {
+            
+            if regionID == 3 {
+                showAlertForNoAMPMValue()
+             } else {
+                showAlertForNoAMPMValue()
+                return false
+            }
+            
+        } else {
+            if strings.contains(Constants.pleaseEnterAMPM) {
+                strings = strings.filter { $0 != Constants.pleaseEnterAMPM }
+            }
+        }
+        
+        return nil
+    }
+    
+    private func validateFormRefactor9() -> Bool? {
+        if self.inovojectData.count > 0 {
+            
+            if let status = validateFormRefactor() {
+                return status
+            }
+            
+            if let status = validateFormRefactor2() {
+                return status
+            }
+            
+            if let status = validateFormRefactor3() {
+                return status
+            }
+        } else {
+            if regionID == 3 {
+                showAlertForNoValid()
+             } else {
+                showAlertForNoValid()
+                return false
+            }
+        }
+        
+        return nil
+    }
+    
+    func validateForm() -> Bool {
+        
+        if let status = checkhowExtendedPlateAndCheckSanitationQuesArr() {
+            return status
+        }
+        
+        if !(self.peNewAssessment.evaluationName?.contains("Non"))! ?? false {
+            if let status = validateFormRefactor9() {
+                return status
+            }
+        }
+        
+        if let status = validateFormRefactor4() {
+            return status
+        }
+        
+        if self.checkForTraning() {
+            
+            if let status = validatFormRefactor7() {
+                return status
+            }
+            
+            if let status = validateFormRefactor8() {
+                return status
             }
         }
         
@@ -4496,12 +4614,10 @@ extension PEAssesmentFinalize : UICollectionViewDelegate, UICollectionViewDataSo
         
         let firstDate = formatter.date(from:peNewAssessment.evaluationDate ?? "")
         let secondDate = Date()
-        if firstDate?.compare(secondDate) == .orderedDescending{
-            
+        if firstDate?.compare(secondDate) == .orderedDescending {
             displayAlertMessage(userMessage: "Submission of  future assessments is restricted")
             SanitationEmbrexQuestionMasterDAO.sharedInstance.deleteExisitingData(entityName: "PE_ExtendedPEAssessmentQuestions", predicate: NSPredicate(format: "userId = %@ AND assessmentId = %@", UserContext.sharedInstance.userDetailsObj?.userId ?? "", peNewAssessment.serverAssessmentId ?? ""))
             return false
-            
         }
         
         return true
@@ -4566,8 +4682,8 @@ extension PEAssesmentFinalize{
     func showAlertForCommentMandatory(){
         let errorMSg = "Please enter the Comment before submitting the assessment in Extended Microbial."
         let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -4583,8 +4699,8 @@ extension PEAssesmentFinalize{
         } else {
             let errorMSg = "Please enter Antibiotic in the Vaccine Preparation Tab."
             let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -4595,8 +4711,8 @@ extension PEAssesmentFinalize{
         
         let errorMSg = "Please enter the certification details before submitting the assessment in Extended Microbial."
         let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -4606,8 +4722,8 @@ extension PEAssesmentFinalize{
         
         let errorMSg = "Please enter the certification details before submitting the assessment."
         let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
@@ -4625,8 +4741,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = Constants.pleaseEnterAMPM
             let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -4647,8 +4763,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = Constants.pleaseEnterPPM
             let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -4668,8 +4784,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = Constants.pleaseEnterPersonName
             let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -4689,8 +4805,8 @@ extension PEAssesmentFinalize{
             
             let errorMSg = Constants.pleaseEnterFrequencyDet
             let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -4712,8 +4828,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = Constants.pleaseEnterQCount
             let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -4733,8 +4849,8 @@ extension PEAssesmentFinalize{
         else{
             let errorMSg = pleaseEnterVaccineMixer
             let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) 
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) 
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -4745,7 +4861,7 @@ extension PEAssesmentFinalize{
         let errorMSg = "Reached maximum limit of images for this question."
         let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg, preferredStyle: .alert)
         
-        let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel) 
+        let cancelAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }

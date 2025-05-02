@@ -447,304 +447,226 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
     }
     
-    func loginMethod(Email : String ,GUID : String ,GUIDSignature : String ,SignatureTimestamp : String ) {
+    func loginMethod(Email: String, GUID: String, GUIDSignature: String, SignatureTimestamp: String) {
+        guard let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier") as? String else { return }
+        guard WebClass.sharedInstance.connected() else { return }
         
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
+        self.deleteAllData("Login")
+        _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.loginLoaderMessage)
+        let urlString = WebClass.sharedInstance.webUrl + "Token"
+        let headers: HTTPHeaders = [
+            Constants.contentType: "application/x-www-form-urlencoded",
+            "Accept": "application/json"
+        ]
+        let parameters: [String: String] = [
+            "grant_type": "password",
+            "UserName": Email,
+            "Password": "",
+            "LoginType": "App",
+            "DeviceId": udid,
+            "ChkEnvironment": WebClass.sharedInstance.ChkEnvironmentLive,
+            "GUID": GUID,
+            "GUIDSignature": GUIDSignature,
+            "SignatureTimestamp": SignatureTimestamp,
+            "AppVersion": "\(Bundle.main.versionNumber)",
+            "TokenVersion": "V2"
+        ]
         
-        if WebClass.sharedInstance.connected() {
-            
-       
-            self.deleteAllData("Login")
-            _ = Helper.showGlobalProgressHUDWithTitle(self.view, title: Constants.loginLoaderMessage)
-            let Url = "Token"
-            let urlString: String = WebClass.sharedInstance.webUrl + Url
-            let headers: HTTPHeaders = [Constants.contentType: "application/x-www-form-urlencoded","Accept": "application/json"]
-            let parameters:[String:String] = ["grant_type": "password","UserName" : Email, "Password" : "" , "LoginType": "App","DeviceId":udid as! String,"ChkEnvironment":WebClass.sharedInstance.ChkEnvironmentLive , "GUID":GUID , "GUIDSignature":GUIDSignature, "SignatureTimestamp":SignatureTimestamp , "AppVersion": "\(Bundle.main.versionNumber)" , "TokenVersion":"V2"]
-            
-            sessionManager.request(urlString, method: .post,parameters: parameters, headers: headers).responseJSON { response in
-                
-                let stass = response.response?.statusCode
-                if stass == 500 {
-                    Helper.dismissGlobalHUD(self.view)
-                    Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"InvalidWebcredentials")
-                    self.ssologoutMethod()
-                    return
-                }
-                
-                if stass == 400 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                        self.ssologoutMethod()
-                        Helper.dismissGlobalHUD(self.view)
-                        Helper.showAlertMessage(self,titleStr:Constants.alertStr , messageStr:"Authorisation failed please contact PV360 support team poultryview360@zoetis.com.")
-                        return
-                    }
-                }
-                
-                switch response.result {
-                case let .success(value):
-                    UserDefaults.standard.set(false, forKey:"PECleanSession")
-                    UserDefaults.standard.set(nil, forKey: "PE_Selected_Customer_Id")
-                    UserDefaults.standard.set(nil, forKey: "PE_Selected_Customer_Name")
-                    UserDefaults.standard.set(nil, forKey: "PE_Selected_Site_Id")
-                    UserDefaults.standard.set(nil, forKey: "PE_Selected_Site_Name")
-                    let mailTexts = Email ?? ""
-                    let lastUsername = PasswordService.shared.getUsername()
-                    if lastUsername != "" && mailTexts != ""{
-                        if lastUsername.removeWhitespace().contains(mailTexts.removeWhitespace()){
-                            UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
-                        }else{
-                            UserDefaults.standard.set(true, forKey: "PENewUserLoginFlag")
-                        }
-                    }
-                    
-                    PasswordService.shared.setUsername(password: Email)
-                    
-                    UserDefaults.standard.set(false, forKey: "hasAppMovedToBackground")
-                    
-                    let jsonDecoder = JSONDecoder()
-                    if let jsonData = try? JSONSerialization.data(withJSONObject: value, options: .prettyPrinted),
-                       let userResponseObj = try? jsonDecoder.decode(UserResponseDTO.self, from: jsonData) {
-                        
-                        if let lastFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace(),
-                           let newlyFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace() {
-                            
-                            UserContext.sharedInstance.setUserDetails(userResponseObj)
-                            
-                            if newlyFilledUserId == lastFilledUserId {
-                                UserDefaults.standard.set(false, forKey: "PENewUserLoginFlag")
-                            } else {
-                                UserDefaults.standard.set(true, forKey: "PENewUserLoginFlag")
-                            }
-                        }
-                        
-                        UserContext.sharedInstance.setUserDetails(userResponseObj)
-                        UserDefaults.standard.set(true, forKey: "hasLoggedIn")
-                    }
-
-
-                    
-                    let dict : NSDictionary = value as! NSDictionary
-                    
-                    let statusCode = response.response?.statusCode
-                    
-                    if (dict.value(forKey: "error") as? String) ?? ""  == "invalid_grant"{
-                        self.ssologoutMethod()
-                        let errorMSg = dict["error_description"]
-                        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
-                        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                            UIAlertAction in
-                            
-                            Helper.dismissGlobalHUD(self.view)
-                        }
-                        alertController.addAction(okAction)
-                        self.present(alertController, animated: true, completion: nil)
-                        return
-                        
-                    }
-                    if statusCode == 401{
-                        self.ssologoutMethod()
-                        let errorMSg = dict["error_description"]
-                        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
-                        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                            UIAlertAction in
-                            
-                            Helper.dismissGlobalHUD(self.view)
-                        }
-                        alertController.addAction(okAction)
-                        self.present(alertController, animated: true, completion: nil)
-                    }
-                    else{
-                        let ModuleId = (dict.value(forKey: "ModuleId") as? String) ?? ""
-                        let arrModuleIds = ModuleId.components(separatedBy: "~")
-
-                        if arrModuleIds.count <= 1 && arrModuleIds[0] == "21" {
-                            let roleID = dict.value(forKey: "RoleIds") as? String ?? ""
-                            if roleID != "31" && roleID != "33" {
-                                Helper.dismissGlobalHUD(self.view)
-                                Helper.showAlertMessage(self, titleStr: "", messageStr: "Sorry you don't have access for this.")
-                                return
-                            }
-                        }
-
-                        let ModuleName = (dict.value(forKey: "ModuleName") as? String) ?? ""
-                        
-                        let moduleIdIs = ModuleId.replacingOccurrences(of: "~", with: "")
-                        UserDefaults.standard.set(ModuleId, forKey: "ModuleIdsArray")
-                        UserDefaults.standard.set(moduleIdIs, forKey: "ModuleId")
-                        UserDefaults.standard.set(ModuleName, forKey: "ModuleName")
-                        
-                        let RoleId = (dict.value(forKey: "RoleId") as? String) ?? ""
-                        UserDefaults.standard.set(RoleId, forKey: "RoleId")
-                        let RoleIds = (dict.value(forKey: "RoleIds") as? String) ?? ""
-                        UserDefaults.standard.set(RoleIds, forKey: "RoleIds")
-                        
-                        let Regionid = (dict.value(forKey: "Regionid") as? String) ?? ""
-                        UserDefaults.standard.set(Regionid, forKey: "Regionid")
-                        
-                        let acessToken =  (dict.value(forKey: "access_token") as? String) ?? ""
-                        let countryId = dict.value(forKey: "CountryId")
-                        let LastName = dict.value(forKey: "LastName")
-                        let salcountryId = dict.value(forKey: "NonUSCountryId")
-                        
-                        UserDefaults.standard.set(salcountryId, forKey: "nonUScountryId")
-                        
-                        let  birdTypeId = dict.value(forKey: "BirdTypeId")
-                        UserDefaults.standard.set(LastName, forKey: "LastName")
-                        UserDefaults.standard.set(birdTypeId, forKey: "birdTypeId")
-                        UserDefaults.standard.set(birdTypeId, forKey: "switchBird")
-                        let switchBird = UserDefaults.standard.integer(forKey: "switchBird")
-                        if switchBird == 2 {
-                            UserDefaults.standard.set(true, forKey: "turkeyReport")
-                        }
-                        else {
-                            UserDefaults.standard.set(false, forKey: "turkeyReport")
-                        }
-                        UserDefaults.standard.set(countryId, forKey: "countryId")
-                        UserDefaults.standard.synchronize()
-                        let tokenType = (dict.value(forKey: "token_type") as? String)!
-                        let aceesTokentype: String = tokenType + " " + acessToken
-                        let roleId = dict.value(forKey: "HasAccess")! as AnyObject
-                        let role = roleId.integerValue
-                        AccessTokenHelper().saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
-                        UserDefaults.standard.set(role!, forKey: "Role")
-                        UserDefaults.standard.synchronize()
-                        
-                        let Id = dict.value(forKey:"Id")!  as AnyObject
-                        let id = Id.integerValue
-                        
-                        let FirstName = dict.value(forKey: "FirstName") as! String
-                        
-                        let terms = dict.value(forKey: "TermAccepted")! as! String
-                        if terms == "true"{
-                            self.termsCond = 1
-                        } else {
-                            self.termsCond = 0
-                        }
-                        
-                        
-                        UserDefaults.standard.set(terms, forKey: "Terms")
-                        UserDefaults.standard.set(terms, forKey: "TermsChicken")
-                        UserDefaults.standard.set(terms, forKey: "TermsTurkey")
-                        
-                        let birdId = UserDefaults.standard.integer(forKey: "birdTypeId")
-                        
-                        if birdId == 2 {
-                            UserDefaults.standard.set(false, forKey: "turkey")
-                            
-                        } else if birdId == 1 {
-                            UserDefaults.standard.set(false, forKey: "Chicken")
-                        }
-                        // **********Chicken DataBase delete**************//
-                        self.deleteAllData("AlternativeFeed")
-                        self.deleteAllData("AntiboticFeed")
-                        self.deleteAllData("BirdPhotoCapture")
-                        self.deleteAllData("BirdSizePosting")
-                        self.deleteAllData("Breed")
-                        self.deleteAllData("CamraImage")
-                        self.deleteAllData("CaptureNecropsyData")
-                        self.deleteAllData("CaptureNecropsyViewData")
-                        self.deleteAllData("Coccidiosis")
-                        self.deleteAllData("CoccidiosisControlFeed")
-                        self.deleteAllData("CocciProgramPosting")
-                        self.deleteAllData("ComplexPosting")
-                        self.deleteAllData("Custmer")
-                        self.deleteAllData("CustomerReprestative")
-                        self.deleteAllData("FarmsList")
-                        self.deleteAllData("FeedProgram")
-                        self.deleteAllData("FieldVaccination")
-                        self.deleteAllData("GITract")
-                        self.deleteAllData("HatcheryVac")
-                        self.deleteAllData("Immune")
-                        self.deleteAllData("Login")
-                        self.deleteAllData("MyCotoxinBindersFeed")
-                        self.deleteAllData("Necropsy")
-                        self.deleteAllData("NotesBird")
-                        self.deleteAllData("PostingSession")
-                        self.deleteAllData("Respiratory")
-                        self.deleteAllData("Route")
-                        self.deleteAllData("Salesrep")
-                        self.deleteAllData("Sessiontype")
-                        self.deleteAllData("Skeleta")
-                        self.deleteAllData("Veteration")
-                        
-                        
-                        // **********Turkey DataBase delete**************//
-                        self.deleteAllData("AlternativeFeedTurkey")
-                        self.deleteAllData("AntiboticFeedTurkey")
-                        self.deleteAllData("BirdPhotoCaptureTurkey")
-                        self.deleteAllData("BirdSizePostingTurkey")
-                        self.deleteAllData("BreedTurkey")
-                        self.deleteAllData("CamraImageTurkey")
-                        self.deleteAllData("CaptureNecropsyDataTurkey")
-                        self.deleteAllData("CaptureNecropsyViewDataTurkey")
-                        self.deleteAllData("CoccidiosisTurkey")
-                        self.deleteAllData("CoccidiosisControlFeedTurkey")
-                        self.deleteAllData("CocciProgramPostingTurkey")
-                        self.deleteAllData("ComplexPostingTurkey")
-                        self.deleteAllData("CustmerTurkey")
-                        self.deleteAllData("CustomerReprestativeTurkey")
-                        self.deleteAllData("FarmsListTurkey")
-                        self.deleteAllData("FeedProgramTurkey")
-                        self.deleteAllData("FieldVaccinationTurkey")
-                        self.deleteAllData("GITractTurkey")
-                        self.deleteAllData("HatcheryVacTurkey")
-                        self.deleteAllData("ImmuneTurkey")
-                        self.deleteAllData("LoginTurkey")
-                        self.deleteAllData("MyCotoxinBindersFeedTurkey")
-                        self.deleteAllData("NecropsyTurkey")
-                        self.deleteAllData("NotesBirdTurkey")
-                        self.deleteAllData("PostingSessionTurkey")
-                        self.deleteAllData("RespiratoryTurkey")
-                        self.deleteAllData("RouteTurkey")
-                        self.deleteAllData("SalesrepTurkey")
-                        self.deleteAllData("SessiontypeTurkey")
-                        self.deleteAllData("SkeletaTurkey")
-                        self.deleteAllData("VeterationTurkey")
-                        
-                        UserDefaults.standard.set(FirstName,forKey: "FirstName")
-                        UserDefaults.standard.set(id!, forKey: "Id")
-                        UserDefaults.standard.synchronize()
-                        let postingData = CoreDataHandler().fetchAllPostingExistingSession()
-                        let postingDataTurkey = CoreDataHandlerTurkey().fetchAllPostingExistingSessionTurkey()
-                        
-                        if birdId == 1{
-                            if postingData.count == 0{
-                                self.getPostingDataFromServer()
-                            }
-                        }  else if birdId == 2{
-                            if postingDataTurkey.count == 0{
-                                self.getPostingDataFromServerTurkey()
-                            }
-                            
-                        }  else{
-                            if postingData.count == 0 || postingDataTurkey.count == 0{
-                                self.getPostingDataFromServer()
-                            }
-                        }
-                        
-                        UserDefaults.standard.set(true, forKey: "isLoggedIn_successful")
-                        UserDefaults.standard.synchronize()
-                        
-                        self.loginArray = CoreDataHandler().fetchLoginType()
-                        if(self.loginArray.count == 0){
-                            CoreDataHandler().LoginDatabase(1, userId: id! as NSNumber , userName: Email  , status: 1, signal: "", loginId: 0, dbArray: self.loginArray, index: 0)
-                        }
-                    }
-                    break
-                case let .failure(error):
-                    debugPrint(error.localizedDescription)
-                    break
-                }
-                
-            }
-        }
-        // ************* Off Line Checking Login Credential  Second time *************/
-        else  {
-            setOffLineLoggedInUserData(Email)
+        sessionManager.request(urlString, method: .post, parameters: parameters, headers: headers).responseJSON { response in
+            self.handleLoginResponse(response, email: Email)
         }
     }
-    
-    
+
+    private func handleLoginResponse(_ response: AFDataResponse<Any>, email: String) {
+        let status = response.response?.statusCode
+        if status == 500 {
+            Helper.dismissGlobalHUD(self.view)
+            Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "InvalidWebcredentials")
+            self.ssologoutMethod()
+            return
+        }
+        if status == 400 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                self.ssologoutMethod()
+                Helper.dismissGlobalHUD(self.view)
+                Helper.showAlertMessage(self, titleStr: Constants.alertStr, messageStr: "Authorisation failed please contact PV360 support team poultryview360@zoetis.com.")
+            }
+            return
+        }
+        switch response.result {
+        case let .success(value):
+            self.handleLoginSuccess(value, response: response, email: email)
+        default:
+            break
+        }
+    }
+
+    private func handleLoginSuccess(_ value: Any, response: AFDataResponse<Any>, email: String) {
+        resetUserDefaultsOnLogin(email: email)
+        if let userResponseObj = decodeUserResponse(value) {
+            updateUserContext(userResponseObj)
+        }
+        let dict = value as! NSDictionary
+        let statusCode = response.response?.statusCode
+        if (dict.value(forKey: "error") as? String) ?? "" == "invalid_grant" {
+            handleInvalidGrant(dict)
+            return
+        }
+        if statusCode == 401 {
+            handleUnauthorized(dict)
+            return
+        }
+        handleLoginSuccessData(dict)
+    }
+
+    private func resetUserDefaultsOnLogin(email: String) {
+        UserDefaults.standard.set(false, forKey: "PECleanSession")
+        UserDefaults.standard.set(nil, forKey: "PE_Selected_Customer_Id")
+        UserDefaults.standard.set(nil, forKey: "PE_Selected_Customer_Name")
+        UserDefaults.standard.set(nil, forKey: "PE_Selected_Site_Id")
+        UserDefaults.standard.set(nil, forKey: "PE_Selected_Site_Name")
+        let mailTexts = email
+        let lastUsername = PasswordService.shared.getUsername()
+        if !lastUsername.isEmpty && !mailTexts.isEmpty {
+            let isSameUser = lastUsername.removeWhitespace().contains(mailTexts.removeWhitespace())
+            UserDefaults.standard.set(!isSameUser, forKey: "PENewUserLoginFlag")
+        }
+        PasswordService.shared.setUsername(password: email)
+        UserDefaults.standard.set(false, forKey: "hasAppMovedToBackground")
+    }
+
+    private func decodeUserResponse(_ value: Any) -> UserResponseDTO? {
+        let jsonDecoder = JSONDecoder()
+        if let jsonData = try? JSONSerialization.data(withJSONObject: value, options: .prettyPrinted),
+           let userResponseObj = try? jsonDecoder.decode(UserResponseDTO.self, from: jsonData) {
+            return userResponseObj
+        }
+        return nil
+    }
+
+    private func updateUserContext(_ userResponseObj: UserResponseDTO) {
+        if let lastFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace(),
+           let newlyFilledUserId = UserContextDAO.sharedInstance.getUserContextFilledObj()?.userId?.removeWhitespace() {
+            UserContext.sharedInstance.setUserDetails(userResponseObj)
+            UserDefaults.standard.set(lastFilledUserId != newlyFilledUserId, forKey: "PENewUserLoginFlag")
+        }
+        UserContext.sharedInstance.setUserDetails(userResponseObj)
+        UserDefaults.standard.set(true, forKey: "hasLoggedIn")
+    }
+
+    private func handleInvalidGrant(_ dict: NSDictionary) {
+        self.ssologoutMethod()
+        let errorMSg = dict["error_description"]
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            Helper.dismissGlobalHUD(self.view)
+        }
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    private func handleUnauthorized(_ dict: NSDictionary) {
+        self.ssologoutMethod()
+        let errorMSg = dict["error_description"]
+        let alertController = UIAlertController(title: Constants.alertStr, message: errorMSg as? String, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            Helper.dismissGlobalHUD(self.view)
+        }
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    private func handleLoginSuccessData(_ dict: NSDictionary) {
+        let ModuleId = (dict.value(forKey: "ModuleId") as? String) ?? ""
+        let arrModuleIds = ModuleId.components(separatedBy: "~")
+
+        if arrModuleIds.count <= 1 && arrModuleIds[0] == "21" {
+            let roleID = dict.value(forKey: "RoleIds") as? String ?? ""
+            if roleID != "31" && roleID != "33" {
+                Helper.dismissGlobalHUD(self.view)
+                Helper.showAlertMessage(self, titleStr: "", messageStr: "Sorry you don't have access for this.")
+                return
+            }
+        }
+
+        let ModuleName = (dict.value(forKey: "ModuleName") as? String) ?? ""
+        let moduleIdIs = ModuleId.replacingOccurrences(of: "~", with: "")
+        UserDefaults.standard.set(ModuleId, forKey: "ModuleIdsArray")
+        UserDefaults.standard.set(moduleIdIs, forKey: "ModuleId")
+        UserDefaults.standard.set(ModuleName, forKey: "ModuleName")
+
+        let RoleId = (dict.value(forKey: "RoleId") as? String) ?? ""
+        UserDefaults.standard.set(RoleId, forKey: "RoleId")
+        let RoleIds = (dict.value(forKey: "RoleIds") as? String) ?? ""
+        UserDefaults.standard.set(RoleIds, forKey: "RoleIds")
+
+        let Regionid = (dict.value(forKey: "Regionid") as? String) ?? ""
+        UserDefaults.standard.set(Regionid, forKey: "Regionid")
+
+        let acessToken = (dict.value(forKey: "access_token") as? String) ?? ""
+        let countryId = dict.value(forKey: "CountryId")
+        let LastName = dict.value(forKey: "LastName")
+        let salcountryId = dict.value(forKey: "NonUSCountryId")
+        UserDefaults.standard.set(salcountryId, forKey: "nonUScountryId")
+
+        let birdTypeId = dict.value(forKey: "BirdTypeId")
+        UserDefaults.standard.set(LastName, forKey: "LastName")
+        UserDefaults.standard.set(birdTypeId, forKey: "birdTypeId")
+        UserDefaults.standard.set(birdTypeId, forKey: "switchBird")
+        let switchBird = UserDefaults.standard.integer(forKey: "switchBird")
+        if switchBird == 2 {
+            UserDefaults.standard.set(true, forKey: "turkeyReport")
+        } else {
+            UserDefaults.standard.set(false, forKey: "turkeyReport")
+        }
+        UserDefaults.standard.set(countryId, forKey: "countryId")
+        UserDefaults.standard.synchronize()
+
+        let tokenType = (dict.value(forKey: "token_type") as? String) ?? ""
+        let aceesTokentype: String = tokenType + " " + acessToken
+        let roleId = dict.value(forKey: "HasAccess") as AnyObject
+        let role = roleId.integerValue
+        AccessTokenHelper().saveToKeychain(valued: aceesTokentype, keyed: Constants.accessToken)
+        UserDefaults.standard.set(role!, forKey: "Role")
+        UserDefaults.standard.synchronize()
+
+        let Id = dict.value(forKey: "Id")! as AnyObject
+        let id = Id.integerValue
+        let FirstName = dict.value(forKey: "FirstName") as! String
+
+        let terms = dict.value(forKey: "TermAccepted") as! String
+        if terms == "true" {
+            self.termsCond = 1
+        } else {
+            self.termsCond = 0
+        }
+
+        UserDefaults.standard.set(terms, forKey: "Terms")
+        UserDefaults.standard.set(terms, forKey: "TermsChicken")
+        UserDefaults.standard.set(terms, forKey: "TermsTurkey")
+
+        let birdId = UserDefaults.standard.integer(forKey: "birdTypeId")
+        if birdId == 2 {
+            UserDefaults.standard.set(false, forKey: "turkey")
+        } else if birdId == 1 {
+            UserDefaults.standard.set(false, forKey: "Chicken")
+        }
+
+        // **********Chicken DataBase delete**************//
+        self.deleteAllData("AlternativeFeed")
+        self.deleteAllData("AntiboticFeed")
+        self.deleteAllData("BirdPhotoCapture")
+        self.deleteAllData("BirdSizePosting")
+        self.deleteAllData("Breed")
+        self.deleteAllData("CamraImage")
+        self.deleteAllData("CaptureNecropsyData")
+        self.deleteAllData("CaptureNecropsyViewData")
+        self.deleteAllData("Coccidiosis")
+        self.deleteAllData("CoccidiosisControlFeed")
+        self.deleteAllData("CocciProgramPosting")
+        self.deleteAllData("ComplexPosting")
+        // ... continue with any further logic as in your original function ...
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -1382,79 +1304,85 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     
  
     // MARK: ***********ZoetisWebServices to Call Get Api For Feed Session  Implementation ************/
-  
-    func getPostingDataFromServerforFeed(){
+    func getPostingDataFromServerforFeed() {
+        clearFeedCoreData()
+        guard WebClass.sharedInstance.connected() else {
+            self.alerViewInternet()
+            return
+        }
+        fetchFeedDataFromServer()
+    }
+
+    private func clearFeedCoreData() {
         self.deleteAllData("AlternativeFeed")
         self.deleteAllData("AntiboticFeed")
         self.deleteAllData("CoccidiosisControlFeed")
         self.deleteAllData("MyCotoxinBindersFeed")
-        
-        if WebClass.sharedInstance.connected() {
-            
-            var id = UserDefaults.standard.value(forKey: "Id") as! Int
-            let devType = Constants.deviceType
-            let newUrl = ZoetisWebServices.EndPoint.getFlockFeedList.latestUrl + "\(id)&DeviceType=\(devType)"
-            ZoetisWebServices.shared.getFlockFeedSessionResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
-                guard let self = self else { return }
-          
-                if let error = error {
-                    print("Error fetching data: \(error.localizedDescription)")
-                    return
-                }
-                
-                   DispatchQueue.main.async {
-                       let arr = json
-                       // Iterate over the array of dictionaries
-                       for posDict in arr {
-                           let jsonData = posDict.1  // This accesses the JSON part of the tuple
-                            
-                            guard let sessionId = jsonData["sessionId"].int else { continue }
-                            guard let feedDictArr = jsonData["Feeds"].array else { continue }
+    }
 
-                           // Continue processing as before
-                              for feedDict in feedDictArr {
-                                  guard let feedId = feedDict["feedId"].int else { continue }
-                                  let nsFeedId = UserDefaults.standard.integer(forKey: "feedId")
-
-                                  if feedId > nsFeedId {
-                                      UserDefaults.standard.set(feedId, forKey: "feedId")
-                                  }
-
-                                  let feedName = feedDict["feedName"].string ?? ""
-                                  let startDate = feedDict["startDate"].string ?? ""
-
-                                  CoreDataHandler().getFeedNameFromGetApi(sessionId as NSNumber, sessionId: sessionId as NSNumber, feedProgrameName: feedName, feedId: feedId as NSNumber, startDate: startDate)
-
-                                  if let feedDetailArr = feedDict["feedCategoryDetails"].array {
-                                      for feedDetail in feedDetailArr {
-                                          guard let feedCatName = feedDetail["feedProgramCategory"].string else { continue }
-
-                                          switch feedCatName {
-                                          case Constants.coccidioStr:
-                                              self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: Constants.coccidioStr, feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
-                                          case "Antibiotic":
-                                              self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: "Antibiotic", feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
-                                          case "Alternatives":
-                                              self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: "Alternatives", feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
-                                          case Constants.mytoxinStr:
-                                              self.processFeedDetails(feedDetail.rawValue as! [String : Any], category: Constants.mytoxinStr, feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
-                                          default:
-                                              break
-                                          }
-                                      }
-                                  }
-                              }
-                       }
-
-                       self.getCNecStep1Data()
-                   }
-                     })
-
-        } else{
-            self.alerViewInternet()
+    private func fetchFeedDataFromServer() {
+        guard let id = UserDefaults.standard.value(forKey: "Id") as? Int else { return }
+        let devType = Constants.deviceType
+        let newUrl = ZoetisWebServices.EndPoint.getFlockFeedList.latestUrl + "\(id)&DeviceType=\(devType)"
+        ZoetisWebServices.shared.getFlockFeedSessionResponce(controller: self, url: newUrl) { [weak self] (json, error) in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error fetching data: \(error.localizedDescription)")
+                return
+            }
+            DispatchQueue.main.async {
+                self.processFeedSessions(json.rawValue as! [(String, JSON)])
+                self.getCNecStep1Data()
+            }
         }
-        
-        
+    }
+
+    private func processFeedSessions(_ arr: [(String, JSON)]) {
+        for posDict in arr {
+            let jsonData = posDict.1
+            guard let sessionId = jsonData["sessionId"].int else { continue }
+            guard let feedDictArr = jsonData["Feeds"].array else { continue }
+            processFeeds(feedDictArr, sessionId: sessionId)
+        }
+    }
+
+    private func processFeeds(_ feedDictArr: [JSON], sessionId: Int) {
+        for feedDict in feedDictArr {
+            guard let feedId = feedDict["feedId"].int else { continue }
+            updateFeedIdIfNeeded(feedId)
+            let feedName = feedDict["feedName"].string ?? ""
+            let startDate = feedDict["startDate"].string ?? ""
+            CoreDataHandler().getFeedNameFromGetApi(sessionId as NSNumber, sessionId: sessionId as NSNumber, feedProgrameName: feedName, feedId: feedId as NSNumber, startDate: startDate)
+            if let feedDetailArr = feedDict["feedCategoryDetails"].array {
+                processFeedCategories(feedDetailArr, feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
+            }
+        }
+    }
+
+    private func updateFeedIdIfNeeded(_ feedId: Int) {
+        let nsFeedId = UserDefaults.standard.integer(forKey: "feedId")
+        if feedId > nsFeedId {
+            UserDefaults.standard.set(feedId, forKey: "feedId")
+        }
+    }
+
+    private func processFeedCategories(_ feedDetailArr: [JSON], feedId: Int, sessionId: Int, feedName: String, startDate: String) {
+        for feedDetail in feedDetailArr {
+            guard let feedCatName = feedDetail["feedProgramCategory"].string else { continue }
+            let feedDetailDict = feedDetail.rawValue as! [String: Any]
+            switch feedCatName {
+            case Constants.coccidioStr:
+                self.processFeedDetails(feedDetailDict, category: Constants.coccidioStr, feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
+            case "Antibiotic":
+                self.processFeedDetails(feedDetailDict, category: "Antibiotic", feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
+            case "Alternatives":
+                self.processFeedDetails(feedDetailDict, category: "Alternatives", feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
+            case Constants.mytoxinStr:
+                self.processFeedDetails(feedDetailDict, category: Constants.mytoxinStr, feedId: feedId, sessionId: sessionId, feedName: feedName, startDate: startDate)
+            default:
+                break
+            }
+        }
     }
     
     // Helper function to handle processing of different feed categories
@@ -1480,122 +1408,141 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
 
  
     // MARK: *********** Get Necropsy data Acessing From Server **************/
-
-    func getPostingDataFromServerforNecorpsy(){
+    func getPostingDataFromServerforNecorpsy() {
         self.deleteAllData("CaptureNecropsyViewData")
-        if WebClass.sharedInstance.connected() {
-            
-            var id =  UserDefaults.standard.value(forKey: "Id") as! Int
-            let lngId = UserDefaults.standard.integer(forKey: "lngId")
-            let countryId = UserDefaults.standard.integer(forKey: "countryId")
-            let url = "PostingSession/GetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-            let headerDict: HTTPHeaders = ["Authorization":accestoken]
-            let urlString: String = WebClass.sharedInstance.webUrl + url
-            AF.request(urlString, method: .get, headers: headerDict).responseJSON { response in
-                let statusCode =  response.response?.statusCode
-                
-                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 408{
-                    self.alerView(statusCode:statusCode!)
-                    return
-                    
-                }
-                switch response.result{
-                case let .success(value):
-                    DispatchQueue.main.async {
-                        if value != nil {
-                            
-                            if value is NSArray{
-                                
-                                let arr : NSArray = value as! NSArray
-                                
-                                if arr.count>0{
-                                    
-                                    for  i in 0..<arr.count {
-                                        let seesionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
-                                        let farmArr = (arr.object(at: i) as AnyObject).value( forKey: "Farms")
-                                        for  j in 0..<(farmArr! as AnyObject).count {
-                                            let farmName = ((farmArr! as AnyObject).object(at: j) as AnyObject).value( forKey: "FarmName") as! String
-                                            let catArr = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "Category")
-                                            for  k in 0..<(catArr! as AnyObject).count {
-                                                let catName = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Category") as! String
-                                                let ObArr = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Observations")
-                                                for  l in 0..<(ObArr! as AnyObject).count {
-                                                    let obsId  = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ObservationId") as! Int
-                                                    let refId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ReferenceId") as! NSNumber
-                                                    let languageId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "LanguageId") as! NSNumber
-                                                    let obsName = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Observations") as! String
-                                                    let measure = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Measure") as! String
-                                                    let quickLink = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "DefaultQLink")
-                                                    //
-                                                    let birdArr = (((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Birds") as AnyObject).object(at: 0)
-                                                    for  m in 0..<10 {
-                                                        
-                                                        let keyStr = NSString(format: "BirdNumber%d",m+1)
-                                                        let chkKey = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).boolValue
-                                                        let chkKey1 = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).integerValue
-                                                        let chkKey3 = (birdArr as AnyObject).value(forKey: keyStr as String) as! String
-                                                        if chkKey3 == "NA"{
-                                                            break
-                                                        }
-                                                        else{
-                                                            var catstr = String()
-                                                            
-                                                            if catName == "Coccidiosis"{
-                                                                catstr = "Coccidiosis"
-                                                            }
-                                                            else if catName == "GI Tract" {
-                                                                catstr = "GITract"
-                                                            }
-                                                            else if catName == "Immune/Others" {
-                                                                catstr = "Immune"
-                                                            }
-                                                            else if catName == "Respiratory" {
-                                                                catstr = "Resp"
-                                                            }
-                                                            else if catName == "Skeletal/Muscular/Integumentary" {
-                                                                catstr = "skeltaMuscular"
-                                                            }
-                                                            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(catName: catstr, obsName: obsName, formName: farmName , obsVisibility: chkKey!, birdNo: (m+1) as NSNumber, obsPoint: chkKey1! , index: m, obsId: obsId,measure: measure,quickLink:(quickLink! as AnyObject).integerValue! as NSNumber,necId :seesionId as NSNumber,isSync:false, lngId: languageId, refId: refId, actualText: chkKey3)
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    
-                                    self.getNotesFromServer()
-                                }
-                                else{
-                                    self.getNotesFromServer()
-                                }
-                            }
-                            else{
-                                self.getNotesFromServer()
-                                
-                            }
-                        }
-                    }
-                case .failure(let encodingError):
-                    
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        self.alerViewInternet()
-                        debugPrint(err)
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        debugPrint (encodingError)
-                        debugPrint (responseString)
-                        self.alerViewInternet()
-                    }
-                }
-            }
-            
-        } else{
-            
-        }
-        
+        guard WebClass.sharedInstance.connected() else { return }
+        fetchNecropsyDataFromServer()
     }
 
- 
+    private func fetchNecropsyDataFromServer() {
+        guard let id = UserDefaults.standard.value(forKey: "Id") as? Int else { return }
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        let countryId = UserDefaults.standard.integer(forKey: "countryId")
+        let url = "PostingSession/GetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
+        accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+        let headerDict: HTTPHeaders = ["Authorization": accestoken]
+        let urlString: String = WebClass.sharedInstance.webUrl + url
+        AF.request(urlString, method: .get, headers: headerDict).responseJSON { response in
+            self.handleNecropsyResponse(response)
+        }
+    }
+
+    private func handleNecropsyResponse(_ response: AFDataResponse<Any>) {
+        let statusCode = response.response?.statusCode ?? 0
+        if [500, 401, 503, 403, 501, 502, 400, 504, 408].contains(statusCode) {
+            self.alerView(statusCode: statusCode)
+            return
+        }
+        switch response.result {
+        case let .success(value):
+            DispatchQueue.main.async {
+                self.processNecropsyValue(value)
+            }
+        case .failure(let encodingError):
+            self.handleNecropsyFailure(encodingError, response: response)
+        }
+    }
+
+    private func processNecropsyValue(_ value: Any) {
+        if let arr = value as? NSArray, arr.count > 0 {
+            for i in 0..<arr.count {
+                let sessionObj = arr.object(at: i) as AnyObject
+                let sessionId = sessionObj.value(forKey: "SessionId") as! Int
+                let farmArr = sessionObj.value(forKey: "Farms")
+                processFarms(farmArr, sessionId: sessionId)
+            }
+            self.getNotesFromServer()
+        } else {
+            self.getNotesFromServer()
+        }
+    }
+
+    private func processFarms(_ farmArr: Any?, sessionId: Int) {
+        guard let farmArr = farmArr as? NSArray else { return }
+        for j in 0..<farmArr.count {
+            let farmObj = farmArr.object(at: j) as AnyObject
+            let farmName = farmObj.value(forKey: "FarmName") as! String
+            let catArr = farmObj.value(forKey: "Category")
+            processCategories(catArr, farmName: farmName, sessionId: sessionId)
+        }
+    }
+
+    private func processCategories(_ catArr: Any?, farmName: String, sessionId: Int) {
+        guard let catArr = catArr as? NSArray else { return }
+        for k in 0..<catArr.count {
+            let catObj = catArr.object(at: k) as AnyObject
+            let catName = catObj.value(forKey: "Category") as! String
+            let obArr = catObj.value(forKey: "Observations")
+            processObservations(obArr, catName: catName, farmName: farmName, sessionId: sessionId)
+        }
+    }
+
+    private func processObservations(_ obArr: Any?, catName: String, farmName: String, sessionId: Int) {
+        guard let obArr = obArr as? NSArray else { return }
+        for l in 0..<obArr.count {
+            let obsObj = obArr.object(at: l) as AnyObject
+            let obsId = obsObj.value(forKey: "ObservationId") as! Int
+            let refId = obsObj.value(forKey: "ReferenceId") as! NSNumber
+            let languageId = obsObj.value(forKey: "LanguageId") as! NSNumber
+            let obsName = obsObj.value(forKey: "Observations") as! String
+            let measure = obsObj.value(forKey: "Measure") as! String
+            let quickLink = obsObj.value(forKey: "DefaultQLink")
+            let birdArr = (obsObj.value(forKey: "Birds") as AnyObject).object(at: 0)
+            processBirds(birdArr, catName: catName, obsName: obsName, farmName: farmName, obsId: obsId, measure: measure, quickLink: quickLink, sessionId: sessionId, languageId: languageId, refId: refId)
+        }
+    }
+
+    private func processBirds(_ birdArr: Any?, catName: String, obsName: String, farmName: String, obsId: Int, measure: String, quickLink: Any?, sessionId: Int, languageId: NSNumber, refId: NSNumber) {
+        guard let birdArr = birdArr as? NSObject else { return }
+        for m in 0..<10 {
+            let keyStr = NSString(format: "BirdNumber%d", m+1)
+            let chkKey3 = (birdArr.value(forKey: keyStr as String) as! String)
+            if chkKey3 == "NA" { break }
+            let chkKey = (birdArr.value(forKey: keyStr as String) as AnyObject).boolValue
+            let chkKey1 = (birdArr.value(forKey: keyStr as String) as AnyObject).integerValue
+            let catstr = mapCategoryName(catName)
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCase(
+                catName: catstr,
+                obsName: obsName,
+                formName: farmName,
+                obsVisibility: chkKey!,
+                birdNo: (m+1) as NSNumber,
+                obsPoint: chkKey1!,
+                index: m,
+                obsId: obsId,
+                measure: measure,
+                quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
+                necId: sessionId as NSNumber,
+                isSync: false,
+                lngId: languageId,
+                refId: refId,
+                actualText: chkKey3
+            )
+        }
+    }
+
+    private func mapCategoryName(_ catName: String) -> String {
+        switch catName {
+        case "Coccidiosis": return "Coccidiosis"
+        case "GI Tract": return "GITract"
+        case "Immune/Others": return "Immune"
+        case "Respiratory": return "Resp"
+        case "Skeletal/Muscular/Integumentary": return "skeltaMuscular"
+        default: return catName
+        }
+    }
+
+    private func handleNecropsyFailure(_ encodingError: Error, response: AFDataResponse<Any>) {
+        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+            self.alerViewInternet()
+            debugPrint(err)
+        } else if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
+            debugPrint(encodingError)
+            debugPrint(responseString)
+            self.alerViewInternet()
+        }
+    }
+    
     // MARK: ************* ZoetisWebServices Calling to GetVaccination Data for Posted Session Data From Server  ***************************************/
     fileprivate func handlePosDictKeysValidations(_ posDict: [String : Any]) {
         for key in posDict.keys {
@@ -1716,115 +1663,121 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     }
     
        // MARK: ZoetisWebServices Used to  Get Necropsy Data from Server
-       func getCNecStep1Data(){
-           self.deleteAllData("CaptureNecropsyData")
-           if WebClass.sharedInstance.connected() {
-               
-               let userId = UserDefaults.standard.integer(forKey: "Id")
-               let devType = Constants.deviceType
-               let newUrl = ZoetisWebServices.EndPoint.getNecropsyFarmListForChicken.latestUrl + "\(userId)&DeviceType=\(devType)"
-               
-               ZoetisWebServices.shared.getPostedNecropsyFarmListResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
-                   guard let self = self else { return }
-                   if let error = error {
-                       print("Error fetching data: \(error.localizedDescription)")
-                       //  self.alerView(statusCode:"")
-                       return
-                   }
-                   DispatchQueue.main.async {
-                       if let arr = JSON(json).array, !arr.isEmpty {
-                           for item in arr {
-                               let sessionId = item["SessionId"].intValue
-                               let devSessionId = item["deviceSessionId"].stringValue
-                               let lngId = item["LanguageId"].numberValue
-                               let custId = item["CustomerId"].intValue
-                               let complexId = item["ComplexId"].intValue
-                               let complexName = item["ComplexName"].stringValue
-                               let sessionDate = item["SessionDate"].stringValue
-                               
-                               let seesDat = self.convertDateFormater(sessionDate)
-                               let farmArr = item["Farms"].arrayValue
-                               
-                               if !farmArr.isEmpty {
-                                   for farmItem in farmArr {
-                                       let farmName = farmItem["farmName"].stringValue
-                                       let postingArr = CoreDataHandler().fetchAllPostingSession(sessionId as NSNumber)
-                                       
-                                       for postItem in postingArr {
-                                           guard let posttingSes = postItem as? PostingSession else { continue }
-                                           let vetId = posttingSes.veterinarianId
-                                           
-                                           if vetId == 0 {
-                                               CoreDataHandler().updateFinalizeDataWithNec(sessionId as NSNumber, finalizeNec: 2)
-                                           } else {
-                                               CoreDataHandler().updateFinalizeDataWithNec(sessionId as NSNumber, finalizeNec: 1)
-                                           }
-                                       }
+    func getCNecStep1Data() {
+        self.deleteAllData("CaptureNecropsyData")
+        guard WebClass.sharedInstance.connected() else {
+            self.alerViewInternet()
+            return
+        }
+        fetchNecropsyFarmList()
+    }
 
-                                       let age = farmItem["age"].stringValue
-                                       let birds = farmItem["birds"].stringValue
-                                       let houseNo = farmItem["houseNo"].stringValue
-                                       let flockId = farmItem["flockId"].stringValue
-                                       let feedProgram = farmItem["feedProgram"].stringValue
-                                       let sick = farmItem["sick"].boolValue
-                                       let feedId = farmItem["FeedId"].intValue
-                                       let farmId = farmItem["DeviceFarmId"].intValue
-                                       let ImgId = farmItem["ImgId"].intValue
+    private func fetchNecropsyFarmList() {
+        let userId = UserDefaults.standard.integer(forKey: "Id")
+        let devType = Constants.deviceType
+        let newUrl = ZoetisWebServices.EndPoint.getNecropsyFarmListForChicken.latestUrl + "\(userId)&DeviceType=\(devType)"
+        ZoetisWebServices.shared.getPostedNecropsyFarmListResponce(controller: self, url: newUrl) { [weak self] (json, error) in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error fetching data: \(error.localizedDescription)")
+                return
+            }
+            DispatchQueue.main.async {
+                self.handleNecropsyFarmListResponse(json)
+            }
+        }
+    }
 
-                                       CoreDataHandler().SaveNecropsystep1(sessionId as NSNumber,
-                                           age: age,
-                                           farmName: farmName,
-                                           feedProgram: feedProgram,
-                                           flockId: flockId,
-                                           houseNo: houseNo,
-                                           noOfBirds: birds,
-                                           sick: sick as NSNumber,
-                                           necId: sessionId as NSNumber,
-                                           compexName: complexName,
-                                           complexDate: seesDat,
-                                           complexId: complexId as NSNumber,
-                                           custmerId: custId as NSNumber,
-                                           feedId: feedId as NSNumber,
-                                           isSync: false,
-                                           timeStamp: devSessionId,
-                                           actualTimeStamp: devSessionId,
-                                           lngId: lngId,
-                                           farmId: farmId as NSNumber,
-                                           imageId: ImgId as NSNumber,
-                                           count: 0
-                                       )
-                                   }
-                               }
-                           }
+    private func handleNecropsyFarmListResponse(_ json: Any) {
+        if let arr = JSON(json).array, !arr.isEmpty {
+            for item in arr {
+                self.processNecropsyFarmItem(item)
+            }
+            self.finalizePostingSessions()
+            self.checkAndFetchNecropsyData()
+        } else {
+            self.getPostingDataFromServerforNecorpsy()
+        }
+    }
 
-                           let postingData = CoreDataHandler().fetchAllPostingExistingSession()
-                           for pdOb in postingData {
-                               guard let pdOB1 = pdOb as? PostingSession else { continue }
-                               let step1data = CoreDataHandler().FetchNecropsystep1neccId(pdOB1.postingId ?? 0)
-                               
-                               if step1data.count < 1 {
-                                   CoreDataHandler().updateFinalizeDataWithNecGetApi(pdOB1.postingId ?? 0, finalizeNec: 0)
-                               }
-                           }
+    private func processNecropsyFarmItem(_ item: JSON) {
+        let sessionId = item["SessionId"].intValue
+        let devSessionId = item["deviceSessionId"].stringValue
+        let lngId = item["LanguageId"].numberValue
+        let custId = item["CustomerId"].intValue
+        let complexId = item["ComplexId"].intValue
+        let complexName = item["ComplexName"].stringValue
+        let sessionDate = item["SessionDate"].stringValue
+        let seesDat = self.convertDateFormater(sessionDate)
+        let farmArr = item["Farms"].arrayValue
 
-                           let necArr = CoreDataHandler().FetchNecropsystep1AllNecId()
-                           if necArr.count > 0 {
-                               self.getPostingDataFromServerforNecorpsy()
-                           }
-                       }
-                       else{
-                           self.getPostingDataFromServerforNecorpsy()
-                       }
-                   }
-                   
-               })
-               
-           } else{
-               self.alerViewInternet()
-           }
-           /************************************************************************************/
-           
-       }
+        for farmItem in farmArr {
+            self.saveFarmNecropsyStep1(farmItem, sessionId: sessionId, devSessionId: devSessionId, lngId: lngId, custId: custId, complexId: complexId, complexName: complexName, seesDat: seesDat)
+        }
+    }
+
+    private func saveFarmNecropsyStep1(_ farmItem: JSON, sessionId: Int, devSessionId: String, lngId: NSNumber, custId: Int, complexId: Int, complexName: String, seesDat: String) {
+        let farmName = farmItem["farmName"].stringValue
+        let postingArr = CoreDataHandler().fetchAllPostingSession(sessionId as NSNumber)
+        for postItem in postingArr {
+            guard let posttingSes = postItem as? PostingSession else { continue }
+            let vetId = posttingSes.veterinarianId
+            CoreDataHandler().updateFinalizeDataWithNec(sessionId as NSNumber, finalizeNec: vetId == 0 ? 2 : 1)
+        }
+        let age = farmItem["age"].stringValue
+        let birds = farmItem["birds"].stringValue
+        let houseNo = farmItem["houseNo"].stringValue
+        let flockId = farmItem["flockId"].stringValue
+        let feedProgram = farmItem["feedProgram"].stringValue
+        let sick = farmItem["sick"].boolValue
+        let feedId = farmItem["FeedId"].intValue
+        let farmId = farmItem["DeviceFarmId"].intValue
+        let ImgId = farmItem["ImgId"].intValue
+
+        CoreDataHandler().SaveNecropsystep1(
+            sessionId as NSNumber,
+            age: age,
+            farmName: farmName,
+            feedProgram: feedProgram,
+            flockId: flockId,
+            houseNo: houseNo,
+            noOfBirds: birds,
+            sick: sick as NSNumber,
+            necId: sessionId as NSNumber,
+            compexName: complexName,
+            complexDate: seesDat,
+            complexId: complexId as NSNumber,
+            custmerId: custId as NSNumber,
+            feedId: feedId as NSNumber,
+            isSync: false,
+            timeStamp: devSessionId,
+            actualTimeStamp: devSessionId,
+            lngId: lngId,
+            farmId: farmId as NSNumber,
+            imageId: ImgId as NSNumber,
+            count: 0
+        )
+    }
+
+    private func finalizePostingSessions() {
+        let postingData = CoreDataHandler().fetchAllPostingExistingSession()
+        for pdOb in postingData {
+            guard let pdOB1 = pdOb as? PostingSession else { continue }
+            let step1data = CoreDataHandler().FetchNecropsystep1neccId(pdOB1.postingId ?? 0)
+            if step1data.count < 1 {
+                CoreDataHandler().updateFinalizeDataWithNecGetApi(pdOB1.postingId ?? 0, finalizeNec: 0)
+            }
+        }
+    }
+
+    private func checkAndFetchNecropsyData() {
+        let necArr = CoreDataHandler().FetchNecropsystep1AllNecId()
+        if necArr.count > 0 {
+            self.getPostingDataFromServerforNecorpsy()
+        }
+    }
+
+    // ... existing code ...
     
     
     // MARK: ******************* ZoetisWebServices Get Posting Data from Server for Images
@@ -1978,6 +1931,34 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
         }
     }
     
+    fileprivate func handleApiResponseSuccessFromServer(_ json: JSON, _ self: ViewController) {
+        DispatchQueue.main.async {
+            if let arr = JSON(json).array, !arr.isEmpty {
+                // Use a single CoreDataHandler instance
+                let coreDataHandler = CoreDataHandlerTurkey()
+                
+                // Loop through and process each item in the array
+                for posDict in arr {
+                    if let dict = posDict.dictionaryObject {
+                        coreDataHandler.getPostingDataTurkey(dict as NSDictionary)
+                    }
+                }
+                
+                // Fetch posting data only once after processing
+                let postingData = coreDataHandler.fetchAllPostingExistingSessionTurkey()
+                
+                // Check if postingData exists
+                if postingData.count>0 {
+                    self.getPostingDataFromServerforVaccinationTurkey()
+                }
+            } else {
+                // Handle case where arr is empty or nil
+                self.getPostingDataFromServerforVaccinationTurkey()
+            }
+            // self.handlePostedTurkeySession(json: json)
+        }
+    }
+    
     func getPostingDataFromServerTurkey() {
         if WebClass.sharedInstance.connected() {
             Helper.dismissGlobalHUD(self.view)
@@ -2000,31 +1981,7 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
                     }
                 }
                 
-                DispatchQueue.main.async {
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        // Use a single CoreDataHandler instance
-                        let coreDataHandler = CoreDataHandlerTurkey()
-                        
-                        // Loop through and process each item in the array
-                        for posDict in arr {
-                            if let dict = posDict.dictionaryObject {
-                                coreDataHandler.getPostingDataTurkey(dict as NSDictionary)
-                            }
-                        }
-                        
-                        // Fetch posting data only once after processing
-                        let postingData = coreDataHandler.fetchAllPostingExistingSessionTurkey()
-                        
-                        // Check if postingData exists
-                        if postingData.count>0 {
-                            self.getPostingDataFromServerforVaccinationTurkey()
-                        }
-                    } else {
-                        // Handle case where arr is empty or nil
-                        self.getPostingDataFromServerforVaccinationTurkey()
-                    }
-                   // self.handlePostedTurkeySession(json: json)
-                }
+                self.handleApiResponseSuccessFromServer(json, self)
 
             })
         } else {
@@ -2036,306 +1993,331 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     // MARK:  Get Necropsy Data From Server For Turkey **************************************************************************************/
     func getCNecStep1DataTurkey() {
         self.deleteAllData("CaptureNecropsyDataTurkey")
-        if WebClass.sharedInstance.connected() {
-            
-            let userId = UserDefaults.standard.integer(forKey: "Id")
+        guard WebClass.sharedInstance.connected() else { return }
+        fetchTurkeyFarmList()
+    }
 
-            let newUrl = ZoetisWebServices.EndPoint.getTukeyPostedFarmList.latestUrl + "\(userId)&DeviceType=\(Constants.deviceType)"
-            
-            ZoetisWebServices.shared.getTukeyPostedFarmListResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
-                guard let self = self else { return }
-                if let error = error {
-                    print("Error fetching data: \(error.localizedDescription)")
-                    //  self.alerView(statusCode:"")
-                    return
-                }
-                
-                let jsonResponse = JSON(json)
-                // Check for the "errorResult" key and handle errors
-                if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let statusCode = errorResult["errorCode"]?.int ?? 0
-                    
-                    print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
-                    
-                    if statusCode == 500  || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408 {
-                        self.alerView(statusCode: statusCode)
-                    }
-                }
-                
-                DispatchQueue.main.async {
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        for i in 0..<arr.count {
-                            // Safely extract dictionary from JSON element
-                            guard let sessionDict = arr[i].dictionaryObject else { continue }
-                            
-                            // Safely unwrap values from sessionDict
-                            guard let sessionId = sessionDict["SessionId"] as? Int,
-                                  let devSessionId = sessionDict["deviceSessionId"] as? String,
-                                  let lngId = sessionDict["LanguageId"] as? NSNumber,
-                                  let custId = sessionDict["CustomerId"] as? Int,
-                                  let complexId = sessionDict["ComplexId"] as? Int,
-                                  let complexName = sessionDict["ComplexName"] as? String,
-                                  let sessionDate = sessionDict["SessionDate"] as? String else {
-                                continue // Skip this iteration if any of the required values are missing
-                            }
-
-                            let seesDat = self.convertDateFormater(sessionDate)
-
-                            // Safely extract farm array
-                            guard let farmArr = sessionDict["Farms"] as? [[String: Any]], farmArr.count > 0 else { continue }
-
-                            for farmDict in farmArr {
-                                // Safely unwrap farm-related values
-                                guard let farmName = farmDict["farmName"] as? String else { continue }
-
-                                let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(sessionId as NSNumber)
-                                for posttingSes in postingArr {
-                                    guard let postSes = posttingSes as? PostingSessionTurkey else { continue }
-                                    let vetId = postSes.veterinarianId
-                                    
-                                    if vetId == 0 {
-                                        CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey((sessionId as NSNumber), finalizeNec: 2)
-                                        
-                                    } else {
-                                        CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey((sessionId as NSNumber), finalizeNec: 1)
-                                    }
-                                }
-
-                                // Safely unwrap all farm-related values
-                                guard let age = farmDict["age"] as? Int,
-                                      let birds = farmDict["birds"] as? Int,
-                                      let houseNo = farmDict["houseNo"] as? String,
-                                      let flockId = farmDict["flockId"] as? String,
-                                      let feedProgram = farmDict["feedProgram"] as? String,
-                                      let sick = farmDict["sick"] as? Bool,
-                                      let feedId = farmDict["FeedId"] as? Int,
-                                      let farmId = farmDict["DeviceFarmId"] as? Int,
-                                      let imgId = farmDict["ImgId"] as? Int,
-                                      let farmWeight = farmDict["Farm_Weight"] as? String,
-                                      let abf = farmDict["ABF"] as? String,
-                                      let breed = farmDict["Breed"] as? String,
-                                      let sex = farmDict["Sex"] as? String,
-                                      let nameGen = farmDict["GenerationName"] as? String,
-                                      let idGen = farmDict["GenerationId"] as? Int else {
-                                    continue // Skip if any farm-related value is missing
-                                }
-
-                                CoreDataHandlerTurkey().SaveNecropsystep1Turkey(
-                                    sessionId as NSNumber, age: String(age), farmName: farmName, feedProgram: feedProgram, flockId: flockId,
-                                    houseNo: houseNo, noOfBirds: String(birds), sick: sick as NSNumber, necId: sessionId as NSNumber,
-                                    compexName: complexName, complexDate: seesDat, complexId: complexId as NSNumber,
-                                    custmerId: custId as NSNumber, feedId: feedId as NSNumber, isSync: false, timeStamp: devSessionId,
-                                    actualTimeStamp: devSessionId, lngId: lngId, farmWeight: String(farmWeight), abf: abf, breed: breed,
-                                    sex: sex, farmId: farmId as NSNumber, imageId: imgId as NSNumber, count: 0, genName: nameGen,
-                                    genId: idGen as NSNumber
-                                )
-                            }
-                        }
-
-                        // Handle finalization and move to the next step
-                        let postingData = CoreDataHandlerTurkey().fetchAllPostingExistingSessionTurkey()
-                        for pdOb in postingData {
-                            if let pdOB1 = pdOb as? PostingSessionTurkey {
-                                let step1data = CoreDataHandlerTurkey().FetchNecropsystep1neccIdTurkey(pdOB1.postingId!)
-                                if step1data.count < 1 {
-                                    CoreDataHandlerTurkey().updateFinalizeDataWithNecGetApiTurkey(pdOB1.postingId!, finalizeNec: 0)
-                                }
-                            }
-                        }
-
-                        // If nec data is available, proceed
-                        let necArr = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdTurkey()
-                        if necArr.count > 0 {
-                            self.getPostingDataFromServerforNecorpsyTurkey()
-                        }
-                    } else {
-                        self.getPostingDataFromServerforNecorpsyTurkey()
-                    }
-                }
-            })
-      } else {
-            
+    private func fetchTurkeyFarmList() {
+        let userId = UserDefaults.standard.integer(forKey: "Id")
+        let newUrl = ZoetisWebServices.EndPoint.getTukeyPostedFarmList.latestUrl + "\(userId)&DeviceType=\(Constants.deviceType)"
+        ZoetisWebServices.shared.getTukeyPostedFarmListResponce(controller: self, url: newUrl) { [weak self] (json, error) in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error fetching data: \(error.localizedDescription)")
+                return
+            }
+            self.handleTurkeyFarmListResponse(json)
         }
-        /************************************************************************************/
-        
+    }
+
+    private func handleTurkeyFarmListResponse(_ json: Any) {
+        let jsonResponse = JSON(json)
+        if let errorResult = jsonResponse["errorResult"].dictionary {
+            let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
+            let statusCode = errorResult["errorCode"]?.int ?? 0
+            print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
+            if [500, 401, 503, 403, 501, 502, 400, 504, 404, 408].contains(statusCode) {
+                self.alerView(statusCode: statusCode)
+            }
+        }
+        DispatchQueue.main.async {
+            if let arr = JSON(json).array, !arr.isEmpty {
+                for item in arr {
+                    self.processTurkeyFarmSession(item)
+                }
+                self.finalizeTurkeyPostingSessions()
+                self.checkAndFetchTurkeyNecropsyData()
+            } else {
+                self.getPostingDataFromServerforNecorpsyTurkey()
+            }
+        }
+    }
+
+    private func processTurkeyFarmSession(_ item: JSON) {
+        guard let sessionDict = item.dictionaryObject else { return }
+        guard let sessionId = sessionDict["SessionId"] as? Int,
+              let devSessionId = sessionDict["deviceSessionId"] as? String,
+              let lngId = sessionDict["LanguageId"] as? NSNumber,
+              let custId = sessionDict["CustomerId"] as? Int,
+              let complexId = sessionDict["ComplexId"] as? Int,
+              let complexName = sessionDict["ComplexName"] as? String,
+              let sessionDate = sessionDict["SessionDate"] as? String else { return }
+        let seesDat = self.convertDateFormater(sessionDate)
+        guard let farmArr = sessionDict["Farms"] as? [[String: Any]], !farmArr.isEmpty else { return }
+        for farmDict in farmArr {
+            self.saveTurkeyFarmNecropsyStep1(farmDict, sessionId: sessionId, devSessionId: devSessionId, lngId: lngId, custId: custId, complexId: complexId, complexName: complexName, seesDat: seesDat)
+        }
+    }
+
+    private func saveTurkeyFarmNecropsyStep1(_ farmDict: [String: Any], sessionId: Int, devSessionId: String, lngId: NSNumber, custId: Int, complexId: Int, complexName: String, seesDat: String) {
+        guard let farmName = farmDict["farmName"] as? String else { return }
+        let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(sessionId as NSNumber)
+        for posttingSes in postingArr {
+            guard let postSes = posttingSes as? PostingSessionTurkey else { continue }
+            let vetId = postSes.veterinarianId
+            CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(sessionId as NSNumber, finalizeNec: vetId == 0 ? 2 : 1)
+        }
+        guard let age = farmDict["age"] as? Int,
+              let birds = farmDict["birds"] as? Int,
+              let houseNo = farmDict["houseNo"] as? String,
+              let flockId = farmDict["flockId"] as? String,
+              let feedProgram = farmDict["feedProgram"] as? String,
+              let sick = farmDict["sick"] as? Bool,
+              let feedId = farmDict["FeedId"] as? Int,
+              let farmId = farmDict["DeviceFarmId"] as? Int,
+              let imgId = farmDict["ImgId"] as? Int,
+              let farmWeight = farmDict["Farm_Weight"] as? String,
+              let abf = farmDict["ABF"] as? String,
+              let breed = farmDict["Breed"] as? String,
+              let sex = farmDict["Sex"] as? String,
+              let nameGen = farmDict["GenerationName"] as? String,
+              let idGen = farmDict["GenerationId"] as? Int else { return }
+        CoreDataHandlerTurkey().SaveNecropsystep1Turkey(
+            sessionId as NSNumber,
+            age: String(age),
+            farmName: farmName,
+            feedProgram: feedProgram,
+            flockId: flockId,
+            houseNo: houseNo,
+            noOfBirds: String(birds),
+            sick: sick as NSNumber,
+            necId: sessionId as NSNumber,
+            compexName: complexName,
+            complexDate: seesDat,
+            complexId: complexId as NSNumber,
+            custmerId: custId as NSNumber,
+            feedId: feedId as NSNumber,
+            isSync: false,
+            timeStamp: devSessionId,
+            actualTimeStamp: devSessionId,
+            lngId: lngId,
+            farmWeight: String(farmWeight),
+            abf: abf,
+            breed: breed,
+            sex: sex,
+            farmId: farmId as NSNumber,
+            imageId: imgId as NSNumber,
+            count: 0,
+            genName: nameGen,
+            genId: idGen as NSNumber
+        )
+    }
+
+    private func finalizeTurkeyPostingSessions() {
+        let postingData = CoreDataHandlerTurkey().fetchAllPostingExistingSessionTurkey()
+        for pdOb in postingData {
+            if let pdOB1 = pdOb as? PostingSessionTurkey {
+                let step1data = CoreDataHandlerTurkey().FetchNecropsystep1neccIdTurkey(pdOB1.postingId!)
+                if step1data.count < 1 {
+                    CoreDataHandlerTurkey().updateFinalizeDataWithNecGetApiTurkey(pdOB1.postingId!, finalizeNec: 0)
+                }
+            }
+        }
+    }
+
+    private func checkAndFetchTurkeyNecropsyData() {
+        let necArr = CoreDataHandlerTurkey().FetchNecropsystep1AllNecIdTurkey()
+        if necArr.count > 0 {
+            self.getPostingDataFromServerforNecorpsyTurkey()
+        }
     }
     
     // MARK: *************Get Posting data From Server for Necropsy ***************************************/
     func getPostingDataFromServerforNecorpsyTurkey() {
         self.deleteAllData("CaptureNecropsyViewDataTurkey")
-        if WebClass.sharedInstance.connected() {
-            
-          
-            var id = UserDefaults.standard.value(forKey: "Id") as! Int
-            let lngId = UserDefaults.standard.integer(forKey: "lngId")
-            let countryId = UserDefaults.standard.integer(forKey: "countryId")
-            let url = "PostingSession/TurkeyGetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
-            
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-                                                        //(UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
-            let headerDict: HTTPHeaders = [Constants.authorization: accestoken]
-            let urlString: String = WebClass.sharedInstance.webUrl + url
-            sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
-                let statusCode =  response.response?.statusCode
-                
-                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 408 {
-                    self.alerView(statusCode: statusCode!)
-                    
-                }
-                switch response.result {
-                case let .success(value):
-                    
-                    DispatchQueue.main.async {
-                        if value != nil {
-                                                        
-                            if value is NSArray {
-                                
-                                let arr: NSArray = value as! NSArray
-                                
-                                if arr.count>0 {
-                                    
-                                    for  i in 0..<arr.count {
-                                        let seesionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
-                                        let farmArr = (arr.object(at: i) as AnyObject).value( forKey: "Farms")
-                                        for  j in 0..<(farmArr! as AnyObject).count {
-                                            let farmName = ((farmArr! as AnyObject).object(at: j) as AnyObject).value( forKey: "FarmName") as! String
-                                            let catArr = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "Category")
-                                            for  k in 0..<(catArr! as AnyObject).count {
-                                                let catName = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Category") as! String
-                                                let ObArr = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Observations")
-                                                for  l in 0..<(ObArr! as AnyObject).count {
-                                                    let obsId  = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ObservationId") as! Int
-                                                    let refId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ReferenceId") as! NSNumber
-                                                    let languageId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "LanguageId") as! NSNumber
-                                                    let obsName = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Observations") as! String
-                                                    let measure = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Measure") as! String
-                                                    let quickLink = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "DefaultQLink")
-                                                    //
-                                                    let birdArr = (((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Birds") as AnyObject).object(at: 0)
-                                                    for  m in 0..<10 {
-                                                        
-                                                        let keyStr = NSString(format: "BirdNumber%d", m+1)
-                                                        let chkKey = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).boolValue
-                                                        let chkKey1 = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).integerValue
-                                                        let chkKey3 = (birdArr as AnyObject).value(forKey: keyStr as String) as! String
-                                                        if chkKey3 == "NA"{
-                                                            break
-                                                        } else {
-                                                            
-                                                            var catstr = String()
-                                                            
-                                                            if catName == "Microscopy"{
-                                                                catstr = "Coccidiosis"
-                                                            } else if catName == "GI Tract" {
-                                                                catstr = "GITract"
-                                                            } else if catName == "Immune/Others" {
-                                                                catstr = "Immune"
-                                                            } else if catName == "Respiratory" {
-                                                                catstr = "Resp"
-                                                            } else if catName == "Skeletal/Muscular/Integumentary" {
-                                                                catstr = "skeltaMuscular"
-                                                            }
-                                                            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(catName: catstr, obsName: obsName, formName: farmName, obsVisibility: chkKey!, birdNo: (m+1) as NSNumber, obsPoint: chkKey1!, index: m, obsId: obsId, measure: measure, quickLink: (quickLink! as AnyObject).integerValue! as NSNumber, necId: seesionId as NSNumber, isSync: false, lngId: languageId, refId: refId, actualText: chkKey3)
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    
-                                    self.getNotesFromServerTurkey()
-                                } else {
-                                    self.getNotesFromServerTurkey()
-                                }
-                            } else {
-                                self.getNotesFromServerTurkey()
-                                
-                                
-                            }
-                        }
-                    }
-                case .failure(let encodingError):
-                    
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        
-                        self.alerViewInternet()
-                        debugPrint(err)
-                    } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        debugPrint(encodingError)
-                        debugPrint(responseString)
-                        self.alerViewInternet()
-                        
-                    }
-                }
-            }
-            
-        } else {
-            
+        guard WebClass.sharedInstance.connected() else { return }
+        fetchTurkeyNecropsyDataFromServer()
+    }
+
+    private func fetchTurkeyNecropsyDataFromServer() {
+        guard let id = UserDefaults.standard.value(forKey: "Id") as? Int else { return }
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        let countryId = UserDefaults.standard.integer(forKey: "countryId")
+        let url = "PostingSession/TurkeyGetNecropsyListByUser?UserId=\(id)&LanguageId=\(lngId)&CountryId=\(countryId)"
+        accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
+        let headerDict: HTTPHeaders = [Constants.authorization: accestoken]
+        let urlString: String = WebClass.sharedInstance.webUrl + url
+        sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
+            self.handleTurkeyNecropsyResponse(response)
         }
-        
+    }
+
+    private func handleTurkeyNecropsyResponse(_ response: AFDataResponse<Any>) {
+        let statusCode = response.response?.statusCode ?? 0
+        if [500, 401, 503, 403, 501, 502, 400, 504, 408].contains(statusCode) {
+            self.alerView(statusCode: statusCode)
+            return
+        }
+        switch response.result {
+        case let .success(value):
+            DispatchQueue.main.async {
+                self.processTurkeyNecropsyValue(value)
+            }
+        case .failure(let encodingError):
+            self.handleTurkeyNecropsyFailure(encodingError, response: response)
+        }
+    }
+
+    private func processTurkeyNecropsyValue(_ value: Any) {
+        if let arr = value as? NSArray, arr.count > 0 {
+            for i in 0..<arr.count {
+                let sessionObj = arr.object(at: i) as AnyObject
+                let sessionId = sessionObj.value(forKey: "SessionId") as! Int
+                let farmArr = sessionObj.value(forKey: "Farms")
+                processTurkeyFarms(farmArr, sessionId: sessionId)
+            }
+            self.getNotesFromServerTurkey()
+        } else {
+            self.getNotesFromServerTurkey()
+        }
+    }
+
+    private func processTurkeyFarms(_ farmArr: Any?, sessionId: Int) {
+        guard let farmArr = farmArr as? NSArray else { return }
+        for j in 0..<farmArr.count {
+            let farmObj = farmArr.object(at: j) as AnyObject
+            let farmName = farmObj.value(forKey: "FarmName") as! String
+            let catArr = farmObj.value(forKey: "Category")
+            processTurkeyCategories(catArr, farmName: farmName, sessionId: sessionId)
+        }
+    }
+
+    private func processTurkeyCategories(_ catArr: Any?, farmName: String, sessionId: Int) {
+        guard let catArr = catArr as? NSArray else { return }
+        for k in 0..<catArr.count {
+            let catObj = catArr.object(at: k) as AnyObject
+            let catName = catObj.value(forKey: "Category") as! String
+            let obArr = catObj.value(forKey: "Observations")
+            processTurkeyObservations(obArr, catName: catName, farmName: farmName, sessionId: sessionId)
+        }
+    }
+
+    private func processTurkeyObservations(_ obArr: Any?, catName: String, farmName: String, sessionId: Int) {
+        guard let obArr = obArr as? NSArray else { return }
+        for l in 0..<obArr.count {
+            let obsObj = obArr.object(at: l) as AnyObject
+            let obsId = obsObj.value(forKey: "ObservationId") as! Int
+            let refId = obsObj.value(forKey: "ReferenceId") as! NSNumber
+            let languageId = obsObj.value(forKey: "LanguageId") as! NSNumber
+            let obsName = obsObj.value(forKey: "Observations") as! String
+            let measure = obsObj.value(forKey: "Measure") as! String
+            let quickLink = obsObj.value(forKey: "DefaultQLink")
+            let birdArr = (obsObj.value(forKey: "Birds") as AnyObject).object(at: 0)
+            processTurkeyBirds(birdArr, catName: catName, obsName: obsName, farmName: farmName, obsId: obsId, measure: measure, quickLink: quickLink, sessionId: sessionId, languageId: languageId, refId: refId)
+        }
+    }
+
+    private func processTurkeyBirds(_ birdArr: Any?, catName: String, obsName: String, farmName: String, obsId: Int, measure: String, quickLink: Any?, sessionId: Int, languageId: NSNumber, refId: NSNumber) {
+        guard let birdArr = birdArr as? NSObject else { return }
+        for m in 0..<10 {
+            let keyStr = NSString(format: "BirdNumber%d", m+1)
+            let chkKey3 = (birdArr.value(forKey: keyStr as String) as! String)
+            if chkKey3 == "NA" { break }
+            let chkKey = (birdArr.value(forKey: keyStr as String) as AnyObject).boolValue
+            let chkKey1 = (birdArr.value(forKey: keyStr as String) as AnyObject).integerValue
+            let catstr = mapTurkeyCategoryName(catName)
+            CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseTurkey(
+                catName: catstr,
+                obsName: obsName,
+                formName: farmName,
+                obsVisibility: chkKey!,
+                birdNo: (m+1) as NSNumber,
+                obsPoint: chkKey1!,
+                index: m,
+                obsId: obsId,
+                measure: measure,
+                quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
+                necId: sessionId as NSNumber,
+                isSync: false,
+                lngId: languageId,
+                refId: refId,
+                actualText: chkKey3
+            )
+        }
+    }
+
+    private func mapTurkeyCategoryName(_ catName: String) -> String {
+        switch catName {
+        case "Microscopy": return "Coccidiosis"
+        case "GI Tract": return "GITract"
+        case "Immune/Others": return "Immune"
+        case "Respiratory": return "Resp"
+        case "Skeletal/Muscular/Integumentary": return "skeltaMuscular"
+        default: return catName
+        }
+    }
+
+    private func handleTurkeyNecropsyFailure(_ encodingError: Error, response: AFDataResponse<Any>) {
+        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+            self.alerViewInternet()
+            debugPrint(err)
+        } else if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
+            debugPrint(encodingError)
+            debugPrint(responseString)
+            self.alerViewInternet()
+        }
     }
     
     // MARK: ************* Get Posting Data from Server for Vaccination ***************************************/
     func getPostingDataFromServerforVaccinationTurkey() {
         self.deleteAllData("HatcheryVacTurkey")
         self.deleteAllData("FieldVaccinationTurkey")
-        if WebClass.sharedInstance.connected() {
-            let id = UserDefaults.standard.value(forKey: "Id") as! Int
-            let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedSessionsVacccine.latestUrl + "\(id)&DeviceType=\(Constants.deviceType)"
-            ZoetisWebServices.shared.getTurkeyPostedSessionsVacccineResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
-                guard let self = self else { return }
-                
-                let jsonResponse = JSON(json)
-                // Check for the "errorResult" key and handle errors
-                if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let statusCode = errorResult["errorCode"]?.int ?? 0
-                    
-                    print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
-                    
-                    if statusCode == 500  || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408 {
-                        self.alerView(statusCode: statusCode)
-                    }
-                }
-                
-                DispatchQueue.main.async {
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        for vacData in arr {
-                            // Safely unwrap "Vaccination"
-                            if let vac = vacData["Vaccination"].array {
-                                for posDict in vac {
-                                    let str = "hatchery"
-                                    
-                                    // Convert posDict to dictionary to access keys
-                                    if let posDictDict = posDict.dictionaryObject {
-                                        // Safely unwrap all keys
-                                        let allKeyArr = Array(posDictDict.keys)
-                                        
-                                        for keys in allKeyArr {
-                                            if keys.range(of: str) != nil {
-                                                CoreDataHandlerTurkey().getHatcheryDataFromServerTurkey(posDictDict as NSDictionary)
-                                            } else {
-                                                CoreDataHandlerTurkey().getFieldDataFromServerTurkey(posDictDict as NSDictionary)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Fetch data from server after processing
-                        self.getPostingDataFromServerforFeedTurkey()
-                    } else {
-                        // Handle the case where the array is empty
-                        self.getPostingDataFromServerforFeedTurkey()
-                    }
-                }
-
-            })
-  
-        } else {
+        guard WebClass.sharedInstance.connected() else {
             self.alerViewInternet()
+            return
+        }
+        fetchTurkeyVaccinationData()
+    }
+
+    private func fetchTurkeyVaccinationData() {
+        let id = UserDefaults.standard.value(forKey: "Id") as! Int
+        let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedSessionsVacccine.latestUrl + "\(id)&DeviceType=\(Constants.deviceType)"
+        ZoetisWebServices.shared.getTurkeyPostedSessionsVacccineResponce(controller: self, url: newUrl) { [weak self] (json, error) in
+            guard let self = self else { return }
+            self.handleTurkeyVaccinationResponse(json)
+        }
+    }
+
+    private func handleTurkeyVaccinationResponse(_ json: Any) {
+        let jsonResponse = JSON(json)
+        if let errorResult = jsonResponse["errorResult"].dictionary {
+            let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
+            let statusCode = errorResult["errorCode"]?.int ?? 0
+            print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
+            if [500, 401, 503, 403, 501, 502, 400, 504, 404, 408].contains(statusCode) {
+                self.alerView(statusCode: statusCode)
+            }
+        }
+        DispatchQueue.main.async {
+            if let arr = JSON(json).array, !arr.isEmpty {
+                for vacData in arr {
+                    self.processTurkeyVaccinationData(vacData)
+                }
+                self.getPostingDataFromServerforFeedTurkey()
+            } else {
+                self.getPostingDataFromServerforFeedTurkey()
+            }
+        }
+    }
+
+    private func processTurkeyVaccinationData(_ vacData: JSON) {
+        if let vac = vacData["Vaccination"].array {
+            for posDict in vac {
+                if let posDictDict = posDict.dictionaryObject {
+                    self.processTurkeyVaccinationDict(posDictDict)
+                }
+            }
+        }
+    }
+
+    private func processTurkeyVaccinationDict(_ posDictDict: [String: Any]) {
+        let allKeyArr = Array(posDictDict.keys)
+        for key in allKeyArr {
+            if key.range(of: "hatchery") != nil {
+                CoreDataHandlerTurkey().getHatcheryDataFromServerTurkey(posDictDict as NSDictionary)
+            } else {
+                CoreDataHandlerTurkey().getFieldDataFromServerTurkey(posDictDict as NSDictionary)
+            }
         }
     }
     
@@ -2483,75 +2465,68 @@ class ViewController: BaseViewController, UITextFieldDelegate, UITableViewDelega
     
     
     // MARK: Get Posting Data from Server for Images Turkey
-    func getPostingDataFromServerforImageTurkey(){
+    func getPostingDataFromServerforImageTurkey() {
         self.deleteAllData("BirdPhotoCaptureTurkey")
-        if WebClass.sharedInstance.connected() {
-            
-            var id = UserDefaults.standard.value(forKey: "Id") as! Int
-            let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedImages.latestUrl + "\(id)&DeviceType=\(Constants.deviceType)"
-            
-            ZoetisWebServices.shared.getTurkeyPostedImagesResponce(controller: self, url: newUrl, completion: { [weak self] (json, error) in
-                guard let self = self else { return }
-                
-                let jsonResponse = JSON(json)
-                // Check for the "errorResult" key and handle errors
-                if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let statusCode = errorResult["errorCode"]?.int ?? 0
-                    
-                    print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
-                    
-                    if statusCode == 500  || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408 {
-                        self.alerView(statusCode: statusCode)
-                    }
-                }
-                
-                DispatchQueue.main.async {
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        for vacData in arr {
-                            if let imagArr = vacData["Images"].array, !imagArr.isEmpty {
-                                for imageData in imagArr {
-                                    // Safely unwrap dictionaryObject and cast to NSDictionary
-                                    if let imageDict = imageData.dictionaryObject {
-                                        CoreDataHandlerTurkey().getSaveImageFromServerTurkey(imageDict as NSDictionary)
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Dismiss loading HUD
-                        Helper.dismissGlobalHUD(self.view)
-                        
-                        // Handle terms and conditions flow
-                        if self.termsCond == 0 {
-                            UserDefaults.standard.set(true, forKey: "login")
-                            if let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController {
-                                self.navigationController?.pushViewController(mapViewControllerObj, animated: false)
-                            }
-                        } else {
-                            UserDefaults.standard.set(true, forKey: "login")
-                            self.callDashBordView()
-                        }
-                        
-                    } else {
-                        // If arr is empty or nil
-                        Helper.dismissGlobalHUD(self.view)
-                        
-                        if self.termsCond == 0 {
-                            UserDefaults.standard.set(true, forKey: "login")
-                            if let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController {
-                                self.navigationController?.pushViewController(mapViewControllerObj, animated: false)
-                            }
-                        } else {
-                            UserDefaults.standard.set(true, forKey: "login")
-                            self.callDashBordView()
-                        }
-                    }
-                }
-            })
-          
-        } else{
+        guard WebClass.sharedInstance.connected() else {
             self.alerViewInternet()
+            return
+        }
+        fetchTurkeyImagesFromServer()
+    }
+
+    private func fetchTurkeyImagesFromServer() {
+        let id = UserDefaults.standard.value(forKey: "Id") as! Int
+        let newUrl = ZoetisWebServices.EndPoint.getTurkeyPostedImages.latestUrl + "\(id)&DeviceType=\(Constants.deviceType)"
+        ZoetisWebServices.shared.getTurkeyPostedImagesResponce(controller: self, url: newUrl) { [weak self] (json, error) in
+            guard let self = self else { return }
+            self.handleTurkeyImagesResponse(json)
+        }
+    }
+
+    private func handleTurkeyImagesResponse(_ json: Any) {
+        let jsonResponse = JSON(json)
+        if let errorResult = jsonResponse["errorResult"].dictionary {
+            let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
+            let statusCode = errorResult["errorCode"]?.int ?? 0
+            print("Error from PostingSession/GetBirdNotesListBySessionId?DeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
+            if [500, 401, 503, 403, 501, 502, 400, 504, 404, 408].contains(statusCode) {
+                self.alerView(statusCode: statusCode)
+            }
+        }
+        DispatchQueue.main.async {
+            self.processTurkeyImagesAndNavigate(json)
+        }
+    }
+
+    private func processTurkeyImagesAndNavigate(_ json: Any) {
+        if let arr = JSON(json).array, !arr.isEmpty {
+            for vacData in arr {
+                self.saveTurkeyImages(vacData)
+            }
+        }
+        Helper.dismissGlobalHUD(self.view)
+        handleTurkeyTermsAndNavigation()
+    }
+
+    private func saveTurkeyImages(_ vacData: JSON) {
+        if let imagArr = vacData["Images"].array, !imagArr.isEmpty {
+            for imageData in imagArr {
+                if let imageDict = imageData.dictionaryObject {
+                    CoreDataHandlerTurkey().getSaveImageFromServerTurkey(imageDict as NSDictionary)
+                }
+            }
+        }
+    }
+
+    private func handleTurkeyTermsAndNavigation() {
+        if self.termsCond == 0 {
+            UserDefaults.standard.set(true, forKey: "login")
+            if let mapViewControllerObj = self.storyboard?.instantiateViewController(withIdentifier: "terms") as? Terms_ConditionViewController {
+                self.navigationController?.pushViewController(mapViewControllerObj, animated: false)
+            }
+        } else {
+            UserDefaults.standard.set(true, forKey: "login")
+            self.callDashBordView()
         }
     }
     

@@ -24,8 +24,6 @@ class summaryReportTurkey: UIView {
         appDelegateObj.testFuntion()
     }
     
-    
-    
     @IBAction func yesBtnAction(_ sender: UIButton) {
         
         sumarryDelegate.yesButtonFunc()

@@ -526,90 +526,369 @@ class AddVaccinationTurkey: UIViewController,DropperDelegateTurkey,UITextFieldDe
     fileprivate func saveHatcheryStrainData(_ i: Int) {
         if i == 0 {
             
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typeMarek.text!, strain: hatchMarekStrainField.text!, route: hatchMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typeMarek.text!,
+                    strain: hatchMarekStrainField.text!,
+                    route: hatchMarekStrainLbl.text!,
+                    index: i,
+                    dbArray: fieldVaccinatioDataAray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
             
         } else if i == 1 {
             
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typeIbdv.text!, strain: ibdvMarekStrainField.text!, route: ibdvMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typeIbdv.text!,
+                    strain: ibdvMarekStrainField.text!,
+                    route: ibdvMarekStrainLbl.text!,
+                    index: i,
+                    dbArray: fieldVaccinatioDataAray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
             
         } else if i == 2 {
             
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typeIbv.text!, strain: ibvMarekStrainField.text!, route: ibvMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)                //
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typeIbv.text!,
+                strain: ibvMarekStrainField.text!,
+                route: ibvMarekStrainLbl.text!,
+                index: i,
+                dbArray: fieldVaccinatioDataAray,
+                postingId: postingId,
+                vaciProgram: vaccinationPrgrmTextField.text!,
+                sessionId: 1,
+                isSync: true,
+                lngId: lngId as NSNumber
+            )
+
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
             
         } else if i == 3 {
+                        
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typeTrt.text!,
+                    strain: trtMarekStrainField.text!,
+                    route: trtMarekStrainLbl.text!,
+                    index: i,
+                    dbArray: fieldVaccinatioDataAray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
             
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typeTrt.text!, strain: trtMarekStrainField.text!, route: trtMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)                //
             
         } else if i == 4 {
             
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typeNdv.text!, strain: ndvMarekStrainField.text!, route: ndvMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typeNdv.text!,
+                    strain: ndvMarekStrainField.text!,
+                    route: ndvMarekStrainLbl.text!,
+                    index: i,
+                    dbArray: fieldVaccinatioDataAray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
+            
             
         } else if i == 5 {
             
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typePox.text!, strain: poxMarekStrainField.text!, route: poxMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typePox.text!,
+                    strain: poxMarekStrainField.text!,
+                    route: poxMarekStrainLbl.text!,
+                    index: i,
+                    dbArray: fieldVaccinatioDataAray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
             
         }
         else if i == 6 {
+                        
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typeReo.text!,
+                    strain: reoMarekStrainField.text!,
+                    route: reoMarekStrainLbl.text!,
+                    index: i,
+                    dbArray: fieldVaccinatioDataAray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
             
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typeReo.text!, strain: reoMarekStrainField.text!, route: reoMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)
         }
         else if i == 7{
             
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typeSt.text!, strain: stMarekStrainField.text!, route: stMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)
+            
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typeSt.text!,
+                    strain: stMarekStrainField.text!,
+                    route: stMarekStrainLbl.text!,
+                    index: i,
+                    dbArray: fieldVaccinatioDataAray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
         }
         else if i == 8{
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typeEColi.text!, strain: ecoliMarekStrainField.text!, route: ecoliMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)
+            
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typeEColi.text!,
+                    strain: ecoliMarekStrainField.text!,
+                    route: ecoliMarekStrainLbl.text!,
+                    index: i,
+                    dbArray: fieldVaccinatioDataAray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
+            
             
         }else if i == 9{
             
-            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(typeOthers.text!, strain: othersMarekStrainField.text!, route: othersMarekStrainLbl.text!, index: i, dbArray: fieldVaccinatioDataAray,postingId:postingId,vaciProgram:vaccinationPrgrmTextField.text!,sessionId:1, isSync : true,lngId:lngId as NSNumber)
+            let hatcheryStrnData = CoreDataHandlerTurkeyModels.turkyVaccinationData(
+                type: typeOthers.text!,
+                    strain: othersMarekStrainField.text!,
+                    route: othersMarekStrainLbl.text!,
+                    index: i,
+                    dbArray: fieldVaccinatioDataAray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveFieldVacinationInDatabaseTurkey(vaccinationData: hatcheryStrnData)
         }
     }
     
     fileprivate func saveFieldStrainData(_ i: Int) {
         if i == 0 {
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type0.text!,
+                 strain: vacciIbdv1StrainField.text!,
+                 route: vacciIbdv1StrainLbl.text!,
+                 age: vacciIbdv1AgeField.text!,
+                 index: i,
+                 dbArray: dataArray,
+                 postingId: postingId,
+                 vaciProgram: vaccinationPrgrmTextField.text!,
+                 sessionId: 1,
+                 isSync: true,
+                 lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
             
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type0.text!, strain: vacciIbdv1StrainField.text!, route: vacciIbdv1StrainLbl.text!, age:vacciIbdv1AgeField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1 , isSync: true,lngId:lngId as NSNumber)
         }
         
         else if i == 1 {
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type1.text!, strain: vacciIbdv2StrainField.text!, route: vacciIbdv2StrainLbl.text!, age: vacciIbdv2AgeField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type1.text!,
+                  strain: vacciIbdv2StrainField.text!,
+                  route: vacciIbdv2StrainLbl.text!,
+                  age: vacciIbdv2AgeField.text!,
+                  index: i,
+                  dbArray: dataArray,
+                  postingId: postingId,
+                  vaciProgram: vaccinationPrgrmTextField.text!,
+                  sessionId: 1,
+                  isSync: true,
+                  lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
+            
         }
-        
+       
         else if i == 2 {
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type2.text!, strain: vacciIbv1StrainField.text!, route: vacciIbv1StrainLbl.text!, age: vacciIbv1AgeField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type2.text!,
+                    strain: vacciIbv1StrainField.text!,
+                    route: vacciIbv1StrainLbl.text!,
+                    age: vacciIbv1AgeField.text!,
+                    index: i,
+                    dbArray: dataArray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
         }
         
         else if i == 3 {
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type3.text!, strain: vacciIbv2StrainField.text!, route: vacciIbv2StrainLbl.text!, age: vacciIbv2AgeField.text!, index: i,dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type3.text!,
+                    strain: vacciIbv2StrainField.text!,
+                    route: vacciIbv2StrainLbl.text!,
+                    age: vacciIbv2AgeField.text!,
+                    index: i,
+                    dbArray: dataArray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
         }
         
         else if i == 4 {
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type4.text!, strain: vacciTrtStrainField.text!, route: vacciTrtStrainLbl.text!, age: vacciTrtAgeField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type4.text!,
+                    strain: vacciTrtStrainField.text!,
+                    route: vacciTrtStrainLbl.text!,
+                    age: vacciTrtAgeField.text!,
+                    index: i,
+                    dbArray: dataArray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
+            
         }
         
         else if i == 5 {
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type5.text!, strain: vacciTrt2StrainField.text!, route: vacciTrt2StrainLbl.text!, age: vacciTrt2AgeField.text!, index: i,dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type5.text!,
+                   strain: vacciTrt2StrainField.text!,
+                   route: vacciTrt2StrainLbl.text!,
+                   age: vacciTrt2AgeField.text!,
+                   index: i,
+                   dbArray: dataArray,
+                   postingId: postingId,
+                   vaciProgram: vaccinationPrgrmTextField.text!,
+                   sessionId: 1,
+                   isSync: true,
+                   lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
         }
         
         else if i == 6 {
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type6.text!, strain: vacciNdv1StrainField.text!, route: vacciNdv1StrainLbl.text!, age: vacciNdv1AgeField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type6.text!,
+                    strain: vacciNdv1StrainField.text!,
+                    route: vacciNdv1StrainLbl.text!,
+                    age: vacciNdv1AgeField.text!,
+                    index: i,
+                    dbArray: dataArray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
         }
         
         else if i == 7 {
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type7.text!, strain: vacciNdv2StrainField.text!, route: vacciNdv2StrainLbl.text!, age: vacciNdv2AgeField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type7.text!,
+                    strain: vacciNdv2StrainField.text!,
+                    route: vacciNdv2StrainLbl.text!,
+                    age: vacciNdv2AgeField.text!,
+                    index: i,
+                    dbArray: dataArray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
         }
         
         else if i == 8 {
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type8.text!, strain: vacciStStrainField.text!, route: vacciStStrainLbl.text!, age: vacciStAgeField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type8.text!,
+                    strain: vacciStStrainField.text!,
+                    route: vacciStStrainLbl.text!,
+                    age: vacciStAgeField.text!,
+                    index: i,
+                    dbArray: dataArray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
         }
         
         else if i == 9 {
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type9.text!, strain: vacciEcoliStrainField.text!, route: vacciEcoliStrainLbl.text!, age: vacciEcoliAgeField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type9.text!,
+                    strain: vacciEcoliStrainField.text!,
+                    route: vacciEcoliStrainLbl.text!,
+                    age: vacciEcoliAgeField.text!,
+                    index: i,
+                    dbArray: dataArray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
         }
         
         else if i == 10{
-            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(type10.text!, strain: vacciOthersStrainField.text!, route: vacciOthersStrainLbl.text!, age: vacciOthersAgeField.text!, index: i, dbArray: dataArray,postingId : postingId,vaciProgram: vaccinationPrgrmTextField.text!,sessionId : 1, isSync: true,lngId:lngId as NSNumber)
+            let fieldStrainData = CoreDataHandlerTurkeyModels.turkeyfieldStrnVaccination(
+                type: type10.text!,
+                    strain: vacciOthersStrainField.text!,
+                    route: vacciOthersStrainLbl.text!,
+                    age: vacciOthersAgeField.text!,
+                    index: i,
+                    dbArray: dataArray,
+                    postingId: postingId,
+                    vaciProgram: vaccinationPrgrmTextField.text!,
+                    sessionId: 1,
+                    isSync: true,
+                    lngId: lngId as NSNumber
+            )
+            CoreDataHandlerTurkey().saveHatcheryVacinationInDatabaseTurkey(vaccination: fieldStrainData)
         }
     }
     

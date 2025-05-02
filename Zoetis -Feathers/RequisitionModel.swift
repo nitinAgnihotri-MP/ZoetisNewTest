@@ -919,7 +919,43 @@ class RequisitionModel {
     //MARK:- Save Enviromental  Sample Info/ Case Info data into DB when Submitted or Save As Draft
     func updateDataForDraft(isFinalSubmit: Bool) {
         let predicate = NSPredicate(format: "timeStamp = %@ AND sessionStatus = %i", argumentArray: [self.timeStamp, "\(self.sessionStatus.rawValue)"])
-        CoreDataHandlerMicro().updateDataInTheEntityWithPredicates(predicate: predicate, entity: "Microbial_EnviromentalSurveyFormSubmitted", requestor: self.requestor, sampleCollectedBy: self.sampleCollectedBy, company: self.company, companyId: self.companyId, site: self.site, siteId: self.siteId, email: self.email, reviewer: self.reviewer, surveyConductedOn: self.surveyConductedOn, sampleCollectionDate: self.sampleCollectionDate, sampleCollectionDateWithTimeStamp: self.sampleCollectionDateWithTimeStamp, purposeOfSurvey: self.purposeOfSurvey, transferIn: self.transferIn, barCode: self.barCode, barCodeManualEntered: self.barCodeManualEntered, notes: self.notes, reasonForVisit: self.reasonForVisit, currentdate: self.currentdate, customerId: "", requisitionType: self.requisitionType.rawValue, sessionStatus: (isFinalSubmit ? SessionStatus.submitted.rawValue : self.sessionStatus.rawValue), requisition_Id: self.barCode, timeStamp: self.timeStamp, isPlateIdGenerated: self.isPlateIdGenerated, typeOfBird: self.typeOfBird, typeOfBirdId: self.typeOfBirdId, reviewerId: self.reviewerId, purposeOfSurveyId: self.purposeOfSurveyId, surveyConductedOnId: self.surveyConductedOnId, reasonForVisitId: self.reasonForVisitId)
+        
+        let updateInfo = CoreDataHandlerMicrodataModels.SessionUpdateData(
+            requestor: self.requestor,
+            sampleCollectedBy: self.sampleCollectedBy,
+            company: self.company,
+            companyId: self.companyId,
+            site: self.site,
+            siteId: self.siteId,
+            email: self.email,
+            reviewer: self.reviewer,
+            surveyConductedOn: self.surveyConductedOn,
+            sampleCollectionDate: self.sampleCollectionDate,
+            sampleCollectionDateWithTimeStamp: self.sampleCollectionDateWithTimeStamp,
+            purposeOfSurvey: self.purposeOfSurvey,
+            transferIn: self.transferIn,
+            barCode: self.barCode,
+            barCodeManualEntered: self.barCodeManualEntered,
+            notes: self.notes,
+            reasonForVisit: self.reasonForVisit,
+            currentdate: self.currentdate,
+            customerId: "",
+            requisitionType: self.requisitionType.rawValue,
+            sessionStatus: isFinalSubmit ? SessionStatus.submitted.rawValue : self.sessionStatus.rawValue,
+            requisition_Id: self.barCode,
+            timeStamp: self.timeStamp,
+            isPlateIdGenerated: self.isPlateIdGenerated,
+            typeOfBird: self.typeOfBird,
+            typeOfBirdId: self.typeOfBirdId,
+            reviewerId: self.reviewerId,
+            purposeOfSurveyId: self.purposeOfSurveyId,
+            surveyConductedOnId: self.surveyConductedOnId,
+            reasonForVisitId: self.reasonForVisitId
+            
+        )
+        
+        CoreDataHandlerMicro().updateDataInTheEntityWithPredicates(predicate: predicate, entity: "Microbial_EnviromentalSurveyFormSubmitted", updateData: updateInfo)
+   
     }
     
     
@@ -944,7 +980,31 @@ class RequisitionModel {
     
     
     func appendNewPlate(data: LocationTypeCellModel , numberOfPlates: Int){
-        Microbial_LocationTypeHeaderPlatesSubmitted.saveSampleInfoPlateDataInToDB_Enviromental(currentdate: self.currentdate, customerId: "", requisitionType: self.requisitionType.rawValue, sessionStatus: self.sessionStatus.rawValue, isBacterialChecked: data.isBacterialChecked, isMicoscoreChecked: data.isMicoscoreChecked, locationTypeId: data.selectedLocationTypeId ?? 0, locationValue: data.selectedLocationValues, plateId: data.plateId, row: data.row ?? -1, sampleDescription: data.sampleDescription, section: data.section ?? -1, requisition_Id: self.barCode, timeStamp: self.timeStamp, locationValueId: data.selectedLocationValueId ?? 0, mediaTypeId: data.selectedMediaTypeId ?? 0, notes: data.notes, samplingMethodTypeId: data.samplingMethodTypeId ?? 0)
+        
+        let plateData = CoreDataHandlerMicrodataModels.envPlateSampleInfo(
+            
+            currentDate: self.currentdate,
+             customerId: "", // Assuming it's intentionally empty
+             requisitionType: self.requisitionType.rawValue,
+             sessionStatus: self.sessionStatus.rawValue,
+             isBacterialChecked: data.isBacterialChecked,
+             isMicoscoreChecked: data.isMicoscoreChecked,
+             locationTypeId: data.selectedLocationTypeId ?? 0,
+             locationValue: data.selectedLocationValues,
+             plateId: data.plateId,
+             row: data.row ?? -1,
+             sampleDescription: data.sampleDescription,
+             section: data.section ?? -1,
+             requisitionId: self.barCode,
+             timeStamp: self.timeStamp,
+             locationValueId: data.selectedLocationValueId ?? 0,
+             mediaTypeId: data.selectedMediaTypeId ?? 0,
+             notes: data.notes,
+             samplingMethodTypeId: data.samplingMethodTypeId ?? 0
+            
+        )
+        Microbial_LocationTypeHeaderPlatesSubmitted.saveSampleInfoPlateDataInToDB_Enviromental(plateData)
+        
         let predicateToUpdateNumberOfPlates = NSPredicate(format: "timeStamp = %@ AND requisition_Id = %@ AND requisitionType = %i AND section = %i", argumentArray: [self.timeStamp, data.requisition_Id, data.requisitionType ?? 0, data.section ?? -1])
         CoreDataHandlerMicro().updateNumberOfPlates(predicate: predicateToUpdateNumberOfPlates, noOfPlates: numberOfPlates)
     }
@@ -959,17 +1019,22 @@ class RequisitionModel {
         
         for (index, header) in self.actualCreatedHeaders.enumerated() {
             if let locationTypeId = header.selectedLocationTypeId {
-                CoreDataHandlerMicro().updateSampleInfoHeaderDataInToDB_Enviromental(currentdate: self.currentdate,
-                                                                                     customerId: "",
-                                                                                     requisitionType: self.requisitionType.rawValue,
-                                                                                     sessionStatus: self.sessionStatus.rawValue,
-                                                                                     locationType: header.selectedLocationType,
-                                                                                     locationTypeId: locationTypeId,
-                                                                                     noOfPlates: header.noOfPlates,
-                                                                                     section: index + 1,
-                                                                                     requisition_Id: self.barCode,
-                                                                                     timeStamp: self.timeStamp,
-                                                                                     prevSection: index + 1/*isFinalSubmit ? (index + 1) : header.section*/)
+                
+                let headerInfo = CoreDataHandlerMicrodataModels.EnvSampleHeaderUpdateInfo(
+                    currentDate: self.currentdate,
+                     customerId: "",
+                     requisitionType: self.requisitionType.rawValue,
+                     sessionStatus: self.sessionStatus.rawValue,
+                     locationType: header.selectedLocationType,
+                     locationTypeId: locationTypeId,
+                     noOfPlates: header.noOfPlates,
+                     section: index + 1,
+                     requisitionId: self.barCode,
+                     timeStamp: self.timeStamp,
+                     prevSection: index + 1
+                )
+                
+                CoreDataHandlerMicro().updateSampleInfoHeaderDataInToDB_Enviromental(headerInfo)
             }
             
             if header.numberOfPlateIDCreated.count > 0 {
@@ -984,22 +1049,32 @@ class RequisitionModel {
         for plate in totalHeaderPlates {
             if let locationTypeId = plate.selectedLocationTypeId {
                 let actualPlateId = "\(plate.plateId)"
-               
-                Microbial_LocationTypeHeaderPlatesSubmitted.updateSampleInfoPlateDataInToDB_Enviromental(currentdate: self.currentdate,
-                                                                                                         customerId: "",
-                                                                                                         requisitionType: self.requisitionType.rawValue,
-                                                                                                         sessionStatus: self.sessionStatus.rawValue,
-                                                                                                         isBacterialChecked: plate.isBacterialChecked,
-                                                                                                         isMicoscoreChecked: plate.isMicoscoreChecked,
-                                                                                                         locationTypeId: locationTypeId,
-                                                                                                         locationValue: plate.selectedLocationValues,
-                                                                                                         locationValueId: plate.selectedLocationValueId ?? 0,
-                                                                                                         plateId: actualPlateId,
-                                                                                                         row: plate.row ?? -1,
-                                                                                                         sampleDescription: plate.sampleDescription,
-                                                                                                         section: plate.section ?? -1,
-                                                                                                         requisition_Id: self.barCode,
-                                                                                                         timeStamp: self.timeStamp, prevSection: plate.prevSection ?? -1, mediaTypeValue: plate.mediaTypeValue, mediaTypeId: plate.selectedMediaTypeId ?? 0, notes: plate.notes,samplingMethodTypeId: plate.samplingMethodTypeId ?? 0 ,samplingMethodTypeValue: plate.samplingMethodTypeValue)
+                
+                let sampleInfo = CoreDataHandlerMicrodataModels.environmentalSampleInfoPlate(
+                    currentdate: self.currentdate,
+                        customerId: "",
+                        requisitionType: self.requisitionType.rawValue,
+                        sessionStatus: self.sessionStatus.rawValue,
+                        isBacterialChecked: plate.isBacterialChecked,
+                        isMicoscoreChecked: plate.isMicoscoreChecked,
+                        locationTypeId: locationTypeId,
+                        locationValue: plate.selectedLocationValues,
+                        locationValueId: plate.selectedLocationValueId ?? 0,
+                        plateId: actualPlateId,
+                        row: plate.row ?? -1,
+                        sampleDescription: plate.sampleDescription,
+                        section: plate.section ?? -1,
+                        requisition_Id: self.barCode,
+                        timeStamp: self.timeStamp,
+                        prevSection: plate.prevSection ?? -1,
+                        mediaTypeValue: plate.mediaTypeValue,
+                        mediaTypeId: plate.selectedMediaTypeId ?? 0,
+                        notes: plate.notes,
+                        samplingMethodTypeId: plate.samplingMethodTypeId ?? 0,
+                        samplingMethodTypeValue: plate.samplingMethodTypeValue
+                    
+                )
+                Microbial_LocationTypeHeaderPlatesSubmitted.updateSampleInfoPlateDataInToDB_Enviromental(sampleInfo: sampleInfo)
             }
             
         }
@@ -1038,21 +1113,32 @@ class RequisitionModel {
         for plate in totalHeaderPlates {
             if let locationTypeId = plate.selectedLocationTypeId {
                 let actualPlateId = "\(plate.plateId)"
-                Microbial_LocationTypeHeaderPlatesSubmitted.saveSampleInfoPlateDataInToDB(currentdate: self.currentdate,
-                                                                                  customerId: "",
-                                                                                  requisitionType:self.requisitionType.rawValue,
-                                                                                  sessionStatus: self.sessionStatus.rawValue,
-                                                                                  isBacterialChecked: plate.isBacterialChecked,
-                                                                                  isMicoscoreChecked: plate.isMicoscoreChecked,
-                                                                                  locationTypeId: locationTypeId,
-                                                                                  locationValue: plate.selectedLocationValues,
-                                                                                  plateId: actualPlateId,
-                                                                                  row: plate.row ?? -1,
-                                                                                  sampleDescription: plate.sampleDescription,
-                                                                                  section: plate.section ?? -1,
-                                                                                  requisition_Id: self.barCode,
-                                                                                  timeStamp: self.timeStamp,
-                                                                                          locationValueId: plate.selectedLocationValueId ?? 0, mediaTypeValue: plate.mediaTypeValue, mediaTypeId: plate.selectedMediaTypeId ?? 0, notes: plate.notes, samplingMethodTypeValue : plate.samplingMethodTypeValue, samplingMethodTypeId: plate.samplingMethodTypeId ?? 0)
+                
+                let saveSampleInfoPlateDataInTo = CoreDataHandlerMicrodataModels.SampleInfoPlate(
+                    currentdate: self.currentdate,
+                    customerId: "",
+                    requisitionType: self.requisitionType.rawValue,
+                    sessionStatus: self.sessionStatus.rawValue,
+                    isBacterialChecked: plate.isBacterialChecked,
+                    isMicoscoreChecked: plate.isMicoscoreChecked,
+                    locationTypeId: locationTypeId,
+                    locationValue: plate.selectedLocationValues,
+                    plateId: actualPlateId,
+                    row: plate.row ?? -1,
+                    sampleDescription: plate.sampleDescription,
+                    section: plate.section ?? -1,
+                    requisition_Id: self.barCode,
+                    timeStamp: self.timeStamp,
+                    locationValueId: plate.selectedLocationValueId ?? 0,
+                    mediaTypeValue: plate.mediaTypeValue,
+                    mediaTypeId: plate.selectedMediaTypeId ?? 0,
+                    notes: plate.notes,
+                    samplingMethodTypeValue: plate.samplingMethodTypeValue,
+                    samplingMethodTypeId: plate.samplingMethodTypeId ?? 0
+                )
+                
+                Microbial_LocationTypeHeaderPlatesSubmitted.saveSampleInfoPlateDataInToDB(sampleInfo: saveSampleInfoPlateDataInTo)
+      
             }
             
         }

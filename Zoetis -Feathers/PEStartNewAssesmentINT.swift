@@ -814,79 +814,6 @@ class PEStartNewAssessmentINT: BaseViewController {
         //  flockView.isHidden = false
     }
     
-    /* Get offline and draft stored session */
-    // MARK: - Get offline and draft stored session
-    private func getAllDateArrayStored() -> [String]{
-        //let draft = ZoetisDropdownShared.sharedInstance.sharedPEDraft ?? []
-        let drafts  = CoreDataHandlerPE().getDraftAssessmentArrayPEObject()
-        var dates : [String] = []
-        var coustomers : [String] = []
-        var sites : [String] = []
-        for obj in drafts {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        let syncData = CoreDataHandlerPE().getOfflineAssessmentArrayPEObject()
-        for obj in syncData {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        return dates
-    }
-    // MARK: - Get Saved Customer List
-    private func getAllCustomerArrayStored() -> [String]{
-        let drafts  = CoreDataHandlerPE().getDraftAssessmentArrayPEObject()
-        var dates : [String] = []
-        var coustomers : [String] = []
-        var sites : [String] = []
-        for obj in drafts {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        let syncData = CoreDataHandlerPE().getOfflineAssessmentArrayPEObject()
-        for obj in syncData {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        return coustomers
-    }
-    // MARK: - Get Saved Site's List
-    private func getAllSitesArrayStored() -> [String]{
-        let drafts  = CoreDataHandlerPE().getDraftAssessmentArrayPEObject()
-        var dates : [String] = []
-        var coustomers : [String] = []
-        var sites : [String] = []
-        for obj in drafts {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        let syncData = CoreDataHandlerPE().getOfflineAssessmentArrayPEObject()
-        for obj in syncData {
-            dates.append(obj.evaluationDate ?? "")
-            coustomers.append(obj.customerName ?? "")
-            sites.append(obj.siteName ?? "")
-        }
-        return sites
-    }
-    // MARK: - Get Saved Evaluation type List
-    private func getAllevaluationIDStored() -> [String]{
-        let drafts  = CoreDataHandlerPE().getDraftAssessmentArrayPEObject(ofCurrentDate:true)
-        var evaluationIDs : [String] = []
-        for obj in drafts {
-            evaluationIDs.append(obj.evaluationName ?? "")
-        }
-        let syncData = CoreDataHandlerPE().getOfflineAssessmentArrayPEObject(ofCurrentDate:true)
-        for obj in syncData {
-            evaluationIDs.append(obj.evaluationName ?? "")
-        }
-        return evaluationIDs
-    }
-    
     @IBAction func btnAction(_ sender: Any) {
         print(appDelegateObj.testFuntion())
     }
@@ -1121,99 +1048,6 @@ class PEStartNewAssessmentINT: BaseViewController {
         }
         return true
     }
-
-//    @IBAction func nextBtnAction(_ sender: Any) {
-//        self.view.endEditing(true)
-//        Constants.isFirstTime = false
-//        self.getVaccineMixerList(customerId: self.peNewAssessment.customerId ?? 0, siteId: self.peNewAssessment.siteId ?? 0, countryId: 40) { status in
-//            print(status)
-//        }
-//        guard let date = self.peNewAssessment.evaluationDate, date.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        guard let customer = self.peNewAssessment.customerName, customer.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        guard let selectedTSR = self.selectedTSR.text, selectedTSR.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        guard let site = self.peNewAssessment.siteName, site.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        guard let evaluationName = self.peNewAssessment.evaluationName, evaluationName.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        guard let evaluator = self.peNewAssessment.evaluatorName, evaluator.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        guard let reasonForVisit = self.peNewAssessment.visitName, reasonForVisit.count > 0 else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        if peNewAssessment.breedOfBird != nil && peNewAssessment.breedOfBird != ""{
-//            if ((peNewAssessment.breedOfBird?.lowercased().contains("other")) ?? false) {
-//                if (peNewAssessment.breedOfBirdOther != nil && peNewAssessment.breedOfBirdOther != "") == false {
-//                    changeMandatorySuperviewToRed()
-//                    return
-//                }
-//            }
-//        } else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        if self.txtManufacturer.text != nil && self.txtManufacturer.text != ""{
-//            if ((self.txtManufacturer.text?.lowercased().contains("other")) ?? false) {
-//                if (manfacturerOtherTxt.text != nil && manfacturerOtherTxt.text != "") == false {
-//                    changeMandatorySuperviewToRed()
-//                    return
-//                }
-//            }
-//        } else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        if (self.countryTxt.text != nil && self.countryTxt.text != "") == false {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        if (peNewAssessment.incubation != nil && peNewAssessment.incubation != "") == false {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        if (txtNumberOfEggs.text != nil && txtNumberOfEggs.text != ""),
-//           ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false),
-//           (eggsOtherTxt.text != nil && eggsOtherTxt.text != "") == false {
-//            
-//            if ((txtNumberOfEggs.text?.lowercased().contains("other")) ?? false),(eggsOtherTxt.text != nil && eggsOtherTxt.text != "") == false {
-//                changeMandatorySuperviewToRed()
-//                return
-//            }
-//        } else {
-//            changeMandatorySuperviewToRed()
-//            return
-//        }
-//        
-//        if self.allProductionViewHeightConstraint.constant == 60 {
-//            showExtendedMicroUI()
-//        } else {
-//            otherCaseTOShowExtendedMicroOption()
-//        }
-//    }
-    
     
     // MARK: - Save Assessment In Draft
     func saveAssessmentInProgressDataInDB()  {
@@ -1455,7 +1289,7 @@ class PEStartNewAssessmentINT: BaseViewController {
     
     fileprivate func handleIncubation() {
         if peNewAssessment.incubation != nil && peNewAssessment.incubation != "" {
-            
+            debugPrint("incubation is not blank..")
         } else {
             let superviewCurrent = btnIncubation.superview
             if superviewCurrent != nil {
@@ -2162,7 +1996,6 @@ extension PEStartNewAssessmentINT : DatePickerPopupViewControllerProtocol{
 // MARK: - Action Methods
 extension PEStartNewAssessmentINT {
     func okButtonTapped() {
-        let sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: scheduledAssessment?.serverAssessmentId ?? "")
         if (Constants.isExtendedPopup && extendedPESwitch) || Constants.isExtendedPopup {
             showScheduledAndMicrobialPopup(VaccinationConstants.PEConstants.WARNING_MSG_NEXTBTN_CLICK_SCHEDULED_DATE)
         } else if !Constants.isExtendedPopup {
@@ -2429,7 +2262,6 @@ extension PEStartNewAssessmentINT : UITextFieldDelegate{
             if string == "" {
                 return true
             }
-            let isValid = string.stringWithoutWhitespaces.isNumber
             let aSet = CharacterSet(charactersIn:"0123456789").inverted
             let compSepByCharInSet = string.components(separatedBy: aSet)
             let numberFiltered = compSepByCharInSet.joined(separator: "")

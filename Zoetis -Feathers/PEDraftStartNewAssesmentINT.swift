@@ -223,6 +223,16 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
         }
     }
     
+    fileprivate func handleSetupViewDidLoadMetho3SubMethod(_ visitIDArray: NSArray, _ userID: Int, _ visitNameArray: NSArray) {
+        for (index,obj) in visitIDArray.enumerated() {
+            if let id = obj as? Int,id == userID {
+                selectedTSR.text = visitNameArray[index] as? String ?? ""
+                peNewAssessment.selectedTSR = visitNameArray[index] as? String ?? ""
+                peNewAssessment.selectedTSRID = id
+            }
+        }
+    }
+    
     fileprivate func setupViewDidLoadMetho3(_ FirstName: inout String, _ LastName: inout String) {
         if peNewAssessment.camera == 1 {
             cameraSwitch.setOn(true, animated: false)
@@ -257,13 +267,7 @@ class PEDraftStartNewAssesmentINT: BaseViewController {
             if peNewAssessment.selectedTSR?.count ?? 0 > 1 {
                 selectedTSR.text = peNewAssessment.selectedTSR
             } else {
-                for (index,obj) in visitIDArray.enumerated() {
-                    if let id = obj as? Int,id == userID {
-                        selectedTSR.text = visitNameArray[index] as? String ?? ""
-                        peNewAssessment.selectedTSR = visitNameArray[index] as? String ?? ""
-                        peNewAssessment.selectedTSRID = id
-                    }
-                }
+                handleSetupViewDidLoadMetho3SubMethod(visitIDArray, userID, visitNameArray)
             }
         }
         

@@ -319,7 +319,7 @@ extension PESessionViewController: UITableViewDelegate, UITableViewDataSource, U
                 _ in
                 self.handleYesAction(indexPath: indexPath)
             }
-            let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel) 
+            let cancelAction = UIAlertAction(title: Constants.noStr, style: UIAlertAction.Style.cancel)
             
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)

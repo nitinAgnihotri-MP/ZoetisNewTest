@@ -710,6 +710,19 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
         }
     }
     
+    fileprivate func handleLanguageFieldsValidations(_ labelFields: [UILabel?], _ dosageArray: [String], _ textFields: [UITextField?]) {
+        // Loop through indices to set values properly
+        for i in 0..<min(labelFields.count, dosageArray.count) {
+            if languageId == 1 {
+                labelFields[i]?.text = dosageArray[i]  // Assign to UILabel
+            } else if languageId == 4 {
+                textFields[i]?.text = dosageArray[i]   // Assign to UITextField
+            } else {
+                labelFields[i]?.text = dosageArray[i]  // Default case
+            }
+        }
+    }
+    
     fileprivate func handleViewWillAppearRefactor1() {
         if cocciControlArray.count > 0 {
             
@@ -737,16 +750,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                     cocciDosSixTextField
                 ]
                 
-                // Loop through indices to set values properly
-                for i in 0..<min(labelFields.count, dosageArray.count) {
-                    if languageId == 1 {
-                        labelFields[i]?.text = dosageArray[i]  // Assign to UILabel
-                    } else if languageId == 4 {
-                        textFields[i]?.text = dosageArray[i]   // Assign to UITextField
-                    } else {
-                        labelFields[i]?.text = dosageArray[i]  // Default case
-                    }
-                }
+                handleLanguageFieldsValidations(labelFields, dosageArray, textFields)
                 
                 /// *********************** to & From fields data setup for Coccidiosis ****************************************
                 ///
@@ -773,6 +777,35 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 }
                 
                 handleCoociControleArrayValidations(i)
+            }
+        }
+    }
+    
+    fileprivate func handleAndPopulateDataOnTextFieldsViewWillAppear(_ molecules: [String], _ dosages: [String], _ fromDays: [String], _ toDays: [String]) {
+        let alternativeMoleculeFields = [moleculeFeedType1Alternativ, moleculeFeedType2Alternativ, moleculeFeedType3Alternativ,
+                                         moleculeFeedType4Alternativ, moleculeFeedType5Alternativ, moleculeFeedType6Alternativ]
+        
+        let alternativeDosageFields = [alternativeDosageFirstText, alternativeDosageSecoondText, alternativeDosageThirdText,
+                                       alternativeDosageFourText, altrNativeDosage5Text, altrNativeDosage6Text]
+        
+        let alternativeFromDurationFields = [alternativeFromFirstTextField, alternativeFromSecondTextField, alternativeFromthirdTextField,
+                                             alternativeFromFourTextField, from5TextAlternative, from6TextAlternative]
+        
+        let alternativetToDurationFields = [alternativeToFirstTextField, alternativeToSecondTextField, alternativeTothirdTextField,
+                                            alternativeToFourTextField, to5TextAlternative, to6TextAlternative]
+        
+        for i in 0..<min(AlternativeArray.count, 6) {
+            if let molecule = molecules[safe: i] {
+                alternativeMoleculeFields[i]?.text = molecule
+            }
+            if let dosage = dosages[safe: i] {
+                alternativeDosageFields[i]?.text = dosage
+            }
+            if let fromDay = fromDays[safe: i] {
+                alternativeFromDurationFields[i]?.text = fromDay
+            }
+            if let toDay = toDays[safe: i] {
+                alternativetToDurationFields[i]?.text = toDay
             }
         }
     }
@@ -819,35 +852,32 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                   let toDays = AlternativeArray.value(forKey: "toDays") as? [String],
                   let feedPrograms = AlternativeArray.value(forKey: "feedProgram") as? [String] else { return }
             
-            let alternativeMoleculeFields = [moleculeFeedType1Alternativ, moleculeFeedType2Alternativ, moleculeFeedType3Alternativ,
-                                             moleculeFeedType4Alternativ, moleculeFeedType5Alternativ, moleculeFeedType6Alternativ]
-            
-            let alternativeDosageFields = [alternativeDosageFirstText, alternativeDosageSecoondText, alternativeDosageThirdText,
-                                           alternativeDosageFourText, altrNativeDosage5Text, altrNativeDosage6Text]
-            
-            let alternativeFromDurationFields = [alternativeFromFirstTextField, alternativeFromSecondTextField, alternativeFromthirdTextField,
-                                                 alternativeFromFourTextField, from5TextAlternative, from6TextAlternative]
-            
-            let alternativetToDurationFields = [alternativeToFirstTextField, alternativeToSecondTextField, alternativeTothirdTextField,
-                                                alternativeToFourTextField, to5TextAlternative, to6TextAlternative]
-            
-            for i in 0..<min(AlternativeArray.count, 6) {
-                if let molecule = molecules[safe: i] {
-                    alternativeMoleculeFields[i]?.text = molecule
-                }
-                if let dosage = dosages[safe: i] {
-                    alternativeDosageFields[i]?.text = dosage
-                }
-                if let fromDay = fromDays[safe: i] {
-                    alternativeFromDurationFields[i]?.text = fromDay
-                }
-                if let toDay = toDays[safe: i] {
-                    alternativetToDurationFields[i]?.text = toDay
-                }
-            }
+            handleAndPopulateDataOnTextFieldsViewWillAppear(molecules, dosages, fromDays, toDays)
             
             feedProgramTextField.text = feedPrograms.first
             
+        }
+    }
+    
+    fileprivate func handleAddFarmelectLblTextOnUIViewWillAppear(_ ftitle: NSMutableString) {
+        for i in 0..<feedNameArr.count {
+            let farms = feedNameArr.object(at:i) as! CaptureNecropsyData
+            let strfarmName = farms.farmName! as String
+            // addFarmSelectLbl.text = strfarmName
+            var label:UILabel
+            if (i == 0) {
+                label = UILabel()
+                label.frame = CGRect(x: 50, y: 519, width: 111, height: 21)
+                ftitle.append( strfarmName + " " )
+            } else {
+                label  = UILabel()
+                label.frame = CGRect(x: 50, y: 519, width: 111*(CGFloat(i)+1)+10, height: 21)
+                ftitle.append(", " + strfarmName + " " )
+            }
+            
+            label.textAlignment = NSTextAlignment.center
+            label.backgroundColor = UIColor.red
+            addFarmSelectLbl.text = ftitle as String
         }
     }
     
@@ -871,26 +901,7 @@ class FeedProgramViewController: UIViewController,popUPnavigation,userLogOut,UIT
                 
                 if (feedNameArr.count > 0) {
                     let ftitle = NSMutableString()
-                    
-                    for i in 0..<feedNameArr.count {
-                        let farms = feedNameArr.object(at:i) as! CaptureNecropsyData
-                        let strfarmName = farms.farmName! as String
-                        // addFarmSelectLbl.text = strfarmName
-                        var label:UILabel
-                        if (i == 0) {
-                            label = UILabel()
-                            label.frame = CGRect(x: 50, y: 519, width: 111, height: 21)
-                            ftitle.append( strfarmName + " " )
-                        } else {
-                            label  = UILabel()
-                            label.frame = CGRect(x: 50, y: 519, width: 111*(CGFloat(i)+1)+10, height: 21)
-                            ftitle.append(", " + strfarmName + " " )
-                        }
-                        
-                        label.textAlignment = NSTextAlignment.center
-                        label.backgroundColor = UIColor.red
-                        addFarmSelectLbl.text = ftitle as String
-                    }
+                    handleAddFarmelectLblTextOnUIViewWillAppear(ftitle)
                 }
             }
         } else {

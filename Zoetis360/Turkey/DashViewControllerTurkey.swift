@@ -1021,19 +1021,101 @@ class DashViewControllerTurkey: UIViewController,syncApiTurkey,SyncApiDataTurkey
             }
             
             if  btnTag == 0 {
-                CoreDataHandlerTurkey().saveSettingsSkeletaInDatabaseTurkey(strObservationField,visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataSkeletaArray,obsId:obsId,measure:measure,isSync: false,lngId:lngIdValue,refId:refId, quicklinkIndex: quickLinkIndex ?? 0 )
+                
+                let settingsSkeletaData = CoreDataHandlerTurkeyModels.turkeySettingsSkeletaData(
+                    strObservationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        strInformation: "xyz",
+                        index: i,
+                        dbArray: dataSkeletaArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex ?? 0                )
+                CoreDataHandlerTurkey().saveSettingsSkeletaInDatabaseTurkey(settingsData: settingsSkeletaData)
+                
                 
             } else if btnTag == 1{
-                CoreDataHandlerTurkey().saveSettingsCocoiiInDatabaseTurkey(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataCocoiiArray,obsId:obsId,measure:measure,isSync: false,lngId:lngIdValue,refId: refId,quicklinkIndex: quickLinkIndex ?? 0)
+                
+                let savecoccidiosisSettings = CoreDataHandlerTurkeyModels.turkeyCoccidiosisSettings(
+                    strObservationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        strInformation: "xyz",
+                        index: i,
+                        dbArray: dataCocoiiArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex ?? 0
+                )
+                CoreDataHandlerTurkey().saveSettingsCocoiiInDatabaseTurkey(data: savecoccidiosisSettings)
+
+                
+                
                 
             } else if btnTag == 2{
-                CoreDataHandlerTurkey().saveSettingsGITractDatabaseTurkey(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataGiTractArray,obsId:obsId,measure:measure,isSync: false,lngId:lngIdValue,refId:refId,quicklinkIndex: quickLinkIndex ?? 0)
+                
+                let gITractDatasettings = CoreDataHandlerTurkeyModels.turkeyGITractSettingsData(
+                    observationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        information: "xyz",
+                        index: i,
+                        dbArray: dataGiTractArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex ?? 0
+                )
+                CoreDataHandlerTurkey().saveSettingsGITractDatabaseTurkey(gITractDatasettings)
+                
                 
             } else if btnTag == 3 {
-                CoreDataHandlerTurkey().saveSettingsRespiratoryDatabaseTurkey(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataRespiratoryArray,obsId:obsId,measure:measure,isSync:false,lngId:lngIdValue,refId: refId,quicklinkIndex: quickLinkIndex ?? 0)
+                
+                let respiratorySettings = CoreDataHandlerTurkeyModels.turkeyRespiratorySettings(
+                    observationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        information: "xyz",
+                        index: i,
+                        dbArray: dataRespiratoryArray,
+                        observationId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex ?? 0
+                )
+                CoreDataHandlerTurkey().saveSettingsRespiratoryDatabaseTurkey(respiratorySettings)
+                
                 
             } else {
-                CoreDataHandlerTurkey().saveSettingsImmuneDatabaseTurkey(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataImmuneArray,obsId:obsId,measure:measure,isSync:false,lngId:lngIdValue,refId: refId,quicklinkIndex: quickLinkIndex ?? 0)
+                
+                let immuneSettings = CoreDataHandlerTurkeyModels.turkeyImmuneSettings(
+                    observationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        information: "xyz",
+                        index: i,
+                        dbArray: dataImmuneArray,
+                        observationId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex ?? 0
+                )
+                CoreDataHandlerTurkey().saveSettingsImmuneDatabaseTurkey(immuneSettings)
+                
+                
             }
             
         }

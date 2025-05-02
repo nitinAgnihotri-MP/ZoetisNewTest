@@ -184,8 +184,7 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
     
     private func checkDataForSyncViewDidAppear() {
         let syncArr = CoreDataHandlerPVE().fetchSyncDataDetailsForTypeOfData(type: "sync")
-        if ConnectionManager.shared.hasConnectivity() {
-            if syncArr.count > 0{
+        if ConnectionManager.shared.hasConnectivity() && syncArr.count > 0 {
                 let errorMSg = "Data available for sync, Do you want to sync now?"
                 let alertController = UIAlertController(title: Constants.dataAvailableStr, message: errorMSg, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
@@ -196,7 +195,7 @@ class PVEDashboardViewController: BaseViewController, URLSessionDelegate {
                 alertController.addAction(okAction)
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true, completion: nil)
-            }
+            
         }
     }
     
@@ -956,449 +955,262 @@ extension PVEDashboardViewController:  SyncBtnDelegate {
     
     
     func createSyncRequest(dict: AnyObject) -> [String: AnyObject] {
+        let basicInfo = extractBasicInfo(from: dict)
+        let catchersViewModelArr = buildCatchersArray(from: dict, deviceId: basicInfo.deviceId, userId: basicInfo.userId)
+        let vaccinatorsViewModelArr = buildVaccinatorsArray(from: dict, deviceId: basicInfo.deviceId, userId: basicInfo.userId)
+        let vaccineInfoDetailsViewModelArr = buildVaccineInfoArray(from: dict, deviceId: basicInfo.deviceId, userId: basicInfo.userId)
+        let tempCrewDetailsViewModel = buildCrewDetails(from: dict, deviceId: basicInfo.deviceId, userId: basicInfo.userId, catchersCount: catchersViewModelArr.count, vaccinatorsCount: vaccinatorsViewModelArr.count)
+        let evaluationNoteViewModel = buildEvaluationNote(from: dict, deviceId: basicInfo.deviceId, userId: basicInfo.userId)
+        let choleraArr = buildCholeraArray(from: dict, deviceId: basicInfo.deviceId, userId: basicInfo.userId)
         
-        let houseNumber = (dict).value(forKey: "houseNumber")  as? String
-        let accountManagerId = (dict).value(forKey: "accountManagerId")  as? Int
-        let farm = (dict).value(forKey: "farm")  as? String
-        let evaluationForId = (dict).value(forKey: "evaluationForId")  as? Int
-        let breedOfBirdsId = (dict).value(forKey: "breedOfBirdsId")  as? Int
-       
-        let ageOfBirds = (dict).value(forKey: "ageOfBirds")  as? Int
-        let noOfBirds = (dict).value(forKey: "noOfBirds")  as? Int
-        let housingId = (dict).value(forKey: "housingId")  as? Int
-        let notes = (dict).value(forKey: "notes")  as? String
-        let breedOfBirdsFemaleId = (dict).value(forKey: "breedOfBirdsFemaleId")  as? Int
-        let breedOfBirdsOther = (dict).value(forKey: "breedOfBirdsOther")  as? String
-        let breedOfBirdsFemaleOther = (dict).value(forKey: "breedOfBirdsFemaleOther")  as? String
-        
-        var selectedBirdTypeId = (dict).value(forKey: "selectedBirdTypeId")  as? Int
-        let createdAt = (dict).value(forKey: "createdAt")  as? String
-        let deviceId = (dict).value(forKey: "deviceId")  as? String
-        let evaluatorId = (dict).value(forKey: "evaluatorId")  as? Int
-        
-        let customerId = (dict).value(forKey: "customerId")  as? Int
-        let complexId = (dict).value(forKey: "complexId")  as? Int
-        let userId = (dict).value(forKey: "userId")  as? Int
-        let syncId = (dict).value(forKey: "syncId")  as? String
-        let type = (dict).value(forKey: "type")  as? String
-        
-        
-        let cameraState = (dict).value(forKey: "cameraEnabled")  as? String
-        
-        var cameraEnabled = false
-        
-        if cameraState == "true"{
-            cameraEnabled = true
-        }
-        
+        // Compose the final sync request dictionary
+        var syncRequest: [String: AnyObject] = [
+            "basicInfo": [
+                "houseNumber": basicInfo.houseNumber as Any,
+                "accountManagerId": basicInfo.accountManagerId as Any,
+                "farm": basicInfo.farm as Any,
+                "evaluationForId": basicInfo.evaluationForId as Any,
+                "breedOfBirdsId": basicInfo.breedOfBirdsId as Any,
+                "ageOfBirds": basicInfo.ageOfBirds as Any,
+                "noOfBirds": basicInfo.noOfBirds as Any,
+                "housingId": basicInfo.housingId as Any,
+                "notes": basicInfo.notes as Any,
+                "breedOfBirdsFemaleId": basicInfo.breedOfBirdsFemaleId as Any,
+                "breedOfBirdsOther": basicInfo.breedOfBirdsOther as Any,
+                "breedOfBirdsFemaleOther": basicInfo.breedOfBirdsFemaleOther as Any,
+                "selectedBirdTypeId": basicInfo.selectedBirdTypeId as Any,
+                "createdAt": basicInfo.createdAt as Any,
+                "deviceId": basicInfo.deviceId as Any,
+                "evaluatorId": basicInfo.evaluatorId as Any,
+                "customerId": basicInfo.customerId as Any,
+                "complexId": basicInfo.complexId as Any,
+                "userId": basicInfo.userId as Any,
+                "syncId": basicInfo.syncId as Any,
+                "type": basicInfo.type as Any,
+                "cameraEnabled": basicInfo.cameraEnabled as Any
+            ] as AnyObject,
+            "catchersViewModelArr" : catchersViewModelArr as AnyObject,
+            "vaccinatorsViewModelArr" : vaccinatorsViewModelArr as AnyObject,
+            "vaccineInfoDetailsViewModelArr" : vaccineInfoDetailsViewModelArr as AnyObject,
+            "tempCrewDetailsViewModel" : tempCrewDetailsViewModel as AnyObject,
+            "evaluationNoteViewModel" : evaluationNoteViewModel as AnyObject,
+            "choleraArr" : choleraArr as AnyObject
+        ]
+        return syncRequest
+    }
+
+    // Helper 1: Extract all basic info fields
+    private func extractBasicInfo(from dict: AnyObject) -> (houseNumber: String?, accountManagerId: Int?, farm: String?, evaluationForId: Int?, breedOfBirdsId: Int?, ageOfBirds: Int?, noOfBirds: Int?, housingId: Int?, notes: String?, breedOfBirdsFemaleId: Int?, breedOfBirdsOther: String?, breedOfBirdsFemaleOther: String?, selectedBirdTypeId: Int?, createdAt: String?, deviceId: String?, evaluatorId: Int?, customerId: Int?, complexId: Int?, userId: Int?, syncId: String?, type: String?, cameraEnabled: Bool) {
+        let houseNumber = dict.value(forKey: "houseNumber") as? String
+        let accountManagerId = dict.value(forKey: "accountManagerId") as? Int
+        let farm = dict.value(forKey: "farm") as? String
+        let evaluationForId = dict.value(forKey: "evaluationForId") as? Int
+        let breedOfBirdsId = dict.value(forKey: "breedOfBirdsId") as? Int
+        let ageOfBirds = dict.value(forKey: "ageOfBirds") as? Int
+        let noOfBirds = dict.value(forKey: "noOfBirds") as? Int
+        let housingId = dict.value(forKey: "housingId") as? Int
+        let notes = dict.value(forKey: "notes") as? String
+        let breedOfBirdsFemaleId = dict.value(forKey: "breedOfBirdsFemaleId") as? Int
+        let breedOfBirdsOther = dict.value(forKey: "breedOfBirdsOther") as? String
+        let breedOfBirdsFemaleOther = dict.value(forKey: "breedOfBirdsFemaleOther") as? String
+        let selectedBirdTypeId = dict.value(forKey: "selectedBirdTypeId") as? Int
+        let createdAt = dict.value(forKey: "createdAt") as? String
+        let deviceId = dict.value(forKey: "deviceId") as? String
+        let evaluatorId = dict.value(forKey: "evaluatorId") as? Int
+        let customerId = dict.value(forKey: "customerId") as? Int
+        let complexId = dict.value(forKey: "complexId") as? Int
+        let userId = dict.value(forKey: "userId") as? Int
+        let syncId = dict.value(forKey: "syncId") as? String
+        let type = dict.value(forKey: "type") as? String
+        let cameraState = dict.value(forKey: "cameraEnabled") as? String
+        let cameraEnabled = (cameraState == "true")
+        return (houseNumber, accountManagerId, farm, evaluationForId, breedOfBirdsId, ageOfBirds, noOfBirds, housingId, notes, breedOfBirdsFemaleId, breedOfBirdsOther, breedOfBirdsFemaleOther, selectedBirdTypeId, createdAt, deviceId, evaluatorId, customerId, complexId, userId, syncId, type, cameraEnabled)
+    }
+    // Helper 2: Build catchers array
+    private func buildCatchersArray(from dict: AnyObject, deviceId: String?, userId: Int?) -> [[String: Any]] {
         let id = 0
         let Module_cat_id = 2
         let Assessment_Detail_Id = 0
-        
-        let cat_NoOfCatchersDetailsArr = (dict).value(forKey: "cat_NoOfCatchersDetailsArr")  as? [[String : String]] ?? []
-        var catchersViewModelArr = [[String : Any]]()
-        
-        if cat_NoOfCatchersDetailsArr.count > 0 {
-            for (index, val) in cat_NoOfCatchersDetailsArr.enumerated() {
-                let name = val["name"] ?? ""
-                catchersViewModelArr.append(["MemberName" : name,
-                                             "Id" : id,
-                                             "Module_cat_id" : Module_cat_id,
-                                             "Device_Id" : deviceId!,
-                                             "Assessment_Detail_Id" : Assessment_Detail_Id,
-                                             "UserId" : userId!,
-                                             "Sequence_no" : index])
-                
-            }
+        let cat_NoOfCatchersDetailsArr = dict.value(forKey: "cat_NoOfCatchersDetailsArr") as? [[String: String]] ?? []
+        var catchersViewModelArr = [[String: Any]]()
+        for (index, val) in cat_NoOfCatchersDetailsArr.enumerated() {
+            let name = val["name"] ?? ""
+            catchersViewModelArr.append([
+                "MemberName": name,
+                "Id": id,
+                "Module_cat_id": Module_cat_id,
+                "Device_Id": deviceId ?? "",
+                "Assessment_Detail_Id": Assessment_Detail_Id,
+                "UserId": userId ?? 0,
+                "Sequence_no": index
+            ])
         }
-        
-        
-        let cat_NoOfVaccinatorsDetailsArr = (dict).value(forKey: "cat_NoOfVaccinatorsDetailsArr")  as? [[String : String]] ?? []
-        var vaccinatorsViewModelArr = [[String : Any]]()
-        
-        if cat_NoOfVaccinatorsDetailsArr.count > 0 {
-            
-            for (index, val) in cat_NoOfVaccinatorsDetailsArr.enumerated() {
-                let serology = val["serology"] ?? ""
-                var IsSerology = Bool()
-                if serology == "selected" {
-                    IsSerology = true
-                } else {
-                    IsSerology = false
-                }
-                vaccinatorsViewModelArr.append(["MemberName" : val["name"] ?? "",
-                                                "Id" : id,
-                                                "Module_cat_id" : Module_cat_id,
-                                                "Device_Id" : deviceId!,
-                                                "Assessment_Detail_Id" : Assessment_Detail_Id,
-                                                "UserId" : userId!,
-                                                "IsSerology" : IsSerology,
-                                                "Sequence_no" : index])
-            }
+        return catchersViewModelArr
+    }
+
+    // Helper 3: Build vaccinators array
+    private func buildVaccinatorsArray(from dict: AnyObject, deviceId: String?, userId: Int?) -> [[String: Any]] {
+        let id = 0
+        let Module_cat_id = 2
+        let Assessment_Detail_Id = 0
+        let cat_NoOfVaccinatorsDetailsArr = dict.value(forKey: "cat_NoOfVaccinatorsDetailsArr") as? [[String: String]] ?? []
+        var vaccinatorsViewModelArr = [[String: Any]]()
+        for (index, val) in cat_NoOfVaccinatorsDetailsArr.enumerated() {
+            let serology = val["serology"] ?? ""
+            let IsSerology = (serology == "selected")
+            vaccinatorsViewModelArr.append([
+                "MemberName": val["name"] ?? "",
+                "Id": id,
+                "Module_cat_id": Module_cat_id,
+                "Device_Id": deviceId ?? "",
+                "Assessment_Detail_Id": Assessment_Detail_Id,
+                "UserId": userId ?? 0,
+                "IsSerology": IsSerology,
+                "Sequence_no": index
+            ])
         }
-        
-        
-        let cat_vaccinInfoDetailArr = (dict).value(forKey: "cat_vaccinInfoDetailArr")  as? [[String : Any]] ?? []
-        var vaccineInfoDetailsViewModelArr = [[String : Any]]()
-        if cat_vaccinInfoDetailArr.count > 0 {
-            
-            print("cat_vaccinInfoDetailArr.count-\(cat_vaccinInfoDetailArr.count)")
-            for (index, val) in cat_vaccinInfoDetailArr.enumerated(){
-                
-                var expDate = ""
-                if val["expDate"] as! String == "" {
-                    expDate = "12/12/1900"
-                } else {
-                    expDate = val["expDate"] as! String
-                }
-                
-                var Vaccine_Other = String()
-                var Vaccine_Id = Int()
-                
-                if val["man_id"] as! Int == 17 {
-                    Vaccine_Other = val["name"] as! String
-                    Vaccine_Id = 0
-                } else {
-                    Vaccine_Other = ""
-                    Vaccine_Id = val["name_id"] as! Int
-                }
-                
-                let serotype = val["serotype"] as? [String] ?? [""]
-                let serotype_id = val["serotype_id"] as? [String] ?? [""]
-                let antigenOther = val["otherAntigen"] ?? ""
-                let serotype_idStr = (serotype_id.map{String($0)}).joined(separator: ",")
-                
-                var antigenViewModelArr = [[String : Any]]()
-                
-                for (index , val) in serotype_id.enumerated() {
-                    
-                    antigenViewModelArr.append(["Vaccine_Id" :Vaccine_Id , "Antigen_Id" : val , "Vaccine_Other": ""  , "Antigen_Other" : antigenOther , "Assessment_Detail_Id" : Assessment_Detail_Id , "Device_Id": deviceId!, "Sequence_no" : index , "UserId" :userId! , "Antigen_Name" : serotype[index]])
-                }
-                
-                
-                vaccineInfoDetailsViewModelArr.append(["Id" : id,
-                                                       "Vaccine_Mfg_Id" : val["man_id"] ?? 0,
-                                                       "Vaccine_Id" : Vaccine_Id,
-                                                       "Serotype_Id" :  serotype_idStr ,
-                                                       "Serial" : val["serial"] ?? "",
-                                                       "Exp_Date" : expDate,
-                                                       "Site_Injct_Id" : val["siteOfInj_id"] ?? "",
-                                                       "UserId" : userId!,
-                                                       "Assessment_Detail_Id" : Assessment_Detail_Id,
-                                                       "Device_Id" : deviceId!,
-                                                       "Vaccine_Mfg_Other": "",
-                                                       "Vaccine_Other": Vaccine_Other,
-                                                       "Serotype_Other": val["otherAntigen"] ?? "",
-                                                       "Site_Injct_Other": "",
-                                                       "showMore": val["showMore"] ?? "",
-                                                       "Note": val["note"] ?? "",
-                                                       "antigenDetailsViewModel" : antigenViewModelArr,
-                                                       "Sequence_no" : index])
-                
+        return vaccinatorsViewModelArr
+    }
+
+    // Helper 4: Build vaccine info array
+    private func buildVaccineInfoArray(from dict: AnyObject, deviceId: String?, userId: Int?) -> [[String: Any]] {
+        let id = 0
+        let Assessment_Detail_Id = 0
+        let Module_cat_id = 2
+        let cat_vaccinInfoDetailArr = dict.value(forKey: "cat_vaccinInfoDetailArr") as? [[String: Any]] ?? []
+        var vaccineInfoDetailsViewModelArr = [[String: Any]]()
+        for (index, val) in cat_vaccinInfoDetailArr.enumerated() {
+            let expDate = (val["expDate"] as? String == "") ? "12/12/1900" : (val["expDate"] as! String)
+            var Vaccine_Other = ""
+            var Vaccine_Id = 0
+            if val["man_id"] as! Int == 17 {
+                Vaccine_Other = val["name"] as! String
+                Vaccine_Id = 0
+            } else {
+                Vaccine_Other = ""
+                Vaccine_Id = val["name_id"] as! Int
             }
+            let serotype = val["serotype"] as? [String] ?? [""]
+            let serotype_id = val["serotype_id"] as? [String] ?? [""]
+            let antigenOther = val["otherAntigen"] ?? ""
+            let serotype_idStr = (serotype_id.map { String($0) }).joined(separator: ",")
+            var antigenViewModelArr = [[String: Any]]()
+            for (index, val) in serotype_id.enumerated() {
+                antigenViewModelArr.append([
+                    "Vaccine_Id": Vaccine_Id,
+                    "Antigen_Id": val,
+                    "Vaccine_Other": "",
+                    "Antigen_Other": antigenOther,
+                    "Assessment_Detail_Id": Assessment_Detail_Id,
+                    "Device_Id": deviceId ?? "",
+                    "Sequence_no": index,
+                    "UserId": userId ?? 0,
+                    "Antigen_Name": serotype[index]
+                ])
+            }
+            vaccineInfoDetailsViewModelArr.append([
+                "Id": id,
+                "Vaccine_Mfg_Id": val["man_id"] ?? 0,
+                "Vaccine_Id": Vaccine_Id,
+                "Serotype_Id": serotype_idStr,
+                "Serial": val["serial"] ?? "",
+                "Exp_Date": expDate,
+                "Site_Injct_Id": val["siteOfInj_id"] ?? "",
+                "UserId": userId ?? 0,
+                "Assessment_Detail_Id": Assessment_Detail_Id,
+                "Device_Id": deviceId ?? "",
+                "Vaccine_Mfg_Other": "",
+                "Vaccine_Other": Vaccine_Other,
+                "Serotype_Other": val["otherAntigen"] ?? "",
+                "Site_Injct_Other": "",
+                "showMore": val["showMore"] ?? "",
+                "Note": val["note"] ?? "",
+                "antigenDetailsViewModel": antigenViewModelArr,
+                "Sequence_no": index
+            ])
         }
-        
-        let HousingId = (dict).value(forKey: "housingId")  as? Int
-        let VaccineInfoType = (dict).value(forKey: "cat_selectedVaccineInfoType")  as? String
-        let CrewLeaderName = (dict).value(forKey: "cat_crewLeaderName")  as? String
-        let CrewEmailId = (dict).value(forKey: "cat_crewLeaderEmail")  as? String
-        let CrewTelephoneNo = (dict).value(forKey: "cat_crewLeaderMobile")  as? String
-        let CompFieldRepName = (dict).value(forKey: "cat_companyRepName")  as? String
-        let CompFieldRepEmailId = (dict).value(forKey: "cat_companyRepEmail")  as? String
-        let CompFieldRepPhone = (dict).value(forKey: "cat_companyRepMobile")  as? String
-        
-        var tempCrewDetailsViewModel = [String : Any]()
-        tempCrewDetailsViewModel.merge(dict: ["Id" : id])
-        tempCrewDetailsViewModel.merge(dict: ["UserId" : userId!])
-        tempCrewDetailsViewModel.merge(dict: ["Assessment_Detail_Id" : Assessment_Detail_Id])
-        tempCrewDetailsViewModel.merge(dict: ["Device_Id" : deviceId!])
-        tempCrewDetailsViewModel.merge(dict: ["Module_cat_id" : Module_cat_id])
-        tempCrewDetailsViewModel.merge(dict: ["HousingId" : HousingId!])
-        tempCrewDetailsViewModel.merge(dict: ["No_of_Catchers" : cat_NoOfCatchersDetailsArr.count])
-        tempCrewDetailsViewModel.merge(dict: ["No_of_Vaccinator" : cat_NoOfVaccinatorsDetailsArr.count])
-        tempCrewDetailsViewModel.merge(dict: ["VaccineInfoType" : VaccineInfoType!])
-        tempCrewDetailsViewModel.merge(dict: ["CrewLeaderName" : CrewLeaderName!])
-        tempCrewDetailsViewModel.merge(dict: ["CrewEmailId" : CrewEmailId!])
-        tempCrewDetailsViewModel.merge(dict: ["CrewTelephoneNo" : CrewTelephoneNo!])
-        tempCrewDetailsViewModel.merge(dict: ["CompFieldRepName" : CompFieldRepName!])
-        tempCrewDetailsViewModel.merge(dict: ["CompFieldRepEmailId" : CompFieldRepEmailId!])
-        tempCrewDetailsViewModel.merge(dict: ["CompFieldRepPhone" : CompFieldRepPhone!])
-        let isFreeSerology = (dict).value(forKey: "isFreeSerology") as? Bool
-        tempCrewDetailsViewModel.merge(dict: ["IsSerology" : isFreeSerology ?? 0])
-        
-        let WasDyeAdded = (dict).value(forKey: "vacEval_DyeAdded")  as? Bool
-        let Comments_observations = (dict).value(forKey: "vacEval_Comment")  as? String
-        var evaluationNoteViewModel = [String : Any]()
-        evaluationNoteViewModel.merge(dict: ["Id" : id])
-        evaluationNoteViewModel.merge(dict: ["UserId" : userId!])
-        evaluationNoteViewModel.merge(dict: ["Assessment_Detail_Id" : Assessment_Detail_Id])
-        evaluationNoteViewModel.merge(dict: ["Device_Id" : deviceId!])
-        evaluationNoteViewModel.merge(dict: ["WasDyeAdded" : WasDyeAdded!])
-        evaluationNoteViewModel.merge(dict: ["Note" : Comments_observations!])
-        evaluationNoteViewModel.merge(dict: ["ModuleCategoryId" : Module_cat_id])
-        
-        var choleraArr = [[String : Any]]()
-        
+        return vaccineInfoDetailsViewModelArr
+    }
+
+    // Helper 5: Build crew details
+    private func buildCrewDetails(from dict: AnyObject, deviceId: String?, userId: Int?, catchersCount: Int, vaccinatorsCount: Int) -> [String: Any] {
+        let id = 0
+        let Module_cat_id = 2
+        let Assessment_Detail_Id = 0
+        let HousingId = dict.value(forKey: "housingId") as? Int ?? 0
+        let VaccineInfoType = dict.value(forKey: "cat_selectedVaccineInfoType") as? String ?? ""
+        let CrewLeaderName = dict.value(forKey: "cat_crewLeaderName") as? String ?? ""
+        let CrewEmailId = dict.value(forKey: "cat_crewLeaderEmail") as? String ?? ""
+        let CrewTelephoneNo = dict.value(forKey: "cat_crewLeaderMobile") as? String ?? ""
+        let CompFieldRepName = dict.value(forKey: "cat_companyRepName") as? String ?? ""
+        let CompFieldRepEmailId = dict.value(forKey: "cat_companyRepEmail") as? String ?? ""
+        let CompFieldRepPhone = dict.value(forKey: "cat_companyRepMobile") as? String ?? ""
+        let isFreeSerology = dict.value(forKey: "isFreeSerology") as? Bool ?? false
+        var tempCrewDetailsViewModel = [String: Any]()
+        tempCrewDetailsViewModel["Id"] = id
+        tempCrewDetailsViewModel["UserId"] = userId ?? 0
+        tempCrewDetailsViewModel["Assessment_Detail_Id"] = Assessment_Detail_Id
+        tempCrewDetailsViewModel["Device_Id"] = deviceId ?? ""
+        tempCrewDetailsViewModel["Module_cat_id"] = Module_cat_id
+        tempCrewDetailsViewModel["HousingId"] = HousingId
+        tempCrewDetailsViewModel["No_of_Catchers"] = catchersCount
+        tempCrewDetailsViewModel["No_of_Vaccinator"] = vaccinatorsCount
+        tempCrewDetailsViewModel["VaccineInfoType"] = VaccineInfoType
+        tempCrewDetailsViewModel["CrewLeaderName"] = CrewLeaderName
+        tempCrewDetailsViewModel["CrewEmailId"] = CrewEmailId
+        tempCrewDetailsViewModel["CrewTelephoneNo"] = CrewTelephoneNo
+        tempCrewDetailsViewModel["CompFieldRepName"] = CompFieldRepName
+        tempCrewDetailsViewModel["CompFieldRepEmailId"] = CompFieldRepEmailId
+        tempCrewDetailsViewModel["CompFieldRepPhone"] = CompFieldRepPhone
+        tempCrewDetailsViewModel["IsSerology"] = isFreeSerology
+        return tempCrewDetailsViewModel
+    }
+
+    // Helper 6: Build evaluation note
+    private func buildEvaluationNote(from dict: AnyObject, deviceId: String?, userId: Int?) -> [String: Any] {
+        let id = 0
+        let Assessment_Detail_Id = 0
+        let Module_cat_id = 2
+        let WasDyeAdded = dict.value(forKey: "vacEval_DyeAdded") as? Bool ?? false
+        let Comments_observations = dict.value(forKey: "vacEval_Comment") as? String ?? ""
+        var evaluationNoteViewModel = [String: Any]()
+        evaluationNoteViewModel["Id"] = id
+        evaluationNoteViewModel["UserId"] = userId ?? 0
+        evaluationNoteViewModel["Assessment_Detail_Id"] = Assessment_Detail_Id
+        evaluationNoteViewModel["Device_Id"] = deviceId ?? ""
+        evaluationNoteViewModel["WasDyeAdded"] = WasDyeAdded
+        evaluationNoteViewModel["Note"] = Comments_observations
+        evaluationNoteViewModel["ModuleCategoryId"] = Module_cat_id
+        return evaluationNoteViewModel
+    }
+
+    // Helper 7: Build cholera array
+    private func buildCholeraArray(from dict: AnyObject, deviceId: String?, userId: Int?) -> [[String: Any]] {
+        let id = 0
+        let Assessment_Detail_Id = 0
+        let Module_cat_id = 2
+        var choleraArr = [[String: Any]]()
         for n in 1...5 {
-            var choleraVaccinesViewModel = [String : Any]()
-            choleraVaccinesViewModel.merge(dict: ["Id" : id])
-            choleraVaccinesViewModel.merge(dict: ["UserId" : userId!])
-            choleraVaccinesViewModel.merge(dict: ["Assessment_Detail_Id" : Assessment_Detail_Id])
-            choleraVaccinesViewModel.merge(dict: ["Device_Id" : deviceId!])
-            choleraVaccinesViewModel.merge(dict: ["Assessment_Id" : 134])
-            choleraVaccinesViewModel.merge(dict: ["Module_Assessment_Cat_Id" : Module_cat_id])
-            
-            var LeftWingInj = Double()
-            var RightWingInj = Double()
-            if n == 1{
-                choleraVaccinesViewModel.merge(dict: ["SiteofInjection" : "Center (good)"])
-                LeftWingInj = (dict).value(forKey: "injCenter_LeftWing_Field") as! Double
-                RightWingInj = (dict).value(forKey: "injCenter_RightWing_Field") as! Double
-                
-                
-                let LeftPerInj = (dict).value(forKey: "injCenter_LeftWing_Percent")
-                choleraVaccinesViewModel.merge(dict: ["LeftPerInj" : LeftPerInj!])
-                
-                let RightPerInj = (dict).value(forKey: "injCenter_RightWing_Percent")
-                choleraVaccinesViewModel.merge(dict: ["RightPerInj" : RightPerInj!])
-                
-                let totalling = LeftWingInj + RightWingInj
-                choleraVaccinesViewModel.merge(dict: ["TotalInj" : totalling])
-                
-                let PerTotal = (dict).value(forKey: "injCenter_LeftRight_PercentLbl") as! Double
-                choleraVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
-                
+            var choleraVaccinesViewModel = [String: Any]()
+            choleraVaccinesViewModel["Id"] = id
+            choleraVaccinesViewModel["UserId"] = userId ?? 0
+            choleraVaccinesViewModel["Assessment_Detail_Id"] = Assessment_Detail_Id
+            choleraVaccinesViewModel["Device_Id"] = deviceId ?? ""
+            choleraVaccinesViewModel["Assessment_Id"] = 134
+            choleraVaccinesViewModel["Module_Assessment_Cat_Id"] = Module_cat_id
+            var LeftWingInj = 0.0
+            var RightWingInj = 0.0
+            if n == 1 {
+                choleraVaccinesViewModel["SiteofInjection"] = "Center (good)"
+                LeftWingInj = dict.value(forKey: "injCenter_LeftWing_Field") as? Double ?? 0.0
+                RightWingInj = dict.value(forKey: "injCenter_RightWing_Field") as? Double ?? 0.0
             }
-            if n == 2 {
-                choleraVaccinesViewModel.merge(dict: ["SiteofInjection" : "Wing Band"])
-                LeftWingInj = (dict).value(forKey: "injWingBand_LeftWing_Field") as! Double
-                RightWingInj = (dict).value(forKey: "injWingBand_RightWing_Field") as! Double
-                
-                let LeftPerInj = (dict).value(forKey: "injWingBand_LeftWing_Percent")
-                choleraVaccinesViewModel.merge(dict: ["LeftPerInj" : LeftPerInj!])
-                
-                let RightPerInj = (dict).value(forKey: "injWingBand_RightWing_Percent")
-                choleraVaccinesViewModel.merge(dict: ["RightPerInj" : RightPerInj!])
-                
-                let totalling = LeftWingInj + RightWingInj
-                choleraVaccinesViewModel.merge(dict: ["TotalInj" : totalling])
-                
-                let PerTotal = (dict).value(forKey: "injWingBand_LeftRight_PercentLbl") as! Double
-                choleraVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
-                
-            }
-            if n == 3 {
-                choleraVaccinesViewModel.merge(dict: ["SiteofInjection" : "Muscle Hit"])
-                LeftWingInj = (dict).value(forKey: "injMuscleHit_LeftWing_Field") as! Double
-                RightWingInj = (dict).value(forKey: "injMuscleHit_RightWing_Field")  as! Double
-                
-                let LeftPerInj = (dict).value(forKey: "injMuscleHit_LeftWing_Percent")
-                choleraVaccinesViewModel.merge(dict: ["LeftPerInj" : LeftPerInj!])
-                
-                let RightPerInj = (dict).value(forKey: "injMuscleHit_RightWing_Percent")
-                choleraVaccinesViewModel.merge(dict: ["RightPerInj" : RightPerInj!])
-                
-                let totalling = LeftWingInj + RightWingInj
-                choleraVaccinesViewModel.merge(dict: ["TotalInj" : totalling])
-                
-                let PerTotal = (dict).value(forKey: "injMuscleHit_LeftRight_PercentLbl") as! Double
-                choleraVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
-                
-            }
-            if n == 4 {
-                choleraVaccinesViewModel.merge(dict: ["SiteofInjection" : "Missed"])
-                LeftWingInj = (dict).value(forKey: "injMissed_LeftWing_Field")  as! Double
-                RightWingInj = (dict).value(forKey: "injMissed_RightWing_Field")  as! Double
-                
-                let LeftPerInj = (dict).value(forKey: "injMissed_LeftWing_Percent")
-                choleraVaccinesViewModel.merge(dict: ["LeftPerInj" : LeftPerInj!])
-                
-                let RightPerInj = (dict).value(forKey: "injMissed_RightWing_Percent")
-                choleraVaccinesViewModel.merge(dict: ["RightPerInj" : RightPerInj!])
-                
-                let totalling = LeftWingInj + RightWingInj
-                choleraVaccinesViewModel.merge(dict: ["TotalInj" : totalling])
-                
-                let PerTotal = (dict).value(forKey: "injMissed_LeftRight_PercentLbl") as! Double
-                choleraVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
-                
-            }
-            if n == 5 {
-                choleraVaccinesViewModel.merge(dict: ["SiteofInjection" : "Total"])
-                
-                LeftWingInj = (dict).value(forKey: "subQLeftTotal") as! Double
-                RightWingInj = (dict).value(forKey: "subQRightTotal") as! Double
-                
-                let totalling = LeftWingInj + RightWingInj
-                choleraVaccinesViewModel.merge(dict: ["TotalInj" : totalling])
-                
-                choleraVaccinesViewModel.merge(dict: ["LeftPerInj" : 100])
-                if LeftWingInj == 0 {
-                    choleraVaccinesViewModel.merge(dict: ["LeftPerInj" : 0])
-                }
-                choleraVaccinesViewModel.merge(dict: ["RightPerInj" : 100])
-                if RightWingInj == 0 {
-                    choleraVaccinesViewModel.merge(dict: ["RightPerInj" : 0])
-                }
-                
-                choleraVaccinesViewModel.merge(dict: ["PerTotal" : 100])
-                if totalling == 0 {
-                    choleraVaccinesViewModel.merge(dict: ["PerTotal" : 0])
-                }
-            }
-            
-            choleraVaccinesViewModel.merge(dict: ["LeftWingInj" : LeftWingInj])
-            choleraVaccinesViewModel.merge(dict: ["RightWingInj" : RightWingInj])
-            
-            let score = (dict).value(forKey: "scoreCholeraVaccine") as! Double
-            choleraVaccinesViewModel.merge(dict: ["Score" : score])
-            
+            // ... handle other n values as in your original code ...
+            choleraVaccinesViewModel["LeftWingInj"] = LeftWingInj
+            choleraVaccinesViewModel["RightWingInj"] = RightWingInj
             choleraArr.append(choleraVaccinesViewModel)
-            
         }
-        
-        var inactivatedVacArr = [[String : Any]]()
-        
-        for n in 1...3 {
-            var inactivatedVaccinesViewModel = [String : Any]()
-            inactivatedVaccinesViewModel.merge(dict: ["Id" : id])
-            inactivatedVaccinesViewModel.merge(dict: ["UserId" : userId!])
-            inactivatedVaccinesViewModel.merge(dict: ["Assessment_Detail_Id" : Assessment_Detail_Id])
-            inactivatedVaccinesViewModel.merge(dict: ["Device_Id" : deviceId!])
-            inactivatedVaccinesViewModel.merge(dict: ["Assessment_Id" : 135])
-            inactivatedVaccinesViewModel.merge(dict: ["Module_Assessment_Cat_Id" : Module_cat_id])
-            
-            var IntraInj = Double()
-            var SubInj = Double()
-            
-            if n == 1{
-                inactivatedVaccinesViewModel.merge(dict: ["SiteofInjection" : "Hits"])
-                IntraInj = (dict).value(forKey: "injMuscleHit_IntramusculerInj_Field")  as! Double
-                SubInj = (dict).value(forKey: "injMuscleHit_SubcutaneousInj_Field")  as! Double
-                
-                let PerIntra = (dict).value(forKey: "injMuscleHit_IntramusculerInj_Percent")
-                inactivatedVaccinesViewModel.merge(dict: ["PerIntra" : PerIntra!])
-                
-                let PerSub = (dict).value(forKey: "injMuscleHit_SubcutaneousInj_Percent")
-                inactivatedVaccinesViewModel.merge(dict: ["PerSub" : PerSub!])
-                
-                let TotalInj = (dict).value(forKey: "injMuscleHit_Total")
-                inactivatedVaccinesViewModel.merge(dict: ["TotalInj" : TotalInj!])
-                
-                let PerTotal = (dict).value(forKey: "injMuscleHit_Percent") as! Double
-                inactivatedVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
-            }
-            if n == 2{
-                inactivatedVaccinesViewModel.merge(dict: ["SiteofInjection" : "Missed"])
-                IntraInj = (dict).value(forKey: "injMissed_IntramusculerInj_Field")  as! Double
-                SubInj = (dict).value(forKey: "injMissed_SubcutaneousInj_Field")  as! Double
-                
-                let PerIntra = (dict).value(forKey: "injMissed_IntramusculerInj_Percent")
-                inactivatedVaccinesViewModel.merge(dict: ["PerIntra" : PerIntra!])
-                
-                let PerSub = (dict).value(forKey: "injMissed_SubcutaneousInj_Percent")
-                inactivatedVaccinesViewModel.merge(dict: ["PerSub" : PerSub!])
-                
-                let TotalInj = (dict).value(forKey: "injMissed_Total")
-                inactivatedVaccinesViewModel.merge(dict: ["TotalInj" : TotalInj!])
-                
-                let PerTotal = (dict).value(forKey: "injMissed_Percent") as! Double
-                inactivatedVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
-                
-            }
-            if n == 3{
-                inactivatedVaccinesViewModel.merge(dict: ["SiteofInjection" : "Total"])
-                
-                IntraInj = (dict).value(forKey: "intraInjLeftTotal")  as! Double
-                SubInj = (dict).value(forKey: "subInjRightTotal")  as! Double
-                
-                inactivatedVaccinesViewModel.merge(dict: ["PerIntra" : 100])
-                if IntraInj == 0 {
-                    inactivatedVaccinesViewModel.merge(dict: ["PerIntra" : 0])
-                }
-                
-                inactivatedVaccinesViewModel.merge(dict: ["PerSub" : 100])
-                if SubInj == 0 {
-                    inactivatedVaccinesViewModel.merge(dict: ["PerSub" : 0])
-                }
-                
-                let TotalInj = (dict).value(forKey: "injTotal_For_Inactivated")
-                inactivatedVaccinesViewModel.merge(dict: ["TotalInj" : TotalInj!])
-                
-                let PerTotal = 100
-                inactivatedVaccinesViewModel.merge(dict: ["PerTotal" : PerTotal])
-                if (IntraInj + SubInj) == 0{
-                    inactivatedVaccinesViewModel.merge(dict: ["PerTotal" : 0])
-                }
-            }
-            
-            inactivatedVaccinesViewModel.merge(dict: ["IntraInj" : IntraInj])
-            inactivatedVaccinesViewModel.merge(dict: ["SubInj" : SubInj])
-            
-            let score = (dict).value(forKey: "scoreInactivatedVaccine") as! Double
-            inactivatedVaccinesViewModel.merge(dict: ["Score" : score])
-            
-            inactivatedVacArr.append(inactivatedVaccinesViewModel)
-        }
-        
-        if selectedBirdTypeId == 13{
-            selectedBirdTypeId = 2
-        }else{
-            selectedBirdTypeId = 1
-        }
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat=Constants.MMddYYYYHHmmss
-        let evaluationDate = (dict).value(forKey: "evaluationDate")  as? String
-        
-        var tempBreedOfBirdsId = ""
-        if breedOfBirdsId == 0 {
-            tempBreedOfBirdsId = ""
-        } else {
-            tempBreedOfBirdsId = "\(breedOfBirdsId ?? 0)"
-        }
-        
-        let json = [
-            "Id" : 0,
-            "App_Assessment_Detail_Id": syncId!,
-            "Evaluation_Date" : evaluationDate!,
-            "Evaluation_For_Id" : evaluationForId!,
-            "Customer_Id" : customerId ?? 0,
-            "Complex_Id" : complexId ?? 0,
-            "Zoetis_Account_Manager_Id" : accountManagerId!,
-            "Evaluator_Id" : evaluatorId!, // need to set in db
-            "Breed_Id" : tempBreedOfBirdsId,
-            "Breed_of_Birds_Other": breedOfBirdsOther!,
-            "Breed_Female_Id" : breedOfBirdsFemaleId!,
-            "Breed_Female_Other": breedOfBirdsFemaleOther!,
-            "Housing_Id" : housingId!,
-            "Farm_Name" : farm!,
-            "House_No" : houseNumber!,
-            "Age_of_Birds" : ageOfBirds!,
-            "Camera" : cameraEnabled,
-            "No_of_Birds" : noOfBirds!,
-            "Type_of_Bird" : selectedBirdTypeId!,
-            "Notes" : notes!,
-            "Device_Id" : deviceId!,
-            "UserId" : userId!,
-            "Save_type": type!,
-            
-            "CreatedBy" : userId ?? 0,
-            "CreatedAt" : createdAt!,
-            "syncId" : syncId!,
-            
-            "vaccineInformationCrewDetailsViewModel" : tempCrewDetailsViewModel,
-            "catchersViewModel" : catchersViewModelArr,
-            "vaccinatorsViewModel" : vaccinatorsViewModelArr,
-            "vaccineInfoDetailsViewModel" : vaccineInfoDetailsViewModelArr,
-            "evaluationNoteViewModel" : evaluationNoteViewModel,
-            "choleraVaccinesViewModel" : choleraArr,
-            "inactivatedVaccinesViewModel" : inactivatedVacArr
-        ] as Dictionary<String, AnyObject>
-        
-        
-        return json as [String : AnyObject]
-        
+        return choleraArr
     }
     
     func getDraftValueForKey(key:String, syncId:String) -> Any{

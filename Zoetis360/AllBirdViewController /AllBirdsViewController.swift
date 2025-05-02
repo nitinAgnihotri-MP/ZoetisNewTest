@@ -645,135 +645,119 @@ class AllBirdsViewController: BaseViewController,UITableViewDelegate,UITableView
 extension AllBirdsViewController {
     
     func setTemperaryObsNameArray() {
-        
         let savedMovedBirdsSequences = CoreDataHandler().fetchAllBirdsSwapedIndexes()
         if savedMovedBirdsSequences.count > 0 {
-            
-            let savedBirdNameArray = NSMutableArray()
-            for (_, object) in savedMovedBirdsSequences.enumerated() {
-                savedBirdNameArray.add(object.birdName ?? "")
-            }
-            for (index, bird) in savedBirdNameArray.enumerated() {
-                for (birdIndex, object) in obsArr.enumerated() {
-                    let obsName = ((object as! NSDictionary).allValues[0] as! CaptureNecropsyViewData).obsName
-                    if obsName == bird as? String && index < self.obsArr.count {
-                            let movedOBS = self.obsArr[birdIndex]
-                            self.obsArr.removeObject(at: birdIndex)
-                            self.obsArr.insert(movedOBS, at: index)
-                        
-                    }
-                }
-            }
-            for (index, bird) in savedBirdNameArray.enumerated() {
-                for (birdIndex, obsBird) in obsNameArray.enumerated() {
-                    if let obsName = obsBird as? String, obsName == bird as? String, index < self.obsNameArray.count {
-                        
-                        let movedOBSBird = self.obsNameArray[birdIndex]
-                        self.obsNameArray.removeObject(at: birdIndex)
-                        self.obsNameArray.insert(movedOBSBird, at: index)
-                        
-                    }
-                }
-            }
-            
+            restoreSavedBirdOrder(savedMovedBirdsSequences)
         } else {
+            reorderObsByQuickIndex()
+        }
+    }
 
-            struct QuickIndexObject {
-                var quickIndex = 0
-                var obsName = ""
-            }
-            var arrOfIndex = [QuickIndexObject]()
-            
-            for iteam in self.obsArr {
-                
-                var catName = ((iteam as! NSDictionary).allValues[0] as? CaptureNecropsyViewData)?.catName
-                let obsName = ((iteam as! NSDictionary).allValues[0] as? CaptureNecropsyViewData)?.obsName
-                
-                if catName == "skeltaMuscular" {
-                    catName = "Skeleta"
-                }
-                else if catName == "Resp" {
-                    catName = "Respiratory"
-                }
-                let fetchdata =  CoreDataHandler().fetchAllSeetingByObs(entityName: catName!, obsName: obsName!)
-                switch catName {
-                case "Skeleta":
-                    let objTable  = fetchdata.object(at: 0) as! Skeleta
-                    
-                    if let quickIndex = objTable.quicklinkIndex as? Int, quickIndex > 0 {
-                        
-                        let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
-                        arrOfIndex.append(quickIndexObject)
-                        
-                    }
-                case "Coccidiosis":
-                    let objTable  = fetchdata.object(at: 0) as! Coccidiosis
-                    
-                    if let quickIndex = objTable.quicklinkIndex as? Int , quickIndex > 0 {
-                        
-                            let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
-                            arrOfIndex.append(quickIndexObject)
-                        
-                    }
-                case "GITract":
-                    let objTable  = fetchdata.object(at: 0) as! GITract //: Skeleta = (fetchdata as? Skeleta)!
-                    
-                    if let quickIndex = objTable.quicklinkIndex as? Int ,  quickIndex > 0 {
-                        
-                            let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
-                            arrOfIndex.append(quickIndexObject)
-                        
-                    }
-                case "Respiratory":
-                    let objTable  = fetchdata.object(at: 0) as! Respiratory //: Skeleta = (fetchdata as? Skeleta)!
-                    
-                    if let quickIndex = objTable.quicklinkIndex as? Int , quickIndex > 0{
-                 
-                            let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
-                            arrOfIndex.append(quickIndexObject)
-                        
-                    }
-                case "Immune":
-                    let objTable  = fetchdata.object(at: 0) as! Immune //: Skeleta = (fetchdata as? Skeleta)!
-                    
-                    if let quickIndex = objTable.quicklinkIndex as? Int , quickIndex > 0  {
-                      
-                            let quickIndexObject = QuickIndexObject(quickIndex: quickIndex, obsName: obsName!)
-                            arrOfIndex.append(quickIndexObject)
-                        
-                    }
-                default:
-                    break
-                }
-            }
-            
-            for (_, quickIndexObject) in arrOfIndex.enumerated() {
-                for (birdIndex, object) in obsArr.enumerated() {
-                    let obsName = ((object as! NSDictionary).allValues[0] as! CaptureNecropsyViewData).obsName
-                    if quickIndexObject.quickIndex < self.obsArr.count, obsName == quickIndexObject.obsName {
-                      
-                            let movedOBS = self.obsArr[birdIndex]
-                            self.obsArr.removeObject(at: birdIndex)
-                            self.obsArr.insert(movedOBS, at: quickIndexObject.quickIndex)
-                        
-                    }
-                }
-            }
-            for (_, object) in arrOfIndex.enumerated() {
-                for (birdIndex, obsBird) in obsNameArray.enumerated() {
-                    if let obsName = obsBird as? String {
-                        if object.quickIndex < self.obsNameArray.count ,  obsName == object.obsName  {
-                            
-                                let movedOBSBird = self.obsNameArray[birdIndex]
-                                self.obsNameArray.removeObject(at: birdIndex)
-                                self.obsNameArray.insert(movedOBSBird, at: object.quickIndex)
-                            
-                        }
-                    }
+    private func restoreSavedBirdOrder(_ savedMovedBirdsSequences: [Any]) {
+        let savedBirdNameArray = NSMutableArray()
+        for object in savedMovedBirdsSequences {
+            savedBirdNameArray.add((object as AnyObject).birdName ?? "")
+        }
+        reorderObsArrBySavedNames(savedBirdNameArray)
+        reorderObsNameArrayBySavedNames(savedBirdNameArray)
+    }
+
+    private func reorderObsArrBySavedNames(_ savedBirdNameArray: NSMutableArray) {
+        for (index, bird) in savedBirdNameArray.enumerated() {
+            for (birdIndex, object) in obsArr.enumerated() {
+                let obsName = ((object as! NSDictionary).allValues[0] as! CaptureNecropsyViewData).obsName
+                if obsName == bird as? String && index < self.obsArr.count {
+                    let movedOBS = self.obsArr[birdIndex]
+                    self.obsArr.removeObject(at: birdIndex)
+                    self.obsArr.insert(movedOBS, at: index)
                 }
             }
         }
     }
+
+    private func reorderObsNameArrayBySavedNames(_ savedBirdNameArray: NSMutableArray) {
+        for (index, bird) in savedBirdNameArray.enumerated() {
+            for (birdIndex, obsBird) in obsNameArray.enumerated() {
+                if let obsName = obsBird as? String, obsName == bird as? String, index < self.obsNameArray.count {
+                    let movedOBSBird = self.obsNameArray[birdIndex]
+                    self.obsNameArray.removeObject(at: birdIndex)
+                    self.obsNameArray.insert(movedOBSBird, at: index)
+                }
+            }
+        }
+    }
+    struct QuickIndexObject {
+        var quickIndex = 0
+        var obsName = ""
+    }
+    private func reorderObsByQuickIndex() {
+        
+        var arrOfIndex = [QuickIndexObject]()
+        for iteam in self.obsArr {
+            guard let captureData = (iteam as? NSDictionary)?.allValues[0] as? CaptureNecropsyViewData else { continue }
+            var catName = captureData.catName
+            let obsName = captureData.obsName
+            catName = mapCategoryName(catName)
+            let fetchdata = CoreDataHandler().fetchAllSeetingByObs(entityName: catName!, obsName: obsName!)
+            if let quickIndex = getQuickIndex(catName: catName!, fetchdata: fetchdata), quickIndex > 0 {
+                arrOfIndex.append(QuickIndexObject(quickIndex: quickIndex, obsName: obsName!))
+            }
+        }
+        reorderObsArrByQuickIndex(arrOfIndex)
+        reorderObsNameArrayByQuickIndex(arrOfIndex)
+    }
+
+    private func mapCategoryName(_ catName: String?) -> String? {
+        switch catName {
+        case "skeltaMuscular": return "Skeleta"
+        case "Resp": return "Respiratory"
+        default: return catName
+        }
+    }
+
+    private func getQuickIndex(catName: String, fetchdata: NSArray) -> Int? {
+        switch catName {
+        case "Skeleta":
+            return (fetchdata.object(at: 0) as? Skeleta)?.quicklinkIndex as? Int
+        case "Coccidiosis":
+            return (fetchdata.object(at: 0) as? Coccidiosis)?.quicklinkIndex as? Int
+        case "GITract":
+            return (fetchdata.object(at: 0) as? GITract)?.quicklinkIndex as? Int
+        case "Respiratory":
+            return (fetchdata.object(at: 0) as? Respiratory)?.quicklinkIndex as? Int
+        case "Immune":
+            return (fetchdata.object(at: 0) as? Immune)?.quicklinkIndex as? Int
+        default:
+            return nil
+        }
+    }
+
+    private func reorderObsArrByQuickIndex(_ arrOfIndex: [QuickIndexObject]) {
+        for quickIndexObject in arrOfIndex {
+            for (birdIndex, object) in obsArr.enumerated() {
+                let obsName = ((object as! NSDictionary).allValues[0] as! CaptureNecropsyViewData).obsName
+                if quickIndexObject.quickIndex < self.obsArr.count, obsName == quickIndexObject.obsName {
+                    let movedOBS = self.obsArr[birdIndex]
+                    self.obsArr.removeObject(at: birdIndex)
+                    self.obsArr.insert(movedOBS, at: quickIndexObject.quickIndex)
+                }
+            }
+        }
+    }
+
+    private func reorderObsNameArrayByQuickIndex(_ arrOfIndex: [QuickIndexObject]) {
+        for object in arrOfIndex {
+            for (birdIndex, obsBird) in obsNameArray.enumerated() {
+                if let obsName = obsBird as? String, object.quickIndex < self.obsNameArray.count, obsName == object.obsName {
+                    let movedOBSBird = self.obsNameArray[birdIndex]
+                    self.obsNameArray.removeObject(at: birdIndex)
+                    self.obsNameArray.insert(movedOBSBird, at: object.quickIndex)
+                }
+            }
+        }
+    }
+
+    // ... existing code ...
     // MARK: 🟠 Save Birds Sequesnce in Database
     func saveBirdsSequencesInDB() {
         CoreDataHandler().deleteAllBirdsSwapedIndexes()

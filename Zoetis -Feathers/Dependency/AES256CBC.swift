@@ -407,63 +407,60 @@ final private class AESCipher {
     }
 
     fileprivate func expandKey(_ key: Key, variant: Variant) -> Array<Array<UInt32>> {
+        let expanded = performKeyExpansion(key, variant: variant)
+        return convertExpandedKey(expanded)
+    }
 
-        func convertExpandedKey(_ expanded: Array<UInt8>) -> Array<Array<UInt32>> {
-            var arr = Array<UInt32>()
-            for idx in stride(from: expanded.startIndex, to: expanded.endIndex, by: 4) {
-                let four = Array(expanded[idx..<idx.advanced(by: 4)].reversed())
-                let num = UInt32(bytes: four)
-                arr.append(num)
-            }
-
-            var allarr = Array<Array<UInt32>>()
-            for idx in stride(from: arr.startIndex, to: arr.endIndex, by: 4) {
-                allarr.append(Array(arr[idx..<idx.advanced(by: 4)]))
-            }
-            return allarr
-        }
-
-        /*
-         * Function used in the Key Expansion routine that takes a four-byte
-         * input word and applies an S-box to each of the four bytes to
-         * produce an output word.
-         */
-        func subWord(_ word: Array<UInt8>) -> Array<UInt8> {
-            var result = word
-            for i in 0..<4 {
-                result[i] = UInt8(sBox[Int(word[i])])
-            }
-            return result
-        }
-
+    private func performKeyExpansion(_ key: Key, variant: Variant) -> [UInt8] {
         var w = Array<UInt8>(repeating: 0, count: variant.Nb * (variant.Nr + 1) * 4)
         for i in 0..<variant.Nk {
             for wordIdx in 0..<4 {
                 w[(4*i)+wordIdx] = key[(4*i)+wordIdx]
             }
         }
-
-        var tmp: Array<UInt8>
-
         for i in variant.Nk..<variant.Nb * (variant.Nr + 1) {
-            tmp = Array<UInt8>(repeating: 0, count: 4)
-
-            for wordIdx in 0..<4 {
-                tmp[wordIdx] = w[4*(i-1)+wordIdx]
-            }
+            var tmp = getTempWord(w, i: i)
             if (i % variant.Nk) == 0 {
                 tmp = subWord(rotateLeft(UInt32(bytes: tmp), by: 8).bytes(totalBytes: MemoryLayout<UInt32>.size))
                 tmp[0] = tmp.first! ^ Rcon[i/variant.Nk]
             } else if variant.Nk > 6 && (i % variant.Nk) == 4 {
                 tmp = subWord(tmp)
             }
-
-            // xor array of bytes
             for wordIdx in 0..<4 {
-                w[4*i+wordIdx] = w[4*(i-variant.Nk)+wordIdx]^tmp[wordIdx]
+                w[4*i+wordIdx] = w[4*(i-variant.Nk)+wordIdx] ^ tmp[wordIdx]
             }
         }
-        return convertExpandedKey(w)
+        return w
+    }
+
+    private func getTempWord(_ w: [UInt8], i: Int) -> [UInt8] {
+        var tmp = Array<UInt8>(repeating: 0, count: 4)
+        for wordIdx in 0..<4 {
+            tmp[wordIdx] = w[4*(i-1)+wordIdx]
+        }
+        return tmp
+    }
+
+    private func subWord(_ word: [UInt8]) -> [UInt8] {
+        var result = word
+        for i in 0..<4 {
+            result[i] = UInt8(sBox[Int(word[i])])
+        }
+        return result
+    }
+
+    private func convertExpandedKey(_ expanded: [UInt8]) -> [[UInt32]] {
+        var arr = [UInt32]()
+        for idx in stride(from: expanded.startIndex, to: expanded.endIndex, by: 4) {
+            let four = Array(expanded[idx..<idx.advanced(by: 4)].reversed())
+            let num = UInt32(bytes: four)
+            arr.append(num)
+        }
+        var allarr = [[UInt32]]()
+        for idx in stride(from: arr.startIndex, to: arr.endIndex, by: 4) {
+            allarr.append(Array(arr[idx..<arr.index(idx, offsetBy: 4)]))
+        }
+        return allarr
     }
 
 }

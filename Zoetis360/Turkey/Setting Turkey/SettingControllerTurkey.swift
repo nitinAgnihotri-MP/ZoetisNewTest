@@ -195,19 +195,96 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             }
             
             if  btnTag == 0 {
-                CoreDataHandlerTurkey().saveSettingsSkeletaInDatabaseTurkey(strObservationField,visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataSkeletaArray,obsId:obsId,measure:measure,isSync:false,lngId: lngIdValue,refId:refId,quicklinkIndex: quickLinkIndex)
+                
+                let settingsSkeletaData = CoreDataHandlerTurkeyModels.turkeySettingsSkeletaData(
+                    strObservationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        strInformation: "xyz",
+                        index: i,
+                        dbArray: dataSkeletaArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex            )
+                CoreDataHandlerTurkey().saveSettingsSkeletaInDatabaseTurkey(settingsData: settingsSkeletaData)
+                
                 
             } else if btnTag == 1{
                 
-                CoreDataHandlerTurkey().saveSettingsCocoiiInDatabaseTurkey(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataCocoiiArray,obsId:obsId,measure:measure,isSync: false,lngId: lngIdValue,refId: refId, quicklinkIndex: quickLinkIndex)
+                let savecoccidiosisSettings = CoreDataHandlerTurkeyModels.turkeyCoccidiosisSettings(
+                    strObservationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isVisibilityCheck,
+                        strInformation: "xyz",
+                        index: i,
+                        dbArray: dataCocoiiArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex
+                )
+                CoreDataHandlerTurkey().saveSettingsCocoiiInDatabaseTurkey(data: savecoccidiosisSettings)
+                
+                
             } else if btnTag == 2{
                 
-                CoreDataHandlerTurkey().saveSettingsGITractDatabaseTurkey(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataGiTractArray,obsId:obsId,measure:measure,isSync: false,lngId: lngIdValue,refId:refId,quicklinkIndex: quickLinkIndex )
+                let gITractDatasettings = CoreDataHandlerTurkeyModels.turkeyGITractSettingsData(
+                    observationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        information: "xyz",
+                        index: i,
+                        dbArray: dataGiTractArray,
+                        obsId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex
+                )
+                CoreDataHandlerTurkey().saveSettingsGITractDatabaseTurkey(gITractDatasettings)
+                
             } else if btnTag == 3{
                 
-                CoreDataHandlerTurkey().saveSettingsRespiratoryDatabaseTurkey(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataRespiratoryArray,obsId:obsId,measure:measure,isSync:false,lngId: lngIdValue,refId: refId,quicklinkIndex: quickLinkIndex)
+                
+                let respiratorySettings = CoreDataHandlerTurkeyModels.turkeyRespiratorySettings(
+                    observationField: strObservationField,
+                       visibilityCheck: isVisibilityCheck,
+                       quicklinks: isQuicklinksCheck,
+                       information: "xyz",
+                       index: i,
+                       dbArray: dataRespiratoryArray,
+                       observationId: obsId,
+                       measure: measure,
+                       isSync: false,
+                       lngId: lngIdValue,
+                       refId: refId,
+                       quicklinkIndex: quickLinkIndex ?? 0
+                )
+                CoreDataHandlerTurkey().saveSettingsRespiratoryDatabaseTurkey(respiratorySettings)
+                
             } else {
-                CoreDataHandlerTurkey().saveSettingsImmuneDatabaseTurkey(strObservationField, visibilityCheck: isVisibilityCheck, quicklinks: isQuicklinksCheck, strInformation: "xyz", index: i, dbArray:dataImmuneArray,obsId:obsId,measure:measure,isSync:false,lngId: lngIdValue,refId:refId,quicklinkIndex: quickLinkIndex)
+                let immuneSettings = CoreDataHandlerTurkeyModels.turkeyImmuneSettings(
+                    observationField: strObservationField,
+                        visibilityCheck: isVisibilityCheck,
+                        quicklinks: isQuicklinksCheck,
+                        information: "xyz",
+                        index: i,
+                        dbArray: dataImmuneArray,
+                        observationId: obsId,
+                        measure: measure,
+                        isSync: false,
+                        lngId: lngIdValue,
+                        refId: refId,
+                        quicklinkIndex: quickLinkIndex
+                )
+                CoreDataHandlerTurkey().saveSettingsImmuneDatabaseTurkey(immuneSettings)
+                
             }
         }
     }
@@ -251,7 +328,24 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let measure = skeletaObject.measure
             let lngIdValue = skeletaObject.lngId
             let refId = skeletaObject.refId
-            CoreDataHandlerTurkey().updateSettingDataSkeltaTurkey(skeletaObject.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataSkeletaArray,obsId:observationId,measure: measure!,isSync: true,lngId: lngIdValue!,refId:refId!)
+            
+            let updatedSkeSetting = CoreDataHandlerTurkeyModels.updateTurkySkeletaSettings(
+                strObservationField: skeletaObject.observationField!,
+                   visibilityCheck: vsibilityValue,
+                   quicklinks: sender.isSelected,
+                   strInformation: "xyz",
+                   index: sender.tag,
+                   dbArray: dataSkeletaArray,
+                   obsId: observationId,
+                   measure: measure!,
+                   isSync: true,
+                   lngId: lngIdValue!,
+                   refId: refId!
+            )
+
+            CoreDataHandlerTurkey().updateSettingDataSkeltaTurkey(updatedSkeSetting)
+                        
+            
         } else if  btnTag == 1{
             
             let cocoii : CoccidiosisTurkey = dataCocoiiArray.object(at: sender.tag) as! CoccidiosisTurkey
@@ -260,7 +354,23 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let measure = cocoii.measure
             let lngIdValue = cocoii.lngId
             let refId = cocoii.refId
-            CoreDataHandlerTurkey().updateSettingDataCocoiiTurkey(cocoii.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataCocoiiArray,obsId: observationId,measure: measure!,isSync: true,lngId: lngIdValue!,refId: refId!)
+            
+            let cocciData = CoreDataHandlerTurkeyModels.updateCoccidiosisTurkeySettings(
+                strObservationField: cocoii.observationField!,
+                    visibilityCheck: vsibilityValue,
+                    quicklinks: sender.isSelected,
+                    strInformation: "xyz",
+                    index: sender.tag,
+                    dbArray: dataCocoiiArray,
+                    obsId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+
+            CoreDataHandlerTurkey().updateSettingDataCocoiiTurkey(data: cocciData)
+            
             
         } else if  btnTag == 2 {
             let skeletaObject : GITractTurkey = dataGiTractArray.object(at: sender.tag) as! GITractTurkey
@@ -270,7 +380,22 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let lngIdValue = skeletaObject.lngId
             let refId = skeletaObject.refId
             
-            CoreDataHandlerTurkey().updateSettingDataGitractTurkey(skeletaObject.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataGiTractArray,obsId: observationId,measure:measure!,isSync:true,lngId: lngIdValue!,refId:refId! )
+            let updateGitrectSeetingsData = CoreDataHandlerTurkeyModels.updateGITractSettingsData(
+                observationField: skeletaObject.observationField!,
+                    visibilityCheck: vsibilityValue,
+                    quicklinks: sender.isSelected,
+                    information: "xyz",
+                    index: sender.tag,
+                    dbArray: dataGiTractArray,
+                    obsId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+            CoreDataHandlerTurkey().updateSettingDataGitractTurkey(updateGitrectSeetingsData)
+            
+            
             
         } else if  btnTag == 3{
             
@@ -282,7 +407,20 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let lngIdValue = cocoii.lngId
             let refId = cocoii.refId
             
-            CoreDataHandlerTurkey().updateSettingDataRespTurkey(cocoii.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataRespiratoryArray,obsId: observationId,measure:measure!,isSync:true,lngId: lngIdValue! ,refId:refId!)
+            let settingsUpdate = CoreDataHandlerTurkeyModels.turkeyRespiratorySettingsUpdate(
+                observationField: cocoii.observationField!,
+                    visibilityCheck: vsibilityValue,
+                    quicklinks: sender.isSelected,
+                    information: "xyz",
+                    index: sender.tag,
+                    dbArray: dataRespiratoryArray,
+                    observationId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+            CoreDataHandlerTurkey().updateSettingDataRespTurkey(settingsUpdate)
             
         } else if  btnTag == 4{
             
@@ -297,11 +435,39 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             
             
             if obsName == bodyWeightObs{
-                CoreDataHandlerTurkey().updateSettingDataImmuneTurkey(cocoii.observationField!, visibilityCheck: vsibilityValue, quicklinks: false, strInformation: "xyz", index: sender.tag,dbArray: dataImmuneArray,obsId: observationId,measure: measure!,isSync:true, lngId: lngIdValue!,refId:refId! )
+                
+                let immuneSettingsUpdate = CoreDataHandlerTurkeyModels.ImmuneSettingsUpdate(
+                    observationField: cocoii.observationField!,
+                        visibilityCheck: vsibilityValue,
+                        quicklinks: false,
+                        information: "xyz",
+                        index: sender.tag,
+                        dbArray: dataImmuneArray,
+                        observationId: observationId,
+                        measure: measure!,
+                        isSync: true,
+                        lngId: lngIdValue!,
+                        refId: refId!
+                )
+                CoreDataHandlerTurkey().updateSettingDataImmuneTurkey(immuneSettingsUpdate)
+                
             }
             else{
+                let immuneSettingsUpdate = CoreDataHandlerTurkeyModels.ImmuneSettingsUpdate(
+                    observationField: cocoii.observationField!,
+                        visibilityCheck: vsibilityValue,
+                        quicklinks: sender.isSelected,
+                        information: "xyz",
+                        index: sender.tag,
+                        dbArray: dataImmuneArray,
+                        observationId: observationId,
+                        measure: measure!,
+                        isSync: true,
+                        lngId: lngIdValue!,
+                        refId: refId!
+                )
+                CoreDataHandlerTurkey().updateSettingDataImmuneTurkey(immuneSettingsUpdate)
                 
-                CoreDataHandlerTurkey().updateSettingDataImmuneTurkey(cocoii.observationField!, visibilityCheck: vsibilityValue, quicklinks: sender.isSelected, strInformation: "xyz", index: sender.tag,dbArray: dataImmuneArray,obsId: observationId,measure: measure!,isSync:true, lngId: lngIdValue!,refId:refId! )
             }
             
         }
@@ -335,7 +501,23 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let measure = skeletaObject.measure
             let  lngIdValue = skeletaObject.lngId
             let  refId = skeletaObject.refId
-            CoreDataHandlerTurkey().updateSettingDataSkeltaTurkey(skeletaObject.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataSkeletaArray,obsId:observationId ,measure: measure!,isSync: true,lngId:lngIdValue!,refId:refId!)
+            
+            let updatedSkeSetting = CoreDataHandlerTurkeyModels.updateTurkySkeletaSettings(
+                strObservationField: skeletaObject.observationField!,
+                   visibilityCheck: sender.isOn,
+                   quicklinks: quicklinksValue,
+                   strInformation: "xyz",
+                   index: sender.tag,
+                   dbArray: dataSkeletaArray,
+                   obsId: observationId,
+                   measure: measure!,
+                   isSync: true,
+                   lngId: lngIdValue!,
+                   refId: refId!
+            )
+
+            CoreDataHandlerTurkey().updateSettingDataSkeltaTurkey(updatedSkeSetting)
+            
         }
         else if btnTag == 1{
             
@@ -344,8 +526,23 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let measure = cocoii.measure
             let  lngIdValue = cocoii.lngId
             let  refId = cocoii.refId
+                        
+            let cocciData = CoreDataHandlerTurkeyModels.updateCoccidiosisTurkeySettings(
+                strObservationField: cocoii.observationField!,
+                   visibilityCheck: sender.isOn,
+                   quicklinks: quicklinksValue,
+                   strInformation: "xyz",
+                   index: sender.tag,
+                   dbArray: dataCocoiiArray,
+                   obsId: observationId,
+                   measure: measure!,
+                   isSync: true,
+                   lngId: lngIdValue!,
+                   refId: refId!
+            )
+
+            CoreDataHandlerTurkey().updateSettingDataCocoiiTurkey(data: cocciData)
             
-            CoreDataHandlerTurkey().updateSettingDataCocoiiTurkey(cocoii.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataCocoiiArray,obsId:observationId,measure: measure!,isSync: true,lngId:lngIdValue!,refId:refId! )
             
         } else if btnTag == 2{
             let skeletaObject : GITractTurkey = dataGiTractArray.object(at: sender.tag) as! GITractTurkey
@@ -353,7 +550,22 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let measure = skeletaObject.measure
             let  lngIdValue = skeletaObject.lngId
             let refId = skeletaObject.refId
-            CoreDataHandlerTurkey().updateSettingDataGitractTurkey(skeletaObject.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataGiTractArray,obsId:observationId,measure: measure!,isSync:true,lngId:lngIdValue!,refId:refId!)
+            
+            let updateGitrectSeetingsData = CoreDataHandlerTurkeyModels.updateGITractSettingsData(
+                observationField: skeletaObject.observationField!,
+                   visibilityCheck: sender.isOn,
+                   quicklinks: quicklinksValue,
+                   information: "xyz",
+                   index: sender.tag,
+                   dbArray: dataGiTractArray,
+                   obsId: observationId,
+                   measure: measure!,
+                   isSync: true,
+                   lngId: lngIdValue!,
+                   refId: refId!
+            )
+            CoreDataHandlerTurkey().updateSettingDataGitractTurkey(updateGitrectSeetingsData)
+            
             
         }  else if btnTag == 3{
             
@@ -362,7 +574,22 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let measure = cocoii.measure
             let  lngIdValue = cocoii.lngId
             let  refId = cocoii.refId
-            CoreDataHandlerTurkey().updateSettingDataRespTurkey(cocoii.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataRespiratoryArray,obsId:observationId,measure:measure!,isSync:true,lngId:lngIdValue!,refId:refId!)
+            
+            let settingsUpdate = CoreDataHandlerTurkeyModels.turkeyRespiratorySettingsUpdate(
+                observationField: cocoii.observationField!,
+                    visibilityCheck: sender.isOn,
+                    quicklinks: quicklinksValue,
+                    information: "xyz",
+                    index: sender.tag,
+                    dbArray: dataRespiratoryArray,
+                    observationId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+            CoreDataHandlerTurkey().updateSettingDataRespTurkey(settingsUpdate)
+            
             
         } else if btnTag == 4{
             
@@ -371,7 +598,22 @@ class SettingControllerTurkey: UIViewController,UINavigationControllerDelegate, 
             let measure = cocoii.measure
             let  lngIdValue = cocoii.lngId
             let  refId = cocoii.refId
-            CoreDataHandlerTurkey().updateSettingDataImmuneTurkey(cocoii.observationField!, visibilityCheck: sender.isOn, quicklinks: quicklinksValue, strInformation: "xyz", index: sender.tag,dbArray: dataImmuneArray,obsId: observationId,measure: measure!,isSync:true,lngId:lngIdValue!,refId:refId! )
+            
+            let immuneSettingsUpdate = CoreDataHandlerTurkeyModels.ImmuneSettingsUpdate(
+                observationField: cocoii.observationField!,
+                    visibilityCheck: sender.isOn,
+                    quicklinks: quicklinksValue,
+                    information: "xyz",
+                    index: sender.tag,
+                    dbArray: dataImmuneArray,
+                    observationId: observationId,
+                    measure: measure!,
+                    isSync: true,
+                    lngId: lngIdValue!,
+                    refId: refId!
+            )
+            CoreDataHandlerTurkey().updateSettingDataImmuneTurkey(immuneSettingsUpdate)
+            
             
         }
     }

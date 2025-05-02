@@ -4248,1192 +4248,424 @@ extension PEDashboardViewController{
     }
     
     private func handlGetPostingAssessmentListByUser(_ json: JSON) {
-        var dataDic : [String:Any] = [:]
+        let dataArray = extractDataArray(from: json)
+        if dataArray.count > 0 {
+            deleteAllPreviousAssessmentData()
+        }
+        for obj in dataArray {
+            handleAssessmentObject(obj)
+        }
+    }
+
+    private func extractDataArray(from json: JSON) -> [Any] {
+        var dataDic: [String: Any] = [:]
         if let string = json.rawString() {
             dataDic = string.convertToDictionary() ?? [:]
         }
-        let dataArray = dataDic["Data"] as? [Any] ?? []
-        if dataArray.count  > 0 {
-            self.deleteAllDataWithUserID("PE_AssessmentInOffline")
-            self.deleteAllDataWithUserID("PE_AssessmentInDraft")
+        return dataDic["Data"] as? [Any] ?? []
+    }
+
+    private func deleteAllPreviousAssessmentData() {
+        self.deleteAllDataWithUserID("PE_AssessmentInOffline")
+        self.deleteAllDataWithUserID("PE_AssessmentInDraft")
+    }
+
+    private func handleAssessmentObject(_ obj: Any) {
+        let objDic = obj as? [String: Any] ?? [:]
+        let saveType = objDic["SaveType"] as? Int ?? 0
+        UserDefaults.standard.set(true, forKey: "hasPELoadedPrevData")
+        if saveType != 0 {
+            let peNewAssessmentWas = parseAssessment(objDic)
+            handleSanitationEmbrex(objDic, serverAssessmentId: peNewAssessmentWas.serverAssessmentId!)
+            handleCategoriesAndQuestions(for: peNewAssessmentWas, objDic: objDic)
+            handleScores(for: peNewAssessmentWas, objDic: objDic)
+            handleComments(for: peNewAssessmentWas, objDic: objDic)
+            handleInovoject(for: peNewAssessmentWas, objDic: objDic)
+            handleDayOfAge(for: peNewAssessmentWas, objDic: objDic)
         }
-        for obj in dataArray {
-            let objDic = obj as? [String:Any] ?? [:]
-            let SaveType = objDic["SaveType"] as? Int ?? 0
-            UserDefaults.standard.set(true, forKey: "hasPELoadedPrevData")
-            
-            if SaveType != 0 {
-                let peNewAssessmentWas = PENewAssessment()
-                let assessmentCommentsPostingData = objDic["AssessmentCommentsPostingData"] as? [[String:Any]] ?? []
-                let assessmentScoresPostingData = objDic["AssessmentScoresPostingData"] as? [[String:Any]] ?? []
-                let EvaluationId = objDic["EvaluationId"] as? Int ?? 0
-                let serverAssessmentId = objDic["AssessmentId"] as? Int ?? 0
-                if objDic["HasChlorineStrips"] as? Int == 1{
-                    let hasChlorineStrips = true
-                }else{
-                    let hasChlorineStrips = false
-                }
-                if objDic["IsAutomaticFail"] as? Int == 1{
-                    let isAutomaticFail = true
-                }else{
-                    let isAutomaticFail = false
-                }
-                
-                let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
-                if sanitationEmbrexValue{
-                    PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil, override: false)
-                }
-                
-                let sanitationEmbrex = objDic["SanitationEmbrexScoresPostinData"] as? [[String:Any]] ?? []
-                let jsonData = try? JSONSerialization.data(withJSONObject: sanitationEmbrex, options: .prettyPrinted)
-                let jsonDecoder = JSONDecoder()
-                if jsonData != nil{
-                    let dtoArr = try? jsonDecoder.decode([PESanitationDTO].self, from: jsonData!)
-                    if dtoArr != nil{
-                        SanitationEmbrexQuestionMasterDAO.sharedInstance.saveServiceResponse(assessmentId: "\(serverAssessmentId)", userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", dtoArr: dtoArr!)
-                    }
-                }
-                
-                peNewAssessmentWas.serverAssessmentId = String(serverAssessmentId)
-                let AppCreationTime = objDic["AppCreationTime"] as? String ?? ""
-                peNewAssessmentWas.siteId = objDic["SiteId"] as? Int ?? 0
-                peNewAssessmentWas.siteName = objDic["SiteName"] as? String ?? ""
-                peNewAssessmentWas.customerId = objDic["CustomerId"] as? Int ?? 0
-                peNewAssessmentWas.customerName = objDic["CustomerName"] as? String ?? ""
-                peNewAssessmentWas.hatcheryAntibiotics = 0
-                peNewAssessmentWas.evaluationID  = EvaluationId
-                peNewAssessmentWas.extndMicro = objDic["IsInterMicrobial"] as? Bool ?? false
-                peNewAssessmentWas.IsEMRequested = objDic["IsEMRequested"] as? Bool ?? false
-                peNewAssessmentWas.sanitationValue = objDic["SanitationEmbrex"] as? Bool ?? false
-                if let doubleSanitation =  objDic["DoubleSanitation"] as? Bool,doubleSanitation{
-                    peNewAssessmentWas.hatcheryAntibiotics = 1
-                }
-                peNewAssessmentWas.isHandMix = objDic["Handmix"] as? Bool ?? false
-                peNewAssessmentWas.isEMRejected = objDic["IsEMRejected"] as? Bool ?? false
-                peNewAssessmentWas.isPERejected = objDic["IsPERejected"] as? Bool ?? false
-                peNewAssessmentWas.emRejectedComment = objDic["EMRejectedComment"] as? String ?? ""
-                peNewAssessmentWas.userID = objDic["UserId"] as? Int ?? 0
-                peNewAssessmentWas.evaluationDate = convertDateFormatter(date: objDic["EvaluationDate"] as? String ?? "")
-                peNewAssessmentWas.visitID = objDic["VisitId"] as? Int ?? 0
-                peNewAssessmentWas.visitName =  objDic["VisitName"] as? String ?? ""
-                peNewAssessmentWas.selectedTSRID = objDic["TSRId"] as? Int ?? 0
-                let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
-                let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
-                let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                if peNewAssessmentWas.selectedTSRID != 0,
-                   visitIDArray.contains(peNewAssessmentWas.selectedTSRID ?? 0) {
-                    let indexOfe = visitIDArray.index(of: peNewAssessmentWas.selectedTSRID ?? 0)
-                    let TSRName = visitNameArray[indexOfe] as? String ?? ""
-                    peNewAssessmentWas.selectedTSR = TSRName
-                }
-                peNewAssessmentWas.evaluatorName = objDic["UserName"] as? String ?? ""
-                peNewAssessmentWas.evaluatorID =  objDic["UserId"] as? Int ?? 0
-                peNewAssessmentWas.evaluationName = objDic["EvaluationName"] as? String ?? ""
-                peNewAssessmentWas.evaluationID = objDic["EvaluationId"] as? Int ?? 0
-                peNewAssessmentWas.incubation = objDic["IncubationStyleName"] as? String ?? ""
-                peNewAssessmentWas.breedOfBird = objDic["BreedBirdsName"] as? String ?? ""
-                peNewAssessmentWas.breedOfBirdOther = objDic["BreedOfBirdsOther"] as? String ?? ""
-                peNewAssessmentWas.dataToSubmitID = objDic["AppCreationTime"] as? String ?? ""
-                peNewAssessmentWas.manufacturer = objDic["ManufacturerName"] as? String ?? ""
-                peNewAssessmentWas.countryName = objDic[Constants.countryNamStr] as? String ?? ""
-                peNewAssessmentWas.countryID = objDic["CountryId"] as? Int ?? 0
-                peNewAssessmentWas.refrigeratorNote = objDic["RefrigeratorNote"] as? String ?? ""
-                peNewAssessmentWas.fluid = objDic["IsInovoFluids"] as? Bool ?? false
-                peNewAssessmentWas.basicTransfer = objDic["IsBasicTrfAssessment"] as? Bool ?? false
-                peNewAssessmentWas.extndMicro = objDic["IsInterMicrobial"] as? Bool ?? false
-                peNewAssessmentWas.clorineName = objDic["ChlorineText"] as? String ?? ""
-                peNewAssessmentWas.clorineId = objDic["ChlorineId"] as? Int ?? 0
-                
-                let manuOthers = objDic["ManufacturerOther"] as? String ?? ""
-                if manuOthers != "" {
-                    peNewAssessmentWas.manufacturer = "S" + manuOthers
-                }
-                let eggStr = objDic["EggsPerFlatName"] as? String ?? "0"
-                peNewAssessmentWas.noOfEggs = Int64(eggStr)
-                let eggsOthers = objDic["EggsPerFlatOther"]  as? String ?? ""
-                if eggsOthers != "" {
-                    let txt = eggsOthers
-                    let str =   txt  + "000"
-                    let iii = Int64(str)
-                    if  iii != nil{
-                        peNewAssessmentWas.noOfEggs = iii!
-                    }
-                }
-                let fsrSignatureImage = objDic["FSTSignatureImage"]  as? String ?? ""
-                peNewAssessmentWas.FSTSignatureImage = fsrSignatureImage
-                let f = objDic["FlockAgeId"] as? Int ?? 0
-                peNewAssessmentWas.isFlopSelected =  f
-                let Camera =  objDic["Camera"]  as? Bool ?? false
-                if  Camera == true {
-                    peNewAssessmentWas.camera = 1
-                } else {
-                    peNewAssessmentWas.camera = 0
-                }
-                peNewAssessmentWas.notes = objDic["Notes"] as? String ?? ""
-                let strBase64Signatture =  objDic["SignatureImage"] as? String ?? ""
-                let representaiveName =  objDic["RepresentativeName"] as? String ?? ""
-                let RoleName =  objDic["RoleName"] as? String ?? ""
-                let imageData : Data? = Data(base64Encoded: strBase64Signatture, options: .ignoreUnknownCharacters)
-                
-                let strBase64Signatture2 =  objDic["SignatureImage2"] as? String ?? ""
-                let representaiveName2 =  objDic["RepresentativeName2"] as? String ?? ""
-                let RoleName2 =  objDic["RoleName2"] as? String ?? ""
-                let imageData2 : Data = Data(base64Encoded: strBase64Signatture2, options: .ignoreUnknownCharacters) ?? Data()
-                let representaiveNotes =  objDic["RepresentativeNotes"] as? String ?? ""
-                let SignatureDate =  objDic["SignatureDate"] as? String ?? ""
-                let id = self.saveImageInPEModule(imageData: imageData ?? Data())
-                let id2 = self.saveImageInPEModule(imageData: imageData2)
-                
-                var sigDate = ""
-                
-                if SignatureDate != "" {
-                    sigDate = self.convertDateFormat(inputDate: SignatureDate)
-                } else {
-                    sigDate = Date().stringFormat(format: yyymmdd)
-                }
-                let param : [String:String] = ["sig":String(id),"sig2":String(id2),"sig_Date":sigDate ,"sig_EmpID":RoleName,"sig_Name":representaiveName ?? "","sig_EmpID2":RoleName2,"sig_Name2":representaiveName2 ?? "","sig_Phone":representaiveNotes ?? ""]
-                jsonRe = (getJSON("QuestionAns") ?? JSON())
-                pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(jsonRe)
-                let questionInfo = (getJSON("QuestionAnsInfo") ?? JSON())
-                let infoImageDataResponse = InfoImageDataResponse(questionInfo)
-                let categoryCount = filterCategoryCount(peNewAssessmentOf: peNewAssessmentWas)
-                if categoryCount > 0 {
-                    for cat in pECategoriesAssesmentsResponse.peCategoryArray {
-                        for (index, ass) in cat.assessmentQuestions.enumerated() {
-                            let peNewAssessmentNew = peNewAssessmentWas
-                            peNewAssessmentNew.serverAssessmentId = peNewAssessmentWas.serverAssessmentId
-                            peNewAssessmentNew.cID = index
-                            peNewAssessmentNew.catID = cat.id
-                            peNewAssessmentNew.catName = cat.categoryName
-                            peNewAssessmentNew.catMaxMark = cat.maxMark
-                            peNewAssessmentNew.sequenceNo = cat.id
-                            peNewAssessmentNew.sequenceNoo = cat.sequenceNo
-                            peNewAssessmentNew.catResultMark = cat.maxMark
-                            peNewAssessmentNew.catEvaluationID = cat.evaluationID
-                            peNewAssessmentNew.catISSelected = cat.isSelected ? 1:0
-                            peNewAssessmentNew.assID = ass.id
-                            peNewAssessmentNew.assDetail1 = ass.assessment
-                            peNewAssessmentNew.evaluationID = cat.evaluationID
-                            peNewAssessmentNew.assDetail2 = ass.assessment2
-                            peNewAssessmentNew.assMinScore = ass.minScore
-                            peNewAssessmentNew.assMaxScore = ass.maxScore
-                            peNewAssessmentNew.assCatType = ass.cateType
-                            peNewAssessmentNew.assModuleCatID = ass.moduleCatId
-                            peNewAssessmentNew.assModuleCatName = ass.moduleCatName
-                            peNewAssessmentNew.assStatus = 1
-                            peNewAssessmentNew.informationImage = ass.informationImage
-                            peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
-                            peNewAssessmentNew.isChlorineStrip = objDic["HasChlorineStrips"] as? Int ?? 0
-                            peNewAssessmentNew.isAutomaticFail = objDic["IsAutomaticFail"] as? Int ?? 0
-                            peNewAssessmentNew.isAllowNA = ass.isAllowNA
-                            peNewAssessmentNew.rollOut = ass.rollOut
-                            peNewAssessmentNew.isNA = ass.isNA
-                            peNewAssessmentNew.qSeqNo = ass.qSeqNo
-                            CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:peNewAssessmentNew)
-                        }
-                    }
-                    let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
-                    var filterScoreData : [[String:Any]] = [[:]]
-                    var isNaSelectedArray : [[String:Any]] = [[:]]
-                    for questionMark in assessmentScoresPostingData {
-                        let AssessmentScore = questionMark["AssessmentScore"] as? Int ?? 0
-                        let QCCount = questionMark["QCCount"] as? String ?? ""
-                        let FrequencyValue = questionMark["FrequencyValue"] as? Int ?? 32
-                        var FrequencyValueStr = ""
-                        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
-                        let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
-                        let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-                        if FrequencyValue != 32,visitIDArray.contains(FrequencyValue) {
-                            let indexOfe =  visitIDArray.index(of: FrequencyValue) //
-                            FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
-                        }
-                        let TextAmPm = questionMark["TextAmPm"] as? String ?? ""
-                        let PersonName = questionMark["PersonName"] as? String ?? ""
-                        
-                        let PPMValue = questionMark["Chlorine_Value"] as? String ?? ""
-                        let isNAValue = questionMark["IsNA"] as? Bool ?? false
-                        
-                        extractedFunc(FrequencyValueStr, QCCount, PersonName, TextAmPm, PPMValue, AssessmentScore, isNAValue, &filterScoreData, questionMark, &isNaSelectedArray)
-                    }
-                    
-                    var assArray : [Int] = []
-                    for cat in filterScoreData {
-                        let assID = cat["ModuleAssessmentId"] as? Int ?? 0
-                        assArray.append(assID)
-                    }
-                    
-                    var naArray : [Int] = []
-                    for cat in isNaSelectedArray 
-                    {
-                        let assID = cat["ModuleAssessmentId"] as? Int ?? 0
-                        naArray.append(assID)
-                    }
-                    
-                    for qMark in allAssesmentArr {
-                        let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                        for assID in naArray {
-                            
-                            if (Int(truncating: objMark.assID ?? 0) == assID ) {
-                                var totalMark = GetLatestTotalMarkOfAss(assID: objMark.assID as? Int ?? 0)
-                                let catISSelected = 0
-                                let maxMarks =  objMark.assMaxScore ?? 0
-                                let reMark = Int(totalMark) - Int(truncating: maxMarks)
-                                totalMark = Int(truncating: NSNumber(value: reMark))
-                                CoreDataHandlerPE().updateChangeInTotalAnsInProgressTable(catISSelected:catISSelected,catMaxMark:Int(totalMark),catID:Int(truncating: objMark.catID ?? 0),assID:Int(truncating: objMark.assID ?? 0), userID:Int(truncating: objMark.userID ?? 0))
-                            }
-                        }
-                    }
-                    
-                    for qMark in allAssesmentArr {
-                        let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                        for assID in assArray {
-                            
-                            if ( Int(truncating: objMark.assID ?? 0) == assID ) {
-                                var totalMark = GetLatestMarkOfAss(assID: objMark.assID as? Int ?? 0)
-                                let catISSelected = 0
-                                let maxMarks =  objMark.assMaxScore ?? 0
-                                let reMark = Int(totalMark) - Int(truncating: maxMarks)
-                                totalMark = Int(truncating: NSNumber(value: reMark))
-                                CoreDataHandlerPE().updateChangeInAnsInProgressTable(catISSelected:catISSelected,catResultMark:Int(totalMark),catID:Int(truncating: objMark.catID ?? 0),assID:Int(truncating: objMark.assID ?? 0), userID:Int(truncating: objMark.userID ?? 0))
-                            }
-                        }
-                    }
-                    
-                    var assNAArray : [[String:Any]] = [[:]]
-                    for cat in assessmentScoresPostingData {
-                        let isNA = cat["IsNA"] as? Bool ?? false
-                        if(isNA){
-                            assNAArray.append(cat)
-                        }
-                    }
-                    
-                    for qMark in allAssesmentArr {
-                        let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                        for assID in assNAArray {
-                            let AssessmentId = assID["ModuleAssessmentId"] as? Int ?? 0
-                            if (Int(truncating: objMark.assID ?? 0) == AssessmentId) {
-                                CoreDataHandlerPE().update_isNAInAssessmentInProgress(isNA: true, assID: Int(objMark.assID ?? 0))
-                            }
-                        }
-                    }
-                    
-                    //score ends
-                    //comment start
-                    var filterCommentData : [[String:Any]] = [[:]]
-                    for questionMark in assessmentCommentsPostingData {
-                        let AssessmentComment = questionMark["AssessmentComment"] as? String ?? ""
-                        if AssessmentComment.count > 0  {
-                            filterCommentData.append(questionMark)
-                        }
-                    }
-                    for qMark in allAssesmentArr {
-                        let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                        for assID in filterCommentData {
-                            let AssessmentComment = assID["AssessmentComment"] as? String ?? ""
-                            let AssessmentId = assID["AssessmentId"] as? Int ?? 0
-                            if ( Int(truncating: objMark.assID ?? 0) == AssessmentId ) {
-                                CoreDataHandlerPE().updateNoteInProgressTable(assID:Int(truncating: objMark.assID ?? 0),text:AssessmentComment)
-                            }
-                        }
-                    }
-                    //comment ends
-                    let InovojectPostingData = objDic["InovojectPostingData"] as? [Any] ?? []
-                    let VaccineMixerObservedPostingData = objDic["VaccineMixerObservedPostingData"] as? [Any] ?? []
-                    
-                    // INOVOJECT
-                    for inoDic in InovojectPostingData {
-                        
-                        let inoDicIS = inoDic as? [String:Any] ?? [:]
-                        let Dosage = inoDicIS["Dosage"] as? String ?? ""
-                        let otherString = inoDicIS["OtherText"] as? String ?? ""
-                        let VaccineId = inoDicIS["VaccineId"] as? Int ?? 0
-                        let AmpuleSize = inoDicIS["AmpuleSize"] as? Int ?? 0
-                        var AmpuleSizeStr = ""
-                        let AntibioticInformation = inoDicIS["AntibioticInformation"] as? String ?? ""
-                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        if AmpuleSize != 0 {
-                            let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
-                            AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
-                        }
-                        
-                        let AmpulePerbag = inoDicIS["AmpulePerbag"] as? Int ?? 0
-                        let HatcheryAntibiotics =  inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
-                        let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
-                        let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
-                        var VName = ""
-                        let ProgramName = inoDicIS["ProgramName"] as? String ?? ""
-                        let DiluentsMfgOtherName = inoDicIS["DiluentsMfgOtherName"] as? String ?? ""
-                        
-                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxxx =    VaccineId
-                        if xxxx != 0 {
-                            if vIDArray.contains(xxxx){
-                                let indexOfd = vIDArray.index(of: xxxx)
-                                VName = vNameArray[indexOfd] as? String ?? ""
-                            }
-                        }  else {
-                            VName = otherString
-                        }
-                        
-                        if otherString != "" {
-                            VName = otherString
-                        }
-                        
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        var HatcheryAntibioticsIntVal = 0
-                        
-                        if HatcheryAntibiotics == true{
-                            HatcheryAntibioticsIntVal = 1
-                        } else {
-                            HatcheryAntibioticsIntVal = 0
-                        }
-                        
-                        peNewAssessmentInProgress.iCS  = inoDicIS["BagSizeType"] as? String ?? ""
-                        let diluentMfg  = inoDicIS["DiluentMfg"] as? String ?? ""
-                        peNewAssessmentInProgress.iDT = diluentMfg
-                        peNewAssessmentInProgress.micro  = ""
-                        peNewAssessmentInProgress.residue = ""
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromInvo: true)
-                        
-                        let inVoDataNew = InovojectData(id: 0,vaccineMan:DiluentMfg,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg,invoHatchAntibiotic: HatcheryAntibioticsIntVal, invoHatchAntibioticText: AntibioticInformation,  invoProgramName: ProgramName, doaDilManOther: DiluentsMfgOtherName)
-                        let id = self.saveInovojectInPEModule(inovojectData: inVoDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                        inVoDataNew.id = id
-                        
-                    }
-                    let DayPostingData = objDic["DayOfAgePostingData"] as? [Any] ?? []
-                    //Day OF AGE
-                    for inoDic in DayPostingData {
-                        
-                        let DayOfAgeIS = inoDic as? [String:Any] ?? [:]
-                        let Dosage = DayOfAgeIS["DayOfAgeDosage"] as? String ?? ""
-                        let otherText = DayOfAgeIS["OtherText"] as? String ?? ""
-                        let VaccineId = DayOfAgeIS["DayOfAgeMfgNameId"] as? Int ?? 0
-                        let AmpuleSize = DayOfAgeIS["DayOfAgeAmpuleSize"] as? Int ?? 0
-                        var AmpuleSizeStr = ""
-                        
-                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        if AmpuleSize != 0 {
-                            let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
-                            AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
-                        }
-                        
-                        let AmpulePerbag = DayOfAgeIS["DayOfAgeAmpulePerbag"] as? Int ?? 0
-                        let HatcheryAntibiotics =  DayOfAgeIS["DayOfBagHatcheryAntibiotics"] as? Bool ?? false
-                        let ManufacturerId = DayOfAgeIS["DayOfAgeMfgId"] as? Int ?? 0
-                        let BagSizeType = DayOfAgeIS["DayOfAgeBagSizeType"] as? String ?? ""
-                        
-                        let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
-                        var VManufacturerName = ""
-                        var VName = ""
-                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxx = ManufacturerId
-                        
-                        if xxx != 0 {
-                            let indexOfd = vManufacutrerIDArray.index(of: xxx)
-                            if vManufacutrerNameArray.count > indexOfd{
-                                VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
-                            }
-                        }
-                        
-                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
-                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxxx = VaccineId
-                        if xxxx != 0 {
-                            if vIDArray.contains(xxxx){
-                                let indexOfd = vIDArray.index(of: xxxx)
-                                VName = vNameArray[indexOfd] as? String ?? ""
-                            }
-                        } else {
-                            if VManufacturerName.lowercased().contains("other"){
-                                VName  = otherText
-                                
-                            }
-                        }
-                        if otherText != "" {
-                            VName = otherText
-                        }
-                        
-                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        
-                        let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
-                        peNewAssessmentInProgress.dCS  = DiluentMfg
-                        peNewAssessmentInProgress.dDT = BagSizeType
-                        peNewAssessmentInProgress.micro  = ""
-                        peNewAssessmentInProgress.residue = ""
-                        if HatcheryAntibiotics == true{
-                            peNewAssessmentInProgress.hatcheryAntibioticsDoa = 1
-                        } else{
-                            peNewAssessmentInProgress.hatcheryAntibioticsDoa = 0
-                        }
-                        let AntibioticInformation = DayOfAgeIS["AntibioticInformation"] as? String ?? ""
-                        peNewAssessmentInProgress.hatcheryAntibioticsDoaText = AntibioticInformation
-                        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: "\(serverAssessmentId)")
-                        PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil,subcutaneousTxt: infoObj?.subcutaneousAntibioticTxt, dayOfAgeTxt: AntibioticInformation)
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromDoa : true)
-                        let id = self.saveDOAInPEModule(inovojectData: DayOfAgeDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                        DayOfAgeDataNew.id = id
-                    }
-                    
-                    // save Refrigator
-                    
-                    let refriPostingData = objDic["RefrigeratorPostingData"] as? [Any] ?? []
-                    for refriDic in refriPostingData {
-                        let RefriData = refriDic as? [String:Any] ?? [:]
-                        let assessmentId = RefriData["AssessmentId"] as? Int ?? 0
-                        let assessmentDetailId = RefriData["AssessmentDetailId"] as? Int ?? 0
-                        let refValue = RefriData["RefValue"] as? Double ?? 0.0
-                        let isNa = RefriData["IsNa"] as? Bool ?? false
-                        let isCheck = RefriData["IsCheck"] as? Bool ?? false
-                        let refUnit = RefriData["RefUnit"] as? String ?? ""
-                        CoreDataHandlerPE().saveOfflineRefrigatorInDB((assessmentId ?? 0) as NSNumber,  labelText: "", rollOut: "Y", unit:  refUnit ?? "", value: refValue ?? 0.0,catID: 11 ,isCheck: isCheck ?? false,isNA: isNa ?? false,schAssmentId: assessmentDetailId ?? 0)
-                    }
-                    
-                    let DayAgeSubcutaneousDetailsPostingData = objDic["DayAgeSubcutaneousDetailsPostingData"] as? [Any] ?? []
-                    
-                    for inoDic in DayAgeSubcutaneousDetailsPostingData {
-                        
-                        let DayOfAgeIS = inoDic as? [String:Any] ?? [:]
-                        let Dosage = DayOfAgeIS["DayAgeSubcutaneousDosage"] as? String ?? ""
-                        let otherText = DayOfAgeIS["OtherText"] as? String ?? ""
-                        let VaccineId = DayOfAgeIS["DayAgeSubcutaneousMfgNameId"] as? Int ?? 0
-                        let AmpuleSize = DayOfAgeIS["DayAgeSubcutaneousAmpuleSize"] as? Int ?? 0
-                        var AmpuleSizeStr = ""
-                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        if AmpuleSize != 0 {
-                            let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
-                            AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
-                        }
-                        let AmpulePerbag = DayOfAgeIS["DayAgeSubcutaneousAmpulePerbag"] as? Int ?? 0
-                        let HatcheryAntibiotics =  DayOfAgeIS["DayAgeSubcutaneousHatcheryAntibiotics"] as? Bool ?? false
-                        let ManufacturerId = DayOfAgeIS["DayAgeSubcutaneousMfgId"] as? Int ?? 0
-                        let BagSizeType = DayOfAgeIS["DayAgeSubcutaneousBagSizeType"] as? String ?? ""
-                        let DiluentMfg = DayOfAgeIS["DayAgeSubcutaneousDiluentMfg"] as? String ?? ""
-                        var VManufacturerName = ""
-                        var VName = ""
-                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxx = ManufacturerId
-                        if xxx != 0 {
-                            let indexOfd = vManufacutrerIDArray.index(of: xxx)
-                            if vManufacutrerNameArray.count > indexOfd{
-                                VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
-                            }
-                        }
-                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
-                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxxx = VaccineId
-                        if xxxx != 0 {
-                            if vIDArray.contains(xxxx){
-                                let indexOfd = vIDArray.index(of: xxxx)
-                                VName = vNameArray[indexOfd] as? String ?? ""
-                            }
-                        } else {
-                            if VManufacturerName.lowercased().contains("other"){
-                                VName  = otherText
-                            }
-                        }
-                        if otherText != "" {
-                            VName = otherText
-                        }
-                        
-                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
-                        
-                        peNewAssessmentInProgress.dDCS  = DiluentMfg
-                        peNewAssessmentInProgress.dDDT = BagSizeType
-                        peNewAssessmentInProgress.micro  = ""
-                        peNewAssessmentInProgress.residue = ""
-                        if HatcheryAntibiotics == true{
-                            peNewAssessmentInProgress.hatcheryAntibioticsDoaS = 1
-                        } else{
-                            peNewAssessmentInProgress.hatcheryAntibioticsDoaS = 0
-                        }
-                        let AntibioticInformation = DayOfAgeIS["AntibioticInformation"] as? String ?? ""
-                        peNewAssessmentInProgress.hatcheryAntibioticsDoaSText = AntibioticInformation
-                        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: "\(serverAssessmentId)")
-                        PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil,subcutaneousTxt: AntibioticInformation, dayOfAgeTxt: infoObj?.dayOfAgeTxtAntibiotic)
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromDoaS : true)
-                        let id = self.saveDOAInPEModule(inovojectData: DayOfAgeDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress(),fromDoaS: true)
-                        DayOfAgeDataNew.id = id
-                    }
-                    //VMIXER
-                    for  vmixer in  VaccineMixerObservedPostingData{
-                        let vmixerIS = vmixer as? [String:Any] ?? [:]
-                        let Name = vmixerIS["Name"] as? String ?? ""
-                        var CertificationDate = vmixerIS["CertificationDate"] as? String ?? ""
-                        var CertificationDateIS = ""
-                        if CertificationDate != "" {
-                            CertificationDate =  CertificationDate.replacingOccurrences(of: "T", with: "")
-                            CertificationDate =  CertificationDate.replacingOccurrences(of: "00", with: "")
-                            CertificationDate = CertificationDate.replacingOccurrences(of: ":", with: "")
-                            let array = CertificationDate.components(separatedBy: "-")
-                            let date = array[2]
-                            let month = array[1]
-                            let year = array[0]
-                            if regionID == 3
-                            {
-                                CertificationDateIS = month + "-" +  date + "-" +  year
-                            }
-                            else
-                            {
-                                CertificationDateIS = date + "/" +  month + "/" +  year
-                            }
-                            
-                        }
-                        let isCertExpired = vmixerIS["IsCertExpired"] as? Bool ?? false
-                        let isReCert = vmixerIS["IsReCert"] as? Bool ?? false
-                        let vacOperatorId = vmixerIS["vacOperatorId"] as? Int ?? 0
-                        let signatureImg = vmixerIS["SignatureImg"] as? String ?? ""
-                        let catId = vmixerIS["ModuleAssessmentCatId"] as? Int ?? 0
-                        let imageCount = getVMixerCountInPEModule()
-                        let certificateData =  PECertificateData(id:imageCount + 1,name:Name,date:CertificationDateIS,isCertExpired: isCertExpired,isReCert: isReCert,vacOperatorId: vacOperatorId, signatureImg: signatureImg, fsrSign: fsrSignatureImage)
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        
-                        CoreDataHandlerPE().saveVMixerPEModuleGet(peCertificateData: certificateData,evalutionID:peNewAssessmentInProgress.evaluationID , CategoryID: catId)
-                    }
-                    let VaccineMicroSamplesPostingData = objDic["VaccineMicroSamplesPostingData"] as? [Any] ?? []
-                    //Micro
-                    for  vmixer in  VaccineMicroSamplesPostingData{
-                        let vmixerIS = vmixer as? [String:Any] ?? [:]
-                        let Name = vmixerIS["Name"] as? String ?? ""
-                        var  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        peNewAssessmentInProgress.micro  = Name
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress)
-                    }
-                    let VaccineResiduePostinData = objDic["VaccineResiduePostinData"] as? [Any] ?? []
-                    //Residue
-                    for  vmixer in  VaccineResiduePostinData{
-                        let vmixerIS = vmixer as? [String:Any] ?? [:]
-                        let Name = vmixerIS["Name"] as? String ?? ""
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        peNewAssessmentInProgress.residue  = Name
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress)
-                    }
-                    let dataToSubmitNumber = self.getAssessmentInOfflineFromDb()
-                    for obj in allAssesmentArr {
-                        CoreDataHandlerPE().saveDataToSyncPEInDBFromGet(newAssessment: obj as? PE_AssessmentInProgress ?? PE_AssessmentInProgress(), dataToSubmitNumber: dataToSubmitNumber + 1,param:param,formateFromServer: AppCreationTime)
-                    }
-                    CoreDataHandler().deleteAllData("PE_AssessmentInProgress")
-                    CoreDataHandler().deleteAllData("PE_Refrigator")
-                }
+    }
+
+    private func parseAssessment(_ objDic: [String: Any]) -> PENewAssessment {
+        let peNewAssessmentWas = PENewAssessment()
+        let serverAssessmentId = objDic["AssessmentId"] as? Int ?? 0
+        let EvaluationId = objDic["EvaluationId"] as? Int ?? 0
+
+        peNewAssessmentWas.serverAssessmentId = String(serverAssessmentId)
+        peNewAssessmentWas.siteId = objDic["SiteId"] as? Int ?? 0
+        peNewAssessmentWas.siteName = objDic["SiteName"] as? String ?? ""
+        peNewAssessmentWas.customerId = objDic["CustomerId"] as? Int ?? 0
+        peNewAssessmentWas.customerName = objDic["CustomerName"] as? String ?? ""
+        peNewAssessmentWas.hatcheryAntibiotics = 0
+        peNewAssessmentWas.evaluationID  = EvaluationId
+        peNewAssessmentWas.extndMicro = objDic["IsInterMicrobial"] as? Bool ?? false
+        peNewAssessmentWas.IsEMRequested = objDic["IsEMRequested"] as? Bool ?? false
+        peNewAssessmentWas.sanitationValue = objDic["SanitationEmbrex"] as? Bool ?? false
+        if let doubleSanitation = objDic["DoubleSanitation"] as? Bool, doubleSanitation {
+            peNewAssessmentWas.hatcheryAntibiotics = 1
+        }
+        peNewAssessmentWas.isHandMix = objDic["Handmix"] as? Bool ?? false
+        peNewAssessmentWas.isEMRejected = objDic["IsEMRejected"] as? Bool ?? false
+        peNewAssessmentWas.isPERejected = objDic["IsPERejected"] as? Bool ?? false
+        peNewAssessmentWas.emRejectedComment = objDic["EMRejectedComment"] as? String ?? ""
+        peNewAssessmentWas.userID = objDic["UserId"] as? Int ?? 0
+        peNewAssessmentWas.evaluationDate = convertDateFormatter(date: objDic["EvaluationDate"] as? String ?? "")
+        peNewAssessmentWas.visitID = objDic["VisitId"] as? Int ?? 0
+        peNewAssessmentWas.visitName = objDic["VisitName"] as? String ?? ""
+        peNewAssessmentWas.selectedTSRID = objDic["TSRId"] as? Int ?? 0
+
+        // TSR Name resolution
+        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
+        let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
+        let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        if peNewAssessmentWas.selectedTSRID != 0,
+           visitIDArray.contains(peNewAssessmentWas.selectedTSRID ?? 0) {
+            let indexOfe = visitIDArray.index(of: peNewAssessmentWas.selectedTSRID ?? 0)
+            let TSRName = visitNameArray[indexOfe] as? String ?? ""
+            peNewAssessmentWas.selectedTSR = TSRName
+        }
+
+        peNewAssessmentWas.evaluatorName = objDic["UserName"] as? String ?? ""
+        peNewAssessmentWas.evaluatorID = objDic["UserId"] as? Int ?? 0
+        peNewAssessmentWas.evaluationName = objDic["EvaluationName"] as? String ?? ""
+        peNewAssessmentWas.evaluationID = objDic["EvaluationId"] as? Int ?? 0
+        peNewAssessmentWas.incubation = objDic["IncubationStyleName"] as? String ?? ""
+        peNewAssessmentWas.breedOfBird = objDic["BreedBirdsName"] as? String ?? ""
+        peNewAssessmentWas.breedOfBirdOther = objDic["BreedOfBirdsOther"] as? String ?? ""
+        peNewAssessmentWas.dataToSubmitID = objDic["AppCreationTime"] as? String ?? ""
+        peNewAssessmentWas.manufacturer = objDic["ManufacturerName"] as? String ?? ""
+        peNewAssessmentWas.countryName = objDic[Constants.countryNamStr] as? String ?? ""
+        peNewAssessmentWas.countryID = objDic["CountryId"] as? Int ?? 0
+        peNewAssessmentWas.refrigeratorNote = objDic["RefrigeratorNote"] as? String ?? ""
+        peNewAssessmentWas.fluid = objDic["IsInovoFluids"] as? Bool ?? false
+        peNewAssessmentWas.basicTransfer = objDic["IsBasicTrfAssessment"] as? Bool ?? false
+        peNewAssessmentWas.extndMicro = objDic["IsInterMicrobial"] as? Bool ?? false
+        peNewAssessmentWas.clorineName = objDic["ChlorineText"] as? String ?? ""
+        peNewAssessmentWas.clorineId = objDic["ChlorineId"] as? Int ?? 0
+
+        let manuOthers = objDic["ManufacturerOther"] as? String ?? ""
+        if manuOthers != "" {
+            peNewAssessmentWas.manufacturer = "S" + manuOthers
+        }
+        let eggStr = objDic["EggsPerFlatName"] as? String ?? "0"
+        peNewAssessmentWas.noOfEggs = Int64(eggStr)
+        let eggsOthers = objDic["EggsPerFlatOther"]  as? String ?? ""
+        if eggsOthers != "" {
+            let txt = eggsOthers
+            let str = txt + "000"
+            let iii = Int64(str)
+            if iii != nil {
+                peNewAssessmentWas.noOfEggs = iii!
             }
-            else {
-                
-                let peNewAssessmentWas = PENewAssessment()
-                let assessmentCommentsPostingData = objDic["AssessmentCommentsPostingData"] as? [[String:Any]] ?? []
-                let assessmentScoresPostingData = objDic["AssessmentScoresPostingData"] as? [[String:Any]] ?? []
-                let EvaluationId = objDic["EvaluationId"] as? Int ?? 0
-                let serverAssessmentId = objDic["AssessmentId"] as? Int ?? 0
-                var hasChlorineStrips = false
-                var isAutomaticFail = false
-                if objDic["HasChlorineStrips"] as? Int == 1{
-                    hasChlorineStrips = true
-                }
-                if objDic["IsAutomaticFail"] as? Int == 1{
-                    isAutomaticFail = true
-                }
-                
-                if hasChlorineStrips{
-                    PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: false, assessmentId: "\(serverAssessmentId)", date: nil, override: false, hasChlorineStrips: hasChlorineStrips, isAutomaticFail: isAutomaticFail)
-                }
-                
-                let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
-                if sanitationEmbrexValue{
-                    PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil, override: false, hasChlorineStrips: hasChlorineStrips, isAutomaticFail: isAutomaticFail)
-                }
-                
-                let sanitationEmbrex = objDic["SanitationEmbrexScoresPostinData"] as? [[String:Any]] ?? []
-                let jsonData = try? JSONSerialization.data(withJSONObject: sanitationEmbrex, options: .prettyPrinted)
-                let jsonDecoder = JSONDecoder()
-                if jsonData != nil{
-                    let dtoArr = try? jsonDecoder.decode([PESanitationDTO].self, from: jsonData!)
-                    if dtoArr != nil{
-                        SanitationEmbrexQuestionMasterDAO.sharedInstance.saveServiceResponse(assessmentId: "\(serverAssessmentId)", userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", dtoArr: dtoArr!)
-                    }
-                    
-                }
-                UserDefaults.standard.set(String(serverAssessmentId), forKey: "currentServerAssessmentId")
-                peNewAssessmentWas.serverAssessmentId = String(serverAssessmentId)
-                let AppCreationTime = objDic["AppCreationTime"] as? String ?? ""
-                let DeviceId = objDic["DeviceId"] as? String ?? ""
-                peNewAssessmentWas.siteId = objDic["SiteId"] as? Int ?? 0
-                peNewAssessmentWas.siteName = objDic["SiteName"] as? String ?? ""
-                peNewAssessmentWas.customerId = objDic["CustomerId"] as? Int ?? 0
-                peNewAssessmentWas.customerName = objDic["CustomerName"] as? String ?? ""
-                peNewAssessmentWas.statusType = objDic["Status_Type"] as? Int ?? 0
-                peNewAssessmentWas.userID = objDic["UserId"] as? Int ?? 0
-                peNewAssessmentWas.evaluationDate = convertDateFormatter(date: objDic["EvaluationDate"] as? String ?? "")
-                peNewAssessmentWas.visitID = objDic["VisitId"] as? Int ?? 0
-                peNewAssessmentWas.visitName =  objDic["VisitName"] as? String ?? ""
-                peNewAssessmentWas.selectedTSRID = objDic["TSRId"] as? Int ?? 0
-                peNewAssessmentWas.hatcheryAntibiotics = 0
-                peNewAssessmentWas.evaluationID  = EvaluationId
-                peNewAssessmentWas.isHandMix = objDic["Handmix"] as? Bool ?? false
-                peNewAssessmentWas.isEMRejected = objDic["IsEMRejected"] as? Bool ?? false
-                peNewAssessmentWas.isPERejected = objDic["IsPERejected"] as? Bool ?? false
-                peNewAssessmentWas.emRejectedComment = objDic["EMRejectedComment"] as? String ?? ""
-                
-                if let doubleSanitation =  objDic["DoubleSanitation"] as? Bool, doubleSanitation {
-                    peNewAssessmentWas.hatcheryAntibiotics = 1
-                }
-                let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
-                let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
-                let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                if peNewAssessmentWas.selectedTSRID != 0,
-                   visitIDArray.contains(peNewAssessmentWas.selectedTSRID ?? 0) {
-                    let indexOfe = visitIDArray.index(of: peNewAssessmentWas.selectedTSRID ?? 0)
-                    let TSRName = visitNameArray[indexOfe] as? String ?? ""
-                    peNewAssessmentWas.selectedTSR =  TSRName
-                }
-                
-                peNewAssessmentWas.evaluatorName = objDic["UserName"] as? String ?? ""
-                peNewAssessmentWas.evaluatorID =  objDic["UserId"] as? Int ?? 0
-                peNewAssessmentWas.evaluationName = objDic["EvaluationName"] as? String ?? ""
-                peNewAssessmentWas.evaluationID = objDic["EvaluationId"] as? Int ?? 0
-                peNewAssessmentWas.incubation = objDic["IncubationStyleName"] as? String ?? ""
-                peNewAssessmentWas.breedOfBird = objDic["BreedBirdsName"] as? String ?? ""
-                peNewAssessmentWas.breedOfBirdOther = objDic["BreedOfBirdsOther"] as? String ?? ""
-                peNewAssessmentWas.dataToSubmitID = objDic["DeviceId"] as? String ?? ""
-                peNewAssessmentWas.rejectionComment = objDic["RejectionComments"] as? String ?? ""
-                peNewAssessmentWas.manufacturer = objDic["ManufacturerName"] as? String ?? ""
-                peNewAssessmentWas.countryName = objDic[Constants.countryNamStr] as? String ?? ""
-                peNewAssessmentWas.countryID = objDic["CountryId"] as? Int ?? 0
-                peNewAssessmentWas.clorineName = objDic["ChlorineText"] as? String ?? ""
-                peNewAssessmentWas.clorineId = objDic["ChlorineId"] as? Int ?? 0
-                peNewAssessmentWas.fluid = objDic["IsInovoFluids"] as? Bool ?? false
-                peNewAssessmentWas.basicTransfer = objDic["IsBasicTrfAssessment"] as? Bool ?? false
-                peNewAssessmentWas.extndMicro = objDic["IsInterMicrobial"] as? Bool ?? false
-                peNewAssessmentWas.refrigeratorNote = objDic["RefrigeratorNote"] as? String ?? ""
-                peNewAssessmentWas.IsEMRequested = objDic["IsEMRequested"] as? Bool ?? false
-                peNewAssessmentWas.sanitationValue = objDic["SanitationEmbrex"] as? Bool ?? false
-                
-                let manuOthers = objDic["ManufacturerOther"] as? String ?? ""
-                if manuOthers != "" {
-                    peNewAssessmentWas.manufacturer = "S" + manuOthers
-                }
-                let eggStr = objDic["EggsPerFlatName"] as? String ?? "0"
-                peNewAssessmentWas.noOfEggs = Int64(eggStr)
-                
-                let eggsOthers = objDic["EggsPerFlatOther"]  as? String ?? ""
-                if eggsOthers != "" {
-                    let txt = eggsOthers
-                    let str =   txt  + "000"
-                    let iii = Int64(str)
-                    if iii != nil{
-                        peNewAssessmentWas.noOfEggs = iii!
-                    }
-                }
-                
-                let fsrSignatureImage = objDic["FSTSignatureImage"]  as? String ?? ""
-                peNewAssessmentWas.FSTSignatureImage = fsrSignatureImage
-                let f = objDic["FlockAgeId"] as? Int ?? 0
-                peNewAssessmentWas.isFlopSelected =  f
-                let Camera =  objDic["Camera"]  as? Bool ?? false
-                if  Camera == true {
-                    peNewAssessmentWas.camera = 1
-                } else {
-                    peNewAssessmentWas.camera = 0
-                }
-                
-                peNewAssessmentWas.notes = objDic["Notes"] as? String ?? ""
-                let strBase64Signatture =  objDic["SignatureImage"] as? String ?? ""
-                let representaiveName =  objDic["RepresentativeName"] as? String ?? ""
-                let RoleName =  objDic["RoleName"] as? String ?? ""
-                let imageData : Data? = Data(base64Encoded: strBase64Signatture, options: .ignoreUnknownCharacters)
-                
-                let strBase64Signatture2 =  objDic["SignatureImage2"] as? String ?? ""
-                let representaiveName2 =  objDic["RepresentativeName2"] as? String ?? ""
-                let RoleName2 =  objDic["RoleName2"] as? String ?? ""
-                let imageData2 : Data = Data(base64Encoded: strBase64Signatture2, options: .ignoreUnknownCharacters) ?? Data()
-                let representaiveNotes =  objDic["RepresentativeNotes"] as? String ?? ""
-                let SignatureDate =  objDic["SignatureDate"] as? String ?? ""
-                let id = self.saveImageInPEModule(imageData: imageData ?? Data())
-                let id2 = self.saveImageInPEModule(imageData: imageData2)
-                var sigDate = ""
-                if SignatureDate != "" {
-                    sigDate = self.convertDateFormat(inputDate: SignatureDate)
-                } else {
-                    sigDate = Date().stringFormat(format: appDelegateObj.mmddyyStr)
-                }
-                let param : [String:String] = ["sig":String(id),"sig2":String(id2),"sig_Date":sigDate ,"sig_EmpID":RoleName,"sig_Name":representaiveName ?? "","sig_EmpID2":RoleName2,"sig_Name2":representaiveName2 ?? "","sig_Phone":representaiveNotes ?? ""]
-                jsonRe = (getJSON("QuestionAns") ?? JSON())
-                pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(jsonRe)
-                let questionInfo = (getJSON("QuestionAnsInfo") ?? JSON())
-                let infoImageDataResponse = InfoImageDataResponse(questionInfo)
-                
-                let categoryCount = filterCategoryCount(peNewAssessmentOf: peNewAssessmentWas)
-                if categoryCount > 0 {
-                    for  cat in  pECategoriesAssesmentsResponse.peCategoryArray {
-                        for (index, ass) in cat.assessmentQuestions.enumerated() {
-                            let peNewAssessmentNew = peNewAssessmentWas
-                            peNewAssessmentNew.cID = index
-                            peNewAssessmentNew.catID = cat.id
-                            peNewAssessmentNew.catName = cat.categoryName
-                            peNewAssessmentNew.catMaxMark = cat.maxMark
-                            peNewAssessmentNew.sequenceNo = cat.id
-                            peNewAssessmentNew.sequenceNoo = cat.sequenceNo
-                            peNewAssessmentNew.catResultMark = cat.maxMark
-                            peNewAssessmentNew.catEvaluationID = cat.evaluationID
-                            peNewAssessmentNew.catISSelected = cat.isSelected ? 1:0
-                            peNewAssessmentNew.assID = ass.id
-                            peNewAssessmentNew.assDetail1 = ass.assessment
-                            peNewAssessmentNew.evaluationID = cat.evaluationID
-                            peNewAssessmentNew.assDetail2 = ass.assessment2
-                            peNewAssessmentNew.assMinScore = ass.minScore
-                            peNewAssessmentNew.assMaxScore = ass.maxScore
-                            peNewAssessmentNew.assCatType = ass.cateType
-                            peNewAssessmentNew.assModuleCatID = ass.moduleCatId
-                            peNewAssessmentNew.assModuleCatName = ass.moduleCatName
-                            peNewAssessmentNew.assStatus = 1
-                            peNewAssessmentNew.informationImage = ass.informationImage
-                            peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
-                            peNewAssessmentNew.isChlorineStrip = objDic["HasChlorineStrips"] as? Int ?? 0
-                            peNewAssessmentNew.isAutomaticFail = objDic["IsAutomaticFail"] as? Int ?? 0
-                            peNewAssessmentNew.isAllowNA = ass.isAllowNA
-                            peNewAssessmentNew.isNA = ass.isNA
-                            peNewAssessmentNew.rollOut = ass.rollOut
-                            peNewAssessmentNew.qSeqNo = ass.qSeqNo
-                            
-                            CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:peNewAssessmentNew)
-                        }
-                    }
-                    var allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
-                    var filterScoreData : [[String:Any]] = [[:]]
-                    var isNaSelectedArray : [[String:Any]] = [[:]]
-                    for questionMark in assessmentScoresPostingData {
-                        let AssessmentScore = questionMark["AssessmentScore"] as? Int ?? 0
-                        let QCCount = questionMark["QCCount"] as? String ?? ""
-                        
-                        let FrequencyValue = questionMark["FrequencyValue"] as? Int ?? 32
-                        var FrequencyValueStr = ""
-                        
-                        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
-                        let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
-                        let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-                        if FrequencyValue != 32,visitIDArray.contains(FrequencyValue) {
-                            let indexOfe =  visitIDArray.index(of: FrequencyValue) //
-                            FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
-                        }
-                        
-                        let isNAValue = questionMark["IsNA"] as? Bool ?? false
-                        let TextAmPm = questionMark["TextAmPm"] as? String ?? ""
-                        let PersonName = questionMark["PersonName"] as? String ?? ""
-                        let PPMValue = questionMark["Chlorine_Value"] as? String ?? ""
-                        
-                        if QCCount.count > 0 {
-                            CoreDataHandlerPE().updateQCCountInAssessmentInProgress(qcCount:QCCount)
-                        }
-                        
-                        if FrequencyValueStr.count > 0 {
-                            CoreDataHandlerPE().updateFrequencyInAssessmentInProgress(frequency:FrequencyValueStr)
-                        }
-                        if PersonName.count > 0 {
-                            CoreDataHandlerPE().updatePersonNameInAssessmentInProgress(personName: PersonName)
-                        }
-                        if TextAmPm.count > 0 {
-                            CoreDataHandlerPE().updateAMPMInAssessmentInProgress(ampmValue: TextAmPm)
-                        }
-                        if PPMValue.count > 0 {
-                            CoreDataHandlerPE().updatePPMInAssessmentInProgress(ppmValue: PPMValue)
-                        }
-                        //
-                        if (AssessmentScore  ==  0) || (isNAValue) {
-                            filterScoreData.append(questionMark)
-                        }
-                        if isNAValue{
-                            isNaSelectedArray.append(questionMark)
-                        }
-                    }
-                    var assArray : [Int] = []
-                    for cat in filterScoreData {
-                        let assID = cat["ModuleAssessmentId"] as? Int ?? 0
-                        assArray.append(assID)
-                    }
-                    
-                    var naArray : [Int] = []
-                    for cat in isNaSelectedArray {
-                        let assID = cat["ModuleAssessmentId"] as? Int ?? 0
-                        naArray.append(assID)
-                    }
-                    
-                    for qMark in allAssesmentArr {
-                        let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                        for assID in naArray {
-                            
-                            if (Int(truncating: objMark.assID ?? 0) == assID ) {
-                                var totalMark = GetLatestTotalMarkOfAss(assID: objMark.assID as? Int ?? 0)
-                                let catISSelected = 0
-                                let maxMarks =  objMark.assMaxScore ?? 0
-                                let reMark = Int(totalMark) - Int(truncating: maxMarks)
-                                totalMark = Int(truncating: NSNumber(value: reMark))
-                                CoreDataHandlerPE().updateChangeInTotalAnsInProgressTable(catISSelected:catISSelected,catMaxMark:Int(totalMark),catID:Int(truncating: objMark.catID ?? 0),assID:Int(truncating: objMark.assID ?? 0), userID:Int(truncating: objMark.userID ?? 0))
-                            }
-                        }
-                    }
-                    
-                    for qMark in allAssesmentArr {
-                        let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                        for assID in assArray {
-                            
-                            if ( Int(truncating: objMark.assID ?? 0) == assID ) {
-                                var totalMark = GetLatestMarkOfAss(assID: objMark.assID as? Int ?? 0)
-                                let catISSelected = 0
-                                let maxMarks =  objMark.assMaxScore ?? 0
-                                let reMark = Int(totalMark) - Int(truncating: maxMarks)
-                                totalMark = Int(truncating: NSNumber(value: reMark))
-                                CoreDataHandlerPE().updateChangeInAnsInProgressTable(catISSelected:catISSelected,catResultMark:Int(totalMark),catID:Int(truncating: objMark.catID ?? 0),assID:Int(truncating: objMark.assID ?? 0), userID:Int(truncating: objMark.userID ?? 0))
-                            }
-                        }
-                    }
-                    //
-                    var assNAArray : [[String:Any]] = [[:]]
-                    for cat in assessmentScoresPostingData {
-                        let isNA = cat["IsNA"] as? Bool ?? false
-                        if(isNA){
-                            assNAArray.append(cat)
-                        }
-                        
-                    }
-                    
-                    for qMark in allAssesmentArr {
-                        let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                        for assID in assNAArray {
-                            let AssessmentId = assID["ModuleAssessmentId"] as? Int ?? 0
-                            
-                            if Int(truncating: objMark.assID ?? 0) == AssessmentId {
-                                CoreDataHandlerPE().update_isNAInAssessmentInProgress(isNA: true, assID: Int(objMark.assID ?? 0))
-                            }
-                        }
-                    }
-                    
-                    //score ends
-                    //comment start
-                    var filterCommentData : [[String:Any]] = [[:]]
-                    for questionMark in assessmentCommentsPostingData {
-                        let AssessmentComment = questionMark["AssessmentComment"] as? String ?? ""
-                        if AssessmentComment.count > 0  {
-                            filterCommentData.append(questionMark)
-                        }
-                    }
-                    
-                    for qMark in allAssesmentArr {
-                        let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                        for assID in filterCommentData {
-                            let AssessmentComment = assID["AssessmentComment"] as? String ?? ""
-                            let AssessmentId = assID["AssessmentId"] as? Int ?? 0
-                            
-                            if ( Int(truncating: objMark.assID ?? 0) == AssessmentId ) {
-                                CoreDataHandlerPE().updateNoteInProgressTable(assID:Int(objMark.assID ?? 0),text:AssessmentComment)
-                            }
-                        }
-                    }
-                    //comment ends
-                    let InovojectPostingData = objDic["InovojectPostingData"] as? [Any] ?? []
-                    let VaccineMixerObservedPostingData = objDic["VaccineMixerObservedPostingData"] as? [Any] ?? []
-                    
-                    for inoDic in InovojectPostingData {
-                        
-                        let inoDicIS = inoDic as? [String:Any] ?? [:]
-                        let Dosage = inoDicIS["Dosage"] as? String ?? ""
-                        let otherString = inoDicIS["OtherText"] as? String ?? ""
-                        let VaccineId = inoDicIS["VaccineId"] as? Int ?? 0
-                        let AmpuleSize = inoDicIS["AmpuleSize"] as? Int ?? 0
-                        var AmpuleSizeStr = ""
-                        let AntibioticInformation =  inoDicIS["AntibioticInformation"] as? String ?? ""
-                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        if AmpuleSize != 0 {
-                            let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
-                            AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
-                        }
-                        
-                        let AmpulePerbag = inoDicIS["AmpulePerbag"] as? Int ?? 0
-                        let HatcheryAntibiotics =  inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
-                        let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
-                        let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
-                        var VName = ""
-                        let ProgramName = inoDicIS["ProgramName"] as? String ?? ""
-                        let DiluentsMfgOtherName = inoDicIS["DiluentsMfgOtherName"] as? String ?? ""
-                        
-                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxxx =    VaccineId
-                        if xxxx != 0 {
-                            if vIDArray.contains(xxxx){
-                                let indexOfd = vIDArray.index(of: xxxx)
-                                VName = vNameArray[indexOfd] as? String ?? ""
-                            }
-                        }  else {
-                            VName = otherString
-                        }
-                        
-                        if otherString != "" {
-                            VName = otherString
-                        }
-                        
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        
-                        var HatcheryAntibioticsIntVal = 0
-                        if HatcheryAntibiotics == true{
-                            HatcheryAntibioticsIntVal = 1
-                        } else {
-                            HatcheryAntibioticsIntVal = 0
-                        }
-                        
-                        peNewAssessmentInProgress.iCS  = inoDicIS["BagSizeType"] as? String ?? ""
-                        let diluentMfg  = inoDicIS["DiluentMfg"] as? String ?? ""
-                        peNewAssessmentInProgress.iDT = diluentMfg
-                        peNewAssessmentInProgress.micro  = ""
-                        peNewAssessmentInProgress.residue = ""
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromInvo: true)
-                        
-                        let inVoDataNew = InovojectData(id: 0,vaccineMan:DiluentMfg,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg,invoHatchAntibiotic: HatcheryAntibioticsIntVal, invoHatchAntibioticText: AntibioticInformation,  invoProgramName: ProgramName, doaDilManOther: DiluentsMfgOtherName)
-                        let id = self.saveInovojectInPEModule(inovojectData: inVoDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                        inVoDataNew.id = id
-                        
-                    }
-                    
-                    let DayPostingData = objDic["DayOfAgePostingData"] as? [Any] ?? []
-                    for inoDic in DayPostingData {
-                        
-                        let DayOfAgeIS = inoDic as? [String:Any] ?? [:]
-                        let Dosage = DayOfAgeIS["DayOfAgeDosage"] as? String ?? ""
-                        let otherText = DayOfAgeIS["OtherText"] as? String ?? ""
-                        let VaccineId = DayOfAgeIS["DayOfAgeMfgNameId"] as? Int ?? 0
-                        let AmpuleSize = DayOfAgeIS["DayOfAgeAmpuleSize"] as? Int ?? 0
-                        var AmpuleSizeStr = ""
-                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        if AmpuleSize != 0 {
-                            let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
-                            AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
-                        }
-                        
-                        let AmpulePerbag = DayOfAgeIS["DayOfAgeAmpulePerbag"] as? Int ?? 0
-                        let HatcheryAntibiotics =  DayOfAgeIS["DayOfBagHatcheryAntibiotics"] as? Bool ?? false
-                        let ManufacturerId = DayOfAgeIS["DayOfAgeMfgId"] as? Int ?? 0
-                        let BagSizeType = DayOfAgeIS["DayOfAgeBagSizeType"] as? String ?? ""
-                        let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
-                        var VManufacturerName = ""
-                        var VName = ""
-                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxx = ManufacturerId
-                        if xxx != 0 {
-                            let indexOfd = vManufacutrerIDArray.index(of: xxx)
-                            if vManufacutrerNameArray.count > indexOfd{
-                                VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
-                            }
-                        }
-                        var vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
-                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxxx = VaccineId
-                        if xxxx != 0 {
-                            if vIDArray.contains(xxxx) {
-                                let indexOfd = vIDArray.index(of: xxxx)
-                                VName = vNameArray[indexOfd] as? String ?? ""
-                            }
-                        } else {
-                            if VManufacturerName.lowercased().contains("other"){
-                                VName  = otherText
-                                
-                            }
-                        }
-                        if otherText != "" {
-                            VName = otherText
-                        }
-                        
-                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
-                        
-                        peNewAssessmentInProgress.dCS  = DiluentMfg
-                        peNewAssessmentInProgress.dDT = BagSizeType
-                        peNewAssessmentInProgress.micro  = ""
-                        peNewAssessmentInProgress.residue = ""
-                        if HatcheryAntibiotics == true{
-                            peNewAssessmentInProgress.hatcheryAntibioticsDoa = 1
-                        } else{
-                            peNewAssessmentInProgress.hatcheryAntibioticsDoa = 0
-                        }
-                        let AntibioticInformation = DayOfAgeIS["AntibioticInformation"] as? String ?? ""
-                        peNewAssessmentInProgress.hatcheryAntibioticsDoaText = AntibioticInformation
-                        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: "\(serverAssessmentId)")
-                        
-                        PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil,subcutaneousTxt: infoObj?.subcutaneousAntibioticTxt, dayOfAgeTxt: AntibioticInformation)
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromDoa : true)
-                        let id = self.saveDOAInPEModule(inovojectData: DayOfAgeDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                        DayOfAgeDataNew.id = id
-                    }
-                    
-                    // save Draft Refrigator
-                    let refriPostingData = objDic["RefrigeratorPostingData"] as? [Any] ?? []
-                    for refriDic in refriPostingData {
-                        
-                        let RefriData = refriDic as? [String:Any] ?? [:]
-                        let assessmentId = RefriData["AssessmentId"] as? Int ?? 0
-                        let assessmentDetailId = RefriData["AssessmentDetailId"] as? Int ?? 0
-                        let refValue = RefriData["RefValue"] as? Double ?? 0.0
-                        let isNa = RefriData["IsNa"] as? Bool ?? false
-                        let isCheck = RefriData["IsCheck"] as? Bool ?? false
-                        let refUnit = RefriData["RefUnit"] as? String ?? ""
-                        CoreDataHandlerPE().saveDraftRefrigatorInDB((assessmentId ?? 0) as NSNumber,  labelText: "", rollOut: "Y", unit:  refUnit ?? "", value: refValue ?? 0.0,catID: 11 ,isCheck: isCheck ?? false,isNA: isNa ?? false,schAssmentId: assessmentDetailId ?? 0)
-                        
-                    }
-                    
-                    let DayAgeSubcutaneousDetailsPostingData = objDic["DayAgeSubcutaneousDetailsPostingData"] as? [Any] ?? []
-                    
-                    for inoDic in DayAgeSubcutaneousDetailsPostingData {
-                        
-                        let DayOfAgeIS = inoDic as? [String:Any] ?? [:]
-                        let Dosage = DayOfAgeIS["DayAgeSubcutaneousDosage"] as? String ?? ""
-                        let otherText = DayOfAgeIS["OtherText"] as? String ?? ""
-                        let VaccineId = DayOfAgeIS["DayAgeSubcutaneousMfgNameId"] as? Int ?? 0
-                        let AmpuleSize = DayOfAgeIS["DayAgeSubcutaneousAmpuleSize"] as? Int ?? 0
-                        var AmpuleSizeStr = ""
-                        let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                        let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                        let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        if AmpuleSize != 0 {
-                            let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
-                            AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
-                        }
-                        let AmpulePerbag = DayOfAgeIS["DayAgeSubcutaneousAmpulePerbag"] as? Int ?? 0
-                        let HatcheryAntibiotics =  DayOfAgeIS["DayAgeSubcutaneousHatcheryAntibiotics"] as? Bool ?? false
-                        let ManufacturerId = DayOfAgeIS["DayAgeSubcutaneousMfgId"] as? Int ?? 0
-                        let BagSizeType = DayOfAgeIS["DayAgeSubcutaneousBagSizeType"] as? String ?? ""
-                        let DiluentMfg = DayOfAgeIS["DayAgeSubcutaneousDiluentMfg"] as? String ?? ""
-                        var VManufacturerName = ""
-                        var VName = ""
-                        let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                        let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                        let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxx = ManufacturerId
-                        if xxx != 0 {
-                            let indexOfd = vManufacutrerIDArray.index(of: xxx)
-                            if vManufacutrerNameArray.count > indexOfd{
-                                VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
-                            }
-                        }
-                        let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
-                        let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                        let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                        let xxxx =    VaccineId
-                        if xxxx != 0 {
-                            if vIDArray.contains(xxxx){
-                                let indexOfd = vIDArray.index(of: xxxx)
-                                VName = vNameArray[indexOfd] as? String ?? ""
-                            }
-                        } else {
-                            if VManufacturerName.lowercased().contains("other"){
-                                VName  = otherText
-                            }
-                        }
-                        if otherText != "" {
-                            VName = otherText
-                        }
-                        
-                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
-                        
-                        peNewAssessmentInProgress.dDCS  = DiluentMfg
-                        peNewAssessmentInProgress.dDDT = BagSizeType
-                        peNewAssessmentInProgress.micro  = ""
-                        peNewAssessmentInProgress.residue = ""
-                        if HatcheryAntibiotics == true{
-                            peNewAssessmentInProgress.hatcheryAntibioticsDoaS = 1
-                        } else {
-                            peNewAssessmentInProgress.hatcheryAntibioticsDoaS = 0
-                        }
-                        let AntibioticInformation = DayOfAgeIS["AntibioticInformation"] as? String ?? ""
-                        peNewAssessmentInProgress.hatcheryAntibioticsDoaSText = AntibioticInformation
-                        let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: "\(serverAssessmentId)")
-                        PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil,subcutaneousTxt: AntibioticInformation, dayOfAgeTxt: infoObj?.dayOfAgeTxtAntibiotic)
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromDoaS : true)
-                        let id = self.saveDOAInPEModule(inovojectData: DayOfAgeDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress(),fromDoaS: true)
-                        DayOfAgeDataNew.id = id
-                    }
-                    
-                    for  vmixer in  VaccineMixerObservedPostingData{
-                        let vmixerIS = vmixer as? [String:Any] ?? [:]
-                        let Name = vmixerIS["Name"] as? String ?? ""
-                        var CertificationDate = vmixerIS["CertificationDate"] as? String ?? ""
-                        var CertificationDateIS = ""
-                        if CertificationDate != "" {
-                            CertificationDate =  CertificationDate.replacingOccurrences(of: "T", with: "")
-                            CertificationDate =  CertificationDate.replacingOccurrences(of: "00", with: "")
-                            CertificationDate = CertificationDate.replacingOccurrences(of: ":", with: "")
-                            let array = CertificationDate.components(separatedBy: "-")
-                            let date = array[2]
-                            let month = array[1]
-                            let year = array[0]
-                            CertificationDateIS = month + "-" +  date + "-" +  year
-                        }
-                        let isCertExpired = vmixerIS["IsCertExpired"] as? Bool ?? false
-                        let isReCert = vmixerIS["IsReCert"] as? Bool ?? false
-                        let vacOperatorId = vmixerIS["vacOperatorId"] as? Int ?? 0
-                        let signatureImg = vmixerIS["SignatureImg"] as? String ?? ""
-                        let catId = vmixerIS["ModuleAssessmentCatId"] as? Int ?? 0
-                        let imageCount = getVMixerCountInPEModule()
-                        let certificateData =  PECertificateData(id:imageCount + 1,name:Name,date:CertificationDateIS,isCertExpired: isCertExpired,isReCert: isReCert,vacOperatorId: vacOperatorId, signatureImg: signatureImg, fsrSign: fsrSignatureImage)
-                        
-                        let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        
-                        CoreDataHandlerPE().saveVMixerPEModuleGet(peCertificateData: certificateData,evalutionID:peNewAssessmentInProgress.evaluationID , CategoryID: catId)
-                    }
-                    
-                    var VaccineMicroSamplesPostingData = objDic["VaccineMicroSamplesPostingData"] as? [Any] ?? []
-                    //Micro
-                    for  vmixer in  VaccineMicroSamplesPostingData{
-                        let vmixerIS = vmixer as? [String:Any] ?? [:]
-                        let Name = vmixerIS["Name"] as? String ?? ""
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        peNewAssessmentInProgress.micro  = Name
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress)
-                        
-                    }
-                    let VaccineResiduePostinData = objDic["VaccineResiduePostinData"] as? [Any] ?? []
-                    
-                    //Residue
-                    for  vmixer in  VaccineResiduePostinData{
-                        let vmixerIS = vmixer as? [String:Any] ?? [:]
-                        let Name = vmixerIS["Name"] as? String ?? ""
-                        let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                        peNewAssessmentInProgress.residue  = Name
-                        CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress)
-                    }
-                    
-                    //Saving in Progress Data to Draft
-                    allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
-                    CoreDataHandlerPE().deleteDraftByDrafyNumber(AppCreationTime ?? "")
-                    let draftNumber = getDraftCountFromDb()
-                    for obj in allAssesmentArr {
-                        CoreDataHandlerPE().saveGetDraftDataToSyncPEInDBFromGet(newAssessment: obj as? PE_AssessmentInProgress ?? PE_AssessmentInProgress(), dataToSubmitNumber: draftNumber + 1,param:param,formateFromServer: AppCreationTime,deviceID:DeviceId)
-                    }
-                    CoreDataHandler().deleteAllData("PE_AssessmentInProgress")
-                    CoreDataHandler().deleteAllData("PE_Refrigator")
+        }
+        let fsrSignatureImage = objDic["FSTSignatureImage"] as? String ?? ""
+        peNewAssessmentWas.FSTSignatureImage = fsrSignatureImage
+        let f = objDic["FlockAgeId"] as? Int ?? 0
+        peNewAssessmentWas.isFlopSelected = f
+        let Camera = objDic["Camera"] as? Bool ?? false
+        peNewAssessmentWas.camera = Camera ? 1 : 0
+        peNewAssessmentWas.notes = objDic["Notes"] as? String ?? ""
+
+        return peNewAssessmentWas
+    }
+
+    private func handleSanitationEmbrex(_ objDic: [String: Any], serverAssessmentId: String) {
+        let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
+        if sanitationEmbrexValue {
+            PEInfoDAO.sharedInstance.saveData(
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                isExtendedPE: sanitationEmbrexValue,
+                assessmentId: serverAssessmentId,
+                date: nil,
+                override: false
+            )
+        }
+        let sanitationEmbrex = objDic["SanitationEmbrexScoresPostinData"] as? [[String: Any]] ?? []
+        let jsonData = try? JSONSerialization.data(withJSONObject: sanitationEmbrex, options: .prettyPrinted)
+        let jsonDecoder = JSONDecoder()
+        if let jsonData = jsonData,
+           let dtoArr = try? jsonDecoder.decode([PESanitationDTO].self, from: jsonData) {
+            SanitationEmbrexQuestionMasterDAO.sharedInstance.saveServiceResponse(
+                assessmentId: serverAssessmentId,
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                dtoArr: dtoArr
+            )
+        }
+    }
+
+    private func handleCategoriesAndQuestions(for assessment: PENewAssessment, objDic: [String: Any]) {
+        jsonRe = (getJSON("QuestionAns") ?? JSON())
+        pECategoriesAssesmentsResponse = PECategoriesAssesmentsResponse(jsonRe)
+        let questionInfo = (getJSON("QuestionAnsInfo") ?? JSON())
+        let infoImageDataResponse = InfoImageDataResponse(questionInfo)
+        let categoryCount = filterCategoryCount(peNewAssessmentOf: assessment)
+        if categoryCount > 0 {
+            for cat in pECategoriesAssesmentsResponse.peCategoryArray {
+                for (index, ass) in cat.assessmentQuestions.enumerated() {
+                    let peNewAssessmentNew = assessment
+                    peNewAssessmentNew.serverAssessmentId = assessment.serverAssessmentId
+                    peNewAssessmentNew.cID = index
+                    peNewAssessmentNew.catID = cat.id
+                    peNewAssessmentNew.catName = cat.categoryName
+                    peNewAssessmentNew.catMaxMark = cat.maxMark
+                    peNewAssessmentNew.sequenceNo = cat.id
+                    peNewAssessmentNew.sequenceNoo = cat.sequenceNo
+                    peNewAssessmentNew.catResultMark = cat.maxMark
+                    peNewAssessmentNew.catEvaluationID = cat.evaluationID
+                    peNewAssessmentNew.catISSelected = cat.isSelected ? 1 : 0
+                    peNewAssessmentNew.assID = ass.id
+                    peNewAssessmentNew.assDetail1 = ass.assessment
+                    peNewAssessmentNew.evaluationID = cat.evaluationID
+                    peNewAssessmentNew.assDetail2 = ass.assessment2
+                    peNewAssessmentNew.assMinScore = ass.minScore
+                    peNewAssessmentNew.assMaxScore = ass.maxScore
+                    peNewAssessmentNew.assCatType = ass.cateType
+                    peNewAssessmentNew.assModuleCatID = ass.moduleCatId
+                    peNewAssessmentNew.assModuleCatName = ass.moduleCatName
+                    peNewAssessmentNew.assStatus = 1
+                    peNewAssessmentNew.informationImage = ass.informationImage
+                    peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
+                    peNewAssessmentNew.isChlorineStrip = objDic["HasChlorineStrips"] as? Int ?? 0
+                    peNewAssessmentNew.isAutomaticFail = objDic["IsAutomaticFail"] as? Int ?? 0
+                    peNewAssessmentNew.isAllowNA = ass.isAllowNA
+                    peNewAssessmentNew.rollOut = ass.rollOut
+                    peNewAssessmentNew.isNA = ass.isNA
+                    peNewAssessmentNew.qSeqNo = ass.qSeqNo
+                    CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment: peNewAssessmentNew)
                 }
             }
         }
-        
-        self.getPostingAssessmentImagesListByUser()
+    }
+
+    private func handleScores(for assessment: PENewAssessment, objDic: [String: Any]) {
+        let assessmentScoresPostingData = objDic["AssessmentScoresPostingData"] as? [[String: Any]] ?? []
+        let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
+        var filterScoreData: [[String: Any]] = [[:]]
+        var isNaSelectedArray: [[String: Any]] = [[:]]
+        for questionMark in assessmentScoresPostingData {
+            let AssessmentScore = questionMark["AssessmentScore"] as? Int ?? 0
+            let QCCount = questionMark["QCCount"] as? String ?? ""
+            let FrequencyValue = questionMark["FrequencyValue"] as? Int ?? 32
+            var FrequencyValueStr = ""
+            let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
+            let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
+            let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
+            if FrequencyValue != 32, visitIDArray.contains(FrequencyValue) {
+                let indexOfe = visitIDArray.index(of: FrequencyValue)
+                FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
+            }
+            let TextAmPm = questionMark["TextAmPm"] as? String ?? ""
+            let PersonName = questionMark["PersonName"] as? String ?? ""
+            let PPMValue = questionMark["Chlorine_Value"] as? String ?? ""
+            let isNAValue = questionMark["IsNA"] as? Bool ?? false
+            extractedFunc(FrequencyValueStr, QCCount, PersonName, TextAmPm, PPMValue, AssessmentScore, isNAValue, &filterScoreData, questionMark, &isNaSelectedArray)
+        }
+
+        var assArray: [Int] = []
+        for cat in filterScoreData {
+            let assID = cat["ModuleAssessmentId"] as? Int ?? 0
+            assArray.append(assID)
+        }
+
+        var naArray: [Int] = []
+        for cat in isNaSelectedArray {
+            let assID = cat["ModuleAssessmentId"] as? Int ?? 0
+            naArray.append(assID)
+        }
+
+        for qMark in allAssesmentArr {
+            let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
+            for assID in naArray {
+                if (Int(truncating: objMark.assID ?? 0) == assID) {
+                    var totalMark = GetLatestTotalMarkOfAss(assID: objMark.assID as? Int ?? 0)
+                    let catISSelected = 0
+                    let maxMarks = objMark.assMaxScore ?? 0
+                    let reMark = Int(totalMark) - Int(truncating: maxMarks)
+                    totalMark = Int(truncating: NSNumber(value: reMark))
+                    CoreDataHandlerPE().updateChangeInTotalAnsInProgressTable(catISSelected: catISSelected, catMaxMark: Int(totalMark), catID: Int(truncating: objMark.catID ?? 0), assID: Int(truncating: objMark.assID ?? 0), userID: Int(truncating: objMark.userID ?? 0))
+                }
+            }
+        }
+
+        for qMark in allAssesmentArr {
+            let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
+            for assID in assArray {
+                if (Int(truncating: objMark.assID ?? 0) == assID) {
+                    var totalMark = GetLatestMarkOfAss(assID: objMark.assID as? Int ?? 0)
+                    let catISSelected = 0
+                    let maxMarks = objMark.assMaxScore ?? 0
+                    let reMark = Int(totalMark) - Int(truncating: maxMarks)
+                    totalMark = Int(truncating: NSNumber(value: reMark))
+                    CoreDataHandlerPE().updateChangeInAnsInProgressTable(catISSelected: catISSelected, catResultMark: Int(totalMark), catID: Int(truncating: objMark.catID ?? 0), assID: Int(truncating: objMark.assID ?? 0), userID: Int(truncating: objMark.userID ?? 0))
+                }
+            }
+        }
+
+        var assNAArray: [[String: Any]] = [[:]]
+        for cat in assessmentScoresPostingData {
+            let isNA = cat["IsNA"] as? Bool ?? false
+            if isNA {
+                assNAArray.append(cat)
+            }
+        }
+
+        for qMark in allAssesmentArr {
+            let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
+            for assID in assNAArray {
+                let AssessmentId = assID["ModuleAssessmentId"] as? Int ?? 0
+                if (Int(truncating: objMark.assID ?? 0) == AssessmentId) {
+                    CoreDataHandlerPE().update_isNAInAssessmentInProgress(isNA: true, assID: Int(objMark.assID ?? 0))
+                }
+            }
+        }
+    }
+
+    private func handleComments(for assessment: PENewAssessment, objDic: [String: Any]) {
+        let assessmentCommentsPostingData = objDic["AssessmentCommentsPostingData"] as? [[String: Any]] ?? []
+        let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
+        var filterCommentData: [[String: Any]] = [[:]]
+        for questionMark in assessmentCommentsPostingData {
+            let AssessmentComment = questionMark["AssessmentComment"] as? String ?? ""
+            if AssessmentComment.count > 0 {
+                filterCommentData.append(questionMark)
+            }
+        }
+        for qMark in allAssesmentArr {
+            let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
+            for assID in filterCommentData {
+                let AssessmentComment = assID["AssessmentComment"] as? String ?? ""
+                let AssessmentId = assID["AssessmentId"] as? Int ?? 0
+                if (Int(truncating: objMark.assID ?? 0) == AssessmentId) {
+                    CoreDataHandlerPE().updateNoteInProgressTable(assID: Int(truncating: objMark.assID ?? 0), text: AssessmentComment)
+                }
+            }
+        }
+    }
+
+    private func handleInovoject(for assessment: PENewAssessment, objDic: [String: Any]) {
+        let InovojectPostingData = objDic["InovojectPostingData"] as? [Any] ?? []
+        let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
+        for inoDic in InovojectPostingData {
+            let inoDicIS = inoDic as? [String: Any] ?? [:]
+            let Dosage = inoDicIS["Dosage"] as? String ?? ""
+            let otherString = inoDicIS["OtherText"] as? String ?? ""
+            let VaccineId = inoDicIS["VaccineId"] as? Int ?? 0
+            let AmpuleSize = inoDicIS["AmpuleSize"] as? Int ?? 0
+            var AmpuleSizeStr = ""
+            let AntibioticInformation = inoDicIS["AntibioticInformation"] as? String ?? ""
+            let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+            let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+            let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+            if AmpuleSize != 0 {
+                let indexOfe = ampleSizeIDArray.index(of: AmpuleSize)
+                AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String ?? ""
+            }
+            let AmpulePerbag = inoDicIS["AmpulePerbag"] as? Int ?? 0
+            let HatcheryAntibiotics = inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
+            let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
+            let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
+            var VName = ""
+            let ProgramName = inoDicIS["ProgramName"] as? String ?? ""
+            let DiluentsMfgOtherName = inoDicIS["DiluentsMfgOtherName"] as? String ?? ""
+            let vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
+            let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+            let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+            let xxxx = VaccineId
+            if xxxx != 0 {
+                if vIDArray.contains(xxxx) {
+                    let indexOfd = vIDArray.index(of: xxxx)
+                    VName = vNameArray[indexOfd] as? String ?? ""
+                }
+            } else {
+                VName = otherString
+            }
+            if otherString != "" {
+                VName = otherString
+            }
+            let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+            var HatcheryAntibioticsIntVal = 0
+            if HatcheryAntibiotics == true {
+                HatcheryAntibioticsIntVal = 1
+            } else {
+                HatcheryAntibioticsIntVal = 0
+            }
+            peNewAssessmentInProgress.iCS = inoDicIS["BagSizeType"] as? String ?? ""
+            let diluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
+            peNewAssessmentInProgress.iDT = diluentMfg
+            peNewAssessmentInProgress.micro = ""
+            peNewAssessmentInProgress.residue = ""
+            CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: peNewAssessmentInProgress, fromInvo: true)
+            let inVoDataNew = InovojectData(id: 0, vaccineMan: DiluentMfg, name: VName, ampuleSize: AmpuleSizeStr, ampulePerBag: String(AmpulePerbag), bagSizeType: BagSizeType, dosage: Dosage, dilute: DiluentMfg, invoHatchAntibiotic: HatcheryAntibioticsIntVal, invoHatchAntibioticText: AntibioticInformation, invoProgramName: ProgramName, doaDilManOther: DiluentsMfgOtherName)
+            let id = self.saveInovojectInPEModule(inovojectData: inVoDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
+            inVoDataNew.id = id
+        }
+    }
+
+    private func handleDayOfAge(for assessment: PENewAssessment, objDic: [String: Any]) {
+        let DayPostingData = objDic["DayOfAgePostingData"] as? [Any] ?? []
+        let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
+        for inoDic in DayPostingData {
+            let DayOfAgeIS = inoDic as? [String: Any] ?? [:]
+            let Dosage = DayOfAgeIS["DayOfAgeDosage"] as? String ?? ""
+            let otherText = DayOfAgeIS["OtherText"] as? String ?? ""
+            let VaccineId = DayOfAgeIS["DayOfAgeMfgNameId"] as? Int ?? 0
+            let AmpuleSize = DayOfAgeIS["DayOfAgeAmpuleSize"] as? Int ?? 0
+            var AmpuleSizeStr = ""
+            let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
+            let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
+            let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
+            if AmpuleSize != 0 {
+                let indexOfe = ampleSizeIDArray.index(of: AmpuleSize)
+                AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String ?? ""
+            }
+            let AmpulePerbag = DayOfAgeIS["DayOfAgeAmpulePerbag"] as? Int ?? 0
+            let HatcheryAntibiotics = DayOfAgeIS["DayOfBagHatcheryAntibiotics"] as? Bool ?? false
+            let ManufacturerId = DayOfAgeIS["DayOfAgeMfgId"] as? Int ?? 0
+            let BagSizeType = DayOfAgeIS["DayOfAgeBagSizeType"] as? String ?? ""
+            let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
+            var VManufacturerName = ""
+            var VName = ""
+            let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
+            let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
+            let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+            let xxx = ManufacturerId
+            if xxx != 0 {
+                let indexOfd = vManufacutrerIDArray.index(of: xxx)
+                if vManufacutrerNameArray.count > indexOfd {
+                    VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
+                }
+            }
+            let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
+            let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
+            let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+            let xxxx = VaccineId
+            if xxxx != 0 {
+                if vIDArray.contains(xxxx) {
+                    let indexOfd = vIDArray.index(of: xxxx)
+                    VName = vNameArray[indexOfd] as? String ?? ""
+                }
+            } else {
+                VName = otherText
+            }
+            if otherText != "" {
+                VName = otherText
+            }
+            let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
+            var HatcheryAntibioticsIntVal = 0
+            if HatcheryAntibiotics == true {
+                HatcheryAntibioticsIntVal = 1
+            } else {
+                HatcheryAntibioticsIntVal = 0
+            }
+            peNewAssessmentInProgress.iCS = DayOfAgeIS["DayOfAgeBagSizeType"] as? String ?? ""
+            let diluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
+            peNewAssessmentInProgress.iDT = diluentMfg
+            peNewAssessmentInProgress.micro = ""
+            peNewAssessmentInProgress.residue = ""
+            CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment: peNewAssessmentInProgress, fromInvo: true)
+            let inVoDataNew = InovojectData(id: 0, vaccineMan: DiluentMfg, name: VName, ampuleSize: AmpuleSizeStr, ampulePerBag: String(AmpulePerbag), bagSizeType: BagSizeType, dosage: Dosage, dilute: DiluentMfg, invoHatchAntibiotic: HatcheryAntibioticsIntVal, invoHatchAntibioticText: "", invoProgramName: "", doaDilManOther: "")
+            let id = self.saveInovojectInPEModule(inovojectData: inVoDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
+            inVoDataNew.id = id
+        }
     }
     // MARK: - Handle PE Posting Assessment images List API Responce
     private func handlGetPostingAssessmentImagesListByUser(_ json: JSON) {
@@ -5485,644 +4717,190 @@ extension PEDashboardViewController{
     }
     // MARK: - Handle PE Rejected Assessment List API Responce
     private func handlGetRejectedAssessmentListByUser(_ json: JSON) {
-        var dataDic : [String:Any] = [:]
+        let dataArray = extractRejectedDataArray(from: json)
+        if dataArray.count > 0 {
+            self.deleteAllDataWithUserID("PE_AssessmentRejected")
+        }
+        var count = 0
+        for obj in dataArray {
+            count += 1
+            UserDefaults.standard.setValue(count, forKey: "rejectedCountIS")
+            handleRejectedAssessmentObject(obj)
+        }
+    }
+
+    private func extractRejectedDataArray(from json: JSON) -> [Any] {
+        var dataDic: [String: Any] = [:]
         if let string = json.rawString() {
             dataDic = string.convertToDictionary() ?? [:]
         }
-        var count = 0
-        let dataArray = dataDic["Data"] as? [Any] ?? []
-        if  dataArray.count  > 0 {
-            self.deleteAllDataWithUserID("PE_AssessmentRejected")
+        return dataDic["Data"] as? [Any] ?? []
+    }
+
+    private func handleRejectedAssessmentObject(_ obj: Any) {
+        let objDic = obj as? [String: Any] ?? [:]
+        let peNewAssessmentWas = parseRejectedAssessment(objDic)
+        handleRejectedSanitation(objDic, serverAssessmentId: peNewAssessmentWas.serverAssessmentId!)
+        self.sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(
+            userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+            assessmentId: peNewAssessmentWas.serverAssessmentId!
+        )
+        UserDefaults.standard.set(String(peNewAssessmentWas.serverAssessmentId!), forKey: "currentServerAssessmentId")
+        handleRejectedCategoriesAndQuestions(for: peNewAssessmentWas, objDic: objDic)
+        // You can add more helpers for scores, comments, etc., if needed
+    }
+
+    private func parseRejectedAssessment(_ objDic: [String: Any]) -> PENewAssessment {
+        let peNewAssessmentWas = PENewAssessment()
+        let serverAssessmentId = objDic["AssessmentId"] as? Int ?? 0
+        let EvaluationId = objDic["EvaluationId"] as? Int ?? 0
+
+        peNewAssessmentWas.serverAssessmentId = String(serverAssessmentId)
+        peNewAssessmentWas.siteId = objDic["SiteId"] as? Int ?? 0
+        peNewAssessmentWas.siteName = objDic["SiteName"] as? String ?? ""
+        peNewAssessmentWas.customerId = objDic["CustomerId"] as? Int ?? 0
+        peNewAssessmentWas.customerName = objDic["CustomerName"] as? String ?? ""
+        peNewAssessmentWas.hatcheryAntibiotics = 0
+        peNewAssessmentWas.evaluationID  = EvaluationId
+        peNewAssessmentWas.isHandMix = objDic["Handmix"] as? Bool ?? false
+        if let doubleSanitation = objDic["DoubleSanitation"] as? Bool, doubleSanitation {
+            peNewAssessmentWas.hatcheryAntibiotics = 1
         }
-        for obj in dataArray {
-            
-            let objDic = obj as? [String:Any] ?? [:]
-            count += 1
-            UserDefaults.standard.setValue(count, forKey: "rejectedCountIS")
-            
-            let peNewAssessmentWas = PENewAssessment()
-            let assessmentCommentsPostingData = objDic["AssessmentCommentsPostingData"] as? [[String:Any]] ?? []
-            let assessmentScoresPostingData = objDic["AssessmentScoresPostingData"] as? [[String:Any]] ?? []
-            let EvaluationId = objDic["EvaluationId"] as? Int ?? 0
-            let serverAssessmentId = objDic["AssessmentId"] as? Int ?? 0
-            
-            if objDic["HasChlorineStrips"] as? Int == 1{
-                UserDefaults.standard.set(1, forKey: "isChlorineStrip")
-                let hasChlorineStrips = true
-            }else{
-                UserDefaults.standard.set(0, forKey: "isChlorineStrip")
-                let hasChlorineStrips = false
-            }
-            if objDic["IsAutomaticFail"] as? Int == 1{
-                UserDefaults.standard.set(1, forKey: "isAutomaticFail")
-                let isAutomaticFail = true
-            }else{
-                UserDefaults.standard.set(0, forKey: "isAutomaticFail")
-                let isAutomaticFail = false
-            }
-            let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
-            if sanitationEmbrexValue{
-                PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil, override: false)
-            }
-            
-            let sanitationEmbrex = objDic["SanitationEmbrexScoresPostinData"] as? [[String:Any]] ?? []
-            let jsonData = try? JSONSerialization.data(withJSONObject: sanitationEmbrex, options: .prettyPrinted)
-            let jsonDecoder = JSONDecoder()
-            if jsonData != nil{
-                let dtoArr = try? jsonDecoder.decode([PESanitationDTO].self, from: jsonData!)
-                if dtoArr != nil{
-                    SanitationEmbrexQuestionMasterDAO.sharedInstance.saveServiceResponse(assessmentId: "\(serverAssessmentId)", userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", dtoArr: dtoArr!)
-                }
-                
-            }
-            
-            self.sanitationQuesArr = SanitationEmbrexQuestionMasterDAO.sharedInstance.fetchAssessmentSanitationQuestions(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId:  "\(serverAssessmentId)" )
-            
-            UserDefaults.standard.set(String(serverAssessmentId), forKey: "currentServerAssessmentId")
-            
-            peNewAssessmentWas.serverAssessmentId = String(serverAssessmentId)
-            let AppCreationTime = objDic["AppCreationTime"] as? String ?? ""
-            peNewAssessmentWas.siteId = objDic["SiteId"] as? Int ?? 0
-            peNewAssessmentWas.siteName = objDic["SiteName"] as? String ?? ""
-            peNewAssessmentWas.customerId = objDic["CustomerId"] as? Int ?? 0
-            peNewAssessmentWas.customerName = objDic["CustomerName"] as? String ?? ""
-            peNewAssessmentWas.hatcheryAntibiotics = 0
-            peNewAssessmentWas.evaluationID  = EvaluationId
-            peNewAssessmentWas.isHandMix = objDic["Handmix"] as? Bool ?? false
-            
-            if let doubleSanitation = objDic["DoubleSanitation"] as? Bool, doubleSanitation {
-                peNewAssessmentWas.hatcheryAntibiotics = 1
-            }
-            
-            peNewAssessmentWas.userID = objDic["UserId"] as? Int ?? 0
-            peNewAssessmentWas.evaluationDate = convertDateFormatter(date: objDic["EvaluationDate"] as? String ?? "")
-            peNewAssessmentWas.evaluatorName = objDic["UserName"] as? String ?? ""
-            peNewAssessmentWas.evaluatorID =  objDic["UserId"] as? Int ?? 0
-            peNewAssessmentWas.evaluationName = objDic["EvaluationName"] as? String ?? ""
-            peNewAssessmentWas.evaluationID = objDic["EvaluationId"] as? Int ?? 0
-            peNewAssessmentWas.incubation = objDic["IncubationStyleName"] as? String ?? ""
-            peNewAssessmentWas.breedOfBird = objDic["BreedBirdsName"] as? String ?? ""
-            peNewAssessmentWas.statusType = objDic["Status_Type"] as? Int ?? 0
-            peNewAssessmentWas.breedOfBirdOther = objDic["BreedOfBirdsOther"] as? String ?? ""
-            peNewAssessmentWas.dataToSubmitID = objDic["AppCreationTime"] as? String ?? ""
-            peNewAssessmentWas.manufacturer = objDic["ManufacturerName"] as? String ?? ""
-            peNewAssessmentWas.rejectionComment = objDic["RejectionComments"] as? String ?? ""
-            peNewAssessmentWas.visitID = objDic["VisitId"] as? Int ?? 0
-            peNewAssessmentWas.visitName =  objDic["VisitName"] as? String ?? ""
-            peNewAssessmentWas.selectedTSRID = objDic["TSRId"] as? Int ?? 0
-            peNewAssessmentWas.countryName = objDic[Constants.countryNamStr] as? String ?? ""
-            peNewAssessmentWas.countryID = objDic["CountryId"] as? Int ?? 0
-            peNewAssessmentWas.clorineName = objDic["ChlorineText"] as? String ?? ""
-            peNewAssessmentWas.clorineId = objDic["ChlorineId"] as? Int ?? 0
-            peNewAssessmentWas.fluid = objDic["IsInovoFluids"] as? Bool ?? false
-            peNewAssessmentWas.basicTransfer = objDic["IsBasicTrfAssessment"] as? Bool ?? false
-            peNewAssessmentWas.extndMicro = objDic["IsInterMicrobial"] as? Bool ?? false
-            peNewAssessmentWas.refrigeratorNote = objDic["RefrigeratorNote"] as? String ?? ""
-            peNewAssessmentWas.IsEMRequested = objDic["IsEMRequested"] as? Bool ?? false
-            peNewAssessmentWas.emRejectedComment = objDic["EMRejectedComment"] as? String ?? ""
-            peNewAssessmentWas.isPERejected = objDic["IsPERejected"] as? Bool ?? false
-            peNewAssessmentWas.isEMRejected = objDic["IsEMRejected"] as? Bool ?? false
-            peNewAssessmentWas.sanitationValue = objDic["SanitationEmbrex"] as? Bool ?? false
-            
-            let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
-            let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
-            let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-            if peNewAssessmentWas.selectedTSRID != 0,
-               visitIDArray.contains( peNewAssessmentWas.selectedTSRID as Any) {
-                let indexOfe =  visitIDArray.index(of: peNewAssessmentWas.selectedTSRID as Any)
-                let TSRName = visitNameArray[indexOfe] as? String ?? ""
-                peNewAssessmentWas.selectedTSR =  TSRName
-            }
-            
-            let manuOthers = objDic["ManufacturerOther"] as? String ?? ""
-            if manuOthers != "" {
-                peNewAssessmentWas.manufacturer = "S" + manuOthers
-            }
-            let eggStr = objDic["EggsPerFlatName"] as? String ?? "0"
-            peNewAssessmentWas.noOfEggs = Int64(eggStr)
-            let eggsOthers = objDic["EggsPerFlatOther"]  as? String ?? ""
-            if eggsOthers != "" {
-                let txt = eggsOthers
-                let str =   txt  + "000"
-                let iii = Int64(str)
-                if  iii != nil{
-                    peNewAssessmentWas.noOfEggs = iii!
-                }
-            }
-            let f = objDic["FlockAgeId"] as? Int ?? 0
-            peNewAssessmentWas.isFlopSelected =  f
-            let Camera =  objDic["Camera"]  as? Bool ?? false
-            if  Camera == true {
-                peNewAssessmentWas.camera = 1
-            } else {
-                peNewAssessmentWas.camera = 0
-            }
-            peNewAssessmentWas.notes = objDic["Notes"] as? String ?? ""
-            let strBase64Signatture =  objDic["SignatureImage"] as? String ?? ""
-            let representaiveName =  objDic["RepresentativeName"] as? String ?? ""
-            let RoleName =  objDic["RoleName"] as? String ?? ""
-            let imageData : Data? = Data(base64Encoded: strBase64Signatture, options: .ignoreUnknownCharacters)
-            
-            let strBase64Signatture2 =  objDic["SignatureImage2"] as? String ?? ""
-            let representaiveName2 =  objDic["RepresentativeName2"] as? String ?? ""
-            let RoleName2 =  objDic["RoleName2"] as? String ?? ""
-            let fsrSignatureImage = objDic["FSTSignatureImage"] as? String ?? ""
-            peNewAssessmentWas.FSTSignatureImage = fsrSignatureImage
-            
-            let imageData2 : Data = Data(base64Encoded: strBase64Signatture2, options: .ignoreUnknownCharacters) ?? Data()
-            let representaiveNotes =  objDic["RepresentativeNotes"] as? String ?? ""
-            let SignatureDate =  objDic["SignatureDate"] as? String ?? ""
-            let id = self.saveImageInPEModule(imageData: imageData ?? Data())
-            let id2 = self.saveImageInPEModule(imageData: imageData2)
-            var sigDate = ""
-            if SignatureDate != "" {
-                sigDate = self.convertDateFormat(inputDate: SignatureDate)
-            } else {
-                sigDate = Date().stringFormat(format: appDelegateObj.mmddyyStr)
-            }
-            let param : [String:String] = ["sig":String(id),"sig2":String(id2),"sig_Date":sigDate ,"sig_EmpID":RoleName,"sig_Name":representaiveName ,"sig_EmpID2":RoleName2,"sig_Name2":representaiveName2 ,"sig_Phone":representaiveNotes ]
-            jsonRe = (getJSON("QuestionAns") ?? JSON())
-            pECategoriesAssesmentsResponse =  PECategoriesAssesmentsResponse(jsonRe)
-            
-            var peCategoryFilteredArray: [PECategory] =  []
-            for object in pECategoriesAssesmentsResponse.peCategoryArray {
-                if peNewAssessmentWas.evaluationID == object.evaluationID, object.id != 36 {
-                    peCategoryFilteredArray.append(object)
-                }
-            }
-            
-            let questionInfo = (getJSON("QuestionAnsInfo") ?? JSON())
-            let infoImageDataResponse = InfoImageDataResponse(questionInfo)
-            var peNewAssessmentNew = PENewAssessment()
-            if peCategoryFilteredArray.count > 0 {
-                for  cat in  peCategoryFilteredArray {
-                    for (index, ass) in cat.assessmentQuestions.enumerated(){
-                        
-                        peNewAssessmentNew = peNewAssessmentWas
-                        peNewAssessmentNew.serverAssessmentId = peNewAssessmentWas.serverAssessmentId
-                        peNewAssessmentNew.cID = index
-                        peNewAssessmentNew.catID = cat.id
-                        peNewAssessmentNew.catName = cat.categoryName
-                        peNewAssessmentNew.catMaxMark = cat.maxMark
-                        peNewAssessmentNew.sequenceNo = cat.id
-                        peNewAssessmentNew.sequenceNoo = cat.sequenceNo
-                        peNewAssessmentNew.catResultMark = cat.maxMark
-                        peNewAssessmentNew.catEvaluationID = cat.evaluationID
-                        peNewAssessmentNew.catISSelected = cat.isSelected ? 1:0
-                        peNewAssessmentNew.assID = ass.id
-                        peNewAssessmentNew.assDetail1 = ass.assessment
-                        peNewAssessmentNew.evaluationID = cat.evaluationID
-                        peNewAssessmentNew.assDetail2 = ass.assessment2
-                        peNewAssessmentNew.assMinScore = ass.minScore
-                        peNewAssessmentNew.assMaxScore = ass.maxScore
-                        peNewAssessmentNew.assCatType = ass.cateType
-                        peNewAssessmentNew.assModuleCatID = ass.moduleCatId
-                        peNewAssessmentNew.assModuleCatName = ass.moduleCatName
-                        peNewAssessmentNew.assStatus = 1
-                        peNewAssessmentNew.isChlorineStrip = objDic["HasChlorineStrips"] as? Int ?? 0
-                        peNewAssessmentNew.isAutomaticFail = objDic["IsAutomaticFail"] as? Int ?? 0
-                        peNewAssessmentNew.manufacturer = peNewAssessmentWas.manufacturer
-                        peNewAssessmentNew.noOfEggs = peNewAssessmentWas.noOfEggs
-                        peNewAssessmentNew.informationImage = ass.informationImage
-                        peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
-                        peNewAssessmentNew.isAllowNA = ass.isAllowNA
-                        peNewAssessmentNew.isNA = ass.isNA
-                        peNewAssessmentNew.rollOut = ass.rollOut
-                        peNewAssessmentNew.qSeqNo = ass.qSeqNo
-                        CoreDataHandlerPE().saveNewAssessmentInProgressInDB(newAssessment:peNewAssessmentNew)
-                    }
-                }
-                
-                var allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
-                
-                var filterScoreData : [[String:Any]] = [[:]]
-                var isNaSelectedArray : [[String:Any]] = [[:]]
-                for questionMark in assessmentScoresPostingData {
-                    let AssessmentScore = questionMark["AssessmentScore"] as? Int ?? 0
-                    let QCCount = questionMark["QCCount"] as? String ?? ""
-                    let FrequencyValue = questionMark["FrequencyValue"] as? Int ?? 32
-                    var FrequencyValueStr = ""
-                    let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Frequency")
-                    let visitNameArray = visitDetailsArray.value(forKey: "frequencyName") as? NSArray ?? NSArray()
-                    let visitIDArray = visitDetailsArray.value(forKey: "frequencyId") as? NSArray ?? NSArray()
-                    if FrequencyValue != 32,visitIDArray.contains(FrequencyValue) {
-                        let indexOfe =  visitIDArray.index(of: FrequencyValue) //
-                        FrequencyValueStr = visitNameArray[indexOfe] as? String ?? ""
-                        
-                    }
-                    let isNAValue = questionMark["IsNA"] as? Bool ?? false
-                    let TextAmPm = questionMark["TextAmPm"] as? String ?? ""
-                    let PersonName = questionMark["PersonName"] as? String ?? ""
-                    let PPMValue = questionMark["Chlorine_Value"] as? String ?? ""
-                    
-                    if FrequencyValueStr.count > 0 {
-                        CoreDataHandlerPE().updateFrequencyInAssessmentInProgress(frequency:FrequencyValueStr)
-                    }
-                    if QCCount.count > 0 {
-                        CoreDataHandlerPE().updateQCCountInAssessmentInProgress(qcCount:QCCount)
-                    }
-                    if PersonName.count > 0 {
-                        CoreDataHandlerPE().updatePersonNameInAssessmentInProgress(personName: PersonName)
-                    }
-                    if TextAmPm.count > 0 {
-                        CoreDataHandlerPE().updateAMPMInAssessmentInProgress(ampmValue: TextAmPm)
-                    }
-                    if PPMValue.count > 0 {
-                        CoreDataHandlerPE().updatePPMValueInAssessmentInProgress(PpmValue: PPMValue)
-                    }
-                    if (AssessmentScore  ==  0) || (isNAValue) {
-                        filterScoreData.append(questionMark)
-                    }
-                    if isNAValue{
-                        isNaSelectedArray.append(questionMark)
-                    }
-                }
-                var assArray : [Int] = []
-                for cat in filterScoreData {
-                    let assID = cat["ModuleAssessmentId"] as? Int ?? 0
-                    assArray.append(assID)
-                }
-                
-                var naArray : [Int] = []
-                for cat in isNaSelectedArray {
-                    let assID = cat["ModuleAssessmentId"] as? Int ?? 0
-                    naArray.append(assID)
-                }
-                
-                for qMark in allAssesmentArr {
-                    let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                    for assID in naArray {
-                        
-                        if (Int(truncating: objMark.assID ?? 0) == assID ) {
-                            var totalMark = GetLatestTotalMarkOfAss(assID: objMark.assID as? Int ?? 0)
-                            let catISSelected = 0
-                            let maxMarks =  objMark.assMaxScore ?? 0
-                            let reMark = Int(totalMark) - Int(truncating: maxMarks)
-                            totalMark = Int(truncating: NSNumber(value: reMark))
-                            CoreDataHandlerPE().updateChangeInTotalAnsInProgressTable(catISSelected:catISSelected,catMaxMark:Int(totalMark),catID:Int(truncating: objMark.catID ?? 0),assID:Int(truncating: objMark.assID ?? 0), userID:Int(truncating: objMark.userID ?? 0))
-                        }
-                    }
-                }
-                
-                for qMark in allAssesmentArr {
-                    let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                    for assID in assArray {
-                        
-                        if ( Int(truncating: objMark.assID ?? 0) == assID ) {
-                            var totalMark = GetLatestMarkOfAss(assID: objMark.assID as? Int ?? 0)
-                            let catISSelected = 0
-                            let maxMarks =  objMark.assMaxScore ?? 0
-                            let reMark = Int(totalMark) - Int(truncating: maxMarks)
-                            totalMark = Int(truncating: NSNumber(value: reMark))
-                            CoreDataHandlerPE().updateChangeInAnsInProgressTable(catISSelected:catISSelected,catResultMark:Int(totalMark),catID:Int(truncating: objMark.catID ?? 0),assID:Int(truncating: objMark.assID ?? 0), userID:Int(truncating: objMark.userID ?? 0))
-                        }
-                    }
-                }
-                
-                var assNAArray : [[String:Any]] = [[:]]
-                for cat in assessmentScoresPostingData {
-                    let isNA = cat["IsNA"] as? Bool ?? false
-                    if(isNA){
-                        assNAArray.append(cat)
-                    }
-                }
-                
-                for qMark in allAssesmentArr {
-                    let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                    for assID in assNAArray {
-                        let AssessmentId = assID["ModuleAssessmentId"] as? Int ?? 0
-                        
-                        if ( Int(truncating: objMark.assID ?? 0) == AssessmentId ) {
-                            CoreDataHandlerPE().update_isNAInAssessmentInProgress(isNA: true, assID: Int(objMark.assID ?? 0))
-                        }
-                    }
-                }
-                
-                //score ends
-                //comment start
-                var filterCommentData : [[String:Any]] = [[:]]
-                for questionMark in assessmentCommentsPostingData {
-                    let AssessmentComment = questionMark["AssessmentComment"] as? String ?? ""
-                    if AssessmentComment.count > 0  {
-                        filterCommentData.append(questionMark)
-                    }
-                }
-                for qMark in allAssesmentArr {
-                    let objMark = qMark as? PE_AssessmentInProgress ?? PE_AssessmentInProgress()
-                    for assID in filterCommentData {
-                        let AssessmentComment = assID["AssessmentComment"] as? String ?? ""
-                        let AssessmentId = assID["AssessmentId"] as? Int ?? 0
-                        if ( Int(truncating: objMark.assID ?? 0) == AssessmentId ) {
-                            CoreDataHandlerPE().updateNoteInProgressTable(assID:Int(truncating: objMark.assID ?? 0),text:AssessmentComment)
-                        }
-                    }
-                }
-                //comment ends
-                let InovojectPostingData = objDic["InovojectPostingData"] as? [Any] ?? []
-                let VaccineMixerObservedPostingData = objDic["VaccineMixerObservedPostingData"] as? [Any] ?? []
-                
-                // INOVOJECT
-                for inoDic in InovojectPostingData {
-                    
-                    let inoDicIS = inoDic as? [String:Any] ?? [:]
-                    let Dosage = inoDicIS["Dosage"] as? String ?? ""
-                    let otherString = inoDicIS["OtherText"] as? String ?? ""
-                    let VaccineId = inoDicIS["VaccineId"] as? Int ?? 0
-                    let AmpuleSize = inoDicIS["AmpuleSize"] as? Int ?? 0
-                    var AmpuleSizeStr = ""
-                    let AntibioticInformation =  inoDicIS["AntibioticInformation"] as? String ?? ""
-                    let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                    let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                    let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    if AmpuleSize != 0 {
-                        let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
-                        AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
-                    }
-                    let AmpulePerbag = inoDicIS["AmpulePerbag"] as? Int ?? 0
-                    let HatcheryAntibiotics =  inoDicIS["HatcheryAntibiotics"] as? Bool ?? false
-                    let BagSizeType = inoDicIS["BagSizeType"] as? String ?? ""
-                    let DiluentMfg = inoDicIS["DiluentMfg"] as? String ?? ""
-                    var VName = ""
-                    let ProgramName = inoDicIS["ProgramName"] as? String ?? ""
-                    let DiluentsMfgOtherName = inoDicIS["DiluentsMfgOtherName"] as? String ?? ""
-                    
-                    let vDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VNames")
-                    let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                    let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    let xxxx = VaccineId
-                    if xxxx != 0 {
-                        if vIDArray.contains(xxxx){
-                            let indexOfd = vIDArray.index(of: xxxx)
-                            VName = vNameArray[indexOfd] as? String ?? ""
-                        }
-                    }  else {
-                        VName = otherString
-                    }
-                    
-                    if otherString != "" {
-                        VName = otherString
-                    }
-                    
-                    let peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                    
-                    var HatcheryAntibioticsIntVal = 0
-                    if HatcheryAntibiotics == true{
-                        HatcheryAntibioticsIntVal = 1
-                    } else {
-                        HatcheryAntibioticsIntVal = 0
-                    }
-                    
-                    peNewAssessmentInProgress.iCS  = inoDicIS["BagSizeType"] as? String ?? ""
-                    let diluentMfg  = inoDicIS["DiluentMfg"] as? String ?? ""
-                    peNewAssessmentInProgress.iDT = diluentMfg
-                    peNewAssessmentInProgress.micro  = ""
-                    peNewAssessmentInProgress.residue = ""
-                    CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromInvo: true)
-                    
-                    let inVoDataNew = InovojectData(id: 0,vaccineMan:DiluentMfg,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg,invoHatchAntibiotic: HatcheryAntibioticsIntVal, invoHatchAntibioticText: AntibioticInformation,  invoProgramName: ProgramName, doaDilManOther: DiluentsMfgOtherName)
-                    let id = self.saveInovojectInPEModule(inovojectData: inVoDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                    inVoDataNew.id = id
-                    
-                }
-                let DayPostingData = objDic["DayOfAgePostingData"] as? [Any] ?? []
-                //Day OF AGE
-                for inoDic in DayPostingData {
-                    
-                    let DayOfAgeIS = inoDic as? [String:Any] ?? [:]
-                    let Dosage = DayOfAgeIS["DayOfAgeDosage"] as? String ?? ""
-                    let otherText = DayOfAgeIS["OtherText"] as? String ?? ""
-                    let VaccineId = DayOfAgeIS["DayOfAgeMfgNameId"] as? Int ?? 0
-                    let AmpuleSize = DayOfAgeIS["DayOfAgeAmpuleSize"] as? Int ?? 0
-                    var AmpuleSizeStr = ""
-                    let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                    let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                    let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    if AmpuleSize != 0 {
-                        let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
-                        AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
-                    }
-                    
-                    let AmpulePerbag = DayOfAgeIS["DayOfAgeAmpulePerbag"] as? Int ?? 0
-                    let HatcheryAntibiotics =  DayOfAgeIS["DayOfBagHatcheryAntibiotics"] as? Bool ?? false
-                    let ManufacturerId = DayOfAgeIS["DayOfAgeMfgId"] as? Int ?? 0
-                    let BagSizeType = DayOfAgeIS["DayOfAgeBagSizeType"] as? String ?? ""
-                    let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
-                    var VManufacturerName = ""
-                    var VName = ""
-                    let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                    let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                    let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    let xxx = ManufacturerId
-                    if xxx != 0 {
-                        
-                        let indexOfd = vManufacutrerIDArray.index(of: xxx)
-                        if vManufacutrerNameArray.count > indexOfd{
-                            VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
-                        }
-                    }
-                    let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
-                    let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                    let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    let xxxx =    VaccineId
-                    if xxxx != 0 {
-                        if vIDArray.contains(xxxx){
-                            let indexOfd = vIDArray.index(of: xxxx)
-                            VName = vNameArray[indexOfd] as? String ?? ""
-                        }
-                    }else {
-                        if VManufacturerName.lowercased().contains("other"){
-                            VName  = otherText
-                            
-                        }
-                    }
-                    if otherText != "" {
-                        VName = otherText
-                    }
-                    
-                    let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                    let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
-                    
-                    peNewAssessmentInProgress.dCS  = DiluentMfg
-                    peNewAssessmentInProgress.dDT = BagSizeType
-                    peNewAssessmentInProgress.micro  = ""
-                    peNewAssessmentInProgress.residue = ""
-                    if HatcheryAntibiotics == true{
-                        peNewAssessmentInProgress.hatcheryAntibioticsDoa = 1
-                    } else{
-                        peNewAssessmentInProgress.hatcheryAntibioticsDoa = 0
-                    }
-                    let AntibioticInformation = DayOfAgeIS["AntibioticInformation"] as? String ?? ""
-                    peNewAssessmentInProgress.hatcheryAntibioticsDoaText = AntibioticInformation
-                    let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: "\(serverAssessmentId)")
-                    
-                    PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil,subcutaneousTxt: infoObj?.subcutaneousAntibioticTxt, dayOfAgeTxt: AntibioticInformation)
-                    CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromDoa : true)
-                    let id = self.saveDOAInPEModule(inovojectData: DayOfAgeDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress())
-                    DayOfAgeDataNew.id = id
-                }
-                
-                let DayAgeSubcutaneousDetailsPostingData = objDic["DayAgeSubcutaneousDetailsPostingData"] as? [Any] ?? []
-                
-                for inoDic in DayAgeSubcutaneousDetailsPostingData {
-                    
-                    let DayOfAgeIS = inoDic as? [String:Any] ?? [:]
-                    let Dosage = DayOfAgeIS["DayAgeSubcutaneousDosage"] as? String ?? ""
-                    let otherText = DayOfAgeIS["OtherText"] as? String ?? ""
-                    let VaccineId = DayOfAgeIS["DayAgeSubcutaneousMfgNameId"] as? Int ?? 0
-                    let AmpuleSize = DayOfAgeIS["DayAgeSubcutaneousAmpuleSize"] as? Int ?? 0
-                    var AmpuleSizeStr = ""
-                    let ampleSizeDetailArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AmpleSizes")
-                    let ampleSizeesNameArray = ampleSizeDetailArray.value(forKey: "size") as? NSArray ?? NSArray()
-                    let ampleSizeIDArray = ampleSizeDetailArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    if AmpuleSize != 0 {
-                        let indexOfe =  ampleSizeIDArray.index(of: AmpuleSize)
-                        AmpuleSizeStr = ampleSizeesNameArray[indexOfe] as? String  ?? ""
-                    }
-                    let AmpulePerbag = DayOfAgeIS["DayAgeSubcutaneousAmpulePerbag"] as? Int ?? 0
-                    let HatcheryAntibiotics =  DayOfAgeIS["DayAgeSubcutaneousHatcheryAntibiotics"] as? Bool ?? false
-                    let ManufacturerId = DayOfAgeIS["DayAgeSubcutaneousMfgId"] as? Int ?? 0
-                    let BagSizeType = DayOfAgeIS["DayAgeSubcutaneousBagSizeType"] as? String ?? ""
-                    let DiluentMfg = DayOfAgeIS["DayAgeSubcutaneousDiluentMfg"] as? String ?? ""
-                    var VManufacturerName = ""
-                    var VName = ""
-                    let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-                    let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-                    let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    let xxx = ManufacturerId
-                    if xxx != 0 {
-                        let indexOfd = vManufacutrerIDArray.index(of: xxx)
-                        if vManufacutrerNameArray.count > indexOfd{
-                            VManufacturerName = vManufacutrerNameArray[indexOfd] as? String ?? ""
-                        }
-                    }
-                    let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 2)
-                    let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
-                    let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-                    let xxxx =    VaccineId
-                    if xxxx != 0 {
-                        if vIDArray.contains(xxxx){
-                            let indexOfd = vIDArray.index(of: xxxx)
-                            VName = vNameArray[indexOfd] as? String ?? ""
-                        }
-                    } else {
-                        if VManufacturerName.lowercased().contains("other"){
-                            VName  = otherText
-                        }
-                    }
-                    if otherText != "" {
-                        VName = otherText
-                    }
-                    
-                    let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                    let DayOfAgeDataNew = InovojectData(id: 0,vaccineMan:VManufacturerName,name:VName,ampuleSize:AmpuleSizeStr,ampulePerBag:String(AmpulePerbag),bagSizeType:BagSizeType,dosage:Dosage, dilute: DiluentMfg)
-                    
-                    peNewAssessmentInProgress.dDCS  = DiluentMfg
-                    peNewAssessmentInProgress.dDDT = BagSizeType
-                    peNewAssessmentInProgress.micro  = ""
-                    peNewAssessmentInProgress.residue = ""
-                    if HatcheryAntibiotics == true{
-                        peNewAssessmentInProgress.hatcheryAntibioticsDoaS = 1
-                    } else{
-                        peNewAssessmentInProgress.hatcheryAntibioticsDoaS = 0
-                    }
-                    let AntibioticInformation = DayOfAgeIS["AntibioticInformation"] as? String ?? ""
-                    peNewAssessmentInProgress.hatcheryAntibioticsDoaSText = AntibioticInformation
-                    let infoObj = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: "\(serverAssessmentId)")
-                    PEInfoDAO.sharedInstance.saveData(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", isExtendedPE: sanitationEmbrexValue, assessmentId: "\(serverAssessmentId)", date: nil,subcutaneousTxt: AntibioticInformation, dayOfAgeTxt: infoObj?.dayOfAgeTxtAntibiotic)
-                    CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress,fromDoaS : true)
-                    let id = self.saveDOAInPEModule(inovojectData: DayOfAgeDataNew, assessment: allAssesmentArr[0] as? PE_AssessmentInProgress ?? PE_AssessmentInProgress(),fromDoaS: true)
-                    DayOfAgeDataNew.id = id
-                }
-                
-                //VMIXER
-                for  vmixer in  VaccineMixerObservedPostingData{
-                    let vmixerIS = vmixer as? [String:Any] ?? [:]
-                    let Name = vmixerIS["Name"] as? String ?? ""
-                    var CertificationDate = vmixerIS["CertificationDate"] as? String ?? ""
-                    var CertificationDateIS = ""
-                    if CertificationDate != "" {
-                        CertificationDate =  CertificationDate.replacingOccurrences(of: "T", with: "")
-                        CertificationDate =  CertificationDate.replacingOccurrences(of: "00", with: "")
-                        CertificationDate = CertificationDate.replacingOccurrences(of: ":", with: "")
-                        let array = CertificationDate.components(separatedBy: "-")
-                        let date = array[2]
-                        let month = array[1]
-                        let year = array[0]
-                        
-                        if regionID == 3
-                        {
-                            CertificationDateIS = month + "-" +  date + "-" +  year
-                        }
-                        else
-                        {
-                            CertificationDateIS = date + "-" +  month + "-" +  year
-                        }
-                        
-                    }
-                    let isCertExpired = vmixerIS["IsCertiExpired"] as? Bool ?? false
-                    let isReCert = vmixerIS["IsReCert"] as? Bool ?? false
-                    let vacOperatorId = vmixerIS["vacOperatorId"] as? Int ?? 0
-                    let signatureImg = vmixerIS["SignatureImg"] as? String ?? ""
-                    let catId = vmixerIS["ModuleAssessmentCatId"] as? Int ?? 0
-                    let imageCount = getVMixerCountInPEModule()
-                    let certificateData =  PECertificateData(id:imageCount + 1,name:Name,date:CertificationDateIS,isCertExpired: isCertExpired,isReCert: isReCert,vacOperatorId: vacOperatorId, signatureImg: signatureImg, fsrSign: fsrSignatureImage)
-                    let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                    CoreDataHandlerPE().saveVMixerPEModuleGet(peCertificateData: certificateData,evalutionID:peNewAssessmentInProgress.evaluationID , CategoryID: catId)
-                }
-                let VaccineMicroSamplesPostingData = objDic["VaccineMicroSamplesPostingData"] as? [Any] ?? []
-                //Micro
-                for  vmixer in  VaccineMicroSamplesPostingData{
-                    let vmixerIS = vmixer as? [String:Any] ?? [:]
-                    let Name = vmixerIS["Name"] as? String ?? ""
-                    var  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                    peNewAssessmentInProgress.micro  = Name
-                    CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress)
-                }
-                let VaccineResiduePostinData = objDic["VaccineResiduePostinData"] as? [Any] ?? []
-                //Residue
-                for  vmixer in  VaccineResiduePostinData{
-                    let vmixerIS = vmixer as? [String:Any] ?? [:]
-                    let Name = vmixerIS["Name"] as? String ?? ""
-                    let  peNewAssessmentInProgress = CoreDataHandlerPE().getSavedOnGoingAssessmentPEObject()
-                    peNewAssessmentInProgress.residue  = Name
-                    CoreDataHandlerPE().updateInDoGInProgressInDB(newAssessment:peNewAssessmentInProgress)
-                }
-                let dataToSubmitNumber = self.getAssessmentInOfflineFromDb()
-                for obj in allAssesmentArr {
-                    CoreDataHandlerPE().saveDataToRejectedSyncPEInDBFromGet(newAssessment: obj as? PE_AssessmentInProgress ?? PE_AssessmentInProgress(), dataToSubmitNumber: dataToSubmitNumber + 1,param:param,formateFromServer: AppCreationTime, rejectionComment: peNewAssessmentWas.rejectionComment ?? "")
-                }
-                
-                // save Reject Refrigator
-                let refriPostingData = objDic["RefrigeratorPostingData"] as? [Any] ?? []
-                for refriDic in refriPostingData {
-                    let RefriData = refriDic as? [String:Any] ?? [:]
-                    let assessmentId = RefriData["AssessmentId"] as? Int ?? 0
-                    let assessmentDetailId = RefriData["AssessmentDetailId"] as? Int ?? 0
-                    let refValue = RefriData["RefValue"] as? Double ?? 0.0
-                    let isNa = RefriData["IsNa"] as? Bool ?? false
-                    let isCheck = RefriData["IsCheck"] as? Bool ?? false
-                    let refUnit = RefriData["RefUnit"] as? String ?? ""
-                    CoreDataHandlerPE().saveRejectRefrigatorInDB((assessmentId ?? 0) as NSNumber,  labelText: "", rollOut: "Y", unit:  refUnit ?? "", value: refValue ?? 0.0,catID: 11 ,isCheck: isCheck ?? false,isNA: isNa ?? false,schAssmentId: assessmentDetailId ?? 0)
-                }
-                
-                CoreDataHandler().deleteAllData("PE_AssessmentInProgress")
-                CoreDataHandler().deleteAllData("PE_Refrigator")
+        peNewAssessmentWas.userID = objDic["UserId"] as? Int ?? 0
+        peNewAssessmentWas.evaluationDate = convertDateFormatter(date: objDic["EvaluationDate"] as? String ?? "")
+        peNewAssessmentWas.evaluatorName = objDic["UserName"] as? String ?? ""
+        peNewAssessmentWas.evaluatorID = objDic["UserId"] as? Int ?? 0
+        peNewAssessmentWas.evaluationName = objDic["EvaluationName"] as? String ?? ""
+        peNewAssessmentWas.evaluationID = objDic["EvaluationId"] as? Int ?? 0
+        peNewAssessmentWas.incubation = objDic["IncubationStyleName"] as? String ?? ""
+        peNewAssessmentWas.breedOfBird = objDic["BreedBirdsName"] as? String ?? ""
+        peNewAssessmentWas.statusType = objDic["Status_Type"] as? Int ?? 0
+        peNewAssessmentWas.breedOfBirdOther = objDic["BreedOfBirdsOther"] as? String ?? ""
+        peNewAssessmentWas.dataToSubmitID = objDic["AppCreationTime"] as? String ?? ""
+        peNewAssessmentWas.manufacturer = objDic["ManufacturerName"] as? String ?? ""
+        peNewAssessmentWas.rejectionComment = objDic["RejectionComments"] as? String ?? ""
+        peNewAssessmentWas.visitID = objDic["VisitId"] as? Int ?? 0
+        peNewAssessmentWas.visitName = objDic["VisitName"] as? String ?? ""
+        peNewAssessmentWas.selectedTSRID = objDic["TSRId"] as? Int ?? 0
+        peNewAssessmentWas.countryName = objDic[Constants.countryNamStr] as? String ?? ""
+        peNewAssessmentWas.countryID = objDic["CountryId"] as? Int ?? 0
+        peNewAssessmentWas.clorineName = objDic["ChlorineText"] as? String ?? ""
+        peNewAssessmentWas.clorineId = objDic["ChlorineId"] as? Int ?? 0
+        peNewAssessmentWas.fluid = objDic["IsInovoFluids"] as? Bool ?? false
+        peNewAssessmentWas.basicTransfer = objDic["IsBasicTrfAssessment"] as? Bool ?? false
+        peNewAssessmentWas.extndMicro = objDic["IsInterMicrobial"] as? Bool ?? false
+        peNewAssessmentWas.refrigeratorNote = objDic["RefrigeratorNote"] as? String ?? ""
+        peNewAssessmentWas.IsEMRequested = objDic["IsEMRequested"] as? Bool ?? false
+        peNewAssessmentWas.emRejectedComment = objDic["EMRejectedComment"] as? String ?? ""
+        peNewAssessmentWas.isPERejected = objDic["IsPERejected"] as? Bool ?? false
+        peNewAssessmentWas.isEMRejected = objDic["IsEMRejected"] as? Bool ?? false
+        peNewAssessmentWas.sanitationValue = objDic["SanitationEmbrex"] as? Bool ?? false
+
+        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
+        let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray()
+        let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
+        if peNewAssessmentWas.selectedTSRID != 0,
+           visitIDArray.contains(peNewAssessmentWas.selectedTSRID as Any) {
+            let indexOfe = visitIDArray.index(of: peNewAssessmentWas.selectedTSRID as Any)
+            let TSRName = visitNameArray[indexOfe] as? String ?? ""
+            peNewAssessmentWas.selectedTSR = TSRName
+        }
+
+        let manuOthers = objDic["ManufacturerOther"] as? String ?? ""
+        if manuOthers != "" {
+            peNewAssessmentWas.manufacturer = "S" + manuOthers
+        }
+        let eggStr = objDic["EggsPerFlatName"] as? String ?? "0"
+        peNewAssessmentWas.noOfEggs = Int64(eggStr)
+        let eggsOthers = objDic["EggsPerFlatOther"]  as? String ?? ""
+        if eggsOthers != "" {
+            let txt = eggsOthers
+            let str = txt + "000"
+            let iii = Int64(str)
+            if iii != nil {
+                peNewAssessmentWas.noOfEggs = iii!
             }
         }
-        
-        UserDefaults.standard.setValue(count, forKey: "rejectedCountIS")
-        UserDefaults.standard.synchronize()
-        if count  > 0 {
-            rejectedListCount.text = String(count)
-            showRejectedCount()
-            if count == 0 {
-                hideRejectedCount()
-            }
-        } else {
-            rejectedListCount.text  = "0"
-            hideRejectedCount()
+        let f = objDic["FlockAgeId"] as? Int ?? 0
+        peNewAssessmentWas.isFlopSelected = f
+        let Camera = objDic["Camera"] as? Bool ?? false
+        peNewAssessmentWas.camera = Camera ? 1 : 0
+        peNewAssessmentWas.notes = objDic["Notes"] as? String ?? ""
+        let fsrSignatureImage = objDic["FSTSignatureImage"] as? String ?? ""
+        peNewAssessmentWas.FSTSignatureImage = fsrSignatureImage
+
+        return peNewAssessmentWas
+    }
+
+    private func handleRejectedSanitation(_ objDic: [String: Any], serverAssessmentId: String) {
+        let sanitationEmbrexValue = objDic["SanitationEmbrex"] as? Bool ?? false
+        if sanitationEmbrexValue {
+            PEInfoDAO.sharedInstance.saveData(
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                isExtendedPE: sanitationEmbrexValue,
+                assessmentId: serverAssessmentId,
+                date: nil,
+                override: false
+            )
         }
-        getScheduledAssessments()
+        let sanitationEmbrex = objDic["SanitationEmbrexScoresPostinData"] as? [[String: Any]] ?? []
+        let jsonData = try? JSONSerialization.data(withJSONObject: sanitationEmbrex, options: .prettyPrinted)
+        let jsonDecoder = JSONDecoder()
+        if let jsonData = jsonData,
+           let dtoArr = try? jsonDecoder.decode([PESanitationDTO].self, from: jsonData) {
+            SanitationEmbrexQuestionMasterDAO.sharedInstance.saveServiceResponse(
+                assessmentId: serverAssessmentId,
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                dtoArr: dtoArr
+            )
+        }
+    }
+
+    private func handleRejectedCategoriesAndQuestions(for assessment: PENewAssessment, objDic: [String: Any]) {
+        jsonRe = (getJSON("QuestionAns") ?? JSON())
+        pECategoriesAssesmentsResponse = PECategoriesAssesmentsResponse(jsonRe)
+        let questionInfo = (getJSON("QuestionAnsInfo") ?? JSON())
+        let infoImageDataResponse = InfoImageDataResponse(questionInfo)
+        var peCategoryFilteredArray: [PECategory] = []
+        for object in pECategoriesAssesmentsResponse.peCategoryArray {
+            if assessment.evaluationID == object.evaluationID, object.id != 36 {
+                peCategoryFilteredArray.append(object)
+            }
+        }
+        if peCategoryFilteredArray.count > 0 {
+            for cat in peCategoryFilteredArray {
+                for (index, ass) in cat.assessmentQuestions.enumerated() {
+                    var peNewAssessmentNew = assessment
+                    peNewAssessmentNew.serverAssessmentId = assessment.serverAssessmentId
+                    peNewAssessmentNew.cID = index
+                    peNewAssessmentNew.catID = cat.id
+                    peNewAssessmentNew.catName = cat.categoryName
+                    peNewAssessmentNew.catMaxMark = cat.maxMark
+                    peNewAssessmentNew.sequenceNo = cat.id
+                    peNewAssessmentNew.sequenceNoo = cat.sequenceNo
+                    peNewAssessmentNew.catResultMark = cat.maxMark
+                    peNewAssessmentNew.catEvaluationID = cat.evaluationID
+                    peNewAssessmentNew.catISSelected = cat.isSelected ? 1 : 0
+                    peNewAssessmentNew.assID = ass.id
+                    peNewAssessmentNew.assDetail1 = ass.assessment
+                    peNewAssessmentNew.evaluationID = cat.evaluationID
+                    peNewAssessmentNew.assDetail2 = ass.assessment2
+                    peNewAssessmentNew.assMinScore = ass.minScore
+                    peNewAssessmentNew.assMaxScore = ass.maxScore
+                    peNewAssessmentNew.assCatType = ass.cateType
+                    peNewAssessmentNew.assModuleCatID = ass.moduleCatId
+                    peNewAssessmentNew.assModuleCatName = ass.moduleCatName
+                    peNewAssessmentNew.assStatus = 1
+                    peNewAssessmentNew.isChlorineStrip = objDic["HasChlorineStrips"] as? Int ?? 0
+                    peNewAssessmentNew.isAutomaticFail = objDic["IsAutomaticFail"] as? Int ?? 0
+                    peNewAssessmentNew.manufacturer = assessment.manufacturer
+                    peNewAssessmentNew.noOfEggs = assessment.noOfEggs
+                    peNewAssessmentNew.informationImage = ass.informationImage
+                    peNewAssessmentNew.informationText = infoImageDataResponse.getInfoTextByQuestionId(questionID: ass.id ?? 151)
+//                    CoreDataHandlerPE().saveRejectedAssessmentInDB(newAssessment: peNewAssessmentNew)
+                }
+            }
+        }
     }
 }
 extension Collection {

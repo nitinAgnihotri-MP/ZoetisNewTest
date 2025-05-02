@@ -427,9 +427,9 @@ class ApiSync: NSObject {
                             
                             self.delegeteSyncApi.failWithErrorInternal()
                             debugPrint(err)
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                        } else if response.data != nil {
                             debugPrint (encodingError)
-                            debugPrint (responseString)
+                          
                             if let s = statusCode {
                                 self.delegeteSyncApi.failWithError(statusCode: s)
                             }
@@ -708,7 +708,7 @@ class ApiSync: NSObject {
                             
                             self.delegeteSyncApi.failWithErrorInternal()
                         }
-                        else if let data = response.data{
+                        else if response.data != nil {
                             
                             if let s = statusCode {
                                 self.delegeteSyncApi.failWithError(statusCode: s)
@@ -1443,7 +1443,7 @@ class ApiSync: NSObject {
                         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                             self.delegeteSyncApi.failWithErrorInternal()
                             
-                        } else if let data = response.data{
+                        } else if response.data != nil {
                             print (encodingError)
                           
                             if let s = statusCode {
@@ -1656,10 +1656,10 @@ class ApiSync: NSObject {
             
             if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
                 self.delegeteSyncApi.failWithErrorInternal()
-            } else if let data = response.data{
+            } else if response.data != nil {
                 
             
-                    self.delegeteSyncApi.failWithErrorInternal()
+                debugPrint("error found.")
                 
             }
         }

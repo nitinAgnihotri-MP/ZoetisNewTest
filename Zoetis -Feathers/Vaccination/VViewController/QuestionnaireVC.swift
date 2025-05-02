@@ -313,85 +313,102 @@ class QuestionnaireVC: BaseViewController {
         }
     }
     
-    @objc func  updateEmpObj(_ notification: NSNotification){
-        if let rowIndex = notification.userInfo?["rowIndex"] as? Int,
-               let index = notification.userInfo?["index"] as? Int {
-            
-                selectedEmpIndex = index
-                if let sign = notification.userInfo?["sign"]  as? String{
-                    if rowIndex == 1, index > -1 {
-                      
-                            selectedEmpIndex = index
-                            if index > -1 && index == employeesAddedArr.count + 1 {
-                                
-                                curentCertification?.fsrSignature = sign
-                                
-                                VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.OperationCertification.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
-                            }
-                            if index > -1 && index == employeesAddedArr.count{
-                                curentCertification?.hatcheryManagerSign = sign
-                                VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.OperationCertification.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
-                            }
-                            if employeesAddedArr.count > index{
-                                var emp = employeesAddedArr[index]
-                                emp.signBase64 = sign
-                                employeesAddedArr[index] = emp
-                                AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: emp)
-                            }
-                        
-                    }
-                    if rowIndex == 2{
-                        curentCertification?.hatcheryManagerSign = sign
-                        
-                        VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.OperationCertification.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
-                    }
-                    if rowIndex == 3{
-                        curentCertification?.fsrSignature = sign
-                        VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.OperationCertification.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
-                        
-                    }
-                    markSyncReady()
-                }
-            if notification.userInfo?["hasSignCleared"] as? Bool != nil {
-                    selectedEmpIndex = index
-                    if rowIndex == 1{
-                        var empIndex = index
-                        if empIndex > -1 && empIndex == employeesAddedArr.count + 1 {
-                            curentCertification?.fsrSignature = ""
-                            VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.OperationCertification.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
-                        }
-                        if empIndex > -1 && empIndex == employeesAddedArr.count{
-                            curentCertification?.hatcheryManagerSign = ""
-                            VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.OperationCertification.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
-                        }
-                        
-                        if rowIndex == 1 && employeesAddedArr.count > 0 && empIndex > -1 && employeesAddedArr.count > empIndex{
-                            var emp = employeesAddedArr[index]
-                            emp.signBase64 = nil
-                            employeesAddedArr[index] = emp
-                            AddEmployeesDAO.sharedInstance.addCertEmployee(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", certificationId: curentCertification?.certificationId ?? "", employeeObj: emp)
-                        }
-                        
-                    }
-                    if rowIndex == 2{
-                        curentCertification?.hatcheryManagerSign = nil
-                        VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.OperationCertification.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
-                    }
-                    if rowIndex == 3{
-                        curentCertification?.fsrSignature = nil
-                        VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", lastModuleName: .QuestionnaireVC, certificationId: curentCertification?.certificationId ?? UUID().uuidString, subModule:VaccinationSubModuleNames.OperationCertification.rawValue, certificationCategoryId:curentCertification?.certificationCategoryId  ?? "", certObj: curentCertification!)
-                        
-                    }
-                    markSyncReady()
-                }else{
-                    //  markSyncReady()
-                    self.questionnaireTblVw.beginUpdates()
-                    questionnaireTblVw.reloadRows(at: [IndexPath.init(row: 0, section: 0)], with:  .automatic)
-                    self.questionnaireTblVw.endUpdates()
-                }
-                
-            
+    @objc func updateEmpObj(_ notification: NSNotification) {
+        guard let rowIndex = notification.userInfo?["rowIndex"] as? Int,
+              let index = notification.userInfo?["index"] as? Int else { return }
+        selectedEmpIndex = index
+
+        if let sign = notification.userInfo?["sign"] as? String {
+            handleSignUpdate(rowIndex: rowIndex, index: index, sign: sign)
+            markSyncReady()
         }
+
+        if notification.userInfo?["hasSignCleared"] as? Bool != nil {
+            handleSignCleared(rowIndex: rowIndex, index: index)
+            markSyncReady()
+        } else {
+            reloadQuestionnaireTable()
+        }
+    }
+
+    private func handleSignUpdate(rowIndex: Int, index: Int, sign: String) {
+        if rowIndex == 1, index > -1 {
+            if index == employeesAddedArr.count + 1 {
+                curentCertification?.fsrSignature = sign
+                insertLastVisitedModuleName()
+            }
+            if index == employeesAddedArr.count {
+                curentCertification?.hatcheryManagerSign = sign
+                insertLastVisitedModuleName()
+            }
+            if employeesAddedArr.count > index {
+                var emp = employeesAddedArr[index]
+                emp.signBase64 = sign
+                employeesAddedArr[index] = emp
+                AddEmployeesDAO.sharedInstance.addCertEmployee(
+                    userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                    certificationId: curentCertification?.certificationId ?? "",
+                    employeeObj: emp
+                )
+            }
+        }
+        if rowIndex == 2 {
+            curentCertification?.hatcheryManagerSign = sign
+            insertLastVisitedModuleName()
+        }
+        if rowIndex == 3 {
+            curentCertification?.fsrSignature = sign
+            insertLastVisitedModuleName()
+        }
+    }
+
+    private func handleSignCleared(rowIndex: Int, index: Int) {
+        selectedEmpIndex = index
+        if rowIndex == 1 {
+            if index == employeesAddedArr.count + 1 {
+                curentCertification?.fsrSignature = ""
+                insertLastVisitedModuleName()
+            }
+            if index == employeesAddedArr.count {
+                curentCertification?.hatcheryManagerSign = ""
+                insertLastVisitedModuleName()
+            }
+            if employeesAddedArr.count > 0, index > -1, employeesAddedArr.count > index {
+                var emp = employeesAddedArr[index]
+                emp.signBase64 = nil
+                employeesAddedArr[index] = emp
+                AddEmployeesDAO.sharedInstance.addCertEmployee(
+                    userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                    certificationId: curentCertification?.certificationId ?? "",
+                    employeeObj: emp
+                )
+            }
+        }
+        if rowIndex == 2 {
+            curentCertification?.hatcheryManagerSign = nil
+            insertLastVisitedModuleName()
+        }
+        if rowIndex == 3 {
+            curentCertification?.fsrSignature = nil
+            insertLastVisitedModuleName()
+        }
+    }
+
+    private func insertLastVisitedModuleName() {
+        VaccinationDashboardDAO.sharedInstance.insertLastVisitedModuleName(
+            userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+            lastModuleName: .QuestionnaireVC,
+            certificationId: curentCertification?.certificationId ?? UUID().uuidString,
+            subModule: VaccinationSubModuleNames.OperationCertification.rawValue,
+            certificationCategoryId: curentCertification?.certificationCategoryId ?? "",
+            certObj: curentCertification!
+        )
+    }
+
+    private func reloadQuestionnaireTable() {
+        self.questionnaireTblVw.beginUpdates()
+        questionnaireTblVw.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        self.questionnaireTblVw.endUpdates()
     }
     
     fileprivate func handleQuestionObj(_ notification: NSNotification, _ sectionIndex: Int, _ rowIndex: Int) {

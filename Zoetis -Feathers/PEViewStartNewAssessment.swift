@@ -1173,299 +1173,166 @@ extension PEViewStartNewAssessment{
     }
     
     // MARK: - Create Sync request
-    func createSyncRequest(dict: PENewAssessment ,certificationData : [PECertificateData]) -> JSONDictionary{
-        print("dict---\(dict)")
-        
-        let udid = UserDefaults.standard.value(forKey: "ApplicationIdentifier")!
-        var UniID = dict.dataToSubmitID ?? ""
-        
-        let evaluationDate = dict.evaluationDate
-        if UniID == "" {
-            UniID = dict.draftID ?? ""
-        }
-        var SaveType = 1
-        saveTypeString.append(11)
-        var AssessmentId = dict.dataToSubmitNumber ?? 0
-        
-        let deviceIdForServer = "\(UniID)_1_iOS_\(udid)"
-        deviceIDFORSERVER = deviceIdForServer
-        
-        if AssessmentId == 0 {
-            if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
-                deviceIDFORSERVER = dict.assDetail2 ?? ""
-            }
-            AssessmentId = dict.draftNumber ?? 0
-            SaveType = 0
-            saveTypeString.append(00)
-        }
-        if dict.assDetail2?.lowercased().contains("_1_ios") ?? false{
-            deviceIDFORSERVER = dict.assDetail2 ?? ""
-        }
-        var serverAssessmentId:Int64 = 0
-        if dict.serverAssessmentId != nil{
-            serverAssessmentId = Int64( dict.serverAssessmentId ?? "") ?? 0
-        }
-        let DocId = ""
-        let VisitId = dict.visitID
-        let CustomerId = dict.customerId
-        let SiteId = dict.siteId
-        let IncubationStyle = dict.incubation
-        let EvaluationId = dict.evaluationID
-        var EvaluationDate = ""
-        let EvaulaterId = dict.evaluatorID
-        var hacheryAntibiotics:Bool = false
-        if dict.hatcheryAntibiotics == 1{
-            hacheryAntibiotics = true
-        }
-        
-        var  TSRId  = dict.selectedTSRID
-        
-        var FSRsign = ""
-        if certificationData.count > 0 {
-            FSRsign = certificateData[0].fsrSign
-        }
-        
-        let visitDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
-        let visitNameArray = visitDetailsArray.value(forKey: "username") as? NSArray ?? NSArray ()
-        let visitIDArray = visitDetailsArray.value(forKey: "id") as? NSArray ?? NSArray ()
-        
-        if let selectedTSR = dict.selectedTSR, selectedTSR.count > 0, visitNameArray.contains(selectedTSR) {
-            let indexOfe = visitNameArray.index(of: dict.selectedTSR ?? "")
-            TSRId = visitIDArray[indexOfe] as? Int ?? 0
-        }
-        
-        
-        let HatchAnti = false
-        var Camera = false
-        if  dict.camera == 1 {
-            Camera = true
-        }
-        
-        var man = dict.manufacturer  ?? ""
-        var manOther =  ""
-        if man != "", let character = dict.manufacturer?.character(at: 0), character == "S" {
-            let str = man.replacingOccurrences(of: "S", with: "")
-            manOther = str
-            man = "Other"
-        }
+    func createSyncRequest(dict: PENewAssessment, certificationData: [PECertificateData]) -> JSONDictionary {
+        let udid = UserDefaults.standard.string(forKey: "ApplicationIdentifier") ?? ""
+        var uniID = dict.dataToSubmitID?.nonEmpty ?? dict.draftID ?? ""
+        let assessmentId = dict.dataToSubmitNumber ?? dict.draftNumber ?? 0
+        let isDraft = dict.dataToSubmitNumber == nil
+        let deviceId = getDeviceId(dict: dict, uniID: uniID, udid: udid, isDraft: isDraft)
 
+        let certSignature = certificationData.first?.fsrSign ?? ""
+        let tsrId = resolveTSRId(dict: dict)
+        let manufacturerInfo = resolveManufacturer(dict: dict)
+        let eggInfo = resolveEggInfo(dict: dict)
+        let breedInfo = resolveBreedInfo(dict: dict)
+        let incubationId = resolveIncubationId(name: dict.incubation)
+        let roleId = resolveRoleId(roleName: dict.sig_EmpID)
+        let roleId2 = resolveRoleId(roleName: dict.sig_EmpID2)
+        let base64Str = imageBase64(for: dict.sig)
+        let base64Str2 = imageBase64(for: dict.sig2)
+        let evalDateStr = formattedEvaluationDate(from: dict.evaluationDate)
+        let dateSig = dict.sig_Date.flatMap(convertDateFormat) ?? ""
 
-        
-        var eggg = ""
-        var egggOther =  ""
-        let xx = String(dict.noOfEggs ?? 000)
-        if xx != "0" {
-            let last3 = String(xx.suffix(3))
-            if last3 ==  "000" {
-                let str =  xx.replacingOccurrences(of: "000", with: "")
-                egggOther = str
-                eggg = "Other"
-            } else {
-                eggg = xx
-            }
-        }
-        
-        var breeedd = dict.breedOfBird  ?? ""
-        var breeeddOther =  ""
-        if breeedd != "", let character = breeedd.character(at: 0), character == "S".character(at: 0) {
-            let str = breeedd.replacingOccurrences(of: "S", with: "")
-            breeeddOther = str
-            breeedd = "Other"
-        }
+        let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(
+            userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+            assessmentId: dict.serverAssessmentId ?? ""
+        )
 
-        
-        breeeddOther = dict.breedOfBirdOther ?? ""
-        
-        var ManufacturerId = 0
-        var EggID = 0
-        var breeddId = 0
-
-        var manufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
-        var manufacutrerNameArray = manufacutrerDetailsArray.value(forKey: "mFG_Name") as? NSArray ?? NSArray()
-        var manufacutrerIDArray = manufacutrerDetailsArray.value(forKey: "mFG_Id") as? NSArray ?? NSArray()
-        if man != "" {
-            let indexOfd = manufacutrerNameArray.index(of: man) // 3
-            ManufacturerId = manufacutrerIDArray[indexOfd] as? Int ?? 0
-        }
-
-        let BirdBreedDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
-        var BirdBreedNameArray = BirdBreedDetailsArray.value(forKey: "birdBreedName") as? NSArray ?? NSArray()
-        var BirdBreedIDArray = BirdBreedDetailsArray.value(forKey: "birdId") as? NSArray ?? NSArray()
-        if breeedd != "" {
-            let indexOfe = BirdBreedNameArray.index(of: breeedd) // 3
-            breeddId = BirdBreedIDArray[indexOfe] as? Int ?? 0
-        }
-       
-        let EggsDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
-        var EggsNameArray = EggsDetailsArray.value(forKey: "eggCount") as? NSArray ?? NSArray()
-        var EggsIDArray = EggsDetailsArray.value(forKey: "eggId") as? NSArray ?? NSArray()
-        if eggg != "" {
-            let indexOfp = EggsNameArray.index(of: eggg) // 3
-            EggID = EggsIDArray[indexOfp] as? Int ?? 0
-        }
-        
-        let FlockAgeId = dict.isFlopSelected
-        let Status_Type = ""
-        let UserId = dict
-            .userID
-        let RepresentativeName = ""
-        let Notes = dict.notes
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = Constants.MMddYYYYHHmmss
-        let date = dict.evaluationDate?.toDate(withFormat: Constants.MMddyyyyStr)
-        var dateSig = ""
-        let ddd = dict.sig_Date ?? ""
-        if ddd != "" {
-            dateSig = self.convertDateFormat(inputDate: ddd)
-        }
-        
-        let sig_Nametext2 = dict.sig_Name2
-        let sig_Nametext = dict.sig_Name
-        let sig_Phonetext = dict.sig_Phone
-        let sig_EmployeeIDtext = dict.sig_EmpID
-        let sig_EmployeeIDtext2 = dict.sig_EmpID2
-        let sigNumber = dict.sig ?? 0
-        let sigNumber2 = dict.sig2 ?? 0
-        
-        let isHandMix = dict.isHandMix ?? false
-        let ppmValue = dict.ppmValue ?? ""
-        
-        var base64Str = ""
-        var base64Str2 = ""
-        if sigNumber == 0 {
-            print(appDelegateObj.testFuntion())
-        } else {
-            base64Str = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig) ?? 0)
-        }
-        if sigNumber2 == 0 {
-            print(appDelegateObj.testFuntion())
-        } else {
-            base64Str2 = CoreDataHandlerPE().getImageBase64ByImageID(idArray:(dict.sig2) ?? 0)
-        }
-        
-        var DisplayId = "C-" + UniID
-        var iStle = 0
-
-        let iStleDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
-        var iStleNameArray = iStleDetailsArray.value(forKey: "incubationStylesName") as? NSArray ?? NSArray()
-        var iStleIDArray = iStleDetailsArray.value(forKey: "incubationId") as? NSArray ?? NSArray()
-        if IncubationStyle?.count ?? 0 > 1 {
-            let indexOfe = iStleNameArray.index(of: IncubationStyle ?? "") // 3
-            iStle = iStleIDArray[indexOfe] as? Int ?? 0
-        }
-        var rollID = 0
-
-        let rollDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
-        var rollNameArray = rollDetailsArray.value(forKey: "roleName") as? NSArray ?? NSArray()
-        var rollIDArray = rollDetailsArray.value(forKey: "roleId") as? NSArray ?? NSArray()
-        if sig_EmployeeIDtext?.count ?? 0 > 1 {
-            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext ?? "") // 3
-            rollID = rollIDArray[indexOfe] as? Int ?? 0
-        }
-        
-        var rollID2 = 0
-        if sig_EmployeeIDtext2?.count ?? 0 > 1 {
-            let indexOfe = rollNameArray.index(of: sig_EmployeeIDtext2 ?? "") // 3
-            rollID2 = rollIDArray[indexOfe] as? Int ?? 0
-        }
-        
-        if dateSig != ""{
-            print(appDelegateObj.testFuntion())
-        }else{
-            let convertDateFormatter = DateFormatter()
-            convertDateFormatter.dateFormat = Constants.yyyyMMddStr
-            convertDateFormatter.timeZone = Calendar.current.timeZone
-            convertDateFormatter.locale = Calendar.current.locale
-        }
-        let userInfo = PEInfoDAO.sharedInstance.fetchInfoVMObj(userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: dict.serverAssessmentId ?? "")
-
-        let RegionalId = UserDefaults.standard.integer(forKey: "Regionid")
-        let NewcountryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
-        var evalDateStr = ""  //dateFormatterObj.string(from: evalDateObj ?? Date())
-        if RegionalId == 3 {
-            
-            let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = Constants.MMddyyyyStr
-
-            // Convert the string to a Date object
-            if let date = inputFormatter.date(from: evaluationDate ?? "") {
-                
-                let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = Constants.yyyyMMddStr
-                
-                let formattedDateString = outputFormatter.string(from: date)
-                evalDateStr = formattedDateString
-            } else {
-                print(appDelegateObj.invalidDateStr)
-            }
-        }
-        else
-        {
-            let inputFormatter = DateFormatter()
-            inputFormatter.dateFormat = Constants.ddMMyyyStr
-
-            if let date = inputFormatter.date(from: evaluationDate ?? "") {
-            
-                let outputFormatter = DateFormatter()
-                outputFormatter.dateFormat = Constants.yyyyMMddStr
-                
-                let formattedDateString = outputFormatter.string(from: date)
-                evalDateStr = formattedDateString
-            } else {
-                print(appDelegateObj.invalidDateStr)
-            }
-        }
-        
-        var json: JSONDictionary = [
-            "AppAssessmentId":String(AssessmentId),
-            "DisplayId":DisplayId.prefix(22),
-            "VisitId": VisitId,
-            "CustomerId": CustomerId,
-            "SiteId": SiteId,
-            "IncubationStyle": iStle,
-            "EvaluationId": EvaluationId,
-            "BreedBirds": breeddId == 0 ? "" : breeddId,
+        return [
+            "AppAssessmentId": "\(assessmentId)",
+            "DisplayId": "C-\(uniID)".prefix(22),
+            "VisitId": dict.visitID,
+            "CustomerId": dict.customerId,
+            "SiteId": dict.siteId,
+            "IncubationStyle": incubationId,
+            "EvaluationId": dict.evaluationID,
+            "BreedBirds": breedInfo.id,
             "EvaluationDate": evalDateStr,
-            "EvaulaterId": EvaulaterId ?? 0,
-            "TSRId": TSRId,
-            "Camera": Camera,
-            "ManufacturerId": ManufacturerId == 0 ? "" : ManufacturerId,
-            "EggsPerFlat": EggID == 0 ? "" : EggID,
-            "Notes": Notes,
-            "FlockAgeId": FlockAgeId == 0 ? "" : FlockAgeId,
-            "SaveType":SaveType,
-            "UserId": UserId,
-            "DeviceId": deviceIDFORSERVER,
-            "RepresentativeName":sig_Nametext,
-            "RepresentativeName2":sig_Nametext2,
-            "RepresentativeNotes":sig_Phonetext,
-            "FSTSignatureImage": FSRsign,
+            "EvaulaterId": dict.evaluatorID ?? 0,
+            "TSRId": tsrId,
+            "Camera": dict.camera == 1,
+            "ManufacturerId": manufacturerInfo.id,
+            "EggsPerFlat": eggInfo.id,
+            "Notes": dict.notes ?? "",
+            "FlockAgeId": dict.isFlopSelected,
+            "SaveType": isDraft ? 0 : 1,
+            "UserId": dict.userID,
+            "DeviceId": deviceId,
+            "RepresentativeName": dict.sig_Name,
+            "RepresentativeName2": dict.sig_Name2,
+            "RepresentativeNotes": dict.sig_Phone,
+            "FSTSignatureImage": certSignature,
             "SignatureImage": base64Str,
             "SignatureImage2": base64Str2,
-            "ManufacturerOther": manOther,
-            "BreedOfBirdsOther": breeeddOther,
-            "EggsPerFlatOther": egggOther,
-            "RoleId":rollID,
-            "RoleId2":rollID2 == 0 ? "" : rollID2,
+            "ManufacturerOther": manufacturerInfo.other,
+            "BreedOfBirdsOther": breedInfo.other,
+            "EggsPerFlatOther": eggInfo.other,
+            "RoleId": roleId,
+            "RoleId2": roleId2,
             "EvaluationTypeText": dict.evaluationName,
-            "AppCreationTime": UniID.prefix(22),
-            "SignatureDate":dateSig,
-            "AssessmentId":serverAssessmentId,
-            "DoubleSanitation":hacheryAntibiotics,
-            "SanitationEmbrex": dict.sanitationValue ?? false,//userInfo?.isExtendedPE ?? false,
-            "HasChlorineStrips" :  dict.isChlorineStrip ?? false,
-            "IsAutomaticFail" :  dict.isAutomaticFail ?? false,
+            "AppCreationTime": uniID.prefix(22),
+            "SignatureDate": dateSig,
+            "AssessmentId": Int64(dict.serverAssessmentId ?? "") ?? 0,
+            "DoubleSanitation": dict.hatcheryAntibiotics == 1,
+            "SanitationEmbrex": dict.sanitationValue ?? false,
+            "HasChlorineStrips": dict.isChlorineStrip ?? false,
+            "IsAutomaticFail": dict.isAutomaticFail ?? false,
             "RefrigeratorNote": dict.refrigeratorNote ?? "",
-            "RegionId" : RegionalId,
+            "RegionId": UserDefaults.standard.integer(forKey: "Regionid"),
             "IsInterMicrobial": userInfo?.isExtendedPE ?? false,
-            "CountryId":NewcountryId,
+            "CountryId": UserDefaults.standard.integer(forKey: "nonUScountryId"),
             "IsInovoFluids": false,
-            "IsBasicTrfAssessment" :  false,
-            "Handmix" : isHandMix ?? false,
-            "Chlorine_Value" : ppmValue
-        ] as JSONDictionary
-        return json
+            "IsBasicTrfAssessment": false,
+            "Handmix": dict.isHandMix ?? false,
+            "Chlorine_Value": dict.ppmValue ?? ""
+        ]
     }
+    private func getDeviceId(dict: PENewAssessment, uniID: String, udid: String, isDraft: Bool) -> String {
+        if let detail = dict.assDetail2?.lowercased(), detail.contains("_1_ios") {
+            return dict.assDetail2 ?? "\(uniID)_1_iOS_\(udid)"
+        }
+        return "\(uniID)_1_iOS_\(udid)"
+    }
+
+    private func resolveTSRId(dict: PENewAssessment) -> Int {
+        guard let selectedTSR = dict.selectedTSR else { return dict.selectedTSRID ?? 0 }
+        let visitData = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Approvers")
+        let names = visitData.value(forKey: "username") as? [String] ?? []
+        let ids = visitData.value(forKey: "id") as? [Int] ?? []
+        return names.firstIndex(of: selectedTSR).flatMap { ids[safe: $0] } ?? dict.selectedTSRID ?? 0
+    }
+
+    private func resolveManufacturer(dict: PENewAssessment) -> (id: Any, other: String) {
+        guard var man = dict.manufacturer else { return ("", "") }
+        if man.hasPrefix("S") {
+            return ("Other", man.replacingOccurrences(of: "S", with: ""))
+        }
+        let data = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Manufacturer")
+        let names = data.value(forKey: "mFG_Name") as? [String] ?? []
+        let ids = data.value(forKey: "mFG_Id") as? [Int] ?? []
+        return names.firstIndex(of: man).flatMap { (ids[safe: $0], "") } ?? ("", "")
+    }
+
+    private func resolveEggInfo(dict: PENewAssessment) -> (id: Any, other: String) {
+        let countStr = String(dict.noOfEggs ?? 0)
+        if countStr.hasSuffix("000") {
+            return ("Other", countStr.replacingOccurrences(of: "000", with: ""))
+        }
+        let data = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Eggs")
+        let names = data.value(forKey: "eggCount") as? [String] ?? []
+        let ids = data.value(forKey: "eggId") as? [Int] ?? []
+        return names.firstIndex(of: countStr).flatMap { (ids[safe: $0], "") } ?? ("", "")
+    }
+
+    private func resolveBreedInfo(dict: PENewAssessment) -> (id: Any, other: String) {
+        guard var breed = dict.breedOfBird else { return ("", dict.breedOfBirdOther ?? "") }
+        if breed.hasPrefix("S") {
+            return ("Other", breed.replacingOccurrences(of: "S", with: ""))
+        }
+        let data = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_BirdBreed")
+        let names = data.value(forKey: "birdBreedName") as? [String] ?? []
+        let ids = data.value(forKey: "birdId") as? [Int] ?? []
+        return names.firstIndex(of: breed).flatMap { (ids[safe: $0], dict.breedOfBirdOther ?? "") } ?? ("", dict.breedOfBirdOther ?? "")
+    }
+
+    private func resolveIncubationId(name: String?) -> Int {
+        guard let name = name else { return 0 }
+        let data = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_IncubationStyle")
+        let names = data.value(forKey: "incubationStylesName") as? [String] ?? []
+        let ids = data.value(forKey: "incubationId") as? [Int] ?? []
+        return names.firstIndex(of: name).flatMap { ids[safe: $0] } ?? 0
+    }
+
+    private func resolveRoleId(roleName: String?) -> Int {
+        guard let name = roleName else { return 0 }
+        let data = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_Roles")
+        let names = data.value(forKey: "roleName") as? [String] ?? []
+        let ids = data.value(forKey: "roleId") as? [Int] ?? []
+        return names.firstIndex(of: name).flatMap { ids[safe: $0] } ?? 0
+    }
+
+    private func imageBase64(for id: Int?) -> String {
+        guard let id = id, id != 0 else { return "" }
+        return CoreDataHandlerPE().getImageBase64ByImageID(idArray: id)
+    }
+
+    private func formattedEvaluationDate(from dateStr: String?) -> String {
+        guard let dateStr = dateStr else { return "" }
+        let inputFormatter = DateFormatter()
+        let regionId = UserDefaults.standard.integer(forKey: "Regionid")
+        inputFormatter.dateFormat = regionId == 3 ? Constants.MMddyyyyStr : Constants.ddMMyyyStr
+
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = Constants.yyyyMMddStr
+
+        guard let date = inputFormatter.date(from: dateStr) else {
+            print(appDelegateObj.invalidDateStr)
+            return ""
+        }
+
+        return outputFormatter.string(from: date)
+    }
+
     
     // MARK: - Create Sync request for Inovoject
     fileprivate func manageDilManOther(_ doaDilManOther: String, _ json: inout [String : Any], _ ManufacturerId: Int) {
@@ -2516,28 +2383,26 @@ extension PEViewStartNewAssessment{
     }
     // MARK: - Call sync request for Images (4)
     fileprivate func handleImageSaveSyncExtendedMicroData(_ self: PEViewStartNewAssessment) {
-        if ConnectionManager.shared.hasConnectivity() {
-            if self.callRequest4Int == 0 {
-                if peNewAssessment.IsEMRequested == true {
-                    if regionID == 3  {
-                        if peNewAssessment.IsEMRequested == true {
-                            self.syncExtendedMicrobial()
-                        }
-                    }
-                } else {
-                    let syncArr = self.getAssessmentInOfflineFromDb()
-                    if syncArr > 0 {
-                        self.syncBtnTapped(showHud: false)
-                    } else {
-                        for i in self.totalImageToSync{
-                            CoreDataHandlerPE().setImageStatusTrue(idArray: i)
-                        }
-                        self.showtoast(message: Constants.dataSyncSuccess)
-                        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UpdateComplexOnDashboardPE"),object: nil))
-                        self.dismissGlobalHUD(self.view)
-                    }
-                }
+        guard ConnectionManager.shared.hasConnectivity() else { return }
+        guard self.callRequest4Int == 0 else { return }
+
+        if peNewAssessment.IsEMRequested! {
+            if regionID == 3 {
+                self.syncExtendedMicrobial()
             }
+            return
+        }
+
+        let syncArr = self.getAssessmentInOfflineFromDb()
+        if syncArr > 0 {
+            self.syncBtnTapped(showHud: false)
+        } else {
+            self.totalImageToSync.forEach {
+                CoreDataHandlerPE().setImageStatusTrue(idArray: $0)
+            }
+            self.showtoast(message: Constants.dataSyncSuccess)
+            NotificationCenter.default.post(name: Notification.Name("UpdateComplexOnDashboardPE"), object: nil)
+            self.dismissGlobalHUD(self.view)
         }
     }
     
@@ -2766,3 +2631,14 @@ public struct PEStatus {
     }
 }
 
+extension String {
+    var nonEmpty: String? {
+        self.isEmpty ? nil : self
+    }
+}
+
+extension Optional where Wrapped == String {
+    var nonEmpty: String? {
+        self?.nonEmpty
+    }
+}

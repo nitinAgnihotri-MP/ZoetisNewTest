@@ -502,7 +502,6 @@ extension ComplexPoupViewController{
         let jsonObject = PVEAssessmentCategoriesDetailsResponse(json)
         sharedManager.sharedAssCategoriesDetailsResArrPVE = jsonObject.getCategoriesDetailsResponse(dataArray: jsonObject.categoriesDetailsArr ?? [])
         sharedManager.sharedAssCategoriesDetailsResPVE =  jsonObject.categoriesDetailsArr ?? []
-        let currntAA = CoreDataHandlerPVE().fetchDetailsFor(entityName: "PVE_AssessmentCategoriesDetails")
         fetchtSerotypeDetailsResponse()
         
     }
@@ -594,34 +593,6 @@ extension ComplexPoupViewController{
         else {
             Helper.dismissGlobalHUD(self.view)
         }
-        
-    }
-    
-    
-    
-    private func getBlankPDFDetailsPVE(){
-        
-        CoreDataHandler().deleteAllData("PVE_PdfDetails")
-        
-        if CodeHelper.sharedInstance.reachability?.connection != .unavailable{
-            
-            self.showGlobalProgressHUDWithTitle(self.view, title: "")
-            
-            let jsonDict = ["ReportType" : "1"]
-            
-            if let theJSONData = try? JSONSerialization.data( withJSONObject: jsonDict, options: .prettyPrinted),
-               let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-                print("SNA Json = \n\(theJSONText)")
-            }
-            
-            ZoetisWebServices.shared.getblankPDFPVE(controller: self, parameters: jsonDict, completion: { [weak self] (json, error) in
-                guard error == nil else { return }
-                print("res json -- \(json)")
-            })
-        } else {
-            Helper.showAlertMessage(self, titleStr: NSLocalizedString(Constants.alertStr, comment: ""), messageStr: NSLocalizedString("You are currently offline. Please go online to download PDF.", comment: ""))
-        }
-        stopLoader()
         
     }
     
