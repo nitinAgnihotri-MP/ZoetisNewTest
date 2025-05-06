@@ -1183,6 +1183,15 @@ extension PELandingPoupViewController {
         }
     }
     
+    fileprivate func handlFilterScoreDataAndValidations(_ filterScoreData: [[String : Any]], _ allAssesmentArr: NSArray) {
+        var assArray : [Int] = []
+        for cat in filterScoreData {
+            let assID = cat["ModuleAssessmentId"] as? Int ?? 0
+            assArray.append(assID)
+        }
+        handleAllAssessmentArrAndValidations(allAssesmentArr, assArray)
+    }
+    
     fileprivate func handleSaveTypeHandleGetPostingAssessmentListByUserValidations(_ objDic: [String : Any]) {
         print("COMPLETED ASSESSMENT : ",self.convertDictToJson(dict: objDic,apiName: "COMPLETED ASSESSMENT :"))
         let peNewAssessmentWas = PENewAssessment()
@@ -1278,12 +1287,7 @@ extension PELandingPoupViewController {
             let allAssesmentArr = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_AssessmentInProgress")
             var filterScoreData : [[String:Any]] = [[:]]
             handleAssessmentScoresPostingDataValidations(assessmentScoresPostingData, &filterScoreData)
-            var assArray : [Int] = []
-            for cat in filterScoreData {
-                let assID = cat["ModuleAssessmentId"] as? Int ?? 0
-                assArray.append(assID)
-            }
-            handleAllAssessmentArrAndValidations(allAssesmentArr, assArray)
+            handlFilterScoreDataAndValidations(filterScoreData, allAssesmentArr)
             
             var filterCommentData : [[String:Any]] = [[:]]
             handleAssessmentCommentPostingDataValidations(assessmentCommentsPostingData, &filterCommentData, allAssesmentArr)

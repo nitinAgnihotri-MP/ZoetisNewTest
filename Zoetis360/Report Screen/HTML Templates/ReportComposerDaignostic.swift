@@ -9,6 +9,41 @@
 import UIKit
 import AVFoundation
 
+struct Metric {
+    var total: Float = 0
+    var mean: Float = 0
+    var updated: Float = 0
+    var spliterTotal: Float = 0
+    var spliterMean: Float = 0
+    var spliterMeanBirds: Float = 0
+    
+    mutating func update(with value: Float, meanValue: Float) {
+        total += value
+        spliterTotal += value
+        mean += meanValue
+        spliterMean += meanValue
+        if meanValue > 0 {
+            updated += 1
+            spliterMeanBirds += 1
+        }
+    }
+    
+    mutating func resetSpliter() {
+        spliterTotal = 0
+        spliterMean = 0
+        spliterMeanBirds = 0
+    }
+}
+
+struct ReportData {
+    var birdsTotal: Int = 0
+    var meanAge: Float = 0
+    var birdsTotalSpliter: Int = 0
+    var meanAgeSpliter: Float = 0
+    var indexSpliter: Float = 0
+    var indexTotal: Int = 0
+}
+
 class ReportComposerDaignostic: NSObject {
     
     var pathToReportHTMLTemplate = UserDefaults.standard.bool(forKey: "turkeyReport") ?Bundle.main.path(forResource:"DiagnosticReportTr-\(Regions.countryId)\(1)", ofType: "html") : Bundle.main.path(forResource:"DiagnosticReport-\(Regions.countryId)\(Regions.languageID)", ofType: "html")
@@ -66,736 +101,415 @@ class ReportComposerDaignostic: NSObject {
         }
         return margin
     }
-    func renderReports(complexName: String,customerName: String,vetanatrionName: String,salesRepName: String,customerRepName: String,typeDate: String,items: [[String: AnyObject]]) -> String! {
-        
+    
+    func renderReports(
+        complexName: String,
+        customerName: String,
+        vetanatrionName: String,
+        salesRepName: String,
+        customerRepName: String,
+        typeDate: String,
+        items: [[String: AnyObject]]
+    ) -> String? {
         debugPrint("DiagnosticReport-\(Regions.countryId)\(Regions.languageID)")
         
-        if pathToReportHTMLTemplate == nil {
-            
-            pathToReportHTMLTemplate = UserDefaults.standard.bool(forKey: "turkeyReport") ?Bundle.main.path(forResource:"DiagnosticReportTr-\(Regions.countryId)\(1)", ofType: "html") : Bundle.main.path(forResource:"DiagnosticReport-\(Regions.countryId)\(Regions.languageID)", ofType: "html")
-        }
+        guard !items.isEmpty else { return nil }
+        guard let (reportTemplate, singleItemTemplate, lastItemTemplate) = loadTemplates(isCocciHistory: items[0]["isCocciHistory"]?.boolValue == true) else { return nil }
+        guard let htmlContent = loadMainTemplate(path: reportTemplate) else { return nil }
         
-        if let hederH = Bundle.main.path(forResource:"DiagnosticReport-\(Regions.countryId)\(Regions.languageID)H", ofType: "html"){
-            pathToReportHTMLTemplate = items[0]["isCocciHistory"]?.boolValue == false ? pathToReportHTMLTemplate : hederH
-        }
+        let replacedContent = replaceMainPlaceholders(
+            htmlContent: htmlContent,
+            complexName: complexName,
+            customerName: customerName,
+            vetanatrionName: vetanatrionName,
+            salesRepName: salesRepName,
+            customerRepName: customerRepName,
+            typeDate: typeDate,
+            isCocciHistory: items[0]["isCocciHistory"]?.boolValue == true,
+            logoImageURL: logoImageURL!
+        )
         
-        if let path = Bundle.main.path(forResource:"single_item_Dignostic-\(Regions.countryId)\(Regions.languageID)H", ofType: "html"){
-            pathToSingleItemHTMLTemplate = items[0]["isCocciHistory"]?.boolValue == false ? pathToSingleItemHTMLTemplate : path
-        }
+        let allItemsContent = processItems(
+            items: items,
+            singleItemTemplate: singleItemTemplate,
+            lastItemTemplate: lastItemTemplate,
+            isCocciHistory: items[0]["isCocciHistory"]?.boolValue == true,
+            birdsMarginHistory: birdsMarginHistory,
+            birdsMarginSummary: birdsMarginSummary,
+            ageMarginHistory: ageMarginHistory,
+            ageMarginSummary: ageMarginSummary
+        )
         
-        if let pathH = Bundle.main.path(forResource:"last_item_daignostic-\(Regions.countryId)\(Regions.languageID)H", ofType: "html"){
-            pathToLastItemHTMLTemplate = items[0]["isCocciHistory"]?.boolValue == false ? pathToLastItemHTMLTemplate : pathH
-        }
-        do {
-            var HTMLContent = try? String(contentsOfFile: pathToReportHTMLTemplate!, encoding:  String.Encoding.utf8)
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#complexName#", with: complexName)
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#CustomerName#", with: customerName)
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#vetanatrionName#", with: vetanatrionName)
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#salesRepName#", with: salesRepName.count == 0 ? "NA" : salesRepName)
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#customerRepName#", with: customerRepName.count == 0 ? "NA" : customerRepName)
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#reportTitle#", with: items[0]["isCocciHistory"]?.boolValue == true ? NSLocalizedString("Necropsy Historical Report", comment: "") : NSLocalizedString("Necropsy Summary Report", comment: ""))
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#digHisMargn#", with: items[0]["isCocciHistory"]?.boolValue == true ? "margin-left:-20px":Constants.leftMargin)
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#typeDate#", with: typeDate)
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#Farm#", with: items[0]["isCocciHistory"]?.boolValue == true ? "Date" : NSLocalizedString("Farm", comment: ""))
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#LOGO_IMAGE#", with: logoImageURL!)
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.noneDisplay : "")
-            //HTMLContent = HTMLContent!.replacingOccurrences(of: "logo.png\"", with: "logo.png\"")
-            
-            var allItems = ""
-            var birdsTotal = Int()
-            
-            
-            var Foot_Pad_Lesions : Float = 0
-            var Ammonia_Burns : Float = 0
-            var tracheitis : Float = 0
-            var Femoral_Head_Necrosis : Float = 0
-            var feed_Passage : Float = 0
-            var feed_P : Float = 0
-            
-            var gizzard_Erosions : Float = 0
-            var enterties : Float = 0
-            var litter_Eater : Float = 0
-            var mouth_Lesions : Float = 0
-            var proventriculitis : Float = 0
-            var roundworms : Float = 0
-            var tapeworms : Float = 0
-            var Tibial_Dyschondroplasia : Float = 0
-            var Rickets : Float = 0
-            var Bone_Strength : Float = 0
-            var Bursa_Size : Float = 0.0
-            var IP : Float = 0.0
-            var Synovitis : Float = 0
-            var retained_Yolk : Float = 0
-            var air_Sac : Float = 0
-            
-            var Intestinal_Content: Float = 0
-            var Thin_Intestine: Float = 0
-            var Muscular_Hemorrhages: Float = 0
-            var Bursa_Lesion_Score: Float = 0
-            
-            var Foot_Pad_Lesions_Mean : Float = 0
-            var Tracheitis_Mean : Float = 0
-            var Tibial_Dyschondroplasia_Mean : Float = 0
-            var air_Sac_Mean : Float = 0
-            var gizzard_Erosions_Mean : Float = 0
-            var proventriculitis_Mean : Float = 0
-            var enterties_Mean : Float = 0
-            var boneStrength_Mean : Float = 0
-            var Bursa_Lesion_Score_Mean: Float = 0
-            
-            var air_Sac_Updated : Float = 0
-            var Bursa_Size_Updated : Float = 0.0
-            var Foot_Pad_Lesions_Updated : Float = 0
-            var Tracheitis_Updated : Float = 0
-            var Tibial_Dyschondroplasia_Updated : Float = 0
-            var gizzard_Erosions_Updated : Float = 0
-            var proventriculitis_Updated : Float = 0
-            var enterties_Updated : Float = 0
-            var boneStrength_Updated : Float = 0
-            var Bursa_Lesion_Score_Updated: Float = 0
-            
-            var birdsTotal_Spliter = Int()
-            var meanAge_Spliter = Float()
-            
-            var Foot_Pad_Lesions_Spliter : Float = 0
-            var Ammonia_Burns_Spliter : Float = 0
-            var tracheitis_Spliter : Float = 0
-            var Femoral_Head_Necrosis_Spliter : Float = 0
-            var feed_Passage_Spliter : Float = 0
-            var feed_P_Spliter : Float = 0
-            var gizzard_Erosions_Spliter : Float = 0
-            var litter_Eater_Spliter : Float = 0
-            var mouth_Lesions_Spliter : Float = 0
-            var proventriculitis_Spliter : Float = 0
-            var roundworms_Spliter : Float = 0
-            var tapeworms_Spliter : Float = 0
-            var Tibial_Dyschondroplasia_Spliter : Float = 0
-            var Rickets_Spliter : Float = 0
-            var Bone_Strength_Spliter : Float = 0
-            var Bursa_Size_Spliter : Float = 0.0
-            var IP_Spliter : Float = 0.0
-            var Synovitis_Spliter : Float = 0
-            var retained_Yolk_Spliter : Float = 0
-            var air_Sac_Spliter : Float = 0
-            var enterties_Spliter : Float = 0
-            var Intestinal_Content_Spliter: Float = 0
-            var Thin_Intestine_Spliter: Float = 0
-            var Muscular_Hemorrhages_Spliter: Float = 0
-            var Bursa_Lesion_Score_Spliter: Float = 0
-            
-            var Foot_Pad_Lesions_Mean_Spliter : Float = 0
-            var Tracheitis_Mean_Spliter : Float = 0
-            var Tibial_Dyschondroplasia_Mean_Spliter : Float = 0
-            var air_Sac_Mean_Spliter : Float = 0
-            var gizzard_Erosions_Mean_Spliter : Float = 0
-            var proventriculitis_Mean_Spliter : Float = 0
-            var enterties_Mean_Spliter : Float = 0
-            var boneStrength_Mean_Spliter : Float = 0
-            var Bursa_Lesion_Score_Mean_Spliter: Float = 0
-            
-            var Foot_Pad_Lesions_Mean_Birds_Spliter : Float = 0
-            var Tracheitis_Mean_Birds_Spliter : Float = 0
-            var Tibial_Dyschondroplasia_Mean_Birds_Spliter : Float = 0
-            var air_Sac_Mean_Birds_Spliter : Float = 0
-            var gizzard_Erosions_Mean_Birds_Spliter : Float = 0
-            var proventriculitis_Mean_Birds_Spliter : Float = 0
-            var enterties_Mean_Birds_Spliter : Float = 0
-            var boneStrength_Mean_Birds_Spliter : Float = 0
-            var Bursa_Lesion_Score_Birds_Spliter: Float = 0
-            
-            var Pericarditis : Float = 0
-            var Septicemia : Float = 0
-            var Liver_Granuloma : Float = 0
-            var Active_Bursa : Float = 0
-           
-            var Pericarditis_Spliter : Float = 0
-            var Septicemia_Spliter : Float = 0
-            var Liver_Granuloma_Spliter : Float = 0
-            var Active_Bursa_Spliter : Float = 0
-            
-            var index = Int()
-            var index_Spliter = Float()
-            var index_Total = Int()
-            let meanArray = AllValidSessions.sharedInstance.meanValues
-            
-            
-            var needToSplit2532 = Bool()
-            var needToSplit3341 = Bool()
-            var needToSplit42 = Bool()
-            var needToSplit1424 = Bool()
-            var needToSplit0114 = Bool()
-            var isCheckSum = Bool()
-            var isCheckSum1 = Bool()
-            var isCheckSum2 = Bool()
-            var isCheckSum3 = Bool()
-            
-            
-            let  lngId = UserDefaults.standard.integer(forKey: "lngId")
-            for i in 0..<items.count+1 {
-                var itemHTMLContent: String!
-                
-                if i != items.count  {
-                    itemHTMLContent = try String(contentsOfFile: pathToSingleItemHTMLTemplate!, encoding: String.Encoding.utf8)
-                    index = 0
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left:-40px;", with: items[0]["isCocciHistory"]?.boolValue == true ? birdsMargin : SingleItemBirdsMargin(countryID: Regions.countryId))
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left: -20px;", with: items[0]["isCocciHistory"]?.boolValue == true ? ageMarginHistory : SingleItemAgeMargin(countryID: Regions.countryId))
-                    
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Intestinal#", with: NSString(format: "%.1f",items[i]["Intestinal"]!.floatValue) as String)
-                    Intestinal_Content = Intestinal_Content+items[i]["Intestinal"]!.floatValue
-                    Intestinal_Content_Spliter = Intestinal_Content_Spliter+items[i]["Intestinal"]!.floatValue
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Thin#", with: NSString(format: "%.1f",items[i]["Thin_Intestine"]!.floatValue) as String)
-                    Thin_Intestine = Thin_Intestine+items[i]["Thin_Intestine"]!.floatValue
-                    Thin_Intestine_Spliter = Thin_Intestine_Spliter+items[i]["Thin_Intestine"]!.floatValue
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MuscularHemorrhages#", with: NSString(format: "%.1f",items[i]["Muscular"]!.floatValue) as String)
-                    Muscular_Hemorrhages = Muscular_Hemorrhages+items[i]["Muscular"]!.floatValue
-                    Muscular_Hemorrhages_Spliter = Muscular_Hemorrhages_Spliter+items[i]["Muscular"]!.floatValue
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FootpadLesions#", with: NSString(format: "%.1f",items[i]["FP"]!.floatValue) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Foot_Pad_Lesions_Mean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                    
-                    Foot_Pad_Lesions = Foot_Pad_Lesions+items[i]["FP"]!.floatValue
-                    Foot_Pad_Lesions_Mean = Foot_Pad_Lesions_Mean +
-                    (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    
-                    Foot_Pad_Lesions_Updated = Foot_Pad_Lesions_Updated + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    Foot_Pad_Lesions_Spliter = Foot_Pad_Lesions_Spliter+items[i]["FP"]!.floatValue
-                    Foot_Pad_Lesions_Mean_Spliter = Foot_Pad_Lesions_Mean_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    
-                    Foot_Pad_Lesions_Mean_Birds_Spliter = Foot_Pad_Lesions_Mean_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#amonia#", with: NSString(format: "%.1f",items[i]["amonia"]!.floatValue) as String)
-                    Ammonia_Burns =  Ammonia_Burns+items[i]["amonia"]!.floatValue
-                    Ammonia_Burns_Spliter = Ammonia_Burns_Spliter+items[i]["amonia"]!.floatValue
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#mouth#", with: NSString(format: "%.1f",items[i]["mouth"]!.floatValue) as String)
-                    mouth_Lesions = mouth_Lesions+items[i]["mouth"]!.floatValue
-                    mouth_Lesions_Spliter = mouth_Lesions_Spliter+items[i]["mouth"]!.floatValue
-                    
-                    index+=1
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#trac#", with: NSString(format: "%.1f",items[i]["trac"]!.floatValue) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Tracheitis_Mean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                    tracheitis = tracheitis+items[i]["trac"]!.floatValue
-                    
-                    Tracheitis_Mean = Tracheitis_Mean + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    
-                    Tracheitis_Updated = Tracheitis_Updated + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    tracheitis_Spliter = tracheitis_Spliter+items[i]["trac"]!.floatValue
-                    Tracheitis_Mean_Spliter = Tracheitis_Mean_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    Tracheitis_Mean_Birds_Spliter = Tracheitis_Mean_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FHN#", with: NSString(format: "%.1f",items[i]["FHN"]!.floatValue) as String)
-                    Femoral_Head_Necrosis = Femoral_Head_Necrosis+items[i]["FHN"]!.floatValue
-                    Femoral_Head_Necrosis_Spliter = Femoral_Head_Necrosis_Spliter+items[i]["FHN"]!.floatValue
-                    
-                    index+=1
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TD#", with: NSString(format: "%.1f",items[i]["TD"]!.floatValue) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Tibial_Dyschondroplasia_Mean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                    Tibial_Dyschondroplasia = Tibial_Dyschondroplasia+items[i]["TD"]!.floatValue
-                    
-                    
-                    Tibial_Dyschondroplasia_Mean = Tibial_Dyschondroplasia_Mean + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    Tibial_Dyschondroplasia_Updated = Tibial_Dyschondroplasia_Updated + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    Tibial_Dyschondroplasia_Spliter = Tibial_Dyschondroplasia_Spliter+items[i]["TD"]!.floatValue
-                    
-                    Tibial_Dyschondroplasia_Mean_Spliter = Tibial_Dyschondroplasia_Mean_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    Tibial_Dyschondroplasia_Mean_Birds_Spliter = Tibial_Dyschondroplasia_Mean_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Rick#", with: NSString(format: "%.1f",items[i]["Rick"]!.floatValue) as String)
-                    Rickets =  Rickets+items[i]["Rick"]!.floatValue
-                    Rickets_Spliter = Rickets_Spliter+items[i]["Rick"]!.floatValue
-                    
-                    index+=1
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Bone#", with: NSString(format: "%.1f",items[i]["Bone"]!.floatValue) as String)
-                    Bone_Strength = Bone_Strength+items[i]["Bone"]!.floatValue
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#boneStrength_Mean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                    Bone_Strength_Spliter = Bone_Strength_Spliter+items[i]["Bone"]!.floatValue
-                    boneStrength_Mean = boneStrength_Mean + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    boneStrength_Updated = boneStrength_Updated + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    boneStrength_Mean_Spliter = boneStrength_Mean_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    boneStrength_Mean_Birds_Spliter = boneStrength_Mean_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Syno#", with: NSString(format: "%.1f",items[i]["Syno"]!.floatValue) as String)
-                    Synovitis =  Synovitis+items[i]["Syno"]!.floatValue
-                    Synovitis_Spliter = Synovitis_Spliter+items[i]["Syno"]!.floatValue
-                    
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Bursa#", with: NSString(format: "%.1f",items[i]["Bursa"]!.floatValue) as String)
-                    Bursa_Size =  Bursa_Size+items[i]["Bursa"]!.floatValue
-                    Bursa_Size_Spliter = Bursa_Size_Spliter+items[i]["Bursa"]!.floatValue
-                    Bursa_Size_Updated = Bursa_Size_Updated + ((items[i]["Bursa"]!.floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#IP#", with: NSString(format: "%.1f",items[i]["IP"]!.floatValue) as String)
-                    IP =  IP+items[i]["IP"]!.floatValue
-                    IP_Spliter = IP_Spliter+items[i]["IP"]!.floatValue
-                    
-                    index+=1
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#air#", with: NSString(format: "%.1f",items[i]["air"]!.floatValue) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#air_Sac_Mean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                    air_Sac = air_Sac+items[i]["air"]!.floatValue
-                    air_Sac_Mean = air_Sac_Mean + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    air_Sac_Updated = air_Sac_Updated + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    air_Sac_Spliter = air_Sac_Spliter+items[i]["air"]!.floatValue
-                    air_Sac_Mean_Spliter = air_Sac_Mean_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    air_Sac_Mean_Birds_Spliter = air_Sac_Mean_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#retained#", with: NSString(format: "%.1f",items[i]["retained"]!.floatValue) as String)
-                    retained_Yolk = retained_Yolk+items[i]["retained"]!.floatValue
-                    retained_Yolk_Spliter = retained_Yolk_Spliter+items[i]["retained"]!.floatValue
-                    
-                    if lngId == 1 {
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#pericarditis#", with: NSString(format: "%.1f",items[i]["pericarditis"]!.floatValue) as String)
-                        Pericarditis = Pericarditis+items[i]["pericarditis"]!.floatValue
-                        Pericarditis_Spliter = Pericarditis_Spliter+items[i]["pericarditis"]!.floatValue
-                        
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#septicemia#", with: NSString(format: "%.1f",items[i]["septicemia"]!.floatValue) as String)
-                        Septicemia = Septicemia+items[i]["septicemia"]!.floatValue
-                        Septicemia_Spliter = Septicemia_Spliter+items[i]["septicemia"]!.floatValue
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Liver_Granuloma#", with: NSString(format: "%.1f",items[i]["Liver_Granuloma"]?.floatValue ?? 0) as String)
-                        Liver_Granuloma = Liver_Granuloma+(items[i]["Liver_Granuloma"]?.floatValue ?? 0)
-                        Liver_Granuloma_Spliter = Liver_Granuloma_Spliter+(items[i]["Liver_Granuloma"]?.floatValue ?? 0)
-                        
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Active_Bursa#", with: NSString(format: "%.1f",items[i]["Active_Bursa"]?.floatValue ?? 0) as String)
-                        Active_Bursa = Active_Bursa+(items[i]["Active_Bursa"]?.floatValue ?? 0)
-                        Active_Bursa_Spliter = Active_Bursa_Spliter+(items[i]["Active_Bursa"]?.floatValue ?? 0)
-                        
-                    }
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#litter#", with: NSString(format: "%.1f",items[i]["litter"]!.floatValue) as String)
-                    litter_Eater =  litter_Eater+items[i]["litter"]!.floatValue
-                    litter_Eater_Spliter = litter_Eater_Spliter+items[i]["litter"]!.floatValue
-                    
-                    index+=1
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#ge#", with: NSString(format: "%.1f",items[i]["ge"]!.floatValue) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#gizzard_Erosions_Mean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                    gizzard_Erosions = gizzard_Erosions+items[i]["ge"]!.floatValue
-                    
-                    gizzard_Erosions_Mean = gizzard_Erosions_Mean + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    gizzard_Erosions_Updated = gizzard_Erosions_Updated + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    gizzard_Erosions_Spliter = gizzard_Erosions_Spliter+items[i]["ge"]!.floatValue
-                    gizzard_Erosions_Mean_Spliter = gizzard_Erosions_Mean_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    gizzard_Erosions_Mean_Birds_Spliter = gizzard_Erosions_Mean_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    index+=1
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#pro#", with: NSString(format: "%.1f",items[i]["pro"]!.floatValue) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#proventriculitis_Mean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                    proventriculitis =  proventriculitis+items[i]["pro"]!.floatValue
-                    
-                    proventriculitis_Mean = proventriculitis_Mean + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    proventriculitis_Updated = proventriculitis_Updated + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    proventriculitis_Spliter = proventriculitis_Spliter+items[i]["pro"]!.floatValue
-                    proventriculitis_Mean_Spliter = proventriculitis_Mean_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    proventriculitis_Mean_Birds_Spliter = proventriculitis_Mean_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    index+=1
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#enterties#", with: NSString(format: "%.1f",items[i]["enterties"]!.floatValue) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#enterties_Mean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                    enterties = enterties+items[i]["enterties"]!.floatValue
-                    
-                    enterties_Mean = enterties_Mean + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    enterties_Updated = enterties_Updated + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    enterties_Spliter = enterties_Spliter+items[i]["enterties"]!.floatValue
-                    enterties_Mean_Spliter = enterties_Mean_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    enterties_Mean_Birds_Spliter = enterties_Mean_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    
-                    index+=1
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#BursaLesionScore#", with: NSString(format: "%.1f",items[i]["BLS"]!.floatValue) as String)
-                    Bursa_Lesion_Score = Bursa_Lesion_Score+items[i]["BLS"]!.floatValue
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#bursaLesionScore_Mean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                    Bursa_Lesion_Score_Mean = Bursa_Lesion_Score_Mean +
-                    (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    
-                    Bursa_Lesion_Score_Updated = Bursa_Lesion_Score_Updated + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    Bursa_Lesion_Score_Mean_Spliter = Bursa_Lesion_Score_Mean_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                    Bursa_Lesion_Score_Birds_Spliter = Bursa_Lesion_Score_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                    Bursa_Lesion_Score_Spliter = Bursa_Lesion_Score_Spliter+items[i]["BLS"]!.floatValue
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#tape#", with: NSString(format: "%.1f",items[i]["tape"]!.floatValue) as String)
-                    tapeworms =  tapeworms+items[i]["tape"]!.floatValue
-                    tapeworms_Spliter = tapeworms_Spliter+items[i]["tape"]!.floatValue
-                    
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#round#", with: NSString(format: "%.1f",items[i]["round"]!.floatValue) as String)
-                    roundworms = roundworms+items[i]["round"]!.floatValue
-                    roundworms_Spliter = roundworms_Spliter+items[i]["round"]!.floatValue
-                    
-                  
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#feed#", with: NSString(format: "%.1f",items[i]["feed"]!.floatValue) as String)
-                    feed_Passage = feed_Passage+items[i]["feed"]!.floatValue
-                    feed_Passage_Spliter = feed_Passage_Spliter+items[i]["feed"]!.floatValue
-                    
-                    
-                    if let feedValue = items[i]["feed_P"]?.floatValue{
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#feed_P#", with: NSString(format: "%.1f",feedValue) as String)
-                        feed_P = feed_P+feedValue
-                        feed_P_Spliter = feed_P_Spliter+feedValue
-                    }
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FarmName#", with: items[i]["isCocciHistory"]?.boolValue == true ? items[i]["sessionDate"]! as! String : items[i]["farmName"]! as! String)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.noneDisplay : "")
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#birds#", with: items[i]["birds"]! as! String)
-                    birdsTotal = birdsTotal+items[i]["birds"]!.integerValue
-                    birdsTotal_Spliter = birdsTotal_Spliter+items[i]["birds"]!.integerValue
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MeanAge#", with: items[i]["meanAge"]! as! String)
-                    meanAge = meanAge+items[i]["meanAge"]!.floatValue
-                    meanAge_Spliter = meanAge_Spliter+items[i]["meanAge"]!.floatValue
-                    
-                    let arrayIndex = i + 1 < items.count ? i + 1 : i
-                    index_Spliter+=1
-                    
-                    if items[arrayIndex]["meanAge"]!.integerValue > 13 && items[arrayIndex]["meanAge"]!.integerValue < 25{
-                        
-                        if needToSplit0114 == true {
-                            needToSplit3341 = false
-                            needToSplit42 = false
-                            needToSplit2532 = false
-                            needToSplit1424 = false
-                            needToSplit0114 = false
-                            isCheckSum = true
-                        } else {
-                            if isCheckSum == false {
-                                needToSplit0114 = true
-                                
-                            } else {
-                                needToSplit0114 = false
-                            }
-                        }
-                    } else if items[arrayIndex]["meanAge"]!.integerValue > 24 && items[arrayIndex]["meanAge"]!.integerValue < 33 {
-                        if needToSplit1424 == true {
-                            needToSplit3341 = false
-                            needToSplit42 = false
-                            needToSplit2532 = false
-                            needToSplit1424 = false
-                            needToSplit0114 = false
-                            isCheckSum1 = true
-                        } else {
-                            if isCheckSum1 == false {
-                                needToSplit1424 = true
-                            } else {
-                                needToSplit1424 = false
-                            }
-                        }
-                    } else if items[arrayIndex]["meanAge"]!.integerValue > 32 && items[arrayIndex]["meanAge"]!.integerValue < 43 {
-                        if needToSplit2532 == true {
-                            needToSplit3341 = false
-                            needToSplit42 = false
-                            needToSplit2532 = false
-                            needToSplit1424 = false
-                            needToSplit0114 = false
-                            isCheckSum2 = true
-                        } else {
-                            if isCheckSum2 == false {
-                                needToSplit2532 = true
-                            } else {
-                                needToSplit2532 = false
-                            }
-                        }
-                    } else if items[arrayIndex]["meanAge"]!.integerValue > 42 && items[arrayIndex]["meanAge"]!.integerValue < 81 {
-                        if needToSplit42 == true {
-                            
-                            needToSplit3341 = false
-                            needToSplit42 = false
-                            needToSplit2532 = false
-                            needToSplit1424 = false
-                            needToSplit0114 = false
-                            isCheckSum3 = true
-                        } else if needToSplit3341 == true {
-                            if (items.count == i + 1) {
-                                needToSplit42 = true
-                                needToSplit3341 = false
-                                needToSplit2532 = false
-                                needToSplit1424 = false
-                                needToSplit0114 = false
-                            } else {
-                                needToSplit42 = false
-                                needToSplit3341 = false
-                                needToSplit2532 = false
-                                needToSplit1424 = false
-                                needToSplit0114 = false
-                                isCheckSum3 = true
-                            }
-                        } else {
-                            if (items.count == i + 1) {
-                                needToSplit42 = true
-                                needToSplit3341 = false
-                                needToSplit2532 = false
-                                needToSplit1424 = false
-                                needToSplit0114 = false
-                            } else {
-                                needToSplit42 = false
-                                if isCheckSum3 == false {
-                                    needToSplit3341 = true
-                                } else {
-                                    needToSplit3341 = false
-                                    
-                                }
-                                needToSplit2532 = false
-                                needToSplit1424 = false
-                                needToSplit0114 = false
-                            }
-                        }
-                    }
-                    
-                    if items[i]["meanAge"]!.integerValue > 13 && items[i]["meanAge"]!.integerValue < 25 {
-                        
-                        needToSplit0114 = false
-                    }
-                    if items[i]["meanAge"]!.integerValue > 41 && items[i]["meanAge"]!.integerValue < 81 {
-                        
-                        needToSplit3341 = false
-                    }
-                    
-                    
-                    if ((needToSplit2532 == true || needToSplit3341 == true || needToSplit42 == true || needToSplit1424 == true || needToSplit0114 == true) && (items[0]["isCocciHistory"]?.boolValue == false)) || (i == items.count-1 && items[0]["isCocciHistory"]?.boolValue == false){
-                        
-                        isCheckSum = false
-                        isCheckSum1 = false
-                        isCheckSum2 = false
-                        isCheckSum3 = false
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display#", with: "" )
-                        
-                        if items[i]["meanAge"]!.integerValue > 13 && items[i]["meanAge"]!.integerValue < 25
-                        {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "14 - 24 \(NSLocalizedString("Days", comment: ""))")
-                        }
-                        else if items[i]["meanAge"]!.integerValue > 0 && items[i]["meanAge"]!.integerValue < 14
-                        {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "01 - 13 \(NSLocalizedString("Days", comment: ""))")
-                        }
-                        else if items[i]["meanAge"]!.integerValue > 24 && items[i]["meanAge"]!.integerValue < 33
-                        {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "25 - 32 \(NSLocalizedString("Days", comment: ""))")
-                        }
-                        
-                        else  if items[i]["meanAge"]!.integerValue > 32 && items[i]["meanAge"]!.integerValue < 43
-                        {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "33 - 41 \(NSLocalizedString("Days", comment: ""))")
-                        }
-                        
-                        else  if items[i]["meanAge"]!.integerValue > 42 && items[i]["meanAge"]!.integerValue < 81{
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: NSLocalizedString("42 days or older", comment: ""))
-                        }
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TotalBirds#", with: NSString(format: "%d",birdsTotal_Spliter) as String )
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MeanAgeTotal#", with: NSString(format: "%.0f",round(Float(meanAge_Spliter/index_Spliter))) as String)
-                        
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FP_TOTAL#", with: NSString(format: "%.1f",Foot_Pad_Lesions_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#amonia_TOTAL#", with: NSString(format: "%.1f",Ammonia_Burns_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#mouth_TOTAL#", with: NSString(format: "%.1f",mouth_Lesions_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#trac_TOTAL#", with: NSString(format: "%.1f",tracheitis_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FHN_TOTAL#", with: NSString(format: "%.1f",Femoral_Head_Necrosis_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TD_TOTAL#", with: NSString(format: "%.1f",Tibial_Dyschondroplasia_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Rick_TOTAL#", with: NSString(format: "%.1f",Rickets_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Bone_TOTAL#", with: NSString(format: "%.1f",Bone_Strength_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Syno_TOTAL#", with: NSString(format: "%.1f",Synovitis_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Bursa_TOTAL#", with: NSString(format: "%.1f",Bursa_Size_Spliter == 0 ? 4 : Bursa_Size_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#IP_TOTAL#", with: NSString(format: "%.1f",IP_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#air_TOTAL#", with: NSString(format: "%.1f",air_Sac_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#retained_TOTAL#", with: NSString(format: "%.1f",retained_Yolk_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#litter_TOTAL#", with: NSString(format: "%.1f",litter_Eater_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#ge_TOTAL#", with: NSString(format: "%.1f",gizzard_Erosions_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#pro_TOTAL#", with: NSString(format: "%.1f",proventriculitis_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#tape_TOTAL#", with: NSString(format: "%.1f",tapeworms_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#round_TOTAL#", with: NSString(format: "%.1f",roundworms_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#feed_TOTAL#", with: NSString(format: "%.1f",feed_Passage_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#feed_P_TOTAL#", with: NSString(format: "%.1f",feed_P_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#enterties_TOTAL#", with: NSString(format: "%.1f",enterties_Spliter/Float(index_Spliter)) as String)
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Intestinal_TOTAL#", with: NSString(format: "%.1f",Intestinal_Content_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Thin_TOTAL#", with: NSString(format: "%.1f",Thin_Intestine_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MuscularHemorrhages_TOTAL#", with: NSString(format: "%.1f",Muscular_Hemorrhages_Spliter/Float(index_Spliter)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#bursaLesionSize_TOTAL#", with: NSString(format: "%.1f",Bursa_Lesion_Score_Spliter/Float(index_Spliter)) as String)
-                        
-                        if lngId == 1 {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#pericarditis_TOTAL#", with: NSString(format: "%.1f",Pericarditis_Spliter/Float(index_Spliter)) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#septicemia_TOTAL#", with: NSString(format: "%.1f",Septicemia_Spliter/Float(index_Spliter)) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Liver_Granuloma_TOTAL#", with: NSString(format: "%.1f",Liver_Granuloma_Spliter/Float(index_Spliter)) as String)
-                            
-                            
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Active_Bursa_TOTAL#", with: NSString(format: "%.1f",Active_Bursa_Spliter/Float(index_Spliter)) as String)
-                        }
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.noneDisplay : "")
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Foot_Pad_Lesions_Mean_Total#", with: NSString(format: "%.1f",(Foot_Pad_Lesions_Mean_Spliter/Foot_Pad_Lesions_Mean_Birds_Spliter).isNaN ? 0 : Foot_Pad_Lesions_Mean_Spliter/Foot_Pad_Lesions_Mean_Birds_Spliter) as String)
-                        
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#enterties_Mean_Total#", with: NSString(format: "%.1f",(enterties_Mean_Spliter/enterties_Mean_Birds_Spliter).isNaN ? 0 : enterties_Mean_Spliter/enterties_Mean_Birds_Spliter) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#boneStrength_Mean_Total#", with: NSString(format: "%.1f",(boneStrength_Mean_Spliter/boneStrength_Mean_Birds_Spliter).isNaN ? 0 : boneStrength_Mean_Spliter/boneStrength_Mean_Birds_Spliter) as String)
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Tracheitis_Mean_Total#", with: NSString(format: "%.1f",(Tracheitis_Mean_Spliter/Tracheitis_Mean_Birds_Spliter).isNaN ? 0 : Tracheitis_Mean_Spliter/Tracheitis_Mean_Birds_Spliter) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Tibial_Dyschondroplasia_Mean_Total#", with: NSString(format: "%.1f",(Tibial_Dyschondroplasia_Mean_Spliter/Tibial_Dyschondroplasia_Mean_Birds_Spliter).isNaN ? 0 : Tibial_Dyschondroplasia_Mean_Spliter/Tibial_Dyschondroplasia_Mean_Birds_Spliter) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#air_Sac_Mean_Total#", with: NSString(format: "%.1f",(air_Sac_Mean_Spliter/air_Sac_Mean_Birds_Spliter).isNaN ? 0 : air_Sac_Mean_Spliter/air_Sac_Mean_Birds_Spliter) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#gizzard_Erosions_Mean_Total#", with: NSString(format: "%.1f",(gizzard_Erosions_Mean_Spliter/gizzard_Erosions_Mean_Birds_Spliter).isNaN ? 0 : gizzard_Erosions_Mean_Spliter/gizzard_Erosions_Mean_Birds_Spliter) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#proventriculitis_Mean_Total#", with: NSString(format: "%.1f",(proventriculitis_Mean_Spliter/proventriculitis_Mean_Birds_Spliter).isNaN ? 0 : proventriculitis_Mean_Spliter/proventriculitis_Mean_Birds_Spliter) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#bursaLesionSize_Mean_Total#", with: NSString(format: "%.1f",(Bursa_Lesion_Score_Mean_Spliter/Bursa_Lesion_Score_Birds_Spliter).isNaN ? 0 : Bursa_Lesion_Score_Mean_Spliter/Bursa_Lesion_Score_Birds_Spliter) as String)
-                        
-                        Foot_Pad_Lesions_Spliter = 0
-                        Ammonia_Burns_Spliter = 0
-                        mouth_Lesions_Spliter = 0
-                        tracheitis_Spliter = 0
-                        Femoral_Head_Necrosis_Spliter = 0
-                        Tibial_Dyschondroplasia_Spliter = 0
-                        Rickets_Spliter = 0
-                        Bone_Strength_Spliter = 0
-                        Synovitis_Spliter = 0
-                        Bursa_Size_Spliter = 0
-                        IP_Spliter = 0
-                        air_Sac_Spliter = 0
-                        retained_Yolk_Spliter = 0
-                    
-                       
-                        Pericarditis_Spliter = 0
-                        Septicemia_Spliter = 0
-                        Liver_Granuloma_Spliter = 0
-                        Active_Bursa_Spliter = 0
-                        
-                        litter_Eater_Spliter = 0
-                        gizzard_Erosions_Spliter = 0
-                        proventriculitis_Spliter = 0
-                        tapeworms_Spliter = 0
-                        roundworms_Spliter = 0
-                        feed_Passage_Spliter = 0
-                        feed_P_Spliter = 0
-                        enterties_Spliter = 0
-                        Bursa_Lesion_Score_Spliter = 0
-                        
-                        Foot_Pad_Lesions_Mean_Spliter = 0
-                        Tracheitis_Mean_Spliter = 0
-                        Tibial_Dyschondroplasia_Mean_Spliter = 0
-                        air_Sac_Mean_Spliter = 0
-                        gizzard_Erosions_Mean_Spliter = 0
-                        proventriculitis_Mean_Spliter = 0
-                        enterties_Mean_Spliter = 0
-                        boneStrength_Mean_Spliter = 0
-                        Bursa_Lesion_Score_Mean_Spliter = 0
-                        
-                        Foot_Pad_Lesions_Mean_Birds_Spliter = 0
-                        Tracheitis_Mean_Birds_Spliter = 0
-                        Tibial_Dyschondroplasia_Mean_Birds_Spliter = 0
-                        air_Sac_Mean_Birds_Spliter = 0
-                        gizzard_Erosions_Mean_Birds_Spliter = 0
-                        proventriculitis_Mean_Birds_Spliter = 0
-                        enterties_Mean_Birds_Spliter = 0
-                        boneStrength_Mean_Birds_Spliter = 0
-                        Bursa_Lesion_Score_Birds_Spliter = 0
-                        
-                        birdsTotal_Spliter = 0
-                        meanAge_Spliter = 0
-                        index_Spliter = 0
-                        
-                        index_Total += 1
-                        
-                    } else{
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display#", with: Constants.noneDisplay )
-                    }
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Sick#", with: items[i]["isSick"]!.intValue == 0 ? "" : "checked")
-                }
-                else {
-                    itemHTMLContent = try String(contentsOfFile: pathToLastItemHTMLTemplate!, encoding: String.Encoding.utf8)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TotalBirds#", with: NSString(format: "%d",birdsTotal) as String )
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MeanAge#", with: NSString(format: "%.0f",round(meanAge/Float(items.count))) as String)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.noneDisplay : "")
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left:-40px;", with: items[0]["isCocciHistory"]?.boolValue == true ? birdsMarginHistory : birdsMarginSummary)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left: -20px;", with: items[0]["isCocciHistory"]?.boolValue == true ? ageMarginHistory : ageMarginSummary)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"margin-left:-140px", with: items[0]["isCocciHistory"]?.boolValue == true ? "margin-left:-180px" : "margin-left:-140px")
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FP_TOTAL#", with: NSString(format: "%.1f",Foot_Pad_Lesions/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#amonia_TOTAL#", with: NSString(format: "%.1f",Ammonia_Burns/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#mouth_TOTAL#", with: NSString(format: "%.1f",mouth_Lesions/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#trac_TOTAL#", with: NSString(format: "%.1f",tracheitis/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FHN_TOTAL#", with: NSString(format: "%.1f",Femoral_Head_Necrosis/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TD_TOTAL#", with: NSString(format: "%.1f",Tibial_Dyschondroplasia/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Rick_TOTAL#", with: NSString(format: "%.1f",Rickets/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Bone_TOTAL#", with: NSString(format: "%.1f",Bone_Strength/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Syno_TOTAL#", with: NSString(format: "%.1f",Synovitis/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Bursa_TOTAL#", with: NSString(format: "%.1f",Bursa_Size == 0 ? 4 : Bursa_Size/Float(items.count) ) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#IP_TOTAL#", with: NSString(format: "%.1f",IP/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#air_TOTAL#", with: NSString(format: "%.1f",air_Sac/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#retained_TOTAL#", with: NSString(format: "%.1f",retained_Yolk/Float(items.count)) as String)
-                
-                    if lngId == 1 {
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#pericarditis_TOTAL#", with: NSString(format: "%.1f",Pericarditis/Float(items.count)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#septicemia_TOTAL#", with: NSString(format: "%.1f",Septicemia/Float(items.count)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Liver_Granuloma_TOTAL#", with: NSString(format: "%.1f",Liver_Granuloma/Float(items.count)) as String)                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Active_Bursa_TOTAL#", with: NSString(format: "%.1f",Active_Bursa/Float(items.count)) as String)
-                    }
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#litter_TOTAL#", with: NSString(format: "%.1f",litter_Eater/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#ge_TOTAL#", with: NSString(format: "%.1f",gizzard_Erosions/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#pro_TOTAL#", with: NSString(format: "%.1f",proventriculitis/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#tape_TOTAL#", with: NSString(format: "%.1f",tapeworms/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#round_TOTAL#", with: NSString(format: "%.1f",roundworms/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#feed_TOTAL#", with: NSString(format: "%.1f",feed_Passage/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#feed_P_TOTAL#", with: NSString(format: "%.1f",feed_P/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#enterties_TOTAL#", with: NSString(format: "%.1f",enterties/Float(items.count)) as String)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Intestinal_TOTAL#", with: NSString(format: "%.1f",Intestinal_Content/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Thin_TOTAL#", with: NSString(format: "%.1f",Thin_Intestine/Float(items.count)) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MuscularHemorrhages_TOTAL#", with: NSString(format: "%.1f",Muscular_Hemorrhages/Float(items.count)) as String)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#bursaLesionSize_TOTAL#", with: NSString(format: "%.1f",Bursa_Lesion_Score/Float(items.count)) as String)
-                    
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Foot_Pad_Lesions_Mean_Total#", with: NSString(format: "%.1f",(Foot_Pad_Lesions_Mean/Foot_Pad_Lesions_Updated).isNaN ? 0 : Foot_Pad_Lesions_Mean/Foot_Pad_Lesions_Updated) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Tracheitis_Mean_Total#", with: NSString(format: "%.1f",(Tracheitis_Mean/Tracheitis_Updated).isNaN ? 0 : Tracheitis_Mean/Tracheitis_Updated) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Tibial_Dyschondroplasia_Mean_Total#", with: NSString(format: "%.1f",(Tibial_Dyschondroplasia_Mean/Tibial_Dyschondroplasia_Updated).isNaN ? 0 : Tibial_Dyschondroplasia_Mean/Tibial_Dyschondroplasia_Updated) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#air_Sac_Mean_Total#", with: NSString(format: "%.1f",(air_Sac_Mean/air_Sac_Updated).isNaN ? 0 : air_Sac_Mean/air_Sac_Updated) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#bursaLesionSize_Mean_Total#", with: NSString(format: "%.1f",(Bursa_Lesion_Score_Mean/Bursa_Lesion_Score_Updated).isNaN ? 0 : Bursa_Lesion_Score_Mean/Bursa_Lesion_Score_Updated) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#gizzard_Erosions_Mean_Total#", with: NSString(format: "%.1f",(gizzard_Erosions_Mean/gizzard_Erosions_Updated).isNaN ? 0 : gizzard_Erosions_Mean/gizzard_Erosions_Updated) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#proventriculitis_Mean_Total#", with: NSString(format: "%.1f",(proventriculitis_Mean/proventriculitis_Updated).isNaN ? 0 : proventriculitis_Mean/proventriculitis_Updated) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#enterties_Mean_Total#", with: NSString(format: "%.1f",(enterties_Mean/enterties_Updated).isNaN ? 0 : enterties_Mean/enterties_Updated) as String)
-                    itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#boneStrength_Mean_Total#", with: NSString(format: "%.1f",(boneStrength_Mean/boneStrength_Updated).isNaN ? 0 : boneStrength_Mean/boneStrength_Updated) as String)
-                }
-                
-                allItems += itemHTMLContent
-            }
-            
-            HTMLContent = HTMLContent!.replacingOccurrences(of:"#ITEMS#", with: allItems)
-            AllValidSessions.sharedInstance.meanValues.removeAllObjects()
-            return HTMLContent
-            
-        }
-        catch {
-            print("Unable to open and use HTML template files.")
-        }
-        
-        return nil
+        let finalContent = replacedContent.replacingOccurrences(of: "#ITEMS#", with: allItemsContent)
+        AllValidSessions.sharedInstance.meanValues.removeAllObjects()
+        return finalContent
     }
+
+    func loadTemplates(isCocciHistory: Bool) -> (String, String, String)? {
+        var reportTemplate = UserDefaults.standard.bool(forKey: "turkeyReport")
+            ? Bundle.main.path(forResource: "DiagnosticReportTr-\(Regions.countryId)\(1)", ofType: "html")
+            : Bundle.main.path(forResource: "DiagnosticReport-\(Regions.countryId)\(Regions.languageID)", ofType: "html")
+        
+        var singleItemTemplate = Bundle.main.path(forResource: "single_item_Dignostic-\(Regions.countryId)\(Regions.languageID)", ofType: "html")
+        var lastItemTemplate = Bundle.main.path(forResource: "last_item_daignostic-\(Regions.countryId)\(Regions.languageID)", ofType: "html")
+        
+        if isCocciHistory {
+            if let headerPath = Bundle.main.path(forResource: "DiagnosticReport-\(Regions.countryId)\(Regions.languageID)H", ofType: "html") {
+                reportTemplate = headerPath
+            }
+            if let singleItemPath = Bundle.main.path(forResource: "single_item_Dignostic-\(Regions.countryId)\(Regions.languageID)H", ofType: "html") {
+                singleItemTemplate = singleItemPath
+            }
+            if let lastItemPath = Bundle.main.path(forResource: "last_item_daignostic-\(Regions.countryId)\(Regions.languageID)H", ofType: "html") {
+                lastItemTemplate = lastItemPath
+            }
+        }
+        
+        guard let report = reportTemplate, let single = singleItemTemplate, let last = lastItemTemplate else { return nil }
+        return (report, single, last)
+    }
+
+    func loadMainTemplate(path: String) -> String? {
+        do {
+            return try String(contentsOfFile: path, encoding: .utf8)
+        } catch {
+            print("Unable to open main HTML template file.")
+            return nil
+        }
+    }
+
+    func replaceMainPlaceholders(
+        htmlContent: String,
+        complexName: String,
+        customerName: String,
+        vetanatrionName: String,
+        salesRepName: String,
+        customerRepName: String,
+        typeDate: String,
+        isCocciHistory: Bool,
+        logoImageURL: String
+    ) -> String {
+        var content = htmlContent
+        content = content.replacingOccurrences(of: "#complexName#", with: complexName)
+        content = content.replacingOccurrences(of: "#CustomerName#", with: customerName)
+        content = content.replacingOccurrences(of: "#vetanatrionName#", with: vetanatrionName)
+        content = content.replacingOccurrences(of: "#salesRepName#", with: salesRepName.isEmpty ? "NA" : salesRepName)
+        content = content.replacingOccurrences(of: "#customerRepName#", with: customerRepName.isEmpty ? "NA" : customerRepName)
+        content = content.replacingOccurrences(of: "#reportTitle#", with: isCocciHistory ? NSLocalizedString("Necropsy Historical Report", comment: "") : NSLocalizedString("Necropsy Summary Report", comment: ""))
+        content = content.replacingOccurrences(of: "#digHisMargn#", with: isCocciHistory ? "margin-left:-20px" : Constants.leftMargin)
+        content = content.replacingOccurrences(of: "#typeDate#", with: typeDate)
+        content = content.replacingOccurrences(of: "#Farm#", with: isCocciHistory ? "Date" : NSLocalizedString("Farm", comment: ""))
+        content = content.replacingOccurrences(of: "#LOGO_IMAGE#", with: logoImageURL)
+        content = content.replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.noneDisplay : "")
+        return content
+    }
+
+    func processItems(
+        items: [[String: AnyObject]],
+        singleItemTemplate: String,
+        lastItemTemplate: String,
+        isCocciHistory: Bool,
+        birdsMarginHistory: String,
+        birdsMarginSummary: String,
+        ageMarginHistory: String,
+        ageMarginSummary: String
+    ) -> String {
+        var metrics: [String: Metric] = [
+            "FP": Metric(), "trac": Metric(), "TD": Metric(), "Bone": Metric(), "air": Metric(),
+            "ge": Metric(), "pro": Metric(), "enterties": Metric(), "BLS": Metric()
+        ]
+        var simpleMetrics: [String: Float] = [
+            "Intestinal": 0, "Thin_Intestine": 0, "Muscular": 0, "amonia": 0, "mouth": 0,
+            "FHN": 0, "Rick": 0, "Syno": 0, "Bursa": 0, "IP": 0, "retained": 0, "litter": 0,
+            "tape": 0, "round": 0, "feed": 0, "feed_P": 0, "pericarditis": 0, "septicemia": 0,
+            "Liver_Granuloma": 0, "Active_Bursa": 0
+        ]
+        var reportData = ReportData()
+        var allItems = ""
+        let lngId = UserDefaults.standard.integer(forKey: "lngId")
+        let meanArray = AllValidSessions.sharedInstance.meanValues as! [[AnyObject]]
+        
+        for i in 0...items.count {
+            if i < items.count {
+                allItems += processSingleItem(
+                    item: items[i],
+                    index: i,
+                    metrics: &metrics,
+                    simpleMetrics: &simpleMetrics,
+                    reportData: &reportData,
+                    template: singleItemTemplate,
+                    meanArray: meanArray,
+                    lngId: lngId,
+                    isCocciHistory: isCocciHistory,
+                    birdsMarginHistory: birdsMarginHistory,
+                    birdsMarginSummary: birdsMarginSummary,
+                    ageMarginHistory: ageMarginHistory,
+                    ageMarginSummary: ageMarginSummary
+                )
+            } else {
+                allItems += processLastItem(
+                    metrics: metrics,
+                    simpleMetrics: simpleMetrics,
+                    reportData: reportData,
+                    template: lastItemTemplate,
+                    lngId: lngId,
+                    isCocciHistory: isCocciHistory,
+                    birdsMarginHistory: birdsMarginHistory,
+                    birdsMarginSummary: birdsMarginSummary,
+                    ageMarginHistory: ageMarginHistory,
+                    ageMarginSummary: ageMarginSummary
+                )
+            }
+        }
+        
+        return allItems
+    }
+
+    func processSingleItem(
+        item: [String: AnyObject],
+        index: Int,
+        metrics: inout [String: Metric],
+        simpleMetrics: inout [String: Float],
+        reportData: inout ReportData,
+        template: String,
+        meanArray: [[AnyObject]],
+        lngId: Int,
+        isCocciHistory: Bool,
+        birdsMarginHistory: String,
+        birdsMarginSummary: String,
+        ageMarginHistory: String,
+        ageMarginSummary: String
+    ) -> String {
+        guard let content = try? String(contentsOfFile: template, encoding: .utf8) else { return "" }
+        var result = content
+        let metricKeys = ["FP", "trac", "TD", "Bone", "air", "ge", "pro", "enterties", "BLS"]
+        let meanPlaceholders = [
+            "#Foot_Pad_Lesions_Mean#", "#Tracheitis_Mean#", "#Tibial_Dyschondroplasia_Mean#",
+            "#boneStrength_Mean#", "#air_Sac_Mean#", "#gizzard_Erosions_Mean#",
+            "#proventriculitis_Mean#", "#enterties_Mean#", "#bursaLesionScore_Mean#"
+        ]
+        
+        // Replace margins
+        result = result.replacingOccurrences(of: "margin-left:-40px;", with: isCocciHistory ? birdsMarginHistory : SingleItemBirdsMargin(countryID: Regions.countryId))
+        result = result.replacingOccurrences(of: "margin-left: -20px;", with: isCocciHistory ? ageMarginHistory : SingleItemAgeMargin(countryID: Regions.countryId))
+        
+        // Update and replace metrics
+        var meanIndex = 0
+        for (key, placeholder) in zip(metricKeys, meanPlaceholders) {
+            let value = item[key]?.floatValue ?? 0
+            let meanValue = (meanArray[index][meanIndex] as? Float) ?? 0
+            metrics[key]!.update(with: value, meanValue: meanValue.isNaN ? 0 : meanValue)
+            result = result.replacingOccurrences(of: "#\(key)#", with: String(format: "%.1f", value))
+            result = result.replacingOccurrences(of: placeholder, with: String(format: "%.1f", meanValue.isNaN ? 0 : meanValue))
+            meanIndex += 1
+            if key == "trac" || key == "TD" || key == "ge" { meanIndex += 1 }
+        }
+        
+        // Update and replace simple metrics
+        for (key, _) in simpleMetrics {
+            let value = item[key]?.floatValue ?? 0
+            simpleMetrics[key]! += value
+            result = result.replacingOccurrences(of: "#\(key)#", with: String(format: "%.1f", value))
+        }
+        
+        // Handle special cases
+        result = result.replacingOccurrences(of: "#FarmName#", with: isCocciHistory ? (item["sessionDate"] as? String ?? "") : (item["farmName"] as? String ?? ""))
+        result = result.replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.noneDisplay : "")
+        result = result.replacingOccurrences(of: "#birds#", with: item["birds"] as? String ?? "0")
+        result = result.replacingOccurrences(of: "#MeanAge#", with: item["meanAge"] as? String ?? "0")
+        result = result.replacingOccurrences(of: "#Sick#", with: (item["isSick"]?.intValue ?? 0) == 0 ? "" : "checked")
+        
+        // Update report data
+        reportData.birdsTotal += (item["birds"]?.intValue ?? 0)
+        reportData.birdsTotalSpliter += (item["birds"]?.intValue ?? 0)
+        reportData.meanAge += (item["meanAge"]?.floatValue ?? 0)
+        reportData.meanAgeSpliter += (item["meanAge"]?.floatValue ?? 0)
+        reportData.indexSpliter += 1
+        
+        // Handle age splitting
+        if !isCocciHistory {
+            result = handleAgeSplitting(
+                content: result,
+                item: item,
+                index: index,
+                items: [item],
+                metrics: &metrics,
+                simpleMetrics: &simpleMetrics,
+                reportData: &reportData,
+                lngId: lngId
+            )
+        } else {
+            result = result.replacingOccurrences(of: "#display#", with: Constants.noneDisplay)
+        }
+        
+        return result
+    }
+
+    func handleAgeSplitting(
+        content: String,
+        item: [String: AnyObject],
+        index: Int,
+        items: [[String: AnyObject]],
+        metrics: inout [String: Metric],
+        simpleMetrics: inout [String: Float],
+        reportData: inout ReportData,
+        lngId: Int
+    ) -> String {
+        var result = content
+        let meanAge = item["meanAge"]?.intValue ?? 0
+        let ageRanges = [
+            (0...13, "01 - 13 Days"),
+            (14...24, "14 - 24 Days"),
+            (25...32, "25 - 32 Days"),
+            (33...41, "33 - 41 Days"),
+            (42...80, "42 days or older")
+        ]
+        
+        let shouldSplit = ageRanges.contains { range, _ in
+            range.contains(meanAge) && (index == items.count - 1 || items[index + 1]["meanAge"]?.intValue ?? 0 > range.upperBound)
+        }
+        
+        if shouldSplit || index == items.count - 1 {
+            let ageLabel = ageRanges.first { $0.0.contains(meanAge) }?.1 ?? "Unknown"
+            result = result.replacingOccurrences(of: Constants.complexTotal, with: ageLabel)
+            result = result.replacingOccurrences(of: "#display#", with: "")
+            
+            // Replace totals
+            result = replaceTotals(
+                content: result,
+                metrics: metrics,
+                simpleMetrics: simpleMetrics,
+                reportData: reportData,
+                lngId: lngId
+            )
+            
+            // Reset spliter values
+            for key in metrics.keys { metrics[key]!.resetSpliter() }
+            for key in simpleMetrics.keys { simpleMetrics[key]! = 0 }
+            reportData.birdsTotalSpliter = 0
+            reportData.meanAgeSpliter = 0
+            reportData.indexSpliter = 0
+            reportData.indexTotal += 1
+        } else {
+            result = result.replacingOccurrences(of: "#display#", with: Constants.noneDisplay)
+        }
+        
+        return result
+    }
+
+    func processLastItem(
+        metrics: [String: Metric],
+        simpleMetrics: [String: Float],
+        reportData: ReportData,
+        template: String,
+        lngId: Int,
+        isCocciHistory: Bool,
+        birdsMarginHistory: String,
+        birdsMarginSummary: String,
+        ageMarginHistory: String,
+        ageMarginSummary: String
+    ) -> String {
+        guard let content = try? String(contentsOfFile: template, encoding: .utf8) else { return "" }
+        var result = content
+        
+        result = result.replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.noneDisplay : "")
+        result = result.replacingOccurrences(of: "margin-left:-40px;", with: isCocciHistory ? birdsMarginHistory : birdsMarginSummary)
+        result = result.replacingOccurrences(of: "margin-left: -20px;", with: isCocciHistory ? ageMarginHistory : ageMarginSummary)
+        result = result.replacingOccurrences(of: "margin-left:-140px", with: isCocciHistory ? "margin-left:-180px" : "margin-left:-140px")
+        
+        result = result.replacingOccurrences(of: "#TotalBirds#", with: String(reportData.birdsTotal))
+        result = result.replacingOccurrences(of: "#MeanAge#", with: String(format: "%.0f", round(reportData.meanAge / Float(reportData.indexTotal))))
+        
+        return replaceTotals(
+            content: result,
+            metrics: metrics,
+            simpleMetrics: simpleMetrics,
+            reportData: reportData,
+            lngId: lngId
+        )
+    }
+
+    func replaceTotals(
+        content: String,
+        metrics: [String: Metric],
+        simpleMetrics: [String: Float],
+        reportData: ReportData,
+        lngId: Int
+    ) -> String {
+        var result = content
+        let count = reportData.indexSpliter > 0 ? reportData.indexSpliter : Float(reportData.indexTotal)
+        // Simple metrics
+        let simpleKeys = [
+            ("Intestinal", "#Intestinal_TOTAL#"), ("Thin_Intestine", "#Thin_TOTAL#"),
+            ("Muscular", "#MuscularHemorrhages_TOTAL#"), ("amonia", "#amonia_TOTAL#"),
+            ("mouth", "#mouth_TOTAL#"), ("FHN", "#FHN_TOTAL#"), ("Rick", "#Rick_TOTAL#"),
+            ("Syno", "#Syno_TOTAL#"), ("Bursa", "#Bursa_TOTAL#"), ("IP", "#IP_TOTAL#"),
+            ("retained", "#retained_TOTAL#"), ("litter", "#litter_TOTAL#"), ("ge", "#ge_TOTAL#"),
+            ("pro", "#pro_TOTAL#"), ("tape", "#tape_TOTAL#"), ("round", "#round_TOTAL#"),
+            ("feed", "#feed_TOTAL#"), ("feed_P", "#feed_P_TOTAL#"), ("enterties", "#enterties_TOTAL#"),
+            ("BLS", "#bursaLesionSize_TOTAL#")
+        ]
+        for (key, placeholder) in simpleKeys {
+            let value = simpleMetrics[key]! / count
+            result = result.replacingOccurrences(of: placeholder, with: String(format: "%.1f", key == "Bursa" && value == 0 ? 4 : value))
+        }
+        
+        // Conditional metrics for lngId == 1
+        if lngId == 1 {
+            let conditionalKeys = [
+                ("pericarditis", "#pericarditis_TOTAL#"), ("septicemia", "#septicemia_TOTAL#"),
+                ("Liver_Granuloma", "#Liver_Granuloma_TOTAL#"), ("Active_Bursa", "#Active_Bursa_TOTAL#")
+            ]
+            for (key, placeholder) in conditionalKeys {
+                result = result.replacingOccurrences(of: placeholder, with: String(format: "%.1f", simpleMetrics[key]! / count))
+            }
+        }
+        
+        // Complex metrics
+        let metricKeys = [
+            ("FP", "#FP_TOTAL#", "#Foot_Pad_Lesions_Mean_Total#"),
+            ("trac", "#trac_TOTAL#", "#Tracheitis_Mean_Total#"),
+            ("TD", "#TD_TOTAL#", "#Tibial_Dyschondroplasia_Mean_Total#"),
+            ("Bone", "#Bone_TOTAL#", "#boneStrength_Mean_Total#"),
+            ("air", "#air_TOTAL#", "#air_Sac_Mean_Total#"),
+            ("ge", "#ge_TOTAL#", "#gizzard_Erosions_Mean_Total#"),
+            ("pro", "#pro_TOTAL#", "#proventriculitis_Mean_Total#"),
+            ("enterties", "#enterties_TOTAL#", "#enterties_Mean_Total#"),
+            ("BLS", "#bursaLesionSize_TOTAL#", "#bursaLesionSize_Mean_Total#")
+        ]
+        for (key, totalPlaceholder, meanPlaceholder) in metricKeys {
+            let metric = metrics[key]!
+            result = result.replacingOccurrences(of: totalPlaceholder, with: String(format: "%.1f", metric.spliterTotal / count))
+            let meanValue = metric.spliterMean / (metric.spliterMeanBirds > 0 ? metric.spliterMeanBirds : 1)
+            result = result.replacingOccurrences(of: meanPlaceholder, with: String(format: "%.1f", meanValue.isNaN ? 0 : meanValue))
+        }
+        
+        result = result.replacingOccurrences(of: "#TotalBirds#", with: String(reportData.birdsTotalSpliter))
+        result = result.replacingOccurrences(of: "#MeanAgeTotal#", with: String(format: "%.0f", round(reportData.meanAgeSpliter / count)))
+        
+        return result
+    }
+
+//    struct Regions {
+//        static let countryId: String = "US"
+//        static let languageID: String = "EN"
+//    }
+
+    struct Constants {
+        static let leftMargin: String = "0px"
+        static let displayNone: String = "display:none"
+        static let noneDisplay: String = ""
+        static let complexTotal: String = "#complexTotal#"
+    }
+
+    class AllValidSessions {
+        static let sharedInstance = AllValidSessions()
+        var meanValues: NSMutableArray = []
+    }
+
+    func SingleItemBirdsMargin(countryID: String) -> String { "0px" }
+    func SingleItemAgeMargin(countryID: String) -> String { "0px" }
+    
     
     func exportHTMLContentToPDF(HTMLContent: String) {
         

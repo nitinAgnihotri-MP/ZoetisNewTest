@@ -1139,10 +1139,30 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
         return ackPart
     }
     
-    fileprivate func handleCurrentCertificationAndCertIdValidations(_ cell: AcknowledgementTableViewCell) -> UITableViewCell {
-        if curentCertification?.certificationCategoryId == "2"{
+    fileprivate func handleSelectedEmpIndexAndEmpIdArrValidations(_ cell: AcknowledgementTableViewCell) {
+        if selectedEmpIndex == (employeesAddedArr.count){
+            var emp = VaccinationEmployeeVM()
+            emp.firstName = UserContext.sharedInstance.userDetailsObj?.firstname
+            emp.lastName = UserContext.sharedInstance.userDetailsObj?.lastName
             
-            if  selectedEmpIndex == (employeesAddedArr.count + 1) {
+            cell.acknowledgementLbl.text = getAcknowldgementLblTxt(empobj: emp)
+            if self.curentCertification?.certificationCategoryId == "1"{
+                cell.acknowledgementLbl.text = getSafwetyAckTxt(empobj: emp)
+            }
+        }
+        if employeesAddedArr.count > 0 && employeesAddedArr.count > selectedEmpIndex && selectedEmpIndex > -1{
+            var emp =  VaccinationEmployeeVM()
+            emp.firstName = UserContext.sharedInstance.userDetailsObj?.firstname
+            emp.lastName = UserContext.sharedInstance.userDetailsObj?.lastName
+            cell.acknowledgementLbl.text = getAcknowldgementLblTxt(empobj: emp)
+            
+        }
+    }
+    
+    fileprivate func handleCurrentCertificationAndCertIdValidations(_ cell: AcknowledgementTableViewCell) -> UITableViewCell {
+        if curentCertification?.certificationCategoryId == "2" {
+            
+            if selectedEmpIndex == (employeesAddedArr.count + 1) {
                 var emp = VaccinationEmployeeVM()
                 emp.firstName = UserContext.sharedInstance.userDetailsObj?.firstname
                 emp.lastName = UserContext.sharedInstance.userDetailsObj?.lastName
@@ -1152,25 +1172,9 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                     cell.acknowledgementLbl.text = getSafwetyAckTxt(empobj: emp)
                 }
             }
-            if selectedEmpIndex == (employeesAddedArr.count){
-                var emp = VaccinationEmployeeVM()
-                emp.firstName = UserContext.sharedInstance.userDetailsObj?.firstname
-                emp.lastName = UserContext.sharedInstance.userDetailsObj?.lastName
-                
-                cell.acknowledgementLbl.text = getAcknowldgementLblTxt(empobj: emp)
-                if self.curentCertification?.certificationCategoryId == "1"{
-                    cell.acknowledgementLbl.text = getSafwetyAckTxt(empobj: emp)
-                }
-            }
-            if employeesAddedArr.count > 0 && employeesAddedArr.count > selectedEmpIndex && selectedEmpIndex > -1{
-                var emp =  VaccinationEmployeeVM()
-                emp.firstName = UserContext.sharedInstance.userDetailsObj?.firstname
-                emp.lastName = UserContext.sharedInstance.userDetailsObj?.lastName
-                cell.acknowledgementLbl.text = getAcknowldgementLblTxt(empobj: emp)
-                
-            }
-        } else{
-            if  selectedEmpIndex == (employeesAddedArr.count + 1) {
+            handleSelectedEmpIndexAndEmpIdArrValidations(cell)
+        } else {
+            if selectedEmpIndex == (employeesAddedArr.count + 1) {
                 var emp = VaccinationEmployeeVM()
                 emp.firstName = UserContext.sharedInstance.userDetailsObj?.firstname
                 emp.lastName = UserContext.sharedInstance.userDetailsObj?.lastName
@@ -1220,118 +1224,16 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
         }
     }
     
-    fileprivate func handleCurrentCertificationEmployeIdArrValidation(_ cell: SignatureTableViewCell) {
-        cell.curentCertification = curentCertification
-        if cell.employeesAddedArr.count == 0 {
-            cell.employeesAddedArr = employeesAddedArr
-            cell.empIndex = 0
-            if cell.empIndex > -1 && cell.empIndex == employeesAddedArr.count + 1 {
-                var fullName = ""
-                let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
-                fullName = firstname ?? ""
-                let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
-                if lastName != nil && lastName != ""{
-                    fullName = firstname ?? "" +  " " + (lastName ?? "")
-                }
-                cell.deviceOperatorNamebl.text  = "Vaccine Mixer Name: \(fullName)"
-                if curentCertification?.fsrSignature != nil && !(curentCertification?.fsrSignature!.isEmpty)!{
-                    cell.hideShowImgVw(false)
-                    cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.fsrSignature!)! )
-                }else{
-                    if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                        cell.clearBtn.isHidden = true
-                        cell.hideShowImgVw(true)
-                    }else{
-                        cell.clearBtn.isHidden = false
-                        
-                        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                            cell.clearBtn.isHidden = true
-                            cell.hideShowImgVw(false)
-                        }else{
-                            cell.clearBtn.isHidden = false
-                        }
-                    }
-                    
-                    cell.hideShowImgVw(true)
-                }
-                cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
-                cell.operatorSignLbl.text = cell.operatorSignLbl.text ?? "" + "*"
-                cell.nextBtn.isEnabled = false
-                cell.nextBtn.isUserInteractionEnabled = false
-                cell.nextBtn.isHidden = true
-                cell.previousBtn.isEnabled = true
-                cell.previousBtn.isUserInteractionEnabled = true
-                cell.previousBtn.isHidden = false
-            }
-            if cell.empIndex > -1 && cell.empIndex == employeesAddedArr.count {
-                cell.operatorSignLbl.text = "Hatchery Manager"
-                cell.nextBtn.isEnabled = true
-                cell.nextBtn.isUserInteractionEnabled = true
-                cell.nextBtn.isHidden = false
-                if employeesAddedArr.count > 0{
-                    
-                    cell.previousBtn.isEnabled = true
-                    cell.previousBtn.isUserInteractionEnabled = true
-                    cell.previousBtn.isHidden = false
-                }else{
-                    cell.previousBtn.isEnabled = false
-                    cell.previousBtn.isUserInteractionEnabled = false
-                    cell.previousBtn.isHidden = true
-                }
-                if curentCertification?.fsmName != nil{
-                    cell.deviceOperatorNamebl.text  = "Hatchery Manager Name: \( curentCertification?.fsmName ?? "")"
-                }
-                if curentCertification?.hatcheryManagerSign != nil && !(curentCertification?.hatcheryManagerSign!.isEmpty)!{
-                    cell.signView.clearCanvas()
-                    cell.hideShowImgVw(false)
-                    cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.hatcheryManagerSign!)! )
-                }
-                else{
-                    cell.hideShowImgVw(true)
-                    if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                        cell.clearBtn.isHidden = true
-                        cell.hideShowImgVw(false)
-                    }else{
-                        cell.clearBtn.isHidden = false
-                    }
-                }
-            }
-            
-            if cell.empIndex > 0 && cell.empIndex < employeesAddedArr.count {
-                print(appDelegateObj.testFuntion())
-            }
-            
-            
-            //---*********************
-            if employeesAddedArr.count  > 0{
-                cell.empIndex = 0
-                
-                cell.deviceOperatorNamebl.text = cell.getEmpName(empobj: cell.employeesAddedArr[cell.empIndex])
-                let emp = employeesAddedArr[cell.empIndex]
-                if emp.signBase64 != nil && !emp.signBase64!.isEmpty{
-                    cell.hideShowImgVw(false)
-                    cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:emp.signBase64! )
-                }else{
-                    cell.hideShowImgVw(true)
-                    if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                        cell.clearBtn.isHidden = true
-                        cell.hideShowImgVw(false)
-                    }else{
-                        cell.clearBtn.isHidden = false
-                    }
-                }
-            }
-        }
-        if cell.empIndex == 0{
-            cell.previousBtn.isHidden = true
-        }
-        
+    fileprivate func handleEmpIndexEmployeedAddedValidations(_ cell: SignatureTableViewCell) {
         if cell.empIndex > -1 && cell.empIndex == employeesAddedArr.count + 1 {
-            
+            var fullName = ""
             let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
+            fullName = firstname ?? ""
             let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
-            var fullName = firstname! + " " + (lastName ?? "") ?? ""
-            cell.deviceOperatorNamebl.text = "Field Service Technician: \(fullName)"
+            if lastName != nil && lastName != ""{
+                fullName = firstname ?? "" +  " " + (lastName ?? "")
+            }
+            cell.deviceOperatorNamebl.text  = "Vaccine Mixer Name: \(fullName)"
             if curentCertification?.fsrSignature != nil && !(curentCertification?.fsrSignature!.isEmpty)!{
                 cell.hideShowImgVw(false)
                 cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.fsrSignature!)! )
@@ -1348,10 +1250,148 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
                     }else{
                         cell.clearBtn.isHidden = false
                     }
-                    
                 }
                 
                 cell.hideShowImgVw(true)
+            }
+            cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
+            cell.operatorSignLbl.text = cell.operatorSignLbl.text ?? "" + "*"
+            cell.nextBtn.isEnabled = false
+            cell.nextBtn.isUserInteractionEnabled = false
+            cell.nextBtn.isHidden = true
+            cell.previousBtn.isEnabled = true
+            cell.previousBtn.isUserInteractionEnabled = true
+            cell.previousBtn.isHidden = false
+        }
+    }
+    
+    fileprivate func handleEmployeeAddedArrCountValidations(_ cell: SignatureTableViewCell) {
+        cell.empIndex = 0
+        
+        cell.deviceOperatorNamebl.text = cell.getEmpName(empobj: cell.employeesAddedArr[cell.empIndex])
+        let emp = employeesAddedArr[cell.empIndex]
+        if emp.signBase64 != nil && !emp.signBase64!.isEmpty{
+            cell.hideShowImgVw(false)
+            cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:emp.signBase64! )
+        }else{
+            cell.hideShowImgVw(true)
+            if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
+                cell.clearBtn.isHidden = true
+                cell.hideShowImgVw(false)
+            }else{
+                cell.clearBtn.isHidden = false
+            }
+        }
+    }
+    
+    fileprivate func handleCurrentcertificationsFmsNameValidations(_ cell: SignatureTableViewCell) {
+        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
+            cell.clearBtn.isHidden = true
+            cell.hideShowImgVw(true)
+        } else {
+            cell.clearBtn.isHidden = false
+            if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
+                cell.clearBtn.isHidden = true
+                cell.hideShowImgVw(false)
+            } else {
+                cell.clearBtn.isHidden = false
+            }
+        }
+        cell.hideShowImgVw(true)
+    }
+    
+    fileprivate func handleEmployeesAddedArrValidations(_ cell: SignatureTableViewCell) {
+        if employeesAddedArr.count > 0 {
+            cell.previousBtn.isEnabled = true
+            cell.previousBtn.isUserInteractionEnabled = true
+            cell.previousBtn.isHidden = false//
+        } else {
+            cell.previousBtn.isEnabled = false
+            cell.previousBtn.isUserInteractionEnabled = false
+            cell.previousBtn.isHidden = true
+        }
+    }
+    
+    fileprivate func handlecurentCertificationHatcheryManagerSignValidations(_ cell: SignatureTableViewCell) {
+        if curentCertification?.hatcheryManagerSign != nil && !(curentCertification?.hatcheryManagerSign!.isEmpty)!{
+            cell.hideShowImgVw(false)
+            cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.hatcheryManagerSign!)! )
+        } else {
+            cell.hideShowImgVw(true)
+            if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
+                cell.clearBtn.isHidden = true
+                cell.hideShowImgVw(false)
+            } else {
+                cell.clearBtn.isHidden = false
+            }
+        }
+    }
+    
+    fileprivate func handleCertifiationsStatusCertificationEmpIdArrValidation(_ cell: SignatureTableViewCell) {
+        cell.hideShowImgVw(true)
+        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
+            cell.clearBtn.isHidden = true
+            cell.hideShowImgVw(false)
+        } else {
+            cell.clearBtn.isHidden = false
+        }
+    }
+    
+    fileprivate func handleEmpIndexAndEmpAddedArrAndCellUIConfigure(_ cell: SignatureTableViewCell) {
+        if cell.empIndex > -1 && cell.empIndex == employeesAddedArr.count {
+            cell.operatorSignLbl.text = "Hatchery Manager"
+            cell.nextBtn.isEnabled = true
+            cell.nextBtn.isUserInteractionEnabled = true
+            cell.nextBtn.isHidden = false
+            if employeesAddedArr.count > 0 {
+                cell.previousBtn.isEnabled = true
+                cell.previousBtn.isUserInteractionEnabled = true
+                cell.previousBtn.isHidden = false
+            } else {
+                cell.previousBtn.isEnabled = false
+                cell.previousBtn.isUserInteractionEnabled = false
+                cell.previousBtn.isHidden = true
+            }
+            if curentCertification?.fsmName != nil{
+                cell.deviceOperatorNamebl.text  = "Hatchery Manager Name: \( curentCertification?.fsmName ?? "")"
+            }
+            if curentCertification?.hatcheryManagerSign != nil && !(curentCertification?.hatcheryManagerSign!.isEmpty)!{
+                cell.signView.clearCanvas()
+                cell.hideShowImgVw(false)
+                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.hatcheryManagerSign!)! )
+            } else {
+                handleCertifiationsStatusCertificationEmpIdArrValidation(cell)
+            }
+        }
+    }
+    
+    fileprivate func handleCurrentCertificationEmployeIdArrValidation(_ cell: SignatureTableViewCell) {
+        cell.curentCertification = curentCertification
+        if cell.employeesAddedArr.count == 0 {
+            cell.employeesAddedArr = employeesAddedArr
+            cell.empIndex = 0
+            handleEmpIndexEmployeedAddedValidations(cell)
+            handleEmpIndexAndEmpAddedArrAndCellUIConfigure(cell)
+            
+            if employeesAddedArr.count > 0 {
+                handleEmployeeAddedArrCountValidations(cell)
+            }
+        }
+        if cell.empIndex == 0 {
+            cell.previousBtn.isHidden = true
+        }
+        
+        if cell.empIndex > -1 && cell.empIndex == employeesAddedArr.count + 1 {
+            
+            let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
+            let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
+            var fullName = firstname! + " " + (lastName ?? "") ?? ""
+            cell.deviceOperatorNamebl.text = "Field Service Technician: \(fullName)"
+            if curentCertification?.fsrSignature != nil && !(curentCertification?.fsrSignature!.isEmpty)!{
+                cell.hideShowImgVw(false)
+                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.fsrSignature!)! )
+            } else {
+                handleCurrentcertificationsFmsNameValidations(cell)
             }
             cell.operatorSignLbl.text = "Field Service Technician Signature*"
             cell.operatorSignLbl.text = cell.operatorSignLbl.text ?? "" + "*"
@@ -1362,45 +1402,20 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
             cell.previousBtn.isUserInteractionEnabled = true
             cell.previousBtn.isHidden = false
         }
-        if cell.empIndex > -1 && cell.empIndex == employeesAddedArr.count{
+        if cell.empIndex > -1 && cell.empIndex == employeesAddedArr.count {
             cell.operatorSignLbl.text = "Hatchery Manager Signature*"
             cell.nextBtn.isEnabled = true
             cell.nextBtn.isUserInteractionEnabled = true
             cell.nextBtn.isHidden = false
-            if employeesAddedArr.count > 0{
-                
-                cell.previousBtn.isEnabled = true
-                cell.previousBtn.isUserInteractionEnabled = true
-                cell.previousBtn.isHidden = false//
-            }else{
-                cell.previousBtn.isEnabled = false
-                cell.previousBtn.isUserInteractionEnabled = false
-                cell.previousBtn.isHidden = true
-            }
+            handleEmployeesAddedArrValidations(cell)
             
-            if curentCertification?.fsmName != nil{
+            if curentCertification?.fsmName != nil {
                 cell.deviceOperatorNamebl.text  = "Hatchery Manager Name: \( curentCertification?.fsmName ?? "")"
             }
-            if curentCertification?.hatcheryManagerSign != nil && !(curentCertification?.hatcheryManagerSign!.isEmpty)!{
-                cell.hideShowImgVw(false)
-                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.hatcheryManagerSign!)! )
-            }else{
-                cell.hideShowImgVw(true)
-                if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                    cell.clearBtn.isHidden = true
-                    cell.hideShowImgVw(false)
-                }else{
-                    cell.clearBtn.isHidden = false
-                }
-            }
+            handlecurentCertificationHatcheryManagerSignValidations(cell)
         }
         
-        if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-            cell.clearBtn.isHidden = true
-        }else{
-            cell.clearBtn.isHidden = false
-        }
-        
+        cell.clearBtn.isHidden = curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue
         cell.setConstraint()
         cell.operatorSignLbl.text = cell.operatorSignLbl.text ?? "" + "*"
     }
@@ -1411,28 +1426,42 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
             if curentCertification?.hatcheryManagerSign != nil  && !(curentCertification?.hatcheryManagerSign?.isEmpty)!{
                 cell.hideShowImgVw(false)
                 cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.hatcheryManagerSign!)! )
-            }else{
+            } else {
                 cell.hideShowImgVw(true)
             }
-            if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                cell.clearBtn.isHidden = true
-            }else{
-                cell.clearBtn.isHidden = false
-            }
-            
+            cell.clearBtn.isHidden = curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue
         } else if indexPath.row == 3 {
             cell.operatorSignLbl.text = "Vaccine Mixer Signature*"
             cell.operatorSignLbl.text = cell.operatorSignLbl.text  ?? "" + "*"
-            if curentCertification?.fsrSignature != nil  && !(curentCertification?.fsrSignature?.isEmpty)!{
+            if curentCertification?.fsrSignature != nil  && !(curentCertification?.fsrSignature?.isEmpty)! {
                 cell.hideShowImgVw(false)
-                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.fsrSignature!)! )
-            }else{
+                cell.signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64:(curentCertification?.fsrSignature!)!)
+            } else {
                 cell.hideShowImgVw(true)
             }
-            if curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                cell.clearBtn.isHidden = true
-            }else{
-                cell.clearBtn.isHidden = false
+            cell.clearBtn.isHidden = curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue
+        }
+    }
+    
+    fileprivate func handleCommentCompletedValidationsInternalMethod(_ cell: QuestionnaireTableViewCell,_ vc: CommentPopupViewController, _ questionObj: VaccinationQuestionVM?) {
+        var questionObjCopy = questionObj
+        vc.commentCompleted = {[unowned self] ( note) in
+            if note == "" {
+                let image = UIImage(named: Constants.peCommentImageStr)
+                cell.commentBtn.setImage(image, for: .normal)
+                
+            } else {
+                let image = UIImage(named: Constants.peCommentSelectedStr)
+                cell.commentBtn.setImage(image, for: .normal)
+                
+            }
+            if questionObjCopy?.userComments != note, self.curentCertification?.certificationStatus != VaccinationCertificationStatus.submitted.rawValue {
+                self.markSyncReady()
+            }
+            questionObjCopy?.userComments = note ?? ""
+            if questionObj != nil {
+                UserFilledQuestionnaireDAO.sharedInstance.updateQuestionUserResponse(vmObj: questionObjCopy!)
+                self.updateCurrentindex(sectionIndex: self.tableviewIndexPath.section, rowIndex: self.tableviewIndexPath.row, questionObj: questionObjCopy!)
             }
         }
     }
@@ -1449,30 +1478,8 @@ extension QuestionnaireVC:UITableViewDataSource, UITableViewDelegate{
             let storyBoard : UIStoryboard = UIStoryboard(name: "PEStoryboard", bundle:nil)
             let vc = storyBoard.instantiateViewController(withIdentifier: "CommentPopupViewController") as! CommentPopupViewController
             vc.textOfTextView = comments
-            if self.curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue{
-                vc.editable = false
-            } else{
-                vc.editable = true
-            }
-            vc.commentCompleted = {[unowned self] ( note) in
-                if note == "" {
-                    let image = UIImage(named: Constants.peCommentImageStr)
-                    cell.commentBtn.setImage(image, for: .normal)
-                    
-                } else {
-                    let image = UIImage(named: Constants.peCommentSelectedStr)
-                    cell.commentBtn.setImage(image, for: .normal)
-                    
-                }
-                if questionObj?.userComments != note, self.curentCertification?.certificationStatus != VaccinationCertificationStatus.submitted.rawValue {
-                    self.markSyncReady()
-                }
-                questionObj?.userComments = note ?? ""
-                if questionObj != nil {
-                    UserFilledQuestionnaireDAO.sharedInstance.updateQuestionUserResponse(vmObj: questionObj!)
-                    self.updateCurrentindex(sectionIndex: self.tableviewIndexPath.section, rowIndex: self.tableviewIndexPath.row, questionObj: questionObj!)
-                }
-            }
+            vc.editable = !(self.curentCertification?.certificationStatus == VaccinationCertificationStatus.submitted.rawValue)
+            handleCommentCompletedValidationsInternalMethod(cell,vc, questionObj)
             if vc.editable {
                 self.navigationController?.present(vc, animated: false, completion: nil)
             } else {

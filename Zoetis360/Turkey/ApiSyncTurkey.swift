@@ -485,6 +485,46 @@ class ApiSyncTurkey: NSObject {
         handleIfWebConnectedAndCallAPI(sessionDictMain)
     }
     
+    fileprivate func handleAddVaccinationAllVaccinationNameValidations(_ addVacinationAll: NSArray, _ vaccinationName: inout String, _ vaccinationDetail: inout NSMutableDictionary) {
+        for i in 0..<addVacinationAll.count {
+            let pSession = addVacinationAll.object(at: i) as! FieldVaccinationTurkey
+            vaccinationName = pSession.vaciNationProgram!
+            let routeName = pSession.route
+            var routeId = NSNumber()
+            if routeName == Constants.drinkingWater {
+                routeId = 2
+            }
+            else if routeName == Constants.wingWeb {
+                routeId = 1
+            }
+            else if routeName == Constants.spray {
+                routeId = 3
+            }
+            else if routeName == Constants.inOvoStr {
+                routeId = 4
+            }
+            else if routeName == "Subcutaneous" {
+                routeId = 5
+            }
+            else if routeName == "Intramuscular" {
+                routeId = 6
+            }
+            else  if  routeName == Constants.eveDrop{
+                routeId = 7
+            }
+            else{
+                routeId = 0
+            }
+            
+            var strain = pSession.strain!
+            let strainKey = "hatcheryStrain\(i + 1)"
+            let routeKey = "hatcheryRoute\(i+1)Id"
+            
+            vaccinationDetail.setObject(strain, forKey: strainKey as NSCopying)
+            vaccinationDetail.setObject(routeId, forKey: routeKey as NSCopying)
+        }
+    }
+    
     fileprivate func handlepostingIdValidationsAddVaccination(_ tempArrTime: NSMutableArray, _ sessionArr: NSMutableArray) {
         for i in 0..<self.postingIdArr.count {
             
@@ -494,44 +534,8 @@ class ApiSyncTurkey: NSObject {
                 let addVacinationAll = CoreDataHandlerTurkey().fetchFieldAddvacinationDataWithisSyncTrueTurkey(pId , isSync : true)
                 var vaccinationName = String ()
                 
-                let vaccinationDetail = NSMutableDictionary()
-                for i in 0..<addVacinationAll.count {
-                    let pSession = addVacinationAll.object(at: i) as! FieldVaccinationTurkey
-                    vaccinationName = pSession.vaciNationProgram!
-                    let routeName = pSession.route
-                    var routeId = NSNumber()
-                    if routeName == Constants.drinkingWater {
-                        routeId = 2
-                    }
-                    else if routeName == Constants.wingWeb {
-                        routeId = 1
-                    }
-                    else if routeName == Constants.spray {
-                        routeId = 3
-                    }
-                    else if routeName == Constants.inOvoStr {
-                        routeId = 4
-                    }
-                    else if routeName == "Subcutaneous" {
-                        routeId = 5
-                    }
-                    else if routeName == "Intramuscular" {
-                        routeId = 6
-                    }
-                    else  if  routeName == Constants.eveDrop{
-                        routeId = 7
-                    }
-                    else{
-                        routeId = 0
-                    }
-                    
-                    var strain = pSession.strain!
-                    let strainKey = "hatcheryStrain\(i + 1)"
-                    let routeKey = "hatcheryRoute\(i+1)Id"
-                    
-                    vaccinationDetail .setObject(strain, forKey: strainKey as NSCopying)
-                    vaccinationDetail .setObject(routeId, forKey: routeKey as NSCopying)
-                }
+                var vaccinationDetail = NSMutableDictionary()
+                handleAddVaccinationAllVaccinationNameValidations(addVacinationAll, &vaccinationName, &vaccinationDetail)
                 
                 
                 let FieldVacinationAll = CoreDataHandlerTurkey().fetchAddvacinationDataWithisSyncTurkey(pId , isSync : true)
@@ -1241,55 +1245,44 @@ class ApiSyncTurkey: NSObject {
             }
         }
     }
-    fileprivate func handleSaveBirdmageSyncDataSuccessResponse(_ response: AFDataResponse<Any>, _ statusCode: Int?,cNecArr: NSArray) {
-        switch response.result {
-            
-        case .success(let responseObject):
-            
-            self.isSyncPostingArrWithData = false
-            self.isSyncPostingIdArr = false
-            self.isDelegateCalled = false
-            if cNecArr.count > 0 && self.postingIdArr.count == 0{
-                self.updadateNacDataOnCoreData(cNecArr: cNecArr, { (success) in
-                    if success == true{
-                        self.delegeteSyncApiTurkey.didFinishApi()
-                    }
-                })
+    fileprivate func handleSaveBirdImageSyncDataSuccessResponseUpdateNacDataOnCoreDataValidations(_ cNecArr: NSArray) {
+        if cNecArr.count > 0 && self.postingIdArr.count == 0 {
+            self.updadateNacDataOnCoreData(cNecArr: cNecArr, { (success) in
+                if success == true{
+                    self.delegeteSyncApiTurkey.didFinishApi()
+                }
+            })
+        } else if cNecArr.count > 0 && self.postingIdArr.count > 0 {
+            self.updateDataOnCoreData(cNecArr: cNecArr) { success in
+                if success {
+                    self.delegeteSyncApiTurkey.didFinishApi()
+                }
             }
-            else if cNecArr.count > 0 && self.postingIdArr.count > 0 {
-                self.updateDataOnCoreData(cNecArr: cNecArr) { success in
-                    if success {
+        } else if cNecArr.count == 0 && self.postingIdArr.count > 0 {
+            self.updateDataOnCoreData(cNecArr: cNecArr,{ (success) in
+                if success == true{
+                    if self.isDelegateCalled == false{
+                        self.isDelegateCalled = true
                         self.delegeteSyncApiTurkey.didFinishApi()
                     }
                 }
-            }
-            
-            
-            
-            else if cNecArr.count == 0 && self.postingIdArr.count > 0 {
-                self.updateDataOnCoreData(cNecArr: cNecArr,{ (success) in
-                    if success == true{
-                        if self.isDelegateCalled == false{
-                            self.isDelegateCalled = true
-                            self.delegeteSyncApiTurkey.didFinishApi()
-                            
-                        }
-                    }
-                })
-            }
-            
+            })
+        }
+    }
+    
+    fileprivate func handleSaveBirdmageSyncDataSuccessResponse(_ response: AFDataResponse<Any>, _ statusCode: Int?,cNecArr: NSArray) {
+        switch response.result {
+        case .success(let responseObject):
+            self.isSyncPostingArrWithData = false
+            self.isSyncPostingIdArr = false
+            self.isDelegateCalled = false
+            handleSaveBirdImageSyncDataSuccessResponseUpdateNacDataOnCoreDataValidations(cNecArr)
         case .failure(let encodingError):
-            
             if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                // no internet connection
                 self.delegeteSyncApiTurkey.failWithErrorInternal()
                 
             } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                // other failures
-                print (encodingError)
-                print (responseString)
                 if let s = statusCode {
-                    
                     self.delegeteSyncApiTurkey.failWithError(statusCode: s)
                 } else {
                     self.delegeteSyncApiTurkey.failWithErrorInternal()

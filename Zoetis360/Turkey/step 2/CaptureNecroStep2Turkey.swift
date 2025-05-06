@@ -5215,7 +5215,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         }
     }
     
-    fileprivate func handleTurkeyBirdSexCompletionActionValidations(_ immune: CaptureNecropsyViewDataTurkey) {
+    fileprivate func handleTurkeyBirdSexCompletionActionValidations(_ indexPath: IndexPath,_ immune: CaptureNecropsyViewDataTurkey) {
         var necId = getNecId()
         let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
         
@@ -5283,7 +5283,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                     
                     if btnTag == 4 {
                         let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
-                        handleTurkeyBirdSexCompletionActionValidations(immune)
+                        handleTurkeyBirdSexCompletionActionValidations(indexPath, immune)
                     }
                     
                     handlePostingIdFromExistingPostingIdFromExistingNavigate()

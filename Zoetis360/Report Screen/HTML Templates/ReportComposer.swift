@@ -31,7 +31,34 @@ class ReportComposer: NSObject {
     var pdfFilename: String!
     
     var meanAge = Float()
-    
+    struct ReportTotals {
+        var birds: Int = 0
+        var meanAge: Float = 0
+        var ag: Float = 0
+        var mg: Float = 0
+        var mm: Float = 0
+        var tg: Float = 0
+        var agMean: Float = 0
+        var mgMean: Float = 0
+        var mmMean: Float = 0
+        var tgMean: Float = 0
+        var agMeanBirds: Float = 0
+        var mgMeanBirds: Float = 0
+        var mmMeanBirds: Float = 0
+        var tgMeanBirds: Float = 0
+    }
+
+    struct SplitFlags {
+        var needToSplit0114: Bool = false
+        var needToSplit1424: Bool = false
+        var needToSplit2532: Bool = false
+        var needToSplit3341: Bool = false
+        var needToSplit42: Bool = false
+        var isCheckSum: Bool = false
+        var isCheckSum1: Bool = false
+        var isCheckSum2: Bool = false
+        var isCheckSum3: Bool = false
+    }
     override init() {
         super.init()
     }
@@ -154,255 +181,407 @@ class ReportComposer: NSObject {
             needToSplit3341 = false
         }
     }
-    
-    func renderReports(_ complexName: String,customerName: String,vetanatrionName: String,salesRepName: String,customerRepName: String,typeDate: String,items: [[String: AnyObject]]) -> String! {
-        
+
+    func renderReports(
+        _ complexName: String,
+        customerName: String,
+        vetanatrionName: String,
+        salesRepName: String,
+        customerRepName: String,
+        typeDate: String,
+        items: [[String: Any]]
+    ) -> String? {
+        guard let pathToReportHTMLTemplate = pathToReportHTMLTemplate,
+              let htmlContent = try? String(contentsOfFile: pathToReportHTMLTemplate, encoding: .utf8) else {
+            return nil
+        }
+
         do {
-            if pathToReportHTMLTemplate != nil {
-                var HTMLContent = try? String(contentsOfFile: pathToReportHTMLTemplate!, encoding: String.Encoding.utf8)
-                
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#complexName#", with: complexName)
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#CustomerName#", with: customerName)
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#vetanatrionName#", with: vetanatrionName)
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#salesRepName#", with: salesRepName.count == 0 ? "NA" : salesRepName)
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#customerRepName#", with: customerRepName.count == 0 ? "NA" : customerRepName)
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#reportTitle#", with: items[0]["isCocciHistory"]?.boolValue == true ? NSLocalizedString("\(categoryName) Historical Report", comment: "") : NSLocalizedString("\(categoryName) Summary Report", comment: ""))
-                
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#typeDate#", with: typeDate)
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#Farm#", with: items[0]["isCocciHistory"]?.boolValue == true ? "Date" : NSLocalizedString("Farm", comment: ""))
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#LOGO_IMAGE#", with: logoImageURL!)
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.visibilityHidden : "")
-                //HTMLContent = HTMLContent!.stringByReplacingOccurrencesOfString( "logo.png\"", withString: "logo.png\"")
-                
-                var allItems = ""
-                var birdsTotal = Int()
-                
-                var AG_Total = Float()
-                var MG_Total = Float()
-                var MM_Total = Float()
-                var TG_Total = Float()
-                
-                var AGMean_Total = Float()
-                var MGMean_Total = Float()
-                var MMMean_Total = Float()
-                var TGMean_Total = Float()
-                
-                var AGMean_Total_Birds = Float()
-                var MGMean_Total_Birds = Float()
-                var MMMean_Total_Birds = Float()
-                var TGMean_Total_Birds = Float()
-                
-                var birdsTotal_Spliter = Int()
-                var meanAge_Spliter = Float()
-                var AG_Total_Spliter = Float()
-                var MG_Total_Spliter = Float()
-                var MM_Total_Spliter = Float()
-                var TG_Total_Spliter = Float()
-                
-                var AGMean_Total_Spliter = Float()
-                var MGMean_Total_Spliter = Float()
-                var MMMean_Total_Spliter = Float()
-                var TGMean_Total_Spliter = Float()
-                
-                var AGMean_Total_Birds_Spliter = Float()
-                var MGMean_Total_Birds_Spliter = Float()
-                var MMMean_Total_Birds_Spliter = Float()
-                var TGMean_Total_Birds_Spliter = Float()
-                
-                
-                var index = Int()
-                var index_Spliter = Float()
-                var index_Total = Int()
-                let meanArray = AllValidSessions.sharedInstance.meanValues
-                
-                //var needToSplitGreaterThan42 = Bool()
-                var needToSplit2532 = Bool()
-                var needToSplit3341 = Bool()
-                var needToSplit42 = Bool()
-                var needToSplit1424 = Bool()
-                
-                var needToSplit0114 = Bool()
-                var isCheckSum = Bool()
-                var isCheckSum1 = Bool()
-                var isCheckSum2 = Bool()
-                var isCheckSum3 = Bool()
-                
-                for i in 0..<items.count+1 {
-                    var itemHTMLContent: String!
-                    
-                    if i != items.count {
-                        itemHTMLContent = try String(contentsOfFile: pathToSingleItemHTMLTemplate!, encoding: String.Encoding.utf8)
-                        index = 0
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Acervulina#", with: NSString(format: "%.1f",items[i]["acer"]?.floatValue ?? 0) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#acerMean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                        
-                        // AG_Total = items[0]["isCocciHistory"]?.boolValue == true ? AG_Total+items[i]["acer"]!.floatValue : AG_Total + items[i]["acer"]!.floatValue
-                        AG_Total = AG_Total + items[i]["acer"]!.floatValue
-                        
-                        AGMean_Total = AGMean_Total + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                        AGMean_Total_Birds = AGMean_Total_Birds + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                        
-                        AG_Total_Spliter = AG_Total_Spliter+items[i]["acer"]!.floatValue
-                        AGMean_Total_Spliter = AGMean_Total_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                        AGMean_Total_Birds_Spliter = AGMean_Total_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                        
-                        index+=1
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MaximaGross#", with: NSString(format: "%.1f",items[i]["mg"]!.floatValue) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#mgMean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                        
-                        
-                        MG_Total = MG_Total+items[i]["mg"]!.floatValue
-                        MGMean_Total = MGMean_Total + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                        MGMean_Total_Birds = MGMean_Total_Birds + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                        
-                        MG_Total_Spliter = MG_Total_Spliter+items[i]["mg"]!.floatValue
-                        MGMean_Total_Spliter = MGMean_Total_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                        MGMean_Total_Birds_Spliter = MGMean_Total_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0.0 ? 1.0 : 0)
-                        
-                        index+=1
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MaximaMicro#", with: NSString(format: "%.1f",items[i]["mm"]!.floatValue) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#mmMean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                        
-                        
-                        MM_Total = MM_Total+items[i]["mm"]!.floatValue
-                        MMMean_Total = MMMean_Total + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                        MMMean_Total_Birds = MMMean_Total_Birds + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0 ? 1 : 0)
-                        
-                        MM_Total_Spliter = MM_Total_Spliter+items[i]["mm"]!.floatValue
-                        MMMean_Total_Spliter = MMMean_Total_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                        MMMean_Total_Birds_Spliter = MMMean_Total_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0 ? 1 : 0)
-                        
-                        index+=1
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TenellaGross#", with: NSString(format: "%.1f",items[i]["tg"]!.floatValue) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#tgMean#", with: NSString(format: "%.1f",(((meanArray[i] as! NSArray)[index] as AnyObject).floatValue).isNaN ? 0 : (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)) as String)
-                        
-                        TG_Total_Spliter = TG_Total_Spliter+items[i]["tg"]!.floatValue
-                        TGMean_Total_Spliter = TGMean_Total_Spliter + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                        TGMean_Total_Birds_Spliter = TGMean_Total_Birds_Spliter + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0 ? 1 : 0)
-                        
-                        
-                        TG_Total = TG_Total + items[i]["tg"]!.floatValue
-                        TGMean_Total = TGMean_Total + (((meanArray[i] as! NSArray)[index] as AnyObject).floatValue)
-                        TGMean_Total_Birds = TGMean_Total_Birds + ((((meanArray[i] as! NSArray)[index] as AnyObject).floatValue) > 0 ? 1 : 0)
-                        
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#FarmName#", with: items[i]["isCocciHistory"]?.boolValue == true ? items[i]["sessionDate"]! as! String : items[i]["farmName"]! as! String)
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.visibilityHidden : "")
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#birds#", with: items[i]["birds"]! as! String)
-                        birdsTotal = birdsTotal+items[i]["birds"]!.integerValue
-                        birdsTotal_Spliter = birdsTotal_Spliter+items[i]["birds"]!.integerValue
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MeanAge#", with: items[i]["meanAge"]! as! String)
-                        meanAge = meanAge+items[i]["meanAge"]!.floatValue
-                        meanAge_Spliter = meanAge_Spliter+items[i]["meanAge"]!.floatValue
-                        
-                        index_Spliter+=1
-                        
-                        let arrayIndex = i + 1 < items.count ? i + 1 : i
-                        
-                        if items[arrayIndex]["meanAge"]!.integerValue > 13 && items[arrayIndex]["meanAge"]!.integerValue < 25 {
-                            handleNeedToSplit0114(&needToSplit0114, &needToSplit3341, &needToSplit42, &needToSplit2532, &needToSplit1424, &isCheckSum)
-                        } else if items[arrayIndex]["meanAge"]!.integerValue > 24 && items[arrayIndex]["meanAge"]!.integerValue < 33 {
-                            handleNeedToSplit1424(&needToSplit1424, &needToSplit3341, &needToSplit42, &needToSplit2532, &needToSplit0114, &isCheckSum1)
-                        } else if items[arrayIndex]["meanAge"]!.integerValue > 32 && items[arrayIndex]["meanAge"]!.integerValue < 43 {
-                            handleNeedToSplit2532(&needToSplit2532, &needToSplit3341, &needToSplit42, &needToSplit1424, &needToSplit0114, &isCheckSum2)
-                        } else if items[arrayIndex]["meanAge"]!.integerValue > 42 && items[arrayIndex]["meanAge"]!.integerValue < 81 {
-                            handleNeedToSplit42(&needToSplit42, &needToSplit3341, &needToSplit2532, &needToSplit1424, &needToSplit0114, &isCheckSum3, items, i)
-                        }
-                        handleNeedToSplit0114(items, i, &needToSplit0114, &needToSplit3341)
-                        let boolStatusNeedToSplit: (Bool) = ((needToSplit2532 == true || needToSplit3341 == true || needToSplit42 == true || needToSplit1424 == true || needToSplit0114 == true) && (items[0]["isCocciHistory"]?.boolValue == false))
-                        let boolStatusIsCocciHistory: (Bool) = (i == items.count-1 && items[0]["isCocciHistory"]?.boolValue == false)
-                        if boolStatusNeedToSplit || boolStatusIsCocciHistory {
-                            
-                            isCheckSum = false
-                            isCheckSum1 = false
-                            isCheckSum2 = false
-                            isCheckSum3 = false
-                            
-                            handleItemHTMLContextValidations(&itemHTMLContent, items, i)
-                            
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TotalBirds#", with: NSString(format: "%d",birdsTotal_Spliter) as String )
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MeanAgeTotal#", with: NSString(format: "%.0f",round(Float(meanAge_Spliter/index_Spliter))) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#AG_TOTAL#", with: NSString(format: "%.1f",AG_Total_Spliter/Float(index_Spliter)) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MG_TOTAL#", with: NSString(format: "%.1f",MG_Total_Spliter/Float(index_Spliter)) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MM_TOTAL#", with: NSString(format: "%.1f",MM_Total_Spliter/Float(index_Spliter)) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TG_TOTAL#", with: NSString(format: "%.1f",TG_Total_Spliter/Float(index_Spliter)) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? "display:none" : "")
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#AGMean_Total#", with: NSString(format: "%.1f",(AGMean_Total_Spliter/AGMean_Total_Birds_Spliter).isNaN ? 0 : AGMean_Total_Spliter/AGMean_Total_Birds_Spliter) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MGMean_Total#", with: NSString(format: "%.1f",(MGMean_Total_Spliter/MGMean_Total_Birds_Spliter).isNaN ? 0 : MGMean_Total_Spliter/MGMean_Total_Birds_Spliter) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MMMean_Total#", with: NSString(format: "%.1f",(MMMean_Total_Spliter/MMMean_Total_Birds_Spliter).isNaN ? 0 : MMMean_Total_Spliter/MMMean_Total_Birds_Spliter) as String)
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TGMean_Total#", with: NSString(format: "%.1f",(TGMean_Total_Spliter/TGMean_Total_Birds_Spliter).isNaN ? 0 : TGMean_Total_Spliter/TGMean_Total_Birds_Spliter) as String)
-                            
-                            AG_Total_Spliter = 0
-                            MG_Total_Spliter = 0
-                            MM_Total_Spliter = 0
-                            TG_Total_Spliter = 0
-                            
-                            AGMean_Total_Spliter = 0
-                            MGMean_Total_Spliter = 0
-                            MMMean_Total_Spliter = 0
-                            TGMean_Total_Spliter = 0
-                            
-                            AGMean_Total_Birds_Spliter = 0
-                            MGMean_Total_Birds_Spliter = 0
-                            MMMean_Total_Birds_Spliter = 0
-                            TGMean_Total_Birds_Spliter = 0
-                            
-                            birdsTotal_Spliter = 0
-                            meanAge_Spliter = 0
-                            index_Spliter = 0
-                            
-                            index_Total += 1
-                        } else {
-                            itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display#", with: "display:none" )
-                        }
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#Sick#", with: items[i]["isSick"]!.intValue == 0 ? "" : "checked")
-                    } else {
-                        itemHTMLContent = try String(contentsOfFile: pathToLastItemHTMLTemplate!, encoding: String.Encoding.utf8)
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TotalBirds#", with: NSString(format: "%d",birdsTotal) as String )
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MeanAge#", with: NSString(format: "%.0f",round(meanAge/Float(items.count))) as String)
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#AG_TOTAL#", with: NSString(format: "%.1f",AG_Total/Float(items.count)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MG_TOTAL#", with: NSString(format: "%.1f",MG_Total/Float(items.count)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MM_TOTAL#", with: NSString(format: "%.1f",MM_Total/Float(items.count)) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TG_TOTAL#", with: NSString(format: "%.1f",TG_Total/Float(items.count)) as String)
-                        
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.displayNone, with: items[0]["isCocciHistory"]?.boolValue == true ? Constants.visibilityHidden : "")
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#AGMean_Total#", with: NSString(format: "%.1f",(AGMean_Total/AGMean_Total_Birds).isNaN ? 0 : AGMean_Total/AGMean_Total_Birds) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MGMean_Total#", with: NSString(format: "%.1f",(MGMean_Total/MGMean_Total_Birds).isNaN ? 0 : MGMean_Total/MGMean_Total_Birds) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#MMMean_Total#", with: NSString(format: "%.1f",(MMMean_Total/MMMean_Total_Birds).isNaN ? 0 : MMMean_Total/MMMean_Total_Birds) as String)
-                        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#TGMean_Total#", with: NSString(format: "%.1f",(TGMean_Total/TGMean_Total_Birds).isNaN ? 0 : TGMean_Total/TGMean_Total_Birds) as String)
-                    }
-                    
-                    allItems += itemHTMLContent
-                }
-                
-                HTMLContent = HTMLContent!.replacingOccurrences(of:"#ITEMS#", with: allItems)
-                AllValidSessions.sharedInstance.meanValues.removeAllObjects()
-                return HTMLContent
-            }
-        }
-        catch {
+            var content = replacePlaceholders(
+                in: htmlContent,
+                complexName: complexName,
+                customerName: customerName,
+                vetanatrionName: vetanatrionName,
+                salesRepName: salesRepName,
+                customerRepName: customerRepName,
+                typeDate: typeDate,
+                items: items
+            )
+            let allItems = processItems(items)
+            content = content.replacingOccurrences(of: "#ITEMS#", with: allItems)
+            AllValidSessions.sharedInstance.meanValues.removeAllObjects()
+            return content
+        } catch {
             print(appDelegateObj.testFuntion())
+            return nil
         }
-        
-        return nil
     }
-    
+
+    private func replacePlaceholders(
+        in htmlContent: String,
+        complexName: String,
+        customerName: String,
+        vetanatrionName: String,
+        salesRepName: String,
+        customerRepName: String,
+        typeDate: String,
+        items: [[String: Any]]
+    ) -> String {
+        var content = htmlContent
+        let isCocciHistory = items.first?["isCocciHistory"] as? Bool ?? false
+        let reportTitle = isCocciHistory ? NSLocalizedString("\(categoryName) Historical Report", comment: "") : NSLocalizedString("\(categoryName) Summary Report", comment: "")
+        let farmLabel = isCocciHistory ? "Date" : NSLocalizedString("Farm", comment: "")
+
+        content = content.replacingOccurrences(of: "#complexName#", with: complexName)
+            .replacingOccurrences(of: "#CustomerName#", with: customerName)
+            .replacingOccurrences(of: "#vetanatrionName#", with: vetanatrionName)
+            .replacingOccurrences(of: "#salesRepName#", with: salesRepName.isEmpty ? "NA" : salesRepName)
+            .replacingOccurrences(of: "#customerRepName#", with: customerRepName.isEmpty ? "NA" : customerRepName)
+            .replacingOccurrences(of: "#reportTitle#", with: reportTitle)
+            .replacingOccurrences(of: "#typeDate#", with: typeDate)
+            .replacingOccurrences(of: "#Farm#", with: farmLabel)
+            .replacingOccurrences(of: "#LOGO_IMAGE#", with: logoImageURL ?? "")
+            .replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.visibilityHidden : "")
+
+        return content
+    }
+
+    private func processItems(_ items: [[String: Any]]) -> String {
+        var allItems = ""
+        var totals = ReportTotals()
+        var splitterTotals = ReportTotals()
+        var splitFlags = SplitFlags()
+        var indexSplitter: Float = 0
+        var indexTotal = 0
+        let meanArray = AllValidSessions.sharedInstance.meanValues as? [[Float]] ?? []
+
+        for i in 0..<items.count + 1 {
+            var itemHTMLContent: String
+            if i < items.count {
+                itemHTMLContent = processSingleItem(
+                    items[i],
+                    index: i,
+                    items: items,
+                    meanArray: meanArray,
+                    totals: &totals,
+                    splitterTotals: &splitterTotals,
+                    splitFlags: &splitFlags,
+                    indexSplitter: &indexSplitter,
+                    indexTotal: &indexTotal
+                )
+            } else {
+                itemHTMLContent = processLastItem(totals: totals, items: items)
+            }
+            allItems += itemHTMLContent
+        }
+
+        return allItems
+    }
+
+    private func processSingleItem(
+        _ item: [String: Any],
+        index: Int,
+        items: [[String: Any]],
+        meanArray: [[Float]],
+        totals: inout ReportTotals,
+        splitterTotals: inout ReportTotals,
+        splitFlags: inout SplitFlags,
+        indexSplitter: inout Float,
+        indexTotal: inout Int
+    ) -> String {
+        guard let templatePath = pathToSingleItemHTMLTemplate,
+              let content = try? String(contentsOfFile: templatePath, encoding: .utf8) else {
+            return ""
+        }
+
+        indexSplitter += 1
+        let meanValues = meanArray[index]
+        let isCocciHistory = item["isCocciHistory"] as? Bool ?? false
+        var updatedContent = updateItemContent(
+            content: content,
+            item: item,
+            meanValues: meanValues,
+            isCocciHistory: isCocciHistory
+        )
+
+        updateTotals(item: item, meanValues: meanValues, totals: &totals, splitterTotals: &splitterTotals)
+        updateSplitFlags(item: item, index: index, items: items, splitFlags: &splitFlags)
+
+        let shouldSplit = shouldSplitItems(splitFlags: splitFlags, isCocciHistory: isCocciHistory)
+        let isLastItem = index == items.count - 1 && !isCocciHistory
+
+        if shouldSplit || isLastItem {
+            updatedContent = updateSplitterTotals(
+                content: updatedContent,
+                splitterTotals: splitterTotals,
+                indexSplitter: indexSplitter,
+                isCocciHistory: isCocciHistory
+            )
+            handleItemHTMLContextValidations(&updatedContent, items: items, index: index)
+            resetSplitter(&splitterTotals, &indexSplitter, &splitFlags)
+            indexTotal += 1
+        } else {
+            updatedContent = updatedContent.replacingOccurrences(of: "#display#", with: "display:none")
+        }
+
+        return updatedContent
+    }
+
+    private func updateItemContent(
+        content: String,
+        item: [String: Any],
+        meanValues: [Float],
+        isCocciHistory: Bool
+    ) -> String {
+        var updatedContent = content
+        let acer = item["acer"] as? Float ?? 0
+        let mg = item["mg"] as? Float ?? 0
+        let mm = item["mm"] as? Float ?? 0
+        let tg = item["tg"] as? Float ?? 0
+        let birds = item["birds"] as? String ?? "0"
+        let meanAge = item["meanAge"] as? String ?? "0"
+        let farmName = isCocciHistory ? (item["sessionDate"] as? String ?? "") : (item["farmName"] as? String ?? "")
+        let isSick = (item["isSick"] as? Int ?? 0) == 0 ? "" : "checked"
+
+        updatedContent = updatedContent
+            .replacingOccurrences(of: "#Acervulina#", with: String(format: "%.1f", acer))
+            .replacingOccurrences(of: "#acerMean#", with: String(format: "%.1f", meanValues[0].isNaN ? 0 : meanValues[0]))
+            .replacingOccurrences(of: "#MaximaGross#", with: String(format: "%.1f", mg))
+            .replacingOccurrences(of: "#mgMean#", with: String(format: "%.1f", meanValues[1].isNaN ? 0 : meanValues[1]))
+            .replacingOccurrences(of: "#MaximaMicro#", with: String(format: "%.1f", mm))
+            .replacingOccurrences(of: "#mmMean#", with: String(format: "%.1f", meanValues[2].isNaN ? 0 : meanValues[2]))
+            .replacingOccurrences(of: "#TenellaGross#", with: String(format: "%.1f", tg))
+            .replacingOccurrences(of: "#tgMean#", with: String(format: "%.1f", meanValues[3].isNaN ? 0 : meanValues[3]))
+            .replacingOccurrences(of: "#FarmName#", with: farmName)
+            .replacingOccurrences(of: "#birds#", with: birds)
+            .replacingOccurrences(of: "#MeanAge#", with: meanAge)
+            .replacingOccurrences(of: "#Sick#", with: isSick)
+            .replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.visibilityHidden : "")
+
+        return updatedContent
+    }
+
+    private func updateTotals(
+        item: [String: Any],
+        meanValues: [Float],
+        totals: inout ReportTotals,
+        splitterTotals: inout ReportTotals
+    ) {
+        let acer = item["acer"] as? Float ?? 0
+        let mg = item["mg"] as? Float ?? 0
+        let mm = item["mm"] as? Float ?? 0
+        let tg = item["tg"] as? Float ?? 0
+        let birds = item["birds"] as? Int ?? 0
+        let meanAge = item["meanAge"] as? Float ?? 0
+
+        totals.birds += birds
+        totals.meanAge += meanAge
+        totals.ag += acer
+        totals.mg += mg
+        totals.mm += mm
+        totals.tg += tg
+        totals.agMean += meanValues[0]
+        totals.mgMean += meanValues[1]
+        totals.mmMean += meanValues[2]
+        totals.tgMean += meanValues[3]
+        totals.agMeanBirds += meanValues[0] > 0 ? 1 : 0
+        totals.mgMeanBirds += meanValues[1] > 0 ? 1 : 0
+        totals.mmMeanBirds += meanValues[2] > 0 ? 1 : 0
+        totals.tgMeanBirds += meanValues[3] > 0 ? 1 : 0
+
+        splitterTotals.birds += birds
+        splitterTotals.meanAge += meanAge
+        splitterTotals.ag += acer
+        splitterTotals.mg += mg
+        splitterTotals.mm += mm
+        splitterTotals.tg += tg
+        splitterTotals.agMean += meanValues[0]
+        splitterTotals.mgMean += meanValues[1]
+        splitterTotals.mmMean += meanValues[2]
+        splitterTotals.tgMean += meanValues[3]
+        splitterTotals.agMeanBirds += meanValues[0] > 0 ? 1 : 0
+        splitterTotals.mgMeanBirds += meanValues[1] > 0 ? 1 : 0
+        splitterTotals.mmMeanBirds += meanValues[2] > 0 ? 1 : 0
+        splitterTotals.tgMeanBirds += meanValues[3] > 0 ? 1 : 0
+    }
+
+    private func updateSplitFlags(
+        item: [String: Any],
+        index: Int,
+        items: [[String: Any]],
+        splitFlags: inout SplitFlags
+    ) {
+        let arrayIndex = index + 1 < items.count ? index + 1 : index
+        let meanAge = items[arrayIndex]["meanAge"] as? Int ?? 0
+
+        if meanAge > 13 && meanAge < 25 {
+            handleNeedToSplit0114(
+                &splitFlags.needToSplit0114,
+                &splitFlags.needToSplit3341,
+                &splitFlags.needToSplit42,
+                &splitFlags.needToSplit2532,
+                &splitFlags.needToSplit1424,
+                &splitFlags.isCheckSum
+            )
+        } else if meanAge > 24 && meanAge < 33 {
+            handleNeedToSplit1424(
+                &splitFlags.needToSplit1424,
+                &splitFlags.needToSplit3341,
+                &splitFlags.needToSplit42,
+                &splitFlags.needToSplit2532,
+                &splitFlags.needToSplit0114,
+                &splitFlags.isCheckSum1
+            )
+        } else if meanAge > 32 && meanAge < 43 {
+            handleNeedToSplit2532(
+                &splitFlags.needToSplit2532,
+                &splitFlags.needToSplit3341,
+                &splitFlags.needToSplit42,
+                &splitFlags.needToSplit1424,
+                &splitFlags.needToSplit0114,
+                &splitFlags.isCheckSum2
+            )
+        } else if meanAge > 42 && meanAge < 81 {
+            handleNeedToSplit42(
+                &splitFlags.needToSplit42,
+                &splitFlags.needToSplit3341,
+                &splitFlags.needToSplit2532,
+                &splitFlags.needToSplit1424,
+                &splitFlags.needToSplit0114,
+                &splitFlags.isCheckSum3,
+                items: items,
+                index: index
+            )
+        }
+
+        handleNeedToSplit3341(items, index, &splitFlags.needToSplit3341, &splitFlags.needToSplit0114)
+    }
+
+    private func shouldSplitItems(splitFlags: SplitFlags, isCocciHistory: Bool) -> Bool {
+        return (splitFlags.needToSplit2532 || splitFlags.needToSplit3341 || splitFlags.needToSplit42 ||
+                splitFlags.needToSplit1424 || splitFlags.needToSplit0114) && !isCocciHistory
+    }
+
+    private func updateSplitterTotals(
+        content: String,
+        splitterTotals: ReportTotals,
+        indexSplitter: Float,
+        isCocciHistory: Bool
+    ) -> String {
+        var updatedContent = content
+        let avgAg = splitterTotals.ag / indexSplitter
+        let avgMg = splitterTotals.mg / indexSplitter
+        let avgMm = splitterTotals.mm / indexSplitter
+        let avgTg = splitterTotals.tg / indexSplitter
+        let avgMeanAge = round(splitterTotals.meanAge / indexSplitter)
+        let avgAgMean = splitterTotals.agMeanBirds > 0 ? splitterTotals.agMean / splitterTotals.agMeanBirds : 0
+        let avgMgMean = splitterTotals.mgMeanBirds > 0 ? splitterTotals.mgMean / splitterTotals.mgMeanBirds : 0
+        let avgMmMean = splitterTotals.mmMeanBirds > 0 ? splitterTotals.mmMean / splitterTotals.mmMeanBirds : 0
+        let avgTgMean = splitterTotals.tgMeanBirds > 0 ? splitterTotals.tgMean / splitterTotals.tgMeanBirds : 0
+
+        updatedContent = updatedContent
+            .replacingOccurrences(of: "#TotalBirds#", with: String(splitterTotals.birds))
+            .replacingOccurrences(of: "#MeanAgeTotal#", with: String(format: "%.0f", avgMeanAge))
+            .replacingOccurrences(of: "#AG_TOTAL#", with: String(format: "%.1f", avgAg))
+            .replacingOccurrences(of: "#MG_TOTAL#", with: String(format: "%.1f", avgMg))
+            .replacingOccurrences(of: "#MM_TOTAL#", with: String(format: "%.1f", avgMm))
+            .replacingOccurrences(of: "#TG_TOTAL#", with: String(format: "%.1f", avgTg))
+            .replacingOccurrences(of: "#AGMean_Total#", with: String(format: "%.1f", avgAgMean))
+            .replacingOccurrences(of: "#MGMean_Total#", with: String(format: "%.1f", avgMgMean))
+            .replacingOccurrences(of: "#MMMean_Total#", with: String(format: "%.1f", avgMmMean))
+            .replacingOccurrences(of: "#TGMean_Total#", with: String(format: "%.1f", avgTgMean))
+            .replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? "display:none" : "")
+
+        return updatedContent
+    }
+
+    private func resetSplitter(
+        _ splitterTotals: inout ReportTotals,
+        _ indexSplitter: inout Float,
+        _ splitFlags: inout SplitFlags
+    ) {
+        splitterTotals = ReportTotals()
+        indexSplitter = 0
+        splitFlags.isCheckSum = false
+        splitFlags.isCheckSum1 = false
+        splitFlags.isCheckSum2 = false
+        splitFlags.isCheckSum3 = false
+    }
+
+    private func processLastItem(totals: ReportTotals, items: [[String: Any]]) -> String {
+        guard let templatePath = pathToLastItemHTMLTemplate,
+              let content = try? String(contentsOfFile: templatePath, encoding: .utf8) else {
+            return ""
+        }
+
+        let itemCount = Float(items.count)
+        let isCocciHistory = items.first?["isCocciHistory"] as? Bool ?? false
+        let avgMeanAge = itemCount > 0 ? round(totals.meanAge / itemCount) : 0
+        let avgAg = itemCount > 0 ? totals.ag / itemCount : 0
+        let avgMg = itemCount > 0 ? totals.mg / itemCount : 0
+        let avgMm = itemCount > 0 ? totals.mm / itemCount : 0
+        let avgTg = itemCount > 0 ? totals.tg / itemCount : 0
+        let avgAgMean = totals.agMeanBirds > 0 ? totals.agMean / totals.agMeanBirds : 0
+        let avgMgMean = totals.mgMeanBirds > 0 ? totals.mgMean / totals.mgMeanBirds : 0
+        let avgMmMean = totals.mmMeanBirds > 0 ? totals.mmMean / totals.mmMeanBirds : 0
+        let avgTgMean = totals.tgMeanBirds > 0 ? totals.tgMean / totals.tgMeanBirds : 0
+
+        return content
+            .replacingOccurrences(of: "#TotalBirds#", with: String(totals.birds))
+            .replacingOccurrences(of: "#MeanAge#", with: String(format: "%.0f", avgMeanAge))
+            .replacingOccurrences(of: "#AG_TOTAL#", with: String(format: "%.1f", avgAg))
+            .replacingOccurrences(of: "#MG_TOTAL Материал#", with: String(format: "%.1f", avgMg))
+            .replacingOccurrences(of: "#MM_TOTAL#", with: String(format: "%.1f", avgMm))
+            .replacingOccurrences(of: "#TG_TOTAL#", with: String(format: "%.1f", avgTg))
+            .replacingOccurrences(of: "#AGMean_Total#", with: String(format: "%.1f", avgAgMean))
+            .replacingOccurrences(of: "#MGMean_Total#", with: String(format: "%.1f", avgMgMean))
+            .replacingOccurrences(of: "#MMMean_Total#", with: String(format: "%.1f", avgMmMean))
+            .replacingOccurrences(of: "#TGMean_Total#", with: String(format: "%.1f", avgTgMean))
+            .replacingOccurrences(of: Constants.displayNone, with: isCocciHistory ? Constants.visibilityHidden : "")
+    }
+
+    private func handleNeedToSplit42(
+        _ needToSplit42: inout Bool,
+        _ needToSplit3341: inout Bool,
+        _ needToSplit2532: inout Bool,
+        _ needToSplit1424: inout Bool,
+        _ needToSplit0114: inout Bool,
+        _ isCheckSum3: inout Bool,
+        items: [[String: Any]],
+        index: Int
+    ) {
+        needToSplit42 = true
+        needToSplit3341 = false
+        needToSplit2532 = false
+        needToSplit1424 = false
+        needToSplit0114 = false
+        isCheckSum3 = true
+    }
+
+    private func handleNeedToSplit3341(
+        _ items: [[String: Any]],
+        _ index: Int,
+        _ needToSplit3341: inout Bool,
+        _ needToSplit0114: inout Bool
+    ) {
+        let arrayIndex = index + 1 < items.count ? index + 1 : index
+        let meanAge = items[arrayIndex]["meanAge"] as? Int ?? 0
+        if meanAge > 32 && meanAge < 42 {
+            needToSplit3341 = true
+            needToSplit0114 = false
+        }
+    }
+
+    private func handleItemHTMLContextValidations(
+        _ itemHTMLContent: inout String,
+        items: [[String: Any]],
+        index: Int
+    ) {
+        let isCocciHistory = items.first?["isCocciHistory"] as? Bool ?? false
+        if !isCocciHistory {
+            itemHTMLContent = itemHTMLContent.replacingOccurrences(of: "#display#", with: "")
+        }
+    }
     func exportHTMLContentToPDF(_ HTMLContent: String){
         let printPageRenderer = UIPrintPageRenderer()
         
