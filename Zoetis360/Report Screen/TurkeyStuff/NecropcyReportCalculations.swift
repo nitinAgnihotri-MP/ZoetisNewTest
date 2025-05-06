@@ -213,6 +213,152 @@ class NecropcyReportCalculations: NSObject {
         }
     }
     
+    fileprivate func handleAllSummaryPDFForLoopValidations1(_ aArray: NSArray, _ j: Int, _ Foot_Pad_Lesions: inout Float, _ Foot_Pad_Lesions_Mean: inout Float, _ Foot_Pad_Lesions_Updated: inout Float, _ Ammonia_Burns: inout Float, _ mouth_Lesions: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 596 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            Foot_Pad_Lesions=Foot_Pad_Lesions+(value.floatValue > 0 ? 1 : 0)
+            Foot_Pad_Lesions_Mean = Foot_Pad_Lesions_Mean + value.floatValue
+            if value.floatValue > 0 {
+                Foot_Pad_Lesions_Updated += 1
+            }
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 635 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Ammonia_Burns=Ammonia_Burns+(value.floatValue > 0 ? 1 : 0)
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 617 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            mouth_Lesions=mouth_Lesions+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
+    fileprivate func handleAllSummaryPDFForLoopValidations2(_ aArray: NSArray, _ j: Int, _ tracheitis: inout Float, _ Tracheitis_Mean: inout Float, _ Tracheitis_Updated: inout Float, _ Femoral_Head_Necrosis: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 636 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            tracheitis=tracheitis+(value.floatValue > 0 ? 1 : 0)
+            Tracheitis_Mean = Tracheitis_Mean + value.floatValue
+            if value.floatValue > 0 {
+                Tracheitis_Updated += 1
+            }
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 597 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Femoral_Head_Necrosis=Femoral_Head_Necrosis+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
+    fileprivate func handleAllSummaryPDFForLoopValidaitons3(_ aArray: NSArray, _ j: Int, _ Tibial_Dyschondroplasia: inout Float, _ Tibial_Dyschondroplasia_Mean: inout Float, _ Tibial_Dyschondroplasia_Updated: inout Float, _ Rickets: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 599 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            Tibial_Dyschondroplasia=Tibial_Dyschondroplasia+(value.floatValue > 0 ? 1 : 0)
+            Tibial_Dyschondroplasia_Mean = Tibial_Dyschondroplasia_Mean + value.floatValue
+            if value.floatValue > 0 {
+                Tibial_Dyschondroplasia_Updated += 1
+            }
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 600 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Rickets=Rickets+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
+    fileprivate func handleAllSummaryPDFForLoopValidaitons4(_ aArray: NSArray, _ j: Int, _ Bone_Strength: inout Float, _ Bone_Strength_Mean: inout Float, _ Bone_Strength_Updated: inout Float, _ Synovitis: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 601 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            Bone_Strength=Bone_Strength+(value.floatValue > 0 ? 1 : 0)
+            Bone_Strength_Mean = Bone_Strength_Mean + value.floatValue
+            if value.floatValue > 0 {
+                Bone_Strength_Updated += 1
+            }
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 602 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Synovitis=Synovitis+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
+    fileprivate func handleAllSummaryPDFForLoopValidaitons5(_ aArray: NSArray, _ j: Int, _ Bursa_Size: inout Float, _ IP: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 641 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            Bursa_Size=Bursa_Size+(value.floatValue > 0 ? 1 : 0)
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 603 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            IP=IP+value.floatValue
+        }
+    }
+    
+    fileprivate func handleAllSummaryPDFForLoopValidaitons6(_ aArray: NSArray, _ j: Int, _ air_Sac: inout Float, _ air_Sac_Mean: inout Float, _ air_Sac_Updated: inout Float, _ retained_Yolk: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 637 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            air_Sac=air_Sac+(value.floatValue > 0 ? 1 : 0)
+            air_Sac_Mean = air_Sac_Mean + value.floatValue
+            if value.floatValue > 0 {
+                air_Sac_Updated += 1
+            }
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 643 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            retained_Yolk=retained_Yolk+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
+    fileprivate func handleAllSummaryPDFForLoopValidaitons7(_ aArray: NSArray, _ j: Int, _ wallThikness: inout Float, _ gizzard_Erosions: inout Float, _ gizzard_Erosions_Mean: inout Float, _ gizzard_Erosions_Updated: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 675 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            wallThikness=wallThikness+(value.floatValue > 0 ? 1 : 0)
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 619 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            gizzard_Erosions=gizzard_Erosions+(value.floatValue > 0 ? 1 : 0)
+            gizzard_Erosions_Mean = gizzard_Erosions_Mean + value.floatValue
+            if value.floatValue > 0 {
+                gizzard_Erosions_Updated += 1
+            }
+        }
+    }
+    
+    fileprivate func handleAllSummaryPDFForLoopValidaitons8(_ aArray: NSArray, _ j: Int, _ enterties: inout Float, _ enterties_Mean: inout Float, _ enterties_Updated: inout Float, _ litter_Eater: inout Float, _ feed_Passage: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 622 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            enterties=enterties+(value.floatValue > 0 ? 1 : 0)
+            enterties_Mean = enterties_Mean + value.floatValue
+            if value.floatValue > 0 {
+                enterties_Updated += 1
+            }
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 621 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            litter_Eater=litter_Eater+(value.floatValue > 0 ? 1 : 0)
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 624 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            feed_Passage=feed_Passage+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
+    fileprivate func handleAllSummaryPDFForLoopValidaitons9(_ aArray: NSArray, _ j: Int, _ proventriculitis: inout Float, _ proventriculitis_Mean: inout Float, _ proventriculitis_Updated: inout Float, _ roundworms: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 633 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            proventriculitis=proventriculitis+(value.floatValue > 0 ? 1 : 0)
+            proventriculitis_Mean = proventriculitis_Mean + value.floatValue
+            if value.floatValue > 0 {
+                proventriculitis_Updated += 1
+            }
+        }
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 632 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            roundworms=roundworms+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
+    fileprivate func handleAllSummaryPDFForLoopValidaitons10(_ aArray: NSArray, _ j: Int, _ tapeworms: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 623 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
+            tapeworms=tapeworms+(value.floatValue > 0 ? 1 : 0)
+        }
+    }
+    
     func allSummaryPDF(_ aArray : NSArray , birdsCount : Float) {
         
         let preparedArray = NSMutableArray()
@@ -272,148 +418,27 @@ class NecropcyReportCalculations: NSObject {
         var enterties_Updated : Float = 0
         var Bone_Strength_Updated : Float = 0
         var Bursa_Lesion_Score_Updated: Float = 0
-         
-
-      
-        
-           let environmentIs = Constants.Api.versionUrl
+        let environmentIs = Constants.Api.versionUrl
         
         for j in 0..<aArray.count {
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 596 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                Foot_Pad_Lesions=Foot_Pad_Lesions+(value.floatValue > 0 ? 1 : 0)
-                Foot_Pad_Lesions_Mean = Foot_Pad_Lesions_Mean + value.floatValue
-                if value.floatValue > 0 {
-                    Foot_Pad_Lesions_Updated += 1
-                }
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 635 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                Ammonia_Burns=Ammonia_Burns+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 617 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                mouth_Lesions=mouth_Lesions+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 636 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                tracheitis=tracheitis+(value.floatValue > 0 ? 1 : 0)
-                Tracheitis_Mean = Tracheitis_Mean + value.floatValue
-                if value.floatValue > 0 {
-                    Tracheitis_Updated += 1
-                }
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 597 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                Femoral_Head_Necrosis=Femoral_Head_Necrosis+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 599 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                Tibial_Dyschondroplasia=Tibial_Dyschondroplasia+(value.floatValue > 0 ? 1 : 0)
-                Tibial_Dyschondroplasia_Mean = Tibial_Dyschondroplasia_Mean + value.floatValue
-                if value.floatValue > 0 {
-                    Tibial_Dyschondroplasia_Updated += 1
-                }
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 600 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                Rickets=Rickets+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 601 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                Bone_Strength=Bone_Strength+(value.floatValue > 0 ? 1 : 0)
-                Bone_Strength_Mean = Bone_Strength_Mean + value.floatValue
-                if value.floatValue > 0 {
-                    Bone_Strength_Updated += 1
-                }
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 602 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                Synovitis=Synovitis+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 641 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                Bursa_Size=Bursa_Size+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 603 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                IP=IP+value.floatValue
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 637 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                air_Sac=air_Sac+(value.floatValue > 0 ? 1 : 0)
-                air_Sac_Mean = air_Sac_Mean + value.floatValue
-                if value.floatValue > 0 {
-                    air_Sac_Updated += 1
-                }
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 643 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                retained_Yolk=retained_Yolk+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 675 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                wallThikness=wallThikness+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 619 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                gizzard_Erosions=gizzard_Erosions+(value.floatValue > 0 ? 1 : 0)
-                gizzard_Erosions_Mean = gizzard_Erosions_Mean + value.floatValue
-                if value.floatValue > 0 {
-                    gizzard_Erosions_Updated += 1
-                }
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 622 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                enterties=enterties+(value.floatValue > 0 ? 1 : 0)
-                enterties_Mean = enterties_Mean + value.floatValue
-                if value.floatValue > 0 {
-                    enterties_Updated += 1
-                }
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 621 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                litter_Eater=litter_Eater+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 624 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                feed_Passage=feed_Passage+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 633 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                proventriculitis=proventriculitis+(value.floatValue > 0 ? 1 : 0)
-                proventriculitis_Mean = proventriculitis_Mean + value.floatValue
-                if value.floatValue > 0 {
-                    proventriculitis_Updated += 1
-                }
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 632 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                roundworms=roundworms+(value.floatValue > 0 ? 1 : 0)
-            }
-            if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 623 {
-                let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                tapeworms=tapeworms+(value.floatValue > 0 ? 1 : 0)
-            }
+            handleAllSummaryPDFForLoopValidations1(aArray, j, &Foot_Pad_Lesions, &Foot_Pad_Lesions_Mean, &Foot_Pad_Lesions_Updated, &Ammonia_Burns, &mouth_Lesions)
+            handleAllSummaryPDFForLoopValidations2(aArray, j, &tracheitis, &Tracheitis_Mean, &Tracheitis_Updated, &Femoral_Head_Necrosis)
+            handleAllSummaryPDFForLoopValidaitons3(aArray, j, &Tibial_Dyschondroplasia, &Tibial_Dyschondroplasia_Mean, &Tibial_Dyschondroplasia_Updated, &Rickets)
+            handleAllSummaryPDFForLoopValidaitons4(aArray, j, &Bone_Strength, &Bone_Strength_Mean, &Bone_Strength_Updated, &Synovitis)
+            handleAllSummaryPDFForLoopValidaitons5(aArray, j, &Bursa_Size, &IP)
+            handleAllSummaryPDFForLoopValidaitons6(aArray, j, &air_Sac, &air_Sac_Mean, &air_Sac_Updated, &retained_Yolk)
+            handleAllSummaryPDFForLoopValidaitons7(aArray, j, &wallThikness, &gizzard_Erosions, &gizzard_Erosions_Mean, &gizzard_Erosions_Updated)
+            handleAllSummaryPDFForLoopValidaitons8(aArray, j, &enterties, &enterties_Mean, &enterties_Updated, &litter_Eater, &feed_Passage)
+            handleAllSummaryPDFForLoopValidaitons9(aArray, j, &proventriculitis, &proventriculitis_Mean, &proventriculitis_Updated, &roundworms)
+            handleAllSummaryPDFForLoopValidaitons10(aArray, j, &tapeworms)
         
-   
-            
             if environmentIs.contains("stageapi") {
-                
                 stageNewObservation(aArray, j, &Pericarditis, &Liver_Granuloma, &Septicemia, &Active_Bursa, &Cellulitis)
-                
             } else if environmentIs.contains("devapi") {
-                
                 devNewObservation(aArray, j, &Pericarditis, &Liver_Granuloma, &Septicemia, &Active_Bursa, &Cellulitis)
-                
-            }else {
-                
+            } else {
                 productionNewObservation(aArray, j, &Pericarditis, &Liver_Granuloma, &Septicemia, &Active_Bursa, &Cellulitis)
-
             }
-            
-            
-            
         }
         Foot_Pad_Lesions = (Foot_Pad_Lesions/birdsCount)*100
         preparedArray.add(Foot_Pad_Lesions)
@@ -516,11 +541,7 @@ class NecropcyReportCalculations: NSObject {
         preparedArrayForMean.add((proventriculitis_Mean/proventriculitis_Updated).isNaN ? 0 : proventriculitis_Mean/proventriculitis_Updated)
         preparedArrayForMean.add((enterties_Mean/enterties_Updated).isNaN ? 0 : enterties_Mean/enterties_Updated)
         preparedArrayForMean.add((Bursa_Lesion_Score_Mean/Bursa_Lesion_Score_Updated).isNaN ? 0 : Bursa_Lesion_Score_Mean/Bursa_Lesion_Score_Updated)
-        
-      
-        
         AllValidSessions.sharedInstance.meanValues.add(preparedArrayForMean)
-        
         delegate?.didFinishParsingWithAllSummaryData!(preparedArray)
     }
 }

@@ -5215,88 +5215,82 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         }
     }
     
+    fileprivate func handleTurkeyBirdSexCompletionActionValidations(_ immune: CaptureNecropsyViewDataTurkey) {
+        var necId = getNecId()
+        let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
+        
+        let resp1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
+        if FetchObsArr.count > 0 {
+            
+            
+            let obsData = CoreDataHandlerTurkeyModels.updateSkeletaTurkeySexValueObs(
+                catName: "Immune",
+                obsName: resp1.obsName!,
+                formName: immune.formName!,
+                obsVisibility: true,
+                birdNo: resp1.birdNo!,
+                obsPoint: 1,
+                obsId: resp1.obsID as! NSInteger,
+                necId: necId as NSNumber,
+                isSync: true,
+                actualText: selectedSexValue
+            )
+            
+            CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseTurkeySexValue(obsData, index: indexPath.row)
+            
+        }
+        
+        dataArrayImmu.removeAllObjects()
+        
+        necId =  getNecId()
+        
+        dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+    }
+    
+    fileprivate func handleSelectedValueAndSetSexValueInVariable(_ selectedVal: String) {
+        if selectedVal == "Female" {
+            selectedSexValue = "2"
+        } else if selectedVal == "N/A" {
+            selectedSexValue = "0"
+        } else {
+            selectedSexValue = "1"
+        }
+    }
+    
+    fileprivate func handlePostingIdFromExistingPostingIdFromExistingNavigate() {
+        if postingIdFromExistingNavigate == "Exting" {
+            CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(postingIdFromExisting as NSNumber)
+            self.printSyncLblCount()
+        } else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            CoreDataHandlerTurkey().updateisSyncNecropsystep1WithneccIdTurkey(necId as NSNumber, isSync : true)
+            self.printSyncLblCount()
+        } else {
+            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(necId as NSNumber)
+            self.printSyncLblCount()
+        }
+    }
+    
     fileprivate func handleTurkeybirdSexCompletionAction(_ cell: CaptureNecroStep2TurkeyCell, _ indexPath: IndexPath) {
         cell.turkeybirdSexCompletion = {[unowned self] ( error) in
             
-            if  turkeyBirdSex.count > 0 {
+            if turkeyBirdSex.count > 0 {
                 self.dropDownVIewNew(arrayData: turkeyBirdSex as? [String] ?? [String](), kWidth: cell.turkeySexView.frame.width, kAnchor: cell.turkeySexView, yheight: cell.turkeySexView.bounds.height) { [unowned self] selectedVal, index  in
                     
                     selectedSexValue = selectedVal
-                    
-                    if selectedVal == "Female"
-                    {
-                        selectedSexValue = "2"
-                    }
-                    else if selectedVal == "N/A"
-                    {
-                        selectedSexValue = "0"
-                    }
-                    else
-                    {
-                        selectedSexValue = "1"
-                    }
+                    handleSelectedValueAndSetSexValueInVariable(selectedVal)
                     
                     if btnTag == 4 {
-                        
                         let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
-                        
-                        var  necId = getNecId()
-                        
-                        
-                        let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
-                        
-                        let resp1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
-                        if FetchObsArr.count > 0 {
-                            
-                            
-                            let obsData = CoreDataHandlerTurkeyModels.updateSkeletaTurkeySexValueObs(
-                                catName: "Immune",
-                                obsName: resp1.obsName!,
-                                formName: immune.formName!,
-                                obsVisibility: true,
-                                birdNo: resp1.birdNo!,
-                                obsPoint: 1,
-                                obsId: resp1.obsID as! NSInteger,
-                                necId: necId as NSNumber,
-                                isSync: true,
-                                actualText: selectedSexValue
-                            )
-                            
-                            CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseTurkeySexValue(obsData, index: indexPath.row)
-                            
-                        }
-                        
-                        dataArrayImmu.removeAllObjects()
-                        
-                        necId =  getNecId()
-                        
-                        dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-                        
+                        handleTurkeyBirdSexCompletionActionValidations(immune)
                     }
                     
-                    if postingIdFromExistingNavigate == "Exting"{
-                        
-                        CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(postingIdFromExisting as NSNumber)
-                        self.printSyncLblCount()
-                    }
-                    else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
-                        
-                        let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        CoreDataHandlerTurkey().updateisSyncNecropsystep1WithneccIdTurkey(necId as NSNumber, isSync : true)
-                        self.printSyncLblCount()
-                        
-                    } else {
-                        let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(necId as NSNumber)
-                        self.printSyncLblCount()
-                    }
-                    
+                    handlePostingIdFromExistingPostingIdFromExistingNavigate()
                     neccollectionView.reloadData()
-                    
                 }
                 
                 self.dropHiddenAndShow()
-                
             }
         }
     }

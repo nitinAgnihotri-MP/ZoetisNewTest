@@ -1293,126 +1293,146 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         return convertedTimeStamp
     }
     
-    func getPostingDataFromServerforNecorpsy(){
-        if WebClass.sharedInstance.connected() {
-         
-            var id =  UserDefaults.standard.value(forKey: "Id") as! Int
-            lngId = UserDefaults.standard.integer(forKey: "lngId")
-            let countryId = UserDefaults.standard.integer(forKey: "countryId")
-            let url = "PostingSession/TurkeyGetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
-            accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-            let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
-            let urlString: String = WebClass.sharedInstance.webUrl + url
-            sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
-                let statusCode =  response.response?.statusCode
-                
-                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                    self.getNotesFromServer()
-                    
-                }
-                switch response.result{
-                case let .success(value):
-                    if value != nil {
-                        
-                        UserDefaults.standard.set("Yes", forKey: "Success")
-                        if value is NSArray{
-                            
-                            let arr : NSArray = value as! NSArray
-                            
-                            if arr.count>0{
-                                CoreDataHandlerTurkey().deleteDataWithStep2dataTurkey(self.postingId)
-                                for i in 0..<arr.count {
-                                    let seesionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
-                                    let farmArr = (arr.object(at: i) as AnyObject).value( forKey: "Farms")
-                                    for j in 0..<(farmArr! as AnyObject).count {
-                                        let farmName = ((farmArr! as AnyObject).object(at: j) as AnyObject).value( forKey: "FarmName") as! String
-                                        let catArr = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "Category")
-                                        for k in 0..<(catArr! as AnyObject).count {
-                                            let catName = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Category") as! String
-                                            let ObArr = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Observations")
-                                            for l in 0..<(ObArr! as AnyObject).count {
-                                                let obsId  = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ObservationId") as! Int
-                                                let refId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ReferenceId") as! NSNumber
-                                                let languageId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "LanguageId") as! NSNumber
-                                                let obsName = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Observations") as! String
-                                                let measure = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Measure") as! String
-                                                let quickLink = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "DefaultQLink")
-                                                
-                                                let birdArr = (((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Birds") as AnyObject).object(at: 0)
-                                                for  m in 0..<10 {
-                                                    
-                                                    let keyStr = NSString(format: "BirdNumber%d",m+1)
-                                                    let chkKey = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).boolValue
-                                                    let chkKey1 = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).integerValue
-                                                    let chkKey3 = (birdArr as AnyObject).value(forKey: keyStr as String) as! String
-                                                    if chkKey3 == "NA" {
-                                                        break
-                                                    } else {
-                                                        
-                                                        var catstr = String()
-                                                        
-                                                        if catName == "Microscopy" {
-                                                            catstr = "Coccidiosis"
-                                                        } else if catName == "GI Tract" {
-                                                            catstr = "GITract"
-                                                        } else if catName == "Immune/Others" {
-                                                            catstr = "Immune"
-                                                        } else if catName == "Respiratory" {
-                                                            catstr = "Resp"
-                                                        } else if catName == "Skeletal/Muscular/Integumentary" {
-                                                            catstr = "skeltaMuscular"
-                                                        }
-                                                        
-                                                        let captureData = CoreDataHandlerTurkeyModels.singleNecroSwithCaseData(
-                                                               catName: catstr,
-                                                               obsName: obsName,
-                                                               formName: farmName,
-                                                               obsVisibility: chkKey!,
-                                                               birdNo: (m + 1) as NSNumber,
-                                                               obsPoint: chkKey1!,
-                                                               index: m,
-                                                               obsId: obsId,
-                                                               measure: measure,
-                                                               quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
-                                                               necId: seesionId as NSNumber,
-                                                               isSync: false,
-                                                               necIdSingle: self.postingId,
-                                                               lngId: languageId,
-                                                               refId: refId
-                                                        )
-                                                        CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseSingleDataTurkey(data: captureData)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                self.getNotesFromServer()
-                            }
-                        } else {
-                            self.getNotesFromServer()
-                        }
-                    }
-                case .failure(let encodingError):
-                    print (encodingError)
-                }
-            }
-        } else {
+    func getPostingDataFromServerforNecorpsy() {
+        guard WebClass.sharedInstance.connected() else {
             self.noInternetConnection()
+            return
+        }
+
+        let id = UserDefaults.standard.integer(forKey: "Id")
+        lngId = UserDefaults.standard.integer(forKey: "lngId")
+        let countryId = UserDefaults.standard.integer(forKey: "countryId")
+        let url = "PostingSession/TurkeyGetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
+        guard let accessToken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken) else { return }
+
+        let headers: HTTPHeaders = [Constants.authorization: accessToken]
+        let fullUrl = WebClass.sharedInstance.webUrl + url
+
+        sessionManager.request(fullUrl, method: .get, headers: headers).responseJSON { response in
+            if self.shouldAbortDueToError(response.response?.statusCode) {
+                self.getNotesFromServer()
+                return
+            }
+
+            switch response.result {
+            case .success(let value):
+                self.handleSuccessResponse(value)
+            case .failure(let error):
+                print("Error decoding necropsy list: \(error)")
+            }
         }
     }
+
+    private func shouldAbortDueToError(_ code: Int?) -> Bool {
+        let errorCodes = [400, 401, 403, 404, 408, 500, 501, 502, 503, 504]
+        return errorCodes.contains(code ?? 0)
+    }
+
+    private func handleSuccessResponse(_ value: Any) {
+        guard let array = value as? NSArray, array.count > 0 else {
+            self.getNotesFromServer()
+            return
+        }
+
+        UserDefaults.standard.set("Yes", forKey: "Success")
+        CoreDataHandlerTurkey().deleteDataWithStep2dataTurkey(postingId)
+
+        for sessionData in array {
+            guard let sessionDict = sessionData as? NSDictionary,
+                  let sessionId = sessionDict["SessionId"] as? Int,
+                  let farms = sessionDict["Farms"] as? NSArray else { continue }
+
+            processFarms(farms, sessionId: sessionId)
+        }
+
+        self.getNotesFromServer()
+    }
+
+    private func processFarms(_ farms: NSArray, sessionId: Int) {
+        for farm in farms {
+            guard let farmDict = farm as? NSDictionary,
+                  let farmName = farmDict["FarmName"] as? String,
+                  let categories = farmDict["Category"] as? NSArray else { continue }
+
+            processCategories(categories, farmName: farmName, sessionId: sessionId)
+        }
+    }
+
+    private func processCategories(_ categories: NSArray, farmName: String, sessionId: Int) {
+        for category in categories {
+            guard let catDict = category as? NSDictionary,
+                  let catName = catDict["Category"] as? String,
+                  let observations = catDict["Observations"] as? NSArray else { continue }
+
+            processObservations(observations, categoryName: catName, farmName: farmName, sessionId: sessionId)
+        }
+    }
+
+    private func processObservations(_ observations: NSArray, categoryName: String, farmName: String, sessionId: Int) {
+        for obs in observations {
+            guard let obsDict = obs as? NSDictionary,
+                  let obsId = obsDict["ObservationId"] as? Int,
+                  let refId = obsDict["ReferenceId"] as? NSNumber,
+                  let languageId = obsDict["LanguageId"] as? NSNumber,
+                  let obsName = obsDict["Observations"] as? String,
+                  let measure = obsDict["Measure"] as? String,
+                  let quickLink = obsDict["DefaultQLink"],
+                  let birdsArray = (obsDict["Birds"] as? NSArray)?.firstObject as? NSDictionary else { continue }
+
+            for i in 0..<10 {
+                let key = "BirdNumber\(i + 1)"
+                guard let birdValue = birdsArray[key] as? String, birdValue != "NA" else { break }
+
+                let visible = ((birdsArray[key] as AnyObject).boolValue)!
+                let score = ((birdsArray[key] as AnyObject).integerValue)!
+                let mappedCategory = mapCategory(catName: categoryName)
+
+                let data = CoreDataHandlerTurkeyModels.singleNecroSwithCaseData(
+                    catName: mappedCategory,
+                    obsName: obsName,
+                    formName: farmName,
+                    obsVisibility: visible,
+                    birdNo: NSNumber(value: i + 1),
+                    obsPoint: score,
+                    index: i,
+                    obsId: obsId,
+                    measure: measure,
+                    quickLink: (quickLink as AnyObject).integerValue as NSNumber,
+                    necId: NSNumber(value: sessionId),
+                    isSync: false,
+                    necIdSingle: self.postingId,
+                    lngId: languageId,
+                    refId: refId
+                )
+
+                CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseSingleDataTurkey(data: data)
+            }
+        }
+    }
+
+    private func mapCategory(catName: String) -> String {
+        switch catName {
+        case "Microscopy": return "Coccidiosis"
+        case "GI Tract": return "GITract"
+        case "Immune/Others": return "Immune"
+        case "Respiratory": return "Resp"
+        case "Skeletal/Muscular/Integumentary": return "skeltaMuscular"
+        default: return catName
+        }
+    }
+
     
     fileprivate func saveNotesData(_ value: Any) {
         let arr : NSArray = value as! NSArray
-        if arr.count>0{
+        if arr.count>0 {
             CoreDataHandlerTurkey().deleteDataBirdNotesWithIdTurkey(self.postingId)
             
             UserDefaults.standard.set("Yes", forKey: "Success")
-            for  i in 0..<arr.count {
+            for i in 0..<arr.count {
                 
                 let noteArr = (arr.object(at: i) as AnyObject).value(forKey:"Note")
                 
-                if (noteArr as AnyObject).count>0{
+                if (noteArr as AnyObject).count>0 {
                     for  j in 0..<(noteArr! as AnyObject).count {
                         let sessionId =  ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey: "sessionId") as! Int
                         let farmName =  ((noteArr as AnyObject).object(at: j) as AnyObject).value(forKey:"farmName") as! String
@@ -1421,14 +1441,14 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                         as! String
                         
                         
-                        let turkeyNote = CoreDataHandlerTurkeyModels.saveTurkeyNoteData(
-                            catName: "",  // Empty string for catName
-                             notes: birdNotes,
-                             formName: farmName,
-                             birdNo: birdNo as NSNumber,
-                             necId: sessionId as NSNumber,
-                             isSync: false,
-                             necIdSingle: self.postingId
+                        let turkeyNote = CoreDataHandlerTurkeyModels.saveTurkeyNoteData (
+                            catName: "",
+                            notes: birdNotes,
+                            formName: farmName,
+                            birdNo: birdNo as NSNumber,
+                            necId: sessionId as NSNumber,
+                            isSync: false,
+                            necIdSingle: self.postingId
                         )
 
                         CoreDataHandlerTurkey().saveNoofBirdWithNotesSingledataTurkey(turkeyNote)
@@ -1438,8 +1458,7 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             }
             self.getPostingDataFromServerforImage()
             
-        }
-        else{
+        } else {
             self.getPostingDataFromServerforImage()
         }
     }

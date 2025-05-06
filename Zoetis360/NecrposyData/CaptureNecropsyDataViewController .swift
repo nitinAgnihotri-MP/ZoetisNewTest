@@ -684,6 +684,29 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
     }
 
     // MARK: 🟠 Help PopUp
+    fileprivate func handleSklDataAndInforImageDataValidations(_ skleta: CaptureNecropsyViewData, _ infoImage: NSMutableArray) {
+        for i in 0..<2 {
+            let n  = String(describing: skleta.refId!)
+            if i == 0 {
+                let imageName = "skeltaMuscular" + "_" + n + "_n"
+                var image = UIImage(named:imageName)
+                if image == nil {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
+            }
+            
+            if i == 1 {
+                let imageName = "skeltaMuscular" + "_" + n + "_y"
+                var image = UIImage(named:imageName)
+                if image == nil {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
+            }
+        }
+    }
+    
     fileprivate func handleClickHelpPopUpBtnTag0(_ skleta: inout CaptureNecropsyViewData, _ sender: UIButton, _ obsName: inout String, _ refId: inout Int, _ obsNameArr: inout NSMutableArray, _ infoImage: NSMutableArray) {
         skleta = dataSkeltaArray.object(at: sender.tag) as! CaptureNecropsyViewData
         obsName  = skleta.obsName!
@@ -691,60 +714,49 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         
         obsNameArr =  self.setObsImageDescForSkleta(desc: refId)
         
-        if skleta.measure ==  "Y,N"
-        {
-            for i in 0..<2
-            {
-                
-                let n  = String(describing: skleta.refId!)
-                if i == 0
-                {
-                    let imageName = "skeltaMuscular" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                    
-                }
-                
-                if i == 1
-                {
-                    let imageName = "skeltaMuscular" + "_" + n + "_y"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                    
-                }
-            }
-            
-        }
-        
-        else if skleta.measure ==  "Actual"
-        {
+        switch skleta.measure {
+        case "Y,N":
+            handleSklDataAndInforImageDataValidations(skleta, infoImage)
+        case "Actual":
             let image = UIImage(named:"image02")
             infoImage.add(image!)
-            
-        }
-        else{
+        default:
             let n  = String(describing: skleta.refId!)
             let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             let array = (trimmed.components(separatedBy: ",") as [String])
             
-            for i in 0..<array.count
-            {
+            for i in 0..<array.count {
                 let imageName = "skeltaMuscular" + "_" + n + "_0" + String(i)
+                var image = UIImage(named:imageName)
+                if image == nil {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
+            }
+        }
+    }
+    
+    fileprivate func handleClickHelpPopupBtnTag1CaseYN(_ skleta: CaptureNecropsyViewData, _ infoImage: NSMutableArray) {
+        for i in 0..<2 {
+            let n  = String(describing: skleta.refId!)
+            
+            if i == 0 {
+                let imageName = "Coccidiosis" + "_" + n + "_n"
                 var image = UIImage(named:imageName)
                 if image == nil
                 {
                     image = UIImage(named:"Image01")
                 }
                 infoImage.add(image!)
-                
+            }
+            
+            if i == 1 {
+                let imageName = "Coccidiosis" + "_" + n + "_y"
+                var image = UIImage(named:imageName)
+                if image == nil {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
             }
         }
     }
@@ -755,49 +767,17 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         refId = skleta.refId as! Int
         obsNameArr =  self.setObsImageDescForCocodis(desc: refId)
         
-        if skleta.measure ==  "Y,N"
-        {
-            for i in 0..<2
-            {
-                let n  = String(describing: skleta.refId!)
-                
-                if i == 0
-                {
-                    let imageName = "Coccidiosis" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                }
-                
-                if i == 1
-                {
-                    let imageName = "Coccidiosis" + "_" + n + "_y"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                }
-            }
-        }
-        
-        else if skleta.measure ==  "Actual"
-        {
+        switch skleta.measure {
+        case "Y,N":
+            handleClickHelpPopupBtnTag1CaseYN(skleta, infoImage)
+        case "Actual":
             let image = UIImage(named:"image02")
             infoImage.add(image!)
-            
-        }
-        else{
-            
+        default:
             let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             let array = (trimmed.components(separatedBy: ",") as [String])
             
-            for i in 0..<array.count
-            {
+            for i in 0..<array.count {
                 let n  = String(describing: skleta.refId!)
                 var imageName = "Coccidiosis" + "_" + n + "_0" + String(i)
                 
@@ -805,6 +785,33 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
                     imageName = "CoccidiosisPor_23_00"
                 }
                 
+                var image = UIImage(named:imageName)
+                if image == nil {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
+            }
+        }
+    }
+    
+    fileprivate func handleSkletaDataMeasureClickHelpPopupBtnTag2(_ skleta: CaptureNecropsyViewData, _ infoImage: NSMutableArray) {
+        for i in 0..<2
+        {
+            let n  = String(describing: skleta.refId!)
+            if i == 0
+            {
+                let imageName = "GITract" + "_" + n + "_n"
+                var image = UIImage(named:imageName)
+                if image == nil
+                {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
+            }
+            
+            if i == 1
+            {
+                let imageName = "GITract" + "_" + n + "_y"
                 var image = UIImage(named:imageName)
                 if image == nil
                 {
@@ -821,50 +828,47 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         refId = skleta.refId as! Int
         obsNameArr =  self.setObsImageDescForGitract(desc: refId)
         
-        if skleta.measure ==  "Y,N"
-        {
-            for i in 0..<2
-            {
-                let n  = String(describing: skleta.refId!)
-                if i == 0
-                {
-                    let imageName = "GITract" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                }
-                
-                if i == 1
-                {
-                    let imageName = "GITract" + "_" + n + "_y"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                }
-            }
-        }
-        
-        else if skleta.measure ==  "Actual"
-        {
+        switch skleta.measure {
+        case "Y,N":
+            handleSkletaDataMeasureClickHelpPopupBtnTag2(skleta, infoImage)
+        case "Actual":
             let image = UIImage(named:"image02")
             infoImage.add(image!)
-            
-        }
-        else{
-            
+        default:
             let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             let array = (trimmed.components(separatedBy: ",") as [String])
             
-            for i in 0..<array.count
-            {
+            for i in 0..<array.count {
                 let n  = String(describing: skleta.refId!)
                 let imageName = "GITract" + "_" + n + "_0" + String(i)
+                var image = UIImage(named:imageName)
+                if image == nil
+                {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
+            }
+        }
+    }
+    
+    fileprivate func handleSkletaDataClickHelpPopupBtnTag3(_ skleta: CaptureNecropsyViewData, _ infoImage: NSMutableArray) {
+        for i in 0..<2
+        {
+            let n  = String(describing: skleta.refId!)
+            if i == 0
+            {
+                let imageName = "Resp" + "_" + n + "_n"
+                var image = UIImage(named:imageName)
+                if image == nil
+                {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
+            }
+            
+            if i == 1
+            {
+                let imageName = "Resp" + "_" + n + "_y"
                 var image = UIImage(named:imageName)
                 if image == nil
                 {
@@ -881,48 +885,45 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         refId = skleta.refId as! Int
         obsNameArr =  self.setObsImageDescForResp(desc: refId)
         
-        if skleta.measure ==  "Y,N"
-        {
-            for i in 0..<2
-            {
-                let n  = String(describing: skleta.refId!)
-                if i == 0
-                {
-                    let imageName = "Resp" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                }
-                
-                if i == 1
-                {
-                    let imageName = "Resp" + "_" + n + "_y"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                }
-            }
-        }
-        
-        else if skleta.measure ==  "Actual"
-        {
+        switch skleta.measure {
+        case "Y,N":
+            handleSkletaDataClickHelpPopupBtnTag3(skleta, infoImage)
+        case "Actual":
             let image = UIImage(named:"image02")
             infoImage.add(image!)
-        }
-        else{
-            
+        default:
             let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             let array = (trimmed.components(separatedBy: ",") as [String])
-            for i in 0..<array.count
-            {
+            for i in 0..<array.count {
                 let n  = String(describing: skleta.refId!)
                 let imageName = "Resp" + "_" + n + "_0" + String(i)
+                var image = UIImage(named:imageName)
+                if image == nil {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
+            }
+        }
+    }
+    
+    fileprivate func handleSkletaDataClickHelpPopupBtnTag4(_ skleta: CaptureNecropsyViewData, _ infoImage: NSMutableArray) {
+        for i in 0..<2
+        {
+            let n  = String(describing: skleta.refId!)
+            
+            if i == 0
+            {
+                let imageName = "Immune" + "_" + n + "_n"
+                var image = UIImage(named:imageName)
+                if image == nil
+                {
+                    image = UIImage(named:"Image01")
+                }
+                infoImage.add(image!)
+            }
+            if i == 1
+            {
+                let imageName = "Immune" + "_" + n + "_y"
                 var image = UIImage(named:imageName)
                 if image == nil
                 {
@@ -933,85 +934,55 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
     }
     
+    fileprivate func handleRefIdValidationsSkletaMeasureHelpBtnTag4(_ skleta: CaptureNecropsyViewData, _ infoImage: NSMutableArray) {
+        let a = NSMutableArray()
+        
+        if lngId == 4 {
+            a.add("0")
+        } else {
+            a.add("0")
+            a.add("3")
+            a.add("7")
+        }
+        
+        for i in 0..<a.count {
+            let n  = String(describing: skleta.refId!)
+            let imageName = "Immune" + "_" + n + "_0" + String(i)
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"Image01")
+            }
+            infoImage.add(image!)
+        }
+    }
+    
     fileprivate func handleClickHelpPopUpBtnTag4(_ skleta: inout CaptureNecropsyViewData, _ sender: UIButton, _ obsName: inout String, _ refId: inout Int, _ obsNameArr: inout NSMutableArray, _ infoImage: NSMutableArray) -> Bool? {
         skleta  = dataArrayImmu.object(at: sender.tag) as! CaptureNecropsyViewData
         obsName  = skleta.obsName!
         refId = skleta.refId as! Int
         obsNameArr =  self.setObsImageDescForImmune(desc: refId)
         
-        if skleta.measure ==  "Y,N"
-        {
-            
-            for i in 0..<2
-            {
-                let n  = String(describing: skleta.refId!)
-                
-                if i == 0
-                {
-                    let imageName = "Immune" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                }
-                if i == 1
-                {
-                    let imageName = "Immune" + "_" + n + "_y"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                }
-            }
-        } else if skleta.measure == "Actual" || skleta.measure == "F,M" {
+        switch skleta.measure {
+        case "Y,N":
+            handleSkletaDataClickHelpPopupBtnTag4(skleta, infoImage)
+        case "Actual", "F,M":
             let image = UIImage(named: "image02")
             infoImage.add(image!)
             return true
-        } else {
-            
-            if refId == 58 {
-                let a = NSMutableArray()
-                
-                if lngId == 4
-                {
-                    a.add("0")
-                }
-                else
-                {
-                    a.add("0")
-                    a.add("3")
-                    a.add("7")
-                }
-                
-                for i in 0..<a.count
-                {
-                    let n  = String(describing: skleta.refId!)
-                    let imageName = "Immune" + "_" + n + "_0" + String(i)
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"Image01")
-                    }
-                    infoImage.add(image!)
-                }
-            }
-            else
-            {
-                
+        default:
+            switch refId {
+            case 58:
+                handleRefIdValidationsSkletaMeasureHelpBtnTag4(skleta, infoImage)
+            default:
                 let trimmed = skleta.measure!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                 let array = (trimmed.components(separatedBy: ",") as [String])
                 
-                for i in 0..<array.count
-                {
+                for i in 0..<array.count {
                     let n  = String(describing: skleta.refId!)
                     let imageName = "Immune" + "_" + n + "_0" + String(i)
                     var image = UIImage(named:imageName)
-                    if image == nil
-                    {
+                    if image == nil {
                         image = UIImage(named:"Image01")
                     }
                     infoImage.add(image!)
@@ -5152,49 +5123,110 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
         }
     }
     
+    fileprivate func handleObsMeasureValidationNecropsyCollectionValidationBtnTagElseCase(_ immu: CaptureNecropsyViewData, _ cell: CaptureNecropsyCollectionViewCell) {
+        if immu.obsName == Constants.maleFemaleStr {
+            cell.birdSexView.isHidden = false
+            let n  = String(describing: immu.refId!)
+            
+            let imageName = "Immune" + "_" + n + "_01"
+            
+            var image = UIImage(named:imageName)
+            if image == nil {
+                image = UIImage(named:"Image01")
+            }
+            
+            if immu.actualText == "1" || immu.actualText == "1.00" || immu.actualText == "1.0"{
+                cell.birdSexLbl.text = "Male"
+            }
+            else if immu.actualText == "2" || immu.actualText == "2.00" || immu.actualText == "2.0"{
+                cell.birdSexLbl.text = "Female"
+            }
+            else{
+                cell.birdSexLbl.text = "N/A"
+            }
+            cell.observationImage.image =  image
+            cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
+            cell.switchNec.alpha = 0
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 0
+        }
+    }
+    
+    fileprivate func handleNecCollectionViewBtnTagElseCaseValidations(_ immu: CaptureNecropsyViewData, _ cell: CaptureNecropsyCollectionViewCell) {
+        var necId : Int
+        if postingIdFromExistingNavigate == "Exting" {
+            necId =  postingIdFromExisting
+        } else {
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
+        }
+        
+        let photoArr = CoreDataHandler().fecthPhotoWithCatnameWithBirdAndObservationID(immu.birdNo!, farmname: immu.formName!, catName: immu.catName!, Obsid: immu.obsID!, obsName: immu.obsName!,necId: necId as NSNumber)
+        if photoArr.count > 0 {
+            cell.badgeButton.alpha = 1
+            cell.badgeButton.badgeString = String(photoArr.count) as String
+            cell.badgeButton.badgeTextColor = UIColor.white
+            cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
+        } else {
+            cell.badgeButton.alpha = 0
+        }
+    }
+    
+    fileprivate func handleImmunisationNecCollecionViewBtnTagElseCaseValidations(_ immu: CaptureNecropsyViewData, _ cell: CaptureNecropsyCollectionViewCell) {
+        if immu.refId == 58 {
+            let n  = String(describing: immu.refId!)
+            let imageName = "Immune" + "_" + n + "_01"
+            var image = UIImage(named:imageName)
+            if image == nil {
+                image = UIImage(named:"Image01")
+            }
+            cell.observationImage.image =  image
+            cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
+            cell.switchNec.alpha = 0
+            cell.plusButton.alpha = 1
+            cell.minusButton.alpha = 1
+            cell.incrementLabel.alpha = 1
+            cell.textFieldActual.alpha = 0
+        } else {
+            let n = String(describing: immu.refId!)
+            let imageName = "Immune" + "_" + n + "_00"
+            var image = UIImage(named:imageName)
+            if image == nil {
+                image = UIImage(named:"Image01")
+            }
+            cell.observationImage.image =  image
+            cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
+            cell.switchNec.alpha = 0
+            cell.plusButton.alpha = 1
+            cell.minusButton.alpha = 1
+            cell.incrementLabel.alpha = 1
+            cell.textFieldActual.alpha = 0
+        }
+    }
+    
     fileprivate func handleNeccollectionViewBtnTagElseCase(_ indexPath: IndexPath, _ cell: CaptureNecropsyCollectionViewCell) {
         let immu : CaptureNecropsyViewData = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewData
         cell.myLabel.text = immu.obsName
         let measure = immu.measure
         cell.mesureValue = measure!
         
-        var  necId : Int
-        if postingIdFromExistingNavigate == "Exting"{
-            necId =  postingIdFromExisting
-        }
-        else{
-            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-        }
-        
-        let photoArr = CoreDataHandler().fecthPhotoWithCatnameWithBirdAndObservationID(immu.birdNo!, farmname: immu.formName!, catName: immu.catName!, Obsid: immu.obsID!, obsName: immu.obsName!,necId: necId as NSNumber)
-        if photoArr.count > 0
-        {
-            cell.badgeButton.alpha = 1
-            cell.badgeButton.badgeString = String(photoArr.count) as String
-            cell.badgeButton.badgeTextColor = UIColor.white
-            cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
-        }
-        else
-        {
-            cell.badgeButton.alpha = 0
-        }
+        handleNecCollectionViewBtnTagElseCaseValidations(immu, cell)
         
         if measure == "Y,N" {
             cell.birdSexView.isHidden = true
             let n  = String(describing: immu.refId!)
             let imageName = "Immune" + "_" + n + "_n"
             var image = UIImage(named:imageName)
-            if image == nil
-            {
+            if image == nil {
                 image = UIImage(named:"Image01")
             }
             
             cell.observationImage.image =  image
             
-            if immu.objsVisibilty == 1{
+            if immu.objsVisibilty == 1 {
                 cell.switchNec.isOn = true
-            }
-            else{
+            } else {
                 cell.switchNec.isOn = false
             }
             
@@ -5203,8 +5235,7 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             cell.minusButton.alpha = 0
             cell.incrementLabel.alpha = 0
             cell.textFieldActual.alpha = 0
-        }
-        else if measure == "Actual" || measure == "F,M" {
+        } else if measure == "Actual" || measure == "F,M" {
             cell.switchNec.alpha = 0
             cell.plusButton.alpha = 0
             cell.minusButton.alpha = 0
@@ -5214,138 +5245,74 @@ class CaptureNecropsyDataViewController: BaseViewController,UICollectionViewDele
             let image = UIImage(named:"image02")
             cell.observationImage.image =  image
             
-            if immu.obsName == Constants.maleFemaleStr
-            {
-                cell.birdSexView.isHidden = false
-                let n  = String(describing: immu.refId!)
-                
-                let imageName = "Immune" + "_" + n + "_01"
-                
-                var image = UIImage(named:imageName)
-                if image == nil
-                {
-                    image = UIImage(named:"Image01")
-                }
-                
-                if immu.actualText == "1" || immu.actualText == "1.00" || immu.actualText == "1.0"{
-                    cell.birdSexLbl.text = "Male"
-                }
-                else if immu.actualText == "2" || immu.actualText == "2.00" || immu.actualText == "2.0"{
-                    cell.birdSexLbl.text = "Female"
-                }
-                else{
-                    cell.birdSexLbl.text = "N/A"
-                }
-                cell.observationImage.image =  image
-                cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
-                cell.switchNec.alpha = 0
-                cell.plusButton.alpha = 0
-                cell.minusButton.alpha = 0
-                cell.incrementLabel.alpha = 0
-                cell.textFieldActual.alpha = 0
-            }
+            handleObsMeasureValidationNecropsyCollectionValidationBtnTagElseCase(immu, cell)
+        } else {
+            handleImmunisationNecCollecionViewBtnTagElseCaseValidations(immu, cell)
+        }
+    }
+    
+    fileprivate func handleBirdSexCompletionActionBtnTag4(_ indexPath: IndexPath) {
+        let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewData
+        var  necId : Int
+        if postingIdFromExistingNavigate == "Exting"{
+            necId =  postingIdFromExisting
+        }
+        else{
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
         }
         
-        else{
+        let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId:necId as NSNumber)
+        
+        let immune1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
+        if FetchObsArr.count > 0 {
             
-            if immu.refId == 58
-            {
-                let n  = String(describing: immu.refId!)
-                let imageName = "Immune" + "_" + n + "_01"
-                var image = UIImage(named:imageName)
-                if image == nil
-                {
-                    image = UIImage(named:"Image01")
-                }
-                cell.observationImage.image =  image
-                cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
-                cell.switchNec.alpha = 0
-                cell.plusButton.alpha = 1
-                cell.minusButton.alpha = 1
-                cell.incrementLabel.alpha = 1
-                cell.textFieldActual.alpha = 0
-            }
-            else{
-                let n  = String(describing: immu.refId!)
-                let imageName = "Immune" + "_" + n + "_00"
-                var image = UIImage(named:imageName)
-                if image == nil
-                {
-                    image = UIImage(named:"Image01")
-                }
-                cell.observationImage.image =  image
-                cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
-                cell.switchNec.alpha = 0
-                cell.plusButton.alpha = 1
-                cell.minusButton.alpha = 1
-                cell.incrementLabel.alpha = 1
-                cell.textFieldActual.alpha = 0
-            }
+            
+            let data = chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData(
+                catName: "Immune",
+                obsName: immune1.obsName!,
+                formName: immune.formName!,
+                birdNo: immune.birdNo!,
+                actualName: selectedSexValue,
+                index: indexPath.row,
+                necId: necId as NSNumber,
+                isSync: true,
+                refId: immune.refId!
+            )
+            
+            CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick(data: data)
+        }
+        
+        dataArrayImmu.removeAllObjects()
+        
+        if postingIdFromExistingNavigate == "Exting"{
+            necId =  postingIdFromExisting
+        }
+        else{
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
+        }
+        dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+    }
+    
+    fileprivate func handleSelectedValValidations(_ selectedVal: String) {
+        if selectedVal == "Female" {
+            selectedSexValue = "2"
+        } else if selectedVal == "N/A" {
+            selectedSexValue = "0"
+        } else {
+            selectedSexValue = "1"
         }
     }
     
     fileprivate func handleBirdSexCompletionAction(_ cell: CaptureNecropsyCollectionViewCell, _ indexPath: IndexPath) {
+        
         cell.birdSexCompletion = {[unowned self] ( error) in
-            
             if BirdSex.count > 0 {
                 self.dropDownVIewNew(arrayData: BirdSex as? [String] ?? [String](), kWidth: cell.birdSexView.frame.width, kAnchor: cell.birdSexView, yheight: cell.birdSexView.bounds.height) { [unowned self] selectedVal, index  in
                     cell.birdSexLbl.text = selectedVal
                     selectedSexValue = selectedVal
-                    
-                    if selectedVal == "Female"
-                    {
-                        selectedSexValue = "2"
-                    }
-                    else if selectedVal == "N/A"
-                    {
-                        selectedSexValue = "0"
-                    }
-                    else
-                    {
-                        selectedSexValue = "1"
-                    }
-                    
+                    handleSelectedValValidations(selectedVal)
                     if btnTag == 4 {
-                        
-                        let immune : CaptureNecropsyViewData = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewData
-                        var  necId : Int
-                        if postingIdFromExistingNavigate == "Exting"{
-                            necId =  postingIdFromExisting
-                        }
-                        else{
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
-                        
-                        let FetchObsArr =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservationID(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId:necId as NSNumber)
-                        
-                        let immune1 : CaptureNecropsyViewData = FetchObsArr.object(at: 0) as! CaptureNecropsyViewData
-                        if FetchObsArr.count > 0 {
-                            
-                            
-                            let data = chickenCoreDataHandlerModels.actualClickUpdateCaptureSkeletaData(
-                                catName: "Immune",
-                                obsName: immune1.obsName!,
-                                formName: immune.formName!,
-                                birdNo: immune.birdNo!,
-                                actualName: selectedSexValue,
-                                index: indexPath.row,
-                                necId: necId as NSNumber,
-                                isSync: true,
-                                refId: immune.refId!
-                            )
-                            
-                            CoreDataHandler().updateCaptureSkeletaInDatabaseOnActualClick(data: data)
-                        }
-                        
-                        dataArrayImmu.removeAllObjects()
-                        
-                        if postingIdFromExistingNavigate == "Exting"{
-                            necId =  postingIdFromExisting
-                        }
-                        else{
-                            necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                        }
-                        dataArrayImmu =  CoreDataHandler().fecthFrmWithCatnameWithBirdAndObservation(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+                        self.handleBirdSexCompletionActionBtnTag4(indexPath)
                     }
                     
                     if postingIdFromExistingNavigate == "Exting"{

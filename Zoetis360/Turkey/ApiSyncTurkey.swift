@@ -485,61 +485,7 @@ class ApiSyncTurkey: NSObject {
         handleIfWebConnectedAndCallAPI(sessionDictMain)
     }
     
-    /********************* Save Add Vacination data On Server ***************************/
-    /**************************************************************************/
-    func addVaccination()  {
-        
-        let vacciPostingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
-        let cNecArr = CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncTurkey(true)
-        let necArrWithoutPosting = NSMutableArray()
-        
-        for j in 0..<cNecArr.count
-        {
-            let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyDataTurkey
-            necArrWithoutPosting.add(captureNecropsyData)
-            for w in 0..<necArrWithoutPosting.count - 1
-            {
-                let c = necArrWithoutPosting.object(at: w)  as! CaptureNecropsyDataTurkey
-                if c.necropsyId == captureNecropsyData.necropsyId
-                {
-                    necArrWithoutPosting.remove(c)
-                }
-            }
-        }
-        self.postingIdArr.removeAllObjects()
-        
-     
-        let tempArrTime = NSMutableArray()
-        let actualTemp  = NSMutableArray()
-        
-        for i in 0..<vacciPostingArrWithAllData.count
-        {
-            if self.isSyncPostingArrWithData == false{
-                self.isSyncPostingArrWithData = true
-                let pSession = vacciPostingArrWithAllData.object(at: i) as! PostingSessionTurkey
-                var sessionId = pSession.postingId!
-                var timeStamp = pSession.timeStamp!
-                var actualtimeStr = pSession.actualTimeStamp
-                if actualtimeStr == nil{
-                    actualtimeStr = ""
-                }
-                actualTemp.add(actualtimeStr!)
-                tempArrTime.add(timeStamp)
-                self.postingIdArr.add(sessionId)
-            }
-            
-        }
-        
-        for i in 0..<necArrWithoutPosting.count
-        {
-            let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
-            var sessionId = nIdSession.necropsyId!
-            self.postingIdArr.add(sessionId)
-        }
-        
-        let sessionArr = NSMutableArray()
-        let sessionDictWithVac = NSMutableDictionary()
-        
+    fileprivate func handlepostingIdValidationsAddVaccination(_ tempArrTime: NSMutableArray, _ sessionArr: NSMutableArray) {
         for i in 0..<self.postingIdArr.count {
             
             if self.isSyncPostingIdArr == false{
@@ -578,7 +524,7 @@ class ApiSyncTurkey: NSObject {
                     else{
                         routeId = 0
                     }
-                  
+                    
                     var strain = pSession.strain!
                     let strainKey = "hatcheryStrain\(i + 1)"
                     let routeKey = "hatcheryRoute\(i+1)Id"
@@ -593,7 +539,7 @@ class ApiSyncTurkey: NSObject {
                 {
                     let pSession = FieldVacinationAll.object(at: i) as! HatcheryVacTurkey
                     let routeName = pSession.route
-                
+                    
                     var routeId = NSNumber()
                     if routeName == Constants.drinkingWater {
                         routeId = 2
@@ -641,7 +587,7 @@ class ApiSyncTurkey: NSObject {
                     mainDict.setValue(pId, forKey: "vaccinationId")
                     mainDict.setValue(vaccinationName, forKey: "vaccinationName")
                     let acttimeStamp = tempArrTime.object(at: i)
-                  
+                    
                     var fullData = acttimeStamp as! String
                     mainDict.setValue(fullData, forKey: "deviceSessionId")
                     sessionArr.add(mainDict)
@@ -649,11 +595,60 @@ class ApiSyncTurkey: NSObject {
             }
             
         }
-        sessionDictWithVac.setValue(sessionArr, forKey: "Vaccinations")
+    }
+    
+    fileprivate func handleSaveMultipleVaccinationAPIResponseMain(_ statusCode: Int?, _ response: AFDataResponse<Any>) {
+        switch statusCode {
+        case 401:
+            self.loginMethod()
+        case 500, 503, 403, 501, 502, 400, 504, 404, 408:
+            self.delegeteSyncApiTurkey.failWithError(statusCode: statusCode!)
+        default:
+            break
+        }
         
-        do {
-   
+        switch response.result {
             
+        case .success(let responseObject):
+            
+            self.isSyncPostingArrWithData = false
+            self.isSyncPostingIdArr = false
+            self.savePostingDataOnServer()
+            
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                
+                self.delegeteSyncApiTurkey.failWithErrorInternal()
+                print(err)
+            } else if response.data != nil {
+                
+                if let s = statusCode {
+                    
+                    self.delegeteSyncApiTurkey.failWithError(statusCode: s)
+                    
+                }  else  {
+                    self.delegeteSyncApiTurkey.failWithErrorInternal()
+                }
+            }
+        }
+    }
+    
+    fileprivate func handleCNecArrForLoopValidations(_ cNecArr: NSArray, _ necArrWithoutPosting: NSMutableArray) {
+        for j in 0..<cNecArr.count {
+            let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyDataTurkey
+            necArrWithoutPosting.add(captureNecropsyData)
+            for w in 0..<necArrWithoutPosting.count - 1 {
+                let c = necArrWithoutPosting.object(at: w)  as! CaptureNecropsyDataTurkey
+                if c.necropsyId == captureNecropsyData.necropsyId {
+                    necArrWithoutPosting.remove(c)
+                }
+            }
+        }
+    }
+    
+    fileprivate func checkInternetConnectionAndCallSaveMultipeVaccinationAPI(_ sessionDictWithVac: NSMutableDictionary) {
+        do {
             if WebClass.sharedInstance.connected() {
                 let Url = "/PostingSession/SaveMultipleVaccinationsSyncData"
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
@@ -664,54 +659,63 @@ class ApiSyncTurkey: NSObject {
                 request.httpMethod = "POST"
                 request.allHTTPHeaderFields = headerDict
                 request.setValue(Constants.applicationJson, forHTTPHeaderField: Constants.contentType)
-    
                 
                 if let jsonData = try? JSONSerialization.data(withJSONObject: sessionDictWithVac, options: []) {
                     request.httpBody = jsonData
-                } else {
-                    print(Constants.failedSerilazedJSON)
-                    // Handle error case, such as not making the request
                 }
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
-                    let statusCode =  response.response?.statusCode
-                    
-                    if statusCode == 401  {
-                        self.loginMethod()
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                        self.delegeteSyncApiTurkey.failWithError(statusCode: statusCode!)
-                    }
-                    
-                    switch response.result {
-                        
-                    case .success(let responseObject):
-                        
-                        self.isSyncPostingArrWithData = false
-                        self.isSyncPostingIdArr = false
-                        self.savePostingDataOnServer()
-                        
-                    case .failure(let encodingError):
-                        
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            
-                            self.delegeteSyncApiTurkey.failWithErrorInternal()
-                            print(err)
-                        } else if response.data != nil {
-                            
-                            if let s = statusCode {
-                                
-                                self.delegeteSyncApiTurkey.failWithError(statusCode: s)
-                                
-                            }  else  {
-                                self.delegeteSyncApiTurkey.failWithErrorInternal()
-                            }
-                        }
-                    }
+                    let statusCode = response.response?.statusCode
+                    self.handleSaveMultipleVaccinationAPIResponseMain(statusCode, response)
                 }
             }
         }
     }
+    
+    /********************* Save Add Vacination data On Server ***************************/
+    /**************************************************************************/
+    func addVaccination()  {
+        
+        let vacciPostingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
+        let cNecArr = CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncTurkey(true)
+        let necArrWithoutPosting = NSMutableArray()
+        
+        handleCNecArrForLoopValidations(cNecArr, necArrWithoutPosting)
+        self.postingIdArr.removeAllObjects()
+        let tempArrTime = NSMutableArray()
+        let actualTemp  = NSMutableArray()
+        
+        for i in 0..<vacciPostingArrWithAllData.count {
+            if self.isSyncPostingArrWithData == false{
+                self.isSyncPostingArrWithData = true
+                let pSession = vacciPostingArrWithAllData.object(at: i) as! PostingSessionTurkey
+                var sessionId = pSession.postingId!
+                var timeStamp = pSession.timeStamp!
+                var actualtimeStr = pSession.actualTimeStamp
+                if actualtimeStr == nil{
+                    actualtimeStr = ""
+                }
+                actualTemp.add(actualtimeStr!)
+                tempArrTime.add(timeStamp)
+                self.postingIdArr.add(sessionId)
+            }
+        }
+        
+        for i in 0..<necArrWithoutPosting.count {
+            let nIdSession = necArrWithoutPosting.object(at: i) as! CaptureNecropsyDataTurkey
+            var sessionId = nIdSession.necropsyId!
+            self.postingIdArr.add(sessionId)
+        }
+        
+        let sessionArr = NSMutableArray()
+        let sessionDictWithVac = NSMutableDictionary()
+        
+        handlepostingIdValidationsAddVaccination(tempArrTime, sessionArr)
+        sessionDictWithVac.setValue(sessionArr, forKey: "Vaccinations")
+        
+        self.checkInternetConnectionAndCallSaveMultipeVaccinationAPI(sessionDictWithVac)
+    }
+    
     fileprivate func necropsyDataApiFailed(_ encodingError: AFError, _ response: AFDataResponse<Any>) {
         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
             self.delegeteSyncApiTurkey.failWithErrorInternal()
@@ -726,12 +730,13 @@ class ApiSyncTurkey: NSObject {
     }
     
     fileprivate func handleSaveMultiplePostingsSyncDataSavePostingData(_ statusCode: Int?, _ response: AFDataResponse<Any>) {
-        if statusCode == 401  {
+        switch statusCode {
+        case 401:
             self.loginMethod()
-        }
-        else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-            //self.delegeteSyncApi.failWithErrorInternal()
+        case 500, 503, 403, 501, 502, 400, 504, 404, 408:
             self.delegeteSyncApiTurkey.failWithError(statusCode: statusCode!)
+        default:
+            break
         }
         
         switch response.result {
@@ -983,15 +988,12 @@ class ApiSyncTurkey: NSObject {
             let obsNameWithValue = CoreDataHandlerTurkey().fetchObsWithBirdandFarmNameTurkey(farmName!, birdNo: (j + 1) as NSNumber, necId: cNData.necropsyId!)
             let notesWithFarm = CoreDataHandlerTurkey().fetchNotesWithBirdNumandFarmNameTurkey((j + 1) as NSNumber, formName: farmName!, necId: cNData.necropsyId!)
             
-            if notesWithFarm.count > 0
-            {
+            if notesWithFarm.count > 0 {
                 let n = notesWithFarm.object(at: 0) as! NotesBirdTurkey
                 let notes = n.notes
                 obsNameWithValue.setValue(j + 1, forKey: "BirdId")
                 obsNameWithValue.setValue(notes, forKey: "birdNotes")
-            }
-            else
-            {
+            } else {
                 obsNameWithValue.setValue(j + 1, forKey: "BirdId")
                 obsNameWithValue.setValue("", forKey: "birdNotes")
             }
@@ -1239,195 +1241,165 @@ class ApiSyncTurkey: NSObject {
             }
         }
     }
-    /********************* Save Image  On Server ***************************/
-    /**************************************************************************/
+    fileprivate func handleSaveBirdmageSyncDataSuccessResponse(_ response: AFDataResponse<Any>, _ statusCode: Int?,cNecArr: NSArray) {
+        switch response.result {
+            
+        case .success(let responseObject):
+            
+            self.isSyncPostingArrWithData = false
+            self.isSyncPostingIdArr = false
+            self.isDelegateCalled = false
+            if cNecArr.count > 0 && self.postingIdArr.count == 0{
+                self.updadateNacDataOnCoreData(cNecArr: cNecArr, { (success) in
+                    if success == true{
+                        self.delegeteSyncApiTurkey.didFinishApi()
+                    }
+                })
+            }
+            else if cNecArr.count > 0 && self.postingIdArr.count > 0 {
+                self.updateDataOnCoreData(cNecArr: cNecArr) { success in
+                    if success {
+                        self.delegeteSyncApiTurkey.didFinishApi()
+                    }
+                }
+            }
+            
+            
+            
+            else if cNecArr.count == 0 && self.postingIdArr.count > 0 {
+                self.updateDataOnCoreData(cNecArr: cNecArr,{ (success) in
+                    if success == true{
+                        if self.isDelegateCalled == false{
+                            self.isDelegateCalled = true
+                            self.delegeteSyncApiTurkey.didFinishApi()
+                            
+                        }
+                    }
+                })
+            }
+            
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                // no internet connection
+                self.delegeteSyncApiTurkey.failWithErrorInternal()
+                
+            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                // other failures
+                print (encodingError)
+                print (responseString)
+                if let s = statusCode {
+                    
+                    self.delegeteSyncApiTurkey.failWithError(statusCode: s)
+                } else {
+                    self.delegeteSyncApiTurkey.failWithErrorInternal()
+                }
+            }
+        }
+    }
     
-    func saveObservationImageOnServer (){
-        
-        let imageArrWithIsyncIsTrue = CoreDataHandlerTurkey().fecthPhotoWithiSynsTrueTurkey(true)
-        let sessionDict = NSMutableDictionary()
-        let sessionArr = NSMutableArray()
-        
-        let cNecArr = CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncTurkey(true)
-        let totalSession = NSMutableArray()
-        
-        for j in 0..<cNecArr.count
-        {
-            let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyDataTurkey
-            totalSession.add(captureNecropsyData)
-            for w in 0..<totalSession.count - 1
-            {
-                let c = totalSession.object(at: w)  as! CaptureNecropsyDataTurkey
-                if c.necropsyId == captureNecropsyData.necropsyId
-                {
-                    totalSession.remove(c)
-                }
-            }
-        }
-        
-        postingArrWithAllData.removeAllObjects()
-        postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
-        
-        if imageArrWithIsyncIsTrue.count > 0
-        {
-            for i in 0..<totalSession.count
-            {
-                let sessionDetails = NSMutableDictionary()
-                let captureNecropsyData = totalSession.object(at: i)  as! CaptureNecropsyDataTurkey
-                let nId = captureNecropsyData.necropsyId!
-                let cNec =  CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncandPostingIdTurkey(true , postingId:nId)
-                let obsWithImageArr = NSMutableArray()
-                for x in 0..<cNec.count
-                {
-                    let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
-                    let farmName = cNData.farmName
-                    let noOfBird = Int(cNData.noOfBirds!)
-                    let necId = Int(cNData.necropsyId!)
-                    for j in 0..<noOfBird!
-                    {
-                        let catArr = ["skeltaMuscular","Coccidiosis","GITract","Resp","Immune"] as NSArray
-                        for w in 0..<catArr.count
-                        {
-                            let obsArr = CoreDataHandlerTurkey().fecthobsDataWithCatnameAndFarmNameAndBirdNumberTurkey((j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, necId: necId as NSNumber)
-                            
-                            for y in 0..<obsArr.count
-                            {
-                                let obsWithAllImageDataDict = NSMutableDictionary()
-                                let cData = obsArr.object(at: y) as! CaptureNecropsyViewDataTurkey
-                                let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDandIsyncTurkey( (j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, Obsid: cData.obsID!, isSync: true,necId: necId as NSNumber)
-                                obsWithAllImageDataDict.setValue(farmName!, forKey: "farmName")
-                                obsWithAllImageDataDict.setValue(j + 1, forKey: "birdNumber")
-                                var catName1 = catArr.object(at: w) as! String
-                                if catName1 == "Coccidiosis"{
-                                    catName1 = "Microscopy"
-                                }
-                                
-                                obsWithAllImageDataDict.setValue(catName1, forKey: "categoryName")
-                                obsWithAllImageDataDict.setValue(cData.obsID!, forKey: "observationId")
-                                
-                                let photoValArr = NSMutableArray()
-                                var yImage =  UIImage()
-                                for z in 0..<photoArr.count
-                                {
-                                    let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCaptureTurkey
-                                    var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
-                                    
-                                    if let imageData = image.jpeg(.lowest) {
-                                        
-                                        image = UIImage(data: imageData)!
-                                        
-                                    }
-                                    let w : CGFloat = image.size.width / 7
-                                    yImage = self.resizeImage(image, newWidth: w)!
-                                    
-                                    let imageDict =  NSMutableDictionary()
-                                    imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
-                                    photoValArr.add(imageDict)
-                                    
-                                }
-                                obsWithAllImageDataDict.setValue(photoValArr, forKey: "images")
-                                obsWithImageArr.add(obsWithAllImageDataDict)
-                            }
-                        }
-                    }
-                }
-                
-               
-                let fullData = captureNecropsyData.timeStamp!
-                sessionDetails.setValue(obsWithImageArr, forKey: "ImageDetails")
-                let id = UserDefaults.standard.integer(forKey: "Id")
-                sessionDetails.setValue(id, forKey: "UserId")
-                sessionDetails.setValue(fullData, forKey: "deviceSessionId")
-                sessionArr.add(sessionDetails)
-                
+    fileprivate func handleObsArrObserverValidationsOnServerValidation(_ obsArr: NSArray, _ j: Int, _ farmName: String?, _ catArr: NSArray, _ w: Int, _ necId: Int, _ obsWithImageArr: NSMutableArray) {
+        for y in 0..<obsArr.count {
+            let obsWithAllImageDataDict = NSMutableDictionary()
+            let cData = obsArr.object(at: y) as! CaptureNecropsyViewDataTurkey
+            let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDandIsyncTurkey((j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, Obsid: cData.obsID!, isSync: true,necId: necId as NSNumber)
+            obsWithAllImageDataDict.setValue(farmName!, forKey: "farmName")
+            obsWithAllImageDataDict.setValue(j + 1, forKey: "birdNumber")
+            var catName = catArr.object(at: w) as! String
+            if catName == "Coccidiosis"{
+                catName = "Microscopy"
             }
             
-            for i in 0..<postingArrWithAllData.count {
-                if isSyncPostingArrWithData == false{
-                    isSyncPostingArrWithData = true
-                    let sessionDetails = NSMutableDictionary()
-                    let captureNecropsyData = postingArrWithAllData.object(at: i)  as! PostingSessionTurkey
-                    let nId = captureNecropsyData.postingId!
-                    _ = captureNecropsyData.timeStamp
-                    
-                    let cNec =  CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncandPostingIdTurkey(true , postingId:nId)
-                    let obsWithImageArr = NSMutableArray()
-                    for x in 0..<cNec.count
-                    {
-                        let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
-                        let farmName = cNData.farmName
-                        let noOfBird = Int(cNData.noOfBirds!)
-                        let necId = Int(cNData.necropsyId!)
-                        for j in 0..<noOfBird!
-                        {
-                            let catArr = ["skeltaMuscular","Coccidiosis","GITract","Resp","Immune"] as NSArray
-                            
-                            for w in 0..<catArr.count
-                            {
-                                let obsArr = CoreDataHandlerTurkey().fecthobsDataWithCatnameAndFarmNameAndBirdNumberTurkey((j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, necId: necId as NSNumber)
-                                
-                                for y in 0..<obsArr.count
-                                {
-                                    let obsWithAllImageDataDict = NSMutableDictionary()
-                                    let cData = obsArr.object(at: y) as! CaptureNecropsyViewDataTurkey
-                                    let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDandIsyncTurkey((j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, Obsid: cData.obsID!, isSync: true,necId: necId as NSNumber)
-                                    obsWithAllImageDataDict.setValue(farmName!, forKey: "farmName")
-                                    obsWithAllImageDataDict.setValue(j + 1, forKey: "birdNumber")
-                                    var catName = catArr.object(at: w) as! String
-                                    if catName == "Coccidiosis"{
-                                        catName = "Microscopy"
-                                    }
-                                    
-                                    obsWithAllImageDataDict.setValue(catName, forKey: "categoryName")
-                                    obsWithAllImageDataDict.setValue(cData.obsID!, forKey: "observationId")
-                                    
-                                    let photoValArr = NSMutableArray()
-                                    var yImage =  UIImage()
-                                    for z in 0..<photoArr.count
-                                    {
-                                        let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCaptureTurkey
-                                        
-                                        var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
-                                        
-                                        if let imageData = image.jpeg(.lowest) {
-                                            
-                                            image = UIImage(data: imageData)!
-                                            
-                                        }
-                                        let w : CGFloat = image.size.width / 7
-                                        
-                                        yImage = self.resizeImage(image, newWidth: w)!
-                                        let imageDict =  NSMutableDictionary()
-                                        imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
-                                        photoValArr.add(imageDict)
-                                    }
-                                    
-                                    obsWithAllImageDataDict.setValue(photoValArr, forKey: "images")
-                                    obsWithImageArr.add(obsWithAllImageDataDict)
-                                }
-                            }
-                        }
-                    }
-                    
-                   
-                    var fullData = captureNecropsyData.timeStamp!
-                    sessionDetails.setValue(obsWithImageArr, forKey: "ImageDetails")
-                    let id = UserDefaults.standard.integer(forKey: "Id")
-                    sessionDetails.setValue(id, forKey: "UserId")
-                    sessionDetails.setValue(fullData, forKey: "deviceSessionId")
-                    sessionArr.add(sessionDetails)
-                }
+            obsWithAllImageDataDict.setValue(catName, forKey: "categoryName")
+            obsWithAllImageDataDict.setValue(cData.obsID!, forKey: "observationId")
+            
+            let photoValArr = NSMutableArray()
+            var yImage =  UIImage()
+            for z in 0..<photoArr.count {
+                let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCaptureTurkey
                 
+                var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
+                
+                if let imageData = image.jpeg(.lowest) {
+                    
+                    image = UIImage(data: imageData)!
+                    
+                }
+                let w : CGFloat = image.size.width / 7
+                
+                yImage = self.resizeImage(image, newWidth: w)!
+                let imageDict =  NSMutableDictionary()
+                imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
+                photoValArr.add(imageDict)
+            }
+            
+            obsWithAllImageDataDict.setValue(photoValArr, forKey: "images")
+            obsWithImageArr.add(obsWithAllImageDataDict)
+        }
+    }
+    
+    fileprivate func handleCNecAndObsWithImageArrValidations(_ cNec: NSArray, _ obsWithImageArr: NSMutableArray) {
+        for x in 0..<cNec.count {
+            let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
+            let farmName = cNData.farmName
+            let noOfBird = Int(cNData.noOfBirds!)
+            let necId = Int(cNData.necropsyId!)
+            for j in 0..<noOfBird! {
+                let catArr = ["skeltaMuscular","Coccidiosis","GITract","Resp","Immune"] as NSArray
+                
+                for w in 0..<catArr.count {
+                    let obsArr = CoreDataHandlerTurkey().fecthobsDataWithCatnameAndFarmNameAndBirdNumberTurkey((j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, necId: necId as NSNumber)
+                    
+                    self.handleObsArrObserverValidationsOnServerValidation(obsArr, j, farmName, catArr, w, necId, obsWithImageArr)
+                }
             }
         }
-        sessionDict.setValue(sessionArr, forKey: "Sessions")
-        
+    }
+    
+    fileprivate func handleTotalSessionArrHandlingAndValidations(_ obsArr: NSArray, _ j: Int, _ farmName: String?, _ catArr: NSArray, _ w: Int, _ necId: Int, _ obsWithImageArr:inout NSMutableArray) {
+        for y in 0..<obsArr.count {
+            let obsWithAllImageDataDict = NSMutableDictionary()
+            let cData = obsArr.object(at: y) as! CaptureNecropsyViewDataTurkey
+            let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDandIsyncTurkey( (j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, Obsid: cData.obsID!, isSync: true,necId: necId as NSNumber)
+            obsWithAllImageDataDict.setValue(farmName!, forKey: "farmName")
+            obsWithAllImageDataDict.setValue(j + 1, forKey: "birdNumber")
+            var catName1 = catArr.object(at: w) as! String
+            if catName1 == "Coccidiosis"{
+                catName1 = "Microscopy"
+            }
+            
+            obsWithAllImageDataDict.setValue(catName1, forKey: "categoryName")
+            obsWithAllImageDataDict.setValue(cData.obsID!, forKey: "observationId")
+            
+            let photoValArr = NSMutableArray()
+            var yImage =  UIImage()
+            for z in 0..<photoArr.count
+            {
+                let objBirdPhotoCapture = photoArr.object(at: z) as! BirdPhotoCaptureTurkey
+                var image : UIImage = UIImage(data: objBirdPhotoCapture.photo! as Data)!
+                
+                if let imageData = image.jpeg(.lowest) {
+                    
+                    image = UIImage(data: imageData)!
+                    
+                }
+                let w : CGFloat = image.size.width / 7
+                yImage = self.resizeImage(image, newWidth: w)!
+                
+                let imageDict =  NSMutableDictionary()
+                imageDict.setValue(self.imageToNSString(yImage), forKey: "Image")
+                photoValArr.add(imageDict)
+                
+            }
+            obsWithAllImageDataDict.setValue(photoValArr, forKey: "images")
+            obsWithImageArr.add(obsWithAllImageDataDict)
+        }
+    }
+    
+    fileprivate func checkInternetAndCallWebAPISaveImageOnServer(_ sessionDict: NSMutableDictionary, _ cNecArr: NSArray) {
         do {
-   
-            
             if WebClass.sharedInstance.connected() {
                 accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-              //  accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
                 let headerDict = [Constants.authorization:accestoken]
                 
                 let Url = "PostingSession/SaveBirdImageSyncData"
@@ -1439,78 +1411,112 @@ class ApiSyncTurkey: NSObject {
                 
                 if let jsonData = try? JSONSerialization.data(withJSONObject: sessionDict, options: []) {
                     request.httpBody = jsonData
-                } else {
-                    print(Constants.failedSerilazedJSON)
-                    // Handle error case, such as not making the request
                 }
                 
                 sessionManager.request(request as URLRequestConvertible).responseJSON { response in
                     let statusCode =  response.response?.statusCode
                     
-                    if statusCode == 401  {
+                    switch statusCode {
+                    case 401:
                         self.loginMethod()
-                    }
-                    else if statusCode == 500 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
+                    case 500, 503, 403, 501, 502, 400, 504, 404, 408:
                         self.delegeteSyncApiTurkey.failWithError(statusCode: statusCode!)
+                    default:
+                        break
                     }
-                    
-                    switch response.result {
-                        
-                    case .success(let responseObject):
-                        
-                        self.isSyncPostingArrWithData = false
-                        self.isSyncPostingIdArr = false
-                        self.isDelegateCalled = false
-                        if cNecArr.count > 0 && self.postingIdArr.count == 0{
-                            self.updadateNacDataOnCoreData(cNecArr: cNecArr, { (success) in
-                                if success == true{
-                                    self.delegeteSyncApiTurkey.didFinishApi()
-                                }
-                            })
-                        }
-                        else if cNecArr.count > 0 && self.postingIdArr.count > 0 {
-                            self.updateDataOnCoreData(cNecArr: cNecArr) { success in
-                                if success {
-                                    self.delegeteSyncApiTurkey.didFinishApi()
-                                }
-                            }
-                        }
-
-                        
-                        
-                        else if cNecArr.count == 0 && self.postingIdArr.count > 0 {
-                            self.updateDataOnCoreData(cNecArr: cNecArr,{ (success) in
-                                if success == true{
-                                    if self.isDelegateCalled == false{
-                                        self.isDelegateCalled = true
-                                        self.delegeteSyncApiTurkey.didFinishApi()
-                                        
-                                    }
-                                }
-                            })
-                        }
-                        
-                    case .failure(let encodingError):
-                        
-                        if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                            // no internet connection
-                            self.delegeteSyncApiTurkey.failWithErrorInternal()
-                            
-                        } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                            // other failures
-                            print (encodingError)
-                            print (responseString)
-                            if let s = statusCode {
-                                
-                                self.delegeteSyncApiTurkey.failWithError(statusCode: s)
-                            } else {
-                                self.delegeteSyncApiTurkey.failWithErrorInternal()
-                            }
-                        }
-                    }
+                    self.handleSaveBirdmageSyncDataSuccessResponse(response, statusCode, cNecArr: cNecArr)
                 }
             }
         }
+    }
+    
+    fileprivate func handlePostingArrWithAllDataForLoopValidations(_ sessionArr: inout NSMutableArray) {
+        for i in 0..<postingArrWithAllData.count {
+            if isSyncPostingArrWithData == false{
+                isSyncPostingArrWithData = true
+                let sessionDetails = NSMutableDictionary()
+                let captureNecropsyData = postingArrWithAllData.object(at: i)  as! PostingSessionTurkey
+                let nId = captureNecropsyData.postingId!
+                _ = captureNecropsyData.timeStamp
+                
+                let cNec = CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncandPostingIdTurkey(true , postingId:nId)
+                let obsWithImageArr = NSMutableArray()
+                handleCNecAndObsWithImageArrValidations(cNec, obsWithImageArr)
+                
+                let fullData = captureNecropsyData.timeStamp!
+                sessionDetails.setValue(obsWithImageArr, forKey: "ImageDetails")
+                let id = UserDefaults.standard.integer(forKey: "Id")
+                sessionDetails.setValue(id, forKey: "UserId")
+                sessionDetails.setValue(fullData, forKey: "deviceSessionId")
+                sessionArr.add(sessionDetails)
+            }
+        }
+    }
+    
+    fileprivate func handleTotalSessionAndSessionArrValidations(_ totalSession: NSMutableArray, _ sessionArr:inout NSMutableArray) {
+        for i in 0..<totalSession.count {
+            let sessionDetails = NSMutableDictionary()
+            let captureNecropsyData = totalSession.object(at: i)  as! CaptureNecropsyDataTurkey
+            let nId = captureNecropsyData.necropsyId!
+            let cNec =  CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncandPostingIdTurkey(true , postingId:nId)
+            var obsWithImageArr = NSMutableArray()
+            for x in 0..<cNec.count {
+                let cNData = cNec.object(at: x) as! CaptureNecropsyDataTurkey
+                let farmName = cNData.farmName
+                let noOfBird = Int(cNData.noOfBirds!)
+                let necId = Int(cNData.necropsyId!)
+                for j in 0..<noOfBird! {
+                    let catArr = ["skeltaMuscular","Coccidiosis","GITract","Resp","Immune"] as NSArray
+                    for w in 0..<catArr.count {
+                        let obsArr = CoreDataHandlerTurkey().fecthobsDataWithCatnameAndFarmNameAndBirdNumberTurkey((j + 1) as NSNumber, farmname: farmName!, catName: catArr.object(at: w) as! String, necId: necId as NSNumber)
+                        self.handleTotalSessionArrHandlingAndValidations(obsArr, j, farmName, catArr, w, necId, &obsWithImageArr)
+                    }
+                }
+            }
+            
+            
+            let fullData = captureNecropsyData.timeStamp!
+            sessionDetails.setValue(obsWithImageArr, forKey: "ImageDetails")
+            let id = UserDefaults.standard.integer(forKey: "Id")
+            sessionDetails.setValue(id, forKey: "UserId")
+            sessionDetails.setValue(fullData, forKey: "deviceSessionId")
+            sessionArr.add(sessionDetails)
+        }
+    }
+    
+    /********************* Save Image  On Server ***************************/
+    /**************************************************************************/
+    
+    func saveObservationImageOnServer() {
+        
+        let imageArrWithIsyncIsTrue = CoreDataHandlerTurkey().fecthPhotoWithiSynsTrueTurkey(true)
+        let sessionDict = NSMutableDictionary()
+        var sessionArr = NSMutableArray()
+        
+        let cNecArr = CoreDataHandlerTurkey().FetchNecropsystep1WithisSyncTurkey(true)
+        let totalSession = NSMutableArray()
+        
+        for j in 0..<cNecArr.count {
+            let captureNecropsyData = cNecArr.object(at: j)  as! CaptureNecropsyDataTurkey
+            totalSession.add(captureNecropsyData)
+            for w in 0..<totalSession.count - 1 {
+                let c = totalSession.object(at: w)  as! CaptureNecropsyDataTurkey
+                if c.necropsyId == captureNecropsyData.necropsyId
+                {
+                    totalSession.remove(c)
+                }
+            }
+        }
+        
+        postingArrWithAllData.removeAllObjects()
+        postingArrWithAllData = CoreDataHandlerTurkey().fetchAllPostingSessionWithisSyncisTrueTurkey(true).mutableCopy() as! NSMutableArray
+        
+        if imageArrWithIsyncIsTrue.count > 0 {
+            handleTotalSessionAndSessionArrValidations(totalSession, &sessionArr)
+            handlePostingArrWithAllDataForLoopValidations(&sessionArr)
+        }
+        sessionDict.setValue(sessionArr, forKey: "Sessions")
+        checkInternetAndCallWebAPISaveImageOnServer(sessionDict, cNecArr)
     }
     
     fileprivate func handleUpdateIsSyncOnBirdPhotoCapture(pId:NSNumber,cNecArr: NSArray, _ completion: @escaping (_ status: Bool) -> Void) {

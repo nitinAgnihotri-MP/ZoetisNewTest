@@ -1616,7 +1616,6 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
         let coreDataHandler = CoreDataHandler()
         coreDataHandler.deleteDataWithPostingIdCaptureStepData(self.postingId)
         
-        // ✅ Process each session
         for session in arr {
             guard let sessionId = session["SessionId"].int,
                   let devSessionId = session["deviceSessionId"].string,
@@ -1630,58 +1629,58 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             }
             
             let seesDat = self.convertDateFormater(sessionDate)
-            
-            if !farmArr.isEmpty {
-                for farm in farmArr {
-                    guard let farmName = farm["farmName"].string,
-                          let feedProgram = farm["feedProgram"].string,
-                          let sick = farm["sick"].bool,
-                          let feedId = farm["FeedId"].int,
-                          let farmId = farm["DeviceFarmId"].int,
-                          let imgId = farm["ImgId"].int else {
-                        print("Invalid farm data.")
-                        continue
-                    }
-                    
-                    let postingArr = coreDataHandler.fetchAllPostingSession(sessionId as NSNumber)
-                    var necroPostingId: Int = 0
-                    necroPostingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
-                    
-                    if necroPostingId == sessionId {
-                        coreDataHandler.updateFinalizeDataWithNec(self.postingId, finalizeNec: 1)
-                    }
-                    
-                    let birdAge = farm["age"].stringValue
-                    let birds = farm["birds"].stringValue
-                    let houseNo = farm["houseNo"].stringValue
-                    let flockId = farm["flockId"].stringValue
-                    
-                    let data = chickenCoreDataHandlerModels.SaveNecropsystep1SingleNecropsyData(
-                        postingId: necroPostingId as NSNumber,
-                        age: birdAge,
-                        farmName: farmName,
-                        feedProgram: feedProgram,
-                        flockId: flockId,
-                        houseNo: houseNo,
-                        noOfBirds: birds,
-                        sick: sick as NSNumber,
-                        necId: sessionId as NSNumber,
-                        compexName: complexName,
-                        complexDate: seesDat,
-                        complexId: complexId as NSNumber,
-                        custmerId: custId as NSNumber,
-                        feedId: feedId as NSNumber,
-                        isSync: false,
-                        timeStamp: devSessionId,
-                        actualTimeStamp: devSessionId,
-                        necIdSingle: self.postingId,
-                        farmId: farmId as NSNumber,
-                        imgId: imgId as NSNumber
-                    )
-                    
-                    coreDataHandler.SaveNecropsystep1SingleData(data: data)
-                    UserDefaults.standard.set(farmId as NSNumber, forKey: "farmId")
+            guard !farmArr.isEmpty else {
+                return
+            }
+            for farm in farmArr {
+                guard let farmName = farm["farmName"].string,
+                      let feedProgram = farm["feedProgram"].string,
+                      let sick = farm["sick"].bool,
+                      let feedId = farm["FeedId"].int,
+                      let farmId = farm["DeviceFarmId"].int,
+                      let imgId = farm["ImgId"].int else {
+                    print("Invalid farm data.")
+                    continue
                 }
+                
+                let postingArr = coreDataHandler.fetchAllPostingSession(sessionId as NSNumber)
+                var necroPostingId: Int = 0
+                necroPostingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
+                
+                if necroPostingId == sessionId {
+                    coreDataHandler.updateFinalizeDataWithNec(self.postingId, finalizeNec: 1)
+                }
+                
+                let birdAge = farm["age"].stringValue
+                let birds = farm["birds"].stringValue
+                let houseNo = farm["houseNo"].stringValue
+                let flockId = farm["flockId"].stringValue
+                
+                let data = chickenCoreDataHandlerModels.SaveNecropsystep1SingleNecropsyData(
+                    postingId: necroPostingId as NSNumber,
+                    age: birdAge,
+                    farmName: farmName,
+                    feedProgram: feedProgram,
+                    flockId: flockId,
+                    houseNo: houseNo,
+                    noOfBirds: birds,
+                    sick: sick as NSNumber,
+                    necId: sessionId as NSNumber,
+                    compexName: complexName,
+                    complexDate: seesDat,
+                    complexId: complexId as NSNumber,
+                    custmerId: custId as NSNumber,
+                    feedId: feedId as NSNumber,
+                    isSync: false,
+                    timeStamp: devSessionId,
+                    actualTimeStamp: devSessionId,
+                    necIdSingle: self.postingId,
+                    farmId: farmId as NSNumber,
+                    imgId: imgId as NSNumber
+                )
+                
+                coreDataHandler.SaveNecropsystep1SingleData(data: data)
+                UserDefaults.standard.set(farmId as NSNumber, forKey: "farmId")
             }
         }
         self.getPostingDataFromServerforNecorpsy()
@@ -1760,6 +1759,32 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
   
     // MARK: 🟢 Get Necropsy Details for posted Session details.
+    fileprivate func handleForLoopPostingDataServerNecropsyValidations(_ observations: [NSDictionary], _ catStr: String, _ farmName: String, _ sessionId: Int) {
+        for observation in observations {
+            guard let obsId = observation["ObservationId"] as? Int,
+                  let refId = observation["ReferenceId"] as? NSNumber,
+                  let languageId = observation["LanguageId"] as? NSNumber,
+                  let obsName = observation["Observations"] as? String,
+                  let measure = observation["Measure"] as? String,
+                  let quickLink = observation["DefaultQLink"],
+                  let birdsArray = observation["Birds"] as? [NSDictionary],
+                  let birdData = birdsArray.first else { continue }
+            
+            processBirds(
+                birdData: birdData,
+                catStr: catStr,
+                obsName: obsName,
+                farmName: farmName,
+                obsId: obsId,
+                measure: measure,
+                quickLink: quickLink,
+                sessionId: sessionId,
+                languageId: languageId,
+                refId: refId
+            )
+        }
+    }
+    
     fileprivate func handleForLoopGetPostingDataFromServerNecropsy(_ arr: NSArray) {
         for i in 0..<arr.count {
             guard let sessionData = arr[i] as? NSDictionary,
@@ -1775,30 +1800,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                           let observations = category["Observations"] as? [NSDictionary] else { continue }
 
                     let catStr = categoryMapping(for: catNameRaw)
-
-                    for observation in observations {
-                        guard let obsId = observation["ObservationId"] as? Int,
-                              let refId = observation["ReferenceId"] as? NSNumber,
-                              let languageId = observation["LanguageId"] as? NSNumber,
-                              let obsName = observation["Observations"] as? String,
-                              let measure = observation["Measure"] as? String,
-                              let quickLink = observation["DefaultQLink"],
-                              let birdsArray = observation["Birds"] as? [NSDictionary],
-                              let birdData = birdsArray.first else { continue }
-
-                        processBirds(
-                            birdData: birdData,
-                            catStr: catStr,
-                            obsName: obsName,
-                            farmName: farmName,
-                            obsId: obsId,
-                            measure: measure,
-                            quickLink: quickLink,
-                            sessionId: sessionId,
-                            languageId: languageId,
-                            refId: refId
-                        )
-                    }
+                    handleForLoopPostingDataServerNecropsyValidations(observations, catStr, farmName, sessionId)
                 }
             }
         }
