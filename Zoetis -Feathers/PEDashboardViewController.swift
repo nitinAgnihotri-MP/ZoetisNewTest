@@ -4606,11 +4606,7 @@ extension PEDashboardViewController{
             let BagSizeType = DayOfAgeIS["DayOfAgeBagSizeType"] as? String ?? ""
             let DiluentMfg = DayOfAgeIS["DiluentMfg"] as? String ?? ""
             var VName = ""
-            let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")
-            let vManufacutrerNameArray = vManufacutrerDetailsArray.value(forKey: "mfgName") as? NSArray ?? NSArray()
-            let vManufacutrerIDArray = vManufacutrerDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()
-            let xxx = ManufacturerId
-        
+            let vManufacutrerDetailsArray = CoreDataHandlerPE().fetchDetailsFor(entityName: "PE_VManufacturer")        
             let vDetailsArray = CoreDataHandlerPE().fetchDetailsForVaccineNames(typeId: 1)
             let vNameArray = vDetailsArray.value(forKey: "name") as? NSArray ?? NSArray()
             let vIDArray = vDetailsArray.value(forKey: "id") as? NSArray ?? NSArray()

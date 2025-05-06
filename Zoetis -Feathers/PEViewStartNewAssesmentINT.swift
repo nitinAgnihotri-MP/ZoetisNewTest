@@ -1176,77 +1176,80 @@ class PEViewStartNewAssesmentINT: BaseViewController {
         return (tempArr, paramForDoaInnovoject)
     }
 
-    // Helper function to process day of age data
     private func processDayOfAgeData(_ dataArray: inout [InovojectData], _ jsonArray: inout [JSONDictionary]) {
         if peNewAssessment.doaS.count > 0 {
             var idArr: [Int] = []
             for objn in peNewAssessment.doaS {
-                if let data = CoreDataHandlerPE().getPEDOAData(doaId: objn) {
-                    if !idArr.contains(data.id ?? 0) {
-                        idArr.append(data.id ?? 0)
-                        dataArray.append(data)
-                    }
+                if let data = CoreDataHandlerPE().getPEDOAData(doaId: objn),
+                   let dataId = data.id, !idArr.contains(dataId) {
+                    idArr.append(dataId)
+                    dataArray.append(data)
                 }
             }
         }
+        
         for item in dataArray {
             let json = createSyncRequestForDOAS(dictArray: peNewAssessment, dayOfAgeData: item)
             jsonArray.append(json)
         }
     }
 
-    // Helper function to process refrigerator data
+
     private func processRefrigeratorData(_ refrigratorDataArr: inout [JSONDictionary]) {
-        if regionID != 3 {
-            if let assId = UserDefaults.standard.value(forKey: "currentServerAssessmentId") as? String,
-               let id = Int(assId) {
-                let refriArray = CoreDataHandlerPE().getOfflineREfriData(id: id)
-                for objn in refriArray {
-                    if let data = createSyncRequestRefrigator(dictArray: objn) {
-                        refrigratorDataArr.append(data)
-                    }
+        if regionID != 3,
+           let assId = UserDefaults.standard.value(forKey: "currentServerAssessmentId") as? String,
+           let id = Int(assId) {
+            let refriArray = CoreDataHandlerPE().getOfflineREfriData(id: id)
+            for objn in refriArray {
+                if let data = createSyncRequestRefrigator(dictArray: objn) {
+                    refrigratorDataArr.append(data)
                 }
             }
         }
     }
-
+    
     // Helper function to process inovoject data
+    
     private func processInovojectData(_ dataArray: inout [InovojectData], _ jsonArray: inout [JSONDictionary]) {
         if peNewAssessment.inovoject.count > 0 {
             var idArr: [Int] = []
             for objn in peNewAssessment.inovoject {
-                if let data = CoreDataHandlerPE().getPEDOAData(doaId: objn) {
-                    if !idArr.contains(data.id ?? 0) {
-                        idArr.append(data.id ?? 0)
-                        dataArray.append(data)
-                    }
+                if let data = CoreDataHandlerPE().getPEDOAData(doaId: objn),
+                   let dataId = data.id, !idArr.contains(dataId) {
+                    idArr.append(dataId)
+                    dataArray.append(data)
                 }
             }
         }
+        
         for item in dataArray {
             let json = createSyncRequestForInvoject(dictArray: peNewAssessment, inovojectData: item)
             jsonArray.append(json)
         }
     }
 
+    
+
     // Helper function to process certificate data
     private func processCertificateData(_ dataArray: inout [PECertificateData], _ jsonArray: inout [JSONDictionary]) {
         if peNewAssessment.vMixer.count > 0 {
             var idArr: [Int] = []
             for objn in peNewAssessment.vMixer {
-                if let data = CoreDataHandlerPE().getCertificateData(doaId: objn) {
-                    if !idArr.contains(data.id ?? 0) {
-                        idArr.append(data.id ?? 0)
-                        dataArray.append(data)
-                    }
+                if let data = CoreDataHandlerPE().getCertificateData(doaId: objn),
+                   let dataId = data.id, !idArr.contains(dataId) {
+                    idArr.append(dataId)
+                    dataArray.append(data)
                 }
             }
         }
+        
         for item in dataArray {
             let json = createSyncRequestForCertificateData(dictArray: peNewAssessment, peCertificateData: item)
             jsonArray.append(json)
         }
     }
+
+    
 
     // Helper function to create parameter dictionary for doa inovoject
     private func createParamForDoaInnovoject(
@@ -2581,6 +2584,11 @@ extension PEViewStartNewAssesmentINT{
     private func processAssessmentArray(_ assessmentArray: [PENewAssessment], isDraft: Bool) {
         let (catArray, catAllRowArray) = buildCategoryArrays(assessmentArray, isDraft: isDraft)
         let (tempArr, comntArray, imgArray) = buildSyncArrays(catAllRowArray)
+        
+        debugPrint(tempArr)
+        debugPrint(comntArray)
+        debugPrint(catArray)
+        
         sendImageSyncRequests(imgArray)
     }
 
@@ -2639,7 +2647,7 @@ extension PEViewStartNewAssesmentINT{
                 if arrayCount == 3 {
                     let ss = imgDic
                     let paramForImages = ["AssessmentImages": ss] as JSONDictionary
-                    arrayCount = 0
+                    
                     imgDic.removeAll()
                     self.callRequest4(paramForImages: paramForImages)
                 }

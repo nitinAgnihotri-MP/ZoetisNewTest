@@ -1483,31 +1483,26 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
         
         return cell
     }
-    private func configureVaccineNoteCell(for indexPath: IndexPath, tableView:UITableView) -> UITableViewCell {
-        if isLiveVaccineOn == true {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
-            configureVaccinationCellAppearance(cell: cell, indexPath: indexPath)
-            return cell
-            
-        } else if isLiveVaccineOn == false {
-            
+
+    private func configureVaccineNoteCell(for indexPath: IndexPath, tableView: UITableView) -> UITableViewCell {
+        if isLiveVaccineOn == false {
             let isSelecteLivedArr = liveQuesArr.value(forKey: "liveComment") as? [String]
-            let liveComment = isSelecteLivedArr![0]
+            let liveComment = isSelecteLivedArr?.first ?? ""
             let cell = tableView.dequeueReusableCell(withIdentifier: "switchVaccineNote", for: indexPath) as! Vaccine_NoteTypeCell
             cell.currentIndPath = indexPath as NSIndexPath
             cell.type = "sync"
             cell.QuesIdArr = liveQuesArr
             cell.SwitchState = isLiveVaccineOn
-            
             cell.notetxtView.text = liveComment
             return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
-            configureVaccinationCellAppearance(cell: cell, indexPath: indexPath)
-            return cell
         }
+
+        // Default case (true or nil)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PVEVaccinationCrewSafetyCell", for: indexPath) as! PVEVaccinationCrewSafetyCell
+        configureVaccinationCellAppearance(cell: cell, indexPath: indexPath)
+        return cell
     }
+
     
     private func configureVaccinationCellAppearance(cell: PVEVaccinationCrewSafetyCell, indexPath: IndexPath) {
         cell.setCellAndControllsNew(qArr: liveQuesArr, currentIndd: indexPath as NSIndexPath)
@@ -1629,7 +1624,14 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
 		}
 	}
 	
-	fileprivate func handleVaccineInfoDetailSubMethod1(_ indexPath: IndexPath, _ cell: PVEVaccineInfoDetailsCell) {
+    fileprivate func handleForLoopVaccineInforDetailSubMethod() {
+        for id in 0..<items.count {
+            let item = SelectedData(id:  Int(itemsIds[id])!, name: items[id])
+            selectedAntigenArray.append(item)
+        }
+    }
+    
+    fileprivate func handleVaccineInfoDetailSubMethod1(_ indexPath: IndexPath, _ cell: PVEVaccineInfoDetailsCell) {
         if vaccinInfoDetailArr.count > indexPath.row {
             
 			handleCellVacManTxtFld(indexPath, cell)
@@ -1647,10 +1649,7 @@ extension PVEStartNewAssFinalizeAssement: UITableViewDelegate, UITableViewDataSo
                     
                     selectedAntigenArray.removeAll()
                     
-                    for id in 0..<items.count {
-                        let item = SelectedData(id:  Int(itemsIds[id])!, name: items[id])
-                        selectedAntigenArray.append(item)
-                    }
+                    handleForLoopVaccineInforDetailSubMethod()
                     
                     cell.serotypeTxtFld.text =  items.joined(separator: " , ")
                 }

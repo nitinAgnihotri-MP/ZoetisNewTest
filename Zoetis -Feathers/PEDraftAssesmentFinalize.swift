@@ -1167,7 +1167,21 @@ class PEDraftAssesmentFinalize: BaseViewController , DatePickerPopupViewControll
                     CoreDataHandlerPE().updateOfflineRefrigatorInDB(updateData)
                     
                 } else {
-                    CoreDataHandlerPE().saveOfflineRefrigatorInDB(refrii.id ?? 0,  labelText:  refrii.labelText ?? "", rollOut: refrii.rollOut ?? "", unit:  refrii.unit ?? "", value: refrii.value ?? 0.0,catID: refrii.catID ?? 0,isCheck: refrii.isCheck ?? false,isNA: refrii.isNA ?? false,schAssmentId: refrii.schAssmentId ?? 0)
+                    
+                    let fridgeData = CoreDataHandlerPEModels.offlineRefrigatorData(
+                           id: refrii.id ?? 0,
+                           labelText: refrii.labelText ?? "",
+                           rollOut: refrii.rollOut ?? "",
+                           unit: refrii.unit ?? "",
+                           value: refrii.value ?? 0.0,
+                           catID: refrii.catID ?? 0,
+                           isCheck: refrii.isCheck ?? false,
+                           isNA: refrii.isNA ?? false,
+                           schAssmentId: refrii.schAssmentId ?? 0
+                    )
+
+                    CoreDataHandlerPE().saveOfflineRefrigatorInDB(fridgeData)
+                    
                 }
             }
         }

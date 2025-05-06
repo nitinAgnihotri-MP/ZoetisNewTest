@@ -1172,6 +1172,8 @@ extension EnviromentalSurveyController: EnviromentalLocationHeaderViewDelegates 
         
         for lValue in locationValues {
             let limit = (templateType == (tempValue == 0 ? .STD20 : .STD)) ? (tempValue == 0 ? lValue.rep20!.intValue : lValue.stnRep!.intValue) : lValue.rep40!.intValue
+            
+            
             for _ in 0..<limit {
                 let plateCell = LocationTypeCellModel()
                 let i = self.currentRequisition.actualCreatedHeaders[index].numberOfPlateIDCreated.count

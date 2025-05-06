@@ -250,7 +250,6 @@ class ApiSync: NSObject {
 		guard !isSyncPostingIdArr else { return }
 		isSyncPostingIdArr = true
 		
-		let mainDict = NSMutableDictionary()
 		var mainFeeds = NSMutableArray()
 		
 		// Process each feed type
@@ -673,8 +672,8 @@ class ApiSync: NSObject {
         if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
             self.delegeteSyncApi.failWithErrorInternal()
             
-        } else if let data = response.data{
-            
+        }
+        else if response.data != nil {
             if let s = statusCode {
                 self.delegeteSyncApi.failWithError(statusCode: s)
             } else {
@@ -756,16 +755,15 @@ class ApiSync: NSObject {
 	
 	// MARK: - Necropsy Data Sync
 	func saveNecropsyDataOnServer() {
-		let languageId = UserDefaults.standard.integer(forKey: NecropsyConstants.languageIdKey)
 		let necropsyData = fetchAndProcessNecropsyData()
 		let postingData = fetchAndProcessPostingData()
 		
-		let sessionArray = NSMutableArray()
-		sessionArray.addObjects(from: necropsyData as! [Any])
-		sessionArray.addObjects(from: postingData as! [Any])
+		let sessionArrayNew = NSMutableArray()
+        sessionArrayNew.addObjects(from: necropsyData as! [Any])
+        sessionArrayNew.addObjects(from: postingData as! [Any])
 		
 		let sessionWithAllForms = NSMutableDictionary()
-		sessionWithAllForms.setValue(sessionArray, forKey: NecropsyConstants.sessionKey)
+		sessionWithAllForms.setValue(sessionArrayNew, forKey: NecropsyConstants.sessionKey)
 		
 		sendNecropsyDataToServer(sessionWithAllForms)
 	}
@@ -785,7 +783,7 @@ class ApiSync: NSObject {
 	
 	// MARK: - Data Processing
 	private func processNecropsyData(_ necropsyData: NSMutableArray) -> NSMutableArray {
-		let sessionArray = NSMutableArray()
+		let processSessionArray = NSMutableArray()
 		
 		for data in necropsyData {
 			guard let captureNecropsyData = data as? CaptureNecropsyData,
@@ -800,14 +798,14 @@ class ApiSync: NSObject {
 				farmDetails: farmDetails
 			)
 			
-			sessionArray.add(sessionDict)
+            processSessionArray.add(sessionDict)
 		}
 		
-		return sessionArray
+		return processSessionArray
 	}
 	
 	private func processPostingData(_ postingData: NSMutableArray) -> NSMutableArray {
-		let sessionArray = NSMutableArray()
+		let sessionNewArray = NSMutableArray()
 		
 		if !isSyncPostingArrWithData {
 			isSyncPostingArrWithData = true
@@ -825,11 +823,11 @@ class ApiSync: NSObject {
 					farmDetails: farmDetails
 				)
 				
-				sessionArray.add(sessionDict)
+                sessionNewArray.add(sessionDict)
 			}
 		}
 		
-		return sessionArray
+		return sessionNewArray
 	}
 	
 	private func processFarmDetails(for sessionId: NSNumber) -> NSMutableArray {
@@ -989,10 +987,10 @@ class ApiSync: NSObject {
 		guard imageArrWithIsyncIsTrue.count > 0 else { return }
 		
 		let (necropsySessions, postingSessions) = fetchAllSessions()
-		let sessionArray = processAllSessions(necropsySessions: necropsySessions, postingSessions: postingSessions)
+		let sessionArrayObs = processAllSessions(necropsySessions: necropsySessions, postingSessions: postingSessions)
 		
 		let sessionDict = NSMutableDictionary()
-		sessionDict.setValue(sessionArray, forKey: ImageSyncConstants.sessionsKey)
+		sessionDict.setValue(sessionArrayObs, forKey: ImageSyncConstants.sessionsKey)
 		
 		sendImagesToServer(sessionDict)
 	}
@@ -1010,7 +1008,7 @@ class ApiSync: NSObject {
 	
 	// MARK: - Session Processing
 	private func processAllSessions(necropsySessions: NSMutableArray, postingSessions: NSMutableArray) -> NSMutableArray {
-		let sessionArray = NSMutableArray()
+		let sessionArrayAllSessions = NSMutableArray()
 		
 		// Process necropsy sessions
 		for session in necropsySessions {
@@ -1021,7 +1019,7 @@ class ApiSync: NSObject {
 				sessionId: necropsyId,
 				timestamp: captureNecropsyData.timeStamp
 			)
-			sessionArray.add(sessionDetails)
+            sessionArrayAllSessions.add(sessionDetails)
 		}
 		
 		// Process posting sessions
@@ -1035,11 +1033,11 @@ class ApiSync: NSObject {
 					sessionId: postingId,
 					timestamp: postingSession.timeStamp
 				)
-				sessionArray.add(sessionDetails)
+                sessionArrayAllSessions.add(sessionDetails)
 			}
 		}
 		
-		return sessionArray
+		return sessionArrayAllSessions
 	}
 	
 	private func processSessionDetails(sessionId: NSNumber, timestamp: String?) -> NSMutableDictionary {
@@ -1290,54 +1288,57 @@ class ApiSync: NSObject {
             return
         }
 
-        let handler = CoreDataHandler()
+        processCaptureNecropsyData(cNecArr: cNecArr, at: 0, completion: completion)
+    }
 
-        func processItem(at index: Int) {
-            if index >= cNecArr.count {
-                completion(true)
-                return
-            }
-
-            guard let captureNecropsyData = cNecArr.object(at: index) as? CaptureNecropsyData,
-                  let nId = captureNecropsyData.necropsyId else {
-                processItem(at: index + 1)
-                return
-            }
-
-            let syncTasks: [(NSNumber, @escaping (Bool) -> Void) -> Void] = [
-                { id, cb in handler.updateisSyncOnCaptureSkeletaInDatabase(id, isSync: false, cb) },
-                { id, cb in handler.updateisSyncNecropsystep1neccId(id, isSync: false, cb) },
-                { id, cb in handler.updateisSyncOnCaptureInDatabase(id, isSync: false, cb) },
-                { id, cb in handler.updateisSyncOnBirdPhotoCaptureDatabase(id, isSync: false, cb) },
-                { id, cb in handler.updateisSyncOnNotesBirdDatabase(id, isSync: false, cb) }
-            ]
-
-            func runSyncTasks(_ taskIndex: Int) {
-                if taskIndex >= syncTasks.count {
-                    handler.updateisAllSyncFalseOnPostingSession(true) { success in
-                        if success {
-                            processItem(at: index + 1)
-                        } else {
-                            completion(false)
-                        }
-                    }
-                    return
-                }
-
-                let task = syncTasks[taskIndex]
-                task(nId) { success in
-                    if success {
-                        runSyncTasks(taskIndex + 1)
-                    } else {
-                        completion(false)
-                    }
-                }
-            }
-
-            runSyncTasks(0)
+    private func processCaptureNecropsyData(cNecArr: NSArray, at index: Int, completion: @escaping (Bool) -> Void) {
+        if index >= cNecArr.count {
+            completion(true)
+            return
         }
 
-        processItem(at: 0)
+        guard let captureNecropsyData = cNecArr.object(at: index) as? CaptureNecropsyData,
+              let nId = captureNecropsyData.necropsyId else {
+            processCaptureNecropsyData(cNecArr: cNecArr, at: index + 1, completion: completion)
+            return
+        }
+
+        runSyncTasks(forId: nId) { success in
+            if success {
+                self.processCaptureNecropsyData(cNecArr: cNecArr, at: index + 1, completion: completion)
+            } else {
+                completion(false)
+            }
+        }
+    }
+
+    private func runSyncTasks(forId nId: NSNumber, completion: @escaping (Bool) -> Void) {
+        let handler = CoreDataHandler()
+
+        let syncTasks: [(NSNumber, @escaping (Bool) -> Void) -> Void] = [
+            { id, cb in handler.updateisSyncOnCaptureSkeletaInDatabase(id, isSync: false, cb) },
+            { id, cb in handler.updateisSyncNecropsystep1neccId(id, isSync: false, cb) },
+            { id, cb in handler.updateisSyncOnCaptureInDatabase(id, isSync: false, cb) },
+            { id, cb in handler.updateisSyncOnBirdPhotoCaptureDatabase(id, isSync: false, cb) },
+            { id, cb in handler.updateisSyncOnNotesBirdDatabase(id, isSync: false, cb) }
+        ]
+
+        func runTask(at index: Int) {
+            if index >= syncTasks.count {
+                handler.updateisAllSyncFalseOnPostingSession(true, completion)
+                return
+            }
+
+            syncTasks[index](nId) { success in
+                if success {
+                    runTask(at: index + 1)
+                } else {
+                    completion(false)
+                }
+            }
+        }
+
+        runTask(at: 0)
     }
 
     // MARK: 🟢******************* Save User Setting On Server ***************************/

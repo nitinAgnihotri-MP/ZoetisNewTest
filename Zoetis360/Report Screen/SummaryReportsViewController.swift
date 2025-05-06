@@ -303,7 +303,7 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
         let complexName = objectArray["complexName"] as? String ?? ""
         let customerName = objectArray["customerName"] as? String ?? ""
         let vetanatrionName = objectArray["vetanatrionName"] as? String ?? ""
-        let sessionDate = objectArray["sessiondate"] as? String ?? ""
+        let sessionDateNew = objectArray["sessiondate"] as? String ?? ""
         let sessionTypeName = objectArray["sessionTypeName"] as? String ?? ""
 
         let salesRepNameValue = objectArray["salesRepName"] as? String
@@ -311,7 +311,7 @@ class SummaryReportsViewController: UIViewController,UITableViewDelegate,UITable
 
         let customerRepName = (objectArray["customerRepName"] as? String == NSLocalizedString(appDelegateObj.selectStr, comment: "")) ? "" : (objectArray["customerRepName"] as? String ?? "")
 
-        let typeDate = "\(UtilityClass.convertDateFormater(sessionDate))-\(sessionTypeName)"
+        let typeDate = "\(UtilityClass.convertDateFormater(sessionDateNew))-\(sessionTypeName)"
 
         reportComposer = ReportComposer()
         reportComposerDaignostic = ReportComposerDaignostic()

@@ -831,7 +831,9 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         if isSafetyCertification && (cert.selectedFsmId == nil || cert.selectedFsmId == "") {
             return false
         }
-        if cert.siteId == nil || cert.siteId == "" { return false
+        if cert.siteId == nil || cert.siteId == ""
+        {
+            return false
         }
         if cert.customerId == nil || cert.customerId == "" {
             return false
@@ -839,26 +841,33 @@ class AddEmployeesVC: BaseViewController, UITextFieldDelegate{
         return true
     }
 
-	fileprivate func handleValidationsEmployeesAddedArr() -> Bool {
-		for emp in employeesAddedArr {
-			if emp.firstName == nil || emp.firstName == "" {
-				return false
-			}
-			if emp.lastName == nil || emp.lastName == "" {
-				return false
-			}
-			if emp.selectedTshirtId == nil || emp.selectedTshirtId == "" {
-				return false
-			}
-			if emp.selectedLangId == nil || emp.selectedLangId == "" {
-				return false
-			}
-			if emp.selectedRolesStr == nil || emp.selectedRolesStr == "" {
-				return false
-			}
-		}
-		return true
-	}
+    fileprivate func handleValidationEmpAddedArrBoolStatus(_ emp: VaccinationEmployeeVM) -> Bool? {
+        if emp.firstName == nil || emp.firstName == "" {
+            return false
+        }
+        if emp.lastName == nil || emp.lastName == "" {
+            return false
+        }
+        if emp.selectedTshirtId == nil || emp.selectedTshirtId == "" {
+            return false
+        }
+        return nil
+    }
+
+    fileprivate func handleValidationsEmployeesAddedArr() -> Bool {
+        for emp in employeesAddedArr {
+            if let boolStatus = handleValidationEmpAddedArrBoolStatus(emp) {
+                return boolStatus
+            }
+            if emp.selectedLangId == "" {
+                return false
+            }
+            if emp.selectedRolesStr == nil || emp.selectedRolesStr == "" {
+                return false
+            }
+        }
+        return true
+    }
 	
 	private func validateEmployeeInfo() -> Bool {
         if employeesAddedArr.isEmpty {
@@ -1533,14 +1542,14 @@ extension AddEmployeesVC: UITableViewDataSource, UITableViewDelegate{
         guard indexPath.row > -1, employeesAddedArr.count > indexPath.row else { return }
         let selectedValueObjStr = employeesAddedArr[indexPath.row].rolesArrStr
         var selectedRoleArr = [DropwnMasterDataVM]()
-        if let selectedValueObjStr = selectedValueObjStr, !selectedValueObjStr.isEmpty {
-            if let data = selectedValueObjStr.data(using: .utf8) {
-                let decoder = JSONDecoder()
-                if let decoded = try? decoder.decode([DropwnMasterDataVM].self, from: data) {
-                    selectedRoleArr = decoded
-                }
+        
+        if let selectedValueObjStr = selectedValueObjStr, !selectedValueObjStr.isEmpty, let data = selectedValueObjStr.data(using: .utf8) {
+            let decoder = JSONDecoder()
+            if let decoded = try? decoder.decode([DropwnMasterDataVM].self, from: data) {
+                selectedRoleArr = decoded
             }
         }
+
         self.displayEmployeePopup(view: sender.roleBtn, rolesArr: self.rolesArr, defaultRolesArr: selectedRoleArr, empId: employeesAddedArr[indexPath.row].employeeId ?? "", indexPath: indexPath)
     }
 

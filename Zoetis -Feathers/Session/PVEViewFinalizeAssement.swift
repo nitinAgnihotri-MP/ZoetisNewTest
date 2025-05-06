@@ -959,61 +959,63 @@ extension PVEViewFinalizeAssement: UITableViewDelegate, UITableViewDataSource{
 		}
 	}
 	
-	fileprivate func configurePVETeamMemeberVaccinatorsCellIndexPath2(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemeberVaccinatorsCell", for: indexPath) as! PVETeamMemeberVaccinatorsCell
-		cell.currentIndPath = indexPath as NSIndexPath
-		cell.isUserInteractionEnabled = false
-		
-		if noOfVaccinatorsArr.count > indexPath.row {
-			
-			if noOfVaccinatorsArr[indexPath.row].keys.contains("name") {
-				cell.nameTxtField.text = noOfVaccinatorsArr[indexPath.row]["name"] ?? ""
-			} else {
-				cell.nameTxtField.text = ""
-			}
-			if noOfVaccinatorsArr[indexPath.row].keys.contains("email") {
-				cell.emailTxtField.text = noOfVaccinatorsArr[indexPath.row]["email"] ?? ""
-			} else {
-				cell.emailTxtField.text = ""
-			}
-			if noOfVaccinatorsArr[indexPath.row].keys.contains("mobile") {
-				cell.mobileTxtField.text = noOfVaccinatorsArr[indexPath.row]["mobile"] ?? ""
-			} else {
-				cell.mobileTxtField.text = ""
-			}
-		} else {
-			cell.nameTxtField.text = ""
-			cell.mobileTxtField.text = ""
-			cell.emailTxtField.text = ""
-		}
-		
-		if cell.currentIndPath.row == 0 {
-			cell.teamMemberTitleLbl.isHidden = false
-		} else {
-			cell.teamMemberTitleLbl.isHidden = true
-		}
-		
-		if cell.currentIndPath.row == 0 {
-			cell.teamMemberTitleLbl.isHidden = false
-		} else {
-			cell.teamMemberTitleLbl.isHidden = true
-		}
-		
-		if noOfVaccinatorsArr[indexPath.row]["serology"] ?? "" == "" {
-			cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
-		}else{
-			cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
-		}
-		
-		
-		let housingStr = getDraftValueForKey(key: "housing") as! String
-		if housingStr == "Floor" {
-			cell.serologyView.isHidden = true
-		} else {
-			cell.serologyView.isHidden = false
-		}
-		return cell
-	}
+    fileprivate func handleIndexPathValidationsPopulateCell(_ cell: PVETeamMemeberVaccinatorsCell, _ indexPath: IndexPath) {
+        if cell.currentIndPath.row == 0 {
+            cell.teamMemberTitleLbl.isHidden = false
+        } else {
+            cell.teamMemberTitleLbl.isHidden = true
+        }
+        
+        if cell.currentIndPath.row == 0 {
+            cell.teamMemberTitleLbl.isHidden = false
+        } else {
+            cell.teamMemberTitleLbl.isHidden = true
+        }
+        
+        if noOfVaccinatorsArr[indexPath.row]["serology"] ?? "" == "" {
+            cell.serologySelUnSelectImg.image =  UIImage(named: "uncheckIconPE")
+        }else{
+            cell.serologySelUnSelectImg.image =  UIImage(named: "checkIconPE")
+        }
+}
+
+    fileprivate func configurePVETeamMemeberVaccinatorsCellIndexPath2(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemeberVaccinatorsCell", for: indexPath) as! PVETeamMemeberVaccinatorsCell
+        cell.currentIndPath = indexPath as NSIndexPath
+        cell.isUserInteractionEnabled = false
+        
+        if noOfVaccinatorsArr.count > indexPath.row {
+            
+            if noOfVaccinatorsArr[indexPath.row].keys.contains("name") {
+                cell.nameTxtField.text = noOfVaccinatorsArr[indexPath.row]["name"] ?? ""
+            } else {
+                cell.nameTxtField.text = ""
+            }
+            if noOfVaccinatorsArr[indexPath.row].keys.contains("email") {
+                cell.emailTxtField.text = noOfVaccinatorsArr[indexPath.row]["email"] ?? ""
+            } else {
+                cell.emailTxtField.text = ""
+            }
+            if noOfVaccinatorsArr[indexPath.row].keys.contains("mobile") {
+                cell.mobileTxtField.text = noOfVaccinatorsArr[indexPath.row]["mobile"] ?? ""
+            } else {
+                cell.mobileTxtField.text = ""
+            }
+        } else {
+            cell.nameTxtField.text = ""
+            cell.mobileTxtField.text = ""
+            cell.emailTxtField.text = ""
+        }
+        
+        handleIndexPathValidationsPopulateCell(cell, indexPath)        
+        let housingStr = getDraftValueForKey(key: "housing") as! String
+        if housingStr == "Floor" {
+            cell.serologyView.isHidden = true
+        } else {
+            cell.serologyView.isHidden = false
+        }
+        return cell
+    }
 	
 	fileprivate func configurePVETeamMemberCatchersCellIndexPath1(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "PVETeamMemberCatchersCell", for: indexPath) as! PVETeamMemberCatchersCell

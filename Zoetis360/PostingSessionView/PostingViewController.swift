@@ -287,6 +287,26 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
         }
     }
     
+    fileprivate func handleViewWillAppearPart3SubFunction(_ isPostingId: Bool) {
+        if isPostingId == false{
+            
+            if lngId == 4 {
+                lblAddVacci.text = ""
+            } else if lngId == 3 {
+                lblAddVacci.text = self.ajouterStr
+            } else {
+                lblAddVacci.text = "Add vaccination"
+            }
+        } else {
+            addVaccinationOutlet.backgroundColor = UIColor.gray
+            if lngId == 3 {
+                lblAddVacci.text = self.ajouterStr
+            } else {
+                lblAddVacci.text = "Edit vaccination"
+            }
+        }
+    }
+    
     fileprivate func refactorViewWillAppearPart3() {
         if appDelegate.isDoneClick == true {
             if UserDefaults.standard.bool(forKey: "Unlinked") == true {
@@ -304,23 +324,7 @@ class PostingViewController: UIViewController,DropperDelegate,UITextViewDelegate
             }
             
             let isPostingId = UserDefaults.standard.bool(forKey: "ispostingIdIncrease")
-            if isPostingId == false{
-                
-                if lngId == 4 {
-                    lblAddVacci.text = ""
-                } else if lngId == 3 {
-                    lblAddVacci.text = self.ajouterStr
-                } else {
-                    lblAddVacci.text = "Add vaccination"
-                }
-            } else {
-                addVaccinationOutlet.backgroundColor = UIColor.gray
-                if lngId == 3 {
-                    lblAddVacci.text = self.ajouterStr
-                } else {
-                    lblAddVacci.text = "Edit vaccination"
-                }
-            }
+            handleViewWillAppearPart3SubFunction(isPostingId)
         }
     }
     

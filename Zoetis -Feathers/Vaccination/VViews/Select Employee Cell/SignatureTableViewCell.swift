@@ -215,7 +215,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
             previousBtn.isHidden = false
         }
     }
-
+ 
     private func updateFieldServiceTechnicianSignature() {
         let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
         let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
@@ -226,14 +226,18 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
         operatorSignLbl.text = "Field Service Technician Signature*"
         operatorSignLbl.text = (operatorSignLbl.text ?? "") + "*"
         deviceOperatorNamebl.text = "Field Service Technician: \(fullName)"
+        
         if let fsrSignature = curentCertification?.fsrSignature, !fsrSignature.isEmpty {
             hideShowImgVw(false)
             signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: fsrSignature)
         } else {
             hideShowImgVw(true)
+            // Provide some feedback when no signature is available
+            print("Current signature not available.")
         }
     }
- 
+
+    
 
     private func updateHatcheryManagerSignature() {
         operatorSignLbl.text = "Hatchery Manager Signature"
@@ -246,8 +250,11 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
             signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: hatcheryManagerSign)
         } else {
             hideShowImgVw(true)
+            // Optional: Add specific handling for missing signature, e.g., logging
+            print("Current hatchery manager signature is missing.")
         }
     }
+
 
     private func updateEmployeeSignature() {
         let emp = employeesAddedArr[empIndex]
@@ -363,7 +370,7 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
         }
         updateButtonStatesPrevious()
     }
-
+    
     private func updateFieldServiceTechnicianSignaturePrevious() {
         let firstname = UserContext.sharedInstance.userDetailsObj?.firstname
         let lastName = UserContext.sharedInstance.userDetailsObj?.lastName
@@ -372,13 +379,15 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
             fullName = "\(firstname ?? "") \(lastName)"
         }
         operatorSignLbl.text = "Field Service Technician Signature*"
-        operatorSignLbl.text = (operatorSignLbl.text ?? "") + "*"
         deviceOperatorNamebl.text = "Field Service Technician: \(fullName)"
+        
         if let fsrSignature = curentCertification?.fsrSignature, !fsrSignature.isEmpty {
             hideShowImgVw(false)
             signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: fsrSignature)
         } else {
             hideShowImgVw(true)
+            // Additional handling for when the signature is missing
+            print("Previous signature not found.")
         }
     }
 
@@ -393,8 +402,12 @@ class SignatureTableViewCell: UITableViewCell, SignatureViewDelegate  {
             signImgVw.image = CodeHelper.sharedInstance.convertToImage(base64: hatcheryManagerSign)
         } else {
             hideShowImgVw(true)
+            // Optional: Add different handling for the previous signature, e.g., logging
+            print("Previous hatchery manager signature is missing.")
         }
     }
+
+    
 
     private func updateDeviceOperatorSignaturePrevious() {
         operatorSignLbl.text = "Device Operator Signature*"

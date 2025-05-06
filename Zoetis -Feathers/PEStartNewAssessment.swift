@@ -1784,7 +1784,7 @@ extension PEStartNewAssessment{
         peCategoryArray(&peCategoryFilteredArray)
         
         if peCategoryFilteredArray.count > 0 {
-            var peNewAssessmentWas = self.peNewAssessment ?? PENewAssessment()
+            let peNewAssessmentWas = self.peNewAssessment ?? PENewAssessment()
             
             
             if handmixSwitch.isOn {
@@ -2055,7 +2055,6 @@ extension PEStartNewAssessment : UITextFieldDelegate{
             if string == "" {
                 return true
             }
-            let isValid = string.stringWithoutWhitespaces.isNumber
             let aSet = CharacterSet(charactersIn:"0123456789").inverted
             let compSepByCharInSet = string.components(separatedBy: aSet)
             let numberFiltered = compSepByCharInSet.joined(separator: "")

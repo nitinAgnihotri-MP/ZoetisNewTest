@@ -56,7 +56,9 @@ class MIcroscopyCalculations: NSObject {
             observationSet += 1
             metric.mean += value
             metric.count += (value > 0 ? 1 : 0)
-            if value > 0 { metric.updated += 1 }
+            if value > 0 {
+                metric.updated += 1
+            }
 
             metrics[refId.intValue] = metric
         }
@@ -118,7 +120,9 @@ class MIcroscopyCalculations: NSObject {
             observationSet += 1
             metric.mean += value
             metric.count += (value > 0 ? 1 : 0)
-            if value > 0 { metric.updated += 1 }
+            if value > 0 {
+                metric.updated += 1
+            }
 
             metrics[refId.intValue] = metric
         }

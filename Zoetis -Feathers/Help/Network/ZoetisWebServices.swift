@@ -336,21 +336,21 @@ extension ZoetisWebServices {
     /* Draft assessment deleted */
     
     func deleteDeletedDrafts( controller: UIViewController, parameters: JSONDictionary, url:String, completion: @escaping CompletionBlock) {
-        deleteRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        deleteRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     /* Dosage list PE */
     
     func getPEDosagesListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getPEDosages.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     /* Customer list PE */
     
     func getAllCustomerListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllCustomerPE.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
         
@@ -358,21 +358,21 @@ extension ZoetisWebServices {
     func getClorineStripsForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         let url = EndPoint.getPEClorine.latestUrl + "RegionId=" + String(Regionid)  + languageIdStr
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     /* App version check */
     
     func getAppVersionCheck( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAppVersion.VerUrl + Bundle.main.versionNumber
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     /* Master data version check */
     
     func getMasterDataVersionCheck( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getMasterDataVersion.VerUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     /* Customer list by user PE */
@@ -382,7 +382,7 @@ extension ZoetisWebServices {
         let countryid = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         let url = EndPoint.getCustomerPE.latestUrl + String(id) + "&countryId=" + String(countryid)  + regionIdStr + String(Regionid)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     /* Site list PE */
@@ -393,7 +393,7 @@ extension ZoetisWebServices {
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         
         let url = EndPoint.getSitesPE.latestUrl + String(id) + countryIdStr + String(countryId)  + regionIdStr + String(Regionid)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     /* Evaluator list PE */
@@ -401,18 +401,18 @@ extension ZoetisWebServices {
     func getEvaluatorListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let url = EndPoint.getEvaluator.latestUrl + String(countryId)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getApproversListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let url = EndPoint.getApproversPE.latestUrl + String(countryId)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getVisitTypesListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getVisitTypes.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getEvaluatorTypesListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -422,12 +422,12 @@ extension ZoetisWebServices {
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         
         let url = EndPoint.getEvaluatorTypes.latestUrl + String(id) + countryIdStr + String(countryid) + regionIdStr + String(Regionid)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getManufacturerListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getManufacturer.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getBirdBreedListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -437,12 +437,12 @@ extension ZoetisWebServices {
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         
         let url = EndPoint.getBirdBreed.latestUrl  + String(id) + countryIdStr + String(countryid) + languageIdStr + regionIdStr + String(Regionid)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getEggsListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getEggs.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getVaccineManufacturerListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -450,7 +450,7 @@ extension ZoetisWebServices {
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let url = EndPoint.getVaccineManufacturer.latestUrl + String(id) +  countryIdStr + String(countryId) + languageIdStr
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getVaccineNamesListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -458,7 +458,7 @@ extension ZoetisWebServices {
         let id = UserDefaults.standard.integer(forKey: "Id")
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let url = EndPoint.getVaccineNames.latestUrl  + String(id)  +  countryIdStr + String(countryId) + languageIdStr
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getVaccineSubNamesListForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -467,60 +467,60 @@ extension ZoetisWebServices {
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
      //   let url = EndPoint.getSubVaccineNames.latestUrl + String(id) + countryIdStr + String(countryId) + languageIdStr + "&Rollout=PEI"
         let url = EndPoint.getSubVaccineNames.latestUrl + String(id) + countryIdStr + String(countryId) + languageIdStr
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
         
     }
     
     
     func getDiluentManufacturerList( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getDiluentManufacturer.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getBagSizes( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getbagSizes.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAmplePerBag( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAmplePerBag.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAmpleSizes( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAmpleSizes.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getPERoles( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getPERoles.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getPEFrequency( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getPEFrequency.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getPEIncubationStyle( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getIncubationStyle.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getPEDOASizes( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         let url = EndPoint.getPEDOASizes.latestUrl + "LanguageId=1" + regionIdStr + String(Regionid)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest( controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getDuplicacyCheck( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getDuplicacyCheck.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: parameters, headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: parameters, headers: [:], completion: completion)
     }
     
     func getPEDOADiluentType( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getPEDOADiluentType.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAssessmentCategoriesDetailsPE( controller: UIViewController,evalType: String,moduleID: String, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -528,19 +528,19 @@ extension ZoetisWebServices {
         let countryid = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         let url = EndPoint.getModuleAssessmentCategoriesDetailsPE.latestUrl + "Module_Id=" + moduleID +  countryIdStr + String(countryid) + languageIdStr + regionIdStr + String(Regionid) + "&EvalType=" + String(evalType)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAssessmentQuesInfoPE( controller: UIViewController,evalType: String,moduleID: String, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         let url = EndPoint.getAssessmentQuesInfoPE.latestUrl  + "?RegionId=" + String(Regionid) + languageIdStr
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func checkAssessment( controller: UIViewController,assessmentId: String, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAssessmentStatus.latestUrl + assessmentId + "&StatusType=1"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getMixerList( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -549,7 +549,7 @@ extension ZoetisWebServices {
         let countryId = parameters["countryId"] as? String ?? ""
         
         let url = EndPoint.getVaccineMixerList.latestUrl + custId + "&SiteId=" + siteId + countryIdStr + countryId
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getPostedAssmntListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -559,36 +559,36 @@ extension ZoetisWebServices {
     // old     let url = EndPoint.getPostingAssessmentListByUserPE.latestUrl + String(Id) + "&DeviceType=ios"  + regionIdStr + String(Regionid)
         let url = EndPoint.getPostingAssessmentListByUserPE.latestUrl + String(Id)  + regionIdStr + String(Regionid)
         
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getCountryForPE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getPECountry.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
    
     
     func getGigyaCountryList( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getGigyaCountries.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getGigyaCountryLanguage(countryID: String, controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getGigyaCountryLanguages.latestUrl + "countryid=\(countryID)"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getEncryptedUserName(emailIs: String, controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getEncryptedEmail.latestUrl + "Text=\(emailIs)"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
     
     func getGigyaApiKeys(countryID: String, controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getGigyaApiKeys.latestUrl + "countryid=\(countryID)" + "&TokenVersion=V2" + "&LoginType=App"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getRejectedAssessmentListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -597,14 +597,14 @@ extension ZoetisWebServices {
         let Regionid = UserDefaults.standard.integer(forKey: "Regionid")
         let url = EndPoint.getPERejectedAssessment.latestUrl + String(Id)  + regionIdStr + String(Regionid)
         
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getRejectedAssessmentImagesListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         
         let assId = parameters["assessmentId"] as? String ?? ""
         let url = EndPoint.getPERejectedAssessmentImages.latestUrl + assId
-        getRequest(showHud: true, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     //getPostingAssessmentImagesListByUserPE
@@ -612,16 +612,16 @@ extension ZoetisWebServices {
         let Id =  UserDefaults.standard.value(forKey: "Id") as? Int ?? 0
         let url = EndPoint.getPostingAssessmentImagesListByUserPE.latestUrl + String(Id) + "&DeviceType=ios" //+ countryIdStr + String(countryId) + regionIdStr + String(Regionid)
         
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
     func sendPostDataToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
-        postRequest(showHud: true, showHudText: "", endPoint: EndPoint.postAddAttachmentDetails.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: EndPoint.postAddAttachmentDetails.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     func sendPostDataToServerVaccination(controller: UIViewController, parameters: JSONDictionary,url:String,  completion: @escaping CompletionBlock) {
-        postRequest(showHud: true, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
  
     func sendAssessmentStatusTOWeb(controller: UIViewController, parameters: JSONDictionary,  completion: @escaping CompletionBlock) {
@@ -632,7 +632,7 @@ extension ZoetisWebServices {
         let AppVersion = parameters["appVersion"] as? String ?? ""
         
         let url = EndPoint.postUpdateStatus.latestUrl + assesId + "&saveType=" + String(saveType) + "&userId=" + String(userId) + "&appVersion=" + AppVersion
-        postRequest(showHud: true, showHudText: "", endPoint: url , controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url , controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     
@@ -641,37 +641,37 @@ extension ZoetisWebServices {
         let assId = parameters["assessmentId"] as? String ?? ""
         let sType = parameters["saveType"] as? Int ?? 0
         let urls = EndPoint.postUpdateStatus.latestUrl + assId + "&userId=\(UserContext.sharedInstance.userDetailsObj?.userId ?? "")" + "&saveType=\(sType)" + "&appVersion=\(Bundle.main.versionNumber)"
-        postRequest(showHud: true, showHudText: "", endPoint: urls, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: urls, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     func sendFCMTokenDataToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         
-        postRequest(showHud: true, showHudText: "", endPoint: Constants.Api.fcmUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: Constants.Api.fcmUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     
     func sendScoresDataToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         print("scccccccoooooooo",parameters)
-        postRequest(showHud: true, showHudText: "", endPoint: EndPoint.postAddScores.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: EndPoint.postAddScores.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     func sendMultipleImagesBase64ToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
-        postRequest(showHud: true, showHudText: "", endPoint: EndPoint.postImagesBase64.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: EndPoint.postImagesBase64.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     
     func sendAddDayOfAgeAndInvoject(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
-        postRequest(showHud: true, showHudText: "", endPoint: EndPoint.postAddDayOfAgeAndInvoject.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: EndPoint.postAddDayOfAgeAndInvoject.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     func sendExtendedMicroToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
    //     print("Extended Micro ",parameters)
-        postRequest(showHud: true, showHudText: "", endPoint: EndPoint.postExtendedMicro.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: EndPoint.postExtendedMicro.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     func submitFinalStatusOfAssessmentToServer(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
    //     print("Extended Micro ",parameters)
-        postRequest(showHud: true, showHudText: "", endPoint: EndPoint.finalAssessmentStatus.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: EndPoint.finalAssessmentStatus.latestUrl, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     
@@ -684,79 +684,79 @@ extension ZoetisWebServices {
     func getVaccineNamesDetailsPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getVaccineNamesDetailsPVE.latestUrl
         print("GET SERVICE*** : getVaccineNamesDetailsPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getVaccineManDetailsPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getVaccineManDetailsPVE.latestUrl
         print("GET SERVICE*** : getVaccineManDetailsPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getSiteInjctsDetailssPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getSiteInjctsDetailssPVE.latestUrl
         print("GET SERVICE*** : getSiteInjctsDetailssPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getSurveyTypeDetailsPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getSurveyTypeDetailsPVE.latestUrl
         print("GET SERVICE*** : getSurveyTypeDetailsPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getSerotypeDetailsPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getSerotypeDetailsPVE.latestUrl
         print("GET SERVICE*** : getSerotypeDetailsPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     func getAssessmentCategoriesDetailsPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getModuleAssessmentCategoriesDetailsPVE.latestUrl
         print("GET SERVICE*** : getAssessmentCategoriesDetailsPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getCustomerListForPVE( controller: UIViewController, countryID: String, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let Id =  UserDefaults.standard.value(forKey: "Id") as? Int
         let url = EndPoint.getCustomerListPVE.latestUrl + String(Id ?? 0) + "&countryId=\(countryID)"
         print("GET SERVICE*** : getCustomerListForPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getComplexListForPVE( controller: UIViewController, countryID: String,  parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getComplexPVE.latestUrl + "countryId=\(countryID)"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getBreedOfBirldsForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getBirdBreedsDetailsPVE.latestUrl
         print("GET SERVICE*** : getBirdBreedsDetailsPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getEvaluationTypeForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getEvaluationTypePVE.latestUrl
         print("GET SERVICE*** : getEvaluationTypePVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getEvaluationForForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getEvaluationForPVE.latestUrl
         print("GET SERVICE*** : getEvaluationForPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getSiteIdNameForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getSiteIDNameDetailsPVE.latestUrl
         print("GET SERVICE*** : getSiteIdNameForPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getblankPDFPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.postPDFPVE.latestUrl
         print("get SERVICE*** : postPDFPVE ", url)
         
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getBlankAssessmentFiles( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -764,38 +764,38 @@ extension ZoetisWebServices {
         let url = EndPoint.getBlankAssessmentFiles.latestUrl + "?RegionId=\(regionId)"
      
         print("get Blank Assessments *** : PDF ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getDownloadBlankFile( controller: UIViewController, parameters: JSONDictionary, fileName: String, completion: @escaping CompletionBlock) {
         let url = EndPoint.getDownloadBlankFile.latestUrl + "fileName=\(fileName)" + "&userId=\(UserContext.sharedInstance.userDetailsObj?.userId ?? "")"
         print("get SERVICE*** : PDF DOWNLOAD LINK ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAgeOfBirdsForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getBirdAgeDetailsPVE.latestUrl
         print("GET SERVICE*** : getAgeOfBirdsForPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getBreedOfBirdsForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getBirdBreedsDetailsPVE.latestUrl
         print("GET SERVICE*** : getBreedOfBirdsForPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getHousingDetailsForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getHousingDetailsPVE.latestUrl
         print("GET SERVICE*** : getHousingDetailsForPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAssignUserDetailForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let url = EndPoint.getAssignUserDetailPVE.latestUrl + "?countryId=\(countryId)"
         print("GET SERVICE*** : getAssignUserDetailForPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getEvaluatorDetailForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -804,38 +804,38 @@ extension ZoetisWebServices {
         let url = EndPoint.getEvaluatorDetailPVE.latestUrl + "?countryId=\(countryId)"
         
         print("GET SERVICE*** : getEvaluatorDetailForPVE ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func GetPostingAssessmentListByUser( controller: UIViewController, header: [String: Any] ,parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getPostingAssessmentListByUser.latestUrl + "?deviceType=ios"
         print("GET SERVICE*** : getPostingAssessmentListByUser ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: header, completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: header, completion: completion)
     }
     
     func GetPostingAssessmentImagesListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getPostingAssessmentImagesListByUser.latestUrl
         print("GET SERVICE*** : getPostingAssessmentImagesListByUser ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func GetPostingAssessmentCompleteImagesListByUser( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getPostingAssessmentCompleteImagesListByUser.latestUrl
         print("GET SERVICE*** : getPostingAssessmentCompleteImagesListByUser ", url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     // PVE - Sync API ---- Start
     
     func postStartNewAssessmentDetailForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.postSNADetailsPVE.latestUrl
-        postRequest(showHud: false, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
         
     }
     
     func postScoreDetailsForPVE( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.postScoreDetailsPVE.latestUrl
-        postRequest(showHud: false, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
         
     }
     
@@ -852,7 +852,7 @@ extension ZoetisWebServices {
         {
             
         }
-        postRequest(showHud: false, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
         
     }
     
@@ -861,64 +861,64 @@ extension ZoetisWebServices {
     //-----------------Microbial-----------------------
     func getAllLocationTypeValues( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllLocationValues.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllMediaTypeValues( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllMediaTypeValues.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     func getAllSamplingMethodValues( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllSamplingMethodList.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllEnvironmentalLocationTypes( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllEnvironmentalLocationTypes.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllBacterialLocationTypes( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllBacterialLocationTypes.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllMicrobialSpecimenTypes(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllMicrobialSpecimenTypes.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllMicrobialBirdTypes(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllMicrobialBirdTypes.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllMicrobialFeatherPulpTest(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllMicrobialFeatherPulpTests.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllCaseStatus(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllCaseStatus.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllHatcheryAllVisitTypeForMicrobial( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllHatcheryAllVisitTypeURLPathMicrobial.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllCustomersForMicrobial( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let userId = UserDefaults.standard.value(forKey: "Id") as? Int
         let url = EndPoint.getAllCustomersMicrobial.latestUrl + "\(userId ?? 0)"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllSyncedRequisitionData( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getSyncedReqData.latestUrl
         let currentUserId = UserDefaults.standard.value(forKey:"Id") as? Int ?? 0
         
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: ["UserId" : currentUserId], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: ["UserId" : currentUserId], completion: completion)
     }
     
     func syncEnvironmentalData(reqType: RequisitionType, controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
@@ -930,46 +930,46 @@ extension ZoetisWebServices {
         }else{
             url = EndPoint.syncFeathurePulp.latestUrl
         }
-        postRequest(showHud: false, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     func getAllHatcherySitesForMicrobial( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllHatcherySiteMicrobial.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
     func getAllHatcheryReviewerForMicrobial( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllHatcheryReviewerMicrobial.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
     func getAllHatcheryAllConductTypeForMicrobial( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllHatcheryConductTypesMicrobial.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getAllHatcheryAllSurveyPurposeForMicrobial( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllHatcheryPurposeOfSurveyURLPathMicrobial.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
     func getAllHatcheryAllTransferTypeForMicrobial( controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock) {
         let url = EndPoint.getAllHatcheryAllTransferTypeURLPathMicrobial.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getVaccinationServicesResponse(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
  
     // Flock Health API ---- Start
 //    
     func getFlockHealthAPIResponce(type: DeviceIDRequestType, controller: UIViewController, url: String, parameters: [String: Any], headers: [String: String], completion: @escaping CompletionBlock) {
         print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
 
     
@@ -1080,7 +1080,7 @@ extension ZoetisWebServices {
         
         let Id = UserDefaults.standard.value(forKey: "Id") as! Int
         let url = EndPoint.getChickenAndTurkeyComplexByUserId.latestUrl + "\(Id)"
-        postRequest(showHud: true, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     func getSalesRepresentativeResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
@@ -1154,12 +1154,12 @@ extension ZoetisWebServices {
     
     func getBirdSizeResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getBirdSizeTurkey.latestUrl
-        postRequest(showHud: true, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     func getTermConditionResponceResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.termAndCondtion.latestUrl
-        postRequest(showHud: true, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     func getBirdBreedChickenAndTurkeyResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
@@ -1187,31 +1187,31 @@ extension ZoetisWebServices {
         let Id = UserDefaults.standard.value(forKey: "Id") as! Int
         let countryId = UserDefaults.standard.integer(forKey: "nonUScountryId")
         let url = EndPoint.GetChickenTurkeyVeterinarian.latestUrl + "\(Id)" + "&SubProductID=2&CountryId=\(countryId)"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     func getCustomerListResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let Id =  UserDefaults.standard.value(forKey: "Id") as! Int
         let url = EndPoint.getCustomerOfChickenAndTurkey.latestUrl + "\(Id)"
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
     func getFarmListTurkeyResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getFarmListTurkey.latestUrl
-        postRequest(showHud: true, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
     
     
     func getProductionTypeResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.getProductionType.latestUrl
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
     func getTurkeyPostedSessionsListResponce(controller: UIViewController, url: String, completion: @escaping CompletionBlock){
         print(url)
-        getRequest(showHud: false, showHudText: "", controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
+        getRequest(controller: controller, endPoint: url, parameters: [:], headers: [:], completion: completion)
     }
     
     
@@ -1247,7 +1247,7 @@ extension ZoetisWebServices {
 
     func getFeedProgramResponceResponce(controller: UIViewController, parameters: JSONDictionary, completion: @escaping CompletionBlock){
         let url = EndPoint.postFeedProgramToServer.latestUrl
-        postRequest(showHud: true, showHudText: "", endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
+        postRequest(endPoint: url, controller: controller, parameters: parameters, headers: [:], completion: completion)
     }
 
     
@@ -1276,9 +1276,9 @@ extension ZoetisWebServices {
         dismissGlobalHUD(viewController.view)
     }
     
-    func getRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary,  headers: [String: Any], completion: @escaping CompletionBlock) {
+    func getRequest(shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary,  headers: [String: Any], completion: @escaping CompletionBlock) {
         viewController = controller
-        ZoetisApiManager.GET(showHud, showHudText, endPoint: endPoint, parameters: parameters, success: { (json) in
+        ZoetisApiManager.GET(endPoint: endPoint, parameters: parameters, success: { (json) in
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
             print("error in api 1",error, endPoint)
@@ -1286,9 +1286,9 @@ extension ZoetisWebServices {
         }
     }
     
-    func deleteRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary, headers: JSONDictionary, completion: @escaping CompletionBlock) {
+    func deleteRequest(shouldErrorRequired: Bool = false, pageNumber: Int = 1, controller: UIViewController, endPoint: String, parameters: JSONDictionary, headers: JSONDictionary, completion: @escaping CompletionBlock) {
         viewController = controller
-        ZoetisApiManager.POST(showHud, showHudText, endPoint: endPoint, parameters: parameters, success: { (json) in
+        ZoetisApiManager.POST(endPoint: endPoint, parameters: parameters, success: { (json) in
             print("response is ",json, endPoint)
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
@@ -1297,10 +1297,10 @@ extension ZoetisWebServices {
         }
     }
     
-    func postRequest(showHud: Bool, showHudText: String, shouldErrorRequired: Bool = false, endPoint: String, controller: UIViewController, parameters: JSONDictionary, imageData: Data = Data(), imageKey: String = "", headers: JSONDictionary, completion: @escaping CompletionBlock) {
+    func postRequest(shouldErrorRequired: Bool = false, endPoint: String, controller: UIViewController, parameters: JSONDictionary, imageData: Data = Data(), imageKey: String = "", headers: JSONDictionary, completion: @escaping CompletionBlock) {
         viewController = controller
     
-        ZoetisApiManager.POST(showHud, showHudText, endPoint: endPoint, parameters: parameters, imageData: imageData, imageKey: imageKey, success: { (json) in
+        ZoetisApiManager.POST(endPoint: endPoint, parameters: parameters, imageData: imageData, imageKey: imageKey, success: { (json) in
             self.handlecompletionResponse(json, shouldErrorRequired: shouldErrorRequired, completion: completion)
         }) { (error) in
             print("error in api with End Point -- " , endPoint)

@@ -172,29 +172,6 @@ class CoreDataHandler : NSObject  {
             }
         }
     }
-
-    private func createNewHatcheryVac(type: String, strain: String, route: String, age: String, postingId: NSNumber, vaciProgram: String, sessionId: NSNumber, isSync: Bool, lngId: NSNumber, routeID: Int, in context: NSManagedObjectContext) {
-        guard let entity = NSEntityDescription.entity(forEntityName: "HatcheryVac", in: context) else { return }
-        let person = NSManagedObject(entity: entity, insertInto: context)
-        
-        person.setValue(type, forKey: "type")
-        person.setValue(strain, forKey: "strain")
-        person.setValue(route, forKey: "route")
-        person.setValue(age, forKey: "age")
-        person.setValue(postingId, forKey: "postingId")
-        person.setValue(vaciProgram, forKey: "vaciNationProgram")
-        person.setValue(sessionId, forKey: "loginSessionId")
-        person.setValue(isSync, forKey: "isSync")
-        person.setValue(lngId, forKey: "lngId")
-        person.setValue(routeID, forKey: "routeId")
-        
-        do {
-            try context.save()
-            hatcheryVaccinationObject.append(person)
-        } catch {
-            print("Error saving managed object: \(error)")
-        }
-    }
  
     // MARK: 🟠 Fetch Saved Vaccination Data
     func fetchAddvacinationDataAll() -> NSArray {
@@ -3303,45 +3280,6 @@ class CoreDataHandler : NSObject  {
         }
     }
 
-    
-    /*
-    func updateSettingDataSkelta (_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber)
-    {
-        let appDelegate    = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        let fetchRequest   = NSFetchRequest<NSFetchRequestResult>(entityName:  "Skeleta")
-        fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.predicate = NSPredicate(format: Constants.refIdPredicater, refId)
-        
-        do
-            
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: Skeleta = (fetchedResult![i] as? Skeleta)!
-                    objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                    objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                    objTable.setValue(strInformation, forKey:"information")
-                    objTable.setValue(isSync, forKey:"isSync")
-                    do
-                    {
-                        try managedContext.save()
-                    }
-                    catch{
-                    }
-                }
-            }
-        }
-        catch
-        {
-            appDelegateObj.testFuntion()
-        }
-    }
-    */
     // MARK: 🟢 *************** Fetch Settings data for Skleta *********************************************
     
     func fetchAllSeettingdata() -> NSArray
@@ -3446,59 +3384,6 @@ class CoreDataHandler : NSObject  {
             settingsCocoii.append(person)
         }
     }
-
-    
-   /*
-    func saveSettingsCocoiiInDatabase(_ strObservationField : String, visibilityCheck : Bool, quicklinks : Bool, strInformation : String, index : Int,dbArray: NSArray,obsId: NSInteger,measure: String,isSync:Bool,lngId:NSNumber,refId:NSNumber,quicklinkIndex: Int)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        let managedContext = appDelegate!.managedObjectContext
-        dataCociiaArray = dbArray
-        
-        if  dataCociiaArray.count > 0 {
-            if let objTable: Coccidiosis = dataCociiaArray[index] as? Coccidiosis {
-                objTable.setValue(strObservationField, forKey:"observationField")
-                objTable.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-                objTable.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(strInformation, forKey:"information")
-                objTable.setValue(obsId, forKey:"observationId")
-                objTable.setValue(measure, forKey:"measure")
-                objTable.setValue(lngId, forKey:"lngId")
-                objTable.setValue(isSync, forKey:"isSync")
-                objTable.setValue(refId, forKey:"refId")
-                objTable.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            }
-            do  {
-                try managedContext.save()
-            }
-            catch{
-            }
-        } else {
-            
-            let entity = NSEntityDescription.entity(forEntityName: "Coccidiosis", in: managedContext)
-            let person = NSManagedObject(entity: entity!, insertInto: managedContext)
-            person.setValue(strObservationField, forKey:"observationField")
-            person.setValue(NSNumber(value: visibilityCheck as Bool), forKey:"visibilityCheck")
-            person.setValue(NSNumber(value: quicklinks as Bool), forKey:"quicklinks")
-            person.setValue(strInformation, forKey:"information")
-            person.setValue(obsId, forKey:"observationId")
-            person.setValue(measure, forKey:"measure")
-            person.setValue(isSync, forKey:"isSync")
-            person.setValue(lngId, forKey:"lngId")
-            person.setValue(refId, forKey:"refId")
-            person.setValue(quicklinkIndex, forKey:"quicklinkIndex")
-            
-            do {
-                try managedContext.save()
-            }
-            catch  {
-            }
-            settingsCocoii.append(person)
-        }
-    }
-    */
     // MARK: 🟠 Update Settings for Coccidiosis Category
     
     func updateSettingDataCocoii(_ settingData: chickenCoreDataHandlerModels.updateCoccidiosisSettingData) {
@@ -5671,13 +5556,11 @@ class CoreDataHandler : NSObject  {
         {
             let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
             
-            auto = fetchedResult?.count == 0 ? 0 : 0
-            if let results = fetchedResult
+            if let results = fetchedResult , results.count > 0
             {
-                if results.count > 0{
                     let ob: Id = results.last as! Id
                     auto = Int(ob.autoId!)
-                }
+                
             }
             else
             {
@@ -8476,50 +8359,6 @@ class CoreDataHandler : NSObject  {
         necrpsystep1.append(contact)
     }
 
-    
-    
-   /*
-    func SaveNecropsystep1(_ postingId : NSNumber, age: String ,farmName: String,feedProgram: String,flockId: String,houseNo: String,noOfBirds: String,sick: NSNumber,necId:NSNumber,compexName : String,complexDate: String,complexId: NSNumber,custmerId: NSNumber,feedId:NSNumber,isSync:Bool,timeStamp :String,actualTimeStamp: String,lngId:NSNumber,farmId:NSNumber,imageId :NSNumber,count:NSNumber)
-    {
-        
-        let entityDescription =
-        NSEntityDescription.entity(forEntityName: "CaptureNecropsyData",in: backgroundContext)
-        
-        let contact = CaptureNecropsyData(entity: entityDescription!,insertInto: backgroundContext)
-        contact.age = age
-        contact.farmName = farmName
-        contact.feedProgram = feedProgram
-        contact.flockId = flockId
-        contact.sick = sick
-        contact.houseNo = houseNo
-        contact.noOfBirds = noOfBirds
-        contact.postingId = postingId
-        contact.necropsyId = necId
-        contact.complexName = compexName
-        contact.complexDate = complexDate
-        contact.complexId = complexId
-        contact.custmerId = custmerId
-        contact.feedId = feedId
-        contact.isChecked = false
-        contact.isSync = isSync as NSNumber
-        contact.timeStamp = timeStamp
-        contact.actualTimeStamp = actualTimeStamp
-        contact.lngId = lngId
-        contact.farmId = farmId
-        contact.imageId = imageId
-        contact.farmcount = count
-        
-        do {
-            try backgroundContext.save()
-            
-        } catch {
-            
-            fatalError("Failure to save context: \(error)")
-        }
-        
-        necrpsystep1.append(contact)
-    }
-    */
     func SaveNecropsystep1SingleData(data: chickenCoreDataHandlerModels.SaveNecropsystep1SingleNecropsyData) {
         let entityDescription = NSEntityDescription.entity(forEntityName: "CaptureNecropsyData", in: backgroundContext)
         let contact = CaptureNecropsyData(entity: entityDescription!, insertInto: backgroundContext)
@@ -9970,41 +9809,7 @@ class CoreDataHandler : NSObject  {
             predicateValue: necId as CVarArg,
             isSync: isSync
         )
-     /*
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        let managedContext = appDelegate!.managedObjectContext
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
-        
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if fetchedResult!.count > 0
-            {
-                for i in 0..<fetchedResult!.count
-                {
-                    let objTable: CaptureNecropsyViewData = (fetchedResult![i] as? CaptureNecropsyViewData)!
-                    objTable.setValue(isSync, forKey:"isSync")
-                    
-                    do
-                    {
-                        try objTable.managedObjectContext!.save()
-                    }
-                    catch{
-                    }
-                }
-                
-                completion(true)
-            }
-            else{
-                completion(true)
-            }
-        }
-        catch
-        {
-            
-        }
-        */
+        debugPrint(status)
     }
 
     // MARK: 🟠 update captured Necropsy Sync Status
@@ -10018,38 +9823,7 @@ class CoreDataHandler : NSObject  {
             isSync: isSync
         )
         
-//        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-//        let managedContext = appDelegate!.managedObjectContext
-//        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-//        fetchRequest.predicate = NSPredicate(format: Constants.necIdPredicate, necId)
-//        
-//        do
-//        {
-//            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-//            if fetchedResult!.count > 0
-//            {
-//                for i in 0..<fetchedResult!.count
-//                {
-//                    let objTable: CaptureNecropsyViewData = (fetchedResult![i] as? CaptureNecropsyViewData)!
-//                    objTable.setValue(isSync, forKey:"isSync")
-//                    do
-//                    {
-//                        try objTable.managedObjectContext!.save()
-//                    }
-//                    catch{
-//                    }
-//                }
-//                
-//                completion(true)
-//            }
-//            else{
-//                completion(true)
-//            }
-//        }
-//        catch
-//        {
-//            
-//        }
+        print(status)
     }
     func updateIsSyncForEntity(entityName: String, predicateFormat: String, predicateValue: CVarArg, isSync: Bool) -> Bool {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
@@ -10210,49 +9984,6 @@ class CoreDataHandler : NSObject  {
         }
     }
 
-    
-/*
-    func updateCaptureSkeletaInDatabaseOnSwithCase(_ catName : String,obsName : String,formName : String, obsVisibility : Bool,  birdNo : NSNumber,camraImage :UIImage,obsPoint:NSInteger, index : Int,obsId: NSInteger , necId : NSNumber,isSync : Bool)
-    {
-        let appDelegate    = UIApplication.shared.delegate as? AppDelegate
-        
-        let managedContext = appDelegate!.managedObjectContext
-        let imageData = camraImage.jpegData(compressionQuality: 0.5)
-        let fetchRequest  = NSFetchRequest<NSFetchRequestResult>(entityName:  "CaptureNecropsyViewData")
-        fetchRequest.predicate = NSPredicate(format: Constants.predicateCatNameBirdsFarmNecID, birdNo,catName,formName , necId)
-        do
-        {
-            let fetchedResult = try managedContext.fetch(fetchRequest) as? [NSManagedObject]
-            if let results = fetchedResult
-            {
-                
-                fecthPhotoArray = results as NSArray
-                
-                let descriptor: NSSortDescriptor = NSSortDescriptor(key: "obsName", ascending: true)
-                let sortedResults = fecthPhotoArray.sortedArray(using: [descriptor])
-                let objTable: CaptureNecropsyViewData = ((sortedResults as NSArray)[index] as? CaptureNecropsyViewData)!
-                objTable.setValue(NSNumber(value: obsVisibility as Bool), forKey:"objsVisibilty")
-                objTable.setValue(imageData, forKey:"cameraImage")
-                objTable.setValue(obsPoint, forKey:"obsPoint")
-                objTable.setValue(birdNo, forKey:"birdNo")
-                objTable.setValue(formName, forKey:"formName")
-                objTable.setValue(isSync, forKey:"isSync")
-                
-                do
-                {
-                    try objTable.managedObjectContext!.save()
-                }
-                catch{
-                }
-            }
-        }
-        catch
-        {
-            print(appDelegateObj.testFuntion())
-        }
-    }
-    
-    */
     // MARK: - 🔴 Delete Captured Necropsy View Data
     func deleteCaptureNecropsyViewData ()
     {

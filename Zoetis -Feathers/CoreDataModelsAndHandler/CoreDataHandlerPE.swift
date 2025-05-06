@@ -65,28 +65,35 @@ class CoreDataHandlerPE: NSObject {
         
     }
     // save Refri for View
-    func saveOfflineRefrigatorInDB(_ id: NSNumber, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,schAssmentId:Int) {
+    func saveOfflineRefrigatorInDB(_ data: CoreDataHandlerPEModels.offlineRefrigatorData) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
-        let entity = NSEntityDescription.entity(forEntityName: "PE_Refrigator_Offline", in: appDelegate!.managedObjectContext)
-        let person = NSManagedObject(entity: entity!, insertInto: appDelegate!.managedObjectContext)
-        person.setValue(id, forKey: "id")
-        person.setValue(labelText, forKey: "labelText")
-        person.setValue(rollOut, forKey: "rollOut")
-        person.setValue(unit, forKey: "unit")
-        person.setValue(value, forKey: "value")
-        person.setValue(catID, forKey: "catID")
-        person.setValue(isCheck, forKey: "isCheck")
-        person.setValue(isNA, forKey: "isNA")
-        person.setValue(schAssmentId, forKey: "schAssmentId")
-        do {
-            try managedContext.save()
-        } catch {
-            print(appDelegateObj.testFuntion())
+        guard let entity = NSEntityDescription.entity(forEntityName: "PE_Refrigator_Offline", in: appDelegate!.managedObjectContext) else {
+            return
         }
-        customerData.append(person)
         
+        let person = NSManagedObject(entity: entity, insertInto: appDelegate!.managedObjectContext)
+        
+        person.setValue(data.id, forKey: "id")
+        person.setValue(data.labelText, forKey: "labelText")
+        person.setValue(data.rollOut, forKey: "rollOut")
+        person.setValue(data.unit, forKey: "unit")
+        person.setValue(data.value, forKey: "value")
+        person.setValue(data.catID, forKey: "catID")
+        person.setValue(data.isCheck, forKey: "isCheck")
+        person.setValue(data.isNA, forKey: "isNA")
+        person.setValue(data.schAssmentId, forKey: "schAssmentId")
+        
+        do {
+            try appDelegate!.managedObjectContext.save()
+        } catch {
+            print(appDelegate!.testFuntion())
+        }
+        
+        customerData.append(person)
     }
+
+    
     //    Save Draft Refrigator Data
     func saveDraftRefrigatorInDB(_ id: NSNumber, labelText: String,rollOut: String,unit:String,value:Double,catID:NSNumber,isCheck:Bool,isNA:Bool,schAssmentId:Int) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate

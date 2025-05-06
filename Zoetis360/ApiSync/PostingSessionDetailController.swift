@@ -1610,9 +1610,127 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
     }
     
     // MARK: 🟢 Get Farm list for  posted Session Detail
+    fileprivate func handleGetFarmListAPIResponse(_ self: PostingSessionDetailController, _ arr: [JSON]) {
+        UserDefaults.standard.set("Yes", forKey: "Success")
+        
+        let coreDataHandler = CoreDataHandler()
+        coreDataHandler.deleteDataWithPostingIdCaptureStepData(self.postingId)
+        
+        // ✅ Process each session
+        for session in arr {
+            guard let sessionId = session["SessionId"].int,
+                  let devSessionId = session["deviceSessionId"].string,
+                  let custId = session["CustomerId"].int,
+                  let complexId = session["ComplexId"].int,
+                  let complexName = session["ComplexName"].string,
+                  let sessionDate = session["SessionDate"].string,
+                  let farmArr = session["Farms"].array else {
+                print("Invalid session data.")
+                continue
+            }
+            
+            let seesDat = self.convertDateFormater(sessionDate)
+            
+            if !farmArr.isEmpty {
+                for farm in farmArr {
+                    guard let farmName = farm["farmName"].string,
+                          let feedProgram = farm["feedProgram"].string,
+                          let sick = farm["sick"].bool,
+                          let feedId = farm["FeedId"].int,
+                          let farmId = farm["DeviceFarmId"].int,
+                          let imgId = farm["ImgId"].int else {
+                        print("Invalid farm data.")
+                        continue
+                    }
+                    
+                    let postingArr = coreDataHandler.fetchAllPostingSession(sessionId as NSNumber)
+                    var necroPostingId: Int = 0
+                    necroPostingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
+                    
+                    if necroPostingId == sessionId {
+                        coreDataHandler.updateFinalizeDataWithNec(self.postingId, finalizeNec: 1)
+                    }
+                    
+                    let birdAge = farm["age"].stringValue
+                    let birds = farm["birds"].stringValue
+                    let houseNo = farm["houseNo"].stringValue
+                    let flockId = farm["flockId"].stringValue
+                    
+                    let data = chickenCoreDataHandlerModels.SaveNecropsystep1SingleNecropsyData(
+                        postingId: necroPostingId as NSNumber,
+                        age: birdAge,
+                        farmName: farmName,
+                        feedProgram: feedProgram,
+                        flockId: flockId,
+                        houseNo: houseNo,
+                        noOfBirds: birds,
+                        sick: sick as NSNumber,
+                        necId: sessionId as NSNumber,
+                        compexName: complexName,
+                        complexDate: seesDat,
+                        complexId: complexId as NSNumber,
+                        custmerId: custId as NSNumber,
+                        feedId: feedId as NSNumber,
+                        isSync: false,
+                        timeStamp: devSessionId,
+                        actualTimeStamp: devSessionId,
+                        necIdSingle: self.postingId,
+                        farmId: farmId as NSNumber,
+                        imgId: imgId as NSNumber
+                    )
+                    
+                    coreDataHandler.SaveNecropsystep1SingleData(data: data)
+                    UserDefaults.standard.set(farmId as NSNumber, forKey: "farmId")
+                }
+            }
+        }
+        self.getPostingDataFromServerforNecorpsy()
+    }
+    
+    fileprivate func handleAPIErrorResponseGetFarmList(_ jsonResponse: JSON) {
+        // Check for the "errorResult" key and handle errors
+        if let errorResult = jsonResponse["errorResult"].dictionary {
+            let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
+            let statusCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
+            
+            print("Error from PostingSession/getFarmListDataByDeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
+            
+            switch statusCode {
+            case "500 ", "401", "503", "403", "501", "502", "400", "504", "404", "408":
+                UserDefaults.standard.set(Constants.noStr, forKey: "Success")
+                self.getCNecStep1Data()
+            default:
+                break
+            }
+        }
+    }
+    
+    fileprivate func handleGetFarmListDataAPIResponseMain(_ jsonResponse: JSON) {
+        if let errorResult = jsonResponse["errorResult"].dictionary {
+            let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
+            let statusCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
+            
+            print("Error from PostingSession/getFarmListDataByDeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
+            
+            switch statusCode {
+            case "500 ", "401", "503", "403", "501", "502", "400", "504", "404", "408":
+                UserDefaults.standard.set(Constants.noStr, forKey: "Success")
+                self.getPostingDataFromServerforNecorpsy()
+            default:
+                break
+            }
+        }
+        
+        if let arr = jsonResponse.array, !arr.isEmpty {
+            handleGetFarmListAPIResponse(self, arr)
+        } else {
+            self.getPostingDataFromServerforNecorpsy()
+        }
+    }
+    
     func getCNecStep1Data() {
         if WebClass.sharedInstance.connected() {
-  
+            
             let apiUrl = ZoetisWebServices.EndPoint.getFarmListDataByDeviceSessionId.latestUrl + "\(fullData)"
             ZoetisWebServices.shared.getFarmListByDeviceIDResponce(controller: self, url: apiUrl, completion: { [weak self] (json, error) in
                 guard let _ = self, error == nil else {
@@ -1621,18 +1739,7 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                 }
                 
                 let jsonResponse = JSON(json)
-                // Check for the "errorResult" key and handle errors
-                if let errorResult = jsonResponse["errorResult"].dictionary {
-                    let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                    let statusCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
-                    
-                    print("Error from PostingSession/getFarmListDataByDeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
-                    
-                    if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-                        UserDefaults.standard.set(Constants.noStr, forKey: "Success")
-                        self!.getCNecStep1Data()
-                    }
-                }
+                self?.handleAPIErrorResponseGetFarmList(jsonResponse)
                 
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
@@ -1640,121 +1747,147 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
                     if let jsonDict = JSON(json).dictionary,
                        let errorMessage = jsonDict["Message"]?.string {
                         print("Error responce from PostingSession/getFarmListDataByDeviceSessionId API is \(errorMessage)")
-                        //  self.showToastWithTimer(message: errorMessage, duration: 3.0)
                         return
                     }
                     
                     let jsonResponse = JSON(json)
-                    // Check for the "errorResult" key and handle errors
-                    if let errorResult = jsonResponse["errorResult"].dictionary {
-                        let errorMsg = errorResult["errorMsg"]?.string ?? Constants.unknownErrorStr
-                        let statusCode = errorResult["errorCode"]?.string ?? Constants.unknowCode
-                        
-                        print("Error from PostingSession/getFarmListDataByDeviceSessionId  API : \(errorMsg) (Code: \(statusCode))")
-                        
-                        if statusCode == "500 " || statusCode == "401" || statusCode == "503" ||  statusCode == "403" ||  statusCode=="501" || statusCode == "502" || statusCode == "400" || statusCode == "504" || statusCode == "404" || statusCode == "408"{
-                            UserDefaults.standard.set(Constants.noStr, forKey: "Success")
-                            self.getPostingDataFromServerforNecorpsy()
-                        }
-                    }
-                    
-                    if let arr = JSON(json).array, !arr.isEmpty {
-                        
-                        UserDefaults.standard.set("Yes", forKey: "Success")
-                        
-                        let coreDataHandler = CoreDataHandler()
-                        coreDataHandler.deleteDataWithPostingIdCaptureStepData(self.postingId)
-                        
-                        // ✅ Process each session
-                        for session in arr {
-                            guard let sessionId = session["SessionId"].int,
-                                  let devSessionId = session["deviceSessionId"].string,
-                                  let custId = session["CustomerId"].int,
-                                  let complexId = session["ComplexId"].int,
-                                  let complexName = session["ComplexName"].string,
-                                  let sessionDate = session["SessionDate"].string,
-                                  let farmArr = session["Farms"].array else {
-                                print("Invalid session data.")
-                                continue
-                            }
-                            
-                            let seesDat = self.convertDateFormater(sessionDate)
-                            
-                            if !farmArr.isEmpty {
-                                for farm in farmArr {
-                                    guard let farmName = farm["farmName"].string,
-                                          let feedProgram = farm["feedProgram"].string,
-                                          let sick = farm["sick"].bool,
-                                          let feedId = farm["FeedId"].int,
-                                          let farmId = farm["DeviceFarmId"].int,
-                                          let imgId = farm["ImgId"].int else {
-                                        print("Invalid farm data.")
-                                        continue
-                                    }
-                                    
-                                    let postingArr = coreDataHandler.fetchAllPostingSession(sessionId as NSNumber)
-                                    var necroPostingId: Int = 0
-                                    necroPostingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
-                                    
-                                    if necroPostingId == sessionId {
-                                        coreDataHandler.updateFinalizeDataWithNec(self.postingId, finalizeNec: 1)
-                                    }
-                                    
-                                    let birdAge = farm["age"].stringValue
-                                    let birds = farm["birds"].stringValue
-                                    let houseNo = farm["houseNo"].stringValue
-                                    let flockId = farm["flockId"].stringValue
-                                                                        
-                                    let data = chickenCoreDataHandlerModels.SaveNecropsystep1SingleNecropsyData(
-                                        postingId: necroPostingId as NSNumber,
-                                            age: birdAge,
-                                            farmName: farmName,
-                                            feedProgram: feedProgram,
-                                            flockId: flockId,
-                                            houseNo: houseNo,
-                                            noOfBirds: birds,
-                                            sick: sick as NSNumber,
-                                            necId: sessionId as NSNumber,
-                                            compexName: complexName,
-                                            complexDate: seesDat,
-                                            complexId: complexId as NSNumber,
-                                            custmerId: custId as NSNumber,
-                                            feedId: feedId as NSNumber,
-                                            isSync: false,
-                                            timeStamp: devSessionId,
-                                            actualTimeStamp: devSessionId,
-                                            necIdSingle: self.postingId,
-                                            farmId: farmId as NSNumber,
-                                            imgId: imgId as NSNumber
-                                    )
-
-                                    coreDataHandler.SaveNecropsystep1SingleData(data: data)
-
-                                    
-                                    // ✅ Update UserDefaults
-                                    UserDefaults.standard.set(farmId as NSNumber, forKey: "farmId")
-                                }
-                            }
-                        }
-                            self.getPostingDataFromServerforNecorpsy()
-                        
-                    } else {
-                        self.getPostingDataFromServerforNecorpsy()
-                    }
+                    handleGetFarmListDataAPIResponseMain(jsonResponse)
                 }
             })
-        }
-        else {
+        } else {
             self.failWithInternetConnection()
         }
     }
   
     // MARK: 🟢 Get Necropsy Details for posted Session details.
-    func getPostingDataFromServerforNecorpsy(){
+    fileprivate func handleForLoopGetPostingDataFromServerNecropsy(_ arr: NSArray) {
+        for i in 0..<arr.count {
+            guard let sessionData = arr[i] as? NSDictionary,
+                  let sessionId = sessionData["SessionId"] as? Int,
+                  let farms = sessionData["Farms"] as? [NSDictionary] else { continue }
+
+            for farm in farms {
+                guard let farmName = farm["FarmName"] as? String,
+                      let categories = farm["Category"] as? [NSDictionary] else { continue }
+
+                for category in categories {
+                    guard let catNameRaw = category["Category"] as? String,
+                          let observations = category["Observations"] as? [NSDictionary] else { continue }
+
+                    let catStr = categoryMapping(for: catNameRaw)
+
+                    for observation in observations {
+                        guard let obsId = observation["ObservationId"] as? Int,
+                              let refId = observation["ReferenceId"] as? NSNumber,
+                              let languageId = observation["LanguageId"] as? NSNumber,
+                              let obsName = observation["Observations"] as? String,
+                              let measure = observation["Measure"] as? String,
+                              let quickLink = observation["DefaultQLink"],
+                              let birdsArray = observation["Birds"] as? [NSDictionary],
+                              let birdData = birdsArray.first else { continue }
+
+                        processBirds(
+                            birdData: birdData,
+                            catStr: catStr,
+                            obsName: obsName,
+                            farmName: farmName,
+                            obsId: obsId,
+                            measure: measure,
+                            quickLink: quickLink,
+                            sessionId: sessionId,
+                            languageId: languageId,
+                            refId: refId
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private func processBirds(
+        birdData: NSDictionary,
+        catStr: String,
+        obsName: String,
+        farmName: String,
+        obsId: Int,
+        measure: String,
+        quickLink: Any,
+        sessionId: Int,
+        languageId: NSNumber,
+        refId: NSNumber
+    ) {
+        for m in 0..<10 {
+            let key = "BirdNumber\(m + 1)"
+            guard let birdText = birdData[key] as? String, birdText != "NA" else { break }
+
+            let visibility = ((birdData[key] as AnyObject).boolValue)!
+            let obsPoint = ((birdData[key] as AnyObject).integerValue)!
+
+            let data = chickenCoreDataHandlerModels.updateSkeletaSingleSyncSkeletaData(
+                catName: catStr,
+                obsName: obsName,
+                formName: farmName,
+                obsVisibility: visibility,
+                birdNo: NSNumber(value: m + 1),
+                obsPoint: obsPoint,
+                index: m,
+                obsId: obsId,
+                measure: measure,
+                quickLink: ((quickLink as AnyObject).integerValue ?? 0) as NSNumber,
+                necId: NSNumber(value: sessionId),
+                isSync: false,
+                necIdSingle: self.postingId,
+                lngId: languageId,
+                refId: refId,
+                actualText: birdText
+            )
+
+            CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCaseSingleData(data: data)
+        }
+    }
+
+    private func categoryMapping(for raw: String) -> String {
+        switch raw {
+        case "Coccidiosis": return "Coccidiosis"
+        case "GI Tract": return "GITract"
+        case "Immune/Others": return "Immune"
+        case "Respiratory": return "Resp"
+        case "Skeletal/Muscular/Integumentary": return "skeltaMuscular"
+        default: return raw
+        }
+    }
+
+    
+    fileprivate func handleGetNecropsyAPIResponseMain(_ response: AFDataResponse<Any>) {
+        switch response.result {
+        case let .success(value):
+            
+            UserDefaults.standard.set("Yes", forKey: "Success")
+            if value is NSArray {
+                let arr : NSArray = value as! NSArray
+                if arr.count>0 {
+                    CoreDataHandler().deleteDataWithStep2data(self.postingId)
+                    self.handleForLoopGetPostingDataFromServerNecropsy(arr)
+                    self.getNotesFromServer()
+                }
+            }
+            break
+        case .failure(let encodingError):
+            
+            if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
+                debugPrint(err)
+            } else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
+                debugPrint (encodingError)
+                debugPrint (responseString)
+            }
+        }
+    }
+    
+    func getPostingDataFromServerforNecorpsy() {
         
         if WebClass.sharedInstance.connected() {
      
-            var  id =  UserDefaults.standard.value(forKey: "Id") as! Int
+            var id =  UserDefaults.standard.value(forKey: "Id") as! Int
             lngId = UserDefaults.standard.integer(forKey: "lngId")
             let countryId = UserDefaults.standard.integer(forKey: "countryId")
             let url = "PostingSession/GetNecropsyListBySessionId?UserId=\(id)&DeviceSessionId=\(fullData)&LanguageId=\(lngId)&CountryId=\(countryId)"
@@ -1764,121 +1897,18 @@ class PostingSessionDetailController: UIViewController,UITableViewDelegate,UITab
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
                 let statusCode =  response.response?.statusCode
                 
-                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
+                switch statusCode {
+                case 500, 401, 503, 403, 501, 502, 400, 504, 404, 408:
                     UserDefaults.standard.set(Constants.noStr, forKey: "Success")
                     self.getNotesFromServer()
-                }
-                switch response.result{
-                case let .success(value):
-                    
-                    UserDefaults.standard.set("Yes", forKey: "Success")
-                    if value is NSArray{
-                        let arr : NSArray = value as! NSArray
-                        if arr.count>0{
-                            CoreDataHandler().deleteDataWithStep2data(self.postingId)
-                            for  i in 0..<arr.count {
-                                let seesionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
-                                let farmArr = (arr.object(at: i) as AnyObject).value( forKey: "Farms")
-                                for  j in 0..<(farmArr! as AnyObject).count {
-                                    let farmName = ((farmArr! as AnyObject).object(at: j) as AnyObject).value( forKey: "FarmName") as! String
-                                    let catArr = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "Category")
-                                    for  k in 0..<(catArr! as AnyObject).count {
-                                        let catName = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Category") as! String
-                                        let ObArr = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Observations")
-                                        for l in 0..<(ObArr! as AnyObject).count {
-                                            
-                                            let obsId  = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ObservationId") as! Int
-                                            let refId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ReferenceId") as! NSNumber
-                                            let languageId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "LanguageId") as! NSNumber
-                                            let obsName = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Observations") as! String
-                                            let measure = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Measure") as! String
-                                            let quickLink = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "DefaultQLink")
-                                            let birdArr = (((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Birds") as AnyObject).object(at: 0)
-                                            
-                                            for  m in 0..<10 {
-                                                
-                                                let keyStr = NSString(format: "BirdNumber%d",m+1)
-                                                let chkKey = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).boolValue
-                                                let chkKey1 = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).integerValue
-                                                let chkKey3 = (birdArr as AnyObject).value(forKey: keyStr as String) as! String
-                                                if chkKey3 == "NA"{
-                                                    break
-                                                }
-                                                else{
-                                                    
-                                                    var catstr = String()
-                                                    
-                                                    if catName == "Coccidiosis"{
-                                                        catstr = "Coccidiosis"
-                                                    }
-                                                    else if catName == "GI Tract" {
-                                                        catstr = "GITract"
-                                                    }
-                                                    else if catName == "Immune/Others" {
-                                                        catstr = "Immune"
-                                                    }
-                                                    else if catName == "Respiratory" {
-                                                        catstr = "Resp"
-                                                    }
-                                                    else if catName == "Skeletal/Muscular/Integumentary" {
-                                                        catstr = "skeltaMuscular"
-                                                    }
-                                                    
-                                                    let data = chickenCoreDataHandlerModels.updateSkeletaSingleSyncSkeletaData(
-                                                          catName: catstr,
-                                                          obsName: obsName,
-                                                          formName: farmName,
-                                                          obsVisibility: chkKey!,
-                                                          birdNo: (m + 1) as NSNumber,
-                                                          obsPoint: chkKey1!,
-                                                          index: m,
-                                                          obsId: obsId,
-                                                          measure: measure,
-                                                          quickLink: (quickLink! as AnyObject).integerValue! as NSNumber,
-                                                          necId: seesionId as NSNumber,
-                                                          isSync: false,
-                                                          necIdSingle: self.postingId,
-                                                          lngId: languageId,
-                                                          refId: refId,
-                                                          actualText: chkKey3
-                                                    )
-
-                                                    CoreDataHandler().saveCaptureSkeletaInDatabaseOnSwithCaseSingleData(data: data)
-
-                                                    
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            self.getNotesFromServer()
-                        }
-                        else{
-                        }
-                    }
-                    else{
-                        
-                    }
+                default:
                     break
-                case .failure(let encodingError):
-                    
-                    if let err = encodingError as? URLError, err.code == .notConnectedToInternet {
-                        debugPrint(err)
-                    }
-                    else if let data = response.data, let responseString = String(data: data, encoding: String.Encoding.utf8) {
-                        debugPrint (encodingError)
-                        debugPrint (responseString)
-                    }
                 }
+                self.handleGetNecropsyAPIResponseMain(response)
             }
-        } else
-        {
-            
         }
-        
     }
+    
     // MARK: 🟢  Get Notes details from the server
     fileprivate func saveNotesOfPostedSessionInDB(_ arr: [JSON], _ self: PostingSessionDetailController) {
         for item in arr {

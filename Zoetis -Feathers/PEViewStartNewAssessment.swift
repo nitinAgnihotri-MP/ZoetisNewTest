@@ -1890,17 +1890,6 @@ extension PEViewStartNewAssessment{
 		}
 	}
 	
-	private func appendSyncPayloads(
-		to targetArray: inout [JSONDictionary],
-		from sourceArray: [JSONDictionary],
-		using creator: (PENewAssessment, JSONDictionary) -> JSONDictionary
-	) {
-		for item in sourceArray {
-			let json = creator(peNewAssessment, item)
-			targetArray.append(json)
-		}
-	}
-	
 	private func createDOAInovojectParam(
 		inovoject: [JSONDictionary],
 		doa: [JSONDictionary],
@@ -1990,7 +1979,6 @@ extension PEViewStartNewAssessment{
 		)
 		
 		let idArr = extractAssessmentIds(from: mainSyncData)
-		let sanitationData = fetchSanitationData(for: idArr)
 		
 		let finalParams: JSONDictionary = [
 			"AssessmentData": mainSyncData,
@@ -2003,7 +1991,7 @@ extension PEViewStartNewAssessment{
 		ZoetisWebServices.shared.sendPostDataToServer(controller: self, parameters: finalParams) { [weak self] (json, error) in
 			guard let self = self else { return }
 			
-			if let error = error {
+            if error != nil {
 				self.dismissGlobalHUD(self.view)
 				return
 			}

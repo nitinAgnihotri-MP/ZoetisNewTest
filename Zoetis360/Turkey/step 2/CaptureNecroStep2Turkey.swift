@@ -2023,6 +2023,461 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         }
     }
     
+    fileprivate func handlePlusButtonClickBtnTag0(_ rowIndex: Int, _ array: ([String]), _ cell: CaptureNecroStep2TurkeyCell) {
+        let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
+        
+        let image = UIImage(named:"image001")
+        var  necId = Int()
+        
+        if postingIdFromExistingNavigate == "Exting" {
+            
+            necId = postingIdFromExisting
+        } else {
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
+        }
+        
+        let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!,Obsid: skleta.obsID!,necId: necId as NSNumber)
+        
+        let skleta1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
+        if FetchObsArr.count > 0 {
+            
+            handleObsPointValidationPlusBtnClicked(skleta1, array, cell, skleta, image, rowIndex, necId)
+        }
+        
+        dataSkeltaArray.removeAllObjects()
+        dataSkeltaArray = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(skleta.birdNo! , farmname: skleta.formName!, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+    }
+    
+    fileprivate func handlePlusButtonClickElseBtnTag1(_ array: ([String]), _ cocoi1: CaptureNecropsyViewDataTurkey, _ cell: CaptureNecroStep2TurkeyCell, _ cocoi: CaptureNecropsyViewDataTurkey, _ image: UIImage?, _ necId: Int, _ rowIndex: Int) {
+        for  i in 0..<array.count
+        {
+            let lastElement = (Int(array.last!)! as Int)
+            if lastElement == Int(array[i])!
+            {
+                debugPrint("for cocci count is not equal")
+            }
+            else
+            {
+                if Int(array[i])! as NSNumber == cocoi1.obsPoint
+                {
+                    cell.incrementLabel.text = String(array[i+1])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName: "Coccidiosis",
+                        obsName: cocoi1.obsName!,
+                        formName: cocoi.formName!,
+                        obsVisibility: Bool(cocoi1.objsVisibilty!),
+                        birdNo: cocoi.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[i + 1])!,
+                        obsId: Int(cocoi1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                    
+                    break
+                    
+                }
+                
+            }
+            
+        }
+    }
+    
+    fileprivate func handlePlusButtonClickBtnTag1(_ rowIndex: Int, _ array: ([String]), _ cell: CaptureNecroStep2TurkeyCell) {
+        let cocoi : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
+        
+        let image = UIImage(named:"image001")
+        
+        var necId = getNecId()
+        
+        
+        let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(cocoi.birdNo!, farmname: cocoi.formName!, catName: cocoi.catName!,Obsid: cocoi.obsID!,necId:necId as NSNumber)
+        
+        let cocoi1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
+        if FetchObsArr.count > 0 {
+            
+            if cocoi1.obsPoint == 0
+            {
+                if Int(array[0]) != 0
+                {
+                    cell.incrementLabel.text = String(array[0])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName: "Coccidiosis",
+                        obsName: cocoi1.obsName!,
+                        formName: cocoi.formName!,
+                        obsVisibility: Bool(cocoi1.objsVisibilty!),
+                        birdNo: cocoi.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[0])!,
+                        obsId: Int(cocoi1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                    
+                } else {
+                    cell.incrementLabel.text = String(array[1])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName: "Coccidiosis",
+                        obsName: cocoi1.obsName!,
+                        formName: cocoi.formName!,
+                        obsVisibility: Bool(cocoi1.objsVisibilty!),
+                        birdNo: cocoi.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[1])!,
+                        obsId: Int(cocoi1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                    
+                    
+                }
+            } else {
+                handlePlusButtonClickElseBtnTag1(array, cocoi1, cell, cocoi, image, necId, rowIndex)
+            }
+        }
+        dataArrayCocoi.removeAllObjects()
+        if postingIdFromExistingNavigate == "Exting"{
+            necId =  postingIdFromExisting
+        } else {
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
+        }
+        
+        
+        dataArrayCocoi =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(cocoi.birdNo! , farmname: cocoi.formName!, catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+    }
+    
+    fileprivate func handlePlusButtonClickElseBtnTag2(_ array: ([String]), _ gitract1: CaptureNecropsyViewDataTurkey, _ cell: CaptureNecroStep2TurkeyCell, _ gitract: CaptureNecropsyViewDataTurkey, _ image: UIImage?, _ necId: Int, _ rowIndex: Int) {
+        for  i in 0..<array.count
+        {
+            let lastElement = (Int(array.last!)! as Int)
+            if lastElement == Int(array[i])!
+            {
+                debugPrint("gitrect count is not equal")
+            }
+            else
+            {
+                if (Int(array[i])! as NSNumber)  == gitract1.obsPoint
+                {
+                    cell.incrementLabel.text = String(array[i+1])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName:  "GITract",
+                        obsName: gitract1.obsName!,
+                        formName: gitract.formName!,
+                        obsVisibility: Bool(gitract1.objsVisibilty!),
+                        birdNo: gitract.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[i + 1])!,
+                        obsId: Int(gitract1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                    
+                    break
+                    
+                }
+            }
+        }
+    }
+    
+    fileprivate func handlePlusButtonClickBtnTag2(_ rowIndex: Int, _ array: ([String]), _ cell: CaptureNecroStep2TurkeyCell) {
+        let gitract : CaptureNecropsyViewDataTurkey = dataArrayGiTract.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
+        
+        let image = UIImage(named:"image001")
+        
+        var necId = getNecId()
+        
+        let FetchObsArr =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!,Obsid: gitract.obsID!,necId:necId as NSNumber)
+        
+        let gitract1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
+        if FetchObsArr.count > 0 {
+            
+            if gitract1.obsPoint == 0
+            {
+                if Int(array[0]) != 0
+                {
+                    cell.incrementLabel.text = String(array[0])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName: "GITract",
+                        obsName: gitract1.obsName!,
+                        formName: gitract.formName!,
+                        obsVisibility: Bool(gitract1.objsVisibilty!),
+                        birdNo: gitract.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[0])!,
+                        obsId: Int(gitract1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                    
+                }
+                else
+                {
+                    cell.incrementLabel.text = String(array[1])
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName: "GITract",
+                        obsName: gitract1.obsName!,
+                        formName: gitract.formName!,
+                        obsVisibility: Bool(gitract1.objsVisibilty!),
+                        birdNo: gitract.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[1])!,
+                        obsId: Int(gitract1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                    
+                }
+                
+                
+            }
+            else
+            {
+                handlePlusButtonClickElseBtnTag2(array, gitract1, cell, gitract, image, necId, rowIndex)
+            }
+        }
+        
+        dataArrayGiTract.removeAllObjects()
+        if postingIdFromExistingNavigate == "Exting"{
+            necId =  postingIdFromExisting
+        }
+        else {
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
+        }
+        dataArrayGiTract =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(gitract.birdNo! , farmname: gitract.formName!, catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+    }
+    
+    fileprivate func handlePlusButtonClickElseBtnTag3(_ array: ([String]), _ resp1: CaptureNecropsyViewDataTurkey, _ cell: CaptureNecroStep2TurkeyCell, _ resp: CaptureNecropsyViewDataTurkey, _ image: UIImage?, _ necId: Int, _ rowIndex: Int) {
+        for i in 0..<array.count
+        {
+            let lastElement = (Int(array.last!)! as Int)
+            if lastElement == Int(array[i])!
+            {
+                debugPrint("Resp Count is not here.")
+            }
+            else
+            {
+                if Int(array[i])! as NSNumber == resp1.obsPoint
+                {
+                    cell.incrementLabel.text = String(array[i+1])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName: "Resp",
+                        obsName: resp1.obsName!,
+                        formName: resp.formName!,
+                        obsVisibility: Bool(resp1.objsVisibilty!),
+                        birdNo: resp.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[i + 1])!,
+                        obsId: Int(resp1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                    
+                    break
+                }
+            }
+        }
+    }
+    
+    fileprivate func handlePlusButtonClickBtnTag3(_ rowIndex: Int, _ array: ([String]), _ cell: CaptureNecroStep2TurkeyCell) {
+        let resp : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
+        let image = UIImage(named:"image001")
+        var necId = getNecId()
+        
+        let FetchObsArr =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(resp.birdNo!, farmname: resp.formName!, catName: resp.catName!,Obsid: resp.obsID!,necId: necId as NSNumber)
+        
+        let resp1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
+        if FetchObsArr.count > 0 {
+            
+            if resp1.obsPoint == 0
+            {
+                if Int(array[0]) != 0
+                {
+                    cell.incrementLabel.text = String(array[0])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName: "Resp",
+                        obsName: resp1.obsName!,
+                        formName: resp.formName!,
+                        obsVisibility: Bool(resp1.objsVisibilty!),
+                        birdNo: resp.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[0])!,
+                        obsId: Int(resp1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                }
+                else
+                
+                {
+                    cell.incrementLabel.text = String(array[1])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName: "Resp",
+                        obsName: resp1.obsName!,
+                        formName: resp.formName!,
+                        obsVisibility: Bool(resp1.objsVisibilty!),
+                        birdNo: resp.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[1])!,
+                        obsId: Int(resp1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                    
+                }
+                
+            }
+            else
+            {
+                handlePlusButtonClickElseBtnTag3(array, resp1, cell, resp, image, necId, rowIndex)
+            }
+        }
+        
+        dataArrayRes.removeAllObjects()
+        
+        if postingIdFromExistingNavigate == "Exting"{
+            
+            necId =  postingIdFromExisting
+        }
+        else{
+            necId = UserDefaults.standard.integer(forKey: "necId") as Int
+        }
+        dataArrayRes =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(resp.birdNo! , farmname: resp.formName!, catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+    }
+    
+    fileprivate func handlePlusButtonClickElseBtnTag4(_ array: ([String]), _ immune1: CaptureNecropsyViewDataTurkey, _ cell: CaptureNecroStep2TurkeyCell, _ immune: CaptureNecropsyViewDataTurkey, _ image: UIImage?, _ necId: Int, _ rowIndex: Int) {
+        for  i in 0..<array.count
+        {
+            
+            let lastElement = (Int(array.last!)! as Int)
+            if lastElement == Int(array[i])!
+            {
+                debugPrint("immune count is equal to each other")
+            }
+            else
+            {
+                if Int(array[i])! as NSNumber == immune1.obsPoint
+                {
+                    cell.incrementLabel.text = String(array[i+1])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName:  "Immune",
+                        obsName: immune1.obsName!,
+                        formName: immune.formName!,
+                        obsVisibility: Bool(immune1.objsVisibilty!),
+                        birdNo: immune.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[i + 1])!,
+                        obsId: Int(immune1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                    
+                    break
+                }
+            }
+        }
+    }
+    
+    fileprivate func handlePlusButtonClickBtnTag4(_ rowIndex: Int, _ array: ([String]), _ cell: CaptureNecroStep2TurkeyCell) {
+        let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
+        let image = UIImage(named:"image001")
+        
+        var necId = getNecId()
+        
+        let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
+        
+        let immune1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
+        if FetchObsArr.count > 0 {
+            
+            if immune1.obsPoint == 0 {
+                if Int(array[0]) != 0 {
+                    cell.incrementLabel.text = String(array[0])
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName:  "Immune",
+                        obsName: immune1.obsName!,
+                        formName: immune.formName!,
+                        obsVisibility: Bool(immune1.objsVisibilty!),
+                        birdNo: immune.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[0])!,
+                        obsId: Int(immune1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                } else {
+                    cell.incrementLabel.text = String(array[1])
+                    
+                    let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
+                        catName:  "Immune",
+                        obsName: immune1.obsName!,
+                        formName: immune.formName!,
+                        obsVisibility: Bool(immune1.objsVisibilty!),
+                        birdNo: immune.birdNo!,
+                        camraImage: image!,
+                        obsPoint: Int(array[1])!,
+                        obsId: Int(immune1.obsID!),
+                        necId: necId as NSNumber,
+                        isSync: true
+                    )
+                    
+                    CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
+                }
+            } else {
+                handlePlusButtonClickElseBtnTag4(array, immune1, cell, immune, image, necId, rowIndex)
+            }
+        }
+        
+        dataArrayImmu.removeAllObjects()
+        
+        dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
+    }
+    
+    fileprivate func handlePostingIdFromExistingNavigateValidations() {
+        if postingIdFromExistingNavigate == "Exting" {
+            CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(postingIdFromExisting as NSNumber)
+            self.printSyncLblCount()
+        } else if UserDefaults.standard.bool(forKey: "Unlinked") == true {
+            
+            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            CoreDataHandlerTurkey().updateisSyncNecropsystep1WithneccIdTurkey(necId as NSNumber, isSync : true)
+            self.printSyncLblCount()
+        } else {
+            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+            CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(necId as NSNumber)
+            self.printSyncLblCount()
+        }
+    }
+    
     @objc func plusButtonClick (_ sender: UIButton){
         let rowIndex :Int = sender.tag
         isFirstTimeLaunch = false
@@ -2031,468 +2486,24 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         let cell = neccollectionView.cellForItem(at: lastSelectedIndex!) as! CaptureNecroStep2TurkeyCell
         let trimmed = cell.mesureValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let array = (trimmed.components(separatedBy: ",") as [String])
+        
         if btnTag == 0 {
-            let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
-            
-            let image = UIImage(named:"image001")
-            var  necId = Int()
-            
-            if postingIdFromExistingNavigate == "Exting" {
-                
-                necId = postingIdFromExisting
-            } else {
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
-            let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!,Obsid: skleta.obsID!,necId: necId as NSNumber)
-            
-            let skleta1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
-            if FetchObsArr.count > 0 {
-                
-                handleObsPointValidationPlusBtnClicked(skleta1, array, cell, skleta, image, rowIndex, necId)
-            }
-            
-            dataSkeltaArray.removeAllObjects()
-            dataSkeltaArray = CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(skleta.birdNo! , farmname: skleta.formName!, catName: "skeltaMuscular",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            
+            handlePlusButtonClickBtnTag0(rowIndex, array, cell)
         }
-        
         if btnTag == 1 {
-            let cocoi : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
-            
-            let image = UIImage(named:"image001")
-            
-            var necId = getNecId()
-
-            
-            let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(cocoi.birdNo!, farmname: cocoi.formName!, catName: cocoi.catName!,Obsid: cocoi.obsID!,necId:necId as NSNumber)
-            
-            let cocoi1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
-            if FetchObsArr.count > 0 {
-                
-                if cocoi1.obsPoint == 0
-                {
-                    if Int(array[0]) != 0
-                    {
-                        cell.incrementLabel.text = String(array[0])
-                        
-                        let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                            catName: "Coccidiosis",
-                             obsName: cocoi1.obsName!,
-                             formName: cocoi.formName!,
-                             obsVisibility: Bool(cocoi1.objsVisibilty!),
-                             birdNo: cocoi.birdNo!,
-                             camraImage: image!,
-                             obsPoint: Int(array[0])!,
-                             obsId: Int(cocoi1.obsID!),
-                             necId: necId as NSNumber,
-                             isSync: true
-                        )
-
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                        
-                    }
-                    else
-                    {
-                        cell.incrementLabel.text = String(array[1])
-                        
-                        let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                            catName: "Coccidiosis",
-                             obsName: cocoi1.obsName!,
-                             formName: cocoi.formName!,
-                             obsVisibility: Bool(cocoi1.objsVisibilty!),
-                             birdNo: cocoi.birdNo!,
-                             camraImage: image!,
-                             obsPoint: Int(array[1])!,
-                             obsId: Int(cocoi1.obsID!),
-                             necId: necId as NSNumber,
-                             isSync: true
-                        )
-
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                        
-                        
-                    }
-                }
-                else
-                {
-                    for  i in 0..<array.count
-                    {
-                        let lastElement = (Int(array.last!)! as Int)
-                        if lastElement == Int(array[i])!
-                        {
-                            debugPrint("for cocci count is not equal")
-                        }
-                        else
-                        {
-                            if Int(array[i])! as NSNumber == cocoi1.obsPoint
-                            {
-                                cell.incrementLabel.text = String(array[i+1])
-                                
-                                let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                                    catName: "Coccidiosis",
-                                     obsName: cocoi1.obsName!,
-                                     formName: cocoi.formName!,
-                                     obsVisibility: Bool(cocoi1.objsVisibilty!),
-                                     birdNo: cocoi.birdNo!,
-                                     camraImage: image!,
-                                     obsPoint: Int(array[i + 1])!,
-                                     obsId: Int(cocoi1.obsID!),
-                                     necId: necId as NSNumber,
-                                     isSync: true
-                                )
-
-                                CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                                
-                                break
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                }
-            }
-            dataArrayCocoi.removeAllObjects()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            
-            
-            dataArrayCocoi =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(cocoi.birdNo! , farmname: cocoi.formName!, catName: "Coccidiosis",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            
+            handlePlusButtonClickBtnTag1(rowIndex, array, cell)
         }
-        
-        
         if btnTag == 2 {
-            
-            
-            let gitract : CaptureNecropsyViewDataTurkey = dataArrayGiTract.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
-            
-            let image = UIImage(named:"image001")
-            
-            var necId = getNecId()
-            
-            let FetchObsArr =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!,Obsid: gitract.obsID!,necId:necId as NSNumber)
-            
-            let gitract1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
-            if FetchObsArr.count > 0 {
-                
-                if gitract1.obsPoint == 0
-                {
-                    if Int(array[0]) != 0
-                    {
-                        cell.incrementLabel.text = String(array[0])
-                        
-                        let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                            catName: "GITract",
-                             obsName: gitract1.obsName!,
-                             formName: gitract.formName!,
-                             obsVisibility: Bool(gitract1.objsVisibilty!),
-                             birdNo: gitract.birdNo!,
-                             camraImage: image!,
-                             obsPoint: Int(array[0])!,
-                             obsId: Int(gitract1.obsID!),
-                             necId: necId as NSNumber,
-                             isSync: true
-                        )
-
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                        
-                    }
-                    else
-                    {
-                        cell.incrementLabel.text = String(array[1])
-                        let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                            catName: "GITract",
-                             obsName: gitract1.obsName!,
-                             formName: gitract.formName!,
-                             obsVisibility: Bool(gitract1.objsVisibilty!),
-                             birdNo: gitract.birdNo!,
-                             camraImage: image!,
-                             obsPoint: Int(array[1])!,
-                             obsId: Int(gitract1.obsID!),
-                             necId: necId as NSNumber,
-                             isSync: true
-                        )
-
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                        
-                    }
-                    
-                    
-                }
-                else
-                {
-                    for  i in 0..<array.count
-                    {
-                        let lastElement = (Int(array.last!)! as Int)
-                        if lastElement == Int(array[i])!
-                        {
-                            debugPrint("gitrect count is not equal")
-                        }
-                        else
-                        {
-                            if (Int(array[i])! as NSNumber)  == gitract1.obsPoint
-                            {
-                                cell.incrementLabel.text = String(array[i+1])
-                                
-                                let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                                    catName:  "GITract",
-                                     obsName: gitract1.obsName!,
-                                     formName: gitract.formName!,
-                                     obsVisibility: Bool(gitract1.objsVisibilty!),
-                                     birdNo: gitract.birdNo!,
-                                     camraImage: image!,
-                                     obsPoint: Int(array[i + 1])!,
-                                     obsId: Int(gitract1.obsID!),
-                                     necId: necId as NSNumber,
-                                     isSync: true
-                                )
-
-                                CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                                
-                                break
-                                
-                            }
-                        }
-                    }
-                }
-            }
-            
-            dataArrayGiTract.removeAllObjects()
-            if postingIdFromExistingNavigate == "Exting"{
-                necId =  postingIdFromExisting
-            }
-            else {
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            dataArrayGiTract =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(gitract.birdNo! , farmname: gitract.formName!, catName: "GITract",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+            handlePlusButtonClickBtnTag2(rowIndex, array, cell)
         }
-        
         if btnTag == 3 {
-            
-            let resp : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
-            let image = UIImage(named:"image001")
-            var necId = getNecId()
-            
-            let FetchObsArr =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(resp.birdNo!, farmname: resp.formName!, catName: resp.catName!,Obsid: resp.obsID!,necId: necId as NSNumber)
-            
-            let resp1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
-            if FetchObsArr.count > 0 {
-                
-                if resp1.obsPoint == 0
-                {
-                    if Int(array[0]) != 0
-                    {
-                        cell.incrementLabel.text = String(array[0])
-                        
-                        let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                            catName: "Resp",
-                             obsName: resp1.obsName!,
-                             formName: resp.formName!,
-                             obsVisibility: Bool(resp1.objsVisibilty!),
-                             birdNo: resp.birdNo!,
-                             camraImage: image!,
-                             obsPoint: Int(array[0])!,
-                             obsId: Int(resp1.obsID!),
-                             necId: necId as NSNumber,
-                             isSync: true
-                        )
-
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                    }
-                    else
-                    
-                    {
-                        cell.incrementLabel.text = String(array[1])
-                        
-                        let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                            catName: "Resp",
-                             obsName: resp1.obsName!,
-                                formName: resp.formName!,
-                                obsVisibility: Bool(resp1.objsVisibilty!),
-                                birdNo: resp.birdNo!,
-                                camraImage: image!,
-                                obsPoint: Int(array[1])!,
-                                obsId: Int(resp1.obsID!),
-                                necId: necId as NSNumber,
-                                isSync: true
-                        )
-
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                        
-                    }
-                    
-                }
-                else
-                {
-                    for  i in 0..<array.count
-                    {
-                        let lastElement = (Int(array.last!)! as Int)
-                        if lastElement == Int(array[i])!
-                        {
-                            debugPrint("Resp Count is not here.")
-                        }
-                        else
-                        {
-                            if Int(array[i])! as NSNumber == resp1.obsPoint
-                            {
-                                cell.incrementLabel.text = String(array[i+1])
-                                
-                                let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                                    catName: "Resp",
-                                     obsName: resp1.obsName!,
-                                         formName: resp.formName!,
-                                         obsVisibility: Bool(resp1.objsVisibilty!),
-                                         birdNo: resp.birdNo!,
-                                         camraImage: image!,
-                                         obsPoint: Int(array[i + 1])!,
-                                         obsId: Int(resp1.obsID!),
-                                         necId: necId as NSNumber,
-                                         isSync: true
-                                )
-
-                                CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                                
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-            
-            dataArrayRes.removeAllObjects()
-            
-            if postingIdFromExistingNavigate == "Exting"{
-                
-                necId =  postingIdFromExisting
-            }
-            else{
-                necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            }
-            dataArrayRes =   CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(resp.birdNo! , farmname: resp.formName!, catName: "Resp",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-            
+            handlePlusButtonClickBtnTag3(rowIndex, array, cell)
         }
         if btnTag == 4 {
-            
-            let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: rowIndex) as! CaptureNecropsyViewDataTurkey
-            let image = UIImage(named:"image001")
-            
-            var necId = getNecId()
-            
-            let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
-            
-            let immune1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
-            if FetchObsArr.count > 0 {
-                
-                if immune1.obsPoint == 0
-                {
-                    if Int(array[0]) != 0
-                    {
-                        cell.incrementLabel.text = String(array[0])
-                        let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                            catName:  "Immune",
-                             obsName: immune1.obsName!,
-                             formName: immune.formName!,
-                             obsVisibility: Bool(immune1.objsVisibilty!),
-                             birdNo: immune.birdNo!,
-                             camraImage: image!,
-                             obsPoint: Int(array[0])!,
-                             obsId: Int(immune1.obsID!),
-                             necId: necId as NSNumber,
-                             isSync: true
-                        )
-
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                    }
-                    else
-                    
-                    {
-                        cell.incrementLabel.text = String(array[1])
-                        
-                        let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                            catName:  "Immune",
-                             obsName: immune1.obsName!,
-                             formName: immune.formName!,
-                             obsVisibility: Bool(immune1.objsVisibilty!),
-                             birdNo: immune.birdNo!,
-                             camraImage: image!,
-                             obsPoint: Int(array[1])!,
-                             obsId: Int(immune1.obsID!),
-                             necId: necId as NSNumber,
-                             isSync: true
-                        )
-
-                        CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                        
-                    }
-                    
-                }
-                else
-                {
-                    for  i in 0..<array.count
-                    {
-                        
-                        let lastElement = (Int(array.last!)! as Int)
-                        if lastElement == Int(array[i])!
-                        {
-                            debugPrint("immune count is equal to each other")
-                        }
-                        else
-                        {
-                            if Int(array[i])! as NSNumber == immune1.obsPoint
-                            {
-                                cell.incrementLabel.text = String(array[i+1])
-                                
-                                let input = CoreDataHandlerTurkeyModels.SkeletaUpdateSwithCaseTurkey(
-                                    catName:  "Immune",
-                                     obsName: immune1.obsName!,
-                                        formName: immune.formName!,
-                                        obsVisibility: Bool(immune1.objsVisibilty!),
-                                        birdNo: immune.birdNo!,
-                                        camraImage: image!,
-                                        obsPoint: Int(array[i + 1])!,
-                                        obsId: Int(immune1.obsID!),
-                                        necId: necId as NSNumber,
-                                        isSync: true
-                                )
-
-                                CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseOnSwithCaseTurkey(input: input, index: rowIndex)
-                                
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-            
-            dataArrayImmu.removeAllObjects()
-            
-            dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId: necId as NSNumber).mutableCopy() as! NSMutableArray
-            
+            handlePlusButtonClickBtnTag4(rowIndex, array, cell)
         }
         
-        if postingIdFromExistingNavigate == "Exting"{
-            
-            CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(postingIdFromExisting as NSNumber)
-            self.printSyncLblCount()
-        }
-        else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
-            
-            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            CoreDataHandlerTurkey().updateisSyncNecropsystep1WithneccIdTurkey(necId as NSNumber, isSync : true)
-            self.printSyncLblCount()
-            
-        }
-        else{
-            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-            CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(necId as NSNumber)
-            self.printSyncLblCount()
-        }
+        handlePostingIdFromExistingNavigateValidations()
     }
     
     fileprivate func handleObsArrBtnTag0(_ array: ([String]), _ skleta1: CaptureNecropsyViewDataTurkey, _ cell: CaptureNecroStep2TurkeyCell, _ skleta: CaptureNecropsyViewDataTurkey, _ image: UIImage?, _ rowIndex: Int, _ necId: Int) {
@@ -4511,243 +4522,908 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
         return 0
     }
     // make a cell for each cell index path
+    fileprivate func handleBirdsCollectionViewBtnTag0(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        var isNotes = NSArray()
+        if dataSkeltaArray.count > 0 {
+            let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: 0) as! CaptureNecropsyViewDataTurkey
+            let formName = skleta.formName
+            let catName = skleta.catName
+            let noOfBird  = indexPath.row + 1
+            
+            var  necId = getNecId()
+            
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+            
+        } else {
+            let formName = UserDefaults.standard.value(forKey: "farm") as! String
+            let catName = "skeltaMuscular"
+            let noOfBird  = indexPath.row + 1
+            
+            var  necId = getNecId()
+            
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+        }
+        
+        if isNotes.count > 0
+        {
+            let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
+            if (note.notes == "")
+            {
+                cell.editImage.alpha = 0
+            }
+            else
+            {
+                cell.editImage.alpha = 1
+            }
+        }
+        else
+        {
+            cell.editImage.alpha = 0
+        }
+    }
+    
+    fileprivate func handleBirdsCollectionViewBtnTag1(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        var isNotes = NSArray()
+        if dataArrayCocoi.count>0
+        {
+            let cocoii : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: 0) as! CaptureNecropsyViewDataTurkey
+            
+            let formName = cocoii.formName
+            let catName = cocoii.catName
+            let noOfBird  = indexPath.row + 1
+            
+            var  necId = getNecId()
+            
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+        }
+        else
+        {
+            let formName = UserDefaults.standard.value(forKey: "farm") as! String
+            let catName = "Coccidiosis"
+            let noOfBird  = indexPath.row + 1
+            var  necId = getNecId()
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+        }
+        
+        if isNotes.count > 0
+        {
+            let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
+            if (note.notes == "")
+            {
+                cell.editImage.alpha = 0
+            }
+            else
+            {
+                cell.editImage.alpha = 1
+            }
+        }
+        
+        else
+        {
+            cell.editImage.alpha = 0
+        }
+    }
+    
+    fileprivate func handleBirdsCollectionViewBtnTag2(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        var isNotes = NSArray()
+        if dataArrayGiTract.count > 0
+        {
+            
+            let gitract : CaptureNecropsyViewDataTurkey = dataArrayGiTract.object(at: 0) as! CaptureNecropsyViewDataTurkey
+            let formName = gitract.formName
+            let catName = gitract.catName
+            let noOfBird  = indexPath.row + 1
+            var  necId = getNecId()
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+            
+        }
+        else
+        {
+            let formName = UserDefaults.standard.value(forKey: "farm") as! String
+            let catName = "GITract"
+            let noOfBird  = indexPath.row + 1
+            var  necId = getNecId()
+            
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+        }
+        
+        
+        if isNotes.count > 0
+        {
+            let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
+            if (note.notes == "")
+            {
+                cell.editImage.alpha = 0
+            }
+            else
+            {
+                cell.editImage.alpha = 1
+            }
+        }
+        else
+        {
+            cell.editImage.alpha = 0
+            
+        }
+    }
+    
+    fileprivate func handleBirdsCollectionViewBtnTag3(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        var isNotes = NSArray()
+        if dataArrayRes.count>0
+        {
+            let res : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: 0) as! CaptureNecropsyViewDataTurkey
+            
+            let formName = res.formName
+            let catName = res.catName
+            let noOfBird  = indexPath.row + 1
+            var  necId = getNecId()
+            
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+            
+        }
+        else
+        {
+            let formName = UserDefaults.standard.value(forKey: "farm") as! String
+            let catName = "Resp"
+            let noOfBird  = indexPath.row + 1
+            var  necId = getNecId()
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+        }
+        
+        
+        if isNotes.count > 0
+        {
+            let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
+            if (note.notes == "")
+            {
+                cell.editImage.alpha = 0
+            }
+            else
+            {
+                cell.editImage.alpha = 1
+            }
+        }
+        
+        else
+        {
+            cell.editImage.alpha = 0
+        }
+    }
+    
+    fileprivate func handleBirdsCollectionViewBtnTag4(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        var isNotes = NSArray()
+        if dataArrayImmu.count>0{
+            let immu : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: 0) as! CaptureNecropsyViewDataTurkey
+            
+            let formName = immu.formName
+            let catName = immu.catName
+            let noOfBird  = indexPath.row + 1
+            var  necId = getNecId()
+            
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+        }
+        else{
+            
+            let formName = UserDefaults.standard.value(forKey: "farm") as! String
+            let catName = "Immune"
+            let noOfBird  = indexPath.row + 1
+            var  necId = getNecId()
+            
+            isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
+        }
+        
+        if isNotes.count > 0
+        {
+            let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
+            if (note.notes == "")
+            {
+                cell.editImage.alpha = 0
+            }
+            else
+            {
+                cell.editImage.alpha = 1
+                
+            }
+            
+        }
+        
+        else
+        {
+            cell.editImage.alpha = 0
+            
+        }
+    }
+    
+    fileprivate func handleBirdsCollectionViewIsFarmClickFalseCase(_ cell: CaptureNecroStep2TurkeyCell, _ indexPath: IndexPath) {
+        if isNewFarm == true
+        {
+            cell.birdsCountLabel?.text =  String(describing:((items.object(at: farmArray.count-1) as AnyObject).object(at: indexPath.row) ))
+        }
+        else
+        {
+            if isFirstTimeLaunch == true
+            {
+                if postingIdFromExistingNavigate == "Exting"{
+                    cell.birdsCountLabel?.text =  String(describing:((items.object(at: self.farmRow)  as AnyObject).object(at: indexPath.row)))
+                } else {
+                    cell.birdsCountLabel?.text =  String(describing:((items.object(at: 0) as AnyObject).object(at: indexPath.row)))
+                }
+                
+            } else {
+                cell.birdsCountLabel?.text =  String(describing: ((items.object(at: farmRow) as AnyObject).object(at: indexPath.row) ))
+            }
+            }
+    }
+    
+    fileprivate func handleNeccollectionViewBtnTag0(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
+        let measure = skleta.measure
+        cell.mesureValue = measure!
+        cell.myLabel.text = skleta.obsName
+        var  necId = getNecId()
+        
+        cell.turkeySexView.alpha = 0
+        cell.turkeySexView.isHidden = true
+        
+        
+        
+        let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!, Obsid: skleta.obsID!, obsName: skleta.obsName!,necId: necId as NSNumber)
+        if photoArr.count > 0
+        {
+            cell.badgeButton.alpha = 1
+            cell.badgeButton.badgeString = String(photoArr.count) as String
+            cell.badgeButton.badgeTextColor = UIColor.white
+            cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
+        }
+        else
+        {
+            cell.badgeButton.alpha = 0
+        }
+        
+        if measure == "Y,N" {
+            
+            let n  = String(describing: skleta.refId!)
+            let imageName = "skeltaMuscular" + "_" + n + "_n"
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"image001")
+            }
+            
+            cell.observationImage.image =  image
+            
+            if skleta.objsVisibilty == 1 {
+                cell.switchNecropsyBtn.isOn = true
+            } else {
+                cell.switchNecropsyBtn.isOn = false
+            }
+            
+            cell.switchNecropsyBtn.alpha = 1
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 0
+        }
+        else if ( measure == "Actual"){
+            
+            let image = UIImage(named:"image001")
+            cell.observationImage.image =  image
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 1
+            cell.textFieldActual.text = skleta.actualText
+        }
+        else {
+            let n  = String(describing: skleta.refId!)
+            let imageName = "skeltaMuscular" + "_" + n + "_00"
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"image001")
+            }
+            cell.observationImage.image =  image
+            
+            cell.incrementLabel.text = String(skleta.obsPoint!.int32Value)
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 1
+            cell.minusButton.alpha = 1
+            cell.incrementLabel.alpha = 1
+            cell.textFieldActual.alpha = 0
+        }
+    }
+    
+    fileprivate func handleNeccollectionViewBtnTag1(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        let cocoii : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
+        cell.myLabel.text = cocoii.obsName
+        let measure = cocoii.measure
+        cell.mesureValue = measure!
+        cell.turkeySexView.alpha = 0
+        cell.turkeySexView.isHidden = true
+        var necId = getNecId()
+        
+        let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(cocoii.birdNo!, farmname: cocoii.formName!, catName: cocoii.catName!, Obsid: cocoii.obsID!, obsName: cocoii.obsName!,necId: necId as NSNumber)
+        if photoArr.count > 0
+        {
+            cell.badgeButton.alpha = 1
+            cell.badgeButton.badgeString = String(photoArr.count) as String
+            cell.badgeButton.badgeTextColor = UIColor.white
+            cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
+        }
+        else
+        {
+            cell.badgeButton.alpha = 0
+        }
+        if measure == "Y,N" {
+            
+            let n  = String(describing: cocoii.refId!)
+            let imageName = "Coccidiosis" + "_" + n + "_n"
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"image001")
+            }
+            
+            cell.observationImage.image =  image
+            
+            if cocoii.objsVisibilty == 1
+            {
+                cell.switchNecropsyBtn.isOn = true
+            }
+            else
+            {
+                cell.switchNecropsyBtn.isOn = false
+            }
+            
+            cell.switchNecropsyBtn.alpha = 1
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 0
+            
+        }
+        
+        else if ( measure == "Actual"){
+            
+            let image = UIImage(named:"image001")
+            cell.observationImage.image =  image
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 1
+            cell.textFieldActual.text = cocoii.actualText
+            
+        }
+        
+        else{
+            let n  = String(describing: cocoii.refId!)
+            let imageName = "Coccidiosis" + "_" + n + "_00"
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"image001")
+            }
+            
+            cell.observationImage.image =  image
+            cell.incrementLabel.text = String(cocoii.obsPoint!.int32Value)
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 1
+            cell.minusButton.alpha = 1
+            cell.incrementLabel.alpha = 1
+            cell.textFieldActual.alpha = 0
+            
+        }
+    }
+    
+    fileprivate func handleNeccollectionViewBtnTag2(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        let gitract : CaptureNecropsyViewDataTurkey = dataArrayGiTract.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
+        cell.myLabel.text = gitract.obsName
+        cell.turkeySexView.alpha = 0
+        cell.turkeySexView.isHidden = true
+        let measure = gitract.measure
+        cell.mesureValue = measure!
+        var necId = getNecId()
+        
+        
+        let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!, Obsid: gitract.obsID!, obsName: gitract.obsName!,necId: necId as NSNumber)
+        if photoArr.count > 0
+        {
+            cell.badgeButton.alpha = 1
+            cell.badgeButton.badgeString = String(photoArr.count) as String
+            cell.badgeButton.badgeTextColor = UIColor.white
+            cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
+        }
+        else
+        {
+            cell.badgeButton.alpha = 0
+            
+        }
+        
+        if measure == "Y,N" {
+            
+            let n  = String(describing: gitract.refId!)
+            
+            let imageName = "GITract" + "_" + n + "_n"
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"image001")
+            }
+            
+            cell.observationImage.image =  image
+            
+            if gitract.objsVisibilty == 1
+            {
+                cell.switchNecropsyBtn.isOn = true
+            }
+            else
+            {
+                cell.switchNecropsyBtn.isOn = false
+            }
+            
+            cell.switchNecropsyBtn.alpha = 1
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 0
+            
+        }
+        
+        else if ( measure == "Actual"){
+            let image = UIImage(named:"image001")
+            
+            cell.observationImage.image =  image
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 1
+            cell.textFieldActual.text = gitract.actualText
+            
+        }
+        
+        else{
+            let n  = String(describing: gitract.refId!)
+            let imageName = "GITract" + "_" + n + "_00"
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"image001")
+            }
+            
+            cell.observationImage.image =  image
+            cell.incrementLabel.text = String(gitract.obsPoint!.int32Value)
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 1
+            cell.minusButton.alpha = 1
+            cell.incrementLabel.alpha = 1
+            cell.textFieldActual.alpha = 0
+            
+        }
+    }
+    
+    fileprivate func handleNeccollectionViewBtnTag3(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        let res : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
+        cell.myLabel.text = res.obsName
+        cell.turkeySexView.alpha = 0
+        cell.turkeySexView.isHidden = true
+        let measure = res.measure
+        cell.mesureValue = measure!
+        var necId = getNecId()
+        
+        
+        let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(res.birdNo!, farmname: res.formName!, catName: res.catName!, Obsid: res.obsID!, obsName: res.obsName!,necId: necId as NSNumber)
+        if photoArr.count > 0
+        {
+            cell.badgeButton.alpha = 1
+            cell.badgeButton.badgeString = String(photoArr.count) as String
+            cell.badgeButton.badgeTextColor = UIColor.white
+            cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
+        }
+        else
+        {
+            cell.badgeButton.alpha = 0
+        }
+        
+        if measure == "Y,N" {
+            
+            let n  = String(describing: res.refId!)
+            let imageName = "Resp" + "_" + n + "_n"
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"image001")
+            }
+            
+            cell.observationImage.image =  image
+            
+            if res.objsVisibilty == 1
+            {
+                cell.switchNecropsyBtn.isOn = true
+            }
+            else
+            {
+                cell.switchNecropsyBtn.isOn = false
+            }
+            
+            cell.switchNecropsyBtn.alpha = 1
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 0
+            
+        }
+        
+        else if ( measure == "Actual"){
+            
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 1
+            cell.textFieldActual.text = res.actualText
+            let image = UIImage(named:"image001")
+            
+            cell.observationImage.image =  image
+        }
+        
+        else{
+            let n  = String(describing: res.refId!)
+            let imageName = "Resp" + "_" + n + "_00"
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"image001")
+            }
+            cell.observationImage.image =  image
+            
+            cell.incrementLabel.text = String(res.obsPoint!.int32Value)
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 1
+            cell.minusButton.alpha = 1
+            cell.incrementLabel.alpha = 1
+            cell.textFieldActual.alpha = 0
+            
+        }
+    }
+    
+    fileprivate func handleNeccollectionViewBtnTagMeasureYN(_ immu: CaptureNecropsyViewDataTurkey, _ cell: CaptureNecroStep2TurkeyCell) {
+        let n  = String(describing: immu.refId!)
+        let imageName = "Immune" + "_" + n + "_n"
+        var image = UIImage(named:imageName)
+        if image == nil
+        {
+            image = UIImage(named:"image001")
+        }
+        cell.observationImage.frame = CGRect(x: 0, y: 0, width: 235, height: 343)
+        
+        if n == "1960" {
+            cell.observationImage.frame = CGRect(x: 0, y: 0, width: 235, height: 235)
+        }
+        cell.observationImage.image =  image
+        
+        if immu.objsVisibilty == 1
+        {
+            cell.switchNecropsyBtn.isOn = true
+        }
+        else
+        {
+            cell.switchNecropsyBtn.isOn = false
+        }
+        
+        cell.switchNecropsyBtn.alpha = 1
+        cell.plusButton.alpha = 0
+        cell.minusButton.alpha = 0
+        cell.incrementLabel.alpha = 0
+        cell.textFieldActual.alpha = 0
+        cell.turkeySexView.alpha = 0
+        cell.turkeySexView.isHidden = true
+    }
+    
+    fileprivate func handleNeccollectionViewOtherValidations(_ measure: String?, _ immu: CaptureNecropsyViewDataTurkey, _ cell: CaptureNecroStep2TurkeyCell) {
+        if measure == "Y,N" {
+            
+            handleNeccollectionViewBtnTagMeasureYN(immu, cell)
+            
+        } else if ( measure == "Actual"){
+            
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 1
+            cell.textFieldActual.text = immu.actualText
+            let image = UIImage(named:"image001")
+            cell.observationImage.image =  image
+            cell.turkeySexView.alpha = 0
+            cell.turkeySexView.isHidden = true
+        } else if ( measure == "F,M") {
+            
+            let n  = String(describing: immu.refId!)
+            let imageName = "Immune" + "_" + n + "_n"
+            var image = UIImage(named:imageName)
+            if image == nil
+            {
+                image = UIImage(named:"image001")
+            }
+            
+            cell.observationImage.image =  image
+            
+            if immu.actualText == "0"  || immu.actualText == "0.0" || immu.actualText == "0.00"
+            {
+                cell.turkeySexLbl.text = "N/A"
+            }
+            else if immu.actualText == "2" || immu.actualText == "2.00" || immu.actualText == "2.0"
+            {
+                cell.turkeySexLbl.text = "Female"
+            }
+            else
+            {
+                cell.turkeySexLbl.text = "Male"
+            }
+            cell.turkeySexView.alpha = 1
+            cell.turkeySexView.isHidden = false
+            cell.switchNecropsyBtn.alpha = 0
+            cell.plusButton.alpha = 0
+            cell.minusButton.alpha = 0
+            cell.incrementLabel.alpha = 0
+            cell.textFieldActual.alpha = 0
+            
+        } else {
+            cell.turkeySexView.alpha = 0
+            cell.turkeySexView.isHidden = true
+            
+            if immu.refId == 58
+            {
+                let n  = String(describing: immu.refId!)
+                let imageName = "Immune" + "_" + n + "_01"
+                
+                var image = UIImage(named:imageName)
+                if image == nil
+                {
+                    image = UIImage(named:"image001")
+                }
+                
+                cell.observationImage.image =  image
+                cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
+                cell.switchNecropsyBtn.alpha = 0
+                cell.plusButton.alpha = 1
+                cell.minusButton.alpha = 1
+                cell.incrementLabel.alpha = 1
+                cell.textFieldActual.alpha = 0
+            }
+            else
+            {
+                let n  = String(describing: immu.refId!)
+                let imageName = "Immune" + "_" + n + "_00"
+                var image = UIImage(named:imageName)
+                if image == nil
+                {
+                    image = UIImage(named:"image001")
+                }
+                
+                cell.observationImage.image =  image
+                cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
+                cell.switchNecropsyBtn.alpha = 0
+                cell.plusButton.alpha = 1
+                cell.minusButton.alpha = 1
+                cell.incrementLabel.alpha = 1
+                cell.textFieldActual.alpha = 0
+            }
+        }
+    }
+    
+    fileprivate func handleTurkeybirdSexCompletionAction(_ cell: CaptureNecroStep2TurkeyCell, _ indexPath: IndexPath) {
+        cell.turkeybirdSexCompletion = {[unowned self] ( error) in
+            
+            if  turkeyBirdSex.count > 0 {
+                self.dropDownVIewNew(arrayData: turkeyBirdSex as? [String] ?? [String](), kWidth: cell.turkeySexView.frame.width, kAnchor: cell.turkeySexView, yheight: cell.turkeySexView.bounds.height) { [unowned self] selectedVal, index  in
+                    
+                    selectedSexValue = selectedVal
+                    
+                    if selectedVal == "Female"
+                    {
+                        selectedSexValue = "2"
+                    }
+                    else if selectedVal == "N/A"
+                    {
+                        selectedSexValue = "0"
+                    }
+                    else
+                    {
+                        selectedSexValue = "1"
+                    }
+                    
+                    if btnTag == 4 {
+                        
+                        let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
+                        
+                        var  necId = getNecId()
+                        
+                        
+                        let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
+                        
+                        let resp1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
+                        if FetchObsArr.count > 0 {
+                            
+                            
+                            let obsData = CoreDataHandlerTurkeyModels.updateSkeletaTurkeySexValueObs(
+                                catName: "Immune",
+                                obsName: resp1.obsName!,
+                                formName: immune.formName!,
+                                obsVisibility: true,
+                                birdNo: resp1.birdNo!,
+                                obsPoint: 1,
+                                obsId: resp1.obsID as! NSInteger,
+                                necId: necId as NSNumber,
+                                isSync: true,
+                                actualText: selectedSexValue
+                            )
+                            
+                            CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseTurkeySexValue(obsData, index: indexPath.row)
+                            
+                        }
+                        
+                        dataArrayImmu.removeAllObjects()
+                        
+                        necId =  getNecId()
+                        
+                        dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
+                        
+                    }
+                    
+                    if postingIdFromExistingNavigate == "Exting"{
+                        
+                        CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(postingIdFromExisting as NSNumber)
+                        self.printSyncLblCount()
+                    }
+                    else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
+                        
+                        let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+                        CoreDataHandlerTurkey().updateisSyncNecropsystep1WithneccIdTurkey(necId as NSNumber, isSync : true)
+                        self.printSyncLblCount()
+                        
+                    } else {
+                        let necId = UserDefaults.standard.integer(forKey: "necId") as Int
+                        CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(necId as NSNumber)
+                        self.printSyncLblCount()
+                    }
+                    
+                    neccollectionView.reloadData()
+                    
+                }
+                
+                self.dropHiddenAndShow()
+                
+            }
+        }
+    }
+    
+    fileprivate func handleBtnTagValidationsNecCollectionView(_ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell) {
+        if btnTag == 0 {
+            handleNeccollectionViewBtnTag0(indexPath, cell)
+            
+        } else if btnTag == 1 {
+            handleNeccollectionViewBtnTag1(indexPath, cell)
+        }
+        else if btnTag == 2 {
+            handleNeccollectionViewBtnTag2(indexPath, cell)
+        } else if btnTag == 3 {
+            handleNeccollectionViewBtnTag3(indexPath, cell)
+            
+        } else {
+            let immu : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
+            cell.myLabel.text = immu.obsName
+            
+            let measure = immu.measure
+            cell.mesureValue = measure!
+            cell.turkeySexView.alpha = 0
+            cell.turkeySexView.isHidden = true
+            var necId = getNecId()
+            
+            let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(immu.birdNo!, farmname: immu.formName!, catName: immu.catName!, Obsid: immu.obsID!, obsName: immu.obsName!,necId: necId as NSNumber)
+            if photoArr.count > 0
+            {
+                cell.badgeButton.alpha = 1
+                cell.badgeButton.badgeString = String(photoArr.count) as String
+                cell.badgeButton.badgeTextColor = UIColor.white
+                cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
+            }
+            else
+            {
+                cell.badgeButton.alpha = 0
+            }
+            
+            handleNeccollectionViewOtherValidations(measure, immu, cell)
+            
+        }
+    }
+    
+    fileprivate func handleFormCollectionViewFarmValidation(_ farmLength: String, _ age: String, _ indexPath: IndexPath, _ cell: CaptureNecroStep2TurkeyCell, _ house: String) {
+        if farmLength.count > 60  {
+            
+            let fullName = farmLength
+            let myStringPrefix = String(fullName.prefix(60)) // result is "1234"
+            let firstName = myStringPrefix + "..." + " " + "[" + age + "]"
+            
+            
+            var farmName2 = String()
+            let range = firstName.range(of: ".")
+            if range != nil{
+                var abc = String(firstName[range!.upperBound...]) as NSString
+                farmName2 = String(indexPath.row+1) + "." + " " + String(describing:abc)
+            }
+            
+            cell.houseLbl.text = "HNo. " +  house
+            cell.farmLabel.text = farmName2
+            
+        } else {
+            
+            var farmLengthAge  : String = (farmArray[indexPath.row] as? String)!
+            let myStringPrefix = String(farmLengthAge.prefix(60)) // result is "1234"
+            
+            farmLengthAge = myStringPrefix + " " + "[" + age + "]"
+            
+            var farmName2 = String()
+            let range = farmLengthAge.range(of: ".")
+            if range != nil{
+                var abc = String(farmLengthAge[range!.upperBound...]) as NSString
+                farmName2 = String(indexPath.row+1) + "." + " " + String(describing:abc)
+                
+            }
+            
+            cell.farmLabel.text = farmName2
+            cell.houseLbl.text = "HNo. " +  house
+        }
+    }
+    
+    fileprivate func handleBirdCollectionViewAllValidations(_ cell: CaptureNecroStep2TurkeyCell, _ indexPath: IndexPath) {
+        if (cell.isSelected) {
+            let image = UIImage(named: "addbird_bg_select")
+            
+            cell.bgImageView.image = image
+            let image2 = UIImage(named: "edit")
+            cell.editImage.image = image2
+            cell.notePopBtn.alpha = 1
+            
+        } else {
+            let image = UIImage(named: "addbird_bg_unselect1")
+            cell.bgImageView.image = image
+            let image1 = UIImage(named: "edit_black")
+            cell.editImage.image = image1
+            cell.notePopBtn.alpha = 0
+        }
+        
+        if btnTag == 0 {
+            handleBirdsCollectionViewBtnTag0(indexPath, cell)
+        }
+        
+        if btnTag == 1 {
+            
+            handleBirdsCollectionViewBtnTag1(indexPath, cell)
+        }
+        
+        if btnTag == 2 {
+            handleBirdsCollectionViewBtnTag2(indexPath, cell)
+        }
+        
+        if btnTag == 3 {
+            handleBirdsCollectionViewBtnTag3(indexPath, cell)
+        }
+        
+        if btnTag == 4 {
+            handleBirdsCollectionViewBtnTag4(indexPath, cell)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CaptureNecroStep2TurkeyCell
         
         if collectionView == birdsCollectionView {
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CaptureNecroStep2TurkeyCell
-            
-            if (cell.isSelected) {
-                let image = UIImage(named: "addbird_bg_select")
-                
-                cell.bgImageView.image = image
-                let image2 = UIImage(named: "edit")
-                cell.editImage.image = image2
-                cell.notePopBtn.alpha = 1
-                
-            } else {
-                let image = UIImage(named: "addbird_bg_unselect1")
-                cell.bgImageView.image = image
-                let image1 = UIImage(named: "edit_black")
-                cell.editImage.image = image1
-                cell.notePopBtn.alpha = 0
-            }
-            
-            if btnTag == 0 {
-                var isNotes = NSArray()
-                if dataSkeltaArray.count > 0 {
-                    let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: 0) as! CaptureNecropsyViewDataTurkey
-                    let formName = skleta.formName
-                    let catName = skleta.catName
-                    let noOfBird  = indexPath.row + 1
-                    
-                    var  necId = getNecId()
-                    
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                    
-                } else {
-                    let formName = UserDefaults.standard.value(forKey: "farm") as! String
-                    let catName = "skeltaMuscular"
-                    let noOfBird  = indexPath.row + 1
-                    
-                    var  necId = getNecId()
-                    
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                }
-                
-                if isNotes.count > 0
-                {
-                    let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
-                    if (note.notes == "")
-                    {
-                        cell.editImage.alpha = 0
-                    }
-                    else
-                    {
-                        cell.editImage.alpha = 1
-                    }
-                }
-                else
-                {
-                    cell.editImage.alpha = 0
-                }
-            }
-            
-            if btnTag == 1 {
-                
-                var isNotes = NSArray()
-                if dataArrayCocoi.count>0
-                {
-                    let cocoii : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: 0) as! CaptureNecropsyViewDataTurkey
-                    
-                    let formName = cocoii.formName
-                    let catName = cocoii.catName
-                    let noOfBird  = indexPath.row + 1
-                    
-                    var  necId = getNecId()
-                    
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                }
-                else
-                {
-                    let formName = UserDefaults.standard.value(forKey: "farm") as! String
-                    let catName = "Coccidiosis"
-                    let noOfBird  = indexPath.row + 1
-                    var  necId = getNecId()
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                }
-                
-                if isNotes.count > 0
-                {
-                    let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
-                    if (note.notes == "")
-                    {
-                        cell.editImage.alpha = 0
-                    }
-                    else
-                    {
-                        cell.editImage.alpha = 1
-                    }
-                }
-                
-                else
-                {
-                    cell.editImage.alpha = 0
-                }
-            }
-            
-            if btnTag == 2 {
-                var isNotes = NSArray()
-                if dataArrayGiTract.count > 0
-                {
-                    
-                    let gitract : CaptureNecropsyViewDataTurkey = dataArrayGiTract.object(at: 0) as! CaptureNecropsyViewDataTurkey
-                    let formName = gitract.formName
-                    let catName = gitract.catName
-                    let noOfBird  = indexPath.row + 1
-                    var  necId = getNecId()
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                    
-                }
-                else
-                {
-                    let formName = UserDefaults.standard.value(forKey: "farm") as! String
-                    let catName = "GITract"
-                    let noOfBird  = indexPath.row + 1
-                    var  necId = getNecId()
-                    
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                }
-                
-                
-                if isNotes.count > 0
-                {
-                    let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
-                    if (note.notes == "")
-                    {
-                        cell.editImage.alpha = 0
-                    }
-                    else
-                    {
-                        cell.editImage.alpha = 1
-                    }
-                }
-                else
-                {
-                    cell.editImage.alpha = 0
-                    
-                }
-            }
-            
-            if btnTag == 3 {
-                var isNotes = NSArray()
-                if dataArrayRes.count>0
-                {
-                    let res : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: 0) as! CaptureNecropsyViewDataTurkey
-                    
-                    let formName = res.formName
-                    let catName = res.catName
-                    let noOfBird  = indexPath.row + 1
-                    var  necId = getNecId()
-                    
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                    
-                }
-                else
-                {
-                    let formName = UserDefaults.standard.value(forKey: "farm") as! String
-                    let catName = "Resp"
-                    let noOfBird  = indexPath.row + 1
-                    var  necId = getNecId()
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                }
-                
-                
-                if isNotes.count > 0
-                {
-                    let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
-                    if (note.notes == "")
-                    {
-                        cell.editImage.alpha = 0
-                    }
-                    else
-                    {
-                        cell.editImage.alpha = 1
-                    }
-                }
-                
-                else
-                {
-                    cell.editImage.alpha = 0
-                }
-            }
-            
-            if btnTag == 4 {
-                var isNotes = NSArray()
-                if dataArrayImmu.count>0{
-                    let immu : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: 0) as! CaptureNecropsyViewDataTurkey
-                    
-                    let formName = immu.formName
-                    let catName = immu.catName
-                    let noOfBird  = indexPath.row + 1
-                    var  necId = getNecId()
-                    
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName! , formName: formName! , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                }
-                else{
-                    
-                    let formName = UserDefaults.standard.value(forKey: "farm") as! String
-                    let catName = "Immune"
-                    let noOfBird  = indexPath.row + 1
-                    var  necId = getNecId()
-                    
-                    isNotes = CoreDataHandlerTurkey().fetchNoofBirdWithNotesTurkey(catName , formName: formName , birdNo: noOfBird as NSNumber,necId: necId as NSNumber)
-                }
-                
-                if isNotes.count > 0
-                {
-                    let note : NotesBirdTurkey = isNotes[0] as! NotesBirdTurkey
-                    if (note.notes == "")
-                    {
-                        cell.editImage.alpha = 0
-                    }
-                    else
-                    {
-                        cell.editImage.alpha = 1
-                        
-                    }
-                    
-                }
-                
-                else
-                {
-                    cell.editImage.alpha = 0
-                    
-                }
-            }
-            
-            
+            handleBirdCollectionViewAllValidations(cell, indexPath)
             
             let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(CaptureNecroStep2Turkey.longPress(_:)))
             longPressRecognizer.view?.tag = indexPath.row
@@ -4757,51 +5433,14 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             if isFarmClick == true {
                 cell.birdsCountLabel?.text = String(describing:((items.object(at: self.farmRow) as AnyObject).object(at: indexPath.row) ))
-                //String(items[self.farmRow][indexPath.row] as? String)
-            }
-            else {
-                
-                if isNewFarm == true
-                {
-                    cell.birdsCountLabel?.text =  String(describing:((items.object(at: farmArray.count-1) as AnyObject).object(at: indexPath.row) ))
-                }
-                else
-                {
-                    if isFirstTimeLaunch == true
-                    {
-                        if postingIdFromExistingNavigate == "Exting"{
-                            cell.birdsCountLabel?.text =  String(describing:((items.object(at: self.farmRow)  as AnyObject).object(at: indexPath.row)))
-                        }
-                        else {
-                            //                            cell.birdsCountLabel?.text =  String((items.object(at: 0) as AnyObject).object(at: indexPath.row) as! String)
-                            cell.birdsCountLabel?.text =  String(describing:((items.object(at: 0) as AnyObject).object(at: indexPath.row)))
-                        }
-                        
-                    }
-                    else
-                    {
-                        cell.birdsCountLabel?.text =  String(describing: ((items.object(at: farmRow) as AnyObject).object(at: indexPath.row) ))
-
-                        //cell.birdsCountLabel?.text =  String(describing: ((items.object(at: farmArray.count-1) as AnyObject).object(at: indexPath.row) ))
-                    }
-                    //String(items[0][indexPath.row] as? String)
-                }
-                
-                
+            } else {
+                handleBirdsCollectionViewIsFarmClickFalseCase(cell, indexPath)
             }
             cell.notePopBtn.tag = indexPath.row
             cell.notePopBtn.addTarget(self, action: #selector(CaptureNecroStep2Turkey.notesPopView), for: .touchUpInside)
-            
-            
-            
             return cell
             
-        }
-        
-        else if collectionView == formCollectionView {
-            
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CaptureNecroStep2TurkeyCell
-            
+        } else if collectionView == formCollectionView {
             cell.layer.borderWidth = 1.0
             cell.layer.cornerRadius = 5.0
             cell.layer.borderColor = UIColor.clear.cgColor
@@ -4828,49 +5467,13 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             var farmLength : String = (farmArray[indexPath.row] as? String)!
             let age : String = (ageArray[indexPath.row] as? String)!
             let house : String = (houseArray[indexPath.row] as? String)!
-            if farmLength.count > 60  {
-                
-                let fullName = farmLength
-                let myStringPrefix = String(fullName.prefix(60)) // result is "1234"
-                let firstName = myStringPrefix + "..." + " " + "[" + age + "]"
-                
-                
-                var farmName2 = String()
-                let range = firstName.range(of: ".")
-                if range != nil{
-                    var abc = String(firstName[range!.upperBound...]) as NSString
-                    farmName2 = String(indexPath.row+1) + "." + " " + String(describing:abc)
-                }
-                
-                cell.houseLbl.text = "HNo. " +  house
-                cell.farmLabel.text = farmName2
-                
-            } else {
-                
-                var farmLengthAge  : String = (farmArray[indexPath.row] as? String)!
-                let myStringPrefix = String(farmLengthAge.prefix(60)) // result is "1234"
-                
-                farmLengthAge = myStringPrefix + " " + "[" + age + "]"
-                
-                var farmName2 = String()
-                let range = farmLengthAge.range(of: ".")
-                if range != nil{
-                    var abc = String(farmLengthAge[range!.upperBound...]) as NSString
-                    farmName2 = String(indexPath.row+1) + "." + " " + String(describing:abc)
-                    
-                }
-                
-                cell.farmLabel.text = farmName2
-                cell.houseLbl.text = "HNo. " +  house
-            }
+            handleFormCollectionViewFarmValidation(farmLength, age, indexPath, cell, house)
             
             cell.QuickLink.addTarget(self, action: #selector(CaptureNecroStep2Turkey.quickLink(_:)), for: .touchUpInside)
             cell.QuickLink.tag = indexPath.row
             return cell
             
-        }
-        
-        else if collectionView == neccollectionView{
+        } else if collectionView == neccollectionView {
             
             cell.textFieldActual.delegate = self
             cell.switchNecropsyBtn.isUserInteractionEnabled = true
@@ -4885,490 +5488,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
                 observationImageFrameTemp = cell.observationImage.frame
             }
             
-            if btnTag == 0 {
-                let skleta : CaptureNecropsyViewDataTurkey = dataSkeltaArray.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
-                let measure = skleta.measure
-                cell.mesureValue = measure!
-                cell.myLabel.text = skleta.obsName
-                var  necId = getNecId()
-                
-                cell.turkeySexView.alpha = 0
-                cell.turkeySexView.isHidden = true
-               
-                
-                
-                let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(skleta.birdNo!, farmname: skleta.formName!, catName: skleta.catName!, Obsid: skleta.obsID!, obsName: skleta.obsName!,necId: necId as NSNumber)
-                if photoArr.count > 0
-                {
-                    cell.badgeButton.alpha = 1
-                    cell.badgeButton.badgeString = String(photoArr.count) as String
-                    cell.badgeButton.badgeTextColor = UIColor.white
-                    cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
-                }
-                else
-                {
-                    cell.badgeButton.alpha = 0
-                }
-                
-                if measure == "Y,N" {
-                    
-                    let n  = String(describing: skleta.refId!)
-                    let imageName = "skeltaMuscular" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    
-                    cell.observationImage.image =  image
-                    
-                    if skleta.objsVisibilty == 1 {
-                        cell.switchNecropsyBtn.isOn = true
-                    } else {
-                        cell.switchNecropsyBtn.isOn = false
-                    }
-                    
-                    cell.switchNecropsyBtn.alpha = 1
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 0
-                }
-                else if ( measure == "Actual"){
-                    
-                    let image = UIImage(named:"image001")
-                    cell.observationImage.image =  image
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 1
-                    cell.textFieldActual.text = skleta.actualText
-                }
-                else {
-                    let n  = String(describing: skleta.refId!)
-                    let imageName = "skeltaMuscular" + "_" + n + "_00"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    cell.observationImage.image =  image
-                    
-                    cell.incrementLabel.text = String(skleta.obsPoint!.int32Value)
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 1
-                    cell.minusButton.alpha = 1
-                    cell.incrementLabel.alpha = 1
-                    cell.textFieldActual.alpha = 0
-                }
-                
-            }
-            else if btnTag == 1 {
-                let cocoii : CaptureNecropsyViewDataTurkey = dataArrayCocoi.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
-                cell.myLabel.text = cocoii.obsName
-                let measure = cocoii.measure
-                cell.mesureValue = measure!
-                cell.turkeySexView.alpha = 0
-                cell.turkeySexView.isHidden = true
-                var necId = getNecId()
-                
-                let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(cocoii.birdNo!, farmname: cocoii.formName!, catName: cocoii.catName!, Obsid: cocoii.obsID!, obsName: cocoii.obsName!,necId: necId as NSNumber)
-                if photoArr.count > 0
-                {
-                    cell.badgeButton.alpha = 1
-                    cell.badgeButton.badgeString = String(photoArr.count) as String
-                    cell.badgeButton.badgeTextColor = UIColor.white
-                    cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
-                }
-                else
-                {
-                    cell.badgeButton.alpha = 0
-                }
-                if measure == "Y,N" {
-                    
-                    let n  = String(describing: cocoii.refId!)
-                    let imageName = "Coccidiosis" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    
-                    cell.observationImage.image =  image
-                    
-                    if cocoii.objsVisibilty == 1
-                    {
-                        cell.switchNecropsyBtn.isOn = true
-                    }
-                    else
-                    {
-                        cell.switchNecropsyBtn.isOn = false
-                    }
-                    
-                    cell.switchNecropsyBtn.alpha = 1
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 0
-                    
-                }
-                
-                else if ( measure == "Actual"){
-                    
-                    let image = UIImage(named:"image001")
-                    cell.observationImage.image =  image
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 1
-                    cell.textFieldActual.text = cocoii.actualText
-                    
-                }
-                
-                else{
-                    let n  = String(describing: cocoii.refId!)
-                    let imageName = "Coccidiosis" + "_" + n + "_00"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    
-                    cell.observationImage.image =  image
-                    cell.incrementLabel.text = String(cocoii.obsPoint!.int32Value)
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 1
-                    cell.minusButton.alpha = 1
-                    cell.incrementLabel.alpha = 1
-                    cell.textFieldActual.alpha = 0
-                    
-                }
-            }
-            else if btnTag == 2 {
-                let gitract : CaptureNecropsyViewDataTurkey = dataArrayGiTract.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
-                cell.myLabel.text = gitract.obsName
-                cell.turkeySexView.alpha = 0
-                cell.turkeySexView.isHidden = true
-                let measure = gitract.measure
-                cell.mesureValue = measure!
-                var necId = getNecId()
-                
-                
-                let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(gitract.birdNo!, farmname: gitract.formName!, catName: gitract.catName!, Obsid: gitract.obsID!, obsName: gitract.obsName!,necId: necId as NSNumber)
-                if photoArr.count > 0
-                {
-                    cell.badgeButton.alpha = 1
-                    cell.badgeButton.badgeString = String(photoArr.count) as String
-                    cell.badgeButton.badgeTextColor = UIColor.white
-                    cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
-                }
-                else
-                {
-                    cell.badgeButton.alpha = 0
-                    
-                }
-                
-                if measure == "Y,N" {
-                    
-                    let n  = String(describing: gitract.refId!)
-                    
-                    let imageName = "GITract" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    
-                    cell.observationImage.image =  image
-                    
-                    if gitract.objsVisibilty == 1
-                    {
-                        cell.switchNecropsyBtn.isOn = true
-                    }
-                    else
-                    {
-                        cell.switchNecropsyBtn.isOn = false
-                    }
-                    
-                    cell.switchNecropsyBtn.alpha = 1
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 0
-                    
-                }
-                
-                else if ( measure == "Actual"){
-                    let image = UIImage(named:"image001")
-                    
-                    cell.observationImage.image =  image
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 1
-                    cell.textFieldActual.text = gitract.actualText
-                    
-                }
-                
-                else{
-                    let n  = String(describing: gitract.refId!)
-                    let imageName = "GITract" + "_" + n + "_00"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    
-                    cell.observationImage.image =  image
-                    cell.incrementLabel.text = String(gitract.obsPoint!.int32Value)
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 1
-                    cell.minusButton.alpha = 1
-                    cell.incrementLabel.alpha = 1
-                    cell.textFieldActual.alpha = 0
-                    
-                }
-                
-                
-            }
-            else if btnTag == 3 {
-                let res : CaptureNecropsyViewDataTurkey = dataArrayRes.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
-                cell.myLabel.text = res.obsName
-                cell.turkeySexView.alpha = 0
-                cell.turkeySexView.isHidden = true
-                let measure = res.measure
-                cell.mesureValue = measure!
-                var necId = getNecId()
-                
-                
-                let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(res.birdNo!, farmname: res.formName!, catName: res.catName!, Obsid: res.obsID!, obsName: res.obsName!,necId: necId as NSNumber)
-                if photoArr.count > 0
-                {
-                    cell.badgeButton.alpha = 1
-                    cell.badgeButton.badgeString = String(photoArr.count) as String
-                    cell.badgeButton.badgeTextColor = UIColor.white
-                    cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
-                }
-                else
-                {
-                    cell.badgeButton.alpha = 0
-                }
-                
-                if measure == "Y,N" {
-                    
-                    let n  = String(describing: res.refId!)
-                    let imageName = "Resp" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    
-                    cell.observationImage.image =  image
-                    
-                    if res.objsVisibilty == 1
-                    {
-                        cell.switchNecropsyBtn.isOn = true
-                    }
-                    else
-                    {
-                        cell.switchNecropsyBtn.isOn = false
-                    }
-                    
-                    cell.switchNecropsyBtn.alpha = 1
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 0
-                    
-                }
-                
-                else if ( measure == "Actual"){
-                    
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 1
-                    cell.textFieldActual.text = res.actualText
-                    let image = UIImage(named:"image001")
-                    
-                    cell.observationImage.image =  image
-                }
-                
-                else{
-                    let n  = String(describing: res.refId!)
-                    let imageName = "Resp" + "_" + n + "_00"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    cell.observationImage.image =  image
-                    
-                    cell.incrementLabel.text = String(res.obsPoint!.int32Value)
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 1
-                    cell.minusButton.alpha = 1
-                    cell.incrementLabel.alpha = 1
-                    cell.textFieldActual.alpha = 0
-                    
-                }
-                
-            }
-            else{
-                let immu : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
-                cell.myLabel.text = immu.obsName
-                
-                let measure = immu.measure
-                cell.mesureValue = measure!
-                cell.turkeySexView.alpha = 0
-                cell.turkeySexView.isHidden = true
-                var necId = getNecId()
-                
-                let photoArr = CoreDataHandlerTurkey().fecthPhotoWithCatnameWithBirdAndObservationIDTurkey(immu.birdNo!, farmname: immu.formName!, catName: immu.catName!, Obsid: immu.obsID!, obsName: immu.obsName!,necId: necId as NSNumber)
-                if photoArr.count > 0
-                {
-                    cell.badgeButton.alpha = 1
-                    cell.badgeButton.badgeString = String(photoArr.count) as String
-                    cell.badgeButton.badgeTextColor = UIColor.white
-                    cell.badgeButton.badgeEdgeInsets = UIEdgeInsets.init(top: 10, left: 0, bottom: 0, right: 15)
-                }
-                else
-                {
-                    cell.badgeButton.alpha = 0
-                }
-                
-                if measure == "Y,N" {
-                    
-                    let n  = String(describing: immu.refId!)
-                    let imageName = "Immune" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    cell.observationImage.frame = CGRect(x: 0, y: 0, width: 235, height: 343)
-
-                    if n == "1960" {
-                        cell.observationImage.frame = CGRect(x: 0, y: 0, width: 235, height: 235)
-                    }
-                    cell.observationImage.image =  image
-                    
-                    if immu.objsVisibilty == 1
-                    {
-                        cell.switchNecropsyBtn.isOn = true
-                    }
-                    else
-                    {
-                        cell.switchNecropsyBtn.isOn = false
-                    }
-                    
-                    cell.switchNecropsyBtn.alpha = 1
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 0
-                    cell.turkeySexView.alpha = 0
-                    cell.turkeySexView.isHidden = true
-                    
-                }
-                
-                else if ( measure == "Actual"){
-                    
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 1
-                    cell.textFieldActual.text = immu.actualText
-                    let image = UIImage(named:"image001")
-                    cell.observationImage.image =  image
-                    cell.turkeySexView.alpha = 0
-                    cell.turkeySexView.isHidden = true
-                }
-                
-                else if ( measure == "F,M"){
-                    
-                    let n  = String(describing: immu.refId!)
-                    let imageName = "Immune" + "_" + n + "_n"
-                    var image = UIImage(named:imageName)
-                    if image == nil
-                    {
-                        image = UIImage(named:"image001")
-                    }
-                    
-                    cell.observationImage.image =  image
-                    
-                    if immu.actualText == "0"  || immu.actualText == "0.0" || immu.actualText == "0.00"
-                    {
-                        cell.turkeySexLbl.text = "N/A"
-                    }
-                    else if immu.actualText == "2" || immu.actualText == "2.00" || immu.actualText == "2.0"
-                    {
-                        cell.turkeySexLbl.text = "Female"
-                    }
-                    else
-                    {
-                        cell.turkeySexLbl.text = "Male"
-                    }
-                    cell.turkeySexView.alpha = 1
-                    cell.turkeySexView.isHidden = false
-                    cell.switchNecropsyBtn.alpha = 0
-                    cell.plusButton.alpha = 0
-                    cell.minusButton.alpha = 0
-                    cell.incrementLabel.alpha = 0
-                    cell.textFieldActual.alpha = 0
-                    
-                }
-                
-                else{
-                    cell.turkeySexView.alpha = 0
-                    cell.turkeySexView.isHidden = true
-                    
-                    if immu.refId == 58
-                    {
-                        let n  = String(describing: immu.refId!)
-                        let imageName = "Immune" + "_" + n + "_01"
-                        
-                        var image = UIImage(named:imageName)
-                        if image == nil
-                        {
-                            image = UIImage(named:"image001")
-                        }
-                        
-                        cell.observationImage.image =  image
-                        cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
-                        cell.switchNecropsyBtn.alpha = 0
-                        cell.plusButton.alpha = 1
-                        cell.minusButton.alpha = 1
-                        cell.incrementLabel.alpha = 1
-                        cell.textFieldActual.alpha = 0
-                    }
-                    else
-                    {
-                        let n  = String(describing: immu.refId!)
-                        let imageName = "Immune" + "_" + n + "_00"
-                        var image = UIImage(named:imageName)
-                        if image == nil
-                        {
-                            image = UIImage(named:"image001")
-                        }
-                        
-                        cell.observationImage.image =  image
-                        cell.incrementLabel.text = String(immu.obsPoint!.int32Value)
-                        cell.switchNecropsyBtn.alpha = 0
-                        cell.plusButton.alpha = 1
-                        cell.minusButton.alpha = 1
-                        cell.incrementLabel.alpha = 1
-                        cell.textFieldActual.alpha = 0
-                    }
-                }
-                
-            }
+            handleBtnTagValidationsNecCollectionView(indexPath, cell)
             
             cell.textFieldActual.tag = indexPath.row
             
@@ -5384,91 +5504,7 @@ class CaptureNecroStep2Turkey: BaseViewController,AddFarmPopTurkey,summmaryRepor
             
             cell.switchNecropsyBtn .addTarget(self, action: #selector(CaptureNecroStep2Turkey.switchClick(_:)) , for:.valueChanged)
             
-            cell.turkeybirdSexCompletion = {[unowned self] ( error) in
-                
-                if  turkeyBirdSex.count > 0 {
-                    self.dropDownVIewNew(arrayData: turkeyBirdSex as? [String] ?? [String](), kWidth: cell.turkeySexView.frame.width, kAnchor: cell.turkeySexView, yheight: cell.turkeySexView.bounds.height) { [unowned self] selectedVal, index  in
-                        
-                        selectedSexValue = selectedVal
-                        
-                        if selectedVal == "Female"
-                        {
-                            selectedSexValue = "2"
-                        }
-                        else if selectedVal == "N/A"
-                        {
-                            selectedSexValue = "0"
-                        }
-                        else
-                        {
-                            selectedSexValue = "1"
-                        }
-                        
-                        if btnTag == 4 {
-                            
-                            let immune : CaptureNecropsyViewDataTurkey = dataArrayImmu.object(at: indexPath.row) as! CaptureNecropsyViewDataTurkey
-                            
-                            var  necId = getNecId()
-                            
-                            
-                            let FetchObsArr =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationIDTurkey(immune.birdNo!, farmname: immune.formName!, catName: immune.catName!,Obsid: immune.obsID!,necId: necId as NSNumber)
-                            
-                            let resp1 : CaptureNecropsyViewDataTurkey = FetchObsArr.object(at: 0) as! CaptureNecropsyViewDataTurkey
-                            if FetchObsArr.count > 0 {
-                                
-                                
-                                let obsData = CoreDataHandlerTurkeyModels.updateSkeletaTurkeySexValueObs(
-                                    catName: "Immune",
-                                        obsName: resp1.obsName!,
-                                        formName: immune.formName!,
-                                        obsVisibility: true,
-                                        birdNo: resp1.birdNo!,
-                                        obsPoint: 1,
-                                        obsId: resp1.obsID as! NSInteger,
-                                        necId: necId as NSNumber,
-                                        isSync: true,
-                                        actualText: selectedSexValue
-                                )
-
-                                CoreDataHandlerTurkey().updateCaptureSkeletaInDatabaseTurkeySexValue(obsData, index: indexPath.row)
-
-                            }
-                            
-                            dataArrayImmu.removeAllObjects()
-                                
-                            necId =  getNecId()
-                            
-                            dataArrayImmu =  CoreDataHandlerTurkey().fecthFrmWithCatnameWithBirdAndObservationTurkey(immune.birdNo! , farmname: immune.formName!, catName: "Immune",necId:necId as NSNumber).mutableCopy() as! NSMutableArray
-                            
-                        }
-                        
-                        if postingIdFromExistingNavigate == "Exting"{
-                            
-                            CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(postingIdFromExisting as NSNumber)
-                            self.printSyncLblCount()
-                        }
-                        else if UserDefaults.standard.bool(forKey: "Unlinked") == true{
-                            
-                            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                            CoreDataHandlerTurkey().updateisSyncNecropsystep1WithneccIdTurkey(necId as NSNumber, isSync : true)
-                            self.printSyncLblCount()
-                            
-                        } else {
-                            let necId = UserDefaults.standard.integer(forKey: "necId") as Int
-                            CoreDataHandlerTurkey().updateisSyncTrueOnPostingSessionTurkey(necId as NSNumber)
-                            self.printSyncLblCount()
-                        }
-                        
-                        neccollectionView.reloadData()
-                        
-                    }
-                    
-                    self.dropHiddenAndShow()
-                    
-                }
-            }
-
-            
+            handleTurkeybirdSexCompletionAction(cell, indexPath)
             cell.helpButtonOutlet.tag = indexPath.row
             cell.textFieldActual.delegate = self
             cell.switchNecropsyBtn.tag = indexPath.row

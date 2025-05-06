@@ -347,7 +347,51 @@ final public  class UserFilledQuestionnaireDAO {
         return getQuestionVMObj(questObj)
     }
     
-	fileprivate func handleConvertQuesDTOtoMOValidation(_ operatorCert: [GetSubmittedOperatorCertificationDTO]?, _ userId: String, _ certificationId: String) {
+    fileprivate func handleQuestionCategoryOperatorCertValidations(_ questCategory: GetSubmittedOperatorCertificationDTO, _ operatorCert: [GetSubmittedOperatorCertificationDTO]?, _ userId: String, _ certificationId: String) {
+        if let attendees = questCategory.attendeeList {
+            for attendee in attendees {
+                if let typeId = operatorCert?[0].typeID, let categoryId = questCategory.catID {
+                    
+                    AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
+                }
+            }
+        }
+    }
+
+    fileprivate func handleQuesCategoryCertIdUserIdValidationsAndDataPopulation(_ questCategory: GetSubmittedOperatorCertificationDTO, _ certificationId: String, _ userId: String, _ operatorCert: [GetSubmittedOperatorCertificationDTO]?, _ questCategoryMOObj: VaccinationFilledQuestionCategories) {
+        if let questions = questCategory.moduleAssessments {
+            
+            for questionObj in questions {
+                let questionMOObj = getVaccinationQuestionsObj()
+                questionMOObj.certificationId = certificationId
+                questionMOObj.userId = userId
+                questionMOObj.questionDescription = questionObj.assessment
+                
+                if let qSeq = questionObj.sequenceNo {
+                    questionMOObj.sequenceNo = (qSeq) as NSNumber?
+                }
+                if let typeId = operatorCert?[0].typeID {
+                    questionMOObj.typeId = String(typeId)
+                }
+                
+                if let categoryId = questCategory.catID {
+                    questionMOObj.categoryId = String(categoryId)
+                }
+                questionMOObj.categoryName = questCategory.categorieName
+                if let qId = questionObj.id {
+                    
+                    questionMOObj.questionId = String(qId)
+                }
+                questionMOObj.questionType  = questionObj.types
+                questionMOObj.userComments  = questionObj.comments
+                questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
+                questCategoryMOObj.addToQuestions(questionMOObj)
+                
+            }
+        }
+    }
+
+fileprivate func handleConvertQuesDTOtoMOValidation(_ operatorCert: [GetSubmittedOperatorCertificationDTO]?, _ userId: String, _ certificationId: String) {
 		if operatorCert != nil && operatorCert!.count > 0 {
 			let moQuestTypeObj = getVaccinationQuestionsTypeObj()
 			moQuestTypeObj.userId = userId
@@ -369,54 +413,59 @@ final public  class UserFilledQuestionnaireDAO {
 					questCategoryMOObj.categoryId = String(categoryId)
 				}
 				questCategoryMOObj.userId = userId
-				if let questions = questCategory.moduleAssessments {
-					
-					for questionObj in questions {
-						let questionMOObj = getVaccinationQuestionsObj()
-						questionMOObj.certificationId = certificationId
-						questionMOObj.userId = userId
-						questionMOObj.questionDescription = questionObj.assessment
-						
-						if let qSeq = questionObj.sequenceNo {
-							
-							
-							questionMOObj.sequenceNo = (qSeq) as NSNumber?
-						}
-						
-						
-						if let typeId = operatorCert?[0].typeID {
-							questionMOObj.typeId = String(typeId)
-						}
-						
-						if let categoryId = questCategory.catID {
-							questionMOObj.categoryId = String(categoryId)
-						}
-						questionMOObj.categoryName = questCategory.categorieName
-						if let qId = questionObj.id {
-							
-							questionMOObj.questionId = String(qId)
-						}
-						questionMOObj.questionType  = questionObj.types
-						questionMOObj.userComments  = questionObj.comments
-						questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
-						questCategoryMOObj.addToQuestions(questionMOObj)
-						
-					}
-				}
-				if let attendees = questCategory.attendeeList {
-					for attendee in attendees {
-						if let typeId = operatorCert?[0].typeID, let categoryId = questCategory.catID {
-							
-							AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
-						}
-					}
-				}
+                handleQuesCategoryCertIdUserIdValidationsAndDataPopulation(questCategory, certificationId, userId, operatorCert, questCategoryMOObj)
+                handleQuestionCategoryOperatorCertValidations(questCategory, operatorCert, userId, certificationId)
 				moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
 			}
 		}
 	}
 	
-	fileprivate func handleConvertQuesDTOtoMOValidationPart2(_ safetyCert: [GetSubmittedSafetyCertificationDTO]?, _ userId: String, _ certificationId: String) {
+    fileprivate func handleConvertQuesToDTOtoMOVValidationInternal(_ questCategory: GetSubmittedSafetyCertificationDTO, _ safetyCert: [GetSubmittedSafetyCertificationDTO]?, _ userId: String, _ certificationId: String) {
+        if let attendees = questCategory.attendeeList {
+            for attendee in attendees {
+                if let typeId = safetyCert?[0].typeId, let categoryId = questCategory.catId {
+                    
+                    AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
+                }
+            }
+        }
+    }
+
+    fileprivate func handleConvertQuesToDTOtoMOVValidationInternalModulAssessment(_ questCategory: GetSubmittedSafetyCertificationDTO, _ certificationId: String, _ userId: String, _ safetyCert: [GetSubmittedSafetyCertificationDTO]?, _ questCategoryMOObj: VaccinationFilledQuestionCategories) {
+        if let questions = questCategory.moduleAssessments {
+            
+            for questionObj in questions {
+                let questionMOObj = getVaccinationQuestionsObj()
+                questionMOObj.certificationId = certificationId
+                questionMOObj.userId = userId
+                questionMOObj.questionDescription = questionObj.assessment
+                if let typeId = safetyCert?[0].typeId {
+                    questionMOObj.typeId = String(typeId)
+                }
+                
+                if let categoryId = questCategory.catId {
+                    questionMOObj.categoryId = String(categoryId)
+                }
+                questionMOObj.categoryName = questCategory.categorieName
+                if let qId = questionObj.id {
+                    
+                    questionMOObj.questionId = String(qId)
+                }
+                
+                if let qSeq = questionObj.sequenceNo {
+                    
+                    questionMOObj.sequenceNo = (qSeq) as NSNumber?
+                }
+                questionMOObj.questionType  = questionObj.types
+                questionMOObj.userComments  = questionObj.comments
+                questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
+                questCategoryMOObj.addToQuestions(questionMOObj)
+                
+            }
+        }
+    }
+
+fileprivate func handleConvertQuesDTOtoMOValidationPart2(_ safetyCert: [GetSubmittedSafetyCertificationDTO]?, _ userId: String, _ certificationId: String) {
 		if safetyCert != nil && safetyCert!.count > 0 {
 			
 			let moQuestTypeObj = getVaccinationQuestionsTypeObj()
@@ -441,45 +490,8 @@ final public  class UserFilledQuestionnaireDAO {
 				
 				questCategoryMOObj.userId = userId
 				
-				if let questions = questCategory.moduleAssessments {
-					
-					for questionObj in questions {
-						let questionMOObj = getVaccinationQuestionsObj()
-						questionMOObj.certificationId = certificationId
-						questionMOObj.userId = userId
-						questionMOObj.questionDescription = questionObj.assessment
-						if let typeId = safetyCert?[0].typeId {
-							questionMOObj.typeId = String(typeId)
-						}
-						
-						if let categoryId = questCategory.catId {
-							questionMOObj.categoryId = String(categoryId)
-						}
-						questionMOObj.categoryName = questCategory.categorieName
-						if let qId = questionObj.id {
-							
-							questionMOObj.questionId = String(qId)
-						}
-						
-						if let qSeq = questionObj.sequenceNo {
-							
-							questionMOObj.sequenceNo = (qSeq) as NSNumber?
-						}
-						questionMOObj.questionType  = questionObj.types
-						questionMOObj.userComments  = questionObj.comments
-						questionMOObj.userSelectedResponse  = questionObj.answer as NSNumber?
-						questCategoryMOObj.addToQuestions(questionMOObj)
-						
-					}
-				}
-				if let attendees = questCategory.attendeeList {
-					for attendee in attendees {
-						if let typeId = safetyCert?[0].typeId, let categoryId = questCategory.catId {
-							
-							AddEmployeesDAO.sharedInstance.linkEmployeeToQuestionnaireById(empId: attendee.text ?? "", userId: userId, certificationId: certificationId, quesTypeId: String(typeId), quesCategoryId: String(categoryId))
-						}
-					}
-				}
+                handleConvertQuesToDTOtoMOVValidationInternalModulAssessment(questCategory, certificationId, userId, safetyCert, questCategoryMOObj)
+                handleConvertQuesToDTOtoMOVValidationInternal(questCategory, safetyCert, userId, certificationId)
 				moQuestTypeObj.addToQuestionCategories(questCategoryMOObj)
 			}
 		}
@@ -560,26 +572,30 @@ final public  class UserFilledQuestionnaireDAO {
 		}
 	}
 	
-	fileprivate func handleShippingDetailsConvertQuesDTO(_ shippingDetails: [ShippingAddressDTO]?) {
+    fileprivate func handleMoQuestionTypeObjDataValues(_ shippingDetails: [ShippingAddressDTO]?, _ moQuestTypeObj:inout ShippingAddressDTO?) {
+        if let cityName = shippingDetails?[0].city {
+            moQuestTypeObj?.city = String(cityName)
+        }
+        if let address1 = shippingDetails?[0].address1 {
+            moQuestTypeObj?.address1 = String(address1)
+        }
+        if let address2 = shippingDetails?[0].address2 {
+            moQuestTypeObj?.address2 = String(address2)
+        }
+        if let pincode = shippingDetails?[0].pincode {
+            moQuestTypeObj?.pincode = String(pincode)
+        }
+        if let fssName = shippingDetails?[0].fssName {
+            moQuestTypeObj?.fssName = String(fssName)
+        }
+    }
+
+fileprivate func handleShippingDetailsConvertQuesDTO(_ shippingDetails: [ShippingAddressDTO]?) {
 		if shippingDetails != nil && shippingDetails!.count > 0 {
 			
 			var moQuestTypeObj : ShippingAddressDTO?
 			
-			if let cityName = shippingDetails?[0].city {
-				moQuestTypeObj?.city = String(cityName)
-			}
-			if let address1 = shippingDetails?[0].address1 {
-				moQuestTypeObj?.address1 = String(address1)
-			}
-			if let address2 = shippingDetails?[0].address2 {
-				moQuestTypeObj?.address2 = String(address2)
-			}
-			if let pincode = shippingDetails?[0].pincode {
-				moQuestTypeObj?.pincode = String(pincode)
-			}
-			if let fssName = shippingDetails?[0].fssName {
-				moQuestTypeObj?.fssName = String(fssName)
-			}
+            handleMoQuestionTypeObjDataValues(shippingDetails, &moQuestTypeObj)
 			if let CountryId = shippingDetails?[0].countryID {
 				moQuestTypeObj?.countryID = Int(CountryId)
 			}
@@ -595,7 +611,6 @@ final public  class UserFilledQuestionnaireDAO {
 			if let trainingId = shippingDetails?[0].trainingID {
 				moQuestTypeObj?.trainingID = Int(trainingId)
 			}
-			
 		}
 	}
 	

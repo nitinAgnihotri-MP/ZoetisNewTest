@@ -1041,11 +1041,83 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
         }
     }
     
-    func getPostingDataFromServerforFeed (){
+    fileprivate func handleFeedDetailArrFeedIdValidations(_ feedDetailArr: Any?, _ feedId: Int, _ seesionId: Int, _ feedName: Any?, _ feedDate: Any?) {
+        for j in 0..<(feedDetailArr! as AnyObject).count{
+            let feedCatName = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedProgramCategory") as! String
+            
+            if feedCatName == Constants.coccidioStr{
+                self.saveCoccidiosisFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
+            }
+            else if feedCatName  == "Alternatives"{
+                self.saveAlternativeFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
+            }
+            else if  feedCatName == "Antibiotic"{
+                self.saveAntibioticFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
+            }
+            else if  feedCatName  == Constants.mytoxinStr{
+                self.saveMicoToxinFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
+                
+            }
+        }
+    }
+    
+    fileprivate func handleGetPostingDataFromServerFeedForLoopValidations(_ arr: NSArray) {
+        for t in 0..<arr.count {
+            
+            let posDict = arr.object(at: t)
+            let seesionId = (posDict as AnyObject).value(forKey: "sessionId") as! Int
+            let feedDictArr = (posDict as AnyObject).value(forKey: "Feeds")
+            
+            for i in 0..<(feedDictArr! as AnyObject).count {
+                var feedId = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey: "feedId") as! Int
+                let nsFeedid = UserDefaults.standard.integer(forKey: "feedId")
+                if feedId > nsFeedid{
+                    UserDefaults.standard.set(feedId, forKey: "feedId")
+                }
+                let feedName = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"feedName")
+                let feedDate = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"startDate")
+                CoreDataHandlerTurkey().getFeedNameFromGetApiSingleDeviceTokenTurkey((seesionId) as NSNumber, sessionId: seesionId as NSNumber, feedProgrameName: feedName as! String, feedId: feedId as NSNumber,postingIdFeed: self.postingId)
+                
+                let feedDetailArr = ((feedDictArr! as AnyObject).object(at: i) as AnyObject).value(forKey: "feedCategoryDetails")
+                
+                self.handleFeedDetailArrFeedIdValidations(feedDetailArr, feedId, seesionId, feedName, feedDate)
+            }
+        }
+    }
+    
+    fileprivate func handleGetFeedListBySessionIdSuccessAPIResponse(_ response: AFDataResponse<Any>) {
+        switch response.result {
+        case let .success(value):
+            
+            if value is NSArray {
+                let arr : NSArray = value as! NSArray
+                
+                UserDefaults.standard.set("Yes", forKey: "Success")
+                if arr.count>0 {
+                    CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramTurkey(self.postingId)
+                    CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramCocoiiSinleTurkey(self.postingId)
+                    CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramAlternativeSinleTurkey(self.postingId)
+                    CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramAntiboiticSingleTurkey(self.postingId)
+                    CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramMyCotoxinSingleTurkey(self.postingId)
+                    
+                    self.handleGetPostingDataFromServerFeedForLoopValidations(arr)
+                    
+                    self.getCNecStep1Data()
+                } else {
+                    self.getCNecStep1Data()
+                }
+            }
+            
+        case .failure(let encodingError):
+            
+            print (encodingError)
+        }
+    }
+    
+    func getPostingDataFromServerforFeed() {
         
         if WebClass.sharedInstance.connected() {
             accestoken = AccessTokenHelper().getFromKeychain(keyed: Constants.accessToken)!
-           // accestoken = (UserDefaults.standard.value(forKey: Constants.accessToken) as? String)!
             let headerDict: HTTPHeaders = [Constants.authorization:accestoken]
             
             let url = "PostingSession/GetFeedListBySessionId?DeviceSessionId=\(fullData)"
@@ -1053,94 +1125,30 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
             
             sessionManager.request(urlString, method: .get, headers: headerDict).responseJSON { response in
                 let statusCode =  response.response?.statusCode
-                if statusCode == 500 || statusCode == 401 || statusCode == 503 ||  statusCode == 403 ||  statusCode==501 || statusCode == 502 || statusCode == 400 || statusCode == 504 || statusCode == 404 || statusCode == 408{
-                    // UserDefaults.standard.set(Constants.noStr, forKey: "Success")
+                switch statusCode {
+                case 500, 401, 503, 403, 501, 502, 400, 504, 404, 408:
                     self.getCNecStep1Data()
+                default:
+                    break
                 }
-                switch response.result{
-                case let .success(value):
-                 
-                    if value is NSArray {
-                            let arr : NSArray = value as! NSArray
-                          
-                            UserDefaults.standard.set("Yes", forKey: "Success")
-                            if arr.count>0 {
-                                CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramTurkey(self.postingId)
-                                CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramCocoiiSinleTurkey(self.postingId)
-                                CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramAlternativeSinleTurkey(self.postingId)
-                                CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramAntiboiticSingleTurkey(self.postingId)
-                                CoreDataHandlerTurkey().deleteDataWithPostingIdFeddProgramMyCotoxinSingleTurkey(self.postingId)
-                                
-                                for  t in 0..<arr.count {
-                                    
-                                    let posDict = arr.object(at: t)
-                                    let seesionId = (posDict as AnyObject).value(forKey: "sessionId") as! Int
-                                    let feedDictArr = (posDict as AnyObject).value(forKey: "Feeds")
-                                    
-                                    for  i in 0..<(feedDictArr! as AnyObject).count {
-                                        var feedId = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey: "feedId") as! Int
-                                        let nsFeedid = UserDefaults.standard.integer(forKey: "feedId")
-                                        if feedId > nsFeedid{
-                                            UserDefaults.standard.set(feedId, forKey: "feedId")
-                                        }
-                                        let feedName = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"feedName")
-                                        let feedDate = ((feedDictArr as AnyObject).object(at: i) as AnyObject).value(forKey:"startDate")
-                                        CoreDataHandlerTurkey().getFeedNameFromGetApiSingleDeviceTokenTurkey((seesionId) as NSNumber, sessionId: seesionId as NSNumber, feedProgrameName: feedName as! String, feedId: feedId as NSNumber,postingIdFeed: self.postingId)
-                                        
-                                        let feedDetailArr = ((feedDictArr! as AnyObject).object(at: i) as AnyObject).value(forKey: "feedCategoryDetails")
-                                        
-                                        for  j in 0..<(feedDetailArr! as AnyObject).count{
-                                            let feedCatName = ((feedDetailArr as AnyObject).object(at: j) as AnyObject).value(forKey: "feedProgramCategory") as! String
-                                            
-                                            if feedCatName == Constants.coccidioStr{
-                                                self.saveCoccidiosisFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
-                                            }
-                                            else if feedCatName  == "Alternatives"{
-                                                self.saveAlternativeFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
-                                            }
-                                            else if  feedCatName == "Antibiotic"{
-                                                self.saveAntibioticFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
-                                            }
-                                            else if  feedCatName  == Constants.mytoxinStr{
-                                                self.saveMicoToxinFeedData(feedDetailArr, j, feedId, seesionId, feedName, feedDate)
-                                                
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                self.getCNecStep1Data()
-                            }
-                            else{
-                                self.getCNecStep1Data()
-                            }
-                        }
-                    
-                case .failure(let encodingError):
-                    
-                    print (encodingError)
-                }
-                
+                self.handleGetFeedListBySessionIdSuccessAPIResponse(response)
             }
-            
-        } else{
+        } else {
             self.noInternetConnection()
         }
-        
     }
     
     fileprivate func saveNecropsyDataInDataBase(_ farmArr: Any?, _ sessionId: Int, _ posttingId: inout Int, _ complexName: String, _ seesDat: String, _ complexId: Int, _ custId: Int, _ devSessionId: String) {
-        for  j in 0..<(farmArr! as AnyObject).count {
-            let farmName =  ((farmArr as AnyObject).object(at:j) as AnyObject).value(forKey:"farmName") as! String
-            let  postingArr  =  CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(sessionId as NSNumber)
-            if postingArr.count>0{
+        for j in 0..<(farmArr! as AnyObject).count {
+            let farmName = ((farmArr as AnyObject).object(at:j) as AnyObject).value(forKey:"farmName") as! String
+            let postingArr = CoreDataHandlerTurkey().fetchAllPostingSessionTurkey(sessionId as NSNumber)
+            if postingArr.count>0 {
                 posttingId = (postingArr.object(at: 0) as AnyObject).value(forKey:"postingId") as! Int
-                if posttingId == sessionId{
+                if posttingId == sessionId {
                     CoreDataHandlerTurkey().updateFinalizeDataWithNecTurkey(self.postingId, finalizeNec: 1)
                     posttingId = sessionId
                 }
-            }
-            else{
+            } else {
                 posttingId = 0
             }
             let birdAge =  ((farmArr as AnyObject).object(at: j) as AnyObject).value(forKey:"age")
@@ -1313,23 +1321,23 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                             
                             if arr.count>0{
                                 CoreDataHandlerTurkey().deleteDataWithStep2dataTurkey(self.postingId)
-                                for  i in 0..<arr.count {
+                                for i in 0..<arr.count {
                                     let seesionId = (arr.object(at: i) as AnyObject).value(forKey: "SessionId") as! Int
                                     let farmArr = (arr.object(at: i) as AnyObject).value( forKey: "Farms")
-                                    for  j in 0..<(farmArr! as AnyObject).count {
+                                    for j in 0..<(farmArr! as AnyObject).count {
                                         let farmName = ((farmArr! as AnyObject).object(at: j) as AnyObject).value( forKey: "FarmName") as! String
                                         let catArr = ((farmArr! as AnyObject).object(at: j) as AnyObject).value(forKey: "Category")
-                                        for  k in 0..<(catArr! as AnyObject).count {
+                                        for k in 0..<(catArr! as AnyObject).count {
                                             let catName = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Category") as! String
                                             let ObArr = ((catArr! as AnyObject).object(at: k) as AnyObject).value(forKey: "Observations")
-                                            for  l in 0..<(ObArr! as AnyObject).count {
+                                            for l in 0..<(ObArr! as AnyObject).count {
                                                 let obsId  = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ObservationId") as! Int
                                                 let refId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "ReferenceId") as! NSNumber
                                                 let languageId = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "LanguageId") as! NSNumber
                                                 let obsName = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Observations") as! String
                                                 let measure = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Measure") as! String
                                                 let quickLink = ((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "DefaultQLink")
-                                                //
+                                                
                                                 let birdArr = (((ObArr! as AnyObject).object(at: l) as AnyObject).value(forKey: "Birds") as AnyObject).object(at: 0)
                                                 for  m in 0..<10 {
                                                     
@@ -1337,26 +1345,21 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                                     let chkKey = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).boolValue
                                                     let chkKey1 = ((birdArr as AnyObject).value(forKey: keyStr as String) as AnyObject).integerValue
                                                     let chkKey3 = (birdArr as AnyObject).value(forKey: keyStr as String) as! String
-                                                    if chkKey3 == "NA"{
+                                                    if chkKey3 == "NA" {
                                                         break
-                                                    }
-                                                    else{
+                                                    } else {
                                                         
                                                         var catstr = String()
                                                         
-                                                        if catName == "Microscopy"{
+                                                        if catName == "Microscopy" {
                                                             catstr = "Coccidiosis"
-                                                        }
-                                                        else if catName == "GI Tract" {
+                                                        } else if catName == "GI Tract" {
                                                             catstr = "GITract"
-                                                        }
-                                                        else if catName == "Immune/Others" {
+                                                        } else if catName == "Immune/Others" {
                                                             catstr = "Immune"
-                                                        }
-                                                        else if catName == "Respiratory" {
+                                                        } else if catName == "Respiratory" {
                                                             catstr = "Resp"
-                                                        }
-                                                        else if catName == "Skeletal/Muscular/Integumentary" {
+                                                        } else if catName == "Skeletal/Muscular/Integumentary" {
                                                             catstr = "skeltaMuscular"
                                                         }
                                                         
@@ -1377,35 +1380,28 @@ class PostingSessionDetailTurkey: UIViewController,turkeyNotes,UITextFieldDelega
                                                                lngId: languageId,
                                                                refId: refId
                                                         )
-
                                                         CoreDataHandlerTurkey().saveCaptureSkeletaInDatabaseOnSwithCaseSingleDataTurkey(data: captureData)
                                                     }
                                                 }
-                                                
                                             }
                                         }
                                     }
                                 }
                                 self.getNotesFromServer()
                             }
-                           
-                        }
-                        else {
+                        } else {
                             self.getNotesFromServer()
-                           
                         }
                     }
                 case .failure(let encodingError):
-                    
                     print (encodingError)
                 }
             }
-            
-        } else{
+        } else {
             self.noInternetConnection()
         }
-        
     }
+    
     fileprivate func saveNotesData(_ value: Any) {
         let arr : NSArray = value as! NSArray
         if arr.count>0{

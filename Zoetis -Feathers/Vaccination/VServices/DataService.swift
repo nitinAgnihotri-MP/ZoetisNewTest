@@ -167,29 +167,50 @@ class DataService{
         }
     }
     
-    fileprivate func handleVacStartedObjMainCertObjUserId(_ vacStartedCertObj: VaccinationStartedCertifications?, _ mainCertObj: VaccinationCertificationDetail, _ userId: String) {
-        if let vacObj = vacStartedCertObj{
-            if vacObj.siteid != nil {
-                mainCertObj.SiteId = Int64(vacObj.siteid!)
+    fileprivate func handleMainCertObj(_ vacObj: VaccinationStartedCertifications, _ mainCertObj: inout VaccinationCertificationDetail) {
+        if vacObj.siteid != nil {
+            mainCertObj.SiteId = Int64(vacObj.siteid!)
+        }
+        if vacObj.certificationCategoryId == "1" {
+            mainCertObj.OperatorCertificate = false
+            mainCertObj.Cretification_Type_Id = 2
+        } else {
+            mainCertObj.OperatorCertificate = true
+            mainCertObj.Cretification_Type_Id = 1
+        }
+        
+        if vacObj.assignedTo != nil && vacObj.assignedTo != "" {
+            mainCertObj.AssingToId = Int64(vacObj.assignedTo!)
+        }
+        if vacObj.certificationTypeId != nil && vacObj.certificationTypeId != ""{
+            mainCertObj.CertificateTypeId = Int64(vacObj.certificationTypeId!)
+        }
+    }
+    
+    fileprivate func handleVacObjMainCertFormattedDataStringValidations(_ vacObj: VaccinationStartedCertifications, _ mainCertObj: VaccinationCertificationDetail, _ formattedDateString: String, _ vacStartedCertObj: VaccinationStartedCertifications?) {
+        if vacObj.scheduledDate != nil {
+            mainCertObj.ScheduleDate = formattedDateString // dateFormatterObj.string(from: scheduledDate)
+        }
+        
+        mainCertObj.ScheduleDate = vacObj.scheduledDate
+        mainCertObj.CustomerName = vacObj.customerName
+        if !(vacObj.deviceId != nil &&  vacObj.deviceId != "") {
+            mainCertObj.DeviceId = getDeviceId(dateObj: vacObj.createdDate ?? (vacObj.submittedDate ?? Date() ), id: vacObj.certificationId ?? "")
+            vacStartedCertObj?.deviceId = mainCertObj.DeviceId
+            for value in mainCertObj.VacOperatorFSSgAddress! {
+                vacStartedCertObj?.fssId = NSNumber(value: value.fssID ?? 0)
             }
+            VaccinationDashboardDAO.sharedInstance.saveCertStartedObj(moObj:vacStartedCertObj! )
+        } else {
+            mainCertObj.DeviceId =   vacObj.deviceId
+        }
+    }
+    
+    fileprivate func handleVacStartedObjMainCertObjUserId(_ vacStartedCertObj: VaccinationStartedCertifications?, _ mainCertObj: inout VaccinationCertificationDetail, _ userId: String) {
+        if let vacObj = vacStartedCertObj {
             mainCertObj.SiteName = vacObj.siteName
             mainCertObj.AssignToName = vacObj.assignedName
-            
-            if vacObj.certificationCategoryId == "1" {
-                mainCertObj.OperatorCertificate = false
-                mainCertObj.Cretification_Type_Id = 2
-            } else {
-                mainCertObj.OperatorCertificate = true
-                mainCertObj.Cretification_Type_Id = 1
-            }
-            
-            
-            if vacObj.assignedTo != nil &&   vacObj.assignedTo != ""{
-                mainCertObj.AssingToId = Int64(vacObj.assignedTo!)
-            }
-            if vacObj.certificationTypeId != nil && vacObj.certificationTypeId != ""{
-                mainCertObj.CertificateTypeId = Int64(vacObj.certificationTypeId!)
-            }
+            handleMainCertObj(vacObj, &mainCertObj)
             mainCertObj.AssingToId = Int64(userId)
             mainCertObj.CustShipping = vacObj.custShippingNum
             mainCertObj.ExistingSite = vacObj.isExistingSite as? Bool
@@ -228,7 +249,6 @@ class DataService{
             }
             mainCertObj.HatcheryManagerSignature = vacObj.hatcheryManagerSign
             
-            
             var formattedDateString = ""
             if let date = dateFormatterObj.date(from: vacObj.scheduledDate ?? "") {
                 
@@ -241,27 +261,12 @@ class DataService{
                 debugPrint("Failed to convert the original date string.")
             }
             
-            if vacObj.scheduledDate != nil {
-                mainCertObj.ScheduleDate = formattedDateString // dateFormatterObj.string(from: scheduledDate)
-            }
-            
-            mainCertObj.ScheduleDate = vacObj.scheduledDate
-            mainCertObj.CustomerName = vacObj.customerName
-            if !(vacObj.deviceId != nil &&  vacObj.deviceId != ""){
-                mainCertObj.DeviceId = getDeviceId(dateObj: vacObj.createdDate ?? (vacObj.submittedDate ?? Date() ), id: vacObj.certificationId ?? "")
-                vacStartedCertObj?.deviceId = mainCertObj.DeviceId
-                for value in mainCertObj.VacOperatorFSSgAddress! {
-                    vacStartedCertObj?.fssId = NSNumber(value: value.fssID ?? 0)
-                }
-                VaccinationDashboardDAO.sharedInstance.saveCertStartedObj(moObj:vacStartedCertObj! )
-            } else{
-                mainCertObj.DeviceId =   vacObj.deviceId
-            }
+            handleVacObjMainCertFormattedDataStringValidations(vacObj, mainCertObj, formattedDateString, vacStartedCertObj)
         }
     }
     
     func getFilledCertObj(certificationId:String, userId:String, siteId:String, customerId:String, fssId: Int = 0 , FsrId: String, trainingId: Int = 0)-> [String:Any]?{
-        let mainCertObj = VaccinationCertificationDetail()
+        var mainCertObj = VaccinationCertificationDetail()
         let vacStartedCertObj = VaccinationDashboardDAO.sharedInstance.getStartedCertStatusMoObj(userId:userId , certificationId: certificationId)
         mainCertObj.OperatorInfo = fillOperatorInfo(certificationId:certificationId, userId:userId, customerId: customerId, siteId: siteId)
         mainCertObj.QuestionAnswer = fillQuestionAnsData(certificationId:certificationId, userId:userId)
@@ -285,7 +290,7 @@ class DataService{
         if customerId != ""{
             mainCertObj.CustomerId = Int64(customerId)
         }
-        handleVacStartedObjMainCertObjUserId(vacStartedCertObj, mainCertObj, userId)
+        handleVacStartedObjMainCertObjUserId(vacStartedCertObj, &mainCertObj, userId)
         
         let jsonEncoder = JSONEncoder()
         let data = try? jsonEncoder.encode(mainCertObj)
@@ -477,18 +482,22 @@ class DataService{
     }
     
     
+    fileprivate func handleAtteneeObjCatObjValidations(_ userId: String, _ attendeeObj: AddAttendeeDetailsDTO, _ categoryObj: VaccinationQuestionCategoryVM, _ certificationId: String) {
+        if userId != nil && userId != "" {
+            attendeeObj.CreatedBy = Int64(userId)
+        }
+        if categoryObj.categoryId != nil && categoryObj.categoryId != "" {
+            attendeeObj.ModuleCatId = Int64(categoryObj.categoryId!)
+        }
+        if certificationId != nil && certificationId != "" {
+            attendeeObj.TrainingId = Int64(certificationId)
+        }
+    }
+    
     fileprivate func handleEmployeesUserIdCatIdValidations(_ employees: [VaccinationEmployeeVM], _ userId: String, _ categoryObj: VaccinationQuestionCategoryVM, _ certificationId: String, _ attendeeDetails: inout [AddAttendeeDetailsDTO]) {
-        for categoryEmp in employees{
+        for categoryEmp in employees {
             let attendeeObj =  AddAttendeeDetailsDTO()
-            if userId != nil && userId != ""{
-                attendeeObj.CreatedBy = Int64(userId)
-            }
-            if categoryObj.categoryId != nil && categoryObj.categoryId != ""{
-                attendeeObj.ModuleCatId = Int64(categoryObj.categoryId!)
-            }
-            if certificationId != nil && certificationId != ""{
-                attendeeObj.TrainingId = Int64(certificationId)
-            }
+            handleAtteneeObjCatObjValidations(userId, attendeeObj, categoryObj, certificationId)
             if certificationId != nil && certificationId != ""{
                 attendeeObj.TrainingId = Int64(certificationId)
             }

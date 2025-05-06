@@ -3176,10 +3176,11 @@ extension PEViewAssesmentFinalize{
         )
 
         let idArr = tempArr.compactMap { "\($0["AssessmentId"] as? Int64 ?? 0)" }.filter { $0 != "0" }
-        let sanitationArr = idArr.flatMap {
-           
+        
+        idArr.forEach { assessmentId in
             SanitationEmbrexQuestionMasterDAO.sharedInstance.sendExtendedPEFilledDTO(
-                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "", assessmentId: $0
+                userId: UserContext.sharedInstance.userDetailsObj?.userId ?? "",
+                assessmentId: assessmentId
             )
         }
 

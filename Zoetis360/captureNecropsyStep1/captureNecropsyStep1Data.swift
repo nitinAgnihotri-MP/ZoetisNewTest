@@ -874,21 +874,36 @@ class captureNecropsyStep1Data: UIViewController,UITableViewDelegate,UITableView
         return timeStampString
     }
     
-    
-    fileprivate func deleteNotesImageNecropsyData(necropsyId :NSNumber , farmWithoutAge:String) {
-        CoreDataHandler().deleteDataWithPostingIdStep2dataCaptureNecViewWithfarmName(necropsyId as NSNumber, farmName: farmWithoutAge, { (success) in
-            if success == true{
-                
-                CoreDataHandler().deleteDataWithPostingIdStep2NotesBirdWithFarmName(necropsyId as NSNumber, farmName: farmWithoutAge, { (success) in
-                    if success == true{
-                        
-                        CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necropsyId as NSNumber, farmName: farmWithoutAge, { (success) in
-                            if success {
-                                self.handleSessionDeletion(for: necropsyId as NSNumber)
-                            }
-                        })
-                    }})
-            }})
+    fileprivate func deleteNotesImageNecropsyData(necropsyId: NSNumber, farmWithoutAge: String) {
+        deleteStep2DataCapture(necropsyId: necropsyId, farmWithoutAge: farmWithoutAge) { success in
+            guard success else { return }
+            self.deleteStep2NotesBird(necropsyId: necropsyId, farmWithoutAge: farmWithoutAge) { success in
+                guard success else { return }
+                self.deleteStep2CameraImage(necropsyId: necropsyId, farmWithoutAge: farmWithoutAge) { success in
+                    if success {
+                        self.handleSessionDeletion(for: necropsyId)
+                    }
+                }
+            }
+        }
+    }
+
+    private func deleteStep2DataCapture(necropsyId: NSNumber, farmWithoutAge: String, completion: @escaping (Bool) -> Void) {
+        CoreDataHandler().deleteDataWithPostingIdStep2dataCaptureNecViewWithfarmName(necropsyId, farmName: farmWithoutAge) { success in
+            completion(success)
+        }
+    }
+
+    private func deleteStep2NotesBird(necropsyId: NSNumber, farmWithoutAge: String, completion: @escaping (Bool) -> Void) {
+        CoreDataHandler().deleteDataWithPostingIdStep2NotesBirdWithFarmName(necropsyId, farmName: farmWithoutAge) { success in
+            completion(success)
+        }
+    }
+
+    private func deleteStep2CameraImage(necropsyId: NSNumber, farmWithoutAge: String, completion: @escaping (Bool) -> Void) {
+        CoreDataHandler().deleteDataWithPostingIdStep2CameraIamgeWithFarmName(necropsyId, farmName: farmWithoutAge) { success in
+            completion(success)
+        }
     }
     
     func handleSessionDeletion(for necropsyId: NSNumber) {

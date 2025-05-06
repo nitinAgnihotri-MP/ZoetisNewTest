@@ -691,268 +691,113 @@ class GI_Tract_Modal: NSObject {
         delegate?.didFinishWithParsing(finishedArray: preparedArray)
     }
     
-    func forImmuneTr(_ aArray : NSArray , birdsCount : Float) {
-        
-        let preparedArray = NSMutableArray()
-        
-        var retained_Yolk : Float = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(643) ? 0 : NOT_EXIST
-        var cardiovascular_Hydropericardium : Float = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(641) ? 0 : NOT_EXIST
-        var Splenomegaly: Float = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(645) ? 0 : NOT_EXIST
-        
-        var CecalTonsilsHemorrhages: Float = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(647) ? 0 : NOT_EXIST
-        
-        var Dehydration: Float = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(648) ? 0 : NOT_EXIST
-        var ThymusAtrophy: Float = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(649) ? 0 : NOT_EXIST
-        
-        var Omphalitis: Float = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(650) ? 0 : NOT_EXIST
-        
-        var LiverGramnuloma: Float = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(2036) ? 0 : NOT_EXIST
-        
-        var Cellulitis: Float = 0.0 // Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(1960) ? 0 : NOT_EXIST
-        
+    fileprivate func forImmuneTr(_ aArray: NSArray, birdsCount: Float) {
         let environmentIs = Constants.Api.versionUrl
-        if environmentIs.contains("stageapi") {
-        Cellulitis = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(1960) ? 0 : NOT_EXIST
-        }
-        else if environmentIs.contains("devapi") {
-        Cellulitis = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(1878) ? 0 : NOT_EXIST
-        }
-        else
-        {
-            Cellulitis = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(2037) ? 0 : NOT_EXIST
-        }
-        
-        
-        for  j in 0..<aArray.count
-        {
-            if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "Immune" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID {
-                
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 643) && retained_Yolk != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    retained_Yolk=(retained_Yolk == NOT_EXIST ? 0 : retained_Yolk)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 641) && cardiovascular_Hydropericardium != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    cardiovascular_Hydropericardium=(cardiovascular_Hydropericardium == NOT_EXIST ? 0 : cardiovascular_Hydropericardium)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 645) && Splenomegaly != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Splenomegaly=(Splenomegaly == NOT_EXIST ? 0 : Splenomegaly)+(value.floatValue > 0 ? 1 : 0)
-                }
-                
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 647) && CecalTonsilsHemorrhages != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    CecalTonsilsHemorrhages=(CecalTonsilsHemorrhages == NOT_EXIST ? 0 : CecalTonsilsHemorrhages)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 648) && Dehydration != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Dehydration=(Dehydration == NOT_EXIST ? 0 : Dehydration)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 649) && ThymusAtrophy != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    ThymusAtrophy=(ThymusAtrophy == NOT_EXIST ? 0 : ThymusAtrophy)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 650) && Omphalitis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Omphalitis=(Omphalitis == NOT_EXIST ? 0 : Omphalitis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2036) && retained_Yolk != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    LiverGramnuloma=(LiverGramnuloma == NOT_EXIST ? 0 : LiverGramnuloma)+(value.floatValue > 0 ? 1 : 0)
-                }
-                
-                if environmentIs.contains("stageapi") {
-                    if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1960) && Cellulitis != NOT_EXIST {
-                        let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                        Cellulitis=(Cellulitis == NOT_EXIST ? 0 : Cellulitis)+(value.floatValue > 0 ? 1 : 0)
-                    }
-                }
-                else if environmentIs.contains("devapi") {
-                    if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1878) && Cellulitis != NOT_EXIST {
-                        let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                        Cellulitis=(Cellulitis == NOT_EXIST ? 0 : Cellulitis)+(value.floatValue > 0 ? 1 : 0)
-                    }
-                }
-                else
-                {
-                    if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 2037) && Cellulitis != NOT_EXIST {
-                        let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                        Cellulitis=(Cellulitis == NOT_EXIST ? 0 : Cellulitis)+(value.floatValue > 0 ? 1 : 0)
-                    }
-                }
-               
-               
-            }
-        }
-        
-        if retained_Yolk != NOT_EXIST {
-            retained_Yolk = (retained_Yolk/birdsCount)*100
-            preparedArray.add(retained_Yolk)
-        }
-        
-        if cardiovascular_Hydropericardium != NOT_EXIST {
-            cardiovascular_Hydropericardium = (cardiovascular_Hydropericardium/birdsCount)*100
-            preparedArray.add(cardiovascular_Hydropericardium)
-        }
-        if Splenomegaly != NOT_EXIST {
-            Splenomegaly = (Splenomegaly/birdsCount)*100
-            preparedArray.add(Splenomegaly)
-        }
-        if CecalTonsilsHemorrhages != NOT_EXIST {
-            CecalTonsilsHemorrhages = (CecalTonsilsHemorrhages/birdsCount)*100
-            preparedArray.add(CecalTonsilsHemorrhages)
-        }
-        if Dehydration != NOT_EXIST {
-            Dehydration = (Dehydration/birdsCount)*100
-            preparedArray.add(Dehydration)
-        }
-        if ThymusAtrophy != NOT_EXIST {
-            ThymusAtrophy = (ThymusAtrophy/birdsCount)*100
-            preparedArray.add(ThymusAtrophy)
-        }
-        if Omphalitis != NOT_EXIST {
-            Omphalitis = (Omphalitis/birdsCount)*100
-            preparedArray.add(Omphalitis)
-        }
-        
-        if LiverGramnuloma != NOT_EXIST {
-            LiverGramnuloma = (LiverGramnuloma/birdsCount)*100
-            preparedArray.add(LiverGramnuloma)
-        }
-        
-        if Cellulitis != NOT_EXIST {
-            Cellulitis = (Cellulitis/birdsCount)*100
-            preparedArray.add(Cellulitis)
-        }
-        
-        
-        delegate?.didFinishWithParsing(finishedArray: preparedArray)
-    }
-    func forGi_tract(_ aArray : NSArray , birdsCount : Float)  {
-        
-        let preparedArray = NSMutableArray()
-        
-        var enteritis : Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(32) ? 0 : NOT_EXIST
-        var feed_Passage : Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(34) ? 0 : NOT_EXIST
-        var gizzard_Erosions : Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(29) ? 0 : NOT_EXIST
-        var litter_Eater : Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(31) ? 0 : NOT_EXIST
-        var mouth_Lesions : Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(27) ? 0 : NOT_EXIST
-        var necrotic_Enteritis : Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(33) ? 0 : NOT_EXIST
-        var proventriculitis : Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(28) ? 0 : NOT_EXIST
-        var roundworms : Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(37) ? 0 : NOT_EXIST
-        var tapeworms : Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(35) ? 0 : NOT_EXIST
-        var Intestinal_Content: Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(41) ? 0 : NOT_EXIST
-        var Thin_Intestine: Float = Regions.getObservationsGITract(countryID: Regions.countryId).contains(38) ? 0 : NOT_EXIST
-        
-        for  j in 0..<aArray.count
-        {
-            if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "GITract" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID {
-                
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 32) && enteritis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    enteritis=(enteritis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 34) && feed_Passage != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    feed_Passage=(feed_Passage)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 29) && gizzard_Erosions != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    gizzard_Erosions=(gizzard_Erosions)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 31) && litter_Eater != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    litter_Eater=(litter_Eater)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 27) && mouth_Lesions != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    mouth_Lesions=(mouth_Lesions)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 33) && necrotic_Enteritis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    necrotic_Enteritis=(necrotic_Enteritis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 28) && proventriculitis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    proventriculitis=(proventriculitis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 37) && roundworms != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    roundworms=(roundworms)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 35) && tapeworms != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    tapeworms=(tapeworms)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 41) && Intestinal_Content != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Intestinal_Content=(Intestinal_Content)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 38) && Thin_Intestine != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Thin_Intestine=(Thin_Intestine)+(value.floatValue > 0 ? 1 : 0)
-                }
-            }
-        }
-        if enteritis != NOT_EXIST {
-            enteritis = (enteritis/birdsCount)*100
-            preparedArray.add(enteritis)
-        }
-        
-        if feed_Passage != NOT_EXIST {
-            feed_Passage = (feed_Passage/birdsCount)*100
-            preparedArray.add(feed_Passage)
-        }
-        
-        if gizzard_Erosions != NOT_EXIST {
-            gizzard_Erosions = (gizzard_Erosions/birdsCount)*100
-            preparedArray.add(gizzard_Erosions)
-        }
-        
-        if litter_Eater != NOT_EXIST {
-            litter_Eater = (litter_Eater/birdsCount)*100
-            preparedArray.add(litter_Eater)
-        }
-        
-        if mouth_Lesions != NOT_EXIST {
-            mouth_Lesions = (mouth_Lesions/birdsCount)*100
-            preparedArray.add(mouth_Lesions)
-        }
-        
-        if necrotic_Enteritis != NOT_EXIST {
-            necrotic_Enteritis = (necrotic_Enteritis/birdsCount)*100
-            preparedArray.add(necrotic_Enteritis)
+        let refIdToKeyMap = getRefIdMapping(for: environmentIs)
+
+        var values: [Int: Float] = [:]
+        for (refId, _) in refIdToKeyMap {
+            values[refId] = Regions.getObservationsForImmuneTr(countryID: Regions.countryId).contains(refId) ? 0 : NOT_EXIST
         }
 
-        if proventriculitis != NOT_EXIST {
-            proventriculitis = (proventriculitis/birdsCount)*100
-            preparedArray.add(proventriculitis)
+        for case let item as NSDictionary in aArray {
+            guard item["catName"] as? String == "Immune",
+                  item["lngId"] as? Int == Regions.languageID,
+                  let refId = item["refId"] as? Int,
+                  let visibility = (item["objsVisibilty"] as? NSNumber)?.floatValue,
+                  var currentVal = values[refId], currentVal != NOT_EXIST
+            else { continue }
+
+            values[refId] = (currentVal == NOT_EXIST ? 0 : currentVal) + (visibility > 0 ? 1 : 0)
         }
-        
-        if roundworms != NOT_EXIST{
-            roundworms = (roundworms/birdsCount)*100
-            preparedArray.add(roundworms)
+
+        let preparedArray = NSMutableArray()
+        for refId in refIdToKeyMap.keys.sorted() {
+            if let value = values[refId], value != NOT_EXIST {
+                preparedArray.add((value / birdsCount) * 100)
+            }
         }
-        
-        if tapeworms != NOT_EXIST {
-            tapeworms = (tapeworms/birdsCount)*100
-            preparedArray.add(tapeworms)
-        }
-        
-        if Thin_Intestine != NOT_EXIST {
-            Thin_Intestine = (Thin_Intestine/birdsCount)*100
-            preparedArray.add(Thin_Intestine)
-        }
-        
-        if Intestinal_Content != NOT_EXIST {
-            Intestinal_Content = (Intestinal_Content/birdsCount)*100
-            preparedArray.add(Intestinal_Content)
-        }
-        
-        
+
         delegate?.didFinishWithParsing(finishedArray: preparedArray)
     }
+
+    private func getRefIdMapping(for environment: String) -> [Int: String] {
+        var cellulitisId: Int
+        if environment.contains("stageapi") {
+            cellulitisId = 1960
+        } else if environment.contains("devapi") {
+            cellulitisId = 1878
+        } else {
+            cellulitisId = 2037
+        }
+
+        return [
+            643: "retained_Yolk",
+            641: "cardiovascular_Hydropericardium",
+            645: "Splenomegaly",
+            647: "CecalTonsilsHemorrhages",
+            648: "Dehydration",
+            649: "ThymusAtrophy",
+            650: "Omphalitis",
+            2036: "LiverGramnuloma",
+            cellulitisId: "Cellulitis"
+        ]
+    }
+    
+    fileprivate func forGi_tract(_ aArray: NSArray, birdsCount: Float) {
+        let preparedArray = NSMutableArray()
+        let countryId = Regions.countryId
+        let observations = Regions.getObservationsGITract(countryID: countryId)
+        
+        var values = initializeGiTractValues(from: observations)
+        
+        for case let item as NSDictionary in aArray {
+            guard item["catName"] as? String == "GITract",
+                  item["lngId"] as? Int == Regions.languageID,
+                  let refId = item["refId"] as? Int,
+                  var currentVal = values[refId], currentVal != NOT_EXIST
+            else { continue }
+            
+            let valueToAdd = getValueToAdd(for: refId, from: item)
+            values[refId] = currentVal + valueToAdd
+        }
+        
+        for refId in giTractRefOrder {
+            if let value = values[refId], value != NOT_EXIST {
+                preparedArray.add((value / birdsCount) * 100)
+            }
+        }
+
+        delegate?.didFinishWithParsing(finishedArray: preparedArray)
+    }
+    private let giTractRefOrder: [Int] = [
+        32, // enteritis
+        34, // feed_Passage
+        29, // gizzard_Erosions
+        31, // litter_Eater
+        27, // mouth_Lesions
+        33, // necrotic_Enteritis
+        28, // proventriculitis
+        37, // roundworms
+        35, // tapeworms
+        38, // Thin_Intestine
+        41  // Intestinal_Content
+    ]
+
+    private func initializeGiTractValues(from observations: [Int]) -> [Int: Float] {
+        var values: [Int: Float] = [:]
+        for refId in giTractRefOrder {
+            values[refId] = observations.contains(refId) ? 0 : NOT_EXIST
+        }
+        return values
+    }
+    private func getValueToAdd(for refId: Int, from item: NSDictionary) -> Float {
+        let usesObsPoint: Set<Int> = [32, 29, 28] // These use `obsPoint`, others use `objsVisibilty`
+        let key = usesObsPoint.contains(refId) ? "obsPoint" : "objsVisibilty"
+        guard let number = item[key] as? NSNumber else { return 0 }
+        return number.floatValue > 0 ? 1 : 0
+    }
+    
     fileprivate func handleAndPopulateFootPadOtherData(_ aArray: NSArray, _ j: Int, _ Foot_Pad_Lesions: inout Float, _ Foot_Pad_Lesions_Mean: inout Float, _ Foot_Pad_Lesions_Updated: inout Float, _ Ammonia_Burns: inout Float) {
         if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 1 {
             let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
@@ -1194,6 +1039,16 @@ class GI_Tract_Modal: NSObject {
         }
     }
     
+    fileprivate func handleDataAsPerEnvioronments(_ environmentIs: String, _ lngId: Int, _ aArray: NSArray, _ j: Int, _ Pericarditis: inout Float, _ Septicemia: inout Float, _ Liver_Granuloma: inout Float, _ Active_Bursa: inout Float, _ Cellulitis: inout Float) {
+        if environmentIs.contains("stageapi") {
+            handleStageAPIDataParams(lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+        } else if environmentIs.contains("devapi") {
+            handleDevAPIDataParams(lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+        } else {
+            handleElseCaseAPIDataParams(lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
+        }
+    }
+    
     func allSummaryPDF(_ aArray : NSArray , birdsCount : Float)  {
         
         let preparedArray = NSMutableArray()
@@ -1268,13 +1123,7 @@ class GI_Tract_Modal: NSObject {
                 handleEntriesMeanUpdatedData(aArray, j, &enterties, &enterties_Mean, &enterties_Updated, &litter_Eater, &proventriculitis, &proventriculitis_Mean, &proventriculitis_Updated)
                 handleRoundWormsTapeWormsData(aArray, j, &roundworms, &tapeworms, &Intestinal_Content, &Thin_Intestine)
                 handleMuscularLesionScoreData(aArray, j, &Muscular_Hemorrhages, &Bursa_Lesion_Score, &Bursa_Lesion_Score_Mean, &Bursa_Lesion_Score_Updated)
-                if environmentIs.contains("stageapi") {
-                    handleStageAPIDataParams(lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
-                } else if environmentIs.contains("devapi") {
-                    handleDevAPIDataParams(lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
-                } else {
-                    handleElseCaseAPIDataParams(lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
-                }
+                handleDataAsPerEnvioronments(environmentIs, lngId, aArray, j, &Pericarditis, &Septicemia, &Liver_Granuloma, &Active_Bursa, &Cellulitis)
             }
         }
         
@@ -1382,147 +1231,57 @@ class GI_Tract_Modal: NSObject {
     }
     
     
-    func forGi_tractTr(_ aArray : NSArray , birdsCount : Float)  {
-        
-        let preparedArray = NSMutableArray()
-        
-        var enteritis : Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(622) ? 0 : NOT_EXIST
-        var feed_Passage : Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(624) ? 0 : NOT_EXIST
-        var gizzard_Erosions : Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(619) ? 0 : NOT_EXIST
-        var litter_Eater : Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(621) ? 0 : NOT_EXIST
-        var mouth_Lesions : Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(617) ? 0 : NOT_EXIST
-        var feedInCrop : Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(623) ? 0 : NOT_EXIST
-        var proventriculitis : Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(618) ? 0 : NOT_EXIST
-        //var roundworms : Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(37) ? 0 : NOT_EXIST
-        var Content : Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(627) ? 0 : NOT_EXIST
-        var Intestinal_Content: Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(628) ? 0 : NOT_EXIST
-        var Thin_Intestine: Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(625) ? 0 : NOT_EXIST
-        var CropMycosis: Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(632) ? 0 : NOT_EXIST
-        var Ceca: Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(633) ? 0 : NOT_EXIST
-        var Hepatomegaly: Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(634) ? 0 : NOT_EXIST
-        var wallThickness: Float = Regions.getObservationsGITractTr(countryID: Regions.countryId).contains(675) ? 0 : NOT_EXIST
-        
-        for  j in 0..<aArray.count
-        {
-            if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "GITract" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID {
-                
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 622) && enteritis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    enteritis=(enteritis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 624) && feed_Passage != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    feed_Passage=(feed_Passage)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 619) && gizzard_Erosions != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    gizzard_Erosions=(gizzard_Erosions)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 621) && litter_Eater != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    litter_Eater=(litter_Eater)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 617) && mouth_Lesions != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    mouth_Lesions=(mouth_Lesions)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 623) && feedInCrop != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    feedInCrop=(feedInCrop)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 618) && proventriculitis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    proventriculitis=(proventriculitis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 627) && Content != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    Content=(Content)+(value.floatValue > 0 ? 1 : 0)
-                }
- 
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 632) && CropMycosis != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    CropMycosis=(CropMycosis)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 633) && Ceca != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    Ceca=(Ceca)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 634) && Hepatomegaly != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    Hepatomegaly=(Hepatomegaly)+(value.floatValue > 0 ? 1 : 0)
-                }
-                if ((aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 675) && wallThickness != NOT_EXIST {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "objsVisibilty") as! NSNumber
-                    wallThickness=(wallThickness)+(value.floatValue > 0 ? 1 : 0)
-                }
+    func forGi_tractTr(_ aArray: NSArray, birdsCount: Float) {
+        guard birdsCount > 0 else {
+            delegate?.didFinishWithParsing(finishedArray: [])
+            return
+        }
+
+        let observations = Regions.getObservationsGITractTr(countryID: Regions.countryId)
+        let filtered = aArray.compactMap { $0 as? NSDictionary }
+            .filter { ($0["catName"] as? String) == "GITract" && ($0["lngId"] as? Int) == Regions.languageID }
+
+        let metrics: [(id: Int, keyPath: String, observationKey: String)] = [
+            (622, "enteritis", "obsPoint"),
+            (624, "feed_Passage", "objsVisibilty"),
+            (619, "gizzard_Erosions", "obsPoint"),
+            (621, "litter_Eater", "objsVisibilty"),
+            (617, "mouth_Lesions", "objsVisibilty"),
+            (623, "feedInCrop", "objsVisibilty"),
+            (618, "proventriculitis", "obsPoint"),
+            (627, "Content", "obsPoint"),
+            (628, "Intestinal_Content", "obsPoint"),
+            (625, "Thin_Intestine", "obsPoint"),
+            (632, "CropMycosis", "objsVisibilty"),
+            (633, "Ceca", "obsPoint"),
+            (634, "Hepatomegaly", "objsVisibilty"),
+            (675, "wallThickness", "objsVisibilty")
+        ]
+
+        var scores = [String: Float]()
+        for metric in metrics {
+            if observations.contains(metric.id) {
+                scores[metric.keyPath] = 0
             }
         }
-        if enteritis != NOT_EXIST {
-            enteritis = (enteritis/birdsCount)*100
-            preparedArray.add(enteritis)
+
+        for item in filtered {
+            guard let refId = item["refId"] as? Int else { continue }
+            guard let metric = metrics.first(where: { $0.id == refId }) else { continue }
+            guard var currentScore = scores[metric.keyPath],
+                  let value = item[metric.observationKey] as? NSNumber else { continue }
+
+            if value.floatValue > 0 {
+                scores[metric.keyPath] = currentScore + 1
+            }
         }
-        
-        
-        
-        if gizzard_Erosions != NOT_EXIST {
-            gizzard_Erosions = (gizzard_Erosions/birdsCount)*100
-            preparedArray.add(gizzard_Erosions)
+
+        let preparedArray = NSMutableArray()
+        for (_, value) in scores {
+            let percent = (value / birdsCount) * 100
+            preparedArray.add(percent)
         }
-        
-        if litter_Eater != NOT_EXIST {
-            litter_Eater = (litter_Eater/birdsCount)*100
-            preparedArray.add(litter_Eater)
-        }
-        
-        if mouth_Lesions != NOT_EXIST {
-            mouth_Lesions = (mouth_Lesions/birdsCount)*100
-            preparedArray.add(mouth_Lesions)
-        }
-        
-        if feedInCrop != NOT_EXIST {
-            feedInCrop = (feedInCrop/birdsCount)*100
-            preparedArray.add(feedInCrop)
-        }
-        
-        if proventriculitis != NOT_EXIST {
-            proventriculitis = (proventriculitis/birdsCount)*100
-            preparedArray.add(proventriculitis)
-        }
-        if wallThickness != NOT_EXIST {
-            wallThickness = (wallThickness/birdsCount)*100
-            preparedArray.add(wallThickness)
-        }
-        if Content != NOT_EXIST {
-            Content = (Content/birdsCount)*100
-            preparedArray.add(Content)
-        }
-        
-        if Intestinal_Content != NOT_EXIST {
-            Intestinal_Content = (Intestinal_Content/birdsCount)*100
-            preparedArray.add(Intestinal_Content)
-        }
-        
-        if Thin_Intestine != NOT_EXIST {
-            Thin_Intestine = (Thin_Intestine/birdsCount)*100
-            preparedArray.add(Thin_Intestine)
-        }
-        
-        if CropMycosis != NOT_EXIST {
-            CropMycosis = (CropMycosis/birdsCount)*100
-            preparedArray.add(CropMycosis)
-        }
-        if Ceca != NOT_EXIST {
-            Ceca = (Ceca/birdsCount)*100
-            preparedArray.add(Ceca)
-        }
-        if feed_Passage != NOT_EXIST {
-            feed_Passage = (feed_Passage/birdsCount)*100
-            preparedArray.add(feed_Passage)
-        }
-        if Hepatomegaly != NOT_EXIST {
-            Hepatomegaly = (Hepatomegaly/birdsCount)*100
-            preparedArray.add(Hepatomegaly)
-        }
+
         delegate?.didFinishWithParsing(finishedArray: preparedArray)
     }
     

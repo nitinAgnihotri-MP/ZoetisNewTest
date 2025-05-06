@@ -27,6 +27,54 @@ class NecropcyReportCalculations: NSObject {
             self.allSummaryPDF(aArray, birdsCount: birdsCount)}
     }
     
+    fileprivate func handleObservation607(_ aArray: NSArray, _ j: Int, _ observationSet: inout Float, _ coccidia_Mean: inout Float, _ coccidia: inout Float, _ isUpdatedCoccidia: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 607 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            observationSet += 1
+            coccidia_Mean=coccidia_Mean+value.floatValue
+            coccidia=coccidia+(value.floatValue > 0 ? 1 : 0)
+            if value.floatValue > 0 {
+                isUpdatedCoccidia += 1
+            }
+        }
+    }
+    
+    fileprivate func handleObservation612(_ aArray: NSArray, _ j: Int, _ observationSet: inout Float, _ bacteriaMotile_Mean: inout Float, _ bacteriaMotile: inout Float, _ isUpdatedBacteriaMotile: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 612 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            observationSet += 1
+            bacteriaMotile_Mean=bacteriaMotile_Mean+value.floatValue
+            bacteriaMotile=bacteriaMotile+(value.floatValue > 0 ? 1 : 0)
+            if value.floatValue > 0 {
+                isUpdatedBacteriaMotile += 1
+            }
+        }
+    }
+    
+    fileprivate func handleObservation613(_ aArray: NSArray, _ j: Int, _ observationSet: inout Float, _ bacteriaNonMotile_Mean: inout Float, _ bacteriaNonMotile: inout Float, _ isUpdatedbacteriaNonMotile: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 613 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            observationSet += 1
+            bacteriaNonMotile_Mean=bacteriaNonMotile_Mean+value.floatValue
+            bacteriaNonMotile=bacteriaNonMotile+(value.floatValue > 0 ? 1 : 0)
+            if value.floatValue > 0 {
+                isUpdatedbacteriaNonMotile += 1
+            }
+        }
+    }
+    
+    fileprivate func handleObservation611(_ aArray: NSArray, _ j: Int, _ observationSet: inout Float, _ pepto_Mean: inout Float, _ pepto: inout Float, _ isUpdatedPepto: inout Float) {
+        if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 611 {
+            let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
+            observationSet += 1
+            pepto_Mean=pepto_Mean+value.floatValue
+            pepto=pepto+(value.floatValue > 0 ? 1 : 0)
+            if value.floatValue > 0 {
+                isUpdatedPepto += 1
+            }
+        }
+    }
+    
     func forMicroscopySummuary(_ aArray : NSArray , birdsCount : Float) {
         
         let preparedArray = NSMutableArray()
@@ -49,46 +97,13 @@ class NecropcyReportCalculations: NSObject {
         
         var observationSet : Float = 0
         
-        for  j in 0..<aArray.count
-        {
+        for  j in 0..<aArray.count {
             if ((aArray.object(at: j) as AnyObject).value(forKey: "catName")) as! NSString == "Coccidiosis" && ((aArray.object(at: j) as AnyObject).value(forKey: "lngId")) as! Int == Regions.languageID {
                 
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 607 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    observationSet += 1
-                    coccidia_Mean=coccidia_Mean+value.floatValue
-                    coccidia=coccidia+(value.floatValue > 0 ? 1 : 0)
-                    if value.floatValue > 0 {
-                        isUpdatedCoccidia += 1
-                    }
-                }
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 612 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    observationSet += 1
-                    bacteriaMotile_Mean=bacteriaMotile_Mean+value.floatValue
-                    bacteriaMotile=bacteriaMotile+(value.floatValue > 0 ? 1 : 0)
-                    if value.floatValue > 0 {
-                        isUpdatedBacteriaMotile += 1
-                    }
-                }
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 613 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    observationSet += 1
-                    bacteriaNonMotile_Mean=bacteriaNonMotile_Mean+value.floatValue
-                    bacteriaNonMotile=bacteriaNonMotile+(value.floatValue > 0 ? 1 : 0)
-                    if value.floatValue > 0 {
-                        isUpdatedbacteriaNonMotile += 1
-                    }
-                }
-                if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 611 {
-                    let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
-                    observationSet += 1
-                    pepto_Mean=pepto_Mean+value.floatValue
-                    pepto=pepto+(value.floatValue > 0 ? 1 : 0)
-                    if value.floatValue > 0 {
-                        isUpdatedPepto += 1
-                    }
-                }
+                handleObservation607(aArray, j, &observationSet, &coccidia_Mean, &coccidia, &isUpdatedCoccidia)
+                handleObservation612(aArray, j, &observationSet, &bacteriaMotile_Mean, &bacteriaMotile, &isUpdatedBacteriaMotile)
+                handleObservation613(aArray, j, &observationSet, &bacteriaNonMotile_Mean, &bacteriaNonMotile, &isUpdatedbacteriaNonMotile)
+                handleObservation611(aArray, j, &observationSet, &pepto_Mean, &pepto, &isUpdatedPepto)
             }
         }
         
@@ -198,7 +213,7 @@ class NecropcyReportCalculations: NSObject {
         }
     }
     
-    func allSummaryPDF(_ aArray : NSArray , birdsCount : Float)  {
+    func allSummaryPDF(_ aArray : NSArray , birdsCount : Float) {
         
         let preparedArray = NSMutableArray()
         let preparedArrayForMean = NSMutableArray()
@@ -263,8 +278,7 @@ class NecropcyReportCalculations: NSObject {
         
            let environmentIs = Constants.Api.versionUrl
         
-        for  j in 0..<aArray.count
-        {
+        for j in 0..<aArray.count {
             if (aArray.object(at: j) as AnyObject).value(forKey: "refId") as! NSNumber == 596 {
                 let value = (aArray.object(at: j) as AnyObject).value(forKey: "obsPoint") as! NSNumber
                 Foot_Pad_Lesions=Foot_Pad_Lesions+(value.floatValue > 0 ? 1 : 0)
