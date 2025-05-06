@@ -525,6 +525,41 @@ class ApiSyncTurkey: NSObject {
         }
     }
     
+    fileprivate func handleFieldVacinationAllForLoopValidations(_ FieldVacinationAll: NSArray, _ vaccinationDetail: inout NSMutableDictionary) {
+        for i in 0..<FieldVacinationAll.count {
+            let pSession = FieldVacinationAll.object(at: i) as! HatcheryVacTurkey
+            let routeName = pSession.route
+            
+            var routeId = NSNumber()
+            if routeName == Constants.drinkingWater {
+                routeId = 2
+            } else if routeName == Constants.wingWeb {
+                routeId = 1
+            } else if routeName == Constants.spray {
+                routeId = 3
+            } else if routeName == Constants.inOvoStr {
+                routeId = 4
+            } else if routeName == "Subcutaneous" {
+                routeId = 5
+            } else if routeName == "Intramuscular" {
+                routeId = 6
+            } else  if  routeName == Constants.eveDrop{
+                routeId = 7
+            } else {
+                routeId = 0
+            }
+            let age = pSession.age
+            var strain = pSession.strain!
+            let fieldStrainKey = "fieldStrain\(i + 1)"
+            let fieldrouteKey = "fieldRoute\(i+1)Id"
+            let fieldAgeKey = "fieldAge\(i + 1)"
+            
+            vaccinationDetail.setObject(strain, forKey: fieldStrainKey as NSCopying)
+            vaccinationDetail.setObject(routeId, forKey: fieldrouteKey as NSCopying)
+            vaccinationDetail.setObject(age!, forKey: fieldAgeKey as NSCopying)
+        }
+    }
+    
     fileprivate func handlepostingIdValidationsAddVaccination(_ tempArrTime: NSMutableArray, _ sessionArr: NSMutableArray) {
         for i in 0..<self.postingIdArr.count {
             
@@ -536,55 +571,14 @@ class ApiSyncTurkey: NSObject {
                 
                 var vaccinationDetail = NSMutableDictionary()
                 handleAddVaccinationAllVaccinationNameValidations(addVacinationAll, &vaccinationName, &vaccinationDetail)
-                
-                
                 let FieldVacinationAll = CoreDataHandlerTurkey().fetchAddvacinationDataWithisSyncTurkey(pId , isSync : true)
-                for i in 0..<FieldVacinationAll.count
-                {
-                    let pSession = FieldVacinationAll.object(at: i) as! HatcheryVacTurkey
-                    let routeName = pSession.route
-                    
-                    var routeId = NSNumber()
-                    if routeName == Constants.drinkingWater {
-                        routeId = 2
-                    }
-                    else if routeName == Constants.wingWeb {
-                        routeId = 1
-                    }
-                    else if routeName == Constants.spray {
-                        routeId = 3
-                    }
-                    else if routeName == Constants.inOvoStr {
-                        routeId = 4
-                    }
-                    else if routeName == "Subcutaneous" {
-                        routeId = 5
-                    }
-                    else if routeName == "Intramuscular" {
-                        routeId = 6
-                    }
-                    else  if  routeName == Constants.eveDrop{
-                        routeId = 7
-                    }
-                    else{
-                        routeId = 0
-                    }
-                    let age = pSession.age
-                    var strain = pSession.strain!
-                    let fieldStrainKey = "fieldStrain\(i + 1)"
-                    let fieldrouteKey = "fieldRoute\(i+1)Id"
-                    let fieldAgeKey = "fieldAge\(i + 1)"
-                    
-                    vaccinationDetail .setObject(strain, forKey: fieldStrainKey as NSCopying)
-                    vaccinationDetail .setObject(routeId, forKey: fieldrouteKey as NSCopying)
-                    vaccinationDetail .setObject(age!, forKey: fieldAgeKey as NSCopying)
-                }
+                handleFieldVacinationAllForLoopValidations(FieldVacinationAll, &vaccinationDetail)
                 
                 if FieldVacinationAll.count > 0 || addVacinationAll.count > 0 {
                     let vaccinationArray = NSMutableArray()
                     vaccinationArray .add(vaccinationDetail)
                     let mainDict = NSMutableDictionary()
-                    mainDict .setObject(vaccinationArray, forKey: "vaccinationDetail" as NSCopying)
+                    mainDict.setObject(vaccinationArray, forKey: "vaccinationDetail" as NSCopying)
                     let id = UserDefaults.standard.integer(forKey: "Id")
                     mainDict.setValue(id, forKey: "UserId")
                     mainDict.setValue(pId, forKey: "sessionId")
@@ -592,12 +586,11 @@ class ApiSyncTurkey: NSObject {
                     mainDict.setValue(vaccinationName, forKey: "vaccinationName")
                     let acttimeStamp = tempArrTime.object(at: i)
                     
-                    var fullData = acttimeStamp as! String
+                    let fullData = acttimeStamp as! String
                     mainDict.setValue(fullData, forKey: "deviceSessionId")
                     sessionArr.add(mainDict)
                 }
             }
-            
         }
     }
     
@@ -1245,27 +1238,34 @@ class ApiSyncTurkey: NSObject {
             }
         }
     }
+    
+    private func handleSuccessBirdImageSyncValidation(success:Bool) {
+        if success == true {
+            self.delegeteSyncApiTurkey.didFinishApi()
+        }
+    }
+    
+    fileprivate func handleIsDelegateCallAndSuccessValidations(_ success: Bool) {
+        if success == true {
+            if self.isDelegateCalled == false {
+                self.isDelegateCalled = true
+                self.delegeteSyncApiTurkey.didFinishApi()
+            }
+        }
+    }
+    
     fileprivate func handleSaveBirdImageSyncDataSuccessResponseUpdateNacDataOnCoreDataValidations(_ cNecArr: NSArray) {
         if cNecArr.count > 0 && self.postingIdArr.count == 0 {
             self.updadateNacDataOnCoreData(cNecArr: cNecArr, { (success) in
-                if success == true{
-                    self.delegeteSyncApiTurkey.didFinishApi()
-                }
+                self.handleSuccessBirdImageSyncValidation(success: success)
             })
         } else if cNecArr.count > 0 && self.postingIdArr.count > 0 {
             self.updateDataOnCoreData(cNecArr: cNecArr) { success in
-                if success {
-                    self.delegeteSyncApiTurkey.didFinishApi()
-                }
+                self.handleSuccessBirdImageSyncValidation(success: success)
             }
         } else if cNecArr.count == 0 && self.postingIdArr.count > 0 {
             self.updateDataOnCoreData(cNecArr: cNecArr,{ (success) in
-                if success == true{
-                    if self.isDelegateCalled == false{
-                        self.isDelegateCalled = true
-                        self.delegeteSyncApiTurkey.didFinishApi()
-                    }
-                }
+                self.handleIsDelegateCallAndSuccessValidations(success)
             })
         }
     }

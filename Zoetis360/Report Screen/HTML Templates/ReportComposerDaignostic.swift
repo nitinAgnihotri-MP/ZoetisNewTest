@@ -69,7 +69,8 @@ class ReportComposerDaignostic: NSObject {
     var pdfFilename: String!
     
     var meanAge = Float()
-    
+    let displayStr = "#display#"
+
     override init() {
         super.init()
     }
@@ -265,6 +266,12 @@ class ReportComposerDaignostic: NSObject {
         return allItems
     }
 
+    fileprivate func handleMeanIndexValidations(_ key: String, _ meanIndex: inout Int) {
+        if key == "trac" || key == "TD" || key == "ge" {
+            meanIndex += 1
+        }
+    }
+    
     func processSingleItem(
         item: [String: AnyObject],
         index: Int,
@@ -302,7 +309,7 @@ class ReportComposerDaignostic: NSObject {
             result = result.replacingOccurrences(of: "#\(key)#", with: String(format: "%.1f", value))
             result = result.replacingOccurrences(of: placeholder, with: String(format: "%.1f", meanValue.isNaN ? 0 : meanValue))
             meanIndex += 1
-            if key == "trac" || key == "TD" || key == "ge" { meanIndex += 1 }
+            handleMeanIndexValidations(key, &meanIndex)
         }
         
         // Update and replace simple metrics
@@ -327,21 +334,10 @@ class ReportComposerDaignostic: NSObject {
         reportData.indexSpliter += 1
         
         // Handle age splitting
+        result = result.replacingOccurrences(of: displayStr, with: Constants.noneDisplay)
         if !isCocciHistory {
-            result = handleAgeSplitting(
-                content: result,
-                item: item,
-                index: index,
-                items: [item],
-                metrics: &metrics,
-                simpleMetrics: &simpleMetrics,
-                reportData: &reportData,
-                lngId: lngId
-            )
-        } else {
-            result = result.replacingOccurrences(of: "#display#", with: Constants.noneDisplay)
+            result = handleAgeSplitting(content: result,item: item,index: index,items: [item],metrics: &metrics,simpleMetrics: &simpleMetrics,reportData: &reportData,lngId: lngId)
         }
-        
         return result
     }
 
@@ -372,7 +368,7 @@ class ReportComposerDaignostic: NSObject {
         if shouldSplit || index == items.count - 1 {
             let ageLabel = ageRanges.first { $0.0.contains(meanAge) }?.1 ?? "Unknown"
             result = result.replacingOccurrences(of: Constants.complexTotal, with: ageLabel)
-            result = result.replacingOccurrences(of: "#display#", with: "")
+            result = result.replacingOccurrences(of: displayStr, with: "")
             
             // Replace totals
             result = replaceTotals(
@@ -391,7 +387,7 @@ class ReportComposerDaignostic: NSObject {
             reportData.indexSpliter = 0
             reportData.indexTotal += 1
         } else {
-            result = result.replacingOccurrences(of: "#display#", with: Constants.noneDisplay)
+            result = result.replacingOccurrences(of: displayStr, with: Constants.noneDisplay)
         }
         
         return result

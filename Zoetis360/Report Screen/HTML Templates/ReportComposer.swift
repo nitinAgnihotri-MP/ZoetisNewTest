@@ -18,19 +18,12 @@ class ReportComposer: NSObject {
     let pathToSingleItemHTMLTemplate = Bundle.main.path(forResource: "single_item\(Regions.languageID)", ofType: "html")
     
     let pathToLastItemHTMLTemplate = Bundle.main.path(forResource: "last_item\(Regions.languageID)", ofType: "html")
-    
-    
-    
-    
-    //let logoImageURL = NSBundle.mainBundle().pathForResource("logo", ofType: "png")
-    
     let logoImageURL = WebClass.sharedInstance.connected() == true ? "https://mypoultryview360.com/Images/logo.png" : Bundle.main.path(forResource: "logo", ofType: "png")
-    
     var invoiceNumber: String!
-    
     var pdfFilename: String!
-    
     var meanAge = Float()
+    let displayStr = "#display#"
+    
     struct ReportTotals {
         var birds: Int = 0
         var meanAge: Float = 0
@@ -159,7 +152,7 @@ class ReportComposer: NSObject {
     }
     
     fileprivate func handleItemHTMLContextValidations(_ itemHTMLContent: inout String?, _ items: [[String : AnyObject]], _ i: Int) {
-        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:"#display#", with: "" )
+        itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:displayStr, with: "" )
         if items[i]["meanAge"]!.integerValue > 0 && items[i]["meanAge"]!.integerValue < 14 {
             itemHTMLContent = itemHTMLContent!.replacingOccurrences(of:Constants.complexTotal, with: "01 - 13 \(NSLocalizedString("Days", comment: ""))")
         } else if items[i]["meanAge"]!.integerValue > 13 && items[i]["meanAge"]!.integerValue < 25 {
@@ -321,7 +314,7 @@ class ReportComposer: NSObject {
             resetSplitter(&splitterTotals, &indexSplitter, &splitFlags)
             indexTotal += 1
         } else {
-            updatedContent = updatedContent.replacingOccurrences(of: "#display#", with: "display:none")
+            updatedContent = updatedContent.replacingOccurrences(of: displayStr, with: "display:none")
         }
 
         return updatedContent
@@ -579,7 +572,7 @@ class ReportComposer: NSObject {
     ) {
         let isCocciHistory = items.first?["isCocciHistory"] as? Bool ?? false
         if !isCocciHistory {
-            itemHTMLContent = itemHTMLContent.replacingOccurrences(of: "#display#", with: "")
+            itemHTMLContent = itemHTMLContent.replacingOccurrences(of: displayStr, with: "")
         }
     }
     func exportHTMLContentToPDF(_ HTMLContent: String){
